@@ -1,0 +1,70 @@
+BinderPokedex/
+├── 📄 README.md                           # Hauptdokumentation
+├── 📋 PROJEKTPLAN.md                      # Projekt-Status & Architektur
+├── 📜 LICENSE                             # MIT License
+├── 📦 requirements.txt                    # Python Dependencies
+├── 🔍 .gitignore                          # Git Ignore Rules
+│
+├── 🐍 scripts/                            # Python-Scripts (Main)
+│   ├── fetch_pokemon_from_pokeapi.py      # Datenfetcher (PokéAPI)
+│   ├── generate_pdf.py                    # PDF-Generator (MAIN)
+│   ├── extract_pokemon_data.py            # Legacy: Excel-Export
+│   ├── fetch_pokemon_from_csv.py          # Legacy: CSV-Fetch
+│   └── ...
+│
+├── 📊 data/                               # Gekachte Daten (JSON)
+│   ├── pokemon_gen1.json                  # Gen 1 (151 Pokémon)
+│   ├── pokemon_gen2.json                  # Gen 2 (100 Pokémon)
+│   ├── pokemon_gen3.json                  # Gen 3 (135 Pokémon)
+│   ├── pokemon_gen4.json                  # Gen 4 (107 Pokémon)
+│   ├── pokemon_gen5.json                  # Gen 5 (156 Pokémon)
+│   ├── pokemon_gen6.json                  # Gen 6 (72 Pokémon)
+│   ├── pokemon_gen7.json                  # Gen 7 (88 Pokémon)
+│   ├── pokemon_gen8.json                  # Gen 8 (96 Pokémon)
+│   └── pokemon_gen9.json                  # Gen 9 (120 Pokémon)
+│
+├── 📄 output/                             # Generierte PDFs
+│   ├── BinderPokedex_Gen1.pdf             # 18 Seiten, 0.25 MB
+│   ├── BinderPokedex_Gen2.pdf             # 13 Seiten, 0.15 MB
+│   ├── BinderPokedex_Gen3.pdf             # 16 Seiten, 0.22 MB
+│   ├── BinderPokedex_Gen4.pdf             # 13 Seiten, 0.18 MB
+│   ├── BinderPokedex_Gen5.pdf             # 19 Seiten, 0.26 MB
+│   ├── BinderPokedex_Gen6.pdf             # 9 Seiten, 0.28 MB
+│   ├── BinderPokedex_Gen7.pdf             # 11 Seiten, 0.16 MB
+│   └── BinderPokedex_Gen8.pdf             # 12 Seiten, 0.17 MB
+│
+├── 📚 docs/                               # Dokumentation
+│   ├── DRUCKANLEITUNG.md                  # Druck- & Bindungsanleitung
+│   └── CONTRIBUTING.md                    # Contributor Guidelines
+│
+├── 📦 _archive/                           # Alte/Legacy Dateien
+│   ├── _greenie (Pokédex).xlsx            # Alte Excel-Quelle
+│   └── Pokemon_Kompakt_Liste.pdf          # Alte PDF-Referenz
+│
+└── 🔄 .venv/                              # Virtual Environment
+
+═══════════════════════════════════════════════════════════════
+
+📊 STATISTIK:
+
+Generationen:      8 vollständig (1-8)
+Pokémon gesamt:    1025
+PDF-Seiten:        111 (+ Deckblätter)
+PDF-Gesamtgröße:   1.67 MB
+JSON-Datencache:   9 Dateien
+Python-Scripts:    5 Hauptscripte + Legacy
+
+═══════════════════════════════════════════════════════════════
+
+✨ FEATURES:
+
+✅ Multi-Generation Support (Gen 1-8)
+✅ Professionelle PDFs mit Deckblättern
+✅ PokéAPI Integration
+✅ Deutsche Lokalisierung
+✅ Parallele Bildverarbeitung
+✅ Automatische Fallback-Quellen
+✅ Detaillierte Dokumentation
+✅ GitHub-ready
+
+═══════════════════════════════════════════════════════════════

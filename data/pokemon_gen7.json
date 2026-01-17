@@ -1,0 +1,882 @@
+[
+  {
+    "id": 722,
+    "num": "#722",
+    "name_en": "Rowlet",
+    "name_de": "Rowlet",
+    "type1": "Pflanze",
+    "type2": "Flug",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/722.png",
+    "generation": 7
+  },
+  {
+    "id": 723,
+    "num": "#723",
+    "name_en": "Dartrix",
+    "name_de": "Dartrix",
+    "type1": "Pflanze",
+    "type2": "Flug",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/723.png",
+    "generation": 7
+  },
+  {
+    "id": 724,
+    "num": "#724",
+    "name_en": "Decidueye",
+    "name_de": "Decidueye",
+    "type1": "Pflanze",
+    "type2": "Spuk",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/724.png",
+    "generation": 7
+  },
+  {
+    "id": 725,
+    "num": "#725",
+    "name_en": "Litten",
+    "name_de": "Litten",
+    "type1": "Feuer",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/725.png",
+    "generation": 7
+  },
+  {
+    "id": 726,
+    "num": "#726",
+    "name_en": "Torracat",
+    "name_de": "Torracat",
+    "type1": "Feuer",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/726.png",
+    "generation": 7
+  },
+  {
+    "id": 727,
+    "num": "#727",
+    "name_en": "Incineroar",
+    "name_de": "Incineroar",
+    "type1": "Feuer",
+    "type2": "Unlicht",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/727.png",
+    "generation": 7
+  },
+  {
+    "id": 728,
+    "num": "#728",
+    "name_en": "Popplio",
+    "name_de": "Popplio",
+    "type1": "Wasser",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/728.png",
+    "generation": 7
+  },
+  {
+    "id": 729,
+    "num": "#729",
+    "name_en": "Brionne",
+    "name_de": "Brionne",
+    "type1": "Wasser",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/729.png",
+    "generation": 7
+  },
+  {
+    "id": 730,
+    "num": "#730",
+    "name_en": "Primarina",
+    "name_de": "Primarina",
+    "type1": "Wasser",
+    "type2": "Fee",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/730.png",
+    "generation": 7
+  },
+  {
+    "id": 731,
+    "num": "#731",
+    "name_en": "Pikipek",
+    "name_de": "Pikipek",
+    "type1": "Normal",
+    "type2": "Flug",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/731.png",
+    "generation": 7
+  },
+  {
+    "id": 732,
+    "num": "#732",
+    "name_en": "Trumbeak",
+    "name_de": "Trumbeak",
+    "type1": "Normal",
+    "type2": "Flug",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/732.png",
+    "generation": 7
+  },
+  {
+    "id": 733,
+    "num": "#733",
+    "name_en": "Toucannon",
+    "name_de": "Toucannon",
+    "type1": "Normal",
+    "type2": "Flug",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/733.png",
+    "generation": 7
+  },
+  {
+    "id": 734,
+    "num": "#734",
+    "name_en": "Yungoos",
+    "name_de": "Yungoos",
+    "type1": "Normal",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/734.png",
+    "generation": 7
+  },
+  {
+    "id": 735,
+    "num": "#735",
+    "name_en": "Gumshoos",
+    "name_de": "Gumshoos",
+    "type1": "Normal",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/735.png",
+    "generation": 7
+  },
+  {
+    "id": 736,
+    "num": "#736",
+    "name_en": "Grubbin",
+    "name_de": "Grubbin",
+    "type1": "Käfer",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/736.png",
+    "generation": 7
+  },
+  {
+    "id": 737,
+    "num": "#737",
+    "name_en": "Charjabug",
+    "name_de": "Charjabug",
+    "type1": "Käfer",
+    "type2": "Elektro",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/737.png",
+    "generation": 7
+  },
+  {
+    "id": 738,
+    "num": "#738",
+    "name_en": "Vikavolt",
+    "name_de": "Vikavolt",
+    "type1": "Käfer",
+    "type2": "Elektro",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/738.png",
+    "generation": 7
+  },
+  {
+    "id": 739,
+    "num": "#739",
+    "name_en": "Crabrawler",
+    "name_de": "Crabrawler",
+    "type1": "Kampf",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/739.png",
+    "generation": 7
+  },
+  {
+    "id": 740,
+    "num": "#740",
+    "name_en": "Crabominable",
+    "name_de": "Crabominable",
+    "type1": "Kampf",
+    "type2": "Eis",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/740.png",
+    "generation": 7
+  },
+  {
+    "id": 741,
+    "num": "#741",
+    "name_en": "Oricorio-baile",
+    "name_de": "Oricorio-baile",
+    "type1": "Feuer",
+    "type2": "Flug",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/741.png",
+    "generation": 7
+  },
+  {
+    "id": 742,
+    "num": "#742",
+    "name_en": "Cutiefly",
+    "name_de": "Cutiefly",
+    "type1": "Käfer",
+    "type2": "Fee",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/742.png",
+    "generation": 7
+  },
+  {
+    "id": 743,
+    "num": "#743",
+    "name_en": "Ribombee",
+    "name_de": "Ribombee",
+    "type1": "Käfer",
+    "type2": "Fee",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/743.png",
+    "generation": 7
+  },
+  {
+    "id": 744,
+    "num": "#744",
+    "name_en": "Rockruff",
+    "name_de": "Rockruff",
+    "type1": "Gestein",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/744.png",
+    "generation": 7
+  },
+  {
+    "id": 745,
+    "num": "#745",
+    "name_en": "Lycanroc-midday",
+    "name_de": "Lycanroc-midday",
+    "type1": "Gestein",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/745.png",
+    "generation": 7
+  },
+  {
+    "id": 746,
+    "num": "#746",
+    "name_en": "Wishiwashi-solo",
+    "name_de": "Wishiwashi-solo",
+    "type1": "Wasser",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/746.png",
+    "generation": 7
+  },
+  {
+    "id": 747,
+    "num": "#747",
+    "name_en": "Mareanie",
+    "name_de": "Mareanie",
+    "type1": "Gift",
+    "type2": "Wasser",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/747.png",
+    "generation": 7
+  },
+  {
+    "id": 748,
+    "num": "#748",
+    "name_en": "Toxapex",
+    "name_de": "Toxapex",
+    "type1": "Gift",
+    "type2": "Wasser",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/748.png",
+    "generation": 7
+  },
+  {
+    "id": 749,
+    "num": "#749",
+    "name_en": "Mudbray",
+    "name_de": "Mudbray",
+    "type1": "Boden",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/749.png",
+    "generation": 7
+  },
+  {
+    "id": 750,
+    "num": "#750",
+    "name_en": "Mudsdale",
+    "name_de": "Mudsdale",
+    "type1": "Boden",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/750.png",
+    "generation": 7
+  },
+  {
+    "id": 751,
+    "num": "#751",
+    "name_en": "Dewpider",
+    "name_de": "Dewpider",
+    "type1": "Wasser",
+    "type2": "Käfer",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/751.png",
+    "generation": 7
+  },
+  {
+    "id": 752,
+    "num": "#752",
+    "name_en": "Araquanid",
+    "name_de": "Araquanid",
+    "type1": "Wasser",
+    "type2": "Käfer",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/752.png",
+    "generation": 7
+  },
+  {
+    "id": 753,
+    "num": "#753",
+    "name_en": "Fomantis",
+    "name_de": "Fomantis",
+    "type1": "Pflanze",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/753.png",
+    "generation": 7
+  },
+  {
+    "id": 754,
+    "num": "#754",
+    "name_en": "Lurantis",
+    "name_de": "Lurantis",
+    "type1": "Pflanze",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/754.png",
+    "generation": 7
+  },
+  {
+    "id": 755,
+    "num": "#755",
+    "name_en": "Morelull",
+    "name_de": "Morelull",
+    "type1": "Pflanze",
+    "type2": "Fee",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/755.png",
+    "generation": 7
+  },
+  {
+    "id": 756,
+    "num": "#756",
+    "name_en": "Shiinotic",
+    "name_de": "Shiinotic",
+    "type1": "Pflanze",
+    "type2": "Fee",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/756.png",
+    "generation": 7
+  },
+  {
+    "id": 757,
+    "num": "#757",
+    "name_en": "Salandit",
+    "name_de": "Salandit",
+    "type1": "Gift",
+    "type2": "Feuer",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/757.png",
+    "generation": 7
+  },
+  {
+    "id": 758,
+    "num": "#758",
+    "name_en": "Salazzle",
+    "name_de": "Salazzle",
+    "type1": "Gift",
+    "type2": "Feuer",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/758.png",
+    "generation": 7
+  },
+  {
+    "id": 759,
+    "num": "#759",
+    "name_en": "Stufful",
+    "name_de": "Stufful",
+    "type1": "Normal",
+    "type2": "Kampf",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/759.png",
+    "generation": 7
+  },
+  {
+    "id": 760,
+    "num": "#760",
+    "name_en": "Bewear",
+    "name_de": "Bewear",
+    "type1": "Normal",
+    "type2": "Kampf",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/760.png",
+    "generation": 7
+  },
+  {
+    "id": 761,
+    "num": "#761",
+    "name_en": "Bounsweet",
+    "name_de": "Bounsweet",
+    "type1": "Pflanze",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/761.png",
+    "generation": 7
+  },
+  {
+    "id": 762,
+    "num": "#762",
+    "name_en": "Steenee",
+    "name_de": "Steenee",
+    "type1": "Pflanze",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/762.png",
+    "generation": 7
+  },
+  {
+    "id": 763,
+    "num": "#763",
+    "name_en": "Tsareena",
+    "name_de": "Tsareena",
+    "type1": "Pflanze",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/763.png",
+    "generation": 7
+  },
+  {
+    "id": 764,
+    "num": "#764",
+    "name_en": "Comfey",
+    "name_de": "Comfey",
+    "type1": "Fee",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/764.png",
+    "generation": 7
+  },
+  {
+    "id": 765,
+    "num": "#765",
+    "name_en": "Oranguru",
+    "name_de": "Oranguru",
+    "type1": "Normal",
+    "type2": "Psycho",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/765.png",
+    "generation": 7
+  },
+  {
+    "id": 766,
+    "num": "#766",
+    "name_en": "Passimian",
+    "name_de": "Passimian",
+    "type1": "Kampf",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/766.png",
+    "generation": 7
+  },
+  {
+    "id": 767,
+    "num": "#767",
+    "name_en": "Wimpod",
+    "name_de": "Wimpod",
+    "type1": "Käfer",
+    "type2": "Wasser",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/767.png",
+    "generation": 7
+  },
+  {
+    "id": 768,
+    "num": "#768",
+    "name_en": "Golisopod",
+    "name_de": "Golisopod",
+    "type1": "Käfer",
+    "type2": "Wasser",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/768.png",
+    "generation": 7
+  },
+  {
+    "id": 769,
+    "num": "#769",
+    "name_en": "Sandygast",
+    "name_de": "Sandygast",
+    "type1": "Spuk",
+    "type2": "Boden",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/769.png",
+    "generation": 7
+  },
+  {
+    "id": 770,
+    "num": "#770",
+    "name_en": "Palossand",
+    "name_de": "Palossand",
+    "type1": "Spuk",
+    "type2": "Boden",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/770.png",
+    "generation": 7
+  },
+  {
+    "id": 771,
+    "num": "#771",
+    "name_en": "Pyukumuku",
+    "name_de": "Pyukumuku",
+    "type1": "Wasser",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/771.png",
+    "generation": 7
+  },
+  {
+    "id": 772,
+    "num": "#772",
+    "name_en": "Type-null",
+    "name_de": "Type-null",
+    "type1": "Normal",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/772.png",
+    "generation": 7
+  },
+  {
+    "id": 773,
+    "num": "#773",
+    "name_en": "Silvally",
+    "name_de": "Silvally",
+    "type1": "Normal",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/773.png",
+    "generation": 7
+  },
+  {
+    "id": 774,
+    "num": "#774",
+    "name_en": "Minior-red-meteor",
+    "name_de": "Minior-red-meteor",
+    "type1": "Gestein",
+    "type2": "Flug",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/774.png",
+    "generation": 7
+  },
+  {
+    "id": 775,
+    "num": "#775",
+    "name_en": "Komala",
+    "name_de": "Komala",
+    "type1": "Normal",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/775.png",
+    "generation": 7
+  },
+  {
+    "id": 776,
+    "num": "#776",
+    "name_en": "Turtonator",
+    "name_de": "Turtonator",
+    "type1": "Feuer",
+    "type2": "Drache",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/776.png",
+    "generation": 7
+  },
+  {
+    "id": 777,
+    "num": "#777",
+    "name_en": "Togedemaru",
+    "name_de": "Togedemaru",
+    "type1": "Elektro",
+    "type2": "Stahl",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/777.png",
+    "generation": 7
+  },
+  {
+    "id": 778,
+    "num": "#778",
+    "name_en": "Mimikyu-disguised",
+    "name_de": "Mimikyu-disguised",
+    "type1": "Spuk",
+    "type2": "Fee",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/778.png",
+    "generation": 7
+  },
+  {
+    "id": 779,
+    "num": "#779",
+    "name_en": "Bruxish",
+    "name_de": "Bruxish",
+    "type1": "Wasser",
+    "type2": "Psycho",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/779.png",
+    "generation": 7
+  },
+  {
+    "id": 780,
+    "num": "#780",
+    "name_en": "Drampa",
+    "name_de": "Drampa",
+    "type1": "Normal",
+    "type2": "Drache",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/780.png",
+    "generation": 7
+  },
+  {
+    "id": 781,
+    "num": "#781",
+    "name_en": "Dhelmise",
+    "name_de": "Dhelmise",
+    "type1": "Spuk",
+    "type2": "Pflanze",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/781.png",
+    "generation": 7
+  },
+  {
+    "id": 782,
+    "num": "#782",
+    "name_en": "Jangmo-o",
+    "name_de": "Jangmo-o",
+    "type1": "Drache",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/782.png",
+    "generation": 7
+  },
+  {
+    "id": 783,
+    "num": "#783",
+    "name_en": "Hakamo-o",
+    "name_de": "Hakamo-o",
+    "type1": "Drache",
+    "type2": "Kampf",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/783.png",
+    "generation": 7
+  },
+  {
+    "id": 784,
+    "num": "#784",
+    "name_en": "Kommo-o",
+    "name_de": "Kommo-o",
+    "type1": "Drache",
+    "type2": "Kampf",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/784.png",
+    "generation": 7
+  },
+  {
+    "id": 785,
+    "num": "#785",
+    "name_en": "Tapu-koko",
+    "name_de": "Tapu-koko",
+    "type1": "Elektro",
+    "type2": "Fee",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/785.png",
+    "generation": 7
+  },
+  {
+    "id": 786,
+    "num": "#786",
+    "name_en": "Tapu-lele",
+    "name_de": "Tapu-lele",
+    "type1": "Psycho",
+    "type2": "Fee",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/786.png",
+    "generation": 7
+  },
+  {
+    "id": 787,
+    "num": "#787",
+    "name_en": "Tapu-bulu",
+    "name_de": "Tapu-bulu",
+    "type1": "Pflanze",
+    "type2": "Fee",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/787.png",
+    "generation": 7
+  },
+  {
+    "id": 788,
+    "num": "#788",
+    "name_en": "Tapu-fini",
+    "name_de": "Tapu-fini",
+    "type1": "Wasser",
+    "type2": "Fee",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/788.png",
+    "generation": 7
+  },
+  {
+    "id": 789,
+    "num": "#789",
+    "name_en": "Cosmog",
+    "name_de": "Cosmog",
+    "type1": "Psycho",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/789.png",
+    "generation": 7
+  },
+  {
+    "id": 790,
+    "num": "#790",
+    "name_en": "Cosmoem",
+    "name_de": "Cosmoem",
+    "type1": "Psycho",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/790.png",
+    "generation": 7
+  },
+  {
+    "id": 791,
+    "num": "#791",
+    "name_en": "Solgaleo",
+    "name_de": "Solgaleo",
+    "type1": "Psycho",
+    "type2": "Stahl",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/791.png",
+    "generation": 7
+  },
+  {
+    "id": 792,
+    "num": "#792",
+    "name_en": "Lunala",
+    "name_de": "Lunala",
+    "type1": "Psycho",
+    "type2": "Spuk",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/792.png",
+    "generation": 7
+  },
+  {
+    "id": 793,
+    "num": "#793",
+    "name_en": "Nihilego",
+    "name_de": "Nihilego",
+    "type1": "Gestein",
+    "type2": "Gift",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/793.png",
+    "generation": 7
+  },
+  {
+    "id": 794,
+    "num": "#794",
+    "name_en": "Buzzwole",
+    "name_de": "Buzzwole",
+    "type1": "Käfer",
+    "type2": "Kampf",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/794.png",
+    "generation": 7
+  },
+  {
+    "id": 795,
+    "num": "#795",
+    "name_en": "Pheromosa",
+    "name_de": "Pheromosa",
+    "type1": "Käfer",
+    "type2": "Kampf",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/795.png",
+    "generation": 7
+  },
+  {
+    "id": 796,
+    "num": "#796",
+    "name_en": "Xurkitree",
+    "name_de": "Xurkitree",
+    "type1": "Elektro",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/796.png",
+    "generation": 7
+  },
+  {
+    "id": 797,
+    "num": "#797",
+    "name_en": "Celesteela",
+    "name_de": "Celesteela",
+    "type1": "Stahl",
+    "type2": "Flug",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/797.png",
+    "generation": 7
+  },
+  {
+    "id": 798,
+    "num": "#798",
+    "name_en": "Kartana",
+    "name_de": "Kartana",
+    "type1": "Pflanze",
+    "type2": "Stahl",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/798.png",
+    "generation": 7
+  },
+  {
+    "id": 799,
+    "num": "#799",
+    "name_en": "Guzzlord",
+    "name_de": "Guzzlord",
+    "type1": "Unlicht",
+    "type2": "Drache",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/799.png",
+    "generation": 7
+  },
+  {
+    "id": 800,
+    "num": "#800",
+    "name_en": "Necrozma",
+    "name_de": "Necrozma",
+    "type1": "Psycho",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/800.png",
+    "generation": 7
+  },
+  {
+    "id": 801,
+    "num": "#801",
+    "name_en": "Magearna",
+    "name_de": "Magearna",
+    "type1": "Stahl",
+    "type2": "Fee",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/801.png",
+    "generation": 7
+  },
+  {
+    "id": 802,
+    "num": "#802",
+    "name_en": "Marshadow",
+    "name_de": "Marshadow",
+    "type1": "Kampf",
+    "type2": "Spuk",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/802.png",
+    "generation": 7
+  },
+  {
+    "id": 803,
+    "num": "#803",
+    "name_en": "Poipole",
+    "name_de": "Poipole",
+    "type1": "Gift",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/803.png",
+    "generation": 7
+  },
+  {
+    "id": 804,
+    "num": "#804",
+    "name_en": "Naganadel",
+    "name_de": "Naganadel",
+    "type1": "Gift",
+    "type2": "Drache",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/804.png",
+    "generation": 7
+  },
+  {
+    "id": 805,
+    "num": "#805",
+    "name_en": "Stakataka",
+    "name_de": "Stakataka",
+    "type1": "Gestein",
+    "type2": "Stahl",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/805.png",
+    "generation": 7
+  },
+  {
+    "id": 806,
+    "num": "#806",
+    "name_en": "Blacephalon",
+    "name_de": "Blacephalon",
+    "type1": "Feuer",
+    "type2": "Spuk",
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/806.png",
+    "generation": 7
+  },
+  {
+    "id": 807,
+    "num": "#807",
+    "name_en": "Zeraora",
+    "name_de": "Zeraora",
+    "type1": "Elektro",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/807.png",
+    "generation": 7
+  },
+  {
+    "id": 808,
+    "num": "#808",
+    "name_en": "Meltan",
+    "name_de": "Meltan",
+    "type1": "Stahl",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/808.png",
+    "generation": 7
+  },
+  {
+    "id": 809,
+    "num": "#809",
+    "name_en": "Melmetal",
+    "name_de": "Melmetal",
+    "type1": "Stahl",
+    "type2": null,
+    "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/809.png",
+    "generation": 7
+  }
+]
