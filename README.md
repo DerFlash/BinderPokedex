@@ -79,12 +79,11 @@ pip install -r requirements.txt
 ### Verwendung
 
 ```bash
-# Generiere alle PDFs
+# Generiere alle PDFs (mit automatischem Daten-Download bei Bedarf)
 python scripts/generate_pdf.py
 
-# Oder nur eine Generation
-python scripts/fetch_pokemon_from_pokeapi.py 1  # Gen 1 fetchen
-python scripts/generate_pdf.py                   # PDF generieren
+# Optional: Pokémon-Daten aktualisieren (falls manuell nötig)
+python scripts/fetch_pokemon_from_pokeapi.py
 ```
 
 **Output:** `output/BinderPokedex_Gen*.pdf`
@@ -145,8 +144,9 @@ BinderPokedex/
 
 ```
 reportlab==4.0.7
-Pillow==10.1.0
+Pillow>=10.0.0
 requests==2.31.0
+mcp[cli]>=0.7.0
 ```
 
 ## 🤝 Beitragen
