@@ -40,6 +40,10 @@ Generiere professionelle **Pokémon-Kartensammlungen** als druckbare PDFs - für
 
 **Gesamt: 1025 Pokémon**
 
+## 📸 Vorschau
+
+![BinderPokedex Preview - Gen1 Deckblatt und Kartenseite](docs/images/binderdex-preview.png)
+
 ## 🚀 Quick Start
 
 ### Mit AI-Tools in VS Code (Empfohlen!) 🤖
