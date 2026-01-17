@@ -55,27 +55,26 @@ Schreibe aussagekräftige Commit-Messages auf Deutsch oder Englisch:
 ## 🎯 Beitrag-Ideen
 
 ### 🌟 Große Features
-- [ ] Weitere Pokémon-Generationen (Gen 2-8)
-- [ ] Web-Interface zum PDF-Generieren
-- [ ] Zusätzliche Design-Optionen (Layouts, Farben)
+- [ ] Weitere Pokémon-Generationen (Gen 9+)
+- [ ] Alternative Kartenlayouts (2×2, 4×4 pro Seite)
+- [ ] Shiny-Varianten
 - [ ] Mehrsprachige Unterstützung (EN, FR, ES, etc.)
-- [ ] Desktop-App mit GUI
 
-### 🐛 Bug-Fixes
-- PDF-Generierungsfehler
-- Bildverarbeitungsprobleme
-- Dateninkonsistenzen
+### 🐛 Bug-Fixes & Verbesserungen
+- [ ] Unicode-Geschlechtszeichen in PDFs (siehe KNOWN_ISSUES.md)
+- [ ] Weitere PDF-Verarbeitungsoptimierungen
+- [ ] Automatische Tests
 
 ### 📚 Dokumentation
-- Übersetzungen
-- Video-Tutorials
-- Verbesserte Druckanleitungen
-- FAQ erweitern
+- [ ] Übersetzungen in andere Sprachen
+- [ ] Video-Tutorials
+- [ ] Verbesserte Druckanleitungen
+- [ ] FAQ erweitern
 
 ### 🎨 Design
-- Neue Farbschemata
-- Alternative Kartenlayouts (2×2, 4×4)
-- Kartenseiten-Rückseite (optional)
+- [ ] Neue Farbschemata für Generationen
+- [ ] Kartenseiten-Rückseite (optional)
+- [ ] Alternative Design-Vorlagen
 
 ---
 

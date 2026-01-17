@@ -42,7 +42,22 @@ Generiere professionelle **Pokémon-Kartensammlungen** als druckbare PDFs - für
 
 ## 🚀 Quick Start
 
-### Installation
+### Mit AI-Tools in VS Code (Empfohlen!) 🤖
+
+```bash
+git clone https://github.com/DerFlash/BinderPokedex.git
+cd BinderPokedex
+code .
+```
+
+Öffne **GitHub Copilot Chat** oder **Claude** und sag einfach:
+```
+"generiere PDF Binder für alle 8 Generationen"
+```
+
+Die KI nutzt automatisch die BinderPokedex-Tools! → [QUICKSTART_AI.md](QUICKSTART_AI.md)
+
+### Klassisch mit Kommandozeile
 
 ```bash
 # Repository klonen
@@ -69,6 +84,17 @@ python scripts/generate_pdf.py                   # PDF generieren
 ```
 
 **Output:** `output/BinderPokedex_Gen*.pdf`
+
+## 🤖 MCP Server (AI Integration)
+
+Das Projekt beinhaltet einen MCP-Server für nahtlose Integration mit AI-Tools:
+
+- **Automatisch geladen** in VS Code via `.vscode/mcp.json`
+- **Tools:** generiere PDFs, fetche Daten, überprüfe Status
+- **Unterstützt:** GitHub Copilot, Claude, und alle MCP-kompatiblen Clients
+- **Lokal & Sicher:** Läuft auf deinem Rechner, keine externe Kommunikation
+
+[Mehr über MCP Integration →](docs/MCP_INTEGRATION.md)
 
 ## 📁 Struktur
 
@@ -123,11 +149,11 @@ requests==2.31.0
 
 Siehe [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 
-Ideen:
+**Aktuelle Prioritäten:**
+- [ ] Unicode-Geschlechtszeichen-Rendering verbessern (siehe KNOWN_ISSUES.md)
 - [ ] Gen 9+ Support
-- [ ] Alternative Layouts (2×2, 4×4)
-- [ ] Shiny-Versionen
-- [ ] Web-Interface
+- [ ] Alternative Kartenlayouts (2×2, 4×4)
+- [ ] Mehrsprachige Unterstützung
 
 ## 📄 Lizenz
 
