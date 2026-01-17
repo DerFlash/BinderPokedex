@@ -10,7 +10,11 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
 from reportlab.pdfgen import canvas
 from reportlab.lib.colors import HexColor
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 from PIL import Image as PILImage
+import subprocess
+import sys
 import tempfile
 import shutil
 from datetime import datetime
@@ -27,6 +31,50 @@ TYPE_NAMES_DE = {
     'Rock': 'Stein', 'Ghost': 'Spuk', 'Dragon': 'Drachen', 'Dark': 'Unlicht',
     'Steel': 'Stahl', 'Fairy': 'Fee',
 }
+
+def draw_pokemon_name_with_symbols(canvas_obj, name, x, y, font_name, font_size, color_hex):
+    """Zeichnet einen Namen mit Geschlechtssymbolen korrekt (ASCII-Version)."""
+    # Ersetze Unicode-Symbole durch ASCII-Alternativen
+    if '♀' in name:
+        name = name.replace('♀', ' (w)')  # Weiblich
+    if '♂' in name:
+        name = name.replace('♂', ' (m)')  # Männlich
+    
+    canvas_obj.setFont(font_name, font_size)
+    canvas_obj.setFillColor(HexColor(color_hex))
+    canvas_obj.drawString(x, y, name)
+
+# Registriere DejaVu Font für Unicode-Unterstützung (Geschlechtszeichen)
+def setup_fonts():
+    """Registriert DejaVu Font für Unicode-Unterstützung."""
+    try:
+        import pkg_resources
+        font_path = pkg_resources.resource_filename('reportlab', 'fonts/DejaVuSansMono.ttf')
+        if Path(font_path).exists():
+            pdfmetrics.registerFont(TTFont('DejaVu', font_path))
+            return 'DejaVu'
+    except:
+        pass
+    
+    # Fallback: Versuch system fonts
+    common_paths = [
+        '/System/Library/Fonts/DejaVuSans.ttf',
+        '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',
+        'C:\\Windows\\Fonts\\dejaVuSans.ttf',
+    ]
+    
+    for path in common_paths:
+        if Path(path).exists():
+            try:
+                pdfmetrics.registerFont(TTFont('DejaVu', path))
+                return 'DejaVu'
+            except:
+                pass
+    
+    # Fallback auf Helvetica
+    return 'Helvetica'
+
+UNICODE_FONT = setup_fonts()
 
 GENERATION_INFO = {
     1: {'name': 'Kanto', 'color': '#FF6B6B', 'range': (1, 151)},
@@ -184,11 +232,13 @@ def draw_pokemon_card(canvas_obj, pokemon, x, y, width, height, processed_images
     canvas_obj.drawString(x + width - type_width - 3, y + height - header_height + 5, type_text)
     
     german_name = pokemon.get('name_de', pokemon['name_en'])
-    canvas_obj.setFont("Helvetica-Bold", 8)
-    canvas_obj.setFillColor(HexColor("#2D2D2D"))
-    name_width = canvas_obj.stringWidth(german_name, "Helvetica-Bold", 8)
-    name_x = x + (width - name_width) / 2
-    canvas_obj.drawString(name_x, y + height - header_height + 11, german_name)
+    name_y = y + height - header_height + 11
+    
+    # Berechne x Position für zentrierten Text (ungefähre Breite)
+    approx_width = canvas_obj.stringWidth(german_name.replace('♀', 'o').replace('♂', 'o'), f"{UNICODE_FONT}-Bold", 8)
+    name_x = x + (width - approx_width) / 2
+    
+    draw_pokemon_name_with_symbols(canvas_obj, german_name, name_x, name_y, f"{UNICODE_FONT}-Bold", 8, "#2D2D2D")
     
     english_name = pokemon['name_en']
     canvas_obj.setFont("Helvetica", 5)
@@ -232,8 +282,10 @@ def generate_all_generations():
     script_dir = Path(__file__).parent
     project_dir = script_dir.parent
     data_dir = project_dir / "data"
+    output_dir = project_dir / "output"
     images_dir = project_dir / "images"
     
+    output_dir.mkdir(exist_ok=True)
     images_dir.mkdir(exist_ok=True)
     
     print("=" * 80)
@@ -250,7 +302,7 @@ def generate_all_generations():
                 print(f"\n⏭️  Generation {generation}: Datei nicht gefunden\n")
                 continue
             
-            output_file = data_dir / f"BinderPokedex_Gen{generation}.pdf"
+            output_file = output_dir / f"BinderPokedex_Gen{generation}.pdf"
             
             gen_info = GENERATION_INFO[generation]
             start_id, end_id = gen_info['range']
