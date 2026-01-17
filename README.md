@@ -1,9 +1,18 @@
 # 🎴 BinderPokedex
 
-Generiere professionelle **Pokémon-Kartensammlungen** als druckbare PDFs - für alle 9 Generationen mit farbigen Deckblättern!
+Generiere professionelle **Pokémon-Platzhalter-Karten** als druckbare PDFs - für alle 9 Generationen mit farbigen Deckblättern zum Ausdrucken und Einfügen in deinen Binder!
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
+[![Ko-fi](https://img.shields.io/badge/Support-Ko--fi-FF5E5B.svg?logo=kofi)](https://ko-fi.com/derflash)
+
+---
+
+**💰 Gefällt dir BinderPokedex? Unterstütze die Entwicklung mit einem Trinkgeld!**
+
+<a href='https://ko-fi.com/derflash' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+
+---
 
 ## 🎯 Features
 
@@ -12,8 +21,8 @@ Generiere professionelle **Pokémon-Kartensammlungen** als druckbare PDFs - für
 - 1000+ Pokémon mit offiziellen Sprites
 - PokéAPI Integration mit automatischem Caching
 
-📄 **Professionelle PDFs**
-- 3×3 Kartenlayout (9 pro Seite)
+📄 **Professionelle PDF-Vorlagen**
+- 3×3 Platzhalter-Kartenlayout (9 pro Seite)
 - Generationsspezifisches Deckblatt mit Branding
 - Gestrichelte Schnittlinien für Zuschnitt
 - Deutsche & englische Namen

@@ -9,7 +9,7 @@ The MCP server exposes the core BinderPokedex functionality as tools that can be
 ## Available Tools
 
 ### `generate_pdfs`
-Generate PDF binders for Pokémon collections across specified generations.
+Generate PDF binders with Pokémon card placeholders across specified generations.
 
 **Parameters:**
 - `generations` (string): Generations to generate ("1", "1-8", "1,3,5", or "all")

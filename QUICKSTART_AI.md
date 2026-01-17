@@ -87,7 +87,7 @@ Project Structure
 ## Tools Available to AI
 
 ### `generate_pdfs`
-**What it does:** Generate PDF binders for Pokémon collections
+**What it does:** Generate PDF binders with Pokémon card placeholders
 
 **Example:** "Create PDF binders for Gen 1-5"
 
