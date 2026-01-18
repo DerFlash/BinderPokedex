@@ -30,12 +30,12 @@ The MCP server is **automatically configured** in `.vscode/mcp.json`. When you o
 Open Copilot Chat (Ctrl+Shift+I / Cmd+Shift+I) and just ask:
 
 ```
-@binderokedex generiere PDF Binder für alle 8 Generationen
+@binderokedex generate PDF binders for all 8 generations in English
 ```
 
-Or in English:
+Or specify a different language:
 ```
-@binderokedex generate PDF binders for all 8 generations
+@binderokedex generate PDF binders for Gen 1-3 in German
 ```
 
 ### Available Commands
@@ -43,19 +43,22 @@ Or in English:
 Simply ask the AI to do things like:
 
 - **"Generate PDFs for generations 1 through 3"**
-  → Calls `generate_pdfs` with "1-3"
+  → Calls `generate_pdfs` with "1-3", uses English by default
 
-- **"Fetch the latest Pokémon data for generation 5"**
-  → Calls `fetch_pokemon` with generation 5
+- **"Create binders in French for all generations"**
+  → Calls `generate_pdfs` with language parameter "fr"
+
+- **"Fetch the latest Pokémon data"**
+  → Calls `fetch_pokemon` for data updates
 
 - **"Show me which generations are ready"**
-  → Calls `list_generations`
+  → Calls `list_status`
 
 - **"What's the status of the Galar region?"**
-  → Calls `get_generation_info` for generation 8
+  → Calls `list_status` and filters for generation 8
 
-- **"Update all generations and create new PDFs"**
-  → AI chains multiple tool calls together
+- **"Generate PDFs in German, Spanish, and Japanese"**
+  → AI chains multiple tool calls for different languages
 
 ---
 
@@ -78,8 +81,16 @@ Project Structure
 │   └── binder_pokedex_server.py
 ├── scripts/
 │   ├── generate_pdf.py
-│   └── fetch_pokemon_from_pokeapi.py
-└── data/ + output/
+│   ├── fetch_pokemon_from_pokeapi.py
+│   └── ...
+├── i18n/
+│   ├── __init__.py
+│   ├── languages.json
+│   └── translations.json
+├── data/
+│   └── pokemon_gen*.json
+└── output/
+    └── BinderPokedex_Gen*_*.pdf
 ```
 
 ---
@@ -89,22 +100,36 @@ Project Structure
 ### `generate_pdfs`
 **What it does:** Generate PDF binders with Pokémon card placeholders
 
-**Example:** "Create PDF binders for Gen 1-5"
+**Parameters:**
+- `generations`: "1", "1-8", "all", or "1,3,5"
+- `language`: "de", "en", "fr", "es", "it", "ja", "ko", "pt", "ru" (default: "en")
 
-### `fetch_pokemon`
-**What it does:** Download and cache Pokémon data from PokéAPI
+**Example:** "Create PDF binders for Gen 1-5 in Japanese"
 
-**Example:** "Download Gen 9 data"
-
-### `list_generations`
-**What it does:** Show status of all generations
+### `list_status`
+**What it does:** Show status of all generations and created PDFs
 
 **Example:** "Which generations do we have?"
 
-### `get_generation_info`
-**What it does:** Get details about a specific generation
+---
 
-**Example:** "Info about generation 3"
+## Multilingual PDFs
+
+The system supports **9 languages** with full localization:
+
+| Code | Language | Card Names | Type Names | Regions |
+|------|----------|-----------|-----------|---------|
+| `en` | English | Only English | English | English |
+| `de` | Deutsch | German | German | German |
+| `fr` | Français | French (+ English) | French | French |
+| `es` | Español | Spanish (+ English) | Spanish | Spanish |
+| `it` | Italiano | Italian (+ English) | Italian | Italian |
+| `ja` | 日本語 | Japanese (+ English) | Japanese | Japanese |
+| `ko` | 한국어 | Korean (+ English) | Korean | Korean |
+| `pt` | Português | Portuguese (+ English) | Portuguese | Portuguese |
+| `ru` | Русский | Russian (+ English) | Russian | Russian |
+
+**Note:** For non-English languages, the English name appears as a secondary label for clarity.
 
 ---
 
@@ -152,10 +177,10 @@ Opens interactive UI at `http://localhost:6274`
 ## Example Workflow
 
 1. **Morning**: Clone project, open in VS Code
-2. **Ask Copilot**: "Generate PDFs for all generations"
-3. **Copilot runs**: `generate_pdfs("1-8")`
-4. **Minutes later**: All 8 PDFs are ready in `output/`
-5. **Ask again**: "Show me the file sizes"
+2. **Ask Copilot**: "Generate English PDFs for all generations"
+3. **Copilot runs**: `generate_pdfs("1-8", "en")`
+4. **Minutes later**: All 8 PDFs are ready in `output/BinderPokedex_Gen*_EN.pdf`
+5. **Ask again**: "Now create German versions"
 6. **Done!** No manual steps needed
 
 ---
@@ -164,7 +189,7 @@ Opens interactive UI at `http://localhost:6274`
 
 - **Batch operations**: Ask AI to do multiple things at once
   ```
-  "Fetch Gen 9 data, then generate PDFs for Gen 1-8, then show me the results"
+  "Generate PDFs for Gen 1-8 in English, German, and Japanese"
   ```
 
 - **Error recovery**: AI automatically handles and reports issues
@@ -174,7 +199,12 @@ Opens interactive UI at `http://localhost:6274`
 
 - **Status checks**: Quick info gathering
   ```
-  "Tell me which generations are complete and how many Pokémon we have"
+  "Which PDFs have been created and what languages?"
+  ```
+
+- **Language switching**: Easy multi-language support
+  ```
+  "Generate the same binders in all supported languages"
   ```
 
 ---
@@ -190,4 +220,4 @@ Opens interactive UI at `http://localhost:6274`
 
 ---
 
-**Questions?** Check the main README.md or docs/MCP_INTEGRATION.md for more details.
+**Questions?** Check the main [README.md](README.en.md) or [docs/MCP_INTEGRATION.md](docs/MCP_INTEGRATION.md) for more details.

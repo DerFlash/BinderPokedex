@@ -1,5 +1,17 @@
 # MCP Server Integration Guide
 
+## Overview
+
+The BinderPokedex MCP Server enables seamless integration with Claude, GitHub Copilot, and other AI assistants. Generate multilingual PDF collections through natural conversation.
+
+### Features
+- 🌍 **9 Language Support**: DE, EN, FR, ES, IT, JA, KO, PT, RU
+- 🤖 **AI-Native**: Talk to Claude or Copilot naturally
+- ⚡ **Local & Fast**: Runs on your machine
+- 🔄 **Seamless**: Automatic image download and processing
+
+---
+
 ## Quick Start: Using BinderPokedex with Claude Desktop
 
 This guide shows you how to connect BinderPokedex MCP Server to Claude Desktop so you can delegate PDF generation and data fetching tasks to Claude.

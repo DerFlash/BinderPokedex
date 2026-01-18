@@ -1,36 +1,38 @@
-# Bekannte Probleme & TODOs
+# Known Issues & TODOs
 
-## Unicode-Geschlechtszeichen in PDFs
+## ✅ Resolved in v2.0.0
 
-### Problem
-Pokémon mit Geschlechtssymbolen (♀/♂) wie Nidoran, Volbeat, Illumise etc. werden in den PDF-Dateien mit diesen schönen Unicode-Zeichen nicht korrekt dargestellt. Stattdessen erscheinen schwarze Kästen oder andere Darstellungsprobleme.
+### Unicode Gender Symbols
+- Gender symbols (♀/♂) are correctly displayed as `(w)` / `(m)`
+- Works reliably on all systems
 
-### Aktuelle Lösung (v1.0.1+)
-Derzeit werden die Geschlechtszeichen durch ASCII-Alternativen ersetzt:
-- `♀` → `(w)` (weiblich)
-- `♂` → `(m)` (männlich)
+### CJK Text Rendering
+- Japanese, Korean, Simplified & Traditional Chinese fully supported
+- Uses Songti TrueType fonts
+- All 9 languages tested
 
-**Beispiel:**
-- Nidoran (w) statt Nidoran♀
-- Nidoran (m) statt Nidoran♂
+### Image Support
+- Official Pokémon artwork downloaded from PokéAPI
+- Transparent backgrounds intelligently removed
+- Aggressive compression results in small file sizes (200-400 KB per generation)
 
-Dies ist zuverlässig und funktioniert auf allen Systemen, wirkt aber weniger elegant.
-
-### TODO für Community
-Wenn du eine bessere Lösung hast, sind wir offen für Beiträge! Mögliche Ansätze:
-- Custom Symbol-Fonts in die PDF einbetten
-- Unicode-Zeichen in Bildern rendern
-- Alternative PDF-Generierungs-Bibliotheken testen (z.B. PDFKit)
-- ReportLab-Configuration für bessere Unicode-Unterstützung
-
-**Falls du eine Lösung hast:**
-1. Forke das Repo
-2. Implementiere den Fix in `scripts/generate_pdf.py`
-3. Teste die PDFs
-4. Erstelle einen Pull Request mit Erklärung
+### English Subtitles
+- English name displayed as small subtitle (4pt) on non-English language cards
+- Improves readability for international collectors
+- Properly centered and positioned below main name
 
 ---
 
-## Weitere bekannte Probleme
+## Current Limitations
 
-Keine weiteren bekannten Probleme. Wenn du eines findest, erstelle bitte ein Issue! 🐛
+No known critical issues. If you find one, please create an Issue! 🐛
+
+---
+
+## Possible Future Improvements
+
+- [ ] Test WebP format for even better compression
+- [ ] Add more languages
+- [ ] CLI options for image quality / size
+- [ ] Batch processing for multiple languages simultaneously
+- [ ] MCP Server improvements

@@ -1,41 +1,41 @@
-# 🤝 Beitragen zu BinderPokedex
+# 🤝 Contributing to BinderPokedex
 
-Danke, dass du zu diesem Projekt beitragen möchtest! Hier ist eine Anleitung, wie du es richtig machst.
+Thank you for your interest in contributing to this project! Here's a guide on how to do it correctly.
 
 ---
 
-## 🚀 Erste Schritte
+## 🚀 Getting Started
 
-### 1. Repository Forken
-Klicke oben rechts auf "Fork", um eine Kopie dieses Projekts in deinem GitHub-Konto zu erstellen.
+### 1. Fork the Repository
+Click the "Fork" button in the top right corner to create a copy of this project in your GitHub account.
 
-### 2. Lokale Kopie klonen
+### 2. Clone Your Local Copy
 ```bash
-git clone https://github.com/DEIN_BENUTZERNAME/BinderPokedex.git
+git clone https://github.com/YOUR_USERNAME/BinderPokedex.git
 cd BinderPokedex
 ```
 
-### 3. Development-Umgebung einrichten
+### 3. Set Up Your Development Environment
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate  # Mac/Linux
-# oder: .venv\Scripts\activate  # Windows
+# or: .venv\Scripts\activate  # Windows
 
 pip install -r requirements.txt
 ```
 
-### 4. Feature-Branch erstellen
+### 4. Create a Feature Branch
 ```bash
-git checkout -b feature/beschreibung-deiner-änderung
+git checkout -b feature/description-of-your-changes
 ```
 
 ---
 
-## 📝 Commit-Richtlinien
+## 📝 Commit Guidelines
 
-Schreibe aussagekräftige Commit-Messages auf Deutsch oder Englisch:
+Write meaningful commit messages in English:
 
-**Gute Beispiele:**
+**Good Examples:**
 ```
 - Add German type names for Gen 2
 - Fix black background in Pokemon images  
@@ -43,7 +43,7 @@ Schreibe aussagekräftige Commit-Messages auf Deutsch oder Englisch:
 - Add support for custom paper sizes
 ```
 
-**Schlechte Beispiele:**
+**Bad Examples:**
 ```
 - fix bug
 - changes
@@ -52,106 +52,106 @@ Schreibe aussagekräftige Commit-Messages auf Deutsch oder Englisch:
 
 ---
 
-## 🎯 Beitrag-Ideen
+## 🎯 Contribution Ideas
 
-### 🌟 Große Features
-- [ ] Weitere Pokémon-Generationen (Gen 9+)
-- [ ] Alternative Kartenlayouts (2×2, 4×4 pro Seite)
-- [ ] Shiny-Varianten
-- [ ] Mehrsprachige Unterstützung (EN, FR, ES, etc.)
+### 🌟 Major Features
+- [ ] Additional Pokémon generations (Gen 10+)
+- [ ] Alternative card layouts (2×2, 4×4 per page)
+- [ ] Shiny variants
+- [ ] Additional language support
 
-### 🐛 Bug-Fixes & Verbesserungen
-- [ ] Unicode-Geschlechtszeichen in PDFs (siehe KNOWN_ISSUES.md)
-- [ ] Weitere PDF-Verarbeitungsoptimierungen
-- [ ] Automatische Tests
+### 🐛 Bug Fixes & Improvements
+- [ ] Further PDF optimization
+- [ ] Automated tests
+- [ ] Performance improvements
 
-### 📚 Dokumentation
-- [ ] Übersetzungen in andere Sprachen
-- [ ] Video-Tutorials
-- [ ] Verbesserte Druckanleitungen
-- [ ] FAQ erweitern
+### 📚 Documentation
+- [ ] Translations to other languages
+- [ ] Video tutorials
+- [ ] Improved printing guides
+- [ ] FAQ expansion
 
 ### 🎨 Design
-- [ ] Neue Farbschemata für Generationen
-- [ ] Kartenseiten-Rückseite (optional)
-- [ ] Alternative Design-Vorlagen
+- [ ] New color schemes
+- [ ] Card back design (optional)
+- [ ] Alternative templates
 
 ---
 
-## 📋 Pull Request Prozess
+## 📋 Pull Request Process
 
-### 1. Code ändern
-Implementiere deine Änderung und teste sie gründlich.
+### 1. Make Your Changes
+Implement your change and test it thoroughly.
 
 ```bash
-# Teste die PDF-Generierung
+# Test PDF generation
 python scripts/generate_pdf.py
 
-# Überprüfe das Ergebnis
-open data/BinderPokedex_Gen1.pdf  # Mac
-# oder: xdg-open data/BinderPokedex_Gen1.pdf  # Linux
+# Check the result
+open output/pokemon_gen1_en.pdf  # Mac
+# or: xdg-open output/pokemon_gen1_en.pdf  # Linux
 ```
 
-### 2. Änderungen committen
+### 2. Commit Your Changes
 ```bash
 git add .
-git commit -m "Aussagekräftige Nachricht hier"
+git commit -m "Meaningful message here"
 ```
 
-### 3. Zu GitHub pushen
+### 3. Push to GitHub
 ```bash
-git push origin feature/beschreibung-deiner-änderung
+git push origin feature/description-of-your-changes
 ```
 
-### 4. Pull Request öffnen
-- Gehe zu deinem Fork auf GitHub
-- Klicke auf "New Pull Request"
-- Wähle den `main` Branch als Ziel
-- Schreibe eine detaillierte Beschreibung
-- Submitten!
+### 4. Open a Pull Request
+- Go to your fork on GitHub
+- Click "New Pull Request"
+- Select `main` as the target branch
+- Write a detailed description
+- Submit!
 
-### 5. Review abwarten
-Kommentare und Verbesserungsvorschläge sind Teil des Prozesses. Nimm sie konstruktiv an!
+### 5. Wait for Review
+Comments and improvement suggestions are part of the process. Accept them constructively!
 
 ---
 
-## 📋 PR-Beschreibungs-Template
+## 📋 PR Description Template
 
 ```markdown
-## 📝 Beschreibung
-Kurze Zusammenfassung, was diese PR bewirkt.
+## 📝 Description
+Brief summary of what this PR does.
 
-## 🔄 Typ der Änderung
-- [ ] 🐛 Bug-Fix
-- [ ] ✨ Neue Funktion
-- [ ] 📚 Dokumentation
+## 🔄 Type of Change
+- [ ] 🐛 Bug fix
+- [ ] ✨ New feature
+- [ ] 📚 Documentation
 - [ ] 🎨 Design/Style
 - [ ] ♻️ Refactoring
 
 ## 🧪 Testing
-Erkläre, wie die Änderung getestet wurde:
-- [ ] Lokal getestet
-- [ ] PDF-Generierung erfolgreich
-- [ ] Kein bekannter Fehler vorhanden
+Explain how the change was tested:
+- [ ] Tested locally
+- [ ] PDF generation successful
+- [ ] No known errors
 
-## 📸 Screenshots (falls relevant)
-Falls visuelle Änderungen: hier Bilder einfügen
+## 📸 Screenshots (if applicable)
+If visual changes: attach images here
 
 ## ✅ Checklist
-- [ ] Mein Code folgt dem Style dieses Projekts
-- [ ] Ich habe Kommentare hinzugefügt wo nötig
-- [ ] Ich habe die Dokumentation aktualisiert
-- [ ] Keine neuen Warnings beim Ausführen
+- [ ] My code follows the project style
+- [ ] I've added comments where needed
+- [ ] I've updated documentation
+- [ ] No new warnings when running
 ```
 
 ---
 
-## 🎓 Coding-Richtlinien
+## 🎓 Coding Guidelines
 
-### Python-Style
-Folge [PEP 8](https://pep8.org/):
+### Python Style
+Follow [PEP 8](https://pep8.org/):
 ```python
-# Gut
+# Good
 def generate_pokemon_cards(generation, output_path):
     """Generate Pokemon cards as PDF."""
     cards = []
@@ -160,7 +160,7 @@ def generate_pokemon_cards(generation, output_path):
         cards.append(card)
     return cards
 
-# Nicht so gut
+# Not so good
 def gen_cards(gen,out):
     c=[]
     for p in get_pkmn(gen):
@@ -168,22 +168,22 @@ def gen_cards(gen,out):
     return c
 ```
 
-### Kommentare
+### Comments
 ```python
-# Verwende Deutsche oder Englische Kommentare konsistent
-# Erkläre das "Warum", nicht das "Was" (Code zeigt das bereits)
+# Use English comments consistently
+# Explain the "why", not the "what" (code shows that already)
 
-# Gut:
-# Die Bilder werden in RGBA konvertiert, da PNG-Transparenz
-# schwarze Bereiche im PDF erzeugt
+# Good:
+# Images are converted to RGBA because PNG transparency
+# creates black areas in the PDF
 img = Image.open(path).convert('RGBA')
 
-# Nicht nötig:
-# Öffne das Bild
+# Not necessary:
+# Open the image
 img = Image.open(path)
 ```
 
-### Funktions-Dokumentation
+### Function Documentation
 ```python
 def draw_pokemon_card(canvas, pokemon, x, y):
     """
@@ -204,53 +204,53 @@ def draw_pokemon_card(canvas, pokemon, x, y):
 
 ## 🧪 Testing
 
-### Vor dem Push testen:
+### Test Before Pushing:
 ```bash
-# 1. Virtual Environment aktivieren
+# 1. Activate virtual environment
 source .venv/bin/activate
 
-# 2. PDF generieren
+# 2. Generate PDF
 python scripts/generate_pdf.py
 
-# 3. Überprüfen, dass keine Fehler auftreten
-# 4. PDF öffnen und visuell prüfen
+# 3. Check that no errors occur
+# 4. Open PDF and verify visually
 
-# 5. Optional: Andere Generationen testen
-# (wenn du an extract_pokemon_data.py arbeitest)
+# 5. Optional: Test other generations
+# (if you're working on fetch_pokemon_from_pokeapi.py)
 ```
 
-### Was sollte getestet werden?
-- ✅ PDF generiert ohne Fehler
-- ✅ Alle Pokemon sind enthalten
-- ✅ Schnittlinien sind sichtbar
-- ✅ Bilder werden angezeigt
-- ✅ Deutsch und Englisch korrekt
-- ✅ Seitenlayout stimmt (3×3 Grid)
+### What Should Be Tested?
+- ✅ PDF generates without errors
+- ✅ All Pokemon are included
+- ✅ Cutting lines are visible
+- ✅ Images are displayed
+- ✅ Languages are correct
+- ✅ Page layout is correct (3×3 grid)
 
 ---
 
-## 📞 Support & Fragen
+## 📞 Support & Questions
 
-- **Fragen?** Öffne eine [Discussion](../../discussions)
-- **Bug gefunden?** Erstelle ein [Issue](../../issues)
-- **Nicht sicher?** Frag in den [Discussions](../../discussions) - lieber fragen als falsch implementieren!
+- **Questions?** Open a [Discussion](../../discussions)
+- **Found a bug?** Create an [Issue](../../issues)
+- **Not sure?** Ask in [Discussions](../../discussions) - better to ask than to implement incorrectly!
 
 ---
 
 ## 📜 Code of Conduct
 
-Wir sind eine einladende und respektvolle Community. Bitte:
-- ✅ Sei freundlich und konstruktiv
-- ✅ Höre auf Feedback
-- ✅ Respektiere unterschiedliche Meinungen
-- ✅ Helfe anderen
+We are a welcoming and respectful community. Please:
+- ✅ Be friendly and constructive
+- ✅ Listen to feedback
+- ✅ Respect different opinions
+- ✅ Help others
 
 ---
 
-## 🏆 Anerkennung
+## 🏆 Recognition
 
-Alle Contributors werden in unserem [Hall of Fame](README.md#-danksagungen) erwähnt!
+All contributors are mentioned in our [Hall of Fame](../README.md)!
 
 ---
 
-**Danke, dass du dieses Projekt besser machst! 🎉**
+**Thank you for making this project better! 🎉**

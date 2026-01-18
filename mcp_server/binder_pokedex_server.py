@@ -39,30 +39,32 @@ GENERATIONS = {
     5: ("Unova", 156),
     6: ("Kalos", 72),
     7: ("Alola", 88),
-    8: ("Galar", 96),
-    9: ("Paldea", 0),
+    8: ("Galar", 89),
+    9: ("Paldea", 120),
 }
 
 
 @mcp.tool()
 async def generate_pdfs(
-    generations: str = "1-8",
+    generations: str = "1-9",
+    language: str = "en",
 ) -> dict[str, Any]:
     """
     Generate PDF binders for Pokémon collections.
     
     Args:
-        generations: Comma-separated or range notation (e.g., "1", "1,3,5", "1-8", "all")
+        generations: Comma-separated or range notation (e.g., "1", "1,3,5", "1-9", "all")
+        language: Language code (de, en, fr, es, it, ja, ko, zh_hans, zh_hant). Default: en
     
     Returns:
         Dictionary with status and results
     """
-    logger.info(f"Starting PDF generation for generations: {generations}")
+    logger.info(f"Starting PDF generation for generations: {generations}, language: {language}")
     
     try:
         # Determine which generations to generate
         if generations.lower() == "all":
-            gen_list = list(range(1, 9))
+            gen_list = list(range(1, 10))
         elif "-" in generations:
             parts = generations.split("-")
             start, end = int(parts[0].strip()), int(parts[1].strip())
@@ -70,12 +72,12 @@ async def generate_pdfs(
         else:
             gen_list = [int(g.strip()) for g in generations.split(",")]
         
-        # Validate generations (only 1-8 are available)
-        gen_list = [g for g in gen_list if 1 <= g <= 8]
+        # Validate generations (1-9 are available)
+        gen_list = [g for g in gen_list if 1 <= g <= 9]
         if not gen_list:
             return {
                 "success": False,
-                "error": "Invalid generations. Valid options are: 1-8 or 'all'",
+                "error": "Invalid generations. Valid options are: 1-9 or 'all'",
             }
         
         logger.info(f"Generating PDFs for generations: {gen_list}")
@@ -84,13 +86,13 @@ async def generate_pdfs(
         project_root = Path(__file__).parent.parent
         script_path = project_root / "scripts" / "generate_pdf.py"
         
-        # Run the script
+        # Run the script with language parameter
         result = subprocess.run(
-            [sys.executable, str(script_path)],
+            [sys.executable, str(script_path), "--language", language, "--generation", generations],
             cwd=str(project_root),
             capture_output=True,
             text=True,
-            timeout=600,
+            timeout=900,
         )
         
         if result.returncode != 0:
@@ -102,21 +104,24 @@ async def generate_pdfs(
         
         # Check which files were created
         output_dir = project_root / "output"
+        lang_dir = output_dir / language
         generated_files = {}
         for gen in gen_list:
-            pdf_path = output_dir / f"BinderPokedex_Gen{gen}.pdf"
+            pdf_path = lang_dir / f"pokemon_gen{gen}_{language}.pdf"
             if pdf_path.exists():
-                size_mb = round(pdf_path.stat().st_size / (1024 * 1024), 2)
+                size_kb = round(pdf_path.stat().st_size / 1024, 1)
                 generated_files[gen] = {
-                    "file": f"BinderPokedex_Gen{gen}.pdf",
-                    "size_mb": size_mb,
+                    "file": f"{language}/pokemon_gen{gen}_{language}.pdf",
+                    "size_kb": size_kb,
                     "region": GENERATIONS[gen][0],
+                    "language": language,
                 }
         
         logger.info(f"PDF generation completed: {generated_files}")
         return {
             "success": True,
             "generations_requested": gen_list,
+            "language": language,
             "files_generated": generated_files,
             "output_directory": "output/",
         }
@@ -124,7 +129,7 @@ async def generate_pdfs(
     except subprocess.TimeoutExpired:
         return {
             "success": False,
-            "error": "PDF generation timed out (exceeded 10 minutes)",
+            "error": "PDF generation timed out (exceeded 15 minutes)",
         }
     except Exception as e:
         error_msg = f"PDF generation failed: {str(e)}"
@@ -152,29 +157,32 @@ async def list_status() -> dict[str, Any]:
         
         generations = {}
         for gen_num, (region_name, pokemon_count) in GENERATIONS.items():
-            pdf_path = output_dir / f"BinderPokedex_Gen{gen_num}.pdf"
-            cache_path = data_dir / f"gen_{gen_num:02d}.json"
+            # Check for PDFs in all language directories: output/{lang}/pokemon_gen{N}_{lang}.pdf
+            pdf_files = list(output_dir.glob(f"*/pokemon_gen{gen_num}_*.pdf"))
+            data_path = data_dir / f"pokemon_gen{gen_num}.json"
             
             info = {
                 "region": region_name,
                 "pokemon_count": pokemon_count,
-                "pdf_generated": pdf_path.exists(),
-                "data_cached": cache_path.exists(),
+                "pdf_generated": len(pdf_files) > 0,
+                "pdf_languages": sorted([f.parent.name for f in pdf_files]),
+                "data_cached": data_path.exists(),
             }
             
-            if pdf_path.exists():
-                size_mb = round(pdf_path.stat().st_size / (1024 * 1024), 2)
-                info["pdf_size_mb"] = size_mb
+            if pdf_files:
+                total_size_kb = sum(f.stat().st_size for f in pdf_files) / 1024
+                info["total_pdf_size_kb"] = round(total_size_kb, 1)
+                info["pdf_count"] = len(pdf_files)
             
             generations[gen_num] = info
         
         # Count generated PDFs
-        generated_count = sum(1 for g in generations.values() if g["pdf_generated"])
+        total_pdfs = sum(g.get("pdf_count", 0) for g in generations.values())
         
         return {
             "success": True,
             "total_generations": len(GENERATIONS),
-            "generations_with_pdfs": generated_count,
+            "total_pdfs_generated": total_pdfs,
             "generations": generations,
         }
     
@@ -185,20 +193,6 @@ async def list_status() -> dict[str, Any]:
             "success": False,
             "error": error_msg,
         }
-
-
-def main() -> None:
-    """Main entry point for the MCP server."""
-    logger.info("Starting BinderPokedex MCP Server")
-    try:
-        mcp.run(transport="stdio")
-    except Exception as e:
-        logger.error(f"Server error: {e}", exc_info=True)
-        sys.exit(1)
-
-
-if __name__ == "__main__":
-    main()
 
 
 def main() -> None:
