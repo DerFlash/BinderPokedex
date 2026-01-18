@@ -102,7 +102,9 @@ GAP_X = 5 * mm
 GAP_Y = 5 * mm
 
 # Page margins
-PAGE_MARGIN = 10 * mm
+# Adjusted from 10mm to 4.75mm to prevent right-side cutoff on A4 (210mm width)
+# Layout: 3 cards × 63.5mm + 2 gaps × 5mm = 200.5mm, needs 4.75mm margins on each side
+PAGE_MARGIN = 4.75 * mm
 
 # Page size (A4)
 from reportlab.lib.pagesizes import A4
@@ -183,7 +185,11 @@ POKEMON_TYPES = {
 # PDF OUTPUT CONFIGURATION
 # ============================================================================
 
-OUTPUT_DIR = 'output'
+from pathlib import Path
+
+# Output directory: {project_root}/output/
+# Calculate relative to this file's location: scripts/lib/constants.py
+OUTPUT_DIR = Path(__file__).parent.parent.parent / 'output'
 PDF_PREFIX = 'pokemon_gen'
 PDF_EXTENSION = '.pdf'
 

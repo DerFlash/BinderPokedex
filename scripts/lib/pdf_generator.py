@@ -199,22 +199,45 @@ class PDFGenerator:
     def _draw_cutting_guides(self, canvas_obj):
         """
         Draw cutting guides as a continuous grid.
-        Lines are drawn at exact positions where cards should be cut.
+        Lines are drawn in the middle of the gaps between cards.
+        Outer frame is drawn around all cards with same offset as gaps.
         """
-        cut_offset = 2 * mm
         canvas_obj.setLineWidth(0.5)
         canvas_obj.setStrokeColor(HexColor("#DDDDDD"))
         canvas_obj.setDash(2, 2)
         
-        # Vertical lines
-        for col in range(CARDS_PER_ROW + 1):
-            x = PAGE_MARGIN + col * (CARD_WIDTH + GAP_X) - cut_offset
-            canvas_obj.line(x, PAGE_MARGIN - cut_offset, x, PAGE_HEIGHT - PAGE_MARGIN + cut_offset)
+        # Calculate outer frame bounds (with GAP offset)
+        # Top frame
+        frame_top = PAGE_HEIGHT - PAGE_MARGIN + GAP_Y / 2
+        # Bottom frame
+        frame_bottom = PAGE_HEIGHT - PAGE_MARGIN - CARDS_PER_COLUMN * CARD_HEIGHT - (CARDS_PER_COLUMN - 1) * GAP_Y - GAP_Y / 2
         
-        # Horizontal lines
+        # Left frame
+        frame_left = PAGE_MARGIN - GAP_X / 2
+        # Right frame
+        frame_right = PAGE_MARGIN + CARDS_PER_ROW * CARD_WIDTH + (CARDS_PER_ROW - 1) * GAP_X + GAP_X / 2
+        
+        # Vertical lines: outer frame left and right, plus lines between cards
+        for col in range(CARDS_PER_ROW + 1):
+            if col == 0 or col == CARDS_PER_ROW:
+                # Outer frame lines
+                x = frame_left if col == 0 else frame_right
+            else:
+                # Lines in middle of gaps between cards
+                x = PAGE_MARGIN + col * CARD_WIDTH + (col - 1) * GAP_X + GAP_X / 2
+            
+            canvas_obj.line(x, frame_bottom, x, frame_top)
+        
+        # Horizontal lines: outer frame top and bottom, plus lines between cards
         for row in range(CARDS_PER_COLUMN + 1):
-            y = PAGE_HEIGHT - PAGE_MARGIN - row * (CARD_HEIGHT + GAP_Y) + cut_offset
-            canvas_obj.line(PAGE_MARGIN - cut_offset, y, PAGE_WIDTH - PAGE_MARGIN + cut_offset, y)
+            if row == 0 or row == CARDS_PER_COLUMN:
+                # Outer frame lines
+                y = frame_top if row == 0 else frame_bottom
+            else:
+                # Lines in middle of gaps between cards
+                y = PAGE_HEIGHT - PAGE_MARGIN - row * CARD_HEIGHT - (row - 1) * GAP_Y - GAP_Y / 2
+            
+            canvas_obj.line(frame_left, y, frame_right, y)
         
         canvas_obj.setDash()
     
@@ -316,6 +339,19 @@ class PDFGenerator:
         title_y = PAGE_HEIGHT - stripe_height + (stripe_height * 0.55)
         canvas_obj.drawCentredString(PAGE_WIDTH / 2, title_y, "BinderPokedex")
         
+        # Version info - top right corner
+        canvas_obj.setFont("Helvetica", 7)
+        canvas_obj.setFillColor(HexColor("#FFFFFF"))
+        version_text = f"Print Edition v1.0 | {datetime.now().strftime('%Y-%m-%d')}"
+        canvas_obj.drawString(PAGE_WIDTH - 70 * mm, PAGE_HEIGHT - 15, version_text)
+        
+        # Language/Project info - top left corner
+        canvas_obj.setFont("Helvetica", 7)
+        canvas_obj.setFillColor(HexColor("#FFFFFF"))
+        lang_name = LANGUAGES.get(self.language, {}).get('name', self.language)
+        project_text = f"Language: {lang_name} | Gen {self.generation}"
+        canvas_obj.drawString(15 * mm, PAGE_HEIGHT - 15, project_text)
+        
         # Generation number
         canvas_obj.setFont("Helvetica", 28)
         canvas_obj.setFillColor(HexColor(gen_color))
@@ -353,11 +389,27 @@ class PDFGenerator:
         line_y = count_text_y - 50
         canvas_obj.line(50 * mm, line_y, PAGE_WIDTH - 50 * mm, line_y)
         
-        # Footer
-        canvas_obj.setFont("Helvetica", 8)
-        canvas_obj.setFillColor(HexColor("#CCCCCC"))
-        date_text = f"Generated: {datetime.now().strftime('%Y-%m-%d')}"
-        canvas_obj.drawCentredString(PAGE_WIDTH / 2, 20, date_text)
+        # Print instructions
+        canvas_obj.setFont("Helvetica", 9)
+        canvas_obj.setFillColor(HexColor("#333333"))
+        instr_y = 50
+        canvas_obj.drawCentredString(PAGE_WIDTH / 2, instr_y, "Druckanleitung / Print Guide:")
+        canvas_obj.setFont("Helvetica", 7)
+        canvas_obj.setFillColor(HexColor("#666666"))
+        instructions = [
+            "• Randlos drucken / Print borderless for best results",
+            "• Schnittlinien beachten / Follow cutting lines",
+        ]
+        instr_y -= 8
+        for instr in instructions:
+            canvas_obj.drawCentredString(PAGE_WIDTH / 2, instr_y, instr)
+            instr_y -= 6
+        
+        # Footer - Project info
+        canvas_obj.setFont("Helvetica", 6)
+        canvas_obj.setFillColor(HexColor("#AAAAAA"))
+        date_text = f"Generated: {datetime.now().strftime('%Y-%m-%d')} | BinderPokedex Project | github.com/BinderPokedex"
+        canvas_obj.drawCentredString(PAGE_WIDTH / 2, 8, date_text)
     
     def _draw_card(self, canvas_obj, pokemon_data: dict, x: float, y: float):
         """
@@ -545,6 +597,11 @@ class PDFGenerator:
                 
                 # Check if we need a new page (9 cards per page)
                 if card_count % (CARDS_PER_ROW * CARDS_PER_COLUMN) == 0 and card_count > 0:
+                    # Add footer before showing page
+                    c.setFont("Helvetica", 6)
+                    c.setFillColor(HexColor("#AAAAAA"))
+                    footer_text = f"BinderPokedex Project | github.com/BinderPokedex"
+                    c.drawCentredString(PAGE_WIDTH / 2, 8, footer_text)
                     c.showPage()
                     page_number += 1
                     logger.debug(f"  Page {page_number} created ({card_count}/{len(self.pokemon_list)} cards)")
@@ -563,6 +620,12 @@ class PDFGenerator:
                 # Draw the card
                 self._draw_card(c, pokemon, x, y)
                 card_count += 1
+            
+            # Add footer to last page before showing it
+            c.setFont("Helvetica", 6)
+            c.setFillColor(HexColor("#AAAAAA"))
+            footer_text = f"BinderPokedex Project | github.com/BinderPokedex"
+            c.drawCentredString(PAGE_WIDTH / 2, 8, footer_text)
             
             # Final page
             c.showPage()
