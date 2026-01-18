@@ -8,213 +8,78 @@ Erstelle **professionelle Pokémon-Binder** in 9 Sprachen! Alle 81 PDFs (9 Gener
 
 ---
 
-## 📥 **Fertige PDFs herunterladen**
+## 🎨 Vorschau
 
-### ⭐ Für die meisten Nutzer - einfach herunterladen und drucken!
-
-**Alle 81 PDFs fertig (v2.0):**
-
-| Format | Link | Größe | Sprachen |
-|--------|------|-------|----------|
-| **Alles-in-Einem** | [binderpokedex-v2.0-all-pdfs.tar.gz](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-all-pdfs.tar.gz) | 12 MB | Alle 9 (in Ordnern) |
-
-**Oder nach Sprache (9 Dateien, je 1,2-1,8 MB):**
-
-🇩🇪 [Deutsch](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-de.zip) | 🇬🇧 [English](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-en.zip) | 🇫🇷 [Français](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-fr.zip) | 🇪🇸 [Español](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-es.zip) | 🇮🇹 [Italiano](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-it.zip)
-
-🇯🇵 [日本語](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-ja.zip) | 🇰🇷 [한국어](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-ko.zip) | 🇨🇳 [简体中文](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-zh_hans.zip) | 🇹🇼 [繁體中文](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-zh_hant.zip)
-
-**✅ Einfach entpacken, öffnen und drucken!**
+![BinderPokedex Preview](docs/images/binderdex-preview.png)
 
 ---
 
-## 🚀 Für Entwickler - Selbst generieren
+## 📥 Fertige PDFs Herunterladen
 
-✨ **Multi-Generation Support**
-- Alle 8 Pokémon-Generationen (Kanto bis Galar)
-- 1000+ Pokémon mit offiziellen Sprites
-- PokéAPI Integration mit automatischem Caching
+### Für normale Nutzer - einfach laden & drucken!
 
-📄 **Professionelle PDF-Vorlagen**
-- 3×3 Platzhalter-Kartenlayout (9 pro Seite)
-- Generationsspezifisches Deckblatt mit Branding
-- Gestrichelte Schnittlinien für Zuschnitt
-- Deutsche & englische Namen
-- A4-Format, druckeroptimiert
+**Alle 81 PDFs (v2.0):** [Alles-in-Einem (12 MB)](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-all-pdfs.tar.gz)
 
-🌍 **Mehrsprachig** 
-- Unterstützte Pokémon-Namen: **7 Sprachen** (DE, EN, ES, FR, IT, JA, KO)
-- Sprachparameter: `--language de|en|es|fr|it|ja|ko`
-- PokéAPI bietet keine Daten für Portugiesisch und Russisch
-- [→ Sprach-Details](docs/LANGUAGE_REQUIREMENTS.md)
+**Nach Sprache:** 🇩🇪 [DE](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-de.zip) | 🇬🇧 [EN](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-en.zip) | 🇫🇷 [FR](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-fr.zip) | 🇪🇸 [ES](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-es.zip) | 🇮🇹 [IT](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-it.zip) | 🇯🇵 [JA](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-ja.zip) | 🇰🇷 [KO](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-ko.zip) | 🇨🇳 [ZH](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-zh_hans.zip) | 🇹🇼 [ZH-T](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-zh_hant.zip)
 
-⚡ **Optimiert**
-- Parallele Bildverarbeitung (4 Worker)
-- Automatische Fallback-Quellen
-- Detaillierte Progress-Updates
-- Generiert alle 8 Generationen in ~2 Minuten
+✅ Entpacken, öffnen, drucken!
 
-## 📊 Generationen-Übersicht
+---
 
-| Gen | Region | Pokémon | PDF-Seiten | Status |
-|-----|--------|---------|-----------|--------|
-| 1 | Kanto | 151 | 18 | ✅ |
-| 2 | Johto | 100 | 13 | ✅ |
-| 3 | Hoenn | 135 | 16 | ✅ |
-| 4 | Sinnoh | 107 | 13 | ✅ |
-| 5 | Unova | 156 | 19 | ✅ |
-| 6 | Kalos | 72 | 9 | ✅ |
-| 7 | Alola | 88 | 11 | ✅ |
-| 8 | Galar | 96 | 12 | ✅ |
+## 🚀 Für Entwickler
 
-**Gesamt: 1025 Pokémon**
-
-## 📸 Vorschau
-
-![BinderPokedex Preview - Gen1 Deckblatt und Kartenseite](docs/images/binderdex-preview.png)
-
-## 🚀 Quick Start
-
-### Mit AI-Tools in VS Code (Empfohlen!) 🤖
+### PDFs selbst generieren
 
 ```bash
+# Clone & Setup
 git clone https://github.com/DerFlash/BinderPokedex.git
 cd BinderPokedex
-code .
-```
-
-Öffne **GitHub Copilot Chat** oder **Claude** und sag einfach:
-```
-"generiere PDF Binder für alle 8 Generationen"
-```
-
-Die KI nutzt automatisch die BinderPokedex-Tools! → [QUICKSTART_AI.md](QUICKSTART_AI.md)
-
-### Klassisch mit Kommandozeile
-
-```bash
-# Repository klonen
-cd BinderPokedex
-
-# Virtual Environment
-python3 -m venv .venv
-source .venv/bin/activate  # Mac/Linux
-# oder: .venv\Scripts\activate  # Windows
-
-# Dependencies
+python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
+
+# PDFs generieren
+python scripts/generate_pdf.py --language de --generation 1
 ```
 
-### Verwendung
+### Abdeckung
 
-```bash
-# Generiere alle PDFs auf Deutsch
-python scripts/generate_pdf.py --language de
-
-# Generiere auf Englisch (Standard)
-python scripts/generate_pdf.py
-
-# Oder: Andere Sprachen
-python scripts/generate_pdf.py --language fr    # Französisch
-python scripts/generate_pdf.py --language ja    # Japanisch
-
-# Optional: Pokémon-Daten aktualisieren (falls manuell nötig)
-python scripts/fetch_pokemon_from_pokeapi.py --language de
-```
-
-**Output:** `output/BinderPokedex_Gen*_DE.pdf` (oder andere Sprachcodes)
-
-## 🤖 MCP Server (AI Integration)
-
-Das Projekt beinhaltet einen MCP-Server für nahtlose Integration mit AI-Tools:
-
-- **Automatisch geladen** in VS Code via `.vscode/mcp.json`
-- **Tools:** generiere PDFs, fetche Daten, überprüfe Status
-- **Unterstützt:** GitHub Copilot, Claude, und alle MCP-kompatiblen Clients
-- **Lokal & Sicher:** Läuft auf deinem Rechner, keine externe Kommunikation
-
-[Mehr über MCP Integration →](docs/MCP_INTEGRATION.md)
-
-## 📁 Struktur
-
-```
-BinderPokedex/
-├── scripts/
-│   ├── fetch_pokemon_from_pokeapi.py  # Daten laden (mit Sprachenparameter)
-│   ├── generate_pdf.py                # PDFs erstellen (mit Sprachenparameter)
-│   └── ...
-├── i18n/
-│   ├── __init__.py                    # I18nManager-Klasse
-│   ├── languages.json                 # Sprachenkonfiguration
-│   └── translations.json              # Alle Übersetzungen
-├── data/
-│   └── pokemon_gen*.json              # Gekachte Daten
-├── output/
-│   └── BinderPokedex_Gen*_*.pdf       # Generierte PDFs
-├── docs/
-│   ├── LANGUAGES.md                   # Mehrsprachig-Guide
-│   ├── DRUCKANLEITUNG.md              # Druck-Guide
-│   └── CONTRIBUTING.md                # Contributor-Guide
-├── requirements.txt
-├── LICENSE
-└── README.md
-```
-
-## 🖨️ Druck & Bindung
-
-→ Siehe [DRUCKANLEITUNG.md](docs/DRUCKANLEITUNG.md)
-
-- Papierformat & Qualität
-- Schnitt- & Falzlinien
-- Bindung & Verpackung
-- Tipps & Tricks
-
-## 🔧 Technische Details
-
-**Kartengröße:** 63.5 × 88.9 mm (TCG Standard)  
-**Layout:** 3×3 pro Seite (A4)  
-**Spacing:** 4mm zwischen Karten  
-**Schnittmarken:** 2mm gestrichelt  
-
-**PDF-Framework:** ReportLab  
-**Bildverarbeitung:** Pillow  
-**Parallele Worker:** 4 (ThreadPoolExecutor)  
-**Bild-Fallbacks:** GitHub → Serebii  
-
-## 📦 Dependencies
-
-```
-reportlab==4.0.7
-Pillow>=10.0.0
-requests==2.31.0
-mcp[cli]>=0.7.0
-```
-
-## 🤝 Beitragen
-
-Siehe [CONTRIBUTING.md](docs/CONTRIBUTING.md)
-
-**Aktuelle Prioritäten:**
-- [x] Mehrsprachige Unterstützung (9 Sprachen) ✨ NEU!
-- [x] MCP-Server Integration für AI-Tools ✨
-- [ ] Unicode-Geschlechtszeichen-Rendering verbessern (siehe KNOWN_ISSUES.md)
-- [ ] Gen 9 Support
-- [ ] Alternative Kartenlayouts (2×2, 4×4)
-- [ ] Sprachspezifische Fonts für besseres Rendering
-
-## 📄 Lizenz
-
-MIT License - [LICENSE](LICENSE)
-
-Pokémon ist eine eingetragene Marke von Nintendo/Creatures/Game Freak.
-
-## 🙏 Danksagungen
-
-- **PokéAPI** (pokeapi.co) - Daten & Sprites
-- **ReportLab** - PDF-Generierung
-- **Pillow** - Bildverarbeitung
-- Pokémon Community
+- **Generationen:** Alle 9 (Kanto → Paldea)
+- **Sprachen:** 9 (DE, EN, FR, ES, IT, JA, KO, ZH, ZH-T)
+- **Pokémon:** 1.025 insgesamt
+- **PDFs:** 81 generiert
 
 ---
 
-**Viel Spaß beim Sammeln!** 🎴✨
+## 📚 Dokumentation
+
+| Thema | Link |
+|-------|------|
+| **Verwendung & Beispiele** | [docs/USAGE.de.md](docs/USAGE.de.md) |
+| **Features & Technik** | [docs/FEATURES.md](docs/FEATURES.md) |
+| **Installationsanleitung** | [docs/INSTALLATION.md](docs/INSTALLATION.md) |
+| **Druckanleitungen** | [docs/PRINTING_GUIDE.de.md](docs/PRINTING_GUIDE.de.md) |
+| **Architektur** | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
+
+---
+
+## ✨ Hauptfeatures
+
+- **9 Sprachen** mit CJK-Unterstützung
+- **Offizielle Pokémon-Grafiken** von PokéAPI
+- **3×3 Kartenlayout** (9 pro Seite)
+- **Generations-Deckblätter**
+- **Druckerfreundlich** A4-Format
+- **Modulare Architektur**
+- **Vollständig getestet**
+
+---
+
+## 📋 Unterstützte Generationen
+
+| Gen | Region | Pokémon |
+|-----|--------|---------|
+| 1-9 | Kanto bis Paldea | 1.025 |
+
+---
+
+**Bereit, deinen Pokémon-Binder zu erstellen?** [Jetzt herunterladen](https://github.com/DerFlash/BinderPokedex/releases/tag/v2.0) oder [selbst bauen](docs/INSTALLATION.md)! 🎉
