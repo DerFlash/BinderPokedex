@@ -1,4 +1,4 @@
-# Scripts Directory - BinderPokedex
+# Scripts Directory - Binder Pokédex
 
 Clean, production-ready implementation for multi-language Pokémon PDF generation with CJK support.
 

@@ -1,4 +1,4 @@
-# BinderPokedex MCP Server
+# Binder Pokédex MCP Server
 
 This directory contains the MCP (Model Context Protocol) server wrapper for BinderPokedex.
 

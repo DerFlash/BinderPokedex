@@ -1,5 +1,5 @@
 """
-Configuration Constants for BinderPokedex PDF Generation
+Configuration Constants for Binder Pokédex PDF Generation
 
 Centralizes all configuration for cards, languages, fonts, and layout.
 """
@@ -73,15 +73,85 @@ LANGUAGES = {
 # ============================================================================
 
 GENERATION_INFO = {
-    1: {'name': 'Generation I', 'count': 151, 'range': (1, 151), 'region': 'Kanto'},
-    2: {'name': 'Generation II', 'count': 100, 'range': (152, 251), 'region': 'Johto'},
-    3: {'name': 'Generation III', 'count': 135, 'range': (252, 386), 'region': 'Hoenn'},
-    4: {'name': 'Generation IV', 'count': 107, 'range': (387, 493), 'region': 'Sinnoh'},
-    5: {'name': 'Generation V', 'count': 156, 'range': (494, 649), 'region': 'Unova'},
-    6: {'name': 'Generation VI', 'count': 72, 'range': (650, 721), 'region': 'Kalos'},
-    7: {'name': 'Generation VII', 'count': 81, 'range': (722, 802), 'region': 'Alola'},
-    8: {'name': 'Generation VIII', 'count': 89, 'range': (803, 891), 'region': 'Galar'},
-    9: {'name': 'Generation IX', 'count': 103, 'range': (892, 1024), 'region': 'Paldea'},
+    1: {
+        'name': 'Generation I',
+        'count': 151,
+        'range': (1, 151),
+        'region': 'Kanto',
+        'iconic_pokemon': [25, 6, 9],  # Pikachu, Charizard, Blastoise
+    },
+    2: {
+        'name': 'Generation II',
+        'count': 100,
+        'range': (152, 251),
+        'region': 'Johto',
+        'iconic_pokemon': [249, 250, 155],  # Lugia, Ho-Oh, Cyndaquil
+    },
+    3: {
+        'name': 'Generation III',
+        'count': 135,
+        'range': (252, 386),
+        'region': 'Hoenn',
+        'iconic_pokemon': [384, 383, 382],  # Rayquaza, Groudon, Kyogre
+    },
+    4: {
+        'name': 'Generation IV',
+        'count': 107,
+        'range': (387, 493),
+        'region': 'Sinnoh',
+        'iconic_pokemon': [483, 484, 487],  # Dialga, Palkia, Giratina
+    },
+    5: {
+        'name': 'Generation V',
+        'count': 156,
+        'range': (494, 649),
+        'region': 'Unova',
+        'iconic_pokemon': [643, 644, 645],  # Reshiram, Zekrom, Landorus
+    },
+    6: {
+        'name': 'Generation VI',
+        'count': 72,
+        'range': (650, 721),
+        'region': 'Kalos',
+        'iconic_pokemon': [658, 653, 650],  # Greninja, Fennekin, Chespin
+    },
+    7: {
+        'name': 'Generation VII',
+        'count': 81,
+        'range': (722, 802),
+        'region': 'Alola',
+        'iconic_pokemon': [791, 792, 784],  # Solgaleo, Lunala, Kommo-o
+    },
+    8: {
+        'name': 'Generation VIII',
+        'count': 89,
+        'range': (803, 891),
+        'region': 'Galar',
+        'iconic_pokemon': [643, 888, 889],  # Eternatus, Zacian, Zamazenta
+    },
+    9: {
+        'name': 'Generation IX',
+        'count': 103,
+        'range': (892, 1024),
+        'region': 'Paldea',
+        'iconic_pokemon': [1005, 1006, 1007],  # Koraidon, Miraidon, Pecharunt
+    },
+}
+
+# ============================================================================
+# GENERATION COLORS
+# ============================================================================
+
+GENERATION_COLORS = {
+    1: '#FF0000',  # Red
+    2: '#FFAA00',  # Orange
+    3: '#0000FF',  # Blue
+    4: '#AA00FF',  # Purple
+    5: '#00AA00',  # Green
+    6: '#00AAAA',  # Cyan
+    7: '#FF00AA',  # Pink
+    8: '#AAAA00',  # Yellow
+    9: '#666666',  # Gray
 }
 
 # ============================================================================

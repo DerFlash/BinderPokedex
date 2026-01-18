@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-BinderPokedex MCP Server
+Binder Pokédex MCP Server
 
 Exposes the Pokémon binder PDF generation as tools for Claude and other MCP clients.
 

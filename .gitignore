@@ -45,9 +45,11 @@ _archive/
 temp/
 tmp/
 
-# Generated files (keep data cache, ignore PDFs)
+# Generated files (keep data, ignore PDFs and image cache)
 output/*.pdf
 !output/.gitkeep
+data/pokemon_images/
+data/pokemon_images_cache/
 
 # OS
 .DS_Store

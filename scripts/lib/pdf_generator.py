@@ -83,71 +83,86 @@ TYPE_COLORS = {
 
 
 class ImageCache:
-    """Image cache returning ImageReader objects for ReportLab's drawImage."""
+    """Image cache with fallback to network downloads."""
     
     def __init__(self):
         self.cache = {}
+        self.disk_cache_dir = Path(__file__).parent.parent.parent / 'data' / 'pokemon_images_cache'
     
-    def get_image(self, url: str, timeout: int = 5, max_width: int = 100):
+    def _get_cached_file(self, pokemon_id: int, variant: str = 'default') -> Path | None:
+        """Get path to cached image file if it exists."""
+        cache_file = self.disk_cache_dir / f'pokemon_{pokemon_id}' / f'{variant}.jpg'
+        if cache_file.exists():
+            return cache_file
+        return None
+    
+    def get_image(self, pokemon_id: int, url: str | None = None, timeout: int = 5):
         """
-        Get ImageReader object from cache or download from URL.
+        Get ImageReader object from disk cache, RAM cache, or download.
         
         Args:
-            url: Image URL
+            pokemon_id: Pokémon ID for disk cache lookup
+            url: Fallback URL if not cached
             timeout: Download timeout in seconds
-            max_width: Max width in pixels for resizing (to reduce file size)
         
         Returns:
             ImageReader object if successful, None otherwise
         """
-        if url in self.cache:
-            # Reset position for ImageReader
-            self.cache[url].seek(0)
-            logger.debug(f"✓ Image cached (size so far: {len(self.cache)} unique images)")
-            return self.cache[url]
+        # Check RAM cache first
+        cache_key = f'pokemon_{pokemon_id}'
+        if cache_key in self.cache:
+            return self.cache[cache_key]
         
-        try:
-            logger.debug(f"⬇ Downloading image: {url.split('/')[-1]}")
-            req = urllib.request.Request(
-                url,
-                headers={'User-Agent': 'BinderPokedex/2.0'}
-            )
-            with urllib.request.urlopen(req, timeout=timeout) as response:
-                image_data = BytesIO(response.read())
-                image_data.seek(0)
-                
-                # Load with PIL
-                pil_image = Image.open(image_data)
-                
-                # Convert to RGBA to access alpha channel
-                if pil_image.mode != 'RGBA':
-                    pil_image = pil_image.convert('RGBA')
-                
-                # Replace transparent pixels with white (card background color)
-                # Create new image with white background
-                background = Image.new('RGB', pil_image.size, (255, 255, 255))
-                background.paste(pil_image, mask=pil_image.split()[3] if pil_image.mode == 'RGBA' else None)
-                pil_image = background
-                
-                # Resize to reduce file size (keep aspect ratio)
-                if pil_image.width > max_width:
-                    ratio = max_width / pil_image.width
-                    new_height = int(pil_image.height * ratio)
-                    pil_image = pil_image.resize((max_width, new_height), Image.Resampling.LANCZOS)
-                
-                # Save to BytesIO with JPEG compression
-                output = BytesIO()
-                pil_image.save(output, format='JPEG', quality=40, optimize=True)
-                output.seek(0)
-                
-                # Wrap in ImageReader for ReportLab
-                image_reader = ImageReader(output)
-                self.cache[url] = image_reader
-                logger.debug(f"✓ Downloaded & cached (total: {len(self.cache)} images)")
+        # Try disk cache
+        cached_file = self._get_cached_file(pokemon_id)
+        if cached_file:
+            try:
+                logger.debug(f"✓ Loading from disk cache: {cached_file.name}")
+                image_reader = ImageReader(str(cached_file))
+                self.cache[cache_key] = image_reader
                 return image_reader
-        except (urllib.error.URLError, urllib.error.HTTPError, Exception) as e:
-            logger.debug(f"✗ Failed to download image from {url}: {e}")
-            return None
+            except Exception as e:
+                logger.debug(f"✗ Failed to load cached file: {e}")
+        
+        # Fallback to network download if URL provided
+        if url:
+            try:
+                logger.debug(f"⬇ Downloading image: {url.split('/')[-1]}")
+                req = urllib.request.Request(
+                    url,
+                    headers={'User-Agent': 'Binder Pokédex/2.0'}
+                )
+                with urllib.request.urlopen(req, timeout=timeout) as response:
+                    image_data = BytesIO(response.read())
+                    image_data.seek(0)
+                    
+                    # Load with PIL
+                    pil_image = Image.open(image_data)
+                    
+                    # Convert to RGB
+                    if pil_image.mode in ('RGBA', 'LA', 'P'):
+                        background = Image.new('RGB', pil_image.size, (255, 255, 255))
+                        if pil_image.mode == 'P':
+                            pil_image = pil_image.convert('RGBA')
+                        background.paste(pil_image, mask=pil_image.split()[-1] if pil_image.mode in ('RGBA', 'LA') else None)
+                        pil_image = background
+                    elif pil_image.mode != 'RGB':
+                        pil_image = pil_image.convert('RGB')
+                    
+                    # Save to BytesIO with JPEG compression
+                    output = BytesIO()
+                    pil_image.save(output, format='JPEG', quality=85, optimize=True)
+                    output.seek(0)
+                    
+                    # Wrap in ImageReader for ReportLab
+                    image_reader = ImageReader(output)
+                    self.cache[cache_key] = image_reader
+                    logger.debug(f"✓ Downloaded & cached (total: {len(self.cache)} images)")
+                    return image_reader
+            except (urllib.error.URLError, urllib.error.HTTPError, Exception) as e:
+                logger.debug(f"✗ Failed to download image: {e}")
+        
+        return None
 
 
 class PDFGenerator:
@@ -316,7 +331,13 @@ class PDFGenerator:
     
     def _draw_cover_page(self, canvas_obj):
         """
-        Draw a cover page for the generation.
+        Draw a cover page for the generation with iconic Pokémon.
+        
+        Features:
+        - Colored top stripe with generation info
+        - Large region name and generation number
+        - Three iconic Pokémon displayed at the bottom
+        - Clean, modern design
         
         Args:
             canvas_obj: ReportLab canvas object
@@ -328,88 +349,111 @@ class PDFGenerator:
         # Get generation color
         gen_color = GENERATION_COLORS.get(self.generation, '#999999')
         
-        # Colored stripe
-        stripe_height = PAGE_HEIGHT * 0.4
+        # ===== TOP COLORED STRIPE (Header section) =====
+        stripe_height = 100 * mm
         canvas_obj.setFillColor(HexColor(gen_color))
         canvas_obj.rect(0, PAGE_HEIGHT - stripe_height, PAGE_WIDTH, stripe_height, fill=True, stroke=False)
         
-        # Title
-        canvas_obj.setFont("Helvetica-Bold", 48)
+        # Subtle gradient effect with semi-transparent overlay
+        canvas_obj.setFillColor(HexColor("#000000"), alpha=0.05)
+        canvas_obj.rect(0, PAGE_HEIGHT - stripe_height, PAGE_WIDTH, stripe_height, fill=True, stroke=False)
+        
+        # Binder Pokédex title
+        canvas_obj.setFont("Helvetica-Bold", 42)
         canvas_obj.setFillColor(HexColor("#FFFFFF"))
-        title_y = PAGE_HEIGHT - stripe_height + (stripe_height * 0.55)
-        canvas_obj.drawCentredString(PAGE_WIDTH / 2, title_y, "BinderPokedex")
+        title_y = PAGE_HEIGHT - 30 * mm
+        canvas_obj.drawCentredString(PAGE_WIDTH / 2, title_y, "Binder Pokédex")
         
-        # Version info - top right corner
-        canvas_obj.setFont("Helvetica", 7)
+        # Decorative underline for title
+        canvas_obj.setStrokeColor(HexColor("#FFFFFF"))
+        canvas_obj.setLineWidth(1.5)
+        canvas_obj.line(40 * mm, title_y - 8, PAGE_WIDTH - 40 * mm, title_y - 8)
+        
+        # Generation and Region info in header
+        get_info = GENERATION_INFO[self.generation]
+        region_name = get_info.get('region', f'Generation {self.generation}')
+        
+        canvas_obj.setFont("Helvetica", 14)
         canvas_obj.setFillColor(HexColor("#FFFFFF"))
-        version_text = f"Print Edition v1.0 | {datetime.now().strftime('%Y-%m-%d')}"
-        canvas_obj.drawString(PAGE_WIDTH - 70 * mm, PAGE_HEIGHT - 15, version_text)
+        canvas_obj.drawCentredString(PAGE_WIDTH / 2, PAGE_HEIGHT - 55 * mm, f"Generation {self.generation}")
         
-        # Language/Project info - top left corner
-        canvas_obj.setFont("Helvetica", 7)
+        canvas_obj.setFont("Helvetica-Bold", 18)
         canvas_obj.setFillColor(HexColor("#FFFFFF"))
-        lang_name = LANGUAGES.get(self.language, {}).get('name', self.language)
-        project_text = f"Language: {lang_name} | Gen {self.generation}"
-        canvas_obj.drawString(15 * mm, PAGE_HEIGHT - 15, project_text)
+        canvas_obj.drawCentredString(PAGE_WIDTH / 2, PAGE_HEIGHT - 65 * mm, region_name)
         
-        # Generation number
-        canvas_obj.setFont("Helvetica", 28)
-        canvas_obj.setFillColor(HexColor(gen_color))
-        gen_y = PAGE_HEIGHT / 2 + 50 * mm
-        gen_text = f"Generation {self.generation}"
-        canvas_obj.drawCentredString(PAGE_WIDTH / 2, gen_y, gen_text)
-        
-        # Get generation info
-        gen_info = GENERATION_INFO[self.generation]
-        
-        # Region name (use Helvetica for now - can be enhanced with CJK support)
-        canvas_obj.setFont("Helvetica", 32)
-        canvas_obj.setFillColor(HexColor(gen_color))
-        region_y = gen_y - 40
-        region_name = gen_info.get('region', f'Generation {self.generation}')
-        canvas_obj.drawCentredString(PAGE_WIDTH / 2, region_y, region_name)
-        
+        # ===== MIDDLE CONTENT SECTION =====
         # ID range
-        canvas_obj.setFont("Helvetica", 18)
-        canvas_obj.setFillColor(HexColor("#666666"))
-        count_y = region_y - 40
-        start_id, end_id = gen_info['range']
-        id_range_text = f"Pokédex #{start_id:03d} - #{end_id:03d}"
-        canvas_obj.drawCentredString(PAGE_WIDTH / 2, count_y, id_range_text)
-        
-        # Pokémon count
+        start_id, end_id = get_info['range']
         canvas_obj.setFont("Helvetica", 16)
-        pokemon_text = f"{len(self.pokemon_list)} Pokémon"
-        count_text_y = count_y - 30
-        canvas_obj.drawCentredString(PAGE_WIDTH / 2, count_text_y, pokemon_text)
-        
-        # Decorative line
-        canvas_obj.setStrokeColor(HexColor(gen_color))
-        canvas_obj.setLineWidth(2)
-        line_y = count_text_y - 50
-        canvas_obj.line(50 * mm, line_y, PAGE_WIDTH - 50 * mm, line_y)
-        
-        # Print instructions
-        canvas_obj.setFont("Helvetica", 9)
         canvas_obj.setFillColor(HexColor("#333333"))
-        instr_y = 50
-        canvas_obj.drawCentredString(PAGE_WIDTH / 2, instr_y, "Druckanleitung / Print Guide:")
-        canvas_obj.setFont("Helvetica", 7)
-        canvas_obj.setFillColor(HexColor("#666666"))
-        instructions = [
-            "• Randlos drucken / Print borderless for best results",
-            "• Schnittlinien beachten / Follow cutting lines",
-        ]
-        instr_y -= 8
-        for instr in instructions:
-            canvas_obj.drawCentredString(PAGE_WIDTH / 2, instr_y, instr)
-            instr_y -= 6
+        id_range_text = f"Pokédex #{start_id:03d} – #{end_id:03d}"
+        canvas_obj.drawCentredString(PAGE_WIDTH / 2, 120 * mm, id_range_text)
         
-        # Footer - Project info
+        # Pokémon count and info
+        canvas_obj.setFont("Helvetica", 14)
+        canvas_obj.setFillColor(HexColor("#666666"))
+        pokemon_text = f"{len(self.pokemon_list)} Pokémon in this collection"
+        canvas_obj.drawCentredString(PAGE_WIDTH / 2, 110 * mm, pokemon_text)
+        
+        # Decorative elements
+        canvas_obj.setStrokeColor(HexColor(gen_color))
+        canvas_obj.setLineWidth(1)
+        canvas_obj.line(40 * mm, 105 * mm, PAGE_WIDTH - 40 * mm, 105 * mm)
+        
+        # ===== BOTTOM SECTION: ICONIC POKÉMON IN A CLEAN ROW =====
+        iconic_ids = get_info.get('iconic_pokemon', [])
+        
+        if iconic_ids:
+            pokemon_by_id = {int(p.get('id', p.get('num', '0').lstrip('#'))): p for p in self.pokemon_list}
+            
+            # Calculate positions for 3 Pokémon in a horizontal line
+            pokemon_count = len(iconic_ids[:3])
+            total_width = PAGE_WIDTH - (30 * mm)
+            spacing_per_pokemon = total_width / pokemon_count
+            
+            for idx, poke_id in enumerate(iconic_ids[:3]):
+                # Center position for this Pokémon
+                x_center = 15 * mm + spacing_per_pokemon * (idx + 0.5)
+                
+                # Pokemon dimensions - large and prominent
+                card_width = 65 * mm
+                card_height = 90 * mm
+                x = x_center - card_width / 2
+                y = 10 * mm  # Lower position
+                
+                pokemon = pokemon_by_id.get(poke_id)
+                
+                if pokemon:
+                    # Try to draw image - that's it
+                    image_source = pokemon.get('image_path') or pokemon.get('image_url')
+                    if image_source:
+                        try:
+                            image_to_render = None
+                            if image_source.startswith('http://') or image_source.startswith('https://'):
+                                image_to_render = self.image_cache.get_image(poke_id, url=image_source, timeout=3)
+                            elif Path(image_source).exists():
+                                image_to_render = image_source
+                            
+                            if image_to_render:
+                                img_width = card_width * 0.72
+                                img_height = card_height * 0.72
+                                img_x = x_center - img_width / 2
+                                img_y = y
+                                canvas_obj.drawImage(
+                                    image_to_render, img_x, img_y,
+                                    width=img_width, height=img_height,
+                                    preserveAspectRatio=True
+                                )
+                        except Exception as e:
+                            logger.debug(f"Could not load image for iconic Pokémon {poke_id}: {e}")
+        
+        # Bottom info - single line with print instructions
         canvas_obj.setFont("Helvetica", 6)
-        canvas_obj.setFillColor(HexColor("#AAAAAA"))
-        date_text = f"Generated: {datetime.now().strftime('%Y-%m-%d')} | BinderPokedex Project | github.com/BinderPokedex"
-        canvas_obj.drawCentredString(PAGE_WIDTH / 2, 8, date_text)
+        canvas_obj.setFillColor(HexColor("#CCCCCC"))
+        footer_text = f"Print borderless • Follow cutting lines • Binder Pokédex Project • {datetime.now().strftime('%Y-%m-%d')}"
+        text_width = canvas_obj.stringWidth(footer_text, "Helvetica", 6)
+        x_pos = (PAGE_WIDTH - text_width) / 2
+        canvas_obj.drawString(x_pos, 2.5 * mm, footer_text)
     
     def _draw_card(self, canvas_obj, pokemon_data: dict, x: float, y: float):
         """
@@ -501,11 +545,12 @@ class PDFGenerator:
                 image_to_render = None
                 
                 if image_source.startswith('http://') or image_source.startswith('https://'):
-                    # It's a URL - download via cache
-                    logger.debug(f"  Downloading from URL: {image_source[:60]}...")
-                    image_data = self.image_cache.get_image(image_source)
+                    # It's a URL - load from cache first, fallback to download
+                    pokemon_id = pokemon_data.get('id')
+                    logger.debug(f"  Getting image for #{pokemon_id}...")
+                    image_data = self.image_cache.get_image(pokemon_id, url=image_source)
                     if image_data:
-                        logger.debug(f"  ✓ Got PIL Image object")
+                        logger.debug(f"  ✓ Got image")
                         image_to_render = image_data
                     else:
                         logger.debug(f"  ✗ Failed to get image data")
@@ -600,7 +645,7 @@ class PDFGenerator:
                     # Add footer before showing page
                     c.setFont("Helvetica", 6)
                     c.setFillColor(HexColor("#AAAAAA"))
-                    footer_text = f"BinderPokedex Project | github.com/BinderPokedex"
+                    footer_text = f"Binder Pokédex Project | github.com/BinderPokedex"
                     c.drawCentredString(PAGE_WIDTH / 2, 8, footer_text)
                     c.showPage()
                     page_number += 1
@@ -624,7 +669,7 @@ class PDFGenerator:
             # Add footer to last page before showing it
             c.setFont("Helvetica", 6)
             c.setFillColor(HexColor("#AAAAAA"))
-            footer_text = f"BinderPokedex Project | github.com/BinderPokedex"
+            footer_text = f"Binder Pokédex Project | github.com/BinderPokedex"
             c.drawCentredString(PAGE_WIDTH / 2, 8, footer_text)
             
             # Final page

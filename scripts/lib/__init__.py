@@ -1,5 +1,5 @@
 """
-BinderPokedex Library - Clean Architecture
+Binder Pokédex Library - Clean Architecture
 
 Core Modules:
 - fonts: Font management for multi-language support (including CJK)

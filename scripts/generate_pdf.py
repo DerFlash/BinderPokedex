@@ -83,6 +83,7 @@ def prepare_pokemon_data(pokemon_list: list, language: str, skip_images: bool = 
     
     for pokemon in pokemon_list:
         prepared_pokemon = {
+            'id': pokemon.get('id'),  # Numeric ID for image cache lookup
             'num': pokemon.get('num', '#???'),
             'name': get_pokemon_name_for_language(pokemon, language),
             'name_en': pokemon.get('name_en', 'Unknown'),  # Fallback
@@ -107,7 +108,8 @@ def generate_pdfs_for_generation(
     generation: int,
     language: str,
     data_dir: Path,
-    skip_images: bool = True
+    skip_images: bool = True,
+    test_mode: bool = False
 ) -> bool:
     """
     Generate PDFs for a specific generation in a specific language.
@@ -142,6 +144,21 @@ def generate_pdfs_for_generation(
             pokemon_list = json.load(f)
         
         logger.info(f"📋 Loaded {len(pokemon_list)} Pokémon from {input_file.name}")
+        
+        # Test mode: use first 9 Pokémon + iconic Pokémon for cover display
+        if test_mode:
+            iconic_ids = gen_info.get('iconic_pokemon', [])
+            # Keep first 9
+            test_pokemon = pokemon_list[:9]
+            # Add iconic Pokémon if not already included
+            for iconic_id in iconic_ids:
+                if iconic_id > 9:  # Only add if not in first 9
+                    # Find and add the iconic Pokémon
+                    iconic_pokemon = next((p for p in pokemon_list if int(p.get('id', p.get('num', '0').lstrip('#'))) == iconic_id), None)
+                    if iconic_pokemon and iconic_pokemon not in test_pokemon:
+                        test_pokemon.append(iconic_pokemon)
+            pokemon_list = test_pokemon
+            logger.info(f"🧪 Test mode: using first 9 + {len(iconic_ids)} iconic Pokémon = {len(pokemon_list)} total")
         
         # Prepare data for rendering
         prepared_data = prepare_pokemon_data(pokemon_list, language, skip_images=skip_images)
@@ -211,6 +228,13 @@ Examples:
         action="store_true",
         default=False,
         help="Skip image processing (faster for testing)"
+    )
+    
+    parser.add_argument(
+        "--test",
+        action="store_true",
+        default=False,
+        help="Test mode: only use 9 Pokémon for faster generation"
     )
     
     args = parser.parse_args()
@@ -288,7 +312,8 @@ Examples:
                 generation,
                 language,
                 data_dir,
-                skip_images=args.skip_images
+                skip_images=args.skip_images,
+                test_mode=args.test
             )
             if success:
                 total_generated += 1

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Language/Internationalization utilities for BinderPokedex.
+Language/Internationalization utilities for Binder Pokédex.
 
 Handles multi-language support for Pokémon names, types, regions, and UI text.
 Supported languages: DE, EN, FR, ES, IT, JA, KO, ZH-Hans, ZH-Hant
