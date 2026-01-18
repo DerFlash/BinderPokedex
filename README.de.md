@@ -6,7 +6,7 @@ Alle 9 Generationen, alle 9 Sprachen: 81 druckfertige PDFs mit 1.025 Pokémon.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-[![v2.0.1](https://img.shields.io/badge/Version-v2.0.1-green.svg)](https://github.com/DerFlash/BinderPokedex/releases/tag/v2.0.1)
+[![v2.1](https://img.shields.io/badge/Version-v2.1-green.svg)](https://github.com/DerFlash/BinderPokedex/releases/tag/v2.1)
 
 ---
 
@@ -20,9 +20,9 @@ Alle 9 Generationen, alle 9 Sprachen: 81 druckfertige PDFs mit 1.025 Pokémon.
 
 ### Für normale Nutzer - einfach laden & drucken!
 
-**Aktuelle Version (v2.0.1):** [Alle 81 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v2.0.1) ✨ *Bugfix: A4-Layout & Schnittlinien korrigiert*
+**Aktuelle Version (v2.1):** [Alle 81 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v2.1) ✨ *100x schneller: Image-Caching + komplettes Rebranding*
 
-**Nach Sprache (v2.0.1):** 🇩🇪 [DE](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0.1/binderpokedex-v2.0.1-de.zip) | 🇬🇧 [EN](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0.1/binderpokedex-v2.0.1-en.zip) | 🇫🇷 [FR](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0.1/binderpokedex-v2.0.1-fr.zip) | 🇪🇸 [ES](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0.1/binderpokedex-v2.0.1-es.zip) | 🇮🇹 [IT](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0.1/binderpokedex-v2.0.1-it.zip) | 🇯🇵 [JA](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0.1/binderpokedex-v2.0.1-ja.zip) | 🇰🇷 [KO](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0.1/binderpokedex-v2.0.1-ko.zip) | 🇨🇳 [ZH](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0.1/binderpokedex-v2.0.1-zh_hans.zip) | 🇹🇼 [ZH-T](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0.1/binderpokedex-v2.0.1-zh_hant.zip)
+**Nach Sprache (v2.1):** 🇩🇪 [DE](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-de.zip) | 🇬🇧 [EN](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-en.zip) | 🇫🇷 [FR](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-fr.zip) | 🇪🇸 [ES](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-es.zip) | 🇮🇹 [IT](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-it.zip) | 🇯🇵 [JA](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-ja.zip) | 🇰🇷 [KO](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-ko.zip) | 🇨🇳 [ZH](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-zh_hans.zip) | 🇹🇼 [ZH-T](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-zh_hant.zip)
 
 ✅ Entpacken, öffnen, drucken!
 
