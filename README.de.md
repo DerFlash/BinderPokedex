@@ -1,20 +1,34 @@
 # 🎴 BinderPokedex
 
-Generiere professionelle **Pokémon-Platzhalter-Karten** als druckbare PDFs - für alle 8 Generationen mit farbigen Deckblättern zum Ausdrucken und Einfügen in deinen Binder!
+Erstelle **professionelle Pokémon-Binder** in 9 Sprachen! Alle 81 PDFs (9 Generationen × 9 Sprachen) mit 1.025 Pokémon - druckfertig für deinen Binder.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
-[![Ko-fi](https://img.shields.io/badge/Support-Ko--fi-FF5E5B.svg?logo=kofi)](https://ko-fi.com/derflash)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
+[![v2.0](https://img.shields.io/badge/Version-v2.0-green.svg)](https://github.com/DerFlash/BinderPokedex/releases/tag/v2.0)
 
 ---
 
-**💰 Gefällt dir BinderPokedex? Unterstütze die Entwicklung mit einem Trinkgeld!**
+## 📥 **Fertige PDFs herunterladen**
 
-<a href='https://ko-fi.com/derflash' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+### ⭐ Für die meisten Nutzer - einfach herunterladen und drucken!
+
+**Alle 81 PDFs fertig (v2.0):**
+
+| Format | Link | Größe | Sprachen |
+|--------|------|-------|----------|
+| **Alles-in-Einem** | [binderpokedex-v2.0-all-pdfs.tar.gz](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-all-pdfs.tar.gz) | 12 MB | Alle 9 (in Ordnern) |
+
+**Oder nach Sprache (9 Dateien, je 1,2-1,8 MB):**
+
+🇩🇪 [Deutsch](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-de.zip) | 🇬🇧 [English](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-en.zip) | 🇫🇷 [Français](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-fr.zip) | 🇪🇸 [Español](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-es.zip) | 🇮🇹 [Italiano](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-it.zip)
+
+🇯🇵 [日本語](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-ja.zip) | 🇰🇷 [한국어](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-ko.zip) | 🇨🇳 [简体中文](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-zh_hans.zip) | 🇹🇼 [繁體中文](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-zh_hant.zip)
+
+**✅ Einfach entpacken, öffnen und drucken!**
 
 ---
 
-## 🎯 Features
+## 🚀 Für Entwickler - Selbst generieren
 
 ✨ **Multi-Generation Support**
 - Alle 8 Pokémon-Generationen (Kanto bis Galar)
