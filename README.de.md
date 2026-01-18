@@ -1,6 +1,6 @@
 # 🎴 BinderPokedex
 
-Erstelle **professionelle Pokémon-Binder** in 9 Sprachen! Alle 81 PDFs (9 Generationen × 9 Sprachen) mit 1.025 Pokémon - druckfertig für deinen Binder.
+Generiere **Pokémon-Platzhalter-Karten** (Pokédex-Stil) in 9 Sprachen! Alle 81 PDFs (9 Generationen × 9 Sprachen) mit 1.025 Pokémon - druckfertig für deinen Sammelalbum-Binder.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
