@@ -6,7 +6,7 @@ All 9 generations, all 9 languages: 81 ready-to-print PDFs with 1,025 Pokémon.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-[![v2.0](https://img.shields.io/badge/version-v2.0-green.svg)](https://github.com/DerFlash/BinderPokedex/releases/tag/v2.0)
+[![v2.0.1](https://img.shields.io/badge/version-v2.0.1-green.svg)](https://github.com/DerFlash/BinderPokedex/releases/tag/v2.0.1)
 
 ---
 
@@ -20,18 +20,18 @@ All 9 generations, all 9 languages: 81 ready-to-print PDFs with 1,025 Pokémon.
 
 ### For End Users - Just Download & Print!
 
-**All 81 PDFs (v2.0):** [All-in-One (12 MB)](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-all-pdfs.tar.gz)
+**Latest (v2.0.1):** [All 81 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v2.0.1) ✨ *Bugfix: Fixed A4 PDF layout & cutting guides*
 
-**By Language:**
-🇩🇪 [Deutsch](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-de.zip) |
-🇬🇧 [English](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-en.zip) |
-🇫🇷 [Français](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-fr.zip) |
-🇪🇸 [Español](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-es.zip) |
-🇮🇹 [Italiano](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-it.zip) |
-🇯🇵 [日本語](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-ja.zip) |
-🇰🇷 [한국어](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-ko.zip) |
-🇨🇳 [简体中文](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-zh_hans.zip) |
-🇹🇼 [繁體中文](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0/binderpokedex-v2.0-zh_hant.zip)
+**By Language (v2.0.1):**
+🇩🇪 [Deutsch](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0.1/binderpokedex-v2.0.1-de.zip) |
+🇬🇧 [English](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0.1/binderpokedex-v2.0.1-en.zip) |
+🇫🇷 [Français](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0.1/binderpokedex-v2.0.1-fr.zip) |
+🇪🇸 [Español](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0.1/binderpokedex-v2.0.1-es.zip) |
+🇮🇹 [Italiano](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0.1/binderpokedex-v2.0.1-it.zip) |
+🇯🇵 [日本語](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0.1/binderpokedex-v2.0.1-ja.zip) |
+🇰🇷 [한국어](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0.1/binderpokedex-v2.0.1-ko.zip) |
+🇨🇳 [简体中文](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0.1/binderpokedex-v2.0.1-zh_hans.zip) |
+🇹🇼 [繁體中文](https://github.com/DerFlash/BinderPokedex/releases/download/v2.0.1/binderpokedex-v2.0.1-zh_hant.zip)
 
 ✅ Extract, open PDFs, print, and bind!
 
