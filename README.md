@@ -2,7 +2,7 @@
 
 **Generate multilingual Pokémon placeholder collection cards (Pokédex-style) for your binder.**
 
-Create 3×3 Pokémon placeholder cards for all 9 generations in 9 languages (81 PDFs, 1,025 Pokémon). Perfect for your collection binder with full CJK support for Japanese, Korean, and Chinese.
+All 9 generations, all 9 languages: 81 ready-to-print PDFs with 1,025 Pokémon.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
