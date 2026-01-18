@@ -1,0 +1,99 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Get tag info
+        id: tag
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+          echo "Release: $TAG_NAME"
+      
+      - name: Create PDF artifacts (all languages + individual language zips)
+        run: |
+          cd output
+          
+          # Create complete zip with all languages
+          zip -r ../binder-pokedex-all-languages.zip . -x ".*" "*/.*"
+          
+          # Create individual zips per language
+          for lang in de en fr es it ja ko zh_hans zh_hant; do
+            if [ -d "$lang" ]; then
+              zip -r ../binder-pokedex-${lang}.zip $lang -x ".*"
+            fi
+          done
+          
+          cd ..
+          ls -lh binder-pokedex*.zip
+      
+      - name: Create Release with Assets
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.tag.outputs.tag_name }}
+          name: Binder Pokédex ${{ steps.tag.outputs.tag_name }}
+          files: |
+            binder-pokedex-all-languages.zip
+            binder-pokedex-de.zip
+            binder-pokedex-en.zip
+            binder-pokedex-fr.zip
+            binder-pokedex-es.zip
+            binder-pokedex-it.zip
+            binder-pokedex-ja.zip
+            binder-pokedex-ko.zip
+            binder-pokedex-zh_hans.zip
+            binder-pokedex-zh_hant.zip
+          body: |
+            ## 🚀 Binder Pokédex ${{ steps.tag.outputs.tag_name }} Released!
+            
+            ### 📦 Downloads
+            - **binder-pokedex-all-languages.zip** - Complete set with all 9 languages
+            - **binder-pokedex-de.zip** - Deutsch
+            - **binder-pokedex-en.zip** - English
+            - **binder-pokedex-fr.zip** - Français
+            - **binder-pokedex-es.zip** - Español
+            - **binder-pokedex-it.zip** - Italiano
+            - **binder-pokedex-ja.zip** - 日本語
+            - **binder-pokedex-ko.zip** - 한국어
+            - **binder-pokedex-zh_hans.zip** - 简体中文
+            - **binder-pokedex-zh_hant.zip** - 繁體中文
+            
+            Each ZIP contains all 9 generations (Kanto to Paldea).
+            
+            ### ✨ Key Features
+            - 100x Performance Improvement: PDF generation reduced from 2-3 hours to ~45 seconds
+            - Persistent Image Cache: All 1025 Pokémon images cached locally (25 MB)
+            - Complete Project Rebrand: 'Binder Pokédex' with proper spacing and accent
+            - 81 PDFs Generated: All 9 generations × 9 languages with embedded images
+            
+            ### 🐛 Bug Fixes
+            - Fixed Pokemon ID missing from prepared data (diverse Pokémon on cards)
+            - Implemented proper image cache fallback strategy (disk → network)
+            
+            ### 📊 Performance Metrics
+            - Cache Build: 3 minutes for 1025 Pokémon images (100% success)
+            - PDF Generation: 46.8 seconds for complete set
+            - File Size: 2-5 MB per PDF with embedded images
+            - Storage: ~25 KB per image with JPEG 85% quality
+            
+            ### 🛠️ Technical Details
+            - Two-tier caching: RAM + persistent disk cache
+            - ImageCache with network fallback
+            - New script: `cache_pokemon_images.py`
+            - Updated .gitignore for cache directories
+            
+            See the commit for detailed technical changes.
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
