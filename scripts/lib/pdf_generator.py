@@ -15,6 +15,7 @@ Features:
 import logging
 from pathlib import Path
 from datetime import datetime
+from typing import Optional
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
@@ -89,14 +90,14 @@ class ImageCache:
         self.cache = {}
         self.disk_cache_dir = Path(__file__).parent.parent.parent / 'data' / 'pokemon_images_cache'
     
-    def _get_cached_file(self, pokemon_id: int, variant: str = 'default') -> Path | None:
+    def _get_cached_file(self, pokemon_id: int, variant: str = 'default') -> Optional[Path]:
         """Get path to cached image file if it exists."""
         cache_file = self.disk_cache_dir / f'pokemon_{pokemon_id}' / f'{variant}.jpg'
         if cache_file.exists():
             return cache_file
         return None
     
-    def get_image(self, pokemon_id: int, url: str | None = None, timeout: int = 5):
+    def get_image(self, pokemon_id: int, url: Optional[str] = None, timeout: int = 5):
         """
         Get ImageReader object from disk cache, RAM cache, or download.
         
