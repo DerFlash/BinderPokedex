@@ -132,7 +132,9 @@ GENERATION_INFO = {
     9: {
         'name': 'Generation IX',
         'count': 103,
-        'range': (892, 1024),
+        'range': (892, 994),
+        'region': 'Paldea',
+        'iconic_pokemon': [906, 909, 912],  # Sprigatito line, Fuecoco line, Quaxly line
         'region': 'Paldea',
         'iconic_pokemon': [1005, 1006, 1007],  # Koraidon, Miraidon, Pecharunt
     },
