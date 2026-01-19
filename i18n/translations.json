@@ -14,7 +14,18 @@
       "cutting_guide": "Bitte entlang der gestrickelten Linien ausschneiden",
       "pokedex_range": "Pokédex {{start}} – {{end}}",
       "cover_print_borderless": "Randlos drucken",
-      "cover_follow_cutting": "Schneidekanten beachten"
+      "cover_follow_cutting": "Schneidekanten beachten",
+      "variant_species": "Arten",
+      "variant_forms": "Formen",
+      "variant_mega_evolution": "Mega-Evolutionen",
+      "variant_gigantamax": "Gigamax-Formen",
+      "variant_regional_alola": "Alola-Formen",
+      "variant_regional_galar": "Galar-Formen",
+      "variant_regional_hisui": "Hisui-Formen",
+      "variant_regional_paldea": "Paldea-Formen",
+      "variant_primal_terastal": "Primäre & Terastallisierung",
+      "variant_patterns_unique": "Muster & Besonderheiten",
+      "variant_fusion_special": "Fusions & Spezialformen"
     },
     "en": {
       "title": "BinderPokedex - Placeholder Card Binder",
@@ -30,7 +41,18 @@
       "cutting_guide": "Please cut along the dashed lines",
       "pokedex_range": "Pokédex {{start}} – {{end}}",
       "cover_print_borderless": "Print borderless",
-      "cover_follow_cutting": "Follow cutting lines"
+      "cover_follow_cutting": "Follow cutting lines",
+      "variant_species": "Species",
+      "variant_forms": "Forms",
+      "variant_mega_evolution": "Mega Evolutions",
+      "variant_gigantamax": "Gigantamax Forms",
+      "variant_regional_alola": "Alola Forms",
+      "variant_regional_galar": "Galar Forms",
+      "variant_regional_hisui": "Hisui Forms",
+      "variant_regional_paldea": "Paldea Forms",
+      "variant_primal_terastal": "Primal & Terastallization",
+      "variant_patterns_unique": "Patterns & Unique Forms",
+      "variant_fusion_special": "Fusions & Special Forms"
     },
     "fr": {
       "title": "BinderPokedex - Classeur de Cartes Spéciales",
@@ -46,7 +68,18 @@
       "cutting_guide": "Veuillez découper le long des lignes pointillées",
       "pokedex_range": "Pokédex {{start}} – {{end}}",
       "cover_print_borderless": "Imprimer sans bordure",
-      "cover_follow_cutting": "Suivre les lignes de coupe"
+      "cover_follow_cutting": "Suivre les lignes de coupe",
+      "variant_species": "Espèces",
+      "variant_forms": "Formes",
+      "variant_mega_evolution": "Méga Évolutions",
+      "variant_gigantamax": "Formes Gigantamax",
+      "variant_regional_alola": "Formes d'Alola",
+      "variant_regional_galar": "Formes de Galar",
+      "variant_regional_hisui": "Formes de Hisui",
+      "variant_regional_paldea": "Formes de Paldea",
+      "variant_primal_terastal": "Primal & Téracristallisation",
+      "variant_patterns_unique": "Motifs & Formes Uniques",
+      "variant_fusion_special": "Fusions & Formes Spéciales"
     },
     "es": {
       "title": "BinderPokedex - Carpeta de Cartas Especiales",
@@ -62,7 +95,18 @@
       "cutting_guide": "Por favor recorta a lo largo de las líneas punteadas",
       "pokedex_range": "Pokédex {{start}} – {{end}}",
       "cover_print_borderless": "Imprimir sin bordes",
-      "cover_follow_cutting": "Seguir líneas de corte"
+      "cover_follow_cutting": "Seguir líneas de corte",
+      "variant_species": "Especies",
+      "variant_forms": "Formas",
+      "variant_mega_evolution": "Megaevoluciones",
+      "variant_gigantamax": "Formas Gigantamax",
+      "variant_regional_alola": "Formas de Alola",
+      "variant_regional_galar": "Formas de Galar",
+      "variant_regional_hisui": "Formas de Hisui",
+      "variant_regional_paldea": "Formas de Paldea",
+      "variant_primal_terastal": "Primal & Teracristalización",
+      "variant_patterns_unique": "Patrones & Formas Únicas",
+      "variant_fusion_special": "Fusiones & Formas Especiales"
     },
     "it": {
       "title": "BinderPokedex - Raccoglitore di Carte Speciali",
@@ -78,7 +122,18 @@
       "cutting_guide": "Si prega di tagliare lungo le linee tratteggiate",
       "pokedex_range": "Pokédex {{start}} – {{end}}",
       "cover_print_borderless": "Stampa senza bordi",
-      "cover_follow_cutting": "Seguire le linee di taglio"
+      "cover_follow_cutting": "Seguire le linee di taglio",
+      "variant_species": "Specie",
+      "variant_forms": "Forme",
+      "variant_mega_evolution": "Megaevoluzione",
+      "variant_gigantamax": "Forme Gigantamax",
+      "variant_regional_alola": "Forme di Alola",
+      "variant_regional_galar": "Forme di Galar",
+      "variant_regional_hisui": "Forme di Hisui",
+      "variant_regional_paldea": "Forme di Paldea",
+      "variant_primal_terastal": "Primal & Teracristallizzazione",
+      "variant_patterns_unique": "Motivi & Forme Uniche",
+      "variant_fusion_special": "Fusioni & Forme Speciali"
     },
     "ja": {
       "title": "BinderPokedex - プレースホルダーカードバインダー",
@@ -94,7 +149,18 @@
       "cutting_guide": "点線に沿って切ってください",
       "pokedex_range": "ポケモン図鑑 {{start}} – {{end}}",
       "cover_print_borderless": "縁なしで印刷",
-      "cover_follow_cutting": "切り取り線に沿う"
+      "cover_follow_cutting": "切り取り線に沿う",
+      "variant_species": "種類",
+      "variant_forms": "姿",
+      "variant_mega_evolution": "メガ進化",
+      "variant_gigantamax": "ギガントマックス",
+      "variant_regional_alola": "アローラのすがた",
+      "variant_regional_galar": "ガラルのすがた",
+      "variant_regional_hisui": "ヒスイのすがた",
+      "variant_regional_paldea": "パルデアのすがた",
+      "variant_primal_terastal": "プリメット & テラスタル",
+      "variant_patterns_unique": "パターン & ユニークなすがた",
+      "variant_fusion_special": "フュージョン & スペシャルなすがた"
     },
     "ko": {
       "title": "BinderPokedex - 플레이스홀더 카드 바인더",
@@ -110,7 +176,18 @@
       "cutting_guide": "점선을 따라 자르세요",
       "pokedex_range": "포켓몬 도감 {{start}} – {{end}}",
       "cover_print_borderless": "테두리 없이 인쇄",
-      "cover_follow_cutting": "자르기 선 따라가기"
+      "cover_follow_cutting": "자르기 선 따라가기",
+      "variant_species": "종",
+      "variant_forms": "형태",
+      "variant_mega_evolution": "메가 진화",
+      "variant_gigantamax": "기가스틸",
+      "variant_regional_alola": "알로라의 모습",
+      "variant_regional_galar": "가라르의 모습",
+      "variant_regional_hisui": "히스이의 모습",
+      "variant_regional_paldea": "팔데아의 모습",
+      "variant_primal_terastal": "프리몬 & 테라스탈",
+      "variant_patterns_unique": "패턴 & 유니크한 모습",
+      "variant_fusion_special": "퓨전 & 스페셜 모습"
     },
     "zh_hans": {
       "title": "BinderPokedex - 占位符卡活页夹",
@@ -126,7 +203,18 @@
       "cutting_guide": "请沿虚线切割",
       "pokedex_range": "宝可梦图鉴 {{start}} – {{end}}",
       "cover_print_borderless": "无边界打印",
-      "cover_follow_cutting": "沿裁切线操作"
+      "cover_follow_cutting": "沿裁切线操作",
+      "variant_species": "物种",
+      "variant_forms": "形态",
+      "variant_mega_evolution": "超级进化",
+      "variant_gigantamax": "极巨化",
+      "variant_regional_alola": "阿罗拉的样子",
+      "variant_regional_galar": "伽勒尔的样子",
+      "variant_regional_hisui": "洗翠的样子",
+      "variant_regional_paldea": "帕底亚的样子",
+      "variant_primal_terastal": "原始与太晶化",
+      "variant_patterns_unique": "图案与独特样子",
+      "variant_fusion_special": "融合与特殊样子"
     },
     "zh_hant": {
       "title": "BinderPokedex - 佔位符卡活頁夾",
@@ -142,7 +230,18 @@
       "cutting_guide": "請沿虛線切割",
       "pokedex_range": "寶可夢圖鑑 {{start}} – {{end}}",
       "cover_print_borderless": "無邊界列印",
-      "cover_follow_cutting": "沿裁切線操作"
+      "cover_follow_cutting": "沿裁切線操作",
+      "variant_species": "物種",
+      "variant_forms": "形態",
+      "variant_mega_evolution": "超級進化",
+      "variant_gigantamax": "極巨化",
+      "variant_regional_alola": "阿羅拉的樣子",
+      "variant_regional_galar": "伽勒爾的樣子",
+      "variant_regional_hisui": "洗翠的樣子",
+      "variant_regional_paldea": "帕底亞的樣子",
+      "variant_primal_terastal": "原始與太晶化",
+      "variant_patterns_unique": "圖案與獨特樣子",
+      "variant_fusion_special": "融合與特殊樣子"
     }
   },
   "types": {

@@ -1,0 +1,28 @@
+# PDF Generator Configuration
+# Minimal configuration for PDF generation settings
+
+pdf:
+  format: "A4"
+  dpi: 300
+  compression: "deflate"
+  
+templates:
+  generation_cover: "generation_cover.html"
+  generation_page: "generation_page.html"
+  variant_cover: "variant_cover.html"
+  variant_page: "variant_page.html"
+
+cache:
+  enabled: true
+  directory: "data/pokemon_images_cache"
+  ttl_days: 30
+
+generation:
+  strategy: "parallel"
+  max_workers: 4
+  timeout_seconds: 300
+  skip_images: false
+
+logging:
+  level: "INFO"
+  file: "logs/pdf_generator.log"

@@ -544,6 +544,18 @@ class PDFGenerator:
         x_pos = (PAGE_WIDTH - text_width) / 2
         canvas_obj.drawString(x_pos, 2.5 * mm, footer_text)
     
+    @staticmethod
+    def _darken_color(hex_color: str, factor: float = 0.6) -> str:
+        """Darken a hex color by multiplying RGB values by factor."""
+        hex_color = hex_color.lstrip('#')
+        r = int(hex_color[0:2], 16)
+        g = int(hex_color[2:4], 16)
+        b = int(hex_color[4:6], 16)
+        r = int(r * factor)
+        g = int(g * factor)
+        b = int(b * factor)
+        return f"#{r:02x}{g:02x}{b:02x}"
+    
     def _draw_card(self, canvas_obj, pokemon_data: dict, x: float, y: float):
         """
         Draw a single Pokémon card.
@@ -570,11 +582,7 @@ class PDFGenerator:
         canvas_obj.setStrokeColor(HexColor("#CCCCCC"))
         canvas_obj.rect(x, y, CARD_WIDTH, CARD_HEIGHT, fill=False, stroke=True)
         
-        # Pokédex number (header left)
-        poke_num = pokemon_data.get('num', '#???')
-        canvas_obj.setFont("Helvetica-Bold", 9)
-        canvas_obj.setFillColor(HexColor("#3D3D3D"))
-        canvas_obj.drawString(x + 3, y + CARD_HEIGHT - header_height + 5, poke_num)
+        # Note: Pokédex number moved to bottom of card (see below)
         
         # Type (header right)
         types = pokemon_data.get('types', [])
@@ -623,6 +631,14 @@ class PDFGenerator:
         image_height = CARD_HEIGHT - header_height - 4 * mm
         canvas_obj.setFillColor(HexColor("#FFFFFF"))
         canvas_obj.rect(x, y, CARD_WIDTH, image_height, fill=True, stroke=False)
+        
+        # Draw index number centered at bottom of card
+        poke_num = pokemon_data.get('id') or pokemon_data.get('num', '???')
+        poke_num_str = f"#{poke_num}" if not str(poke_num).startswith('#') else str(poke_num)
+        darkened_type_color = self._darken_color(header_color, factor=0.6)
+        canvas_obj.setFont("Helvetica-Bold", 16)
+        canvas_obj.setFillColor(HexColor(darkened_type_color))
+        canvas_obj.drawCentredString(x + CARD_WIDTH / 2, y + 4 * mm, poke_num_str)
         
         # Image (if available - from image_url or image_path)
         image_source = pokemon_data.get('image_path') or pokemon_data.get('image_url')

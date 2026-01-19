@@ -71,6 +71,9 @@ python scripts/generate_pdf.py --language de --generation 1
 | **Printing Tips** | [docs/PRINTING_GUIDE.md](docs/PRINTING_GUIDE.md) |
 | **Architecture** | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
 | **Contribution** | [CONTRIBUTING.md](docs/CONTRIBUTING.md) |
+| **🆕 Pokémon Variants Feature** | [docs/VARIANTS_FEATURE_SUMMARY.md](docs/VARIANTS_FEATURE_SUMMARY.md) |
+| **🆕 Variants Technical Spec** | [docs/VARIANTS_TECHNICAL_SPEC.md](docs/VARIANTS_TECHNICAL_SPEC.md) |
+| **🆕 Variants Research** | [docs/VARIANTS_RESEARCH.md](docs/VARIANTS_RESEARCH.md) |
 
 ---
 
@@ -79,9 +82,13 @@ python scripts/generate_pdf.py --language de --generation 1
 - **9 Languages** with proper CJK support (Japanese, Korean, Chinese)
 - **Official Pokémon artwork** from PokéAPI
 - **3×3 card layout** (9 per page)
-- **Generation cover pages**
+- **Generation cover pages** with multilingual footer text
+- **Pokémon Variants Support** - Starting with Mega Evolution ✨
+  - **Mega Evolution:** 76 Pokémon with 79 form-specific images
+  - Dynamic form imagery (PokeAPI + Bulbapedia fallback)
+  - Future support planned for Gigantamax, Regional Variants, etc.
 - **English subtitles** on non-English cards
-- **Print-ready** A4 format
+- **Print-ready** A4 format with cutting guides
 - **Modular, clean architecture** (no workarounds)
 - **Fully tested** (15 unit tests passing)
 

@@ -23,13 +23,18 @@ import sys
 import argparse
 import logging
 from pathlib import Path
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.units import mm
+from reportlab.lib.colors import HexColor
 
 # Add lib to path for imports
 sys.path.insert(0, str(Path(__file__).parent / 'lib'))
 
 from lib.fonts import FontManager
 from lib.pdf_generator import PDFGenerator
-from lib.constants import LANGUAGES, GENERATION_INFO
+from lib.variant_pdf_generator import VariantPDFGenerator
+from lib.constants import LANGUAGES, GENERATION_INFO, PAGE_WIDTH, PAGE_HEIGHT
 
 # Configure logging
 logging.basicConfig(
@@ -194,17 +199,29 @@ def main():
         epilog="""
 Examples:
   # Generate German PDFs for Gen 1
-  python generate_pdf_new.py --language de --generation 1
+  python generate_pdf.py --type generation --language de --generation 1
   
   # Generate Japanese PDFs for Gen 1-3
-  python generate_pdf_new.py --language ja --generation 1-3
+  python generate_pdf.py --type generation --language ja --generation 1-3
   
-  # Generate all languages for Gen 1
-  python generate_pdf_new.py --generation 1
+  # Generate Mega Evolution variants in English
+  python generate_pdf.py --type variant --variant mega --language en
   
-  # Generate all generations in English
-  python generate_pdf_new.py --language en
+  # Generate all variant categories for a language
+  python generate_pdf.py --type variant --variant all --language de
+  
+  # List available variants
+  python generate_pdf.py --type variant --list
         """
+    )
+    
+    parser.add_argument(
+        "--type",
+        "-t",
+        type=str,
+        default="generation",
+        choices=["generation", "variant"],
+        help="Type of PDF to generate: 'generation' (default) or 'variant'"
     )
     
     parser.add_argument(
@@ -220,7 +237,22 @@ Examples:
         "-g",
         type=str,
         default="1-9",
-        help="Generation(s) to generate: '1', '1-3', '1,3,5', or '1-9' (default: 1-9)"
+        help="Generation(s) to generate: '1', '1-3', '1,3,5', or '1-9' (default: 1-9). Only for --type generation"
+    )
+    
+    parser.add_argument(
+        "--variant",
+        "-v",
+        type=str,
+        default=None,
+        help="Variant category(s) to generate: 'mega', 'gigantamax', 'regional_alola', 'regional_galar', 'regional_hisui', 'regional_paldea', 'primal_terastal', 'patterns_unique', 'fusion_special', or 'all'. Only for --type variant"
+    )
+    
+    parser.add_argument(
+        "--list",
+        action="store_true",
+        default=False,
+        help="List all available variants and their status"
     )
     
     parser.add_argument(
@@ -243,11 +275,50 @@ Examples:
     script_dir = Path(__file__).parent
     project_dir = script_dir.parent
     data_dir = project_dir / "data"
+    variants_dir = data_dir / "variants"
     
     if not data_dir.exists():
         logger.error(f"❌ Data directory not found: {data_dir}")
         return 1
     
+    # Handle --list for variants
+    if args.list and args.type == "variant":
+        if not variants_dir.exists():
+            logger.error(f"❌ Variants directory not found: {variants_dir}")
+            return 1
+        
+        meta_file = variants_dir / "meta.json"
+        if not meta_file.exists():
+            logger.error(f"❌ Variants metadata not found: {meta_file}")
+            return 1
+        
+        with open(meta_file, 'r', encoding='utf-8') as f:
+            meta = json.load(f)
+        
+        print(f"\n{'=' * 80}")
+        print(f"Available Pokémon Variant Categories")
+        print(f"{'=' * 80}")
+        
+        for cat in meta['variant_categories']:
+            status_icon = "🟢" if cat['status'] == 'complete' else "🟡" if cat['status'] == 'in-progress' else "⚪"
+            print(f"{status_icon} {cat['id']:20s} | {cat['pokemon_count']:3d} Pokémon, {cat['forms_count']:3d} Forms | {cat['icon']} {cat.get('short_code', 'N/A')}")
+        
+        print(f"\n{meta['statistics']['total_categories']} categories | {meta['statistics']['total_pokemon']} Pokémon | {meta['statistics']['total_forms']} Forms")
+        print(f"{'=' * 80}\n")
+        return 0
+    
+    # Route based on type
+    if args.type == "generation":
+        return handle_generation_mode(args, script_dir, project_dir, data_dir)
+    elif args.type == "variant":
+        return handle_variant_mode(args, script_dir, project_dir, data_dir, variants_dir)
+    else:
+        logger.error(f"❌ Unknown type: {args.type}")
+        return 1
+
+
+def handle_generation_mode(args, script_dir, project_dir, data_dir):
+    """Handle generation-based PDF generation."""
     # Validate and normalize language
     if args.language:
         if args.language not in LANGUAGES:
@@ -297,7 +368,7 @@ Examples:
     
     # Generate PDFs
     print(f"\n{'=' * 80}")
-    print(f"PDF Generation - Clean Architecture Version")
+    print(f"PDF Generation - Pokédex (Generations)")
     print(f"{'=' * 80}")
     print(f"Generations: {', '.join(str(g) for g in generations)}")
     print(f"Languages:   {', '.join(languages)}")
@@ -334,6 +405,150 @@ Examples:
     else:
         logger.warning(f"⚠️  {total_failed} PDFs failed to generate")
         return 1
+
+
+def handle_variant_mode(args, script_dir, project_dir, data_dir, variants_dir):
+    """Handle variant-based PDF generation."""
+    # Validate variant directory
+    if not variants_dir.exists():
+        logger.error(f"❌ Variants directory not found: {variants_dir}")
+        logger.info(f"   Please run Phase 1 setup first to create variant infrastructure")
+        return 1
+    
+    meta_file = variants_dir / "meta.json"
+    if not meta_file.exists():
+        logger.error(f"❌ Variants metadata not found: {meta_file}")
+        return 1
+    
+    # Load variant metadata
+    with open(meta_file, 'r', encoding='utf-8') as f:
+        meta = json.load(f)
+    
+    # Determine which variants to generate
+    if args.variant is None:
+        logger.error(f"❌ --variant argument required for --type variant")
+        logger.info(f"   Use --variant mega|gigantamax|regional_alola|... or --variant all")
+        logger.info(f"   Use --list to see all available variants")
+        return 1
+    
+    variants_to_generate = []
+    
+    if args.variant.lower() == 'all':
+        variants_to_generate = [cat['id'] for cat in meta['variant_categories']]
+    else:
+        # Parse comma-separated list
+        variant_ids = [v.strip() for v in args.variant.lower().split(',')]
+        valid_ids = {cat['id'] for cat in meta['variant_categories']}
+        
+        for vid in variant_ids:
+            if vid not in valid_ids:
+                logger.error(f"❌ Unknown variant: {vid}")
+                logger.info(f"   Valid variants: {', '.join(sorted(valid_ids))}")
+                return 1
+            variants_to_generate.append(vid)
+    
+    # Validate language
+    if args.language:
+        if args.language not in LANGUAGES:
+            logger.error(f"❌ Unsupported language: {args.language}")
+            logger.info(f"   Supported: {', '.join(LANGUAGES.keys())}")
+            return 1
+        languages = [args.language]
+    else:
+        languages = list(LANGUAGES.keys())
+    
+    # Register fonts
+    try:
+        FontManager.register_fonts()
+        logger.info("✅ Fonts registered successfully")
+    except Exception as e:
+        logger.error(f"❌ Failed to register fonts: {e}")
+        return 1
+    
+    # Generate variant PDFs
+    print(f"\n{'=' * 80}")
+    print(f"PDF Generation - Pokémon Variants (v3.0)")
+    print(f"{'=' * 80}")
+    print(f"Variants:  {', '.join(variants_to_generate)}")
+    print(f"Languages: {', '.join(languages)}")
+    print(f"Output dir: {project_dir / 'output'}")
+    print(f"Data dir:  {variants_dir}")
+    
+    total_generated = 0
+    total_failed = 0
+    
+    for variant_id in variants_to_generate:
+        variant_meta = next((cat for cat in meta['variant_categories'] if cat['id'] == variant_id), None)
+        if not variant_meta:
+            logger.error(f"❌ Variant metadata not found: {variant_id}")
+            total_failed += 1
+            continue
+        
+        variant_file = variants_dir / variant_meta['json_file']
+        
+        if not variant_file.exists():
+            logger.warning(f"⏭️  Variant not yet implemented: {variant_id} (file: {variant_file.name})")
+            continue
+        
+        for language in languages:
+            try:
+                logger.info(f"\n📊 Generating {variant_id} → {LANGUAGES.get(language, {}).get('name', language.upper())}")
+                
+                # Load variant data
+                with open(variant_file, 'r', encoding='utf-8') as f:
+                    variant_data = json.load(f)
+                
+                # Generate PDF
+                _generate_variant_pdf(
+                    variant_data=variant_data,
+                    language=language,
+                    output_dir=project_dir / 'output' / language,
+                    script_dir=script_dir
+                )
+                
+                total_generated += 1
+                logger.info(f"   ✅ Generated: {variant_id}_{language}.pdf")
+            except Exception as e:
+                logger.error(f"❌ Error generating variant PDF: {e}")
+                total_failed += 1
+    
+    # Summary
+    print(f"\n{'=' * 80}")
+    print(f"Summary")
+    print(f"{'=' * 80}")
+    print(f"✅ Generated: {total_generated}")
+    print(f"❌ Failed:    {total_failed}")
+    print(f"{'=' * 80}\n")
+    
+    return 0 if total_failed == 0 else 1
+
+
+def _generate_variant_pdf(variant_data, language, output_dir, script_dir):
+    """Generate a PDF for a variant category."""
+    from lib.pdf_generator import ImageCache
+    
+    # Ensure output directory exists
+    output_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Extract variant info
+    variant_type = variant_data.get('variant_type', 'unknown')
+    
+    # Generate output filename
+    output_file = output_dir / f"Variant_{variant_type}_{language.upper()}.pdf"
+    
+    # Initialize image cache for loading Pokémon images
+    image_cache = ImageCache()
+    
+    # Create and generate PDF
+    pdf_gen = VariantPDFGenerator(
+        variant_data=variant_data,
+        language=language,
+        output_file=output_file,
+        image_cache=image_cache
+    )
+    
+    return pdf_gen.generate()
+
 
 
 if __name__ == "__main__":

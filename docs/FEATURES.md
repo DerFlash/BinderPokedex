@@ -1,5 +1,30 @@
 # ✨ Features & Technical Details
 
+## Project Status
+
+### Phase 1: Generation PDFs ✅ COMPLETE
+- 9 generations (Gen 1-9) with 1,025 Pokémon
+- All 9 languages fully supported
+- 81 PDFs generated (9 × 9 languages)
+
+### Phase 2: Pokémon Variants - MVP 🚀 IN PROGRESS
+- **Mega Evolution** ✅ Complete
+  - 87 Pokémon species with 92 Mega forms
+  - PokeAPI form variety IDs correctly mapped (official artwork where available)
+  - Pokemon.com fallback for form-specific images (f2, f3, etc.)
+  - Form suffix extraction working for X/Y, Attack/Defense/Speed, and special forms (Curly/Droopy/Stretchy)
+  - 9 language PDFs generated
+  - Iconic Pokémon on covers (Charizard X, Mewtwo X, Gengar)
+  - Translation callbacks integrated
+  - Font rendering fixed for JP/ZH
+
+### Phase 3-9: Additional Variants 📋 PLANNED
+- Gigantamax forms
+- Regional variants (Alola, Galar, Hisui, Paldea)
+- Primal Reversion & Terastal forms
+- Unique patterns & forms
+- Special fusions & forms
+
 ## Language Support
 
 ### 9 Languages Supported
@@ -23,29 +48,47 @@
 - **Chinese** (Simplified & Traditional) with full Unicode support
 - **Gender symbols** (♂/♀) working correctly in all languages
 - **English subtitles** on non-English cards for readability
+- **Bilingual covers** with localized variant names and English labels
 
 ## PDF Features
 
 ### Layout
 - **3×3 card grid** (9 cards per page)
-- **Cover page** for each generation
+- **Cover page** for each generation/variant with featured Pokémon
 - **A4 format** (210 × 297 mm)
 - **Print-ready** with precise measurements
 - **Type-based header colors** with transparency
+- **Featured Pokémon images** on cover (up to 3 iconic species)
 
 ### Content
 - **Official Pokémon artwork** from PokéAPI
 - **Species names** in target language
+- **Variant names** (e.g., "Mega Venusaur" → "Mega Bisaflor" in German)
 - **Type information** with type colors
 - **National Pokédex number**
 - **Height & weight** in metric units
+- **Multilingual footers** with translation keys
 - **Cutting guides** for easy card extraction
 
+### Generation Covers
+- Region name (Kanto, Johto, etc.)
+- Pokédex range (#001-#151)
+- Pokémon count in collection
+- Generation-specific color scheme
+- 3 iconic Pokémon images
+
+### Variant Covers
+- Variant type (Mega Evolution, etc.)
+- Variant name (e.g., "Mega Evolution")
+- Species and forms count
+- Variant-specific color scheme
+- Up to 3 iconic variant Pokémon images
+
 ### Optimization
-- **File sizes:** 200-400 KB per generation
-- **Image compression:** JPEG quality 40
-- **Image resolution:** 100px max width
-- **In-memory caching:** Efficient batch processing
+- **File sizes:** 200-400 KB per generation, ~2MB per variant collection
+- **Image compression:** JPEG quality 85 (balanced for crisp printing)
+- **Image resolution:** Up to 100px on cards, 250px for featured images
+- **In-memory caching:** Efficient batch processing with disk cache
 
 ## Architecture
 
@@ -56,21 +99,30 @@ scripts/lib/
 ├── __init__.py              # Package initialization
 ├── constants.py             # Language configs & URLs
 ├── fonts.py                 # Font management & registration
+├── card_template.py         # Reusable card rendering
+├── cover_template.py        # Reusable cover page rendering
 ├── text_renderer.py         # Unicode-aware text rendering
-├── pdf_generator.py         # Core PDF orchestration
+├── pdf_generator.py         # Generation PDF orchestration
+├── variant_pdf_generator.py # Variant PDF orchestration
 ├── pokeapi_client.py        # PokéAPI data fetching
 ├── pokemon_processor.py     # Data preprocessing
 ├── pokemon_enricher.py      # Language enrichment
-└── data_storage.py          # File I/O & caching
+├── data_storage.py          # File I/O & caching
+└── form_fetchers/
+    ├── __init__.py
+    └── mega_evolution_fetcher.py  # Mega form fetching
 ```
 
 ### Key Principles
 
+- ✅ **Template-based rendering** - Reusable templates for generation & variant PDFs
+- ✅ **Translation callbacks** - Format translations passed as functions to templates
 - ✅ **No monkey-patching** - Clean code without hacks
 - ✅ **Proper error handling** - Graceful fallbacks
 - ✅ **Type hints** - Better IDE support
 - ✅ **Modular design** - Testable, reusable components
 - ✅ **Separation of concerns** - Each module has clear responsibility
+- ✅ **Custom field preservation** - Fetch scripts maintain custom data (e.g., iconic_pokemon_ids)
 
 ## Testing
 
@@ -99,6 +151,7 @@ python -m pytest scripts/tests/ -v
 - **Gen 3-9 (774 Pokémon):** ~7m 47s
 - **All 9 generations:** ~10 minutes
 - **All 81 PDFs (9 gen × 9 lang):** ~1.5 hours
+- **Mega Evolution (66 forms × 9 lang):** ~3 minutes
 
 ### Data Caching
 
@@ -106,6 +159,7 @@ python -m pytest scripts/tests/ -v
 - Cached data included in repository
 - No API calls required after first fetch
 - Reproducible builds from cache
+- Custom fields (iconic_pokemon_ids, etc.) preserved across fetches
 
 ## Image Processing
 

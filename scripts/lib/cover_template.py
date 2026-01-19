@@ -1,0 +1,355 @@
+"""
+Cover Template - Reusable cover page rendering for both Generation and Variant PDFs
+
+Provides parametrized templates for drawing cover pages with:
+- Colored header stripe
+- Title and subtitle
+- Featured Pokémon
+- Multi-language support
+"""
+
+from datetime import datetime
+from pathlib import Path
+from reportlab.lib.units import mm
+from reportlab.lib.colors import HexColor
+
+from .fonts import FontManager
+from .constants import PAGE_WIDTH, PAGE_HEIGHT
+
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+class CoverTemplate:
+    """Template for rendering cover pages."""
+    
+    def __init__(self, language: str = 'en', format_translation=None, image_cache=None):
+        """
+        Initialize cover template.
+        
+        Args:
+            language: Language code for text rendering
+            format_translation: Optional function to format translated text
+            image_cache: Optional image cache for featured Pokémon
+        """
+        self.language = language
+        self.format_translation = format_translation
+        self.image_cache = image_cache
+    
+    def draw_generation_cover(self, canvas_obj, generation: int, pokemon_list: list,
+                             color: str, generation_info: dict, generation_colors: dict):
+        """
+        Draw a generation cover page.
+        
+        Args:
+            canvas_obj: ReportLab canvas object
+            generation: Generation number (1-9)
+            pokemon_list: List of Pokémon in this generation
+            color: Color hex for header stripe
+            generation_info: Generation metadata (region, range, iconic_pokemon)
+            generation_colors: Dict mapping generation to color
+        """
+        self._draw_cover_base(canvas_obj, color)
+        
+        # Header content
+        canvas_obj.setFont("Helvetica-Bold", 42)
+        canvas_obj.setFillColor(HexColor("#FFFFFF"))
+        title_y = PAGE_HEIGHT - 30 * mm
+        canvas_obj.drawCentredString(PAGE_WIDTH / 2, title_y, "Binder Pokédex")
+        
+        # Decorative underline
+        canvas_obj.setStrokeColor(HexColor("#FFFFFF"))
+        canvas_obj.setLineWidth(1.5)
+        canvas_obj.line(40 * mm, title_y - 8, PAGE_WIDTH - 40 * mm, title_y - 8)
+        
+        # Generation text with translation support
+        if self.format_translation:
+            gen_text = self.format_translation('generation_num', gen=generation)
+            if not gen_text or gen_text == 'generation_num':
+                gen_text = f"Generation {generation}"
+        else:
+            gen_text = f"Generation {generation}"
+        
+        try:
+            gen_font_name = FontManager.get_font_name(self.language, bold=False)
+            canvas_obj.setFont(gen_font_name, 14)
+        except:
+            canvas_obj.setFont("Helvetica", 14)
+        
+        canvas_obj.setFillColor(HexColor("#FFFFFF"))
+        canvas_obj.drawCentredString(PAGE_WIDTH / 2, PAGE_HEIGHT - 55 * mm, gen_text)
+        
+        # Region name
+        region_name = generation_info.get('region', f'Generation {generation}')
+        canvas_obj.setFont("Helvetica-Bold", 18)
+        canvas_obj.setFillColor(HexColor("#FFFFFF"))
+        canvas_obj.drawCentredString(PAGE_WIDTH / 2, PAGE_HEIGHT - 65 * mm, region_name)
+        
+        # Content section: ID range
+        start_id, end_id = generation_info.get('range', (1, 151))
+        if self.format_translation:
+            id_range_text = self.format_translation('pokedex_range', start=f"#{start_id:03d}", end=f"#{end_id:03d}")
+            if not id_range_text or id_range_text == 'pokedex_range':
+                id_range_text = f"Pokédex #{start_id:03d} – #{end_id:03d}"
+        else:
+            id_range_text = f"Pokédex #{start_id:03d} – #{end_id:03d}"
+        
+        try:
+            id_font_name = FontManager.get_font_name(self.language, bold=False)
+            canvas_obj.setFont(id_font_name, 16)
+        except:
+            canvas_obj.setFont("Helvetica", 16)
+        
+        canvas_obj.setFillColor(HexColor("#333333"))
+        canvas_obj.drawCentredString(PAGE_WIDTH / 2, 120 * mm, id_range_text)
+        
+        # Pokémon count
+        if self.format_translation:
+            pokemon_text = self.format_translation('pokemon_count_text', count=len(pokemon_list))
+            if not pokemon_text or pokemon_text == 'pokemon_count_text':
+                pokemon_text = f"{len(pokemon_list)} Pokémon in this collection"
+        else:
+            pokemon_text = f"{len(pokemon_list)} Pokémon in this collection"
+        
+        try:
+            count_font_name = FontManager.get_font_name(self.language, bold=False)
+            canvas_obj.setFont(count_font_name, 14)
+        except:
+            canvas_obj.setFont("Helvetica", 14)
+        
+        canvas_obj.setFillColor(HexColor("#666666"))
+        canvas_obj.drawCentredString(PAGE_WIDTH / 2, 110 * mm, pokemon_text)
+        
+        # Decorative line
+        canvas_obj.setStrokeColor(HexColor(color))
+        canvas_obj.setLineWidth(1)
+        canvas_obj.line(40 * mm, 105 * mm, PAGE_WIDTH - 40 * mm, 105 * mm)
+        
+        # Featured Pokémon
+        iconic_ids = generation_info.get('iconic_pokemon', [])
+        self._draw_featured_pokemon(canvas_obj, pokemon_list, iconic_ids)
+        
+        # Footer
+        self._draw_cover_footer(canvas_obj, color)
+    
+    def draw_variant_cover(self, canvas_obj, variant_data: dict, pokemon_list: list, color: str):
+        """
+        Draw a variant cover page (similar to generation cover with featured images).
+        
+        Args:
+            canvas_obj: ReportLab canvas object
+            variant_data: Variant metadata (variant_type, variant_name, icon, etc.)
+            pokemon_list: List of Pokémon for this variant
+            color: Color hex for header stripe
+        """
+        self._draw_cover_base(canvas_obj, color)
+        
+        # Header content
+        canvas_obj.setFont("Helvetica-Bold", 42)
+        canvas_obj.setFillColor(HexColor("#FFFFFF"))
+        title_y = PAGE_HEIGHT - 30 * mm
+        canvas_obj.drawCentredString(PAGE_WIDTH / 2, title_y, "Binder Pokédex")
+        
+        # Decorative underline
+        canvas_obj.setStrokeColor(HexColor("#FFFFFF"))
+        canvas_obj.setLineWidth(1.5)
+        canvas_obj.line(40 * mm, title_y - 8, PAGE_WIDTH - 40 * mm, title_y - 8)
+        
+        # Variant type with translation support
+        variant_type = variant_data.get('variant_type', 'Unknown')
+        if self.format_translation:
+            variant_text = self.format_translation(f'variant_{variant_type}', default=variant_type)
+            if not variant_text or variant_text.startswith('variant_'):
+                variant_text = variant_type
+        else:
+            variant_text = variant_type
+        
+        try:
+            variant_font_name = FontManager.get_font_name(self.language, bold=False)
+            canvas_obj.setFont(variant_font_name, 14)
+        except:
+            canvas_obj.setFont("Helvetica", 14)
+        
+        canvas_obj.setFillColor(HexColor("#FFFFFF"))
+        canvas_obj.drawCentredString(PAGE_WIDTH / 2, PAGE_HEIGHT - 55 * mm, variant_text)
+        
+        # Variant name (e.g., "Mega Evolution") - always use Helvetica for English names
+        variant_name = variant_data.get('variant_name', 'Variants')
+        canvas_obj.setFont("Helvetica-Bold", 28)
+        canvas_obj.setFillColor(HexColor("#FFFFFF"))
+        canvas_obj.drawCentredString(PAGE_WIDTH / 2, PAGE_HEIGHT - 65 * mm, variant_name)
+        
+        # Content section: stats
+        pokemon_count = variant_data.get('pokemon_count', len(pokemon_list))
+        forms_count = variant_data.get('forms_count', 0)
+        
+        # Translate "Species" and "Forms"
+        species_text = "Species"
+        forms_text = "Forms"
+        if self.format_translation:
+            species_text = self.format_translation('variant_species', default='Species')
+            forms_text = self.format_translation('variant_forms', default='Forms')
+        
+        # Use proper font for CJK languages
+        try:
+            stats_font = FontManager.get_font_name(self.language, bold=True)
+            canvas_obj.setFont(stats_font, 14)
+        except:
+            canvas_obj.setFont("Helvetica-Bold", 14)
+        
+        canvas_obj.setFillColor(HexColor("#333333"))
+        stats_text = f"{pokemon_count} {species_text} • {forms_count} {forms_text}"
+        canvas_obj.drawCentredString(PAGE_WIDTH / 2, 120 * mm, stats_text)
+        
+        # Decorative line
+        canvas_obj.setStrokeColor(HexColor(color))
+        canvas_obj.setLineWidth(1)
+        canvas_obj.line(40 * mm, 115 * mm, PAGE_WIDTH - 40 * mm, 115 * mm)
+        
+        # Featured Pokémon with images (use iconic_pokemon_ids if available)
+        iconic_ids = variant_data.get('iconic_pokemon_ids', [])
+        self._draw_featured_pokemon(canvas_obj, pokemon_list, iconic_ids)
+        
+        # Footer
+        self._draw_cover_footer(canvas_obj, color)
+    
+    def _draw_cover_base(self, canvas_obj, color: str):
+        """Draw base cover background."""
+        # White background
+        canvas_obj.setFillColor(HexColor("#FFFFFF"))
+        canvas_obj.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT, fill=True, stroke=False)
+        
+        # Top colored stripe
+        stripe_height = 100 * mm
+        canvas_obj.setFillColor(HexColor(color))
+        canvas_obj.rect(0, PAGE_HEIGHT - stripe_height, PAGE_WIDTH, stripe_height, fill=True, stroke=False)
+        
+        # Semi-transparent overlay
+        canvas_obj.setFillColor(HexColor("#000000"), alpha=0.05)
+        canvas_obj.rect(0, PAGE_HEIGHT - stripe_height, PAGE_WIDTH, stripe_height, fill=True, stroke=False)
+    
+    def _draw_featured_pokemon(self, canvas_obj, pokemon_list: list, iconic_ids: list):
+        """Draw featured Pokémon at bottom of cover. If iconic_ids is empty, draw nothing."""
+        if not pokemon_list or not iconic_ids:
+            # Don't draw featured pokemon if iconic_ids is not provided
+            return
+        
+        # OPTIMIZATION: Skip featured pokemon if image_cache not available
+        # (avoids expensive HTTP requests during PDF generation)
+        if not self.image_cache:
+            return
+        
+        # Use provided iconic_ids (max 3)
+        featured_ids = iconic_ids[:3]
+        
+        # Create lookup maps: both by integer ID and by full ID string
+        # (for variants like "#006_MEGA_X")
+        pokemon_by_int_id = {}
+        pokemon_by_str_id = {}
+        for p in pokemon_list:
+            poke_id = p.get('id', p.get('num', '0'))
+            
+            # Map by full ID string (e.g., "#006_MEGA_X")
+            pokemon_by_str_id[poke_id] = p
+            
+            # Map by integer ID (e.g., 6)
+            if isinstance(poke_id, str):
+                # Extract base integer from ID
+                int_id = int(poke_id.lstrip('#').split('_')[0])
+            else:
+                int_id = int(poke_id)
+            pokemon_by_int_id[int_id] = p
+        
+        pokemon_count = min(len(featured_ids), 3)
+        if pokemon_count == 0:
+            return
+        
+        total_width = PAGE_WIDTH - (30 * mm)
+        spacing_per_pokemon = total_width / pokemon_count
+        
+        for idx, poke_id in enumerate(featured_ids[:3]):
+            # Try to find pokemon first by full ID (for variants), then by integer ID
+            pokemon = None
+            
+            # First try exact match (for variants like "#006_MEGA_X")
+            if isinstance(poke_id, str) and poke_id in pokemon_by_str_id:
+                pokemon = pokemon_by_str_id[poke_id]
+            
+            # Fall back to integer lookup if exact match not found
+            if not pokemon:
+                if isinstance(poke_id, str):
+                    lookup_id = int(poke_id.lstrip('#').split('_')[0])
+                else:
+                    lookup_id = int(poke_id) if poke_id else 0
+                pokemon = pokemon_by_int_id.get(lookup_id)
+            
+            if not pokemon:
+                continue
+            
+            x_center = 15 * mm + spacing_per_pokemon * (idx + 0.5)
+            card_width = 65 * mm
+            card_height = 90 * mm
+            x = x_center - card_width / 2
+            y = 10 * mm
+            
+            image_source = pokemon.get('image_path') or pokemon.get('image_url')
+            if image_source and self.image_cache:
+                try:
+                    image_to_render = None
+                    # Use mega_form_id if available (PokeAPI), otherwise pokemon_form_cache_id (Pokemon.com)
+                    img_lookup_id = pokemon.get('mega_form_id') or pokemon.get('pokemon_form_cache_id')
+                    if not img_lookup_id:
+                        img_lookup_id = pokemon.get('id', pokemon.get('num', 0))
+                        if isinstance(img_lookup_id, str):
+                            img_lookup_id = int(img_lookup_id.lstrip('#').split('_')[0])
+                        else:
+                            img_lookup_id = int(img_lookup_id)
+                    else:
+                        img_lookup_id = int(img_lookup_id) if img_lookup_id else 0
+                    
+                    if image_source.startswith('http://') or image_source.startswith('https://'):
+                        image_to_render = self.image_cache.get_image(img_lookup_id, url=image_source, timeout=3)
+                    elif Path(image_source).exists():
+                        image_to_render = image_source
+                    
+                    if image_to_render:
+                        img_width = card_width * 0.72
+                        img_height = card_height * 0.72
+                        img_x = x_center - img_width / 2
+                        img_y = y
+                        canvas_obj.drawImage(
+                            image_to_render, img_x, img_y,
+                            width=img_width, height=img_height,
+                            preserveAspectRatio=True
+                        )
+                except Exception as e:
+                    logger.debug(f"Could not load featured image {lookup_id}: {e}")
+    
+    def _draw_cover_footer(self, canvas_obj, color: str):
+        """Draw footer on cover page."""
+        try:
+            font_name = FontManager.get_font_name(self.language, bold=False)
+            canvas_obj.setFont(font_name, 6)
+        except:
+            canvas_obj.setFont("Helvetica", 6)
+        
+        canvas_obj.setFillColor(HexColor("#CCCCCC"))
+        
+        # Build footer text
+        footer_parts = []
+        
+        if self.format_translation:
+            footer_parts.append(self.format_translation('cover_print_borderless'))
+            footer_parts.append(self.format_translation('cover_follow_cutting'))
+        else:
+            footer_parts.append("Print borderless")
+            footer_parts.append("Follow cutting lines")
+        
+        footer_parts.append("Binder Pokédex Project")
+        footer_parts.append(datetime.now().strftime('%Y-%m-%d'))
+        
+        footer_text = " • ".join(footer_parts)
+        text_width = canvas_obj.stringWidth(footer_text, canvas_obj._fontname, 6) if hasattr(canvas_obj, '_fontname') else len(footer_text) * 2
+        x_pos = (PAGE_WIDTH - text_width) / 2
+        canvas_obj.drawString(x_pos, 2.5 * mm, footer_text)

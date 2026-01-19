@@ -159,11 +159,54 @@ def cache_all_pokemon():
         
         logger.info(f"  ✓ {gen_cached} cached, {gen_failed} failed\n")
     
+    # Process variants (e.g., Mega Evolution)
+    variants_dir = DATA_DIR / 'variants'
+    if variants_dir.exists():
+        for variant_file in sorted(variants_dir.glob('variants_*.json')):
+            logger.info(f"Variant: {variant_file.stem}")
+            
+            try:
+                with open(variant_file) as f:
+                    variant_data = json.load(f)
+            except Exception as e:
+                logger.error(f"  ✗ Failed to load {variant_file}: {e}")
+                continue
+            
+            pokemon_list = variant_data.get('pokemon', [])
+            var_cached = 0
+            var_failed = 0
+            
+            for pokemon in pokemon_list:
+                # Use mega_form_id if available, otherwise use pokemon_form_cache_id (for Pokemon.com forms)
+                # Otherwise use pokemon_id from ID
+                pokemon_id = pokemon.get('mega_form_id') or pokemon.get('pokemon_form_cache_id')
+                if not pokemon_id:
+                    pokemon_id = pokemon.get('id')
+                    if isinstance(pokemon_id, str):
+                        pokemon_id = int(pokemon_id.lstrip('#').split('_')[0])
+                
+                image_url = pokemon.get('image_url')
+                
+                if not pokemon_id or not image_url:
+                    continue
+                
+                total_pokemon += 1
+                
+                if cache_pokemon_image(pokemon_id, image_url):
+                    cached_count += 1
+                    var_cached += 1
+                else:
+                    failed_count += 1
+                    var_failed += 1
+                    logger.debug(f"    ✗ Failed to cache #{pokemon_id}")
+            
+            logger.info(f"  ✓ {var_cached} cached, {var_failed} failed\n")
+    
     # Summary
     logger.info(f"{'='*80}")
     logger.info("Cache Summary")
     logger.info(f"{'='*80}")
-    logger.info(f"Total Pokémon: {total_pokemon}")
+    logger.info(f"Total Pokémon/Forms: {total_pokemon}")
     logger.info(f"Successfully cached: {cached_count}")
     logger.info(f"Failed: {failed_count}")
     
