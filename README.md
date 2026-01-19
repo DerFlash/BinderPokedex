@@ -37,6 +37,17 @@ All 9 generations, all 9 languages: 81 ready-to-print PDFs with 1,025 Pokémon.
 
 ---
 
+## ⚖️ Legal Notice
+
+**This is a fan-made, non-commercial project.** Pokémon, Pokédex, and all related trademarks are the property of The Pokémon Company, Nintendo, and GameFreak.
+
+✅ **Permitted:** Personal use, educational purposes, private collections  
+❌ **Prohibited:** Commercial use, selling PDFs or printed materials, profit-driven redistribution
+
+For full details, see [LICENSE](LICENSE).
+
+---
+
 ## 🚀 For Developers
 
 ### Generate Your Own PDFs
