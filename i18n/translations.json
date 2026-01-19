@@ -3,101 +3,146 @@
     "de": {
       "title": "BinderPokedex - Platzhalter-Karten Binder",
       "generation": "Generation",
+      "generation_num": "Generation {{gen}}",
       "pokemon_count": "Pokémon",
+      "pokemon_count_text": "{{count}} Pokémon in dieser Sammlung",
       "pages": "Seiten",
       "cover_page": "Deckblatt",
       "card_page": "Kartenseite",
       "type": "Typ",
       "id": "Nr.",
-      "cutting_guide": "Bitte entlang der gestrickelten Linien ausschneiden"
+      "cutting_guide": "Bitte entlang der gestrickelten Linien ausschneiden",
+      "pokedex_range": "Pokédex {{start}} – {{end}}",
+      "cover_print_borderless": "Randlos drucken",
+      "cover_follow_cutting": "Schneidekanten beachten"
     },
     "en": {
       "title": "BinderPokedex - Placeholder Card Binder",
       "generation": "Generation",
+      "generation_num": "Generation {{gen}}",
       "pokemon_count": "Pokémon",
+      "pokemon_count_text": "{{count}} Pokémon in this collection",
       "pages": "Pages",
       "cover_page": "Cover Page",
       "card_page": "Card Page",
       "type": "Type",
       "id": "No.",
-      "cutting_guide": "Please cut along the dashed lines"
+      "cutting_guide": "Please cut along the dashed lines",
+      "pokedex_range": "Pokédex {{start}} – {{end}}",
+      "cover_print_borderless": "Print borderless",
+      "cover_follow_cutting": "Follow cutting lines"
     },
     "fr": {
       "title": "BinderPokedex - Classeur de Cartes Spéciales",
       "generation": "Génération",
+      "generation_num": "Génération {{gen}}",
       "pokemon_count": "Pokémon",
+      "pokemon_count_text": "{{count}} Pokémon dans cette collection",
       "pages": "Pages",
       "cover_page": "Couverture",
       "card_page": "Page de Carte",
       "type": "Type",
       "id": "Nº",
-      "cutting_guide": "Veuillez découper le long des lignes pointillées"
+      "cutting_guide": "Veuillez découper le long des lignes pointillées",
+      "pokedex_range": "Pokédex {{start}} – {{end}}",
+      "cover_print_borderless": "Imprimer sans bordure",
+      "cover_follow_cutting": "Suivre les lignes de coupe"
     },
     "es": {
       "title": "BinderPokedex - Carpeta de Cartas Especiales",
       "generation": "Generación",
+      "generation_num": "Generación {{gen}}",
       "pokemon_count": "Pokémon",
+      "pokemon_count_text": "{{count}} Pokémon en esta colección",
       "pages": "Páginas",
       "cover_page": "Portada",
       "card_page": "Página de Carta",
       "type": "Tipo",
       "id": "Nº",
-      "cutting_guide": "Por favor recorta a lo largo de las líneas punteadas"
+      "cutting_guide": "Por favor recorta a lo largo de las líneas punteadas",
+      "pokedex_range": "Pokédex {{start}} – {{end}}",
+      "cover_print_borderless": "Imprimir sin bordes",
+      "cover_follow_cutting": "Seguir líneas de corte"
     },
     "it": {
       "title": "BinderPokedex - Raccoglitore di Carte Speciali",
       "generation": "Generazione",
+      "generation_num": "Generazione {{gen}}",
       "pokemon_count": "Pokémon",
+      "pokemon_count_text": "{{count}} Pokémon in questa collezione",
       "pages": "Pagine",
       "cover_page": "Copertina",
       "card_page": "Pagina Carta",
       "type": "Tipo",
       "id": "N.",
-      "cutting_guide": "Si prega di tagliare lungo le linee tratteggiate"
+      "cutting_guide": "Si prega di tagliare lungo le linee tratteggiate",
+      "pokedex_range": "Pokédex {{start}} – {{end}}",
+      "cover_print_borderless": "Stampa senza bordi",
+      "cover_follow_cutting": "Seguire le linee di taglio"
     },
     "ja": {
       "title": "BinderPokedex - プレースホルダーカードバインダー",
       "generation": "世代",
+      "generation_num": "{{gen}}世代",
       "pokemon_count": "ポケモン",
+      "pokemon_count_text": "このコレクションの{{count}}のポケモン",
       "pages": "ページ",
       "cover_page": "表紙",
       "card_page": "カードページ",
       "type": "タイプ",
       "id": "No.",
-      "cutting_guide": "点線に沿って切ってください"
+      "cutting_guide": "点線に沿って切ってください",
+      "pokedex_range": "ポケモン図鑑 {{start}} – {{end}}",
+      "cover_print_borderless": "縁なしで印刷",
+      "cover_follow_cutting": "切り取り線に沿う"
     },
     "ko": {
       "title": "BinderPokedex - 플레이스홀더 카드 바인더",
       "generation": "세대",
+      "generation_num": "{{gen}}세대",
       "pokemon_count": "포켓몬",
+      "pokemon_count_text": "이 컬렉션의 {{count}}개 포켓몬",
       "pages": "페이지",
       "cover_page": "표지",
       "card_page": "카드 페이지",
       "type": "유형",
       "id": "No.",
-      "cutting_guide": "점선을 따라 자르세요"
+      "cutting_guide": "점선을 따라 자르세요",
+      "pokedex_range": "포켓몬 도감 {{start}} – {{end}}",
+      "cover_print_borderless": "테두리 없이 인쇄",
+      "cover_follow_cutting": "자르기 선 따라가기"
     },
-    "zh-hans": {
-      "title": "BinderPokedex - 占位符卡片活页夹",
+    "zh_hans": {
+      "title": "BinderPokedex - 占位符卡活页夹",
       "generation": "世代",
-      "pokemon_count": "口袋妖怪",
+      "generation_num": "第{{gen}}世代",
+      "pokemon_count": "宝可梦",
+      "pokemon_count_text": "此收集中的{{count}}只宝可梦",
       "pages": "页",
       "cover_page": "封面",
-      "card_page": "卡页",
+      "card_page": "卡牌页面",
       "type": "类型",
       "id": "No.",
-      "cutting_guide": "请沿虚线剪裁"
+      "cutting_guide": "请沿虚线切割",
+      "pokedex_range": "宝可梦图鉴 {{start}} – {{end}}",
+      "cover_print_borderless": "无边界打印",
+      "cover_follow_cutting": "沿裁切线操作"
     },
-    "zh-hant": {
-      "title": "BinderPokedex - 佔位符卡片活頁夾",
+    "zh_hant": {
+      "title": "BinderPokedex - 佔位符卡活頁夾",
       "generation": "世代",
+      "generation_num": "第{{gen}}世代",
       "pokemon_count": "寶可夢",
+      "pokemon_count_text": "此收集中的{{count}}隻寶可夢",
       "pages": "頁",
       "cover_page": "封面",
-      "card_page": "卡頁",
+      "card_page": "卡牌頁面",
       "type": "類型",
       "id": "No.",
-      "cutting_guide": "請沿虛線剪裁"
+      "cutting_guide": "請沿虛線切割",
+      "pokedex_range": "寶可夢圖鑑 {{start}} – {{end}}",
+      "cover_print_borderless": "無邊界列印",
+      "cover_follow_cutting": "沿裁切線操作"
     }
   },
   "types": {
@@ -241,7 +286,7 @@
       "Steel": "강철",
       "Fairy": "페어리"
     },
-    "zh-hans": {
+    "zh_hans": {
       "Normal": "一般",
       "Fire": "火",
       "Water": "水",
@@ -261,7 +306,7 @@
       "Steel": "钢",
       "Fairy": "妖精"
     },
-    "zh-hant": {
+    "zh_hant": {
       "Normal": "一般",
       "Fire": "火",
       "Water": "水",
@@ -360,7 +405,7 @@
       "8": "가라르",
       "9": "팔데아"
     },
-    "zh-hans": {
+    "zh_hans": {
       "1": "关都",
       "2": "城都",
       "3": "丰缘",
@@ -371,7 +416,7 @@
       "8": "伽勒尔",
       "9": "帕底亚"
     },
-    "zh-hant": {
+    "zh_hant": {
       "1": "關都",
       "2": "城都",
       "3": "豐緣",

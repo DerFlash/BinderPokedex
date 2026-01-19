@@ -176,13 +176,14 @@ class PDFGenerator:
     - File output
     """
     
-    def __init__(self, language: str, generation: int):
+    def __init__(self, language: str, generation: int, translations: dict = None):
         """
         Initialize PDF generator.
         
         Args:
             language: Language code (e.g., 'de', 'ja', 'zh_hans')
             generation: Pokémon generation (1-9)
+            translations: Optional translations dictionary. If None, will be loaded from file.
         
         Raises:
             ValueError: If language or generation is invalid
@@ -199,7 +200,52 @@ class PDFGenerator:
         self.page_count = 0
         self.image_cache = ImageCache()  # Initialize image cache
         
+        # Load translations
+        if translations is None:
+            self.translations = self._load_translations()
+        else:
+            self.translations = translations
+        
         logger.info(f"Initialized PDFGenerator for {LANGUAGES[language]['name']} (Gen {generation})")
+    
+    def _load_translations(self) -> dict:
+        """
+        Load translations from i18n/translations.json
+        
+        Returns:
+            Dictionary with translations for current language
+        """
+        try:
+            import json
+            trans_file = Path(__file__).parent.parent.parent / 'i18n' / 'translations.json'
+            with open(trans_file, 'r', encoding='utf-8') as f:
+                all_trans = json.load(f)
+            
+            # Return UI translations for the current language, or empty dict if not found
+            ui_trans = all_trans.get('ui', {})
+            return ui_trans.get(self.language, {})
+        except Exception as e:
+            logger.warning(f"Could not load translations: {e}")
+            return {}
+    
+    def _format_translation(self, key: str, **kwargs) -> str:
+        """
+        Get a translated string and format it with provided variables.
+        
+        Args:
+            key: Translation key (e.g., 'pokemon_count_text')
+            **kwargs: Variables to format into the string (e.g., count=151)
+        
+        Returns:
+            Formatted translation or key if not found
+        """
+        text = self.translations.get(key, key)
+        
+        # Simple template replacement
+        for var_name, var_value in kwargs.items():
+            text = text.replace(f'{{{{{var_name}}}}}', str(var_value))
+        
+        return text
     
     def set_pokemon_list(self, pokemon_list: list):
         """
@@ -338,6 +384,7 @@ class PDFGenerator:
         - Large region name and generation number
         - Three iconic Pokémon displayed at the bottom
         - Clean, modern design
+        - Multi-language support for all text
         
         Args:
             canvas_obj: ReportLab canvas object
@@ -373,26 +420,55 @@ class PDFGenerator:
         get_info = GENERATION_INFO[self.generation]
         region_name = get_info.get('region', f'Generation {self.generation}')
         
-        canvas_obj.setFont("Helvetica", 14)
+        # Use translations for Generation text
+        gen_text = self._format_translation('generation_num', gen=self.generation)
+        if not gen_text or gen_text == 'generation_num':
+            # Fallback to English if translation not found
+            gen_text = f"Generation {self.generation}"
+        
+        # Use appropriate font for generation text
+        try:
+            gen_font_name = FontManager.get_font_name(self.language, bold=False)
+            canvas_obj.setFont(gen_font_name, 14)
+        except:
+            canvas_obj.setFont("Helvetica", 14)
         canvas_obj.setFillColor(HexColor("#FFFFFF"))
-        canvas_obj.drawCentredString(PAGE_WIDTH / 2, PAGE_HEIGHT - 55 * mm, f"Generation {self.generation}")
+        canvas_obj.drawCentredString(PAGE_WIDTH / 2, PAGE_HEIGHT - 55 * mm, gen_text)
         
         canvas_obj.setFont("Helvetica-Bold", 18)
         canvas_obj.setFillColor(HexColor("#FFFFFF"))
         canvas_obj.drawCentredString(PAGE_WIDTH / 2, PAGE_HEIGHT - 65 * mm, region_name)
         
         # ===== MIDDLE CONTENT SECTION =====
-        # ID range
+        # ID range with translation
         start_id, end_id = get_info['range']
-        canvas_obj.setFont("Helvetica", 16)
+        id_range_text = self._format_translation('pokedex_range', start=f"#{start_id:03d}", end=f"#{end_id:03d}")
+        if not id_range_text or id_range_text == 'pokedex_range':
+            # Fallback if translation not found
+            id_range_text = f"Pokédex #{start_id:03d} – #{end_id:03d}"
+        
+        # Use appropriate font for ID range text
+        try:
+            id_font_name = FontManager.get_font_name(self.language, bold=False)
+            canvas_obj.setFont(id_font_name, 16)
+        except:
+            canvas_obj.setFont("Helvetica", 16)
         canvas_obj.setFillColor(HexColor("#333333"))
-        id_range_text = f"Pokédex #{start_id:03d} – #{end_id:03d}"
         canvas_obj.drawCentredString(PAGE_WIDTH / 2, 120 * mm, id_range_text)
         
-        # Pokémon count and info
-        canvas_obj.setFont("Helvetica", 14)
+        # Pokémon count and info with translation
+        pokemon_text = self._format_translation('pokemon_count_text', count=len(self.pokemon_list))
+        if not pokemon_text or pokemon_text == 'pokemon_count_text':
+            # Fallback if translation not found
+            pokemon_text = f"{len(self.pokemon_list)} Pokémon in this collection"
+        
+        # Use appropriate font for pokemon count text
+        try:
+            count_font_name = FontManager.get_font_name(self.language, bold=False)
+            canvas_obj.setFont(count_font_name, 14)
+        except:
+            canvas_obj.setFont("Helvetica", 14)
         canvas_obj.setFillColor(HexColor("#666666"))
-        pokemon_text = f"{len(self.pokemon_list)} Pokémon in this collection"
         canvas_obj.drawCentredString(PAGE_WIDTH / 2, 110 * mm, pokemon_text)
         
         # Decorative elements
@@ -447,11 +523,24 @@ class PDFGenerator:
                         except Exception as e:
                             logger.debug(f"Could not load image for iconic Pokémon {poke_id}: {e}")
         
-        # Bottom info - single line with print instructions
-        canvas_obj.setFont("Helvetica", 6)
+        # Bottom info - single line with print instructions (multilingual)
+        try:
+            font_name = FontManager.get_font_name(self.language, bold=False)
+            canvas_obj.setFont(font_name, 6)
+        except:
+            canvas_obj.setFont("Helvetica", 6)
+        
         canvas_obj.setFillColor(HexColor("#CCCCCC"))
-        footer_text = f"Print borderless • Follow cutting lines • Binder Pokédex Project • {datetime.now().strftime('%Y-%m-%d')}"
-        text_width = canvas_obj.stringWidth(footer_text, "Helvetica", 6)
+        
+        # Build footer text with translations
+        footer_parts = [
+            self._format_translation('cover_print_borderless'),
+            self._format_translation('cover_follow_cutting'),
+            "Binder Pokédex Project",  # Keep project name in English
+            datetime.now().strftime('%Y-%m-%d')
+        ]
+        footer_text = " • ".join(footer_parts)
+        text_width = canvas_obj.stringWidth(footer_text, canvas_obj._fontname, 6) if hasattr(canvas_obj, '_fontname') else len(footer_text) * 2
         x_pos = (PAGE_WIDTH - text_width) / 2
         canvas_obj.drawString(x_pos, 2.5 * mm, footer_text)
     
