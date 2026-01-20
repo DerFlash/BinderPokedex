@@ -71,6 +71,8 @@ jobs:
           body: |
             ## 🚀 Binder Pokédex ${{ steps.tag.outputs.tag_name }} Released!
             
+            ✅ **Release complete with all 117 PDFs!**
+            
             ### 📦 Downloads
             - **binder-pokedex-all-languages.zip** - Complete set with all 9 languages (117 PDFs)
             - **binder-pokedex-de.zip** - Deutsch
