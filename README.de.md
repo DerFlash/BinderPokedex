@@ -2,11 +2,11 @@
 
 Generiere **Pokémon-Platzhalter-Karten** (Pokédex-Stil) in 9 Sprachen!
 
-Alle 9 Generationen, alle 9 Sprachen: 81 druckfertige PDFs mit 1.025 Pokémon.
+Alle 9 Generationen + EX Varianten, alle 9 Sprachen: 117 druckfertige PDFs mit 1.025+ Pokémon.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-[![v2.1](https://img.shields.io/badge/Version-v2.1-green.svg)](https://github.com/DerFlash/BinderPokedex/releases/tag/v2.1)
+[![v3.0](https://img.shields.io/badge/Version-v3.0-green.svg)](https://github.com/DerFlash/BinderPokedex/releases/tag/v3.0)
 
 ---
 
@@ -20,9 +20,9 @@ Alle 9 Generationen, alle 9 Sprachen: 81 druckfertige PDFs mit 1.025 Pokémon.
 
 ### Für normale Nutzer - einfach laden & drucken!
 
-**Aktuelle Version (v2.1):** [Alle 81 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v2.1) ✨ *100x schneller: Image-Caching + komplettes Rebranding*
+**Aktuelle Version (v3.0):** [Alle 117 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v3.0) ✨ *Mit EX Varianten + CJK-Fixes + Live-Progress*
 
-**Nach Sprache (v2.1):** 🇩🇪 [DE](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-de.zip) | 🇬🇧 [EN](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-en.zip) | 🇫🇷 [FR](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-fr.zip) | 🇪🇸 [ES](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-es.zip) | 🇮🇹 [IT](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-it.zip) | 🇯🇵 [JA](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-ja.zip) | 🇰🇷 [KO](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-ko.zip) | 🇨🇳 [ZH](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-zh_hans.zip) | 🇹🇼 [ZH-T](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-zh_hant.zip)
+**Nach Sprache (v3.0):** 🇩🇪 [DE](https://github.com/DerFlash/BinderPokedex/releases/download/v3.0/binder-pokedex-de.zip) | 🇬🇧 [EN](https://github.com/DerFlash/BinderPokedex/releases/download/v3.0/binder-pokedex-en.zip) | 🇫🇷 [FR](https://github.com/DerFlash/BinderPokedex/releases/download/v3.0/binder-pokedex-fr.zip) | 🇪🇸 [ES](https://github.com/DerFlash/BinderPokedex/releases/download/v3.0/binder-pokedex-es.zip) | 🇮🇹 [IT](https://github.com/DerFlash/BinderPokedex/releases/download/v3.0/binder-pokedex-it.zip) | 🇯🇵 [JA](https://github.com/DerFlash/BinderPokedex/releases/download/v3.0/binder-pokedex-ja.zip) | 🇰🇷 [KO](https://github.com/DerFlash/BinderPokedex/releases/download/v3.0/binder-pokedex-ko.zip) | 🇨🇳 [ZH](https://github.com/DerFlash/BinderPokedex/releases/download/v3.0/binder-pokedex-zh_hans.zip) | 🇹🇼 [ZH-T](https://github.com/DerFlash/BinderPokedex/releases/download/v3.0/binder-pokedex-zh_hant.zip)
 
 ✅ Entpacken, öffnen, drucken!
 
@@ -46,9 +46,10 @@ python scripts/generate_pdf.py --language de --generation 1
 ### Abdeckung
 
 - **Generationen:** Alle 9 (Kanto → Paldea)
+- **Varianten:** EX-Serie (Gen1, Gen2, Gen3) + Mega Evolution
 - **Sprachen:** 9 (DE, EN, FR, ES, IT, JA, KO, ZH, ZH-T)
-- **Pokémon:** 1.025 insgesamt
-- **PDFs:** 81 generiert
+- **Pokémon:** 1.025+ insgesamt inkl. Varianten
+- **PDFs:** 117 generiert (81 Generationen + 36 Varianten)
 
 ---
 

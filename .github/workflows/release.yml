@@ -20,6 +20,21 @@ jobs:
           echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
           echo "Release: $TAG_NAME"
       
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Generate PDFs
+        run: |
+          python scripts/generate_pdf.py
+          ls -lh output/*/*pdf | wc -l
+      
       - name: Create PDF artifacts (all languages + individual language zips)
         run: |
           cd output
@@ -57,7 +72,7 @@ jobs:
             ## 🚀 Binder Pokédex ${{ steps.tag.outputs.tag_name }} Released!
             
             ### 📦 Downloads
-            - **binder-pokedex-all-languages.zip** - Complete set with all 9 languages
+            - **binder-pokedex-all-languages.zip** - Complete set with all 9 languages (117 PDFs)
             - **binder-pokedex-de.zip** - Deutsch
             - **binder-pokedex-en.zip** - English
             - **binder-pokedex-fr.zip** - Français
@@ -68,31 +83,40 @@ jobs:
             - **binder-pokedex-zh_hans.zip** - 简体中文
             - **binder-pokedex-zh_hant.zip** - 繁體中文
             
-            Each ZIP contains all 9 generations (Kanto to Paldea).
+            Each ZIP contains:
+            - 81 Generation PDFs (Kanto to Paldea)
+            - 36 Variant PDFs (EX Gen1/Gen2/Gen3 + Mega Evolution)
             
-            ### ✨ Key Features
-            - 100x Performance Improvement: PDF generation reduced from 2-3 hours to ~45 seconds
-            - Persistent Image Cache: All 1025 Pokémon images cached locally (25 MB)
-            - Complete Project Rebrand: 'Binder Pokédex' with proper spacing and accent
-            - 81 PDFs Generated: All 9 generations × 9 languages with embedded images
+            ### ✨ New Features in v3.0
+            - **EX Variant Series**
+              - EX Gen1: 119 Pokémon-ex cards
+              - EX Gen2: 72 Pokémon-EX cards with Mega Evolution
+              - EX Gen3: 82 Pokémon ex cards with Tera forms
+              - Mega Evolution: 76 Pokémon with mega forms
+            - **Fixed CJK Type Rendering**
+              - No more black boxes for Japanese, Korean, Chinese type text!
+              - Proper FontManager integration with drawRightString()
+            - **Live Progress Bars** for variant PDF generation
+            - **Logo Rendering** for EX variants (M Pokémon, EX, EX New, EX Tera)
             
             ### 🐛 Bug Fixes
-            - Fixed Pokemon ID missing from prepared data (diverse Pokémon on cards)
-            - Implemented proper image cache fallback strategy (disk → network)
+            - Fixed CJK type text rendering in card headers
+            - Fixed type field compatibility (types array vs type1 field)
+            - Improved type text positioning (right-aligned without overflow)
             
-            ### 📊 Performance Metrics
-            - Cache Build: 3 minutes for 1025 Pokémon images (100% success)
-            - PDF Generation: 46.8 seconds for complete set
-            - File Size: 2-5 MB per PDF with embedded images
-            - Storage: ~25 KB per image with JPEG 85% quality
+            ### 📊 Stats
+            - **Total PDFs:** 117 (81 generations + 36 variants)
+            - **Total Pokémon:** 1,025+ including variants
+            - **Languages:** 9 (DE, EN, FR, ES, IT, JA, KO, ZH, ZH-T)
+            - **Size per PDF:** 5-8 MB with embedded images
             
-            ### 🛠️ Technical Details
-            - Two-tier caching: RAM + persistent disk cache
-            - ImageCache with network fallback
-            - New script: `cache_pokemon_images.py`
-            - Updated .gitignore for cache directories
+            ### 🔧 Technical Details
+            - Support for both 'types' array and 'type1' field formats
+            - Multilingual variant titles and descriptions
+            - Section-based PDF generation with featured Pokémon
+            - Proper handling of null subtitle values in covers
             
-            See the commit for detailed technical changes.
+            See commit 7f9d052 for detailed technical changes.
           draft: false
           prerelease: false
         env:

@@ -2,11 +2,11 @@
 
 **Generate multilingual Pokémon placeholder collection cards (Pokédex-style) for your binder.**
 
-All 9 generations, all 9 languages: 81 ready-to-print PDFs with 1,025 Pokémon.
+All 9 generations + EX variants, all 9 languages: 117 ready-to-print PDFs with 1,025+ Pokémon.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-[![v2.1](https://img.shields.io/badge/version-v2.1-green.svg)](https://github.com/DerFlash/BinderPokedex/releases/tag/v2.1)
+[![v3.0](https://img.shields.io/badge/version-v3.0-green.svg)](https://github.com/DerFlash/BinderPokedex/releases/tag/v3.0)
 
 ---
 
@@ -20,18 +20,18 @@ All 9 generations, all 9 languages: 81 ready-to-print PDFs with 1,025 Pokémon.
 
 ### For End Users - Just Download & Print!
 
-**Latest (v2.1):** [All 81 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v2.1) ✨ *100x faster: Image caching system + complete rebranding*
+**Latest (v3.0):** [All 117 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v3.0) ✨ *Now with EX variants + CJK fixes + live progress*
 
-**By Language (v2.1):**
-🇩🇪 [Deutsch](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-de.zip) |
-🇬🇧 [English](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-en.zip) |
-🇫🇷 [Français](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-fr.zip) |
-🇪🇸 [Español](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-es.zip) |
-🇮🇹 [Italiano](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-it.zip) |
-🇯🇵 [日本語](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-ja.zip) |
-🇰🇷 [한국어](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-ko.zip) |
-🇨🇳 [简体中文](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-zh_hans.zip) |
-🇹🇼 [繁體中文](https://github.com/DerFlash/BinderPokedex/releases/download/v2.1/binder-pokedex-zh_hant.zip)
+**By Language (v3.0):**
+🇩🇪 [Deutsch](https://github.com/DerFlash/BinderPokedex/releases/download/v3.0/binder-pokedex-de.zip) |
+🇬🇧 [English](https://github.com/DerFlash/BinderPokedex/releases/download/v3.0/binder-pokedex-en.zip) |
+🇫🇷 [Français](https://github.com/DerFlash/BinderPokedex/releases/download/v3.0/binder-pokedex-fr.zip) |
+🇪🇸 [Español](https://github.com/DerFlash/BinderPokedex/releases/download/v3.0/binder-pokedex-es.zip) |
+🇮🇹 [Italiano](https://github.com/DerFlash/BinderPokedex/releases/download/v3.0/binder-pokedex-it.zip) |
+🇯🇵 [日本語](https://github.com/DerFlash/BinderPokedex/releases/download/v3.0/binder-pokedex-ja.zip) |
+🇰🇷 [한국어](https://github.com/DerFlash/BinderPokedex/releases/download/v3.0/binder-pokedex-ko.zip) |
+🇨🇳 [简体中文](https://github.com/DerFlash/BinderPokedex/releases/download/v3.0/binder-pokedex-zh_hans.zip) |
+🇹🇼 [繁體中文](https://github.com/DerFlash/BinderPokedex/releases/download/v3.0/binder-pokedex-zh_hant.zip)
 
 ✅ Extract, open PDFs, print, and bind!
 
@@ -66,9 +66,10 @@ python scripts/generate_pdf.py --language de --generation 1
 ### Coverage
 
 - **Generations:** All 9 (Kanto → Paldea)
+- **Variants:** EX series (Gen1, Gen2, Gen3) + Mega Evolution
 - **Languages:** 9 (DE, EN, FR, ES, IT, JA, KO, ZH, ZH-T)
-- **Pokémon:** 1,025 total
-- **PDFs:** 81 generated
+- **Pokémon:** 1,025+ total including variants
+- **PDFs:** 117 generated (81 generations + 36 variants)
 
 ---
 
@@ -91,13 +92,19 @@ python scripts/generate_pdf.py --language de --generation 1
 ## ✨ Key Features
 
 - **9 Languages** with proper CJK support (Japanese, Korean, Chinese)
+  - Fixed CJK type text rendering (no more black boxes!)
 - **Official Pokémon artwork** from PokéAPI
 - **3×3 card layout** (9 per page)
 - **Generation cover pages** with multilingual footer text
-- **Pokémon Variants Support** - Starting with Mega Evolution ✨
-  - **Mega Evolution:** 76 Pokémon with 79 form-specific images
+- **EX Variant Series** ✨ NEW in v3.0
+  - **EX Gen1:** 119 Pokémon-ex cards with special forms
+  - **EX Gen2:** 72 Pokémon-EX cards with Mega Evolution support
+  - **EX Gen3:** 82 Pokémon ex cards with Tera forms
+  - **Mega Evolution:** 76 Pokémon with 79 mega forms
+  - Logo rendering: M Pokémon, EX, EX New, EX Tera
+- **Pokémon Variants Support** with sectioned PDFs
   - Dynamic form imagery (PokeAPI + Bulbapedia fallback)
-  - Future support planned for Gigantamax, Regional Variants, etc.
+  - Live progress bars during generation
 - **English subtitles** on non-English cards
 - **Print-ready** A4 format with cutting guides
 - **Modular, clean architecture** (no workarounds)
@@ -127,4 +134,4 @@ MIT License - See [LICENSE](LICENSE) for details.
 
 ---
 
-**Ready to create your Pokémon binder?** [Download now](https://github.com/DerFlash/BinderPokedex/releases/tag/v2.0) or [build it yourself](docs/INSTALLATION.md)! 🎉
+**Ready to create your Pokémon binder?** [Download now](https://github.com/DerFlash/BinderPokedex/releases/tag/v3.0) or [build it yourself](docs/INSTALLATION.md)! 🎉
