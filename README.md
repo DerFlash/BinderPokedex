@@ -134,4 +134,13 @@ MIT License - See [LICENSE](LICENSE) for details.
 
 ---
 
-**Ready to create your Pokémon binder?** [Download now](https://github.com/DerFlash/BinderPokedex/releases/tag/v3.0) or [build it yourself](docs/INSTALLATION.md)! 🎉
+## 🙏 Credits & Acknowledgments
+
+This project couldn't exist without these amazing resources and people:
+
+- **[PokéAPI](https://pokeapi.co/)** 📊 - The backbone of our Pokémon knowledge
+- **[Bulbapedia](https://bulbapedia.bulbagarden.net/)** 📚 - The Pokémon fan wiki that never lets us down
+- **[The Pokémon Company](https://www.pokemon.com/)** 🎮 - For keeping the dream alive for 30 years
+- **ReportLab** 🎨 - For turning data into gorgeous PDFs without breaking a sweat
+- **Python Community** 🐍 - For the incredible ecosystem and endless support
+- **GitHub Copilot** 🦆 - For rubber-ducking and occasionally knowing what I want before I do 😄

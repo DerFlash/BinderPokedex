@@ -85,4 +85,13 @@ python scripts/generate_pdf.py --language de --generation 1
 
 ---
 
-**Bereit, deinen Pokémon-Binder zu erstellen?** [Jetzt herunterladen](https://github.com/DerFlash/BinderPokedex/releases/tag/v2.0) oder [selbst bauen](docs/INSTALLATION.md)! 🎉
+## 🙏 Danksagung & Quellen
+
+Dieses Projekt verdankt seinen Erfolg diesen fantastischen Ressourcen und Personen:
+
+- **[PokéAPI](https://pokeapi.co/)** 📊 - Das Rückgrat unseres Pokémon-Wissens
+- **[Bulbapedia](https://bulbapedia.bulbagarden.net/)** 📚 - Das Pokémon-Fan-Wiki, das uns nie im Stich lässt
+- **[The Pokémon Company](https://www.pokemon.com/)** 🎮 - Für 30 Jahre Traum-Erfüllung
+- **ReportLab** 🎨 - Für die Umwandlung von Daten in wunderschöne PDFs ohne Stress
+- **Python Community** 🐍 - Für das großartige Ökosystem und endlose Unterstützung
+- **GitHub Copilot** 🦆 - Für Rubber-Ducking und dafür, dass er meine Gedanken manchmal vor mir kennt 😄
