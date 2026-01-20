@@ -29,29 +29,30 @@ from PIL import Image
 
 try:
     from .fonts import FontManager
-    from .text_renderer import TextRenderer
+    from .utils import TranslationHelper, TextRenderer
     from .constants import (
-        LANGUAGES, GENERATION_INFO, PAGE_WIDTH, PAGE_HEIGHT, PAGE_MARGIN,
+        LANGUAGES, PAGE_WIDTH, PAGE_HEIGHT, PAGE_MARGIN,
         CARD_WIDTH, CARD_HEIGHT, CARDS_PER_ROW, CARDS_PER_COLUMN, GAP_X, GAP_Y,
-        OUTPUT_DIR, PDF_PREFIX, PDF_EXTENSION, COLORS
+        OUTPUT_DIR, PDF_PREFIX, PDF_EXTENSION, COLORS, TYPE_COLORS, GENERATION_COLORS
     )
     from .rendering import CardRenderer, CoverRenderer, PageRenderer
 except ImportError:
     # Fallback for direct imports (testing)
     from fonts import FontManager
-    from text_renderer import TextRenderer
+    from utils import TranslationHelper, TextRenderer
     from constants import (
-        LANGUAGES, GENERATION_INFO, PAGE_WIDTH, PAGE_HEIGHT, PAGE_MARGIN,
+        LANGUAGES, PAGE_WIDTH, PAGE_HEIGHT, PAGE_MARGIN,
         CARD_WIDTH, CARD_HEIGHT, CARDS_PER_ROW, CARDS_PER_COLUMN, GAP_X, GAP_Y,
-        OUTPUT_DIR, PDF_PREFIX, PDF_EXTENSION, COLORS
+        OUTPUT_DIR, PDF_PREFIX, PDF_EXTENSION, COLORS, TYPE_COLORS, GENERATION_COLORS
     )
     from rendering import CardRenderer, CoverRenderer, PageRenderer
 
 logger = logging.getLogger(__name__)
 
 
-# Generation color scheme for cover pages
-GENERATION_COLORS = {
+# ⚠️ DEPRECATED - Use TYPE_COLORS from constants.py instead
+# Keeping for backward compatibility during transition
+GENERATION_COLORS_DEPRECATED = {
     1: '#FF0000',  # Red
     2: '#FFAA00',  # Orange
     3: '#0000FF',  # Blue
@@ -63,8 +64,9 @@ GENERATION_COLORS = {
     9: '#666666',  # Gray
 }
 
-# Pokémon type color mapping for card headers
-TYPE_COLORS = {
+# ⚠️ DEPRECATED - Use TYPE_COLORS from constants.py instead
+# Keeping for backward compatibility during transition
+TYPE_COLORS_DEPRECATED = {
     'Normal': '#A8A878',
     'Fire': '#F08030',
     'Water': '#6890F0',
@@ -194,7 +196,7 @@ class PDFGenerator:
         """
         if language not in LANGUAGES:
             raise ValueError(f"Unsupported language: {language}")
-        if generation not in GENERATION_INFO:
+        if generation not in range(1, 10):
             raise ValueError(f"Invalid generation: {generation}")
         
         self.language = language
@@ -211,7 +213,7 @@ class PDFGenerator:
         
         # Load translations
         if translations is None:
-            self.translations = self._load_translations()
+            self.translations = TranslationHelper.load_translations(self.language)
         else:
             self.translations = translations
         
@@ -219,42 +221,31 @@ class PDFGenerator:
     
     def _load_translations(self) -> dict:
         """
+        ⚠️ DEPRECATED - Use TranslationHelper.load_translations() instead.
+        Kept for backward compatibility.
+        
         Load translations from i18n/translations.json
         
         Returns:
             Dictionary with translations for current language
         """
-        try:
-            import json
-            trans_file = Path(__file__).parent.parent.parent / 'i18n' / 'translations.json'
-            with open(trans_file, 'r', encoding='utf-8') as f:
-                all_trans = json.load(f)
-            
-            # Return UI translations for the current language, or empty dict if not found
-            ui_trans = all_trans.get('ui', {})
-            return ui_trans.get(self.language, {})
-        except Exception as e:
-            logger.warning(f"Could not load translations: {e}")
-            return {}
+        return TranslationHelper.load_translations(self.language)
     
     def _format_translation(self, key: str, **kwargs) -> str:
         """
+        ⚠️ DEPRECATED - Use TranslationHelper.format_translation() instead.
+        Kept for backward compatibility.
+        
         Get a translated string and format it with provided variables.
         
         Args:
-            key: Translation key (e.g., 'pokemon_count_text')
-            **kwargs: Variables to format into the string (e.g., count=151)
+            key: Translation key (e.g., 'pokemon_species')
+            **kwargs: Variables to format into the string
         
         Returns:
             Formatted translation or key if not found
         """
-        text = self.translations.get(key, key)
-        
-        # Simple template replacement
-        for var_name, var_value in kwargs.items():
-            text = text.replace(f'{{{{{var_name}}}}}', str(var_value))
-        
-        return text
+        return TranslationHelper.format_translation(self.translations, key, **kwargs)
     
     def set_pokemon_list(self, pokemon_list: list):
         """
@@ -266,139 +257,6 @@ class PDFGenerator:
         self.pokemon_list = pokemon_list
         logger.info(f"Set {len(pokemon_list)} Pokémon for rendering")
     
-    def _draw_cutting_guides(self, canvas_obj):
-        """
-        Draw cutting guides as a continuous grid.
-        Lines are drawn in the middle of the gaps between cards.
-        Outer frame is drawn around all cards with same offset as gaps.
-        """
-        canvas_obj.setLineWidth(0.5)
-        canvas_obj.setStrokeColor(HexColor("#DDDDDD"))
-        canvas_obj.setDash(2, 2)
-        
-        # Calculate outer frame bounds (with GAP offset)
-        # Top frame
-        frame_top = PAGE_HEIGHT - PAGE_MARGIN + GAP_Y / 2
-        # Bottom frame
-        frame_bottom = PAGE_HEIGHT - PAGE_MARGIN - CARDS_PER_COLUMN * CARD_HEIGHT - (CARDS_PER_COLUMN - 1) * GAP_Y - GAP_Y / 2
-        
-        # Left frame
-        frame_left = PAGE_MARGIN - GAP_X / 2
-        # Right frame
-        frame_right = PAGE_MARGIN + CARDS_PER_ROW * CARD_WIDTH + (CARDS_PER_ROW - 1) * GAP_X + GAP_X / 2
-        
-        # Vertical lines: outer frame left and right, plus lines between cards
-        for col in range(CARDS_PER_ROW + 1):
-            if col == 0 or col == CARDS_PER_ROW:
-                # Outer frame lines
-                x = frame_left if col == 0 else frame_right
-            else:
-                # Lines in middle of gaps between cards
-                x = PAGE_MARGIN + col * CARD_WIDTH + (col - 1) * GAP_X + GAP_X / 2
-            
-            canvas_obj.line(x, frame_bottom, x, frame_top)
-        
-        # Horizontal lines: outer frame top and bottom, plus lines between cards
-        for row in range(CARDS_PER_COLUMN + 1):
-            if row == 0 or row == CARDS_PER_COLUMN:
-                # Outer frame lines
-                y = frame_top if row == 0 else frame_bottom
-            else:
-                # Lines in middle of gaps between cards
-                y = PAGE_HEIGHT - PAGE_MARGIN - row * CARD_HEIGHT - (row - 1) * GAP_Y - GAP_Y / 2
-            
-            canvas_obj.line(frame_left, y, frame_right, y)
-        
-        canvas_obj.setDash()
-    
-    def _load_type_translations(self):
-        """Load type translations from i18n/translations.json"""
-        try:
-            import json
-            # Use absolute path from this file's location
-            pdf_generator_file = Path(__file__).resolve()
-            translations_path = pdf_generator_file.parent.parent.parent / 'i18n' / 'translations.json'
-            
-            if translations_path.exists():
-                with open(translations_path, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                    return data.get('types', {})
-        except Exception as e:
-            logger.warning(f"Could not load type translations: {e}")
-        return {}
-    
-    def _calculate_card_position(self, card_index: int) -> tuple:
-        """
-        Calculate x, y position for a card on the page.
-        
-        Args:
-            card_index: Index of card on current page (0-8)
-        
-        Returns:
-            (x, y) coordinates in points
-        """
-        row = card_index // CARDS_PER_ROW
-        col = card_index % CARDS_PER_ROW
-        
-        x = PAGE_MARGIN + col * (CARD_WIDTH + GAP_X)
-        y = PAGE_HEIGHT - PAGE_MARGIN - (row + 1) * CARD_HEIGHT - row * GAP_Y
-        
-        return (x, y)
-    
-    def _draw_name_with_symbol_fallback(self, canvas_obj, name: str, x: float, width: float, y: float, primary_font: str):
-        """
-        Draw Pokémon name with gender symbol fallback.
-        
-        If name contains ♂/♀ symbols and primary font is Helvetica (Latin),
-        render text parts with Helvetica and symbols with Songti (better Unicode support).
-        
-        Args:
-            canvas_obj: ReportLab canvas
-            name: Full name with potential symbols
-            x: Card x position
-            width: Card width (for centering)
-            y: Y position
-            primary_font: Primary font name
-        """
-        # Split name into parts and symbols
-        parts = []
-        current_part = ""
-        
-        for char in name:
-            if char in '♂♀':
-                if current_part:
-                    parts.append(('text', current_part))
-                    current_part = ""
-                parts.append(('symbol', char))
-            else:
-                current_part += char
-        
-        if current_part:
-            parts.append(('text', current_part))
-        
-        # Measure total width to center
-        total_width = 0
-        for part_type, part_text in parts:
-            if part_type == 'text':
-                total_width += canvas_obj.stringWidth(part_text, primary_font, 8)
-            else:  # symbol
-                total_width += canvas_obj.stringWidth(part_text, 'SongtiBold', 8)
-        
-        # Draw centered
-        start_x = x + width / 2 - total_width / 2
-        current_x = start_x
-        
-        for part_type, part_text in parts:
-            if part_type == 'text':
-                canvas_obj.setFont(primary_font, 8)
-                canvas_obj.setFillColor(HexColor("#2D2D2D"))
-                canvas_obj.drawString(current_x, y, part_text)
-                current_x += canvas_obj.stringWidth(part_text, primary_font, 8)
-            else:  # symbol
-                canvas_obj.setFont('SongtiBold', 8)
-                canvas_obj.setFillColor(HexColor("#2D2D2D"))
-                canvas_obj.drawString(current_x, y, part_text)
-                current_x += canvas_obj.stringWidth(part_text, 'SongtiBold', 8)
     
     def _draw_cover_page(self, canvas_obj):
         """
@@ -581,154 +439,6 @@ class PDFGenerator:
         b = int(b * factor)
         return f"#{r:02x}{g:02x}{b:02x}"
     
-    def _draw_card(self, canvas_obj, pokemon_data: dict, x: float, y: float):
-        """
-        Draw a single Pokémon card.
-
-        Args:
-            canvas_obj: ReportLab canvas object
-            pokemon_data: Dictionary with pokemon info (name, type, image, etc.)
-            x: X position for card top-left
-            y: Y position for card top-left
-        """
-        # Card background
-        header_height = 12 * mm
-        
-        # Get primary type and its color
-        pokemon_type = pokemon_data.get('types', ['Normal'])[0] if pokemon_data.get('types') else 'Normal'
-        header_color = TYPE_COLORS.get(pokemon_type, '#A8A878')  # Default to Normal type color
-        
-        # Draw header with type color and 90% transparency (10% opaque)
-        canvas_obj.setFillColor(HexColor(header_color), alpha=0.1)
-        canvas_obj.rect(x, y + CARD_HEIGHT - header_height, CARD_WIDTH, header_height, fill=True, stroke=False)
-        
-        # Card border
-        canvas_obj.setLineWidth(0.5)
-        canvas_obj.setStrokeColor(HexColor("#CCCCCC"))
-        canvas_obj.rect(x, y, CARD_WIDTH, CARD_HEIGHT, fill=False, stroke=True)
-        
-        # Note: Pokédex number moved to bottom of card (see below)
-        
-        # Type (header right) - with language translation
-        # Get type from either 'types' array or 'type1' field (for compatibility)
-        types = pokemon_data.get('types', [])
-        if not types and pokemon_data.get('type1'):
-            types = [pokemon_data.get('type1')]
-        
-        if types:
-            type_english = types[0]  # Use first type (English name)
-            # Translate type to current language
-            type_translations = self._load_type_translations()
-            language_types = type_translations.get(self.language, type_translations.get('en', {}))
-            type_text = language_types.get(type_english, type_english)
-            
-            try:
-                # Use same font approach as Pokémon names - this works for CJK!
-                type_font = FontManager.get_font_name(self.language, bold=False)
-                canvas_obj.setFont(type_font, 5)
-            except:
-                canvas_obj.setFont("Helvetica", 5)
-            
-            canvas_obj.setFillColor(HexColor("#5D5D5D"))
-            # Use drawRightString for proper right-alignment without overflow
-            type_x = x + CARD_WIDTH - 3  # Right edge with margin
-            type_y = y + CARD_HEIGHT - header_height + 6
-            canvas_obj.drawRightString(type_x, type_y, type_text)
-        
-        # Pokémon name (centered, using proper font for language)
-        name = pokemon_data.get('name', 'Unknown')
-        name_en = pokemon_data.get('name_en', 'Unknown')
-        
-        try:
-            font_name = FontManager.get_font_name(self.language, bold=True)
-            
-            # Render centered Pokémon name
-            canvas_obj.setFont(font_name, 8)
-            canvas_obj.setFillColor(HexColor("#2D2D2D"))
-            name_y = y + CARD_HEIGHT - header_height + 11
-            
-            # Check if name contains gender symbols that might not render in Latin fonts
-            if ('♂' in name or '♀' in name) and font_name == 'Helvetica-Bold':
-                # Split name and symbols to render them separately with fallback font
-                self._draw_name_with_symbol_fallback(canvas_obj, name, x, CARD_WIDTH, name_y, font_name)
-            else:
-                # Render normally (CJK fonts handle symbols fine)
-                canvas_obj.drawCentredString(x + CARD_WIDTH / 2, name_y, name)
-            
-            # Add English subtitle for non-English languages
-            if self.language != 'en' and name_en != 'Unknown' and name_en != name:
-                canvas_obj.setFont("Helvetica", 4)
-                canvas_obj.setFillColor(HexColor("#999999"))
-                name_en_y = y + CARD_HEIGHT - header_height + 3
-                canvas_obj.drawCentredString(x + CARD_WIDTH / 2, name_en_y, name_en)
-                
-        except Exception as e:
-            logger.warning(f"Could not render name '{name}': {e}")
-            # Fallback to Helvetica
-            canvas_obj.setFont("Helvetica-Bold", 8)
-            canvas_obj.setFillColor(HexColor("#2D2D2D"))
-            canvas_obj.drawCentredString(x + CARD_WIDTH / 2, y + CARD_HEIGHT - header_height + 11, name)
-        
-        # Image area (white background)
-        image_height = CARD_HEIGHT - header_height - 4 * mm
-        canvas_obj.setFillColor(HexColor("#FFFFFF"))
-        canvas_obj.rect(x, y, CARD_WIDTH, image_height, fill=True, stroke=False)
-        
-        # Draw index number centered at bottom of card
-        poke_num = pokemon_data.get('id') or pokemon_data.get('num', '???')
-        poke_num_str = f"#{poke_num}" if not str(poke_num).startswith('#') else str(poke_num)
-        darkened_type_color = self._darken_color(header_color, factor=0.6)
-        canvas_obj.setFont("Helvetica-Bold", 16)
-        canvas_obj.setFillColor(HexColor(darkened_type_color))
-        canvas_obj.drawCentredString(x + CARD_WIDTH / 2, y + 4 * mm, poke_num_str)
-        
-        # Image (if available - from image_url or image_path)
-        image_source = pokemon_data.get('image_path') or pokemon_data.get('image_url')
-        
-        logger.debug(f"Processing card for {pokemon_data.get('name', '???')}: image_source={image_source is not None}")
-        
-        if image_source:
-            try:
-                image_to_render = None
-                
-                if image_source.startswith('http://') or image_source.startswith('https://'):
-                    # It's a URL - load from cache first, fallback to download
-                    pokemon_id = pokemon_data.get('id')
-                    logger.debug(f"  Getting image for #{pokemon_id}...")
-                    image_data = self.image_cache.get_image(pokemon_id, url=image_source)
-                    if image_data:
-                        logger.debug(f"  ✓ Got image")
-                        image_to_render = image_data
-                    else:
-                        logger.debug(f"  ✗ Failed to get image data")
-                else:
-                    # It's a local path
-                    if Path(image_source).exists():
-                        logger.debug(f"  Using local path: {image_source}")
-                        image_to_render = image_source
-                
-                if image_to_render:
-                    logger.debug(f"  Drawing image...")
-                    padding = 2 * mm
-                    max_width = (CARD_WIDTH - 2 * padding) / 2
-                    max_height = (image_height - 2 * padding) / 2
-                    
-                    img_x = x + (CARD_WIDTH - max_width) / 2
-                    img_y = y + (image_height - max_height) / 2 + padding
-                    
-                    canvas_obj.drawImage(
-                        image_to_render, img_x, img_y,
-                        width=max_width, height=max_height,
-                        preserveAspectRatio=True
-                    )
-                    logger.debug(f"  ✓ Image drawn")
-            except Exception as e:
-                logger.debug(f"Could not render image from {image_source}: {e}")
-                import traceback
-                traceback.print_exc()
-        
-        # Additional metadata could be added here
-        # (HP, Dex number, etc.)
     
     def generate(self, pokemon_list: list = None) -> Path:
         """

@@ -30,40 +30,13 @@ from reportlab.lib.units import mm
 from reportlab.lib.colors import HexColor
 
 from .fonts import FontManager
-from .constants import CARD_WIDTH, CARD_HEIGHT
+from .constants import CARD_WIDTH, CARD_HEIGHT, TYPE_COLORS
+from .utils import TextRenderer
+from .rendering.translation_loader import TranslationLoader
 
 import logging
 
 logger = logging.getLogger(__name__)
-
-
-# Pokémon type color mapping
-TYPE_COLORS = {
-    'Normal': '#A8A878', 'Fire': '#F08030', 'Water': '#6890F0',
-    'Electric': '#F8D030', 'Grass': '#78C850', 'Ice': '#98D8D8',
-    'Fighting': '#C03028', 'Poison': '#A040A0', 'Ground': '#E0C068',
-    'Flying': '#A890F0', 'Psychic': '#F85888', 'Bug': '#A8B820',
-    'Rock': '#B8A038', 'Ghost': '#705898', 'Dragon': '#7038F8',
-    'Dark': '#705848', 'Steel': '#B8B8D0', 'Fairy': '#EE99AC',
-}
-
-# Load type translations
-def _load_type_translations():
-    """Load type translations from i18n/translations.json"""
-    try:
-        # Use absolute path from card_template.py location
-        card_template_file = Path(__file__).resolve()  # Get absolute path
-        translations_path = card_template_file.parent.parent.parent / 'i18n' / 'translations.json'
-        
-        if translations_path.exists():
-            with open(translations_path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                return data.get('types', {})
-    except Exception as e:
-        logger.warning(f"Could not load type translations: {e}")
-    return {}
-
-TYPE_TRANSLATIONS = _load_type_translations()
 
 
 class CardTemplate:
@@ -141,8 +114,8 @@ class CardTemplate:
         
         if types:
             type_english = types[0]
-            # Translate type to current language
-            language_types = TYPE_TRANSLATIONS.get(self.language, TYPE_TRANSLATIONS.get('en', {}))
+            # Translate type to current language using TranslationLoader
+            language_types = TranslationLoader.load_types(self.language)
             type_text = language_types.get(type_english, type_english)
             
             try:
@@ -279,7 +252,7 @@ class CardTemplate:
                 self._draw_card_name_with_ex_logo(canvas_obj, name, x, card_width, name_y, font_name, logo_type='ex_new')
             # Check for gender symbols that might need fallback
             elif ('♂' in name or '♀' in name) and font_name == 'Helvetica-Bold':
-                self._draw_name_with_symbol_fallback(canvas_obj, name, x, card_width, name_y, font_name)
+                TextRenderer.draw_name_with_symbol_fallback(canvas_obj, name, x, card_width, name_y, font_name)
             else:
                 canvas_obj.drawCentredString(x + card_width / 2, name_y, name)
             
@@ -350,18 +323,6 @@ class CardTemplate:
         except Exception as e:
             logger.debug(f"Could not load image: {e}")
     
-    def _draw_name_with_symbol_fallback(self, canvas_obj, name: str, x: float, 
-                                        card_width: float, y: float, font_name: str):
-        """Draw name with symbol fallback for gender symbols."""
-        # This is a helper for rendering names with ♂/♀ symbols
-        try:
-            # Try rendering the whole thing first
-            canvas_obj.drawCentredString(x + card_width / 2, y, name)
-        except:
-            # Fallback: render without symbol
-            name_clean = name.replace('♂', 'M').replace('♀', 'F')
-            canvas_obj.drawCentredString(x + card_width / 2, y, name_clean)
-
     def _draw_card_name_with_ex_logo(self, canvas_obj, name, x, card_width, name_y, font_name, logo_type='ex'):
         """
         Draw Pokémon name with M/EX logos for Gen2/Gen3 variants.

@@ -21,7 +21,6 @@ from .text_renderer import TextRenderer
 from .pdf_generator import PDFGenerator
 from .constants import (
     LANGUAGES,
-    GENERATION_INFO,
     CARD_WIDTH,
     CARD_HEIGHT,
     GAP_X,
@@ -46,7 +45,6 @@ __all__ = [
     
     # Constants & Configuration
     'LANGUAGES',
-    'GENERATION_INFO',
     'CARD_WIDTH',
     'CARD_HEIGHT',
     'GAP_X',

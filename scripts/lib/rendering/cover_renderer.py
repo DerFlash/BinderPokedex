@@ -21,12 +21,12 @@ from reportlab.lib.colors import HexColor
 
 try:
     from ..fonts import FontManager
-    from ..constants import PAGE_WIDTH, PAGE_HEIGHT, GENERATION_INFO
+    from ..constants import PAGE_WIDTH, PAGE_HEIGHT, GENERATION_COLORS, get_generation_info
     from .translation_loader import TranslationLoader
 except ImportError:
     # Fallback for direct imports
     from scripts.lib.fonts import FontManager
-    from scripts.lib.constants import PAGE_WIDTH, PAGE_HEIGHT, GENERATION_INFO
+    from scripts.lib.constants import PAGE_WIDTH, PAGE_HEIGHT, GENERATION_COLORS, get_generation_info
     from scripts.lib.rendering.translation_loader import TranslationLoader
 
 logger = logging.getLogger(__name__)
@@ -35,18 +35,8 @@ logger = logging.getLogger(__name__)
 class CoverStyle:
     """Unified cover styling constants."""
     
-    # Generation color scheme
-    GENERATION_COLORS = {
-        1: '#FF0000',  # Red
-        2: '#FFAA00',  # Orange
-        3: '#0000FF',  # Blue
-        4: '#AA00FF',  # Purple
-        5: '#00AA00',  # Green
-        6: '#00AAAA',  # Cyan
-        7: '#FF00AA',  # Pink
-        8: '#AAAA00',  # Yellow
-        9: '#666666',  # Gray
-    }
+    # Generation color scheme - NOW IMPORTED FROM constants.py (canonical source)
+    GENERATION_COLORS = GENERATION_COLORS
     
     # Dimensions
     STRIPE_HEIGHT = 100 * mm
@@ -159,7 +149,7 @@ class CoverRenderer:
     
     def _draw_generation_info(self, canvas_obj) -> None:
         """Draw generation and region information."""
-        get_info = GENERATION_INFO[self.generation]
+        get_info = get_generation_info(self.generation)
         region_name = get_info.get('region', f'Generation {self.generation}')
         
         # Generation text (with translation)
@@ -186,8 +176,8 @@ class CoverRenderer:
     def _draw_pokemon_count(self, canvas_obj, count: int) -> None:
         """Draw Pokémon count information."""
         # ID range
-        get_info = GENERATION_INFO[self.generation]
-        start_id, end_id = get_info['range']
+        get_info = get_generation_info(self.generation)
+        start_id, end_id = get_info.get('range', (1, 151))
         
         id_range_text = self._get_translation('pokedex_range', 
                                              start=f"#{start_id:03d}", 
@@ -226,29 +216,40 @@ class CoverRenderer:
     
     def _draw_iconic_pokemon(self, canvas_obj, pokemon_list: List[Dict]) -> None:
         """Draw iconic Pokémon at the bottom of the cover."""
-        get_info = GENERATION_INFO[self.generation]
+        get_info = get_generation_info(self.generation)
         iconic_ids = get_info.get('iconic_pokemon', [])
         
         if not iconic_ids:
             return
         
-        # Create lookup by ID
-        pokemon_by_id = {
-            int(p.get('id', p.get('num', '0').lstrip('#'))): p 
-            for p in pokemon_list
-        }
+        # Create lookup by ID (handle both regular and variant formats)
+        pokemon_by_id = {}
+        for p in pokemon_list:
+            # Extract base ID from any format (regular int, or variant string like '#003_EX1')
+            pid_raw = p.get('id', p.get('num', '0'))
+            try:
+                # For variant IDs, extract base: '#003_EX1' -> 3
+                base_id = int(str(pid_raw).split('_')[0].lstrip('#'))
+                if base_id not in pokemon_by_id:  # Keep first occurrence
+                    pokemon_by_id[base_id] = p
+            except (ValueError, AttributeError):
+                pass
         
-        # Position 3 Pokémon horizontally
+        # Position Pokémon horizontally (center if < 3)
         pokemon_count = min(len(iconic_ids), 3)
-        total_width = PAGE_WIDTH - (30 * mm)
-        spacing_per_pokemon = total_width / pokemon_count
+        card_width = self.style.ICONIC_CARD_WIDTH
+        spacing = 15 * mm  # Fixed spacing between cards
+        
+        # Calculate total width needed for all cards
+        total_cards_width = pokemon_count * card_width + (pokemon_count - 1) * spacing
+        
+        # Center horizontally on the page
+        page_center = PAGE_WIDTH / 2
+        start_x = page_center - total_cards_width / 2
         
         for idx, poke_id in enumerate(iconic_ids[:3]):
-            x_center = self.style.MARGIN_HORIZONTAL + spacing_per_pokemon * (idx + 0.5)
+            x_center = start_x + (card_width / 2) + idx * (card_width + spacing)
             
-            card_width = self.style.ICONIC_CARD_WIDTH
-            card_height = self.style.ICONIC_CARD_HEIGHT
-            x = x_center - card_width / 2
             y = self.style.ICONIC_POKEMON_Y
             
             pokemon = pokemon_by_id.get(poke_id)

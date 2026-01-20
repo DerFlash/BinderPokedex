@@ -46,8 +46,23 @@ class CoverTemplate:
             image_cache: Optional image cache for featured Pokémon
         """
         self.language = language
-        self.format_translation = format_translation
         self.image_cache = image_cache
+        
+        # Load translations and create format_translation function
+        from .utils import TranslationHelper
+        self.translations = TranslationHelper.load_translations(language)
+        
+        if format_translation:
+            self.format_translation = format_translation
+        else:
+            # Create a format_translation function using loaded translations
+            def default_format_translation(key: str, **kwargs) -> str:
+                text = self.translations.get(key, key)
+                # Replace template variables like {{var}} with actual values
+                for var_name, var_value in kwargs.items():
+                    text = text.replace(f'{{{{{var_name}}}}}', str(var_value))
+                return text
+            self.format_translation = default_format_translation
     
     def draw_generation_cover(self, canvas_obj, generation: int, pokemon_list: list,
                              color: str, generation_info: dict, generation_colors: dict):
@@ -239,8 +254,8 @@ class CoverTemplate:
         
         # Content section: stats (omitted for EX variants to keep clean layout)
         
-        # Featured Pokémon with images (use iconic_pokemon_ids if available)
-        iconic_ids = variant_data.get('iconic_pokemon_ids', [])
+        # Featured Pokémon with images (use iconic_pokemon if available)
+        iconic_ids = variant_data.get('iconic_pokemon', [])
         self._draw_featured_pokemon(canvas_obj, pokemon_list, iconic_ids)
         
         # Footer
@@ -290,96 +305,6 @@ class CoverTemplate:
             )
         # else: No pattern - just solid color (already drawn in _draw_cover_base)
     
-    def _draw_title_with_ex_logo(self, canvas_obj, x_center, y, title_text, font_size=18):
-        """
-        Draw title with EX logo replacing "EX" text.
-        E.g., "Pokémon EX · Gen 2" becomes "Pokémon [EX-LOGO] · Gen 2"
-        
-        Args:
-            canvas_obj: ReportLab canvas
-            x_center: X coordinate of text center
-            y: Y coordinate of text
-            title_text: Full title text including "EX"
-            font_size: Font size to use (default 18pt)
-        """
-        # Replace "EX" with placeholder token to calculate layout
-        logo_placeholder = "[EX]"
-        display_text = title_text.replace("EX", logo_placeholder)
-        
-        # Measure text width to position logo correctly
-        try:
-            title_font_name = FontManager.get_font_name(self.language, bold=True)
-            canvas_obj.setFont(title_font_name, font_size)
-        except:
-            canvas_obj.setFont("Helvetica-Bold", font_size)
-        
-        full_width = canvas_obj.stringWidth(display_text, canvas_obj._fontname, font_size)
-        
-        # Logo dimensions (proportional to 18pt font)
-        logo_width = 10 * mm
-        logo_height = 12 * mm
-        
-        # Calculate starting position for left-aligned text
-        start_x = x_center - full_width / 2
-        
-        # Draw text parts around logo
-        parts = display_text.split(logo_placeholder)
-        current_x = start_x
-        
-        canvas_obj.setFillColor(HexColor("#FFFFFF"))
-        
-        # Part before logo
-        if parts[0]:
-            canvas_obj.drawString(current_x, y, parts[0])
-            current_x += canvas_obj.stringWidth(parts[0], canvas_obj._fontname, font_size)
-        
-        # Draw EX logo from image file
-        import os
-        from PIL import Image
-        
-        logo_file = os.path.join(
-            os.path.dirname(__file__),
-            "../../data/variants/EXLogoBig.png"
-        )
-        
-        logo_x = current_x
-        logo_width = 11.05 * mm
-        logo_height = 14.45 * mm
-        
-        # Center logo vertically with text, then shift upward
-        logo_y = y - (logo_height / 2) + 2 * mm  # Center plus 2mm upward offset
-        
-        if os.path.exists(logo_file):
-            canvas_obj.drawImage(
-                logo_file,
-                logo_x,
-                logo_y,
-                width=logo_width,
-                height=logo_height,
-                preserveAspectRatio=True,
-                mask='auto'
-            )
-            current_x += logo_width + 0.5 * mm
-        else:
-            # Fallback: draw simple EX if logo file missing
-            canvas_obj.setFillColor(HexColor("#FFD700"))
-            canvas_obj.rect(logo_x, logo_y, 11*mm, 14*mm, fill=True, stroke=False)
-            canvas_obj.setFont("Helvetica-Bold", 11)
-            canvas_obj.setFillColor(HexColor("#FFFFFF"))
-            canvas_obj.drawCentredString(logo_x + 5.5*mm, logo_y + 7*mm, "EX")
-            current_x += 11 * mm + 0.5 * mm
-        
-        # Part after logo
-        try:
-            title_font_name = FontManager.get_font_name(self.language, bold=True)
-            canvas_obj.setFont(title_font_name, font_size)
-        except:
-            canvas_obj.setFont("Helvetica-Bold", font_size)
-        
-        canvas_obj.setFillColor(HexColor("#FFFFFF"))
-        
-        if len(parts) > 1 and parts[1]:
-            canvas_obj.drawString(current_x, y, parts[1])
     
     def _draw_subtitle_with_ex_logo(self, canvas_obj, x_center, y, subtitle_text, font_size=14):
         """

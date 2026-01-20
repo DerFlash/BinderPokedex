@@ -231,47 +231,6 @@ class CrystallinePatterns:
             )
     
     @staticmethod
-    def _draw_crystalline_fragments(c, page_width, page_height, colors: list, density: int, opacity: float):
-        """
-        Draw scattered crystalline fragments using geometric shapes.
-        
-        Creates random polygons to simulate crystal fragments across the page.
-        
-        Args:
-            c: Canvas object
-            page_width: Page width
-            page_height: Page height
-            colors: List of hex colors to use
-            density: Number of fragments to draw
-            opacity: Fragment opacity (0.0-1.0)
-        """
-        random.seed(42)  # Consistent pattern
-        
-        for _ in range(density):
-            # Random position
-            x = random.uniform(0, page_width)
-            y = random.uniform(0, page_height)
-            
-            # Random size
-            size = random.uniform(20 * mm, 80 * mm)
-            
-            # Random color
-            color = random.choice(colors)
-            
-            # Random number of sides (3-6 = triangle to hexagon)
-            sides = random.randint(3, 6)
-            
-            # Random rotation
-            rotation = random.uniform(0, 360)
-            
-            c.setFillColor(HexColor(color), alpha=opacity)
-            c.setStrokeColor(HexColor(color), alpha=opacity * 0.5)
-            c.setLineWidth(0.5)
-            
-            # Draw polygon
-            CrystallinePatterns._draw_polygon(c, x, y, sides, size, rotation)
-    
-    @staticmethod
     def _draw_crystalline_fragments_bounded(c, bound_x, bound_y, bound_width, bound_height,
                                            colors: list, density: int, opacity: float):
         """
@@ -345,44 +304,6 @@ class CrystallinePatterns:
             path.lineTo(point[0], point[1])
         path.close()
         c.drawPath(path, stroke=True, fill=True)
-    
-    @staticmethod
-    def _draw_corner_sparkles(c, page_width, page_height, sparkle_count: int = 8):
-        """
-        Draw decorative sparkles in corners.
-        
-        Args:
-            c: Canvas object
-            page_width: Page width
-            page_height: Page height
-            sparkle_count: Number of sparkles per corner
-        """
-        corners = [
-            (30 * mm, 30 * mm),                              # Bottom-left
-            (page_width - 30 * mm, 30 * mm),                # Bottom-right
-            (30 * mm, page_height - 30 * mm),               # Top-left
-            (page_width - 30 * mm, page_height - 30 * mm),  # Top-right
-        ]
-        
-        random.seed(42)
-        
-        for corner_x, corner_y in corners:
-            for _ in range(sparkle_count):
-                # Random offset from corner
-                offset_x = random.uniform(-15 * mm, 15 * mm)
-                offset_y = random.uniform(-15 * mm, 15 * mm)
-                
-                x = corner_x + offset_x
-                y = corner_y + offset_y
-                
-                # Small star sparkle
-                c.setStrokeColor(HexColor("#FFD700"), alpha=0.3)
-                c.setLineWidth(0.5)
-                
-                r = 3 * mm
-                # Draw 4-pointed star
-                c.line(x - r, y, x + r, y)
-                c.line(x, y - r, x, y + r)
     
     @staticmethod
     def _draw_featured_pokemon_images(c, page_width, page_height, featured_pokemon: list, accent_color: str = "#A335EE"):

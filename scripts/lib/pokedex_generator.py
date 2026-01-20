@@ -1,0 +1,230 @@
+#!/usr/bin/env python3
+"""
+Pokédex PDF Generator (Section-based)
+
+Generates a single comprehensive PDF with selected generations as sections.
+Uses the same section-based architecture as VariantPDFGenerator.
+
+Each generation is a section with:
+- Section separator page (using CoverTemplate)
+- All Pokémon cards in 3x3 layout
+"""
+
+import logging
+from pathlib import Path
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import mm
+
+from .fonts import FontManager
+from .data_storage import DataStorage
+from .rendering.card_renderer import CardRenderer
+from .rendering.page_renderer import PageRenderer
+from .cover_template import CoverTemplate
+from .utils import TranslationHelper
+from .constants import (
+    PAGE_WIDTH, PAGE_HEIGHT, PAGE_MARGIN, CARD_WIDTH, CARD_HEIGHT,
+    CARDS_PER_ROW, CARDS_PER_COLUMN, GAP_X, GAP_Y, GENERATION_COLORS
+)
+
+logger = logging.getLogger(__name__)
+
+
+class PokedexGenerator:
+    """Generate Pokédex PDF with selected generations as sections."""
+    
+    def __init__(self, language: str, output_file: Path, image_cache=None, generations=None):
+        """
+        Initialize Pokédex generator.
+        
+        Args:
+            language: Language code (de, en, fr, etc.)
+            output_file: Path to output PDF file
+            image_cache: Optional image cache for loading Pokémon images
+            generations: Optional list of generation numbers to include (e.g., [1, 2]). 
+                        If None, loads all 9 generations.
+        """
+        self.language = language
+        self.output_file = output_file
+        self.image_cache = image_cache
+        
+        # Default to all generations if not specified
+        if generations is None:
+            generations = list(range(1, 10))
+        
+        # Load specified generations using DataStorage
+        storage = DataStorage()
+        self.generations = {}
+        for gen in generations:
+            if 1 <= gen <= 9:
+                pokemon_list = storage.load_generation(gen)
+                gen_info = storage.load_generation_info(gen)
+                if pokemon_list and gen_info:
+                    self.generations[gen] = {
+                        'info': gen_info,
+                        'pokemon': pokemon_list
+                    }
+        
+        logger.info(f"Loaded {len(self.generations)} generations for Pokédex")
+        
+        # Load translations (same as VariantPDFGenerator)
+        self.translations = TranslationHelper.load_translations(language)
+        
+        # Initialize rendering components (same as VariantPDFGenerator)
+        self.card_renderer = CardRenderer(language=language, image_cache=image_cache)
+        self.page_renderer = PageRenderer()
+        self.cover_template = CoverTemplate(language=language, image_cache=image_cache)
+        
+        # Register fonts if not already done
+        try:
+            FontManager.register_fonts()
+        except:
+            pass
+    
+    def generate(self) -> bool:
+        """
+        Generate Pokédex PDF using section-based architecture.
+        
+        Returns:
+            True if successful, False otherwise
+        """
+        try:
+            self.output_file.parent.mkdir(parents=True, exist_ok=True)
+            
+            c = canvas.Canvas(str(self.output_file), pagesize=(PAGE_WIDTH, PAGE_HEIGHT))
+            
+            total_pokemon = sum(len(gen['pokemon']) for gen in self.generations.values())
+            logger.info(f"Generating Pokédex with {total_pokemon} Pokémon across {len(self.generations)} generations")
+            
+            cards_rendered = 0
+            
+            # Generate each generation section (like variant sections)
+            for gen_num in sorted(self.generations.keys()):
+                gen_data = self.generations[gen_num]
+                gen_info = gen_data['info']
+                pokemon_list = gen_data['pokemon']
+                
+                # Generation section separator (using cover_template, like variants do)
+                # Pass full pokemon_list for count display, but featured_pokemon for featured display
+                self._draw_generation_separator(c, gen_num, gen_info, pokemon_list, pokemon_list[:3])
+                c.showPage()
+                
+                # Generation Pokémon cards (3x3 per page, like variants do)
+                cards_per_page = CARDS_PER_ROW * CARDS_PER_COLUMN
+                for page_idx in range(0, len(pokemon_list), cards_per_page):
+                    page_pokemon = pokemon_list[page_idx:page_idx + cards_per_page]
+                    
+                    cards_rendered += len(page_pokemon)
+                    progress_pct = (cards_rendered / total_pokemon) * 100
+                    bar_width = 30
+                    filled = int(bar_width * progress_pct / 100)
+                    bar = '█' * filled + '░' * (bar_width - filled)
+                    print(f"\r  [{bar}] {cards_rendered}/{total_pokemon} ({progress_pct:.0f}%)", end='', flush=True)
+                    
+                    self._draw_cards_page(c, page_pokemon)
+                    c.showPage()
+            
+            c.save()
+            print()  # Newline after progress bar
+            
+            file_size_mb = self.output_file.stat().st_size / 1024 / 1024
+            cards_per_page = CARDS_PER_ROW * CARDS_PER_COLUMN
+            total_pages = int(cards_rendered / cards_per_page) + len(self.generations)
+            logger.info(f"✅ Pokédex generated: {self.output_file.name}")
+            logger.info(f"   Size: {file_size_mb:.2f} MB")
+            logger.info(f"   Pages: ~{total_pages}")
+            
+            return True
+            
+        except Exception as e:
+            logger.error(f"❌ Error generating Pokédex: {e}")
+            import traceback
+            traceback.print_exc()
+            return False
+    
+    def _draw_generation_separator(self, c, gen_num, gen_info, pokemon_list, featured_pokemon=None):
+        """
+        Draw generation separator page using CoverTemplate.draw_generation_cover.
+        
+        This uses the existing generation cover template which shows:
+        - "Binder Pokédex" title
+        - "Generation X" subtitle  
+        - Region name
+        - Pokédex ID range
+        - Pokémon count (from pokemon_list, not featured_pokemon)
+        
+        Args:
+            c: ReportLab canvas
+            gen_num: Generation number (1-9)
+            gen_info: Generation info dict
+            pokemon_list: Full list of Pokémon in this generation (for count display)
+            featured_pokemon: Optional featured Pokémon to display (currently unused)
+        """
+        color = GENERATION_COLORS.get(gen_num, '#666666')
+        
+        # Use the existing draw_generation_cover method from CoverTemplate
+        # Pass full pokemon_list so the count is correct
+        self.cover_template.draw_generation_cover(
+            c,
+            generation=gen_num,
+            pokemon_list=pokemon_list,  # Full list for correct count!
+            color=color,
+            generation_info=gen_info,
+            generation_colors=GENERATION_COLORS
+        )
+    
+    def _draw_cards_page(self, c, pokemon_list):
+        """
+        Draw a page of Pokémon cards (3x3 layout).
+        
+        Same as VariantPDFGenerator._draw_cards_page.
+        """
+        for idx, pokemon in enumerate(pokemon_list):
+            row = idx // CARDS_PER_ROW
+            col = idx % CARDS_PER_ROW
+            
+            x = PAGE_MARGIN + (col * (CARD_WIDTH + GAP_X))
+            y = PAGE_HEIGHT - PAGE_MARGIN - ((row + 1) * CARD_HEIGHT) - (row * GAP_Y)
+            
+            # Normalize Pokemon data: add 'name' field with language-specific name
+            pokemon_normalized = self._normalize_pokemon_data(pokemon)
+            
+            self.card_renderer.render_card(c, pokemon_normalized, x, y)
+    
+    def _normalize_pokemon_data(self, pokemon: dict) -> dict:
+        """
+        Normalize Pokemon data for the current language.
+        
+        Ensures the 'name' field contains the name in the current language,
+        and 'name_en' field contains the English name for subtitle display.
+        
+        Args:
+            pokemon: Raw Pokemon dict from JSON (with name_de, name_en, etc.)
+            
+        Returns:
+            Normalized dict with 'name' and 'name_en' fields
+        """
+        normalized = pokemon.copy()
+        
+        # Map language codes to name keys
+        language_map = {
+            'de': 'name_de',
+            'en': 'name_en',
+            'fr': 'name_fr',
+            'es': 'name_es',
+            'it': 'name_it',
+            'ja': 'name_ja',
+            'ko': 'name_ko',
+            'zh': 'name_zh_hans',
+            'zh_hans': 'name_zh_hans',
+            'zh_hant': 'name_zh_hant',
+        }
+        
+        # Get the name for current language
+        name_key = language_map.get(self.language, 'name_en')
+        normalized['name'] = pokemon.get(name_key, pokemon.get('name_en', 'Unknown'))
+        
+        # Ensure name_en is set for subtitle display
+        if 'name_en' not in normalized:
+            normalized['name_en'] = pokemon.get('name_en', 'Unknown')
+        
+        return normalized

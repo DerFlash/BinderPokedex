@@ -6,19 +6,34 @@ Clean, production-ready implementation for multi-language Pokémon PDF generatio
 
 ### Generate PDFs
 
-**Generation PDFs (All 9 Generations):**
+**Generation PDFs (Individual Generations):**
 ```bash
 # German Gen 1
-python scripts/generate_pdf.py --language de --generation 1
+python scripts/generate_pdf.py --type generation --language de --generation 1
 
 # All languages Gen 1
-python scripts/generate_pdf.py --generation 1
+python scripts/generate_pdf.py --type generation --generation 1
 
 # Japanese Gen 1-3
-python scripts/generate_pdf.py --language ja --generation 1-3
+python scripts/generate_pdf.py --type generation --language ja --generation 1-3
 
 # All generations (1-9)
-python scripts/generate_pdf.py
+python scripts/generate_pdf.py --type generation
+```
+
+**Pokédex PDFs (Multiple Generations in One PDF):**
+```bash
+# German Pokédex Gen 1-2
+python scripts/generate_pdf.py --type pokedex --language de --generations 1-2
+
+# All languages Pokédex Gen 1-5
+python scripts/generate_pdf.py --type pokedex --generations 1-5
+
+# Complete Pokédex (all 9 generations)
+python scripts/generate_pdf.py --type pokedex
+
+# Complete Pokédex in German
+python scripts/generate_pdf.py --type pokedex --language de
 ```
 
 **Variant PDFs (EX, Mega Evolution, etc.):**
@@ -47,6 +62,7 @@ python scripts/generate_pdf.py --type variant --variant mega_evolution --languag
 
 **Outputs:** 
 - Generations: `../output/<lang>/pokemon_gen<N>_<lang>.pdf`
+- Pokédex: `../output/<lang>/Pokedex_Gen<X>-<Y>_<LANG>.pdf` or `Pokedex_Gen<X>_<LANG>.pdf`
 - Variants: `../output/<lang>/Variant_<variant>_<LANG>.pdf`
 
 ## 📚 Main Entry Point
@@ -81,10 +97,11 @@ zh_hant     繁體中文 (Traditional) ← CJK
 
 **Command Line Options:**
 ```
---type, -t              PDF type: 'generation' or 'variant' (default: generation)
+--type, -t              PDF type: 'generation', 'pokedex', or 'variant' (default: generation)
 --language, -l          Language code (default: all languages)
---generation, -g        Generations: '1', '1-3', '1,3,5', or '1-9' (default: 1-9)
---variant, -v           Variant ID: 'ex_gen1', 'ex_gen2', 'ex_gen3', 'mega_evolution', 'all'
+--generation, -g        Generations for 'generation' type: '1', '1-3', '1,3,5', or '1-9' (default: 1-9)
+--generations           Generations for 'pokedex' type: '1', '1-2', '1-5', or '1-9' (default: 1-9)
+--variant, -v           Variant ID for 'variant' type: 'ex_gen1', 'ex_gen2', 'ex_gen3', 'mega_evolution', 'all'
 --list                  List all available variants and their status
 --skip-images           Skip image processing (faster for testing)
 --test                  Test mode: only generate with 9 Pokémon
@@ -95,7 +112,12 @@ zh_hant     繁體中文 (Traditional) ← CJK
 # Generation PDFs
 python generate_pdf.py --type generation --language de --generation 1
 python generate_pdf.py --type generation --generation 1-3
-python generate_pdf.py  # All gens, all languages
+python generate_pdf.py --type generation  # All gens, all languages
+
+# Pokédex PDFs
+python generate_pdf.py --type pokedex --language de --generations 1-2
+python generate_pdf.py --type pokedex --generations 1-5
+python generate_pdf.py --type pokedex  # All gens, all languages
 
 # Variant PDFs
 python generate_pdf.py --type variant --language de --variant ex_gen1

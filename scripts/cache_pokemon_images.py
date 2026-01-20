@@ -27,6 +27,7 @@ logger = logging.getLogger(__name__)
 # Add scripts/lib to path
 sys.path.insert(0, str(Path(__file__).parent))
 from lib.constants import GENERATION_INFO
+from lib.data_storage import DataStorage
 
 # Configuration
 CACHE_DIR = Path(__file__).parent.parent / 'data' / 'pokemon_images_cache'
@@ -117,6 +118,9 @@ def cache_all_pokemon():
     cached_count = 0
     failed_count = 0
     
+    # Use DataStorage to load data from consolidated or individual files
+    storage = DataStorage(DATA_DIR)
+    
     # Process each generation
     for gen_num in sorted(GENERATION_INFO.keys()):
         gen_info = GENERATION_INFO[gen_num]
@@ -124,17 +128,10 @@ def cache_all_pokemon():
         
         logger.info(f"Generation {gen_num} - {region}")
         
-        # Load JSON for this generation
-        json_file = DATA_DIR / f'pokemon_gen{gen_num}.json'
-        if not json_file.exists():
-            logger.warning(f"  ✗ File not found: {json_file}")
-            continue
-        
-        try:
-            with open(json_file) as f:
-                pokemon_list = json.load(f)
-        except Exception as e:
-            logger.error(f"  ✗ Failed to load {json_file}: {e}")
+        # Load JSON for this generation using DataStorage
+        pokemon_list = storage.load_generation(gen_num)
+        if not pokemon_list:
+            logger.warning(f"  ✗ No Pokémon data found for generation {gen_num}")
             continue
         
         gen_cached = 0

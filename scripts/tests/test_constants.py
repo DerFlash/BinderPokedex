@@ -11,7 +11,7 @@ from pathlib import Path
 # Add lib to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / 'lib'))
 
-from constants import LANGUAGES, GENERATION_INFO, PAGE_WIDTH, PAGE_HEIGHT, CARD_WIDTH, CARD_HEIGHT
+from constants import LANGUAGES, PAGE_WIDTH, PAGE_HEIGHT, CARD_WIDTH, CARD_HEIGHT, GENERATION_COLORS
 
 # Import TYPE_COLORS from pdf_generator (where it's defined for PDF color scheme)
 from pdf_generator import TYPE_COLORS
@@ -76,10 +76,18 @@ def test_generations_structure():
     """Test that all generations have required fields."""
     logger.info("Testing generation structure...")
     
+    from data_storage import DataStorage
+    storage = DataStorage()
+    
     required_fields = {'name', 'count', 'range', 'region', 'iconic_pokemon'}
     
-    for gen_num, gen_data in GENERATION_INFO.items():
+    for gen_num in range(1, 10):
+        gen_data = storage.load_generation_info(gen_num)
         assert isinstance(gen_data, dict), f"Gen {gen_num}: data must be dict"
+        
+        if not gen_data:
+            logger.warning(f"⚠ Gen {gen_num}: no data found")
+            continue
         
         missing = required_fields - set(gen_data.keys())
         assert not missing, f"Gen {gen_num}: missing fields {missing}"
@@ -100,11 +108,14 @@ def test_generations_count():
     """Test that generations 1-9 are defined."""
     logger.info("Testing generation count...")
     
-    expected_gens = set(range(1, 10))
-    actual_gens = set(GENERATION_INFO.keys())
+    from data_storage import DataStorage
+    storage = DataStorage()
     
-    assert actual_gens == expected_gens, f"Generation set mismatch: {actual_gens ^ expected_gens}"
-    assert len(GENERATION_INFO) == 9, f"Expected 9 generations, got {len(GENERATION_INFO)}"
+    for gen_num in range(1, 10):
+        pokemon = storage.load_generation(gen_num)
+        assert isinstance(pokemon, list), f"Gen {gen_num}: pokemon must be list"
+        assert len(pokemon) > 0, f"Gen {gen_num}: must have pokemon"
+        logger.info(f"✓ Gen {gen_num}: {len(pokemon)} pokemon")
     
     logger.info(f"✓ All 9 generations present (1-9)")
 

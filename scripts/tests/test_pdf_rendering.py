@@ -15,7 +15,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / 'lib'))
 from fonts import FontManager
 from text_renderer import TextRenderer
 from pdf_generator import PDFGenerator
-from constants import LANGUAGES, GENERATION_INFO
+from constants import LANGUAGES
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

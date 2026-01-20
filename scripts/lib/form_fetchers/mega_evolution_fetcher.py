@@ -214,28 +214,6 @@ class MegaEvolutionFetcher:
         return ""
     
     @classmethod
-    def _get_pokemon_base_data(cls, pokemon_id: int) -> Dict[str, Any] | None:
-        """Fetch Pokemon base data from PokeAPI."""
-        try:
-            response = requests.get(f"{cls.POKEAPI_URL}/pokemon/{pokemon_id}")
-            response.raise_for_status()
-            return response.json()
-        except Exception as e:
-            print(f"❌ Error fetching Pokemon {pokemon_id}: {e}")
-            return None
-    
-    @classmethod
-    def _get_species_data(cls, pokemon_id: int) -> Dict[str, Any] | None:
-        """Fetch Pokemon species data from PokeAPI."""
-        try:
-            response = requests.get(f"{cls.POKEAPI_URL}/pokemon-species/{pokemon_id}")
-            response.raise_for_status()
-            return response.json()
-        except Exception as e:
-            print(f"❌ Error fetching species {pokemon_id}: {e}")
-            return None
-    
-    @classmethod
     def _get_translated_names(cls, species_data: Dict[str, Any]) -> Dict[str, str]:
         """Extract translated names from species data."""
         translations = {

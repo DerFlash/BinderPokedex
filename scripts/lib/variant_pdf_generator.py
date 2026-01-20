@@ -21,14 +21,17 @@ from reportlab.lib.units import mm
 from reportlab.lib.colors import HexColor
 
 from .fonts import FontManager
-from .rendering import CardRenderer, CoverRenderer, PageRenderer
-from .constants import PAGE_WIDTH, PAGE_HEIGHT, PAGE_MARGIN, CARD_WIDTH, CARD_HEIGHT, CARDS_PER_ROW, CARDS_PER_COLUMN, GAP_X, GAP_Y
+from .rendering import CardRenderer, CoverRenderer, PageRenderer, VariantCoverRenderer, VariantCoverStyle
+from .cover_template import CoverTemplate
+from .utils import TranslationHelper
+from .constants import PAGE_WIDTH, PAGE_HEIGHT, PAGE_MARGIN, CARD_WIDTH, CARD_HEIGHT, CARDS_PER_ROW, CARDS_PER_COLUMN, GAP_X, GAP_Y, VARIANT_COLORS
 
 logger = logging.getLogger(__name__)
 
 
-# Variant color scheme (for cover pages)
-VARIANT_COLORS = {
+# ⚠️ DEPRECATED - Use VARIANT_COLORS from constants.py instead
+# Keeping for backward compatibility during transition
+VARIANT_COLORS_DEPRECATED = {
     'ex_gen1': '#1F51BA',             # Blue for Gen1
     'ex_gen2': '#3D5A80',             # Dark Blue for Gen2
     'ex_gen3': '#6B40D1',             # Purple for Gen3
@@ -66,14 +69,15 @@ class VariantPDFGenerator:
         logger.info(f"Loaded {len(self.pokemon_list)} Pokémon from variant data")
         
         # Load translations
-        self.translations = self._load_translations()
+        self.translations = TranslationHelper.load_translations(self.language)
         
         # DO NOT SORT HERE - respect the order in the variant data
         # The pokemon list order matters for section indices to work correctly
         
         # Initialize new unified rendering modules
-        self.card_renderer = CardRenderer(language=language, image_cache=image_cache, variant=variant_data.get('variant'))
-        # CoverRenderer will be created when needed for variant covers
+        self.card_renderer = CardRenderer(language=language, image_cache=image_cache, variant=variant_data.get('variant_type'), variant_data=variant_data)
+        # Modern VariantCoverRenderer for variant covers
+        self.variant_cover_renderer = VariantCoverRenderer(language=language, image_cache=image_cache)
         self.page_renderer = PageRenderer()
         
         # Register fonts if not already done
@@ -84,25 +88,21 @@ class VariantPDFGenerator:
     
     def _load_translations(self) -> dict:
         """
+        ⚠️ DEPRECATED - Use TranslationHelper.load_translations() instead.
+        Kept for backward compatibility.
+        
         Load translations from i18n/translations.json
         
         Returns:
             Dictionary with translations for current language
         """
-        try:
-            trans_file = Path(__file__).parent.parent.parent / 'i18n' / 'translations.json'
-            with open(trans_file, 'r', encoding='utf-8') as f:
-                all_trans = json.load(f)
-            
-            # Return UI translations for the current language, or empty dict if not found
-            ui_trans = all_trans.get('ui', {})
-            return ui_trans.get(self.language, {})
-        except Exception as e:
-            logger.warning(f"Could not load translations: {e}")
-            return {}
+        return TranslationHelper.load_translations(self.language)
     
     def _format_translation(self, key: str, **kwargs) -> str:
         """
+        ⚠️ DEPRECATED - Use TranslationHelper.format_translation() instead.
+        Kept for backward compatibility.
+        
         Get a translated string and format it with provided variables.
         
         Args:
@@ -112,13 +112,7 @@ class VariantPDFGenerator:
         Returns:
             Formatted translation or key if not found
         """
-        text = self.translations.get(key, key)
-        
-        # Simple template replacement
-        for var_name, var_value in kwargs.items():
-            text = text.replace(f'{{{{{var_name}}}}}', str(var_value))
-        
-        return text
+        return TranslationHelper.format_translation(self.translations, key, **kwargs)
     
     def generate(self) -> bool:
         """Generate the PDF with optional separator pages for sections."""
@@ -190,8 +184,22 @@ class VariantPDFGenerator:
             if is_separator:
                 section_name = section.get(f'section_name_{self.language}', section_id)
                 
-                # Get featured pokémon for this section (first 3)
-                featured_pokemon = section_pokemon[:3] if section_pokemon else []
+                # Get featured pokémon from iconic_pokemon field in section
+                iconic_pokemon_ids = section.get('iconic_pokemon', [])
+                
+                # Build featured_pokemon list from IDs
+                featured_pokemon = []
+                if iconic_pokemon_ids:
+                    for pid in iconic_pokemon_ids:
+                        for p in section_pokemon:
+                            if p.get('pokemon_id') == pid or p.get('id') == pid:
+                                featured_pokemon.append(p)
+                                break
+                
+                # Fallback to first 3 if no iconic_pokemon defined
+                if not featured_pokemon:
+                    featured_pokemon = section_pokemon[:3] if section_pokemon else []
+                
                 logger.info(f"    Featured Pokémon: {[p.get('name_en', 'Unknown') for p in featured_pokemon]}")
                 
                 # Use _draw_simple_separator for all patterns (which uses draw_variant_cover)
@@ -224,8 +232,8 @@ class VariantPDFGenerator:
     
     def _draw_simple_separator(self, c, title: str, color: str, iconic_pokemon_ids: list = None, pattern: str = None, section_id: str = None):
         """
-        Draw a separator page using the same design as the cover page.
-        Reuses draw_variant_cover() with section_title parameter for consistency.
+        Draw a separator page using VariantCoverRenderer.
+        Uses render_variant_cover() with section_title parameter for consistency.
         
         Args:
             c: Canvas object
@@ -239,59 +247,28 @@ class VariantPDFGenerator:
         separator_data = dict(self.variant_data)
         separator_data['iconic_pokemon_ids'] = iconic_pokemon_ids or []
         
-        # Use the same draw_variant_cover() method with section_title parameter
+        # Use VariantCoverRenderer.render_variant_cover() with section_title parameter
         # This ensures identical spacing and styling to the main cover page
-        self.cover_template.draw_variant_cover(
+        self.variant_cover_renderer.render_variant_cover(
             c,
             separator_data,
             self.pokemon_list,
             color,
-            pattern=pattern,
-            section_title=title,  # Mark this as a separator with the section name
-            section_id=section_id  # Pass section ID for special logo rendering
+            section_title=title  # Mark this as a separator with the section name
         )
     
     def _draw_cover_page(self, c):
-        """Draw the cover page using cover template."""
+        """Draw the cover page using VariantCoverRenderer."""
         variant_type = self.variant_data.get('variant_type', 'unknown')
         color = VARIANT_COLORS.get(variant_type, '#FFD700')
         
-        self.cover_template.draw_variant_cover(
+        self.variant_cover_renderer.render_variant_cover(
             c,
             self.variant_data,
             self.pokemon_list,
             color
         )
     
-    def _draw_cutting_guides(self, c):
-        """Draw cutting guides as a continuous grid."""
-        c.setLineWidth(0.5)
-        c.setStrokeColor(HexColor("#DDDDDD"))
-        c.setDash(2, 2)
-        
-        # Calculate outer frame bounds (with GAP offset)
-        frame_top = PAGE_HEIGHT - PAGE_MARGIN + GAP_Y / 2
-        frame_bottom = PAGE_HEIGHT - PAGE_MARGIN - CARDS_PER_COLUMN * CARD_HEIGHT - (CARDS_PER_COLUMN - 1) * GAP_Y - GAP_Y / 2
-        frame_left = PAGE_MARGIN - GAP_X / 2
-        frame_right = PAGE_MARGIN + CARDS_PER_ROW * CARD_WIDTH + (CARDS_PER_ROW - 1) * GAP_X + GAP_X / 2
-        
-        # Draw outer frame
-        c.line(frame_left, frame_bottom, frame_left, frame_top)  # Left
-        c.line(frame_right, frame_bottom, frame_right, frame_top)  # Right
-        c.line(frame_left, frame_top, frame_right, frame_top)  # Top
-        c.line(frame_left, frame_bottom, frame_right, frame_bottom)  # Bottom
-        
-        # Draw vertical lines
-        for col in range(1, CARDS_PER_ROW):
-            x = PAGE_MARGIN + col * CARD_WIDTH + (col - 0.5) * GAP_X
-            c.line(x, frame_bottom, x, frame_top)
-        
-        # Draw horizontal lines
-        for row in range(1, CARDS_PER_COLUMN):
-            y = PAGE_HEIGHT - PAGE_MARGIN - row * CARD_HEIGHT - (row - 0.5) * GAP_Y
-            c.line(frame_left, y, frame_right, y)
-        
-        c.setDash()  # Reset dash
     
     def _draw_cards_page(self, c, pokemon_list):
         """Draw a page with cards (3x3 grid) with cutting guides and footer."""

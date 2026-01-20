@@ -1,10 +1,10 @@
 {
   "variant_type": "mega_evolution",
   "variant_name": "Mega Evolution",
+  "suffix": "",
   "short_code": "MEGA",
   "icon": "⚡",
   "color_hex": "#FFD700",
-  "pokemon_count": 76,
   "forms_count": 79,
   "title": {
     "de": "Mega Entwicklung",
@@ -18,10 +18,10 @@
     "zh_hant": "超級進化"
   },
   "subtitle": null,
-  "iconic_pokemon_ids": [
-    "#006_MEGA_X",
-    "#094_MEGA",
-    "#150_MEGA_X"
+  "iconic_pokemon": [
+    6,
+    94,
+    150
   ],
   "pokemon": [
     {

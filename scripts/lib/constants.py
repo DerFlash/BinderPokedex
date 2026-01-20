@@ -69,78 +69,6 @@ LANGUAGES = {
 }
 
 # ============================================================================
-# GENERATION INFORMATION
-# ============================================================================
-
-GENERATION_INFO = {
-    1: {
-        'name': 'Generation I',
-        'count': 151,
-        'range': (1, 151),
-        'region': 'Kanto',
-        'iconic_pokemon': [25, 6, 9],  # Pikachu, Charizard, Blastoise
-    },
-    2: {
-        'name': 'Generation II',
-        'count': 100,
-        'range': (152, 251),
-        'region': 'Johto',
-        'iconic_pokemon': [249, 250, 155],  # Lugia, Ho-Oh, Cyndaquil
-    },
-    3: {
-        'name': 'Generation III',
-        'count': 135,
-        'range': (252, 386),
-        'region': 'Hoenn',
-        'iconic_pokemon': [384, 383, 382],  # Rayquaza, Groudon, Kyogre
-    },
-    4: {
-        'name': 'Generation IV',
-        'count': 107,
-        'range': (387, 493),
-        'region': 'Sinnoh',
-        'iconic_pokemon': [483, 484, 487],  # Dialga, Palkia, Giratina
-    },
-    5: {
-        'name': 'Generation V',
-        'count': 156,
-        'range': (494, 649),
-        'region': 'Unova',
-        'iconic_pokemon': [643, 644, 645],  # Reshiram, Zekrom, Landorus
-    },
-    6: {
-        'name': 'Generation VI',
-        'count': 72,
-        'range': (650, 721),
-        'region': 'Kalos',
-        'iconic_pokemon': [658, 653, 650],  # Greninja, Fennekin, Chespin
-    },
-    7: {
-        'name': 'Generation VII',
-        'count': 81,
-        'range': (722, 802),
-        'region': 'Alola',
-        'iconic_pokemon': [791, 792, 784],  # Solgaleo, Lunala, Kommo-o
-    },
-    8: {
-        'name': 'Generation VIII',
-        'count': 89,
-        'range': (803, 891),
-        'region': 'Galar',
-        'iconic_pokemon': [888, 889, 890],  # Zacian, Zamazenta, Eternatus
-    },
-    9: {
-        'name': 'Generation IX',
-        'count': 103,
-        'range': (892, 994),
-        'region': 'Paldea',
-        'iconic_pokemon': [906, 909, 912],  # Sprigatito line, Fuecoco line, Quaxly line
-        'region': 'Paldea',
-        'iconic_pokemon': [1005, 1006, 1007],  # Koraidon, Miraidon, Pecharunt
-    },
-}
-
-# ============================================================================
 # GENERATION COLORS
 # ============================================================================
 
@@ -229,6 +157,64 @@ COLORS = {
 }
 
 # ============================================================================
+# POKÉMON TYPE COLORS (Canonical Source)
+# ============================================================================
+# Used for card header colors. This is the single source of truth for type colors.
+# Maps English type names to hex color codes.
+
+TYPE_COLORS = {
+    'Normal': '#A8A878',
+    'Fire': '#F08030',
+    'Water': '#6890F0',
+    'Electric': '#F8D030',
+    'Grass': '#78C850',
+    'Ice': '#98D8D8',
+    'Fighting': '#C03028',
+    'Poison': '#A040A0',
+    'Ground': '#E0C068',
+    'Flying': '#A890F0',
+    'Psychic': '#F85888',
+    'Bug': '#A8B820',
+    'Rock': '#B8A038',
+    'Ghost': '#705898',
+    'Dragon': '#7038F8',
+    'Dark': '#705848',
+    'Steel': '#B8B8D0',
+    'Fairy': '#EE99AC',
+}
+
+# ============================================================================
+# GENERATION & VARIANT COLORS (Canonical Source)
+# ============================================================================
+
+GENERATION_COLORS = {
+    1: '#FF0000',      # Red
+    2: '#FFAA00',      # Orange
+    3: '#0000FF',      # Blue
+    4: '#AA00FF',      # Purple
+    5: '#00AA00',      # Green
+    6: '#00AAAA',      # Cyan
+    7: '#FF00AA',      # Pink
+    8: '#AAAA00',      # Yellow
+    9: '#666666',      # Gray
+}
+
+VARIANT_COLORS = {
+    'ex_gen1': '#1F51BA',             # Blue for Gen1
+    'ex_gen2': '#3D5A80',             # Dark Blue for Gen2
+    'ex_gen3': '#6B40D1',             # Purple for Gen3
+    'mega_evolution': '#FFD700',      # Gold
+    'gigantamax': '#C5283F',          # Red
+    'regional_alola': '#FDB927',      # Yellow
+    'regional_galar': '#0071BA',      # Blue
+    'regional_hisui': '#9D3F1D',      # Brown
+    'regional_paldea': '#D3337F',     # Pink
+    'primal_terastal': '#7B61FF',     # Purple
+    'patterns_unique': '#9D7A4C',     # Orange
+    'fusion_special': '#6F6F6F',      # Gray
+}
+
+# ============================================================================
 # TYPE INFORMATION
 # ============================================================================
 
@@ -296,3 +282,41 @@ def get_type_color(pokemon_type: str):
         raise ValueError(f"Unknown type: {pokemon_type}")
     
     return POKEMON_TYPES[pokemon_type]['color']
+
+
+def get_generation_info(generation: int) -> dict:
+    """Load generation info from consolidated pokemon.json or fallback to pokemon_gen*.json."""
+    import json
+    from pathlib import Path
+    
+    data_dir = OUTPUT_DIR.parent / 'data'
+    
+    # Try consolidated format first
+    consolidated_file = data_dir / 'pokemon.json'
+    if consolidated_file.exists():
+        try:
+            with open(consolidated_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            section_key = f'gen{generation}'
+            if section_key in data.get('sections', {}):
+                section = data['sections'][section_key]
+                # Build generation_info from section metadata
+                return {
+                    'name': section.get('name', f'Generation {generation}'),
+                    'region': section.get('region', ''),
+                    'count': len(section.get('pokemon', [])),  # Calculate from actual list
+                    'range': section.get('range', [0, 0]),
+                    'iconic_pokemon': section.get('iconic_pokemon', [])
+                }
+        except (json.JSONDecodeError, IOError):
+            pass
+    
+    # Fall back to old format
+    gen_file = data_dir / f'pokemon_gen{generation}.json'
+    if not gen_file.exists():
+        raise FileNotFoundError(f"Generation data file not found: {gen_file}")
+    
+    with open(gen_file, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    
+    return data.get('generation_info', {})

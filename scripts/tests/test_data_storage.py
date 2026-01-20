@@ -33,27 +33,40 @@ def test_data_storage_initialization():
 
 
 def test_save_and_load_generation():
-    """Test saving and loading generation data."""
-    logger.info("Testing save and load...")
+    """Test saving and loading generation data with consolidated format."""
+    logger.info("Testing save and load with consolidated format...")
     
     with tempfile.TemporaryDirectory() as tmpdir:
         storage = DataStorage(data_dir=Path(tmpdir))
         
-        # Test data
-        pokemon_data = [
-            {'id': 1, 'name': 'Bisasam', 'types': ['Pflanze', 'Gift'], 'number': 1},
-            {'id': 2, 'name': 'Bisaknosp', 'types': ['Pflanze', 'Gift'], 'number': 2},
-            {'id': 3, 'name': 'Bisakutor', 'types': ['Pflanze', 'Gift'], 'number': 3},
-        ]
+        # Test data - simulate consolidated format
+        consolidated_data = {
+            "version": "2.0",
+            "sections": {
+                "gen1": {
+                    "id": 1,
+                    "name": "Generation I",
+                    "region": "Kanto",
+                    "range": [1, 3],
+                    "iconic_pokemon": [1],
+                    "pokemon": [
+                        {'id': 1, 'name': 'Bisasam', 'types': ['Pflanze', 'Gift'], 'number': 1},
+                        {'id': 2, 'name': 'Bisaknosp', 'types': ['Pflanze', 'Gift'], 'number': 2},
+                        {'id': 3, 'name': 'Bisakutor', 'types': ['Pflanze', 'Gift'], 'number': 3},
+                    ]
+                }
+            }
+        }
         
-        # Save
-        output_file = storage.save_generation(1, pokemon_data)
-        assert output_file.exists(), "Pokemon file not created"
-        assert output_file.name == "pokemon_gen1.json"
+        # Write consolidated file
+        consolidated_file = Path(tmpdir) / "pokemon.json"
+        with open(consolidated_file, 'w', encoding='utf-8') as f:
+            json.dump(consolidated_data, f, indent=2, ensure_ascii=False)
         
-        logger.info(f"✓ Saved: {output_file}")
+        logger.info(f"✓ Saved consolidated: {consolidated_file}")
         
-        # Load
+        # Load - this clears cache and reloads
+        storage._consolidated_data = None
         loaded_data = storage.load_generation(1)
         assert len(loaded_data) == 3, f"Expected 3 pokemon, got {len(loaded_data)}"
         assert loaded_data[0]['name'] == 'Bisasam', "Name mismatch"
@@ -106,22 +119,39 @@ def test_save_multiple_generations():
 
 
 def test_unicode_handling():
-    """Test proper handling of Unicode characters."""
+    """Test proper handling of Unicode characters in consolidated format."""
     logger.info("Testing Unicode handling...")
     
     with tempfile.TemporaryDirectory() as tmpdir:
         storage = DataStorage(data_dir=Path(tmpdir))
         
-        # Data with various Unicode characters
-        pokemon_data = [
-            {'id': 1, 'name': 'Bisasam', 'german': 'Bisamanda', 'language': 'de'},
-            {'id': 2, 'name': '草之精靈', 'chinese': '简体中文', 'language': 'zh'},
-            {'id': 3, 'name': 'ポケモン', 'japanese': '日本語', 'language': 'ja'},
-            {'id': 4, 'name': 'Pokémon', 'accent': 'é', 'language': 'fr'},
-        ]
+        # Data with various Unicode characters - in consolidated format
+        consolidated_data = {
+            "version": "2.0",
+            "sections": {
+                "gen1": {
+                    "id": 1,
+                    "name": "Generation I",
+                    "region": "Kanto",
+                    "range": [1, 4],
+                    "iconic_pokemon": [1],
+                    "pokemon": [
+                        {'id': 1, 'name': 'Bisasam', 'german': 'Bisamanda', 'language': 'de'},
+                        {'id': 2, 'name': '草之精靈', 'chinese': '简体中文', 'language': 'zh'},
+                        {'id': 3, 'name': 'ポケモン', 'japanese': '日本語', 'language': 'ja'},
+                        {'id': 4, 'name': 'Pokémon', 'accent': 'é', 'language': 'fr'},
+                    ]
+                }
+            }
+        }
         
-        # Save and load
-        storage.save_generation(1, pokemon_data)
+        # Write consolidated file
+        consolidated_file = Path(tmpdir) / "pokemon.json"
+        with open(consolidated_file, 'w', encoding='utf-8') as f:
+            json.dump(consolidated_data, f, indent=2, ensure_ascii=False)
+        
+        # Clear cache and load
+        storage._consolidated_data = None
         loaded_data = storage.load_generation(1)
         
         # Verify all Unicode is preserved
