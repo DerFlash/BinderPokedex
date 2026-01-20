@@ -25,7 +25,12 @@
       "variant_regional_paldea": "Paldea-Formen",
       "variant_primal_terastal": "Primäre & Terastallisierung",
       "variant_patterns_unique": "Muster & Besonderheiten",
-      "variant_fusion_special": "Fusions & Spezialformen"
+      "variant_fusion_special": "Fusions & Spezialformen",
+      "variant_ex_gen1": "Pokémon-ex (Gen1)",
+      "variant_ex_gen2": "Pokémon-EX",
+      "variant_ex_gen3": "Pokémon ex",
+      "variant_ex_gen3_tera": "Pokémon ex Tera",
+      "variant_ex_gen3_mega": "Pokémon ex Mega"
     },
     "en": {
       "title": "BinderPokedex - Placeholder Card Binder",
@@ -52,7 +57,12 @@
       "variant_regional_paldea": "Paldea Forms",
       "variant_primal_terastal": "Primal & Terastallization",
       "variant_patterns_unique": "Patterns & Unique Forms",
-      "variant_fusion_special": "Fusions & Special Forms"
+      "variant_fusion_special": "Fusions & Special Forms",
+      "variant_ex_gen1": "Pokémon-ex (Gen1)",
+      "variant_ex_gen2": "Pokémon-EX",
+      "variant_ex_gen3": "Pokémon ex",
+      "variant_ex_gen3_tera": "Pokémon ex Tera",
+      "variant_ex_gen3_mega": "Pokémon ex Mega"
     },
     "fr": {
       "title": "BinderPokedex - Classeur de Cartes Spéciales",
@@ -79,7 +89,12 @@
       "variant_regional_paldea": "Formes de Paldea",
       "variant_primal_terastal": "Primal & Téracristallisation",
       "variant_patterns_unique": "Motifs & Formes Uniques",
-      "variant_fusion_special": "Fusions & Formes Spéciales"
+      "variant_fusion_special": "Fusions & Formes Spéciales",
+      "variant_ex_gen1": "Pokémon-ex (Gén1)",
+      "variant_ex_gen2": "Pokémon-EX",
+      "variant_ex_gen3": "Pokémon ex",
+      "variant_ex_gen3_tera": "Pokémon ex Téra",
+      "variant_ex_gen3_mega": "Pokémon ex Méga"
     },
     "es": {
       "title": "BinderPokedex - Carpeta de Cartas Especiales",
@@ -106,7 +121,12 @@
       "variant_regional_paldea": "Formas de Paldea",
       "variant_primal_terastal": "Primal & Teracristalización",
       "variant_patterns_unique": "Patrones & Formas Únicas",
-      "variant_fusion_special": "Fusiones & Formas Especiales"
+      "variant_fusion_special": "Fusiones & Formas Especiales",
+      "variant_ex_gen1": "Pokémon-ex (Gen1)",
+      "variant_ex_gen2": "Pokémon-EX",
+      "variant_ex_gen3": "Pokémon ex",
+      "variant_ex_gen3_tera": "Pokémon ex Tera",
+      "variant_ex_gen3_mega": "Pokémon ex Mega"
     },
     "it": {
       "title": "BinderPokedex - Raccoglitore di Carte Speciali",
@@ -133,7 +153,12 @@
       "variant_regional_paldea": "Forme di Paldea",
       "variant_primal_terastal": "Primal & Teracristallizzazione",
       "variant_patterns_unique": "Motivi & Forme Uniche",
-      "variant_fusion_special": "Fusioni & Forme Speciali"
+      "variant_fusion_special": "Fusioni & Forme Speciali",
+      "variant_ex_gen1": "Pokémon-ex (Gen1)",
+      "variant_ex_gen2": "Pokémon-EX",
+      "variant_ex_gen3": "Pokémon ex",
+      "variant_ex_gen3_tera": "Pokémon ex Tera",
+      "variant_ex_gen3_mega": "Pokémon ex Mega"
     },
     "ja": {
       "title": "BinderPokedex - プレースホルダーカードバインダー",
@@ -160,7 +185,12 @@
       "variant_regional_paldea": "パルデアのすがた",
       "variant_primal_terastal": "プリメット & テラスタル",
       "variant_patterns_unique": "パターン & ユニークなすがた",
-      "variant_fusion_special": "フュージョン & スペシャルなすがた"
+      "variant_fusion_special": "フュージョン & スペシャルなすがた",
+      "variant_ex_gen1": "ポケモンex(第1世代)",
+      "variant_ex_gen2": "ポケモンEX",
+      "variant_ex_gen3": "ポケモンex",
+      "variant_ex_gen3_tera": "ポケモンex テラ",
+      "variant_ex_gen3_mega": "ポケモンex メガ"
     },
     "ko": {
       "title": "BinderPokedex - 플레이스홀더 카드 바인더",
@@ -187,7 +217,12 @@
       "variant_regional_paldea": "팔데아의 모습",
       "variant_primal_terastal": "프리몬 & 테라스탈",
       "variant_patterns_unique": "패턴 & 유니크한 모습",
-      "variant_fusion_special": "퓨전 & 스페셜 모습"
+      "variant_fusion_special": "퓨전 & 스페셜 모습",
+      "variant_ex_gen1": "포켓몬ex(1세대)",
+      "variant_ex_gen2": "포켓몬EX",
+      "variant_ex_gen3": "포켓몬ex",
+      "variant_ex_gen3_tera": "포켓몬ex 테라",
+      "variant_ex_gen3_mega": "포켓몬ex 메가"
     },
     "zh_hans": {
       "title": "BinderPokedex - 占位符卡活页夹",
@@ -214,7 +249,12 @@
       "variant_regional_paldea": "帕底亚的样子",
       "variant_primal_terastal": "原始与太晶化",
       "variant_patterns_unique": "图案与独特样子",
-      "variant_fusion_special": "融合与特殊样子"
+      "variant_fusion_special": "融合与特殊样子",
+      "variant_ex_gen1": "宝可梦ex(第1世代)",
+      "variant_ex_gen2": "宝可梦EX",
+      "variant_ex_gen3": "宝可梦ex",
+      "variant_ex_gen3_tera": "宝可梦ex 太晶",
+      "variant_ex_gen3_mega": "宝可梦ex 超级"
     },
     "zh_hant": {
       "title": "BinderPokedex - 佔位符卡活頁夾",
@@ -241,7 +281,12 @@
       "variant_regional_paldea": "帕底亞的樣子",
       "variant_primal_terastal": "原始與太晶化",
       "variant_patterns_unique": "圖案與獨特樣子",
-      "variant_fusion_special": "融合與特殊樣子"
+      "variant_fusion_special": "融合與特殊樣子",
+      "variant_ex_gen1": "寶可夢ex(第1世代)",
+      "variant_ex_gen2": "寶可夢EX",
+      "variant_ex_gen3": "寶可夢ex",
+      "variant_ex_gen3_tera": "寶可夢ex 太晶",
+      "variant_ex_gen3_mega": "寶可夢ex 超級"
     }
   },
   "types": {

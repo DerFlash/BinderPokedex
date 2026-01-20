@@ -3,8 +3,51 @@
   "last_updated": "2026-01-19",
   "variant_categories": [
     {
-      "id": "mega_evolution",
+      "id": "ex_gen1",
       "order": 1,
+      "json_file": "variants_ex_gen1.json",
+      "short_code": "ex-GEN1",
+      "icon": "✨",
+      "pokemon_count": 6,
+      "forms_count": 6,
+      "status": "complete",
+      "notes": "6 Pokémon-ex cards from Gen1 (EX Ruby & Sapphire era, ~2003)"
+    },
+    {
+      "id": "ex_gen2",
+      "order": 2,
+      "json_file": "variants_ex_gen2.json",
+      "short_code": "ex-GEN2",
+      "icon": "✨",
+      "pokemon_count": 146,
+      "forms_count": 146,
+      "status": "complete",
+      "sections": {
+        "normal": {"pokemon_count": 119, "separator_style": "standard"},
+        "mega": {"pokemon_count": 25, "separator_style": "mega_evolution"},
+        "primal": {"pokemon_count": 2, "separator_style": "primal_reversion"}
+      },
+      "notes": "146 Pokémon-EX cards from Gen2 (Black & White Series) with Normal/Mega/Primal subsections"
+    },
+    {
+      "id": "ex_gen3",
+      "order": 3,
+      "json_file": "variants_ex_gen3.json",
+      "short_code": "ex",
+      "icon": "✨",
+      "pokemon_count": 40,
+      "forms_count": 40,
+      "status": "complete",
+      "sections": {
+        "normal": {"pokemon_count": 16, "separator_style": "standard"},
+        "tera": {"pokemon_count": 9, "separator_style": "crystalline_abstract_rainbow"},
+        "mega": {"pokemon_count": 15, "separator_style": "crystalline_abstract_gold"}
+      },
+      "notes": "40 Pokémon-ex from Gen3 (Scarlet & Violet) with Tera and Mega subsections"
+    },
+    {
+      "id": "mega_evolution",
+      "order": 4,
       "json_file": "variants_mega.json",
       "short_code": "MEGA",
       "icon": "⚡",
@@ -14,6 +57,11 @@
       "notes": "87 Pokémon species, 96 unique Mega forms (X/Y/Z variants)"
     }
   ],
+  "statistics": {
+    "total_categories": 4,
+    "total_pokemon": 272,
+    "total_forms": 281
+  },
   "features": {
     "multilingual_support": 9,
     "languages": ["de", "en", "fr", "es", "it", "ja", "ko", "zh_hans", "zh_hant"],

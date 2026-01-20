@@ -13,6 +13,7 @@ Features:
 """
 
 import logging
+import json
 from pathlib import Path
 from datetime import datetime
 from typing import Optional
@@ -303,6 +304,22 @@ class PDFGenerator:
         
         canvas_obj.setDash()
     
+    def _load_type_translations(self):
+        """Load type translations from i18n/translations.json"""
+        try:
+            import json
+            # Use absolute path from this file's location
+            pdf_generator_file = Path(__file__).resolve()
+            translations_path = pdf_generator_file.parent.parent.parent / 'i18n' / 'translations.json'
+            
+            if translations_path.exists():
+                with open(translations_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    return data.get('types', {})
+        except Exception as e:
+            logger.warning(f"Could not load type translations: {e}")
+        return {}
+    
     def _calculate_card_position(self, card_index: int) -> tuple:
         """
         Calculate x, y position for a card on the page.
@@ -585,14 +602,31 @@ class PDFGenerator:
         
         # Note: Pokédex number moved to bottom of card (see below)
         
-        # Type (header right)
+        # Type (header right) - with language translation
+        # Get type from either 'types' array or 'type1' field (for compatibility)
         types = pokemon_data.get('types', [])
+        if not types and pokemon_data.get('type1'):
+            types = [pokemon_data.get('type1')]
+        
         if types:
-            type_text = types[0]  # Use first type
-            canvas_obj.setFont("Helvetica", 5)
-            type_width = canvas_obj.stringWidth(type_text, "Helvetica", 5)
+            type_english = types[0]  # Use first type (English name)
+            # Translate type to current language
+            type_translations = self._load_type_translations()
+            language_types = type_translations.get(self.language, type_translations.get('en', {}))
+            type_text = language_types.get(type_english, type_english)
+            
+            try:
+                # Use same font approach as Pokémon names - this works for CJK!
+                type_font = FontManager.get_font_name(self.language, bold=False)
+                canvas_obj.setFont(type_font, 5)
+            except:
+                canvas_obj.setFont("Helvetica", 5)
+            
             canvas_obj.setFillColor(HexColor("#5D5D5D"))
-            canvas_obj.drawString(x + CARD_WIDTH - type_width - 3, y + CARD_HEIGHT - header_height + 5, type_text)
+            # Use drawRightString for proper right-alignment without overflow
+            type_x = x + CARD_WIDTH - 3  # Right edge with margin
+            type_y = y + CARD_HEIGHT - header_height + 6
+            canvas_obj.drawRightString(type_x, type_y, type_text)
         
         # Pokémon name (centered, using proper font for language)
         name = pokemon_data.get('name', 'Unknown')

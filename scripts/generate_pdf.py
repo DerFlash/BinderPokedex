@@ -198,6 +198,9 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
+  # Generate all PDFs (generations + variants) for all languages
+  python generate_pdf.py
+  
   # Generate German PDFs for Gen 1
   python generate_pdf.py --type generation --language de --generation 1
   
@@ -219,9 +222,9 @@ Examples:
         "--type",
         "-t",
         type=str,
-        default="generation",
-        choices=["generation", "variant"],
-        help="Type of PDF to generate: 'generation' (default) or 'variant'"
+        default=None,
+        choices=["generation", "variant", "all"],
+        help="Type of PDF to generate: 'generation', 'variant', or 'all' (default: all if no args provided)"
     )
     
     parser.add_argument(
@@ -281,8 +284,20 @@ Examples:
         logger.error(f"❌ Data directory not found: {data_dir}")
         return 1
     
+    # Determine generation mode if not specified
+    if args.type is None:
+        # Default: generate both if no args, or infer from other args
+        if len(sys.argv) == 1:  # No arguments at all
+            args.type = "all"
+        else:
+            # Check for variant-specific args
+            if "--variant" in sys.argv or "--list" in sys.argv:
+                args.type = "variant"
+            else:
+                args.type = "generation"
+    
     # Handle --list for variants
-    if args.list and args.type == "variant":
+    if args.list and args.type in ["variant", "all"]:
         if not variants_dir.exists():
             logger.error(f"❌ Variants directory not found: {variants_dir}")
             return 1
@@ -308,7 +323,12 @@ Examples:
         return 0
     
     # Route based on type
-    if args.type == "generation":
+    if args.type == "all":
+        # Generate both generations and variants
+        result_gen = handle_generation_mode(args, script_dir, project_dir, data_dir)
+        result_var = handle_variant_mode(args, script_dir, project_dir, data_dir, variants_dir)
+        return result_gen | result_var  # 0 if both succeed, 1 if either fails
+    elif args.type == "generation":
         return handle_generation_mode(args, script_dir, project_dir, data_dir)
     elif args.type == "variant":
         return handle_variant_mode(args, script_dir, project_dir, data_dir, variants_dir)
@@ -426,20 +446,23 @@ def handle_variant_mode(args, script_dir, project_dir, data_dir, variants_dir):
     
     # Determine which variants to generate
     if args.variant is None:
-        logger.error(f"❌ --variant argument required for --type variant")
-        logger.info(f"   Use --variant mega|gigantamax|regional_alola|... or --variant all")
-        logger.info(f"   Use --list to see all available variants")
-        return 1
-    
-    variants_to_generate = []
-    
-    if args.variant.lower() == 'all':
+        # Default: generate all variants if not in mode where --variant is required
+        if args.type == "variant":
+            logger.error(f"❌ --variant argument required for --type variant")
+            logger.info(f"   Use --variant mega|gigantamax|regional_alola|... or --variant all")
+            logger.info(f"   Use --list to see all available variants")
+            return 1
+        else:
+            # In "all" mode, generate all variants
+            variants_to_generate = [cat['id'] for cat in meta['variant_categories']]
+    elif args.variant.lower() == 'all':
         variants_to_generate = [cat['id'] for cat in meta['variant_categories']]
     else:
         # Parse comma-separated list
         variant_ids = [v.strip() for v in args.variant.lower().split(',')]
         valid_ids = {cat['id'] for cat in meta['variant_categories']}
         
+        variants_to_generate = []
         for vid in variant_ids:
             if vid not in valid_ids:
                 logger.error(f"❌ Unknown variant: {vid}")
@@ -531,7 +554,7 @@ def _generate_variant_pdf(variant_data, language, output_dir, script_dir):
     output_dir.mkdir(parents=True, exist_ok=True)
     
     # Extract variant info
-    variant_type = variant_data.get('variant_type', 'unknown')
+    variant_type = variant_data.get('variant', variant_data.get('variant_type', 'unknown'))
     
     # Generate output filename
     output_file = output_dir / f"Variant_{variant_type}_{language.upper()}.pdf"

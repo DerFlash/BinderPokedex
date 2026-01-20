@@ -6,6 +6,7 @@ Clean, production-ready implementation for multi-language Pokémon PDF generatio
 
 ### Generate PDFs
 
+**Generation PDFs (All 9 Generations):**
 ```bash
 # German Gen 1
 python scripts/generate_pdf.py --language de --generation 1
@@ -16,22 +17,52 @@ python scripts/generate_pdf.py --generation 1
 # Japanese Gen 1-3
 python scripts/generate_pdf.py --language ja --generation 1-3
 
-# Everything
+# All generations (1-9)
 python scripts/generate_pdf.py
 ```
 
-**Outputs:** `../output/pokemon_gen<N>_<lang>.pdf`
+**Variant PDFs (EX, Mega Evolution, etc.):**
+```bash
+# German EX Gen1
+python scripts/generate_pdf.py --type variant --variant ex_gen1 --language de
+
+# All languages EX Gen2
+python scripts/generate_pdf.py --type variant --variant ex_gen2
+
+# All EX variants in German
+python scripts/generate_pdf.py --type variant --variant all --language de
+
+# List all available variants
+python scripts/generate_pdf.py --type variant --list
+
+# Mega Evolution variant
+python scripts/generate_pdf.py --type variant --variant mega_evolution --language en
+```
+
+**Available Variants:**
+- `ex_gen1` - Pokémon EX from Gen1 (6 Pokémon)
+- `ex_gen2` - Pokémon EX from Gen2 with Mega/Primal sections (146 Pokémon)
+- `ex_gen3` - Pokémon ex from Gen3 with Tera/Mega sections (40 Pokémon)
+- `mega_evolution` - Mega Evolution collection (87 Pokémon, 96 Forms)
+
+**Outputs:** 
+- Generations: `../output/<lang>/pokemon_gen<N>_<lang>.pdf`
+- Variants: `../output/<lang>/Variant_<variant>_<LANG>.pdf`
 
 ## 📚 Main Entry Point
 
 ### `generate_pdf.py` ⭐
 
-Complete PDF generation with real Pokémon data.
+Complete PDF generation with real Pokémon data for both standard generations and variant collections.
 
 **Features:**
 - ✅ 9 languages (including CJK: Japanese, Korean, Chinese)
-- ✅ Cover pages with generation info
+- ✅ Standard generation PDFs (Gen 1-9)
+- ✅ Variant PDFs (EX collections, Mega Evolution, etc.)
+- ✅ Cover pages with generation/variant info
+- ✅ Separator pages with custom styling
 - ✅ 3×3 card layout (18+ pages per generation)
+- ✅ Multi-language separator titles with logo tokens ([M], [EX], [EX_NEW], [EX_TERA])
 - ✅ Professional typography
 - ✅ Clean architecture, no workarounds
 
@@ -48,11 +79,32 @@ zh_hans     简体中文 (Simplified) ← CJK
 zh_hant     繁體中文 (Traditional) ← CJK
 ```
 
-**Options:**
+**Command Line Options:**
 ```
---language, -l    Language code (default: all)
---generation, -g  Generations: 1, 1-3, 1,3,5, or 1-9 (default: 1-9)
---skip-images     Skip image processing
+--type, -t              PDF type: 'generation' or 'variant' (default: generation)
+--language, -l          Language code (default: all languages)
+--generation, -g        Generations: '1', '1-3', '1,3,5', or '1-9' (default: 1-9)
+--variant, -v           Variant ID: 'ex_gen1', 'ex_gen2', 'ex_gen3', 'mega_evolution', 'all'
+--list                  List all available variants and their status
+--skip-images           Skip image processing (faster for testing)
+--test                  Test mode: only generate with 9 Pokémon
+```
+
+**Examples:**
+```bash
+# Generation PDFs
+python generate_pdf.py --type generation --language de --generation 1
+python generate_pdf.py --type generation --generation 1-3
+python generate_pdf.py  # All gens, all languages
+
+# Variant PDFs
+python generate_pdf.py --type variant --language de --variant ex_gen1
+python generate_pdf.py --type variant --language en --variant ex_gen2
+python generate_pdf.py --type variant --variant all --language de
+python generate_pdf.py --type variant --list
+
+# Test mode (9 Pokémon only)
+python generate_pdf.py --type generation --generation 1 --language de --test
 ```
 
 ## 📦 Library (lib/)

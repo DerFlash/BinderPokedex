@@ -6,6 +6,18 @@
   "color_hex": "#FFD700",
   "pokemon_count": 76,
   "forms_count": 79,
+  "title": {
+    "de": "Mega Entwicklung",
+    "en": "Mega Evolution",
+    "fr": "Méga Évolution",
+    "es": "Megaevolución",
+    "it": "Megaevoluzione",
+    "ja": "メガシンカ",
+    "ko": "메가진화",
+    "zh_hans": "超级进化",
+    "zh_hant": "超級進化"
+  },
+  "subtitle": null,
   "iconic_pokemon_ids": [
     "#006_MEGA_X",
     "#094_MEGA",

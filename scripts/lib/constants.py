@@ -127,7 +127,7 @@ GENERATION_INFO = {
         'count': 89,
         'range': (803, 891),
         'region': 'Galar',
-        'iconic_pokemon': [643, 888, 889],  # Eternatus, Zacian, Zamazenta
+        'iconic_pokemon': [888, 889, 890],  # Zacian, Zamazenta, Eternatus
     },
     9: {
         'name': 'Generation IX',
