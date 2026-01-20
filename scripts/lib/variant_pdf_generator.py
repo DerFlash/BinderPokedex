@@ -21,8 +21,7 @@ from reportlab.lib.units import mm
 from reportlab.lib.colors import HexColor
 
 from .fonts import FontManager
-from .card_template import CardTemplate
-from .cover_template import CoverTemplate
+from .rendering import CardRenderer, CoverRenderer, PageRenderer
 from .constants import PAGE_WIDTH, PAGE_HEIGHT, PAGE_MARGIN, CARD_WIDTH, CARD_HEIGHT, CARDS_PER_ROW, CARDS_PER_COLUMN, GAP_X, GAP_Y
 
 logger = logging.getLogger(__name__)
@@ -72,13 +71,10 @@ class VariantPDFGenerator:
         # DO NOT SORT HERE - respect the order in the variant data
         # The pokemon list order matters for section indices to work correctly
         
-        # Initialize templates with format_translation callback
-        self.card_template = CardTemplate(language=language, image_cache=image_cache, variant=variant_data.get('variant'))
-        self.cover_template = CoverTemplate(
-            language=language, 
-            image_cache=image_cache,
-            format_translation=self._format_translation
-        )
+        # Initialize new unified rendering modules
+        self.card_renderer = CardRenderer(language=language, image_cache=image_cache, variant=variant_data.get('variant'))
+        # CoverRenderer will be created when needed for variant covers
+        self.page_renderer = PageRenderer()
         
         # Register fonts if not already done
         try:
@@ -299,30 +295,12 @@ class VariantPDFGenerator:
     
     def _draw_cards_page(self, c, pokemon_list):
         """Draw a page with cards (3x3 grid) with cutting guides and footer."""
-        # White background
-        c.setFillColor(HexColor("#FFFFFF"))
-        c.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT, fill=True, stroke=False)
+        # Create page using unified PageRenderer
+        self.page_renderer.create_page(c)
         
-        # Draw cutting guides
-        self._draw_cutting_guides(c)
-        
-        # Draw cards in 3x3 grid
-        MARGIN = PAGE_MARGIN
-        CARD_W = CARD_WIDTH
-        CARD_H = CARD_HEIGHT
-        
-        # Draw cards using template
+        # Draw cards using unified CardRenderer
         for idx, pokemon in enumerate(pokemon_list):
-            row = idx // CARDS_PER_ROW
-            col = idx % CARDS_PER_ROW
-            
-            x = MARGIN + col * (CARD_W + GAP_X)
-            y = PAGE_HEIGHT - MARGIN - (row + 1) * CARD_H - row * GAP_Y
-            
-            self.card_template.draw_card(c, pokemon, x, y, CARD_W, CARD_H, variant_mode=True)
+            self.page_renderer.add_card_to_page(c, self.card_renderer, pokemon, idx, variant_mode=True)
         
-        # Draw footer before showing page
-        c.setFont("Helvetica", 6)
-        c.setFillColor(HexColor("#AAAAAA"))
-        footer_text = f"Binder Pokédex Project | github.com/BinderPokedex"
-        c.drawCentredString(PAGE_WIDTH / 2, 8, footer_text)
+        # Add footer
+        self.page_renderer.add_footer(c)

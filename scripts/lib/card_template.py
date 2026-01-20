@@ -1,5 +1,21 @@
 """
+⚠️  DEPRECATED - Use scripts.lib.rendering.CardRenderer instead
+
 Card Template - Reusable card rendering for both Generation and Variant PDFs
+
+This module is deprecated and will be removed in a future version.
+All card rendering functionality has been consolidated into the unified
+CardRenderer class in the rendering module for better code organization
+and consistency.
+
+Migration Guide:
+  Old: from card_template import CardTemplate
+  New: from rendering import CardRenderer
+
+  Old: template.draw_card(canvas, pokemon_data, x, y)
+  New: renderer.render_card(canvas, pokemon_data, x, y)
+
+See: scripts/lib/rendering/README.md for migration details.
 
 Provides a parametrized template for drawing Pokémon cards with:
 - Type-based header colors

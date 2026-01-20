@@ -35,6 +35,7 @@ try:
         CARD_WIDTH, CARD_HEIGHT, CARDS_PER_ROW, CARDS_PER_COLUMN, GAP_X, GAP_Y,
         OUTPUT_DIR, PDF_PREFIX, PDF_EXTENSION, COLORS
     )
+    from .rendering import CardRenderer, CoverRenderer, PageRenderer
 except ImportError:
     # Fallback for direct imports (testing)
     from fonts import FontManager
@@ -44,6 +45,7 @@ except ImportError:
         CARD_WIDTH, CARD_HEIGHT, CARDS_PER_ROW, CARDS_PER_COLUMN, GAP_X, GAP_Y,
         OUTPUT_DIR, PDF_PREFIX, PDF_EXTENSION, COLORS
     )
+    from rendering import CardRenderer, CoverRenderer, PageRenderer
 
 logger = logging.getLogger(__name__)
 
@@ -201,6 +203,11 @@ class PDFGenerator:
         self.current_page_cards = []
         self.page_count = 0
         self.image_cache = ImageCache()  # Initialize image cache
+        
+        # Initialize new rendering modules
+        self.card_renderer = CardRenderer(language, self.image_cache)
+        self.cover_renderer = CoverRenderer(language, generation, self.image_cache)
+        self.page_renderer = PageRenderer()
         
         # Load translations
         if translations is None:
@@ -727,6 +734,9 @@ class PDFGenerator:
         """
         Generate the complete PDF with cover page and cards.
         
+        Uses unified rendering modules (CardRenderer, CoverRenderer, PageRenderer)
+        for consistent quality across all PDF types.
+        
         Args:
             pokemon_list: List of Pokémon to render (optional, uses self.pokemon_list if not provided)
         
@@ -760,12 +770,12 @@ class PDFGenerator:
             # Create canvas
             c = canvas.Canvas(str(pdf_file_path), pagesize=A4)
             
-            # Draw cover page
-            self._draw_cover_page(c)
+            # Draw cover page using unified CoverRenderer
+            self.cover_renderer.render_cover(c, self.pokemon_list)
             c.showPage()
             logger.info(f"  Cover page created")
             
-            # Render cards (9 per page)
+            # Render cards (9 per page) using unified CardRenderer and PageRenderer
             card_count = 0
             page_number = 1
             total_cards = len(self.pokemon_list)
@@ -777,40 +787,29 @@ class PDFGenerator:
                     bar_width = 30
                     filled = int(bar_width * progress_pct / 100)
                     bar = '█' * filled + '░' * (bar_width - filled)
-                    # Print progress bar directly without logging to avoid line breaks
                     print(f"\r  [{bar}] {idx}/{total_cards} ({progress_pct:.0f}%)", end='', flush=True)
                 
-                # Check if we need a new page (9 cards per page)
-                if card_count % (CARDS_PER_ROW * CARDS_PER_COLUMN) == 0 and card_count > 0:
+                # Check if we need a new page
+                if self.page_renderer.should_start_new_page(card_count):
                     # Add footer before showing page
-                    c.setFont("Helvetica", 6)
-                    c.setFillColor(HexColor("#AAAAAA"))
-                    footer_text = f"Binder Pokédex Project | github.com/BinderPokedex"
-                    c.drawCentredString(PAGE_WIDTH / 2, 8, footer_text)
+                    self.page_renderer.add_footer(c)
                     c.showPage()
                     page_number += 1
-                    logger.debug(f"  Page {page_number} created ({card_count}/{len(self.pokemon_list)} cards)")
+                    logger.debug(f"  Page {page_number} created ({card_count}/{total_cards} cards)")
                 
-                # White background for page
-                if card_count % (CARDS_PER_ROW * CARDS_PER_COLUMN) == 0:
-                    c.setFillColor(HexColor("#FFFFFF"))
-                    c.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT, fill=True, stroke=False)
-                    # Draw cutting guides for the new page
-                    self._draw_cutting_guides(c)
+                # Create new page if needed
+                if self.page_renderer.get_card_index_on_page(card_count) == 0:
+                    self.page_renderer.create_page(c)
                 
                 # Calculate position on page
-                card_position = card_count % (CARDS_PER_ROW * CARDS_PER_COLUMN)
-                x, y = self._calculate_card_position(card_position)
+                card_position = self.page_renderer.get_card_index_on_page(card_count)
                 
-                # Draw the card
-                self._draw_card(c, pokemon, x, y)
+                # Draw the card using unified CardRenderer
+                self.page_renderer.add_card_to_page(c, self.card_renderer, pokemon, card_position)
                 card_count += 1
             
             # Add footer to last page before showing it
-            c.setFont("Helvetica", 6)
-            c.setFillColor(HexColor("#AAAAAA"))
-            footer_text = f"Binder Pokédex Project | github.com/BinderPokedex"
-            c.drawCentredString(PAGE_WIDTH / 2, 8, footer_text)
+            self.page_renderer.add_footer(c)
             
             # Final page
             c.showPage()
@@ -821,7 +820,7 @@ class PDFGenerator:
             print()  # Newline after progress bar
             
             file_size_mb = pdf_file_path.stat().st_size / 1024 / 1024
-            total_pages = 1 + (card_count + 8) // 9  # +1 for cover page
+            total_pages = self.page_renderer.get_total_pages(card_count, include_cover=True)
             self.page_count = total_pages  # Store for testing/reporting
             
             logger.info(f"✓ PDF generated successfully: {pdf_file_path}")

@@ -1,5 +1,17 @@
 """
+⚠️  DEPRECATED (Partial) - Use scripts.lib.rendering for Generation PDFs
+
 Cover Template - Reusable cover page rendering for both Generation and Variant PDFs
+
+This module is partially deprecated:
+- For Generation PDFs: Use scripts.lib.rendering.CoverRenderer
+- For Variant PDFs: Still used (VariantCoverRenderer planned for future)
+
+Migration is ongoing:
+- pdf_generator.py now uses unified CoverRenderer
+- variant_pdf_generator.py will migrate in next refactoring phase
+
+See: scripts/lib/rendering/README.md for details.
 
 Provides parametrized templates for drawing cover pages with:
 - Colored header stripe
