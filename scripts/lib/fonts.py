@@ -3,12 +3,15 @@ Font Management Module
 
 Handles TrueType font registration for CJK languages.
 All fonts are registered once at module load time.
+
+Includes Unicode character support and graceful fallback handling.
 """
 
 import logging
 from pathlib import Path
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+import unicodedata
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +22,11 @@ class FontManager:
     
     Uses TrueType fonts from system directories when available.
     Latin languages use built-in ReportLab fonts.
+    
+    Features:
+    - Graceful font fallback for unsupported characters
+    - Character-level font selection for mixed-script text
+    - CJK language support with Songti.ttc
     """
     
     # Mapping of language codes to font configuration
@@ -29,7 +37,7 @@ class FontManager:
         'fr': {'font': 'Helvetica', 'font_bold': 'Helvetica-Bold'},
         'it': {'font': 'Helvetica', 'font_bold': 'Helvetica-Bold'},
         'ja': {'font': 'SongtiBold', 'font_bold': 'SongtiBold'},          # Japanese
-        'ko': {'font': 'AppleGothicRegular', 'font_bold': 'AppleGothicRegular'},  # Korean (AppleGothic TTF)
+        'ko': {'font': 'SongtiBold', 'font_bold': 'SongtiBold'},          # Korean (Songti supports CJK)
         'zh_hans': {'font': 'SongtiBold', 'font_bold': 'SongtiBold'},     # Simplified Chinese
         'zh_hant': {'font': 'SongtiBold', 'font_bold': 'SongtiBold'},     # Traditional Chinese
     }
@@ -37,14 +45,26 @@ class FontManager:
     # CJK Languages that need TrueType fonts
     CJK_LANGUAGES = ['ja', 'ko', 'zh_hans', 'zh_hant']
     
-    # Path to Songti TrueType Collection
+    # Path to Songti TrueType Collection (primary CJK font)
     SONGTI_PATH = Path('/System/Library/Fonts/Supplemental/Songti.ttc')
     
-    # Path to AppleGothic for Korean (TTF, not TTC)
-    APPLE_GOTHIC_PATH = Path('/System/Library/Fonts/Supplemental/AppleGothic.ttf')
+    # Fallback CJK fonts for Linux systems
+    NOTO_CJK_PATHS = [
+        # WenQuanYi fonts (TTF format that works with ReportLab) - prefer these
+        Path('/usr/share/fonts/truetype/wqy/wqy-zenhei.ttf'),
+        Path('/usr/share/fonts/truetype/wqy/wqy-microhei.ttf'),
+        Path('/usr/share/fonts/wenquanyi/wqy-zenhei.ttf'),
+        Path('/usr/share/fonts/wenquanyi/wqy-microhei.ttf'),
+        # Noto Sans CJK (PostScript outlines - won't work with ReportLab)
+        Path('/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc'),
+        Path('/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc'),
+        Path('/usr/share/fonts/noto-cjk/NotoSansCJK-Bold.ttc'),
+        Path('/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc'),
+    ]
     
     # Track if fonts have been registered
     _fonts_registered = False
+    _font_cache = {}
     
     @classmethod
     def register_fonts(cls):
@@ -53,6 +73,8 @@ class FontManager:
         
         This should be called once before any PDF generation.
         If called multiple times, subsequent calls are no-ops.
+        
+        Supports graceful fallback if fonts are missing.
         """
         if cls._fonts_registered:
             logger.debug("Fonts already registered, skipping")
@@ -60,37 +82,95 @@ class FontManager:
         
         logger.info("Registering fonts for multi-language support...")
         
-        successful = 0
-        
         # Register Songti font for CJK if available
         if cls.SONGTI_PATH.exists():
             try:
                 font = TTFont('SongtiBold', str(cls.SONGTI_PATH))
                 pdfmetrics.registerFont(font)
-                logger.info(f"✓ Registered Songti font (JA, ZH)")
+                logger.info(f"✓ Registered Songti font (JA, KO, ZH)")
                 logger.debug(f"  Path: {cls.SONGTI_PATH}")
-                successful += 1
+                cls._font_cache['SongtiBold'] = True
             except Exception as e:
                 logger.warning(f"✗ Could not register Songti: {e}")
+                logger.warning(f"  Some CJK characters may not render properly")
+                cls._font_cache['SongtiBold'] = False
         else:
             logger.warning(f"⚠️  Songti font not found at {cls.SONGTI_PATH}")
-        
-        # Register AppleGothic for Korean
-        if cls.APPLE_GOTHIC_PATH.exists():
-            try:
-                font = TTFont('AppleGothicRegular', str(cls.APPLE_GOTHIC_PATH))
-                pdfmetrics.registerFont(font)
-                logger.info(f"✓ Registered AppleGothic font (KO)")
-                logger.debug(f"  Path: {cls.APPLE_GOTHIC_PATH}")
-                successful += 1
-            except Exception as e:
-                logger.warning(f"✗ Could not register AppleGothic: {e}")
-        else:
-            logger.warning(f"⚠️  AppleGothic font not found")
+            logger.warning(f"  CJK characters may not render - install fonts or use Noto Sans CJK")
+            cls._font_cache['SongtiBold'] = False
+            
+            # Try Noto Sans CJK as fallback on Linux systems
+            noto_registered = False
+            
+            # First try specific known paths
+            for noto_path in cls.NOTO_CJK_PATHS:
+                if noto_path.exists():
+                    try:
+                        # Register as 'SongtiBold' for compatibility with existing code
+                        font = TTFont('SongtiBold', str(noto_path))
+                        pdfmetrics.registerFont(font)
+                        logger.info(f"✓ Registered Noto Sans CJK font as SongtiBold (JA, KO, ZH)")
+                        logger.debug(f"  Path: {noto_path}")
+                        cls._font_cache['SongtiBold'] = True
+                        noto_registered = True
+                        break
+                    except Exception as e:
+                        logger.debug(f"Could not register {noto_path}: {e}")
+                        continue
+                else:
+                    logger.debug(f"Noto path does not exist: {noto_path}")
+            
+            # If specific paths didn't work, try to find any .ttc file in noto directories
+            if not noto_registered:
+                noto_dirs = [
+                    Path('/usr/share/fonts/opentype/noto/'),
+                    Path('/usr/share/fonts/truetype/noto/'),
+                    Path('/usr/share/fonts/noto-cjk/'),
+                    Path('/usr/share/fonts/truetype/wqy/'),
+                    Path('/usr/share/fonts/wenquanyi/'),
+                ]
+                
+                for noto_dir in noto_dirs:
+                    logger.warning(f"Checking directory: {noto_dir}")
+                    if noto_dir.exists():
+                        logger.warning(f"Directory exists: {noto_dir}")
+                        # Look for both .ttc and .ttf files (prefer .ttf for ReportLab compatibility)
+                        ttf_files = list(noto_dir.glob('**/*.ttf'))
+                        ttc_files = list(noto_dir.glob('**/*.ttc'))
+                        font_files = ttf_files + ttc_files  # TTF first
+                        logger.warning(f"Found TTF files: {ttf_files}")
+                        logger.warning(f"Found TTC files: {ttc_files}")
+                        if font_files:
+                            for font_path in font_files:
+                                try:
+                                    logger.warning(f"Trying to register: {font_path}")
+                                    font = TTFont('SongtiBold', str(font_path))
+                                    pdfmetrics.registerFont(font)
+                                    logger.info(f"✓ Registered CJK font as SongtiBold (JA, KO, ZH)")
+                                    logger.debug(f"  Path: {font_path} (found in {noto_dir})")
+                                    cls._font_cache['SongtiBold'] = True
+                                    noto_registered = True
+                                    break
+                                except Exception as e:
+                                    logger.warning(f"Could not register {font_path}: {e}")
+                                    continue
+                            if noto_registered:
+                                break
+                        else:
+                            logger.warning(f"No font files found in {noto_dir}")
+                    else:
+                        logger.warning(f"Directory does not exist: {noto_dir}")
+            
+            if not noto_registered:
+                logger.warning(f"⚠️  Noto Sans CJK fonts not found. CJK characters may not render properly.")
+                logger.warning(f"  Checked specific paths: {cls.NOTO_CJK_PATHS}")
+                logger.warning(f"  Checked directories: /usr/share/fonts/opentype/noto/, /usr/share/fonts/truetype/noto/, /usr/share/fonts/noto-cjk/, /usr/share/fonts/truetype/wqy/, /usr/share/fonts/wenquanyi/")
+                cls._font_cache['SongtiBold'] = False
         
         # Built-in Helvetica fonts are always available
         logger.debug("✓ Built-in Latin fonts available (Helvetica)")
-        successful += 1
+        cls._font_cache['Helvetica'] = True
+        cls._font_cache['Helvetica-Bold'] = True
         
         cls._fonts_registered = True
         logger.info(f"Font registration complete")

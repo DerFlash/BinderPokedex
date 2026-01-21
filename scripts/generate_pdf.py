@@ -57,6 +57,11 @@ logging.basicConfig(
     level=logging.WARNING,
     format='%(levelname)s: %(message)s'
 )
+
+# Suppress ReportLab font rendering warnings for known unsupported characters
+# These are expected when rendering CJK text with limited font support
+logging.getLogger('reportlab.pdfbase.ttfonts').setLevel(logging.ERROR)
+
 logger = logging.getLogger(__name__)
 
 

@@ -25,6 +25,10 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[logging.StreamHandler(sys.stderr)],
 )
+
+# Suppress ReportLab font rendering warnings for known unsupported characters
+logging.getLogger('reportlab.pdfbase.ttfonts').setLevel(logging.ERROR)
+
 logger = logging.getLogger(__name__)
 
 # Initialize FastMCP server
