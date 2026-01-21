@@ -6,7 +6,7 @@ Print 1,025+ Pokémon across 9 generations in 9 languages. All variants, all for
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-![v4.1.1](https://img.shields.io/badge/version-v4.1.1-green.svg)
+![v4.2](https://img.shields.io/badge/version-v4.2-green.svg)
 
 ---
 
@@ -21,21 +21,36 @@ Print 1,025+ Pokémon across 9 generations in 9 languages. All variants, all for
 ### For End Users - Just Download & Print!
 
 
-**Latest (v4.1.1):** [All 117 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v4.1.1) ✨ *Hotfix: fine dashed cutting guides, improved preview, includes v4.1 features*
+**Latest (v4.2):** [All 117 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v4.2) ✨ *Major: Comprehensive CJK/Asian font support, WenQuanYi integration, improved Unicode coverage*
 
-**By Language (v4.1.1):**
-🇩🇪 [Deutsch](https://github.com/DerFlash/BinderPokedex/releases/download/v4.1.1/binder-pokedex-de.zip) |
-🇬🇧 [English](https://github.com/DerFlash/BinderPokedex/releases/download/v4.1.1/binder-pokedex-en.zip) |
-🇫🇷 [Français](https://github.com/DerFlash/BinderPokedex/releases/download/v4.1.1/binder-pokedex-fr.zip) |
-🇪🇸 [Español](https://github.com/DerFlash/BinderPokedex/releases/download/v4.1.1/binder-pokedex-es.zip) |
-🇮🇹 [Italiano](https://github.com/DerFlash/BinderPokedex/releases/download/v4.1.1/binder-pokedex-it.zip) |
-🇯🇵 [日本語](https://github.com/DerFlash/BinderPokedex/releases/download/v4.1.1/binder-pokedex-ja.zip) |
-🇰🇷 [한국어](https://github.com/DerFlash/BinderPokedex/releases/download/v4.1.1/binder-pokedex-ko.zip) |
-🇨🇳 [简体中文](https://github.com/DerFlash/BinderPokedex/releases/download/v4.1.1/binder-pokedex-zh_hans.zip) |
-🇹🇼 [繁體中文](https://github.com/DerFlash/BinderPokedex/releases/download/v4.1.1/binder-pokedex-zh_hant.zip)
+**By Language (v4.2):**
+🇩🇪 [Deutsch](https://github.com/DerFlash/BinderPokedex/releases/download/v4.2/binder-pokedex-de.zip) |
+🇬🇧 [English](https://github.com/DerFlash/BinderPokedex/releases/download/v4.2/binder-pokedex-en.zip) |
+🇫🇷 [Français](https://github.com/DerFlash/BinderPokedex/releases/download/v4.2/binder-pokedex-fr.zip) |
+🇪🇸 [Español](https://github.com/DerFlash/BinderPokedex/releases/download/v4.2/binder-pokedex-es.zip) |
+🇮🇹 [Italiano](https://github.com/DerFlash/BinderPokedex/releases/download/v4.2/binder-pokedex-it.zip) |
+🇯🇵 [日本語](https://github.com/DerFlash/BinderPokedex/releases/download/v4.2/binder-pokedex-ja.zip) |
+🇰🇷 [한국어](https://github.com/DerFlash/BinderPokedex/releases/download/v4.2/binder-pokedex-ko.zip) |
+🇨🇳 [简体中文](https://github.com/DerFlash/BinderPokedex/releases/download/v4.2/binder-pokedex-zh_hans.zip) |
+🇹🇼 [繁體中文](https://github.com/DerFlash/BinderPokedex/releases/download/v4.2/binder-pokedex-zh_hant.zip)
 ---
 
 ## 📝 Release Notes
+
+### v4.2 (Major Release - Font Support Complete)
+**Issue:** PDFs generated in GitHub Actions environments were failing to render CJK (Chinese, Japanese, Korean) and other non-Latin scripts correctly due to missing font mappings and ReportLab font detection issues.
+
+**Solution:** 
+- 🎯 Comprehensive CJK and Asian font support with WenQuanYi font integration
+- 📦 Install and configure WenQuanYi fonts for improved Unicode character coverage
+- 🔍 Enhanced font detection with fallback mechanisms for Noto fonts and system fonts
+- 🛠️ Fixed font path resolution for Ubuntu/Linux systems (OpenType fonts)
+- 🎨 Improved Korean rendering using SongtiBold (better coverage than AppleGothic)
+- 🔧 Consolidated font configuration with single source of truth
+- 📝 Suppressed expected ReportLab font warnings while maintaining error visibility
+- ✅ Verified Japanese, Chinese, Korean, and variant PDF generation across all platforms
+
+**Result:** All 1,025+ Pokémon now render correctly in all 9 languages, with proper Unicode support and consistent font handling across local and CI/CD environments.
 
 ### v4.1.1 (Hotfix)
 - Fine dashed gray cutting guides for all PDFs
