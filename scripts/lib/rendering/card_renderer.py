@@ -270,14 +270,8 @@ class CardRenderer:
         Returns:
             Fully formatted variant name with prefix/suffix
         """
-        # Get base name in target language
-        language_key: str = {
-            'de': 'name_de', 'en': 'name_en', 'fr': 'name_fr',
-            'es': 'name_es', 'it': 'name_it', 'ja': 'name_ja',
-            'ko': 'name_ko', 'zh_hans': 'name_zh_hans', 'zh_hant': 'name_zh_hant',
-        }.get(self.language, 'name_en')
-        
-        base_name = pokemon_data.get(language_key, pokemon_data.get('name_en', 'Unknown'))
+        # Get base name in target language (unified name object structure - required)
+        base_name = pokemon_data['name'][self.language]
         
         # Get variant form and trainer
         variant_form = pokemon_data.get('variant_form', '')

@@ -337,8 +337,8 @@ class CrystallinePatterns:
             c.rect(x - box_size / 2, base_y - box_size / 2, box_size, box_size, 
                    fill=False, stroke=True)
             
-            # Try to display Pokémon name or ID
-            pokemon_name = pokemon.get('name_en', pokemon.get('id', f"#{idx+1}"))
+            # Display Pokémon name (from unified name object structure)
+            pokemon_name = pokemon['name']['en']
             c.setFont("Helvetica", 7)
             c.setFillColor(HexColor("#666666"))
             c.drawCentredString(x, base_y - 15 * mm, pokemon_name[:15])  # Truncate if too long
@@ -370,10 +370,18 @@ def add_separator_pages_to_pdf(pdf_generator, sections: list, pokemon_by_section
         if not hasattr(pdf_generator, 'separator_pages'):
             pdf_generator.separator_pages = []
         
+        # Support both old format (section_name_xx) and new format (section_name object)
+        section_name_data = section.get('section_name')
+        if isinstance(section_name_data, dict):
+            section_name = section_name_data.get(pdf_generator.language, section_name_data.get('en', section_id))
+        else:
+            # Fallback to old format for backward compatibility
+            section_name = section.get(f'section_name_{pdf_generator.language}', section_id)
+        
         pdf_generator.separator_pages.append({
             'pattern': pattern,
             'section_id': section_id,
-            'section_name': section.get(f'section_name_{pdf_generator.language}', section_id),
+            'section_name': section_name,
             'order': section.get('section_order', 999)
         })
     

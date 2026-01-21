@@ -50,27 +50,13 @@ def get_pokemon_name_for_language(pokemon: dict, language: str) -> str:
     Get the Pokémon name for the specified language.
     
     Args:
-        pokemon: Pokémon data dictionary
+        pokemon: Pokémon data dictionary (must have 'name' as multilingual object)
         language: Language code (de, en, ja, etc.)
     
     Returns:
         Pokémon name in the specified language
     """
-    # Map language codes to JSON keys
-    language_map = {
-        'de': 'name_de',
-        'en': 'name_en',
-        'fr': 'name_fr',
-        'es': 'name_es',
-        'it': 'name_it',
-        'ja': 'name_ja',
-        'ko': 'name_ko',
-        'zh_hans': 'name_zh_hans',
-        'zh_hant': 'name_zh_hant',
-    }
-    
-    key = language_map.get(language, 'name_en')
-    return pokemon.get(key, pokemon.get('name_en', 'Unknown'))
+    return pokemon['name'].get(language, pokemon['name'].get('en', 'Unknown'))
 
 
 def prepare_pokemon_data(pokemon_list: list, language: str, skip_images: bool = False) -> list:
@@ -78,7 +64,7 @@ def prepare_pokemon_data(pokemon_list: list, language: str, skip_images: bool = 
     Prepare Pokémon data for PDF generation.
     
     Args:
-        pokemon_list: Raw Pokémon data from JSON
+        pokemon_list: Raw Pokémon data from JSON (must have unified name object structure)
         language: Target language code
         skip_images: If True, don't include image_url in prepared data
     
@@ -92,7 +78,7 @@ def prepare_pokemon_data(pokemon_list: list, language: str, skip_images: bool = 
             'id': pokemon.get('id'),  # Numeric ID for image cache lookup
             'num': pokemon.get('num', '#???'),
             'name': get_pokemon_name_for_language(pokemon, language),
-            'name_en': pokemon.get('name_en', 'Unknown'),  # Fallback
+            'name_en': pokemon['name']['en'],  # English name for subtitle
             'types': [pokemon.get('type1', 'Normal')],
             'generation': pokemon.get('generation', 1),
         }

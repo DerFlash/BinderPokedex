@@ -195,36 +195,24 @@ class PokedexGenerator:
         Normalize Pokemon data for the current language.
         
         Ensures the 'name' field contains the name in the current language,
+        Ensures the 'name' field contains the name in the current language,
         and 'name_en' field contains the English name for subtitle display.
         
+        The 'name' field in the raw Pokemon dict must have multilingual structure:
+        'name': {'en': '...', 'de': '...', 'fr': '...', etc.}
+        
         Args:
-            pokemon: Raw Pokemon dict from JSON (with name_de, name_en, etc.)
+            pokemon: Raw Pokemon dict from JSON (must have unified name object structure)
             
         Returns:
             Normalized dict with 'name' and 'name_en' fields
         """
         normalized = pokemon.copy()
         
-        # Map language codes to name keys
-        language_map = {
-            'de': 'name_de',
-            'en': 'name_en',
-            'fr': 'name_fr',
-            'es': 'name_es',
-            'it': 'name_it',
-            'ja': 'name_ja',
-            'ko': 'name_ko',
-            'zh': 'name_zh_hans',
-            'zh_hans': 'name_zh_hans',
-            'zh_hant': 'name_zh_hant',
-        }
-        
-        # Get the name for current language
-        name_key = language_map.get(self.language, 'name_en')
-        normalized['name'] = pokemon.get(name_key, pokemon.get('name_en', 'Unknown'))
+        # Get the name for current language from unified name object
+        normalized['name'] = pokemon['name'].get(self.language, pokemon['name'].get('en', 'Unknown'))
         
         # Ensure name_en is set for subtitle display
-        if 'name_en' not in normalized:
-            normalized['name_en'] = pokemon.get('name_en', 'Unknown')
+        normalized['name_en'] = pokemon['name']['en']
         
         return normalized
