@@ -23,10 +23,24 @@ import sys
 import argparse
 import logging
 from pathlib import Path
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
-from reportlab.lib.units import mm
-from reportlab.lib.colors import HexColor
+
+# Check for required dependencies and provide helpful hint
+try:
+    from reportlab.pdfgen import canvas
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.units import mm
+    from reportlab.lib.colors import HexColor
+except ImportError as e:
+    print("\n" + "=" * 80)
+    print("❌ Missing Python Dependencies")
+    print("=" * 80)
+    print(f"\nError: {e}")
+    print("\n💡 HINT: You need to activate the Python virtual environment first:")
+    print("\n   source venv/bin/activate")
+    print("\nOr run with the venv Python directly:")
+    print("\n   ./venv/bin/python scripts/generate_pdf.py")
+    print("\n" + "=" * 80 + "\n")
+    sys.exit(1)
 
 # Add lib to path for imports
 sys.path.insert(0, str(Path(__file__).parent / 'lib'))
