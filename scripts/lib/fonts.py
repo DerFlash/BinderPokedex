@@ -56,6 +56,11 @@ class FontManager:
         Path('/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc'), # TrueType location
         Path('/usr/share/fonts/noto-cjk/NotoSansCJK-Bold.ttc'),         # Alternative package location
         Path('/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc'),      # Alternative package location
+        # WenQuanYi fonts (TTF format that works with ReportLab)
+        Path('/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc'),
+        Path('/usr/share/fonts/truetype/wqy/wqy-microhei.ttc'),
+        Path('/usr/share/fonts/wenquanyi/wqy-zenhei.ttc'),
+        Path('/usr/share/fonts/wenquanyi/wqy-microhei.ttc'),
     ]
     
     # Track if fonts have been registered
@@ -122,6 +127,8 @@ class FontManager:
                     Path('/usr/share/fonts/opentype/noto/'),
                     Path('/usr/share/fonts/truetype/noto/'),
                     Path('/usr/share/fonts/noto-cjk/'),
+                    Path('/usr/share/fonts/truetype/wqy/'),
+                    Path('/usr/share/fonts/wenquanyi/'),
                 ]
                 
                 for noto_dir in noto_dirs:
@@ -154,7 +161,7 @@ class FontManager:
             if not noto_registered:
                 logger.warning(f"⚠️  Noto Sans CJK fonts not found. CJK characters may not render properly.")
                 logger.warning(f"  Checked specific paths: {cls.NOTO_CJK_PATHS}")
-                logger.warning(f"  Checked directories: /usr/share/fonts/opentype/noto/, /usr/share/fonts/truetype/noto/, /usr/share/fonts/noto-cjk/")
+                logger.warning(f"  Checked directories: /usr/share/fonts/opentype/noto/, /usr/share/fonts/truetype/noto/, /usr/share/fonts/noto-cjk/, /usr/share/fonts/truetype/wqy/, /usr/share/fonts/wenquanyi/")
                 cls._font_cache['SongtiBold'] = False
         
         # Built-in Helvetica fonts are always available
