@@ -97,6 +97,8 @@ class FontManager:
             
             # Try Noto Sans CJK as fallback on Linux systems
             noto_registered = False
+            
+            # First try specific known paths
             for noto_path in cls.NOTO_CJK_PATHS:
                 if noto_path.exists():
                     try:
@@ -114,9 +116,36 @@ class FontManager:
                 else:
                     logger.debug(f"Noto path does not exist: {noto_path}")
             
+            # If specific paths didn't work, try to find any .ttc file in noto directories
+            if not noto_registered:
+                noto_dirs = [
+                    Path('/usr/share/fonts/opentype/noto/'),
+                    Path('/usr/share/fonts/truetype/noto/'),
+                    Path('/usr/share/fonts/noto-cjk/'),
+                ]
+                
+                for noto_dir in noto_dirs:
+                    if noto_dir.exists():
+                        ttc_files = list(noto_dir.glob('*.ttc'))
+                        if ttc_files:
+                            try:
+                                # Try the first .ttc file found
+                                font_path = ttc_files[0]
+                                font = TTFont('SongtiBold', str(font_path))
+                                pdfmetrics.registerFont(font)
+                                logger.info(f"✓ Registered Noto Sans CJK font as SongtiBold (JA, KO, ZH)")
+                                logger.debug(f"  Path: {font_path} (found in {noto_dir})")
+                                cls._font_cache['SongtiBold'] = True
+                                noto_registered = True
+                                break
+                            except Exception as e:
+                                logger.debug(f"Could not register {ttc_files[0]}: {e}")
+                                continue
+            
             if not noto_registered:
                 logger.warning(f"⚠️  Noto Sans CJK fonts not found. CJK characters may not render properly.")
-                logger.warning(f"  Checked paths: {cls.NOTO_CJK_PATHS}")
+                logger.warning(f"  Checked specific paths: {cls.NOTO_CJK_PATHS}")
+                logger.warning(f"  Checked directories: /usr/share/fonts/opentype/noto/, /usr/share/fonts/truetype/noto/, /usr/share/fonts/noto-cjk/")
                 cls._font_cache['SongtiBold'] = False
         
         # Built-in Helvetica fonts are always available
