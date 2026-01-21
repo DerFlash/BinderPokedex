@@ -111,9 +111,12 @@ class FontManager:
                     except Exception as e:
                         logger.debug(f"Could not register {noto_path}: {e}")
                         continue
+                else:
+                    logger.debug(f"Noto path does not exist: {noto_path}")
             
             if not noto_registered:
                 logger.warning(f"⚠️  Noto Sans CJK fonts not found. CJK characters may not render properly.")
+                logger.warning(f"  Checked paths: {cls.NOTO_CJK_PATHS}")
                 cls._font_cache['SongtiBold'] = False
         
         # Built-in Helvetica fonts are always available
