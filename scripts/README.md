@@ -127,6 +127,31 @@ python generate_pdf.py --type variant --list
 
 # Test mode (9 Pokémon only)
 python generate_pdf.py --type generation --generation 1 --language de --test
+
+# Verbose mode (show detailed logs)
+python generate_pdf.py --type pokedex --language de --verbose
+```
+
+## 📊 Output Format
+
+**Clean output by default:**
+```
+================================================================================
+PDF Generation - Pokédex (Gen 1-9)
+================================================================================
+Languages:   de, en, es, fr, it, ja, ko, zh_hans, zh_hant
+Generations: 1, 2, 3, 4, 5, 6, 7, 8, 9
+Output dir:  /path/to/output
+
+  📊 Pokedex_Gen1-9_DE              [████████████████████████░] 99%  1023/1025
+  ✅ Pokedex_Gen1-9_DE
+     Pokémon: 1025
+     Size: 31.72 MB
+```
+
+**With `--verbose` flag:**
+```
+Shows detailed generation logs including data loading, image processing, and section info.
 ```
 
 ## 📦 Library (lib/)
