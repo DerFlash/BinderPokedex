@@ -1,8 +1,8 @@
 # 🎴 BinderPokedex
 
-**Generate multilingual Pokémon placeholder collection cards (Pokédex-style) for your binder.**
+**Complete your Pokédex... one printable sheet at a time!** 📋✨
 
-All 9 generations + EX variants, all 9 languages: 117 ready-to-print PDFs with 1,025+ Pokémon.
+Print 1,025+ Pokémon across 9 generations in 9 languages. All variants, all forms, all ready to go. Just download, print, and start collecting.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
@@ -91,42 +91,22 @@ python scripts/generate_pdf.py --language de --generation 1
 
 ## ✨ Key Features
 
-- **9 Languages** with proper CJK support (Japanese, Korean, Chinese)
-  - Fixed CJK type text rendering (no more black boxes!)
-- **Official Pokémon artwork** from PokéAPI
-- **3×3 card layout** (9 per page)
-- **Generation cover pages** with multilingual footer text
-- **EX Variant Series** ✨ NEW in v3.0
-  - **EX Gen1:** 119 Pokémon-ex cards with special forms
-  - **EX Gen2:** 72 Pokémon-EX cards with Mega Evolution support
-  - **EX Gen3:** 82 Pokémon ex cards with Tera forms
-  - **Mega Evolution:** 76 Pokémon with 79 mega forms
-  - Logo rendering: M Pokémon, EX, EX New, EX Tera
-- **Pokémon Variants Support** with sectioned PDFs
-  - Dynamic form imagery (PokeAPI + Bulbapedia fallback)
-  - Live progress bars during generation
-- **English subtitles** on non-English cards
-- **Print-ready** A4 format with cutting guides
-- **Modular, clean architecture** (no workarounds)
-- **Fully tested** (15 unit tests passing)
+- **9 Languages** 🌍 with proper CJK support (Japanese, Korean, Chinese)
+- **1,025+ Pokémon** across all 9 generations (Kanto → Paldea) ready to collect
+- **Official artwork** from PokéAPI - every card gets the real deal
+- **3×3 card layout** (9 per page) - perfect for binder sheets
+- **Generation cover pages** with beautiful multilingual design
+- **EX Variant Collections** ✨ 
+  - EX Gen1: 119 Pokémon with retro flair
+  - EX Gen2: 72 Pokémon + Mega Evolution forms
+  - EX Gen3: 82 Pokémon + Tera types
+  - Classic Mega Evolution: All 76 Pokémon with mega forms
+- **Sectioned PDFs** with themed dividers and featured Pokémon headers
+- **Print-ready A4** - just download, print, and bind! 📎
+- **Fully tested** and production-ready
 
 ---
 
-## 📋 Supported Generations
-
-| Gen | Region | Pokémon |
-|-----|--------|---------|
-| 1 | Kanto | 151 |
-| 2 | Johto | 100 |
-| 3 | Hoenn | 135 |
-| 4 | Sinnoh | 107 |
-| 5 | Unova | 156 |
-| 6 | Kalos | 72 |
-| 7 | Alola | 88 |
-| 8 | Galar | 96 |
-| 9 | Paldea | 120 |
-
----
 
 ## 📄 License
 

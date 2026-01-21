@@ -1,8 +1,8 @@
 # 🎴 BinderPokedex
 
-Generiere **Pokémon-Platzhalter-Karten** (Pokédex-Stil) in 9 Sprachen!
+**Vervollständige dein Pokédex... ein druckbares Blatt nach dem anderen!** 📋✨
 
-Alle 9 Generationen + EX Varianten, alle 9 Sprachen: 117 druckfertige PDFs mit 1.025+ Pokémon.
+Drucke 1.025+ Pokémon über 9 Generationen in 9 Sprachen. Alle Varianten, alle Formen, alles startklar. Einfach laden, drucken und sammeln starten.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
@@ -67,21 +67,19 @@ python scripts/generate_pdf.py --language de --generation 1
 
 ## ✨ Hauptfeatures
 
-- **9 Sprachen** mit CJK-Unterstützung
-- **Offizielle Pokémon-Grafiken** von PokéAPI
-- **3×3 Kartenlayout** (9 pro Seite)
-- **Generations-Deckblätter**
-- **Druckerfreundlich** A4-Format
-- **Modulare Architektur**
-- **Vollständig getestet**
-
----
-
-## 📋 Unterstützte Generationen
-
-| Gen | Region | Pokémon |
-|-----|--------|---------|
-| 1-9 | Kanto bis Paldea | 1.025 |
+- **9 Sprachen** 🌍 mit vollständiger CJK-Unterstützung (Japanisch, Koreanisch, Chinesisch)
+- **1.025+ Pokémon** über alle 9 Generationen (Kanto → Paldea) ready zum Sammeln
+- **Offizielle Artwork** von PokéAPI - jede Karte bekommt die echten Bilder
+- **3×3 Kartenlayout** (9 pro Seite) - perfekt für Binderblätter
+- **Generations-Deckblätter** mit wunderschönem mehrsprachigem Design
+- **EX Varianten-Kollektionen** ✨ 
+  - EX Gen1: 119 Pokémon mit Retro-Feeling
+  - EX Gen2: 72 Pokémon + Mega Evolution Formen
+  - EX Gen3: 82 Pokémon + Tera Typen
+  - Klassische Mega Evolution: Alle 76 Pokémon mit Mega Formen
+- **Strukturierte PDFs** mit thematischen Trennern und Featured-Pokémon-Headern
+- **Druckfertig A4** - einfach laden, drucken und binden! 📎
+- **Vollständig getestet** und produktionsreif
 
 ---
 
