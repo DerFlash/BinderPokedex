@@ -125,12 +125,17 @@ class FontManager:
                 ]
                 
                 for noto_dir in noto_dirs:
+                    logger.debug(f"Checking directory: {noto_dir}")
                     if noto_dir.exists():
-                        ttc_files = list(noto_dir.glob('*.ttc'))
-                        if ttc_files:
+                        logger.debug(f"Directory exists: {noto_dir}")
+                        # Look for both .ttc and .ttf files (recursive)
+                        font_files = list(noto_dir.glob('**/*.ttc')) + list(noto_dir.glob('**/*.ttf'))
+                        logger.debug(f"Found font files: {font_files}")
+                        if font_files:
                             try:
-                                # Try the first .ttc file found
-                                font_path = ttc_files[0]
+                                # Try the first font file found
+                                font_path = font_files[0]
+                                logger.debug(f"Trying to register: {font_path}")
                                 font = TTFont('SongtiBold', str(font_path))
                                 pdfmetrics.registerFont(font)
                                 logger.info(f"✓ Registered Noto Sans CJK font as SongtiBold (JA, KO, ZH)")
@@ -139,8 +144,12 @@ class FontManager:
                                 noto_registered = True
                                 break
                             except Exception as e:
-                                logger.debug(f"Could not register {ttc_files[0]}: {e}")
+                                logger.debug(f"Could not register {font_files[0]}: {e}")
                                 continue
+                        else:
+                            logger.debug(f"No font files found in {noto_dir}")
+                    else:
+                        logger.debug(f"Directory does not exist: {noto_dir}")
             
             if not noto_registered:
                 logger.warning(f"⚠️  Noto Sans CJK fonts not found. CJK characters may not render properly.")
