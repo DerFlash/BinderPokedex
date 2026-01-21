@@ -50,10 +50,12 @@ class FontManager:
     
     # Fallback CJK fonts for Linux systems (Noto Sans CJK)
     NOTO_CJK_PATHS = [
-        Path('/usr/share/fonts/truetype/noto/NotoSansCJK-Bold.ttc'),     # Bold (preferred)
-        Path('/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc'),  # Regular fallback
-        Path('/usr/share/fonts/noto-cjk/NotoSansCJK-Bold.ttc'),          # Alternative location
-        Path('/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc'),       # Alternative location
+        Path('/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc'),    # OpenType location (Ubuntu)
+        Path('/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc'), # OpenType location
+        Path('/usr/share/fonts/truetype/noto/NotoSansCJK-Bold.ttc'),    # TrueType location
+        Path('/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc'), # TrueType location
+        Path('/usr/share/fonts/noto-cjk/NotoSansCJK-Bold.ttc'),         # Alternative package location
+        Path('/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc'),      # Alternative package location
     ]
     
     # Track if fonts have been registered
