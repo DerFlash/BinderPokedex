@@ -53,7 +53,7 @@ class PageStyle:
     # Colors
     BACKGROUND_COLOR = '#FFFFFF'
     BORDER_COLOR = '#CCCCCC'
-    GUIDE_COLOR = '#DDDDDD'
+    GUIDE_COLOR = "#9C9C9C"
     FOOTER_COLOR = '#AAAAAA'
     
     # Cutting guides
@@ -73,7 +73,7 @@ class PageRenderer:
     
     def create_page(self, canvas_obj) -> None:
         """
-        Create a new blank page with background and guides.
+        Create a new blank page with background. Cutting guides are now drawn last for visibility.
         
         Args:
             canvas_obj: ReportLab canvas object
@@ -82,9 +82,7 @@ class PageRenderer:
         canvas_obj.setFillColor(HexColor(self.style.BACKGROUND_COLOR))
         canvas_obj.rect(0, 0, self.style.PAGE_WIDTH, self.style.PAGE_HEIGHT, 
                        fill=True, stroke=False)
-        
-        # Draw cutting guides
-        self.draw_cutting_guides(canvas_obj)
+        # Cutting guides will be drawn after cards and footer
     
     def add_card_to_page(self, canvas_obj, card_renderer, pokemon_data: dict, 
                         card_index: int, **render_kwargs) -> None:
@@ -136,49 +134,30 @@ class PageRenderer:
         Args:
             canvas_obj: ReportLab canvas object
         """
+        # Cutting guides: dashed lines between cards and outer frame
         canvas_obj.setLineWidth(self.style.GUIDE_LINE_WIDTH)
         canvas_obj.setStrokeColor(HexColor(self.style.GUIDE_COLOR))
-        canvas_obj.setDash(self.style.GUIDE_DASH_PATTERN[0], self.style.GUIDE_DASH_PATTERN[1])
-        
-        # Calculate outer frame bounds (with GAP offset)
-        frame_top = self.style.PAGE_HEIGHT - self.style.PAGE_MARGIN + self.style.GAP_Y / 2
-        frame_bottom = (self.style.PAGE_HEIGHT - self.style.PAGE_MARGIN - 
-                       self.style.CARDS_PER_COLUMN * self.style.CARD_HEIGHT - 
-                       (self.style.CARDS_PER_COLUMN - 1) * self.style.GAP_Y - 
-                       self.style.GAP_Y / 2)
-        
-        frame_left = self.style.PAGE_MARGIN - self.style.GAP_X / 2
-        frame_right = (self.style.PAGE_MARGIN + 
-                      self.style.CARDS_PER_ROW * self.style.CARD_WIDTH + 
-                      (self.style.CARDS_PER_ROW - 1) * self.style.GAP_X + 
-                      self.style.GAP_X / 2)
-        
-        # Outer frame
-        canvas_obj.line(frame_left, frame_top, frame_right, frame_top)      # Top
-        canvas_obj.line(frame_left, frame_bottom, frame_right, frame_bottom) # Bottom
-        canvas_obj.line(frame_left, frame_top, frame_left, frame_bottom)     # Left
-        canvas_obj.line(frame_right, frame_top, frame_right, frame_bottom)   # Right
-        
-        # Vertical lines (between card columns)
-        for col in range(1, self.style.CARDS_PER_ROW):
-            x = (self.style.PAGE_MARGIN + col * self.style.CARD_WIDTH + 
-                 (col - 1) * self.style.GAP_X + self.style.GAP_X / 2)
-            canvas_obj.line(x, frame_top, x, frame_bottom)
-        
-        # Horizontal lines (between card rows)
-        for row in range(1, self.style.CARDS_PER_COLUMN):
-            y = (self.style.PAGE_HEIGHT - self.style.PAGE_MARGIN - 
-                 row * self.style.CARD_HEIGHT - (row - 1) * self.style.GAP_Y - 
-                 self.style.GAP_Y / 2)
-            canvas_obj.line(frame_left, y, frame_right, y)
-        
-        # Lines in middle of gaps between cards
-        for row in range(self.style.CARDS_PER_COLUMN - 1):
-            # Lines in middle of vertical gaps
-            y = (self.style.PAGE_HEIGHT - self.style.PAGE_MARGIN - 
-                 (row + 1) * self.style.CARD_HEIGHT - (row + 0.5) * self.style.GAP_Y)
-            canvas_obj.line(frame_left, y, frame_right, y)
-        
+        canvas_obj.setDash(*self.style.GUIDE_DASH_PATTERN)
+
+
+        # Calculate the center of the gap for the outer frame
+        gap_x = self.style.GAP_X
+        gap_y = self.style.GAP_Y
+        left = self.style.PAGE_MARGIN - gap_x / 2
+        top = self.style.PAGE_HEIGHT - self.style.PAGE_MARGIN + gap_y / 2
+        right = self.style.PAGE_MARGIN + self.style.CARDS_PER_ROW * self.style.CARD_WIDTH + (self.style.CARDS_PER_ROW - 1) * gap_x + gap_x / 2
+        bottom = top - self.style.CARDS_PER_COLUMN * self.style.CARD_HEIGHT - (self.style.CARDS_PER_COLUMN - 1) * gap_y - gap_y
+
+        # Draw vertical dashed lines between cards (in the middle of the gap)
+        for col in range(self.style.CARDS_PER_ROW + 1):
+            x = self.style.PAGE_MARGIN + col * self.style.CARD_WIDTH + (col - 0.5) * gap_x
+            canvas_obj.line(x, top, x, bottom)
+
+        # Draw horizontal dashed lines between cards (in the middle of the gap)
+        for row in range(self.style.CARDS_PER_COLUMN + 1):
+            y = self.style.PAGE_HEIGHT - self.style.PAGE_MARGIN - row * self.style.CARD_HEIGHT - (row - 0.5) * gap_y
+            canvas_obj.line(left, y, right, y)
+
         canvas_obj.setDash()  # Reset to solid line
     
     def add_footer(self, canvas_obj, footer_text: str = None) -> None:

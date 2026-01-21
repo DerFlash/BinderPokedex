@@ -283,3 +283,5 @@ class VariantPDFGenerator:
         
         # Add footer
         self.page_renderer.add_footer(c)
+        # Draw cutting guides last (on top)
+        self.page_renderer.draw_cutting_guides(c)
