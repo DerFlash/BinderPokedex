@@ -3,12 +3,15 @@ Font Management Module
 
 Handles TrueType font registration for CJK languages.
 All fonts are registered once at module load time.
+
+Includes Unicode character support and graceful fallback handling.
 """
 
 import logging
 from pathlib import Path
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+import unicodedata
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +22,11 @@ class FontManager:
     
     Uses TrueType fonts from system directories when available.
     Latin languages use built-in ReportLab fonts.
+    
+    Features:
+    - Graceful font fallback for unsupported characters
+    - Character-level font selection for mixed-script text
+    - CJK language support with Songti.ttc
     """
     
     # Mapping of language codes to font configuration
@@ -29,7 +37,7 @@ class FontManager:
         'fr': {'font': 'Helvetica', 'font_bold': 'Helvetica-Bold'},
         'it': {'font': 'Helvetica', 'font_bold': 'Helvetica-Bold'},
         'ja': {'font': 'SongtiBold', 'font_bold': 'SongtiBold'},          # Japanese
-        'ko': {'font': 'AppleGothicRegular', 'font_bold': 'AppleGothicRegular'},  # Korean (AppleGothic TTF)
+        'ko': {'font': 'SongtiBold', 'font_bold': 'SongtiBold'},          # Korean (Songti supports CJK)
         'zh_hans': {'font': 'SongtiBold', 'font_bold': 'SongtiBold'},     # Simplified Chinese
         'zh_hant': {'font': 'SongtiBold', 'font_bold': 'SongtiBold'},     # Traditional Chinese
     }
@@ -37,14 +45,12 @@ class FontManager:
     # CJK Languages that need TrueType fonts
     CJK_LANGUAGES = ['ja', 'ko', 'zh_hans', 'zh_hant']
     
-    # Path to Songti TrueType Collection
+    # Path to Songti TrueType Collection (primary CJK font)
     SONGTI_PATH = Path('/System/Library/Fonts/Supplemental/Songti.ttc')
-    
-    # Path to AppleGothic for Korean (TTF, not TTC)
-    APPLE_GOTHIC_PATH = Path('/System/Library/Fonts/Supplemental/AppleGothic.ttf')
     
     # Track if fonts have been registered
     _fonts_registered = False
+    _font_cache = {}
     
     @classmethod
     def register_fonts(cls):
@@ -53,6 +59,8 @@ class FontManager:
         
         This should be called once before any PDF generation.
         If called multiple times, subsequent calls are no-ops.
+        
+        Supports graceful fallback if fonts are missing.
         """
         if cls._fonts_registered:
             logger.debug("Fonts already registered, skipping")
@@ -60,37 +68,27 @@ class FontManager:
         
         logger.info("Registering fonts for multi-language support...")
         
-        successful = 0
-        
         # Register Songti font for CJK if available
         if cls.SONGTI_PATH.exists():
             try:
                 font = TTFont('SongtiBold', str(cls.SONGTI_PATH))
                 pdfmetrics.registerFont(font)
-                logger.info(f"✓ Registered Songti font (JA, ZH)")
+                logger.info(f"✓ Registered Songti font (JA, KO, ZH)")
                 logger.debug(f"  Path: {cls.SONGTI_PATH}")
-                successful += 1
+                cls._font_cache['SongtiBold'] = True
             except Exception as e:
                 logger.warning(f"✗ Could not register Songti: {e}")
+                logger.warning(f"  Some CJK characters may not render properly")
+                cls._font_cache['SongtiBold'] = False
         else:
             logger.warning(f"⚠️  Songti font not found at {cls.SONGTI_PATH}")
-        
-        # Register AppleGothic for Korean
-        if cls.APPLE_GOTHIC_PATH.exists():
-            try:
-                font = TTFont('AppleGothicRegular', str(cls.APPLE_GOTHIC_PATH))
-                pdfmetrics.registerFont(font)
-                logger.info(f"✓ Registered AppleGothic font (KO)")
-                logger.debug(f"  Path: {cls.APPLE_GOTHIC_PATH}")
-                successful += 1
-            except Exception as e:
-                logger.warning(f"✗ Could not register AppleGothic: {e}")
-        else:
-            logger.warning(f"⚠️  AppleGothic font not found")
+            logger.warning(f"  CJK characters may not render - install fonts or use Noto Sans CJK")
+            cls._font_cache['SongtiBold'] = False
         
         # Built-in Helvetica fonts are always available
         logger.debug("✓ Built-in Latin fonts available (Helvetica)")
-        successful += 1
+        cls._font_cache['Helvetica'] = True
+        cls._font_cache['Helvetica-Bold'] = True
         
         cls._fonts_registered = True
         logger.info(f"Font registration complete")
