@@ -189,6 +189,9 @@ class PokedexGenerator:
             pokemon_normalized = self._normalize_pokemon_data(pokemon)
             
             self.card_renderer.render_card(c, pokemon_normalized, x, y)
+
+        # Always draw cutting guides after cards
+        self.page_renderer.draw_cutting_guides(c)
     
     def _normalize_pokemon_data(self, pokemon: dict) -> dict:
         """

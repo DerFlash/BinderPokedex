@@ -12,6 +12,12 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+
+      - name: Clean old PDFs from output
+        run: |
+          echo "Removing old PDFs from output folders..."
+          if [ -d output ]; then find output -type f -name '*.pdf' -delete; fi
+          echo "Old PDFs removed."
       
       - name: Get tag info
         id: tag
