@@ -48,19 +48,18 @@ class FontManager:
     # Path to Songti TrueType Collection (primary CJK font)
     SONGTI_PATH = Path('/System/Library/Fonts/Supplemental/Songti.ttc')
     
-    # Fallback CJK fonts for Linux systems (Noto Sans CJK)
+    # Fallback CJK fonts for Linux systems
     NOTO_CJK_PATHS = [
-        Path('/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc'),    # OpenType location (Ubuntu)
-        Path('/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc'), # OpenType location
-        Path('/usr/share/fonts/truetype/noto/NotoSansCJK-Bold.ttc'),    # TrueType location
-        Path('/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc'), # TrueType location
-        Path('/usr/share/fonts/noto-cjk/NotoSansCJK-Bold.ttc'),         # Alternative package location
-        Path('/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc'),      # Alternative package location
-        # WenQuanYi fonts (TTF format that works with ReportLab)
-        Path('/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc'),
-        Path('/usr/share/fonts/truetype/wqy/wqy-microhei.ttc'),
-        Path('/usr/share/fonts/wenquanyi/wqy-zenhei.ttc'),
-        Path('/usr/share/fonts/wenquanyi/wqy-microhei.ttc'),
+        # WenQuanYi fonts (TTF format that works with ReportLab) - prefer these
+        Path('/usr/share/fonts/truetype/wqy/wqy-zenhei.ttf'),
+        Path('/usr/share/fonts/truetype/wqy/wqy-microhei.ttf'),
+        Path('/usr/share/fonts/wenquanyi/wqy-zenhei.ttf'),
+        Path('/usr/share/fonts/wenquanyi/wqy-microhei.ttf'),
+        # Noto Sans CJK (PostScript outlines - won't work with ReportLab)
+        Path('/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc'),
+        Path('/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc'),
+        Path('/usr/share/fonts/noto-cjk/NotoSansCJK-Bold.ttc'),
+        Path('/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc'),
     ]
     
     # Track if fonts have been registered
@@ -135,24 +134,28 @@ class FontManager:
                     logger.warning(f"Checking directory: {noto_dir}")
                     if noto_dir.exists():
                         logger.warning(f"Directory exists: {noto_dir}")
-                        # Look for both .ttc and .ttf files (recursive)
-                        font_files = list(noto_dir.glob('**/*.ttc')) + list(noto_dir.glob('**/*.ttf'))
-                        logger.warning(f"Found font files: {font_files}")
+                        # Look for both .ttc and .ttf files (prefer .ttf for ReportLab compatibility)
+                        ttf_files = list(noto_dir.glob('**/*.ttf'))
+                        ttc_files = list(noto_dir.glob('**/*.ttc'))
+                        font_files = ttf_files + ttc_files  # TTF first
+                        logger.warning(f"Found TTF files: {ttf_files}")
+                        logger.warning(f"Found TTC files: {ttc_files}")
                         if font_files:
-                            try:
-                                # Try the first font file found
-                                font_path = font_files[0]
-                                logger.warning(f"Trying to register: {font_path}")
-                                font = TTFont('SongtiBold', str(font_path))
-                                pdfmetrics.registerFont(font)
-                                logger.info(f"✓ Registered Noto Sans CJK font as SongtiBold (JA, KO, ZH)")
-                                logger.debug(f"  Path: {font_path} (found in {noto_dir})")
-                                cls._font_cache['SongtiBold'] = True
-                                noto_registered = True
+                            for font_path in font_files:
+                                try:
+                                    logger.warning(f"Trying to register: {font_path}")
+                                    font = TTFont('SongtiBold', str(font_path))
+                                    pdfmetrics.registerFont(font)
+                                    logger.info(f"✓ Registered CJK font as SongtiBold (JA, KO, ZH)")
+                                    logger.debug(f"  Path: {font_path} (found in {noto_dir})")
+                                    cls._font_cache['SongtiBold'] = True
+                                    noto_registered = True
+                                    break
+                                except Exception as e:
+                                    logger.warning(f"Could not register {font_path}: {e}")
+                                    continue
+                            if noto_registered:
                                 break
-                            except Exception as e:
-                                logger.warning(f"Could not register {font_files[0]}: {e}")
-                                continue
                         else:
                             logger.warning(f"No font files found in {noto_dir}")
                     else:
