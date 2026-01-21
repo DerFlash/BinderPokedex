@@ -21,6 +21,7 @@ from .rendering.card_renderer import CardRenderer
 from .rendering.page_renderer import PageRenderer
 from .cover_template import CoverTemplate
 from .utils import TranslationHelper
+from .log_formatter import PDFStatus
 from .constants import (
     PAGE_WIDTH, PAGE_HEIGHT, PAGE_MARGIN, CARD_WIDTH, CARD_HEIGHT,
     CARDS_PER_ROW, CARDS_PER_COLUMN, GAP_X, GAP_Y, GENERATION_COLORS
@@ -93,6 +94,10 @@ class PokedexGenerator:
             c = canvas.Canvas(str(self.output_file), pagesize=(PAGE_WIDTH, PAGE_HEIGHT))
             
             total_pokemon = sum(len(gen['pokemon']) for gen in self.generations.values())
+            
+            status = PDFStatus(self.output_file.stem, total_pokemon)
+            status.current_message = f"Generating Pokédex with {len(self.generations)} generations"
+            
             logger.info(f"Generating Pokédex with {total_pokemon} Pokémon across {len(self.generations)} generations")
             
             cards_rendered = 0
@@ -115,23 +120,18 @@ class PokedexGenerator:
                     
                     cards_rendered += len(page_pokemon)
                     progress_pct = (cards_rendered / total_pokemon) * 100
-                    bar_width = 30
-                    filled = int(bar_width * progress_pct / 100)
-                    bar = '█' * filled + '░' * (bar_width - filled)
-                    print(f"\r  [{bar}] {cards_rendered}/{total_pokemon} ({progress_pct:.0f}%)", end='', flush=True)
+                    status.update(None, progress_pct)
+                    status.print_progress()
                     
                     self._draw_cards_page(c, page_pokemon)
                     c.showPage()
             
             c.save()
-            print()  # Newline after progress bar
             
-            file_size_mb = self.output_file.stat().st_size / 1024 / 1024
-            cards_per_page = CARDS_PER_ROW * CARDS_PER_COLUMN
-            total_pages = int(cards_rendered / cards_per_page) + len(self.generations)
-            logger.info(f"✅ Pokédex generated: {self.output_file.name}")
-            logger.info(f"   Size: {file_size_mb:.2f} MB")
-            logger.info(f"   Pages: ~{total_pages}")
+            # Update summary info
+            file_size_mb = self.output_file.stat().st_size / (1024 * 1024)
+            status.file_size_mb = file_size_mb
+            status.print_summary()
             
             return True
             

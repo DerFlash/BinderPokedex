@@ -25,6 +25,7 @@ from .rendering import CardRenderer, CoverRenderer, PageRenderer, VariantCoverRe
 from .cover_template import CoverTemplate
 from .utils import TranslationHelper
 from .constants import PAGE_WIDTH, PAGE_HEIGHT, PAGE_MARGIN, CARD_WIDTH, CARD_HEIGHT, CARDS_PER_ROW, CARDS_PER_COLUMN, GAP_X, GAP_Y, VARIANT_COLORS
+from .log_formatter import PDFStatus, SectionHeader
 
 logger = logging.getLogger(__name__)
 
@@ -119,6 +120,8 @@ class VariantPDFGenerator:
         try:
             self.output_file.parent.mkdir(parents=True, exist_ok=True)
             
+            status = PDFStatus(self.output_file.stem, len(self.pokemon_list))
+            
             c = canvas.Canvas(str(self.output_file), pagesize=(PAGE_WIDTH, PAGE_HEIGHT))
             
             # Draw cover page
@@ -130,34 +133,31 @@ class VariantPDFGenerator:
             
             if sections:
                 # Render with section separators
-                self._generate_with_sections(c, sections)
+                self._generate_with_sections(c, sections, status)
             else:
                 # Simple rendering without sections
                 cards_per_page = 9
-                total_cards = len(self.pokemon_list)
                 for page_idx in range(0, len(self.pokemon_list), cards_per_page):
                     page_pokemon = self.pokemon_list[page_idx:page_idx + cards_per_page]
-                    # Show progress
-                    cards_rendered = min(page_idx + cards_per_page, total_cards)
-                    progress_pct = (cards_rendered / total_cards) * 100
-                    bar_width = 30
-                    filled = int(bar_width * progress_pct / 100)
-                    bar = '█' * filled + '░' * (bar_width - filled)
-                    print(f"\r  [{bar}] {cards_rendered}/{total_cards} ({progress_pct:.0f}%)", end='', flush=True)
-                    
+                    status.update(len(page_pokemon))
+                    status.print_progress()
                     self._draw_cards_page(c, page_pokemon)
                     c.showPage()
             
             c.save()
-            print()  # Newline after progress bar
-            logger.info(f"✅ Generated: {self.output_file.name}")
+            
+            # Update summary info
+            file_size = self.output_file.stat().st_size / (1024 * 1024)
+            status.file_size_mb = file_size
+            status.print_summary()
+            
             return True
             
         except Exception as e:
             logger.error(f"❌ Error generating PDF: {e}")
             return False
     
-    def _generate_with_sections(self, c, sections: list):
+    def _generate_with_sections(self, c, sections: list, status: PDFStatus = None):
         """Generate PDF with section separators and crystalline patterns."""
         # Sort sections by order
         sections = sorted(sections, key=lambda s: s.get('section_order', 999))
@@ -219,10 +219,15 @@ class VariantPDFGenerator:
                 # Show progress
                 cards_rendered += len(page_pokemon)
                 progress_pct = (cards_rendered / total_cards) * 100
-                bar_width = 30
-                filled = int(bar_width * progress_pct / 100)
-                bar = '█' * filled + '░' * (bar_width - filled)
-                print(f"\r  [{bar}] {cards_rendered}/{total_cards} ({progress_pct:.0f}%)", end='', flush=True)
+                if status:
+                    status.update(None, progress_pct)
+                    status.print_progress()
+                else:
+                    # Fallback to inline progress bar if no status object
+                    bar_width = 30
+                    filled = int(bar_width * progress_pct / 100)
+                    bar = '█' * filled + '░' * (bar_width - filled)
+                    print(f"\r  [{bar}] {cards_rendered}/{total_cards} ({progress_pct:.0f}%)", end='', flush=True)
                 
                 self._draw_cards_page(c, page_pokemon)
                 c.showPage()

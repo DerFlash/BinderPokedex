@@ -35,12 +35,13 @@ from lib.fonts import FontManager
 from lib.pdf_generator import PDFGenerator
 from lib.variant_pdf_generator import VariantPDFGenerator
 from lib.data_storage import DataStorage
+from lib.log_formatter import BatchSummary, SectionHeader
 from lib.constants import LANGUAGES, PAGE_WIDTH, PAGE_HEIGHT
 
-# Configure logging
+# Configure logging - suppress INFO during generation for clean output
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.WARNING,
+    format='%(levelname)s: %(message)s'
 )
 logger = logging.getLogger(__name__)
 
@@ -178,7 +179,22 @@ Examples:
         help="Test mode: only use 9 Pokémon for faster generation"
     )
     
+    parser.add_argument(
+        "--verbose",
+        "-vv",
+        action="store_true",
+        default=False,
+        help="Verbose mode: show detailed logs during generation"
+    )
+    
     args = parser.parse_args()
+    
+    # Configure logging level based on verbose flag
+    if args.verbose:
+        logging.getLogger().setLevel(logging.INFO)
+        logging.getLogger().handlers[0].setFormatter(
+            logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+        )
     
     # Get workspace directories
     script_dir = Path(__file__).parent
