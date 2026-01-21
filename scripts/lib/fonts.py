@@ -48,6 +48,14 @@ class FontManager:
     # Path to Songti TrueType Collection (primary CJK font)
     SONGTI_PATH = Path('/System/Library/Fonts/Supplemental/Songti.ttc')
     
+    # Fallback CJK fonts for Linux systems (Noto Sans CJK)
+    NOTO_CJK_PATHS = [
+        Path('/usr/share/fonts/truetype/noto/NotoSansCJK-Bold.ttc'),     # Bold (preferred)
+        Path('/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc'),  # Regular fallback
+        Path('/usr/share/fonts/noto-cjk/NotoSansCJK-Bold.ttc'),          # Alternative location
+        Path('/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc'),       # Alternative location
+    ]
+    
     # Track if fonts have been registered
     _fonts_registered = False
     _font_cache = {}
@@ -84,6 +92,27 @@ class FontManager:
             logger.warning(f"⚠️  Songti font not found at {cls.SONGTI_PATH}")
             logger.warning(f"  CJK characters may not render - install fonts or use Noto Sans CJK")
             cls._font_cache['SongtiBold'] = False
+            
+            # Try Noto Sans CJK as fallback on Linux systems
+            noto_registered = False
+            for noto_path in cls.NOTO_CJK_PATHS:
+                if noto_path.exists():
+                    try:
+                        # Register as 'SongtiBold' for compatibility with existing code
+                        font = TTFont('SongtiBold', str(noto_path))
+                        pdfmetrics.registerFont(font)
+                        logger.info(f"✓ Registered Noto Sans CJK font as SongtiBold (JA, KO, ZH)")
+                        logger.debug(f"  Path: {noto_path}")
+                        cls._font_cache['SongtiBold'] = True
+                        noto_registered = True
+                        break
+                    except Exception as e:
+                        logger.debug(f"Could not register {noto_path}: {e}")
+                        continue
+            
+            if not noto_registered:
+                logger.warning(f"⚠️  Noto Sans CJK fonts not found. CJK characters may not render properly.")
+                cls._font_cache['SongtiBold'] = False
         
         # Built-in Helvetica fonts are always available
         logger.debug("✓ Built-in Latin fonts available (Helvetica)")
