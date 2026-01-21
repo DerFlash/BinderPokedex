@@ -304,7 +304,6 @@ class CoverRenderer:
         
         # Build footer text with translations
         footer_parts = [
-            self._get_translation('cover_print_borderless', 'Print borderless'),
             self._get_translation('cover_follow_cutting', 'Follow cutting guides'),
             "Binder Pokédex Project",  # Keep project name in English
             datetime.now().strftime('%Y-%m-%d')

@@ -211,41 +211,12 @@ class PDFGenerator:
         self.cover_renderer = CoverRenderer(language, generation, self.image_cache)
         self.page_renderer = PageRenderer()
         
-        # Load translations
-        if translations is None:
-            self.translations = TranslationHelper.load_translations(self.language)
-        else:
-            self.translations = translations
+        # Load translations via TranslationLoader
+        from .rendering.translation_loader import TranslationLoader
+        self.translation_loader = TranslationLoader()
+        self.translations = self.translation_loader.load_ui(self.language)
         
         logger.info(f"Initialized PDFGenerator for {LANGUAGES[language]['name']} (Gen {generation})")
-    
-    def _load_translations(self) -> dict:
-        """
-        ⚠️ DEPRECATED - Use TranslationHelper.load_translations() instead.
-        Kept for backward compatibility.
-        
-        Load translations from i18n/translations.json
-        
-        Returns:
-            Dictionary with translations for current language
-        """
-        return TranslationHelper.load_translations(self.language)
-    
-    def _format_translation(self, key: str, **kwargs) -> str:
-        """
-        ⚠️ DEPRECATED - Use TranslationHelper.format_translation() instead.
-        Kept for backward compatibility.
-        
-        Get a translated string and format it with provided variables.
-        
-        Args:
-            key: Translation key (e.g., 'pokemon_species')
-            **kwargs: Variables to format into the string
-        
-        Returns:
-            Formatted translation or key if not found
-        """
-        return TranslationHelper.format_translation(self.translations, key, **kwargs)
     
     def set_pokemon_list(self, pokemon_list: list):
         """
@@ -304,10 +275,7 @@ class PDFGenerator:
         region_name = get_info.get('region', f'Generation {self.generation}')
         
         # Use translations for Generation text
-        gen_text = self._format_translation('generation_num', gen=self.generation)
-        if not gen_text or gen_text == 'generation_num':
-            # Fallback to English if translation not found
-            gen_text = f"Generation {self.generation}"
+        gen_text = self.translations.get('generation_num', 'Generation {{gen}}').replace('{{gen}}', str(self.generation))
         
         # Use appropriate font for generation text
         try:
@@ -325,10 +293,7 @@ class PDFGenerator:
         # ===== MIDDLE CONTENT SECTION =====
         # ID range with translation
         start_id, end_id = get_info['range']
-        id_range_text = self._format_translation('pokedex_range', start=f"#{start_id:03d}", end=f"#{end_id:03d}")
-        if not id_range_text or id_range_text == 'pokedex_range':
-            # Fallback if translation not found
-            id_range_text = f"Pokédex #{start_id:03d} – #{end_id:03d}"
+        id_range_text = self.translations.get('pokedex_range', 'Pokédex {{start}} – {{end}}').replace('{{start}}', f"#{start_id:03d}").replace('{{end}}', f"#{end_id:03d}")
         
         # Use appropriate font for ID range text
         try:
@@ -340,10 +305,7 @@ class PDFGenerator:
         canvas_obj.drawCentredString(PAGE_WIDTH / 2, 120 * mm, id_range_text)
         
         # Pokémon count and info with translation
-        pokemon_text = self._format_translation('pokemon_count_text', count=len(self.pokemon_list))
-        if not pokemon_text or pokemon_text == 'pokemon_count_text':
-            # Fallback if translation not found
-            pokemon_text = f"{len(self.pokemon_list)} Pokémon in this collection"
+        pokemon_text = self.translations.get('pokemon_count_text', '{{count}} Pokémon in this collection').replace('{{count}}', str(len(self.pokemon_list)))
         
         # Use appropriate font for pokemon count text
         try:
@@ -417,7 +379,6 @@ class PDFGenerator:
         
         # Build footer text with translations
         footer_parts = [
-            self._format_translation('cover_print_borderless'),
             self._format_translation('cover_follow_cutting'),
             "Binder Pokédex Project",  # Keep project name in English
             datetime.now().strftime('%Y-%m-%d')

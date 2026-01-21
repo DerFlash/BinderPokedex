@@ -670,10 +670,8 @@ class CoverTemplate:
         footer_parts = []
         
         if self.format_translation:
-            footer_parts.append(self.format_translation('cover_print_borderless'))
             footer_parts.append(self.format_translation('cover_follow_cutting'))
         else:
-            footer_parts.append("Print borderless")
             footer_parts.append("Follow cutting lines")
         
         footer_parts.append("Binder Pokédex Project")

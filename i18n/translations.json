@@ -13,11 +13,9 @@
       "id": "Nr.",
       "cutting_guide": "Bitte entlang der gestrickelten Linien ausschneiden",
       "pokedex_range": "Pokédex {{start}} – {{end}}",
-      "cover_print_borderless": "Randlos drucken",
       "cover_follow_cutting": "Schneidekanten beachten",
       "variant_species": "Arten",
       "variant_forms": "Formen",
-      "variant_mega_evolution": "Mega-Evolutionen",
       "variant_gigantamax": "Gigamax-Formen",
       "variant_regional_alola": "Alola-Formen",
       "variant_regional_galar": "Galar-Formen",
@@ -30,7 +28,8 @@
       "variant_ex_gen2": "Pokémon-EX",
       "variant_ex_gen3": "Pokémon ex",
       "variant_ex_gen3_tera": "Pokémon ex Tera",
-      "variant_ex_gen3_mega": "Pokémon ex Mega"
+      "variant_ex_gen3_mega": "Pokémon ex Mega",
+      "variant_collection_count": "{{count}} Pokémon in dieser Sammlung"
     },
     "en": {
       "title": "BinderPokedex - Placeholder Card Binder",
@@ -45,7 +44,6 @@
       "id": "No.",
       "cutting_guide": "Please cut along the dashed lines",
       "pokedex_range": "Pokédex {{start}} – {{end}}",
-      "cover_print_borderless": "Print borderless",
       "cover_follow_cutting": "Follow cutting lines",
       "variant_species": "Species",
       "variant_forms": "Forms",
@@ -62,7 +60,8 @@
       "variant_ex_gen2": "Pokémon-EX",
       "variant_ex_gen3": "Pokémon ex",
       "variant_ex_gen3_tera": "Pokémon ex Tera",
-      "variant_ex_gen3_mega": "Pokémon ex Mega"
+      "variant_ex_gen3_mega": "Pokémon ex Mega",
+      "variant_collection_count": "{{count}} Pokémon in this collection"
     },
     "fr": {
       "title": "BinderPokedex - Classeur de Cartes Spéciales",
@@ -77,7 +76,6 @@
       "id": "Nº",
       "cutting_guide": "Veuillez découper le long des lignes pointillées",
       "pokedex_range": "Pokédex {{start}} – {{end}}",
-      "cover_print_borderless": "Imprimer sans bordure",
       "cover_follow_cutting": "Suivre les lignes de coupe",
       "variant_species": "Espèces",
       "variant_forms": "Formes",
@@ -94,7 +92,8 @@
       "variant_ex_gen2": "Pokémon-EX",
       "variant_ex_gen3": "Pokémon ex",
       "variant_ex_gen3_tera": "Pokémon ex Téra",
-      "variant_ex_gen3_mega": "Pokémon ex Méga"
+      "variant_ex_gen3_mega": "Pokémon ex Méga",
+      "variant_collection_count": "{{count}} Pokémon dans cette collection"
     },
     "es": {
       "title": "BinderPokedex - Carpeta de Cartas Especiales",
@@ -109,7 +108,6 @@
       "id": "Nº",
       "cutting_guide": "Por favor recorta a lo largo de las líneas punteadas",
       "pokedex_range": "Pokédex {{start}} – {{end}}",
-      "cover_print_borderless": "Imprimir sin bordes",
       "cover_follow_cutting": "Seguir líneas de corte",
       "variant_species": "Especies",
       "variant_forms": "Formas",
@@ -126,7 +124,8 @@
       "variant_ex_gen2": "Pokémon-EX",
       "variant_ex_gen3": "Pokémon ex",
       "variant_ex_gen3_tera": "Pokémon ex Tera",
-      "variant_ex_gen3_mega": "Pokémon ex Mega"
+      "variant_ex_gen3_mega": "Pokémon ex Mega",
+      "variant_collection_count": "{{count}} Pokémon en esta colección"
     },
     "it": {
       "title": "BinderPokedex - Raccoglitore di Carte Speciali",
@@ -141,7 +140,6 @@
       "id": "N.",
       "cutting_guide": "Si prega di tagliare lungo le linee tratteggiate",
       "pokedex_range": "Pokédex {{start}} – {{end}}",
-      "cover_print_borderless": "Stampa senza bordi",
       "cover_follow_cutting": "Seguire le linee di taglio",
       "variant_species": "Specie",
       "variant_forms": "Forme",
@@ -158,7 +156,8 @@
       "variant_ex_gen2": "Pokémon-EX",
       "variant_ex_gen3": "Pokémon ex",
       "variant_ex_gen3_tera": "Pokémon ex Tera",
-      "variant_ex_gen3_mega": "Pokémon ex Mega"
+      "variant_ex_gen3_mega": "Pokémon ex Mega",
+      "variant_collection_count": "{{count}} Pokémon in questa collezione"
     },
     "ja": {
       "title": "BinderPokedex - プレースホルダーカードバインダー",
@@ -173,7 +172,6 @@
       "id": "No.",
       "cutting_guide": "点線に沿って切ってください",
       "pokedex_range": "ポケモン図鑑 {{start}} – {{end}}",
-      "cover_print_borderless": "縁なしで印刷",
       "cover_follow_cutting": "切り取り線に沿う",
       "variant_species": "種類",
       "variant_forms": "姿",
@@ -190,7 +188,8 @@
       "variant_ex_gen2": "ポケモンEX",
       "variant_ex_gen3": "ポケモンex",
       "variant_ex_gen3_tera": "ポケモンex テラ",
-      "variant_ex_gen3_mega": "ポケモンex メガ"
+      "variant_ex_gen3_mega": "ポケモンex メガ",
+      "variant_collection_count": "このコレクションの{{count}}のポケモン"
     },
     "ko": {
       "title": "BinderPokedex - 플레이스홀더 카드 바인더",
@@ -205,7 +204,6 @@
       "id": "No.",
       "cutting_guide": "점선을 따라 자르세요",
       "pokedex_range": "포켓몬 도감 {{start}} – {{end}}",
-      "cover_print_borderless": "테두리 없이 인쇄",
       "cover_follow_cutting": "자르기 선 따라가기",
       "variant_species": "종",
       "variant_forms": "형태",
@@ -222,7 +220,8 @@
       "variant_ex_gen2": "포켓몬EX",
       "variant_ex_gen3": "포켓몬ex",
       "variant_ex_gen3_tera": "포켓몬ex 테라",
-      "variant_ex_gen3_mega": "포켓몬ex 메가"
+      "variant_ex_gen3_mega": "포켓몬ex 메가",
+      "variant_collection_count": "이 컬렉션의 {{count}}개 포켓몬"
     },
     "zh_hans": {
       "title": "BinderPokedex - 占位符卡活页夹",
@@ -237,7 +236,6 @@
       "id": "No.",
       "cutting_guide": "请沿虚线切割",
       "pokedex_range": "宝可梦图鉴 {{start}} – {{end}}",
-      "cover_print_borderless": "无边界打印",
       "cover_follow_cutting": "沿裁切线操作",
       "variant_species": "物种",
       "variant_forms": "形态",
@@ -254,7 +252,8 @@
       "variant_ex_gen2": "宝可梦EX",
       "variant_ex_gen3": "宝可梦ex",
       "variant_ex_gen3_tera": "宝可梦ex 太晶",
-      "variant_ex_gen3_mega": "宝可梦ex 超级"
+      "variant_ex_gen3_mega": "宝可梦ex 超级",
+      "variant_collection_count": "此收集中的{{count}}只宝可梦"
     },
     "zh_hant": {
       "title": "BinderPokedex - 佔位符卡活頁夾",
@@ -269,7 +268,6 @@
       "id": "No.",
       "cutting_guide": "請沿虛線切割",
       "pokedex_range": "寶可夢圖鑑 {{start}} – {{end}}",
-      "cover_print_borderless": "無邊界列印",
       "cover_follow_cutting": "沿裁切線操作",
       "variant_species": "物種",
       "variant_forms": "形態",
@@ -286,7 +284,8 @@
       "variant_ex_gen2": "寶可夢EX",
       "variant_ex_gen3": "寶可夢ex",
       "variant_ex_gen3_tera": "寶可夢ex 太晶",
-      "variant_ex_gen3_mega": "寶可夢ex 超級"
+      "variant_ex_gen3_mega": "寶可夢ex 超級",
+      "variant_collection_count": "此收集中的{{count}}隻寶可夢"
     }
   },
   "types": {

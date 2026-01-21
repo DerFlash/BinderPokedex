@@ -182,30 +182,20 @@ class VariantPDFGenerator:
             
             # Draw separator page if needed
             if is_separator:
-                # Support both old format (section_name_xx) and new format (section_name object)
+                # section_name is always a dict with localized strings
                 section_name_data = section.get('section_name')
-                if isinstance(section_name_data, dict):
-                    section_name = section_name_data.get(self.language, section_name_data.get('en', section_id))
-                else:
-                    # Fallback to old format for backward compatibility
-                    section_name = section.get(f'section_name_{self.language}', section_id)
+                section_name = section_name_data.get(self.language, section_name_data.get('en', section_id))
                 
                 # Get featured pokémon from iconic_pokemon field in section
                 iconic_pokemon_ids = section.get('iconic_pokemon', [])
                 
                 # Build featured_pokemon list from IDs
                 featured_pokemon = []
-                if iconic_pokemon_ids:
-                    for pid in iconic_pokemon_ids:
-                        for p in section_pokemon:
-                            # With unified schema, use numeric id field (same as base pokemon ID)
-                            if p.get('id') == pid:
-                                featured_pokemon.append(p)
-                                break
-                
-                # Fallback to first 3 if no iconic_pokemon defined
-                if not featured_pokemon:
-                    featured_pokemon = section_pokemon[:3] if section_pokemon else []
+                for pid in iconic_pokemon_ids:
+                    for p in section_pokemon:
+                        if p.get('id') == pid:
+                            featured_pokemon.append(p)
+                            break
                 
                 logger.info(f"    Featured Pokémon: {[p['name']['en'] for p in featured_pokemon]}")
                 

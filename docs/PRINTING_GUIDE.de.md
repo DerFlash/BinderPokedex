@@ -35,8 +35,7 @@ Papierformat: A4 (210 × 297 mm)
 
 #### **Ränder/Margins:**
 ```
-Ränder: Keine (Borderless/Randlos)
-        oder Minimal (falls Drucker das nicht unterstützt)
+Ränder: Minimal/Standard (randlos nicht erforderlich)
 ```
 
 #### **Farbe:**
@@ -61,7 +60,6 @@ Gewicht:   80-90 g/m² (Standard)
 1. **Datei** → **Drucken** (Ctrl/Cmd + P)
 2. Unter **"Seite einrichten"** oder **"Mehr Einstellungen"**:
    - ✅ **"Tatsächliche Größe"** aktivieren (oder Skalierung auf 100%)
-   - ✅ **"Randlos drucken"** aktivieren (falls vorhanden)
 3. Unter **"Papier"**:
    - ✅ Papierformat: **A4**
    - ✅ Ausrichtung: **Hochformat (Portrait)**
@@ -74,7 +72,6 @@ Gewicht:   80-90 g/m² (Standard)
    - Papierformat: **A4**
 3. Unter **"Papierbehandlung"** oder **"Layout"**:
    - Skalierung: **100%** (nicht "Automatisch skalieren")
-   - ✅ **"Randlos"** aktivieren (falls vorhanden)
 4. **Drucken**
 
 ### Windows Print Dialog
@@ -82,7 +79,6 @@ Gewicht:   80-90 g/m² (Standard)
 2. **"Weitere Optionen"** oder **"Erweiterte Einstellungen"** öffnen
 3. Skalierung: **"Keine"** oder **"100%"**
 4. Papierformat: **A4**
-5. **"Randlos drucken"** aktivieren
 6. **Drucken**
 
 ---
@@ -179,7 +175,7 @@ Nach dem Ausschneiden sollten die Karten diese Maße haben:
 | Fehler | Problem | Lösung |
 |--------|---------|--------|
 | Skalierung nicht 100% | Karten zu groß/klein | Druckdialog prüfen, Skalierung auf 100% setzen |
-| Mit Seitenrändern drucken | Bilder abgeschnitten | "Randlos" aktivieren oder Ränder minimieren |
+| Mit Seitenrändern drucken | Bilder abgeschnitten | Skalierung auf 100% prüfen; minimale Standardränder reichen |
 | Schwarzweiß-Modus | Keine Farben | Farbmodus/Farbe in den Druckoptionen auswählen |
 | Falsches Papierformat | Schnittlinien falsch | Papierformat auf A4 prüfen |
 | Zu schnell ausschneiden | Krumme Schnitte | Langsam und präzise schneiden, evtl. Lineal nutzen |

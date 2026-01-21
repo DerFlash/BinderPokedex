@@ -114,7 +114,7 @@ class TranslationHelper:
         
         Args:
             translations: Dictionary with translations for current language
-            key: Translation key (e.g., 'variant_species', 'cover_print_borderless')
+            key: Translation key (e.g., 'variant_species')
             **kwargs: Variables to format into the string
         
         Returns:

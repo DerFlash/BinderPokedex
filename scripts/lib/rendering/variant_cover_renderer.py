@@ -225,24 +225,9 @@ class VariantCoverRenderer:
             canvas_obj.setFont(self.style.CONTENT_FONT, 14)
         
         canvas_obj.setFillColor(HexColor(self.style.TEXT_DARK))
-        # Use translation-aware text
-        count_key = f"{pokemon_count}_pokemon_collection"
-        # Fallback to translated template or English
-        if self.language != 'en':
-            # Build translation for each language
-            lang_texts = {
-                'de': f"{pokemon_count} Pokémon in dieser Sammlung",
-                'fr': f"{pokemon_count} Pokémon dans cette collection",
-                'es': f"{pokemon_count} Pokémon en esta colección",
-                'it': f"{pokemon_count} Pokémon in questa collezione",
-                'ja': f"{pokemon_count} Pokémon",
-                'ko': f"{pokemon_count} 포켓몬",
-                'zh_hans': f"{pokemon_count} 宝可梦",
-                'zh_hant': f"{pokemon_count} 寶可夢",
-            }
-            count_text = lang_texts.get(self.language, f"{pokemon_count} Pokémon in this collection")
-        else:
-            count_text = f"{pokemon_count} Pokémon in this collection"
+        # Use translation from TranslationLoader
+        ui_trans = self.translation_loader.load_ui(self.language)
+        count_text = ui_trans.get('variant_collection_count', '{{count}} Pokémon in this collection').replace('{{count}}', str(pokemon_count))
         canvas_obj.drawCentredString(self.style.PAGE_WIDTH / 2, 120 * mm, count_text)
         
         # Decorative separator
@@ -251,17 +236,8 @@ class VariantCoverRenderer:
         canvas_obj.line(40 * mm, 105 * mm, self.style.PAGE_WIDTH - 40 * mm, 105 * mm)
         
         # ===== FEATURED POKÉMON =====
-        # Check both 'iconic_pokemon' (from variant main level) and 'iconic_pokemon_ids' (from section separators)
+        # Get iconic_pokemon from variant_data (main or section-level)
         iconic_ids = variant_data.get('iconic_pokemon_ids') or variant_data.get('iconic_pokemon', [])
-        if not iconic_ids:
-            # Use first 3 Pokémon as featured - handle variant IDs like '#003_EX1'
-            iconic_ids = []
-            for p in pokemon_list[:3]:
-                try:
-                    pid = str(p.get('id', p.get('num', '0'))).split('_')[0].lstrip('#')
-                    iconic_ids.append(int(pid))
-                except (ValueError, AttributeError):
-                    pass
         
         if iconic_ids:
             self._draw_featured_pokemon(canvas_obj, iconic_ids, pokemon_list)
@@ -292,10 +268,6 @@ class VariantCoverRenderer:
                 clean_iconic_ids.append(clean_id)
             except (ValueError, AttributeError):
                 pass
-        
-        if not clean_iconic_ids:
-            # Fallback to first 3 Pokémon
-            clean_iconic_ids = [int(str(p.get('id', 0)).split('_')[0].lstrip('#')) for p in pokemon_list[:3]]
         
         pokemon_count = len(clean_iconic_ids[:3])
         total_width = self.style.PAGE_WIDTH - (30 * mm)
@@ -388,11 +360,9 @@ class VariantCoverRenderer:
         # Footer text with translations
         ui_trans = self.translation_loader.load_ui(self.language)
         
-        print_text = ui_trans.get('cover_print_borderless', 'Print borderless')
         cutting_text = ui_trans.get('cover_follow_cutting', 'Follow cutting guides')
         
         footer_parts = [
-            print_text,
             cutting_text,
             "Binder Pokédex Project",
             datetime.now().strftime('%Y-%m-%d')

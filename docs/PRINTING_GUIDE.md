@@ -35,8 +35,7 @@ Paper Size: A4 (210 × 297 mm)
 
 #### **Margins:**
 ```
-Margins: None (Borderless)
-         or Minimal (if printer doesn't support borderless)
+Margins: Minimal / Standard (borderless not required)
 ```
 
 #### **Color:**
@@ -61,7 +60,6 @@ Weight:     80-90 g/m² (Standard)
 1. **File** → **Print** (Ctrl/Cmd + P)
 2. Under **"Page Setup"** or **"More Settings"**:
    - ✅ Enable **"Actual Size"** (or set scaling to 100%)
-   - ✅ Enable **"Borderless Printing"** (if available)
 3. Under **"Paper"**:
    - ✅ Paper Size: **A4**
    - ✅ Orientation: **Portrait**
@@ -74,7 +72,6 @@ Weight:     80-90 g/m² (Standard)
    - Paper Size: **A4**
 3. Under **"Paper Handling"** or **"Layout"**:
    - Scaling: **100%** (not "Auto Scale")
-   - ✅ Enable **"Borderless"** (if available)
 4. **Print**
 
 ### Windows Print Dialog
@@ -82,7 +79,6 @@ Weight:     80-90 g/m² (Standard)
 2. Open **"More Options"** or **"Advanced Settings"**
 3. Scaling: **"None"** or **"100%"**
 4. Paper Size: **A4**
-5. Enable **"Borderless Printing"**
 6. **Print**
 
 ---
@@ -186,7 +182,7 @@ After cutting, your cards should measure:
 | Mistake | Problem | Solution |
 |---------|---------|----------|
 | Scaling not 100% | Cards too large/small | Check print dialog, set scaling to 100% |
-| Printing with page margins | Images cut off | Enable "Borderless" or minimize margins |
+| Printing with page margins | Images cut off | Ensure scaling 100%; standard minimal margins are fine |
 | Black & White mode | No colors | Select color mode in print options |
 | Wrong paper size | Cutting lines misaligned | Verify paper size set to A4 |
 | Cutting too fast | Uneven cuts | Cut slowly and precisely, use ruler if needed |
