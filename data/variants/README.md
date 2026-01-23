@@ -21,6 +21,9 @@ This directory contains JSON data for all Pokémon variant categories.
 ## Files
 
 - **meta.json** - Metadata for all variant categories, versioning, and statistics
+- **logos/** - Logo assets for variant categories (localized and default)
+  - **mega_evolution/** - Localized Mega Evolution logos (de.png, en.png, ja.png, etc.)
+  - **ex/**, **ex_new/**, **ex_tera/**, **m_pokemon/** - Default logos for EX variants
 - **variants_mega.json** - Mega Evolution forms (76 Pokémon, 79 forms) ✅ COMPLETE
 - **variants_gigantamax.json** - Gigantamax forms (32+ Pokémon)
 - **variants_regional_alola.json** - Alolan regional forms (18 Pokémon)

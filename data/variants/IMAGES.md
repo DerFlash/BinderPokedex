@@ -24,6 +24,47 @@ Mega Evolution forms now display **correct form-specific artwork** using a hybri
    - Use for problematic or special cases
    - Format: `(pokemon_id, form_suffix): url`
 
+### Logo System ✅
+
+**Location:** `data/variants/logos/`
+
+**Structure:**
+```
+logos/
+  ├── mega_evolution/       # Localized Mega Evolution TCG logos
+  │   ├── de.png          # German: "MEGA"
+  │   ├── en.png          # English: "MEGA"
+  │   ├── fr.png          # French: "MEGA"
+  │   ├── es.png          # Spanish: "MEGA"
+  │   ├── it.png          # Italian: "MEGA"
+  │   ├── ja.png          # Japanese: "メガ"
+  │   ├── ko.png          # Korean: "메가"
+  │   ├── zh_hans.png     # Chinese Simplified: "超级"
+  │   └── zh_hant.png     # Chinese Traditional: "超級"
+  ├── ex/
+  │   └── default.png     # EX logo (not localized)
+  ├── ex_new/
+  │   └── default.png     # EX New logo (not localized)
+  ├── ex_tera/
+  │   └── default.png     # EX Tera logo (not localized)
+  └── m_pokemon/
+      └── default.png     # M Pokémon logo (not localized)
+```
+
+**Token System:**
+- `[MEGA]` - Renders localized Mega Evolution logo
+- `[EX]` - Renders EX logo
+- `[EX_NEW]` - Renders EX New logo (Scarlet & Violet era)
+- `[EX_TERA]` - Renders EX Tera logo
+- `[M]` - Renders M Pokémon logo
+
+**Fallback Chain:**
+1. Try localized logo: `logos/{type}/{language}.png`
+2. Try default logo: `logos/{type}/default.png`
+3. Try legacy location: `data/variants/{legacy_filename}.png`
+
+**Implementation:** `scripts/lib/rendering/logo_renderer.py`
+
 ### Implementation Details
 
 **File:** [mega_evolution_fetcher.py](../../scripts/lib/form_fetchers/mega_evolution_fetcher.py)

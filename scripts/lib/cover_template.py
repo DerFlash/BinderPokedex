@@ -27,6 +27,7 @@ from reportlab.lib.colors import HexColor
 
 from .fonts import FontManager
 from .constants import PAGE_WIDTH, PAGE_HEIGHT
+from .rendering.logo_renderer import LogoRenderer
 
 import logging
 
@@ -293,168 +294,35 @@ class CoverTemplate:
     def _draw_subtitle_with_logos(self, canvas_obj, x_center, y, section_id, section_title, font_size=14):
         """
         Draw subtitle with token-based logos for special sections.
-        Supports tokens like [M] for Mega logo and [EX] for EX logo.
-        E.g., "[M] Pokémon [EX] Serie" becomes "[M-LOGO] Pokémon [EX-LOGO] Serie"
+        Supports tokens like [M], [EX], [EX_NEW], [EX_TERA], [MEGA] for logos.
+        
+        Delegates to LogoRenderer for consistent logo rendering.
         
         Args:
             canvas_obj: ReportLab canvas
             x_center: X coordinate of text center
             y: Y coordinate of text
-            section_id: Section identifier ('mega', 'primal', 'tera', etc.)
+            section_id: Section identifier ('mega', 'primal', 'tera', etc.) - unused now
             section_title: Section title text with potential tokens
             font_size: Font size to use
         """
-        import os
-        
-        # Check if section_title contains tokens
-        if '[M]' not in section_title and '[EX]' not in section_title and '[EX_NEW]' not in section_title and '[EX_TERA]' not in section_title:
-            # No special rendering needed, use plain text
-            try:
-                subtitle_font_name = FontManager.get_font_name(self.language, bold=False)
-                canvas_obj.setFont(subtitle_font_name, font_size)
-            except:
-                canvas_obj.setFont("Helvetica", font_size)
-            canvas_obj.setFillColor(HexColor("#FFFFFF"))
-            canvas_obj.drawCentredString(x_center, y, section_title)
-            return
-        
-        # Get logo files
-        m_logo_file = os.path.join(
-            os.path.dirname(__file__),
-            "../../data/variants/M_Pokémon.png"
-        )
-        ex_logo_file = os.path.join(
-            os.path.dirname(__file__),
-            "../../data/variants/EXLogoBig.png"
-        )
-        ex_new_logo_file = os.path.join(
-            os.path.dirname(__file__),
-            "../../data/variants/EXLogoNew.png"
-        )
-        ex_tera_logo_file = os.path.join(
-            os.path.dirname(__file__),
-            "../../data/variants/EXTeraLogo.png"
-        )
-        
-        if not os.path.exists(m_logo_file) or not os.path.exists(ex_logo_file):
-            # Fallback to plain text
-            try:
-                subtitle_font_name = FontManager.get_font_name(self.language, bold=False)
-                canvas_obj.setFont(subtitle_font_name, font_size)
-            except:
-                canvas_obj.setFont("Helvetica", font_size)
-            canvas_obj.setFillColor(HexColor("#FFFFFF"))
-            canvas_obj.drawCentredString(x_center, y, section_title)
-            return
-        
-        # Parse section_title for tokens and text segments
-        # E.g., "[M] Pokémon [EX] Serie" -> segments: [("[M]", logo), ("Pokémon ", text), ("[EX]", logo), ("Serie", text)]
         try:
             subtitle_font_name = FontManager.get_font_name(self.language, bold=False)
-            canvas_obj.setFont(subtitle_font_name, font_size)
         except:
-            canvas_obj.setFont("Helvetica", font_size)
+            subtitle_font_name = "Helvetica"
         
-        # Calculate total width
-        total_width = 0
-        segments = []
-        remaining_title = section_title
-        
-        m_logo_width = 6.65 * mm
-        m_logo_height = 5.3 * mm
-        ex_logo_width = 7.3 * mm
-        ex_logo_height = 8.8 * mm
-        ex_new_logo_width = 7.3 * mm
-        ex_new_logo_height = 8.8 * mm
-        ex_tera_logo_width = 7.3 * mm
-        ex_tera_logo_height = 8.8 * mm
-        gap = 1.5 * mm
-        
-        # Parse tokens (check longest tokens first: [EX_TERA], [EX_NEW], then shorter ones)
-        while remaining_title:
-            if remaining_title.startswith('[EX_TERA]'):
-                segments.append(('logo', 'ex_tera'))
-                total_width += ex_tera_logo_width + gap
-                remaining_title = remaining_title[9:].lstrip()
-            elif remaining_title.startswith('[EX_NEW]'):
-                segments.append(('logo', 'ex_new'))
-                total_width += ex_new_logo_width + gap
-                remaining_title = remaining_title[8:].lstrip()
-            elif remaining_title.startswith('[M]'):
-                segments.append(('logo', 'm'))
-                total_width += m_logo_width + gap
-                remaining_title = remaining_title[3:].lstrip()
-            elif remaining_title.startswith('[EX]'):
-                segments.append(('logo', 'ex'))
-                total_width += ex_logo_width + gap
-                remaining_title = remaining_title[4:].lstrip()
-            else:
-                # Find next token or end of string
-                m_idx = remaining_title.find('[M]')
-                ex_idx = remaining_title.find('[EX]')
-                ex_new_idx = remaining_title.find('[EX_NEW]')
-                ex_tera_idx = remaining_title.find('[EX_TERA]')
-                next_idx = len(remaining_title)
-                
-                if m_idx >= 0:
-                    next_idx = min(next_idx, m_idx)
-                if ex_idx >= 0:
-                    next_idx = min(next_idx, ex_idx)
-                if ex_new_idx >= 0:
-                    next_idx = min(next_idx, ex_new_idx)
-                if ex_tera_idx >= 0:
-                    next_idx = min(next_idx, ex_tera_idx)
-                
-                text_segment = remaining_title[:next_idx].rstrip()
-                if text_segment:
-                    segments.append(('text', text_segment))
-                    text_width = canvas_obj.stringWidth(text_segment + ' ', canvas_obj._fontname, font_size)
-                    total_width += text_width
-                
-                remaining_title = remaining_title[next_idx:]
-        
-        # Draw with calculated positions
-        start_x = x_center - total_width / 2
-        current_x = start_x
-        
-        canvas_obj.setFillColor(HexColor("#FFFFFF"))
-        
-        for seg_type, seg_value in segments:
-            if seg_type == 'text':
-                canvas_obj.drawString(current_x, y, seg_value + ' ')
-                current_x += canvas_obj.stringWidth(seg_value + ' ', canvas_obj._fontname, font_size)
-            elif seg_type == 'logo':
-                if seg_value == 'm':
-                    logo_file = m_logo_file
-                    logo_width = m_logo_width
-                    logo_height = m_logo_height
-                    logo_y = y - (logo_height / 2) + 1.2 * mm
-                elif seg_value == 'ex':
-                    logo_file = ex_logo_file
-                    logo_width = ex_logo_width
-                    logo_height = ex_logo_height
-                    logo_y = y - (logo_height / 2) + 1.5 * mm
-                elif seg_value == 'ex_new':
-                    logo_file = ex_new_logo_file
-                    logo_width = ex_new_logo_width
-                    logo_height = ex_new_logo_height
-                    logo_y = y - (logo_height / 2) + 1.5 * mm
-                elif seg_value == 'ex_tera':
-                    logo_file = ex_tera_logo_file
-                    logo_width = ex_tera_logo_width
-                    logo_height = ex_tera_logo_height
-                    logo_y = y - (logo_height / 2) + 1.5 * mm
-                
-                canvas_obj.drawImage(
-                    logo_file,
-                    current_x,
-                    logo_y,
-                    width=logo_width,
-                    height=logo_height,
-                    preserveAspectRatio=True,
-                    mask='auto'
-                )
-                current_x += logo_width + gap
+        # Use unified LogoRenderer for consistent logo rendering
+        LogoRenderer.draw_text_with_logos(
+            canvas_obj,
+            section_title,
+            x_center,
+            y,
+            subtitle_font_name,
+            font_size,
+            context='title',
+            text_color='#FFFFFF',  # White for cover subtitles
+            language=self.language
+        )
     
     def _draw_featured_pokemon(self, canvas_obj, pokemon_list: list, iconic_ids: list):
         """Draw featured Pokémon at bottom of cover. If iconic_ids is empty, draw nothing."""

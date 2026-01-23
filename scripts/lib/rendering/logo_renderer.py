@@ -16,14 +16,15 @@ logger = logging.getLogger(__name__)
 
 
 class LogoRenderer:
-    """Unified renderer for variant logos (EX, M, EX_NEW, EX_TERA)."""
+    """Unified renderer for variant logos (EX, M, EX_NEW, EX_TERA, MEGA)."""
     
-    # Logo file locations (relative to data/variants/)
+    # Logo file locations (uses logos/ directory structure)
     LOGO_FILES = {
-        'ex': "EXLogoBig.png",
-        'm': "M_Pokémon.png",
-        'ex_new': "EXLogoNew.png",
-        'ex_tera': "EXTeraLogo.png",
+        'ex': "logos/ex",  # Non-localized (default.png)
+        'm': "logos/m_pokemon",  # Non-localized (default.png)
+        'ex_new': "logos/ex_new",  # Non-localized (default.png)
+        'ex_tera': "logos/ex_tera",  # Non-localized (default.png)
+        'mega': "logos/mega_evolution",  # Localized (de.png, en.png, ja.png, etc.)
     }
     
     # Standard logo dimensions for different contexts
@@ -33,21 +34,53 @@ class LogoRenderer:
             'm': (6.65 * mm, 5.3 * mm),
             'ex_new': (7.3 * mm, 8.8 * mm),
             'ex_tera': (7.3 * mm, 8.8 * mm),
+            'mega': (80 * mm, 40 * mm),  # Mega Evolution logo dimensions (10x larger)
         },
         'card': {  # For card names
             'ex': (6 * mm, 7.2 * mm),
             'm': (5 * mm, 4 * mm),
             'ex_new': (6 * mm, 7.2 * mm),
             'ex_tera': (6 * mm, 7.2 * mm),
+            'mega': (65 * mm, 32.5 * mm),  # Mega Evolution logo dimensions for cards (10x larger)
         }
     }
     
     @staticmethod
-    def get_logo_path(logo_key: str) -> Path:
-        """Get full path to logo file."""
+    def get_logo_path(logo_key: str, language: str = 'en') -> Path:
+        """
+        Get full path to logo file with localization support.
+        
+        Fallback chain:
+        1. Try localized logo: logos/{logo_key}/{language}.png
+        2. Try default logo: logos/{logo_key}/default.png
+        
+        Args:
+            logo_key: Logo identifier ('ex', 'm', 'ex_new', 'ex_tera', 'mega')
+            language: Language code (de, en, fr, es, it, ja, ko, zh_hans, zh_hant)
+        
+        Returns:
+            Path to logo file (may not exist)
+        """
         base_path = Path(__file__).parent.parent.parent.parent / "data/variants"
-        logo_file = base_path / LogoRenderer.LOGO_FILES.get(logo_key, "")
-        return logo_file
+        logo_config = LogoRenderer.LOGO_FILES.get(logo_key, "")
+        
+        if not logo_config:
+            return base_path / "unknown.png"
+        
+        logo_dir = base_path / logo_config
+        
+        # Try localized version first
+        localized_logo = logo_dir / f"{language}.png"
+        if localized_logo.exists():
+            return localized_logo
+        
+        # Fallback to default.png
+        default_logo = logo_dir / "default.png"
+        if default_logo.exists():
+            return default_logo
+        
+        # If neither exists, return the localized path (caller will handle missing file)
+        return localized_logo
     
     @staticmethod
     def parse_text_with_logos(text: str) -> list:
@@ -71,6 +104,9 @@ class LogoRenderer:
             elif remaining.startswith('[EX_NEW]'):
                 segments.append(('logo', 'ex_new'))
                 remaining = remaining[8:].lstrip()
+            elif remaining.startswith('[MEGA]'):
+                segments.append(('logo', 'mega'))
+                remaining = remaining[6:].lstrip()
             elif remaining.startswith('[M]'):
                 segments.append(('logo', 'm'))
                 remaining = remaining[3:].lstrip()
@@ -80,7 +116,7 @@ class LogoRenderer:
             else:
                 # Find next token
                 token_positions = []
-                for token, idx in [('[EX_TERA]', 9), ('[EX_NEW]', 8), ('[M]', 3), ('[EX]', 4)]:
+                for token, idx in [('[EX_TERA]', 9), ('[EX_NEW]', 8), ('[MEGA]', 6), ('[M]', 3), ('[EX]', 4)]:
                     pos = remaining.find(token)
                     if pos >= 0:
                         token_positions.append((pos, idx))
@@ -102,7 +138,7 @@ class LogoRenderer:
     @staticmethod
     def draw_text_with_logos(canvas_obj, text: str, x_center: float, y: float,
                             font_name: str, font_size: int, context: str = 'title',
-                            text_color: str = '#2D2D2D') -> None:
+                            text_color: str = '#2D2D2D', language: str = 'en') -> None:
         """
         Draw text with embedded logos, centered at x_center.
         
@@ -115,12 +151,13 @@ class LogoRenderer:
             font_size: Font size
             context: 'title' or 'card' (determines logo sizing)
             text_color: Hex color for text
+            language: Language code for localized logos (de, en, fr, etc.)
         """
         canvas_obj.setFont(font_name, font_size)
         canvas_obj.setFillColor(HexColor(text_color))
         
         # Check if text contains any logo tokens
-        if '[EX_TERA]' not in text and '[EX_NEW]' not in text and '[M]' not in text and '[EX]' not in text:
+        if '[EX_TERA]' not in text and '[EX_NEW]' not in text and '[MEGA]' not in text and '[M]' not in text and '[EX]' not in text:
             # No logos - render plain text
             canvas_obj.drawCentredString(x_center, y, text)
             return
@@ -149,7 +186,7 @@ class LogoRenderer:
                 canvas_obj.drawString(current_x, y, seg_value + ' ')
                 current_x += canvas_obj.stringWidth(seg_value + ' ', font_name, font_size)
             elif seg_type == 'logo':
-                logo_file = LogoRenderer.get_logo_path(seg_value)
+                logo_file = LogoRenderer.get_logo_path(seg_value, language)
                 logo_width, logo_height = dims.get(seg_value, (6 * mm, 7.2 * mm))
                 logo_y = y - (logo_height / 2) + 1.2 * mm
                 

@@ -112,7 +112,8 @@ class TitleRenderer:
                     font_name,
                     subtitle_font_size,
                     context='subtitle',
-                    text_color="#FFFFFF"
+                    text_color="#FFFFFF",
+                    language=language
                 )
         
         # ===== MODE: no_subtitle =====
@@ -127,7 +128,8 @@ class TitleRenderer:
                 font_name,
                 subtitle_font_size,
                 context='title',
-                text_color="#FFFFFF"
+                text_color="#FFFFFF",
+                language=language
             )
         
         # ===== MODE: separator =====
@@ -143,7 +145,8 @@ class TitleRenderer:
                     font_name,
                     subtitle_font_size,
                     context='separator',
-                    text_color="#FFFFFF"
+                    text_color="#FFFFFF",
+                    language=language
                 )
             else:
                 # Fallback: show variant_name if no section_title
