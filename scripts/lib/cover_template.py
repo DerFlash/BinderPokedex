@@ -156,7 +156,7 @@ class CoverTemplate:
         canvas_obj.line(40 * mm, 105 * mm, PAGE_WIDTH - 40 * mm, 105 * mm)
         
         # Featured Pokémon
-        iconic_ids = generation_info.get('iconic_pokemon', [])
+        iconic_ids = generation_info.get('featured_pokemon', [])
         self._draw_featured_pokemon(canvas_obj, pokemon_list, iconic_ids)
         
         # Footer
@@ -238,7 +238,7 @@ class CoverTemplate:
         # Content section: stats (omitted for EX variants to keep clean layout)
         
         # Featured Pokémon with images (use iconic_pokemon if available)
-        iconic_ids = variant_data.get('iconic_pokemon', [])
+        iconic_ids = variant_data.get('featured_pokemon', [])
         self._draw_featured_pokemon(canvas_obj, pokemon_list, iconic_ids)
         
         # Footer

@@ -9,7 +9,7 @@ Features:
 - Unified styling system
 - Data-driven title modes and colors
 - Multi-language support
-- Iconic Pokémon display
+- Featured Pokémon display
 - Clean, modern design
 """
 
@@ -27,7 +27,7 @@ try:
     from ..utils import TranslationHelper
     from .translation_loader import TranslationLoader
     from .title_renderer import TitleRenderer
-    from .iconic_pokemon_renderer import IconicPokemonRenderer
+    from .featured_pokemon_renderer import FeaturedPokemonRenderer
     from .footer_renderer import FooterRenderer
 except ImportError:
     # Fallback for direct imports
@@ -36,7 +36,7 @@ except ImportError:
     from scripts.lib.utils import TranslationHelper
     from scripts.lib.rendering.translation_loader import TranslationLoader
     from scripts.lib.rendering.title_renderer import TitleRenderer
-    from scripts.lib.rendering.iconic_pokemon_renderer import IconicPokemonRenderer
+    from scripts.lib.rendering.featured_pokemon_renderer import FeaturedPokemonRenderer
     from scripts.lib.rendering.footer_renderer import FooterRenderer
 
 logger = logging.getLogger(__name__)
@@ -78,7 +78,7 @@ class CoverStyle:
     ICONIC_POKEMON_Y = 10 * mm
     FOOTER_Y = 2.5 * mm
     
-    # Iconic Pokémon sizing
+    # Featured Pokémon sizing
     ICONIC_CARD_WIDTH = 65 * mm
     ICONIC_CARD_HEIGHT = 90 * mm
     ICONIC_IMAGE_SCALE = 0.72
@@ -140,7 +140,7 @@ class CoverRenderer:
         self._draw_pokemon_count(canvas_obj, len(pokemon_list), cover_data, color)
         
         # ===== BOTTOM SECTION: ICONIC POKÉMON =====
-        iconic_ids = cover_data.get('iconic_pokemon_ids') or cover_data.get('iconic_pokemon', [])
+        iconic_ids = cover_data.get('featured_pokemon_ids') or cover_data.get('featured_pokemon', [])
         if iconic_ids and pokemon_list:
             self._draw_iconic_pokemon(canvas_obj, iconic_ids, pokemon_list)
         
@@ -154,7 +154,7 @@ class CoverRenderer:
             'title': gen_info.get('title', {'en': f'Generation {generation}', 'de': f'Generation {generation}'}),
             'subtitle': gen_info.get('subtitle', {'en': gen_info.get('region', ''), 'de': gen_info.get('region', '')}),
             'title_mode': gen_info.get('title_mode', 'with_subtitle'),
-            'iconic_pokemon': gen_info.get('iconic_pokemon', []),
+            'featured_pokemon': gen_info.get('featured_pokemon', []),
             'range': gen_info.get('range', (1, 151)),
         }
     
@@ -244,8 +244,8 @@ class CoverRenderer:
         canvas_obj.line(40 * mm, self.style.DECORATIVE_LINE_Y, PAGE_WIDTH - 40 * mm, self.style.DECORATIVE_LINE_Y)
     
     def _draw_iconic_pokemon(self, canvas_obj, iconic_ids: List[int], pokemon_list: List[Dict]) -> None:
-        """Draw iconic Pokémon at the bottom of the cover."""
-        IconicPokemonRenderer.draw_iconic_pokemon(
+        """Draw featured Pokémon at the bottom of the cover."""
+        FeaturedPokemonRenderer.draw_iconic_pokemon(
             canvas_obj, iconic_ids, pokemon_list, self.image_cache, PAGE_WIDTH
         )
     

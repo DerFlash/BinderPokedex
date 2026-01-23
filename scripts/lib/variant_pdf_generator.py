@@ -114,7 +114,7 @@ class VariantPDFGenerator:
                             'zh_hant': ''
                         },
                         'color_hex': self.variant_data.get('color_hex', '#999999'),
-                        'iconic_pokemon': [],
+                        'featured_pokemon': [],
                         'pokemon': self.pokemon_list
                     }
                 }
@@ -176,14 +176,14 @@ class VariantPDFGenerator:
             logger.info(f"    Title: {section_title}, Subtitle: {section_subtitle}")
             
             # Get iconic pokemon
-            iconic_pokemon_ids = section.get('iconic_pokemon', [])
+            featured_pokemon_ids = section.get('featured_pokemon', [])
             
             # Draw cover page for this section
             self._draw_section_cover(
                 c, section_title, section_subtitle, section.get('color_hex', '#7851A9'),
                 section_title_dict=section_title_data,
                 section_subtitle_dict=section_subtitle_data,
-                iconic_pokemon_ids=iconic_pokemon_ids,
+                featured_pokemon_ids=featured_pokemon_ids,
                 section_pokemon=section_pokemon
             )
             c.showPage()
@@ -214,7 +214,7 @@ class VariantPDFGenerator:
     
     def _draw_section_cover(self, c, section_title_str: str, section_subtitle_str: str, color: str, 
                            section_title_dict: dict = None, section_subtitle_dict: dict = None, 
-                           iconic_pokemon_ids: list = None, section_pokemon: list = None):
+                           featured_pokemon_ids: list = None, section_pokemon: list = None):
         """
         Draw a cover page for a section.
         
@@ -225,12 +225,12 @@ class VariantPDFGenerator:
             color: Hex color for the stripe
             section_title_dict: Full multilingual title dict for override
             section_subtitle_dict: Full multilingual subtitle dict for override
-            iconic_pokemon_ids: List of Pokémon IDs to display as featured Pokémon
+            featured_pokemon_ids: List of Pokémon IDs to display as featured Pokémon
             section_pokemon: The pokemon in this section (for featured pokemon lookup)
         """
         # Create cover data with section-specific title and subtitle
         cover_data = dict(self.variant_data)
-        cover_data['iconic_pokemon_ids'] = iconic_pokemon_ids or []
+        cover_data['featured_pokemon_ids'] = featured_pokemon_ids or []
         
         # Override title with section-specific title dict
         if section_title_dict:

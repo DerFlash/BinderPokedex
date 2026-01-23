@@ -106,7 +106,7 @@ class DataStorage:
                 'region': section.get('region', ''),
                 'count': pokemon_count,  # Calculated from actual pokemon list
                 'range': section.get('range', [0, 0]),
-                'iconic_pokemon': section.get('iconic_pokemon', [])
+                'featured_pokemon': section.get('featured_pokemon', [])
             }
         
         return {}

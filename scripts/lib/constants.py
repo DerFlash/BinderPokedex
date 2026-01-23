@@ -306,7 +306,7 @@ def get_generation_info(generation: int) -> dict:
                     'region': section.get('region', ''),
                     'count': len(section.get('pokemon', [])),  # Calculate from actual list
                     'range': section.get('range', [0, 0]),
-                    'iconic_pokemon': section.get('iconic_pokemon', []),
+                    'featured_pokemon': section.get('featured_pokemon', []),
                     'title_mode': 'with_subtitle',  # Unified title rendering mode
                     'title': {'en': f'Generation {generation}', 'de': f'Generation {generation}'},
                     'subtitle': {'en': section.get('region', ''), 'de': section.get('region', '')},

@@ -28,10 +28,10 @@
         "zh_hans": "[EX]系列（来自下一个命运）",
         "zh_hant": "[EX]系列（來自下一個命運）"
       },
-      "iconic_pokemon": [
-        152,
-        155,
-        158
+      "featured_pokemon": [
+        249,
+        250,
+        251
       ],
       "pokemon": [
         {
@@ -2522,7 +2522,7 @@
         "zh_hans": "[M]宝可梦[EX]系列",
         "zh_hant": "[M]寶可夢[EX]系列"
       },
-      "iconic_pokemon": [
+      "featured_pokemon": [
         248,
         373,
         384
@@ -3327,7 +3327,7 @@
         "zh_hans": "原始宝可梦[EX]系列",
         "zh_hant": "原始寶可夢[EX]系列"
       },
-      "iconic_pokemon": [
+      "featured_pokemon": [
         382,
         383
       ],

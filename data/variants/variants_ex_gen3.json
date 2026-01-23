@@ -28,10 +28,10 @@
         "zh_hans": "[EX_NEW]系列（来自朱&紫）",
         "zh_hant": "[EX_NEW]系列（來自朱&紫）"
       },
-      "iconic_pokemon": [
-        252,
-        255,
-        258
+      "featured_pokemon": [
+        149,
+        445,
+        373
       ],
       "pokemon": [
         {
@@ -380,10 +380,10 @@
         "zh_hans": "太晶宝可梦[EX_TERA]系列",
         "zh_hant": "太晶寶可夢[EX_TERA]系列"
       },
-      "iconic_pokemon": [
-        1005,
-        1006,
-        1009
+      "featured_pokemon": [
+        384,
+        445,
+        130
       ],
       "pokemon": [
         {
@@ -595,10 +595,10 @@
         "zh_hans": "超级宝可梦[EX_NEW]系列",
         "zh_hant": "超級寶可夢[EX_NEW]系列"
       },
-      "iconic_pokemon": [
-        6,
+      "featured_pokemon": [
         150,
-        376
+        65,
+        248
       ],
       "pokemon": [
         {

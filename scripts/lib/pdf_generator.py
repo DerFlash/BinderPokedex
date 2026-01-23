@@ -312,12 +312,12 @@ class PDFGenerator:
     
     def _draw_cover_page(self, canvas_obj):
         """
-        Draw a cover page for the generation with iconic Pokémon.
+        Draw a cover page for the generation with featured Pokémon.
         
         Features:
         - Colored top stripe with generation info
         - Large region name and generation number
-        - Three iconic Pokémon displayed at the bottom
+        - Three featured Pokémon displayed at the bottom
         - Clean, modern design
         - Multi-language support for all text
         
@@ -403,7 +403,7 @@ class PDFGenerator:
         canvas_obj.line(40 * mm, 105 * mm, PAGE_WIDTH - 40 * mm, 105 * mm)
         
         # ===== BOTTOM SECTION: ICONIC POKÉMON IN A CLEAN ROW =====
-        iconic_ids = get_info.get('iconic_pokemon', [])
+        iconic_ids = get_info.get('featured_pokemon', [])
         
         if iconic_ids:
             pokemon_by_id = {int(p.get('id', p.get('num', '0').lstrip('#'))): p for p in self.pokemon_list}
@@ -447,7 +447,7 @@ class PDFGenerator:
                                     preserveAspectRatio=True
                                 )
                         except Exception as e:
-                            logger.debug(f"Could not load image for iconic Pokémon {poke_id}: {e}")
+                            logger.debug(f"Could not load image for featured Pokémon {poke_id}: {e}")
         
         # Bottom info - single line with print instructions (multilingual)
         try:

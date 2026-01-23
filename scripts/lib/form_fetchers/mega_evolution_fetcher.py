@@ -182,7 +182,7 @@ class MegaEvolutionFetcher:
             entry.pop('pokedex_number', None)
         
         iconic_ids = ["#006_MEGA_X", "#150_MEGA_X", "#094_MEGA"]
-        iconic_pokemon_ids = [entry["id"] for entry in mega_forms if entry["id"] in iconic_ids]
+        featured_pokemon_ids = [entry["id"] for entry in mega_forms if entry["id"] in iconic_ids]
         
         return {
             "variant_type": "mega_evolution",
@@ -192,7 +192,7 @@ class MegaEvolutionFetcher:
             "color_hex": "#FFD700",
             "pokemon_count": pokemon_count,
             "forms_count": len(mega_forms),
-            "iconic_pokemon_ids": iconic_pokemon_ids,
+            "featured_pokemon_ids": featured_pokemon_ids,
             "pokemon": mega_forms,
         }
     

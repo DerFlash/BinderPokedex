@@ -1,5 +1,5 @@
 """
-Iconic Pokémon Renderer - Shared featured Pokémon rendering logic
+Featured Pokémon Renderer - Shared featured Pokémon rendering logic
 
 Consolidates featured Pokémon rendering for both Generation and Variant covers.
 Provides a single, canonical implementation used by CoverRenderer and VariantCoverRenderer.
@@ -21,7 +21,7 @@ from reportlab.lib.colors import HexColor
 logger = logging.getLogger(__name__)
 
 
-class IconicPokemonRenderer:
+class FeaturedPokemonRenderer:
     """Unified renderer for featured Pokémon on cover pages."""
     
     # Dimensions
@@ -87,15 +87,15 @@ class IconicPokemonRenderer:
             return
         
         # Calculate total width needed for all cards
-        total_cards_width = (IconicPokemonRenderer.CARD_WIDTH * pokemon_count + 
-                            IconicPokemonRenderer.CARD_SPACING * (pokemon_count - 1))
+        total_cards_width = (FeaturedPokemonRenderer.CARD_WIDTH * pokemon_count + 
+                            FeaturedPokemonRenderer.CARD_SPACING * (pokemon_count - 1))
         
         # Center the group on the page
         start_x = (page_width - total_cards_width) / 2
         
         for idx, poke_id in enumerate(clean_iconic_ids[:3]):
-            x_center = start_x + idx * (IconicPokemonRenderer.CARD_WIDTH + 
-                                       IconicPokemonRenderer.CARD_SPACING) + IconicPokemonRenderer.CARD_WIDTH / 2
+            x_center = start_x + idx * (FeaturedPokemonRenderer.CARD_WIDTH + 
+                                       FeaturedPokemonRenderer.CARD_SPACING) + FeaturedPokemonRenderer.CARD_WIDTH / 2
             
             # Use the list dict first (handles duplicates), then fall back to single dict
             pokemon = None
@@ -119,10 +119,10 @@ class IconicPokemonRenderer:
                             image_to_render = image_source
                         
                         if image_to_render:
-                            img_width = IconicPokemonRenderer.CARD_WIDTH * IconicPokemonRenderer.IMAGE_SCALE
-                            img_height = IconicPokemonRenderer.CARD_HEIGHT * IconicPokemonRenderer.IMAGE_SCALE
+                            img_width = FeaturedPokemonRenderer.CARD_WIDTH * FeaturedPokemonRenderer.IMAGE_SCALE
+                            img_height = FeaturedPokemonRenderer.CARD_HEIGHT * FeaturedPokemonRenderer.IMAGE_SCALE
                             img_x = x_center - img_width / 2
-                            img_y = IconicPokemonRenderer.Y_POSITION
+                            img_y = FeaturedPokemonRenderer.Y_POSITION
                             canvas_obj.drawImage(image_to_render, img_x, img_y,
                                                width=img_width, height=img_height,
                                                preserveAspectRatio=True)

@@ -200,14 +200,14 @@ class TestVariantCoverWithLogos:
 
     @pytest.fixture
     def variant_data(self):
-        """Variant data with iconic Pokémon."""
+        """Variant data with featured Pokémon."""
         return {
             'variant_name': 'EX-Serie',
             'variant_type': 'ex_gen1',
             'variant_display_name': 'Generation 1 EX',
             'region': 'Kanto',
             'description': 'Test variant',
-            'iconic_pokemon_ids': [1, 25, 130]
+            'featured_pokemon_ids': [1, 25, 130]
         }
 
     def test_ex_logo_rendering(self, canvas, renderer, variant_data):

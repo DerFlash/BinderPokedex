@@ -28,7 +28,7 @@
         "zh_hans": "经典ex系列",
         "zh_hant": "經典ex系列"
       },
-      "iconic_pokemon": [
+      "featured_pokemon": [
         3,
         6,
         9
@@ -2134,10 +2134,10 @@
         "zh_hans": "火箭队ex系列",
         "zh_hant": "火箭隊ex系列"
       },
-      "iconic_pokemon": [
-        52,
-        24,
-        110
+      "featured_pokemon": [
+        150,
+        144,
+        145
       ],
       "pokemon": [
         {
@@ -2429,9 +2429,9 @@
         "zh_hans": "训练师ex系列",
         "zh_hant": "訓練師ex系列"
       },
-      "iconic_pokemon": [
-        83,
-        295
+      "featured_pokemon": [
+        295,
+        448
       ],
       "pokemon": [
         {

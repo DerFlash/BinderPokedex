@@ -154,7 +154,7 @@ class PokedexGenerator:
         - Region name
         - Pokédex ID range
         - Pokémon count
-        - Iconic Pokémon images
+        - Featured Pokémon images
         
         Args:
             c: ReportLab canvas

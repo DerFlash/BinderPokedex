@@ -39,7 +39,7 @@ def main():
         
         output_file = data_dir / 'variants_mega.json'
         
-        # Load existing data to preserve custom fields like iconic_pokemon_ids
+        # Load existing data to preserve custom fields like featured_pokemon_ids
         existing_data = {}
         if output_file.exists():
             try:
@@ -55,10 +55,10 @@ def main():
             "short_code": "MEGA",
             "icon": "⚡",
             "color_hex": "#FFD700",
-            **forms_data  # Includes pokemon_count, forms_count, iconic_pokemon_ids, pokemon
+            **forms_data  # Includes pokemon_count, forms_count, featured_pokemon_ids, pokemon
         }
         
-        # Note: iconic_pokemon_ids is now provided by the fetcher and included via forms_data
+        # Note: featured_pokemon_ids is now provided by the fetcher and included via forms_data
         
         with open(output_file, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
@@ -66,8 +66,8 @@ def main():
         print(f"\n✅ Successfully populated {output_file}")
         print(f"   • {data['pokemon_count']} Pokémon species")
         print(f"   • {data['forms_count']} Mega forms")
-        if "iconic_pokemon_ids" in data:
-            print(f"   • {len(data['iconic_pokemon_ids'])} iconic Pokémon defined")
+        if "featured_pokemon_ids" in data:
+            print(f"   • {len(data['featured_pokemon_ids'])} featured Pokémon defined")
         print(f"   • Completed in {elapsed:.1f}s")
 
 
