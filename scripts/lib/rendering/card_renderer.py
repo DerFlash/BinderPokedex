@@ -135,7 +135,8 @@ class CardRenderer:
     
     def render_card(self, canvas_obj, pokemon_data: dict, x: float, y: float,
                    card_width: float = None, card_height: float = None,
-                   variant_mode: bool = False) -> None:
+                   variant_mode: bool = False, section_prefix: str = None, 
+                   section_suffix: str = None) -> None:
         """
         Draw a Pokémon card.
         
@@ -149,6 +150,8 @@ class CardRenderer:
             card_width: Card width (default: CARD_WIDTH from constants)
             card_height: Card height (default: CARD_HEIGHT from constants)
             variant_mode: If True, uses variant data format (variant_name, trainer, etc.)
+            section_prefix: Prefix from section-level data (e.g., "Mega", "Rocket's")
+            section_suffix: Suffix from section-level data (e.g., "[EX]", "ex")
         """
         if card_width is None:
             card_width = self.style.CARD_WIDTH
@@ -202,7 +205,7 @@ class CardRenderer:
         # ===== NAME RENDERING =====
         if variant_mode:
             # For variant PDFs - construct full variant name
-            name: str = self._construct_variant_name(pokemon_data)
+            name: str = self._construct_variant_name(pokemon_data, section_prefix, section_suffix)
         else:
             # For generation PDFs
             name = pokemon_data.get('name', 'Unknown')
@@ -258,14 +261,17 @@ class CardRenderer:
         if image_source and self.image_cache:
             self._draw_image(canvas_obj, pokemon_data, x, y, card_width, image_height)
     
-    def _construct_variant_name(self, pokemon_data: dict) -> str:
+    def _construct_variant_name(self, pokemon_data: dict, section_prefix: str = None, 
+                                section_suffix: str = None) -> str:
         """
         Construct translated variant name from pokemon_data.
         
-        Handles Mega, Primal, Tera, Trainer variants with proper translations.
+        Fully data-driven approach using section-level prefix/suffix.
         
         Args:
             pokemon_data: Pokemon variant data dict
+            section_prefix: Prefix from section data (e.g., "Mega", "Rocket's", "[M]")
+            section_suffix: Suffix from section data (e.g., "[EX]", "ex", "[EX_NEW]")
         
         Returns:
             Fully formatted variant name with prefix/suffix
@@ -273,47 +279,35 @@ class CardRenderer:
         # Get base name in target language (unified name object structure - required)
         base_name = pokemon_data['name'][self.language]
         
-        # Get variant form and trainer
-        variant_form = pokemon_data.get('variant_form', '')
-        trainer = pokemon_data.get('trainer', '')
+        # Get pokemon-specific prefix/suffix (can override section defaults)
+        pokemon_prefix = pokemon_data.get('prefix', None)
+        pokemon_suffix = pokemon_data.get('suffix', None)
         
-        # Get custom prefix from pokémon data if defined (can override variant/trainer defaults)
-        custom_prefix = pokemon_data.get('prefix', '')  # e.g., "Rocket's", "Imakuni?'s"
+        # Use pokemon-specific values if present, otherwise use section values
+        prefix = pokemon_prefix if pokemon_prefix is not None else (section_prefix or '')
+        suffix = pokemon_suffix if pokemon_suffix is not None else (section_suffix or '')
         
-        # Determine all suffixes from variant data (fully data-driven approach)
-        default_suffix = self.variant_data.get('suffix', '')  # Normal/mega/primal suffix
-        tera_suffix: str = self.variant_data.get('tera_suffix', default_suffix)  # Override for tera form
-        
-        # Map variant forms to suffixes - unified, no language-specific mappings needed
-        variant_suffixes_map: Dict[str, str] = {
-            'normal': default_suffix,
-            'mega': default_suffix,
-            'primal': default_suffix,
-            'tera': tera_suffix,
-        }
-        
-        # Build name with appropriate prefix and suffix
+        # Build name with prefix and suffix
         name = base_name
         
-        # Add trainer prefix first (from pokémon data if defined)
-        if custom_prefix:
-            name: str = f"{custom_prefix} {name}"
+        # Add prefix (if present)
+        if prefix:
+            name = f"{prefix} {name}"
         
-        # Add prefix for Mega/Primal (using unified prefixes from config, not language-dependent)
-        mega_prefix_map = {'mega': '[M]', 'primal': 'Primal'}
-        if variant_form in mega_prefix_map:
-            name: str = f"{mega_prefix_map[variant_form]} {name}"
-        
-        # Add suffix
-        if base_name != 'Unknown':
-            suffix_form = variant_form if variant_form else 'normal'
-            suffix: str = variant_suffixes_map.get(suffix_form, default_suffix)
-            
-            # Add delta symbol for delta variants
+        # Handle variant_form (delta, x, y)
+        variant_form = pokemon_data.get('variant_form', None)
+        if variant_form:
             if variant_form == 'delta':
-                suffix: str = f"{suffix} δ"
-            
-            name: str = f"{name} {suffix}"
+                # Delta Species: add δ symbol to suffix
+                if suffix:
+                    suffix = f"{suffix} δ"
+            elif variant_form in ['x', 'y']:
+                # Mega X/Y forms: add X or Y after name, before suffix
+                name = f"{name} {variant_form.upper()}"
+        
+        # Add suffix (if present)
+        if suffix:
+            name = f"{name} {suffix}"
         
         return name
     

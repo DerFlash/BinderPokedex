@@ -5,12 +5,17 @@ Cache Pokémon images locally for fast PDF generation.
 This script downloads and caches the image for each Pokémon (one per Pokémon from JSON),
 storing them as compressed JPEGs to minimize storage while maintaining quality.
 
+Usage:
+    python cache_pokemon_images.py              # Full refresh (re-downloads everything)
+    python cache_pokemon_images.py --skip-existing  # Only cache missing images
+
 Run once to populate cache, then PDF generation will be ~100x faster.
 """
 
 import sys
 import json
 import logging
+import argparse
 from pathlib import Path
 from urllib.request import urlopen, Request
 from urllib.error import URLError, HTTPError
@@ -26,7 +31,6 @@ logger = logging.getLogger(__name__)
 
 # Add scripts/lib to path
 sys.path.insert(0, str(Path(__file__).parent))
-from lib.constants import GENERATION_INFO
 from lib.data_storage import DataStorage
 
 # Configuration
@@ -34,6 +38,13 @@ CACHE_DIR = Path(__file__).parent.parent / 'data' / 'pokemon_images_cache'
 DATA_DIR = Path(__file__).parent.parent / 'data'
 TIMEOUT = 5
 USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+
+# ⚡ OPTIMIZATION: Pre-resize images to different PDF render sizes
+# - Card size (180×180px): For Pokémon cards in binder (optimal for 150-300 DPI print: 164-328px needed)
+# - Featured size (500×500px): For large featured Pokémon on cover pages (46×65mm = high quality)
+CARD_SIZE = (180, 180)
+FEATURED_SIZE = (500, 500)
+JPEG_QUALITY = 75  # Reduced from 85 - visually identical on printed material
 
 
 def ensure_directory(pokemon_id: int) -> Path:
@@ -65,7 +76,7 @@ def is_valid_image(image_data: bytes) -> bool:
 
 
 def process_and_cache_image(image_data: bytes, pokemon_id: int) -> bool:
-    """Convert to JPEG and cache."""
+    """Convert to JPEG, pre-resize to PDF dimensions, and cache both card and featured sizes."""
     try:
         img = Image.open(BytesIO(image_data))
         
@@ -79,26 +90,41 @@ def process_and_cache_image(image_data: bytes, pokemon_id: int) -> bool:
         elif img.mode != 'RGB':
             img = img.convert('RGB')
         
-        # Save as compressed JPEG
         pokemon_dir = ensure_directory(pokemon_id)
-        output_file = pokemon_dir / 'default.jpg'
-        img.save(output_file, format='JPEG', quality=85, optimize=True)
+        
+        # ⚡ OPTIMIZATION 1: Cache card-size (100×100px) for binder cards
+        # This avoids expensive resize operations during PDF generation
+        img_card = img.resize(CARD_SIZE, Image.Resampling.LANCZOS)
+        output_file_card = pokemon_dir / 'default_thumb.jpg'
+        img_card.save(output_file_card, format='JPEG', quality=JPEG_QUALITY, optimize=True)
+        
+        # ⚡ OPTIMIZATION 2: Cache featured-size (250×250px) for cover displays
+        # This prevents re-downloading when featured images are needed
+        img_featured = img.resize(FEATURED_SIZE, Image.Resampling.LANCZOS)
+        output_file_featured = pokemon_dir / 'default_featured.jpg'
+        img_featured.save(output_file_featured, format='JPEG', quality=JPEG_QUALITY, optimize=True)
         return True
     except Exception as e:
         logger.warning(f"  Failed to process image for #{pokemon_id}: {e}")
         return False
 
 
-def cache_pokemon_image(pokemon_id: int, image_url: str) -> bool:
-    """Cache a single Pokémon image."""
-    pokemon_dir = ensure_directory(pokemon_id)
-    cached_file = pokemon_dir / 'default.jpg'
+def cache_pokemon_image(pokemon_id: int, image_url: str, skip_existing: bool = False) -> bool:
+    """
+    Cache a single Pokémon image.
     
-    # Check if already cached
-    if cached_file.exists():
-        return True
+    Args:
+        pokemon_id: Pokémon ID
+        image_url: URL to download from
+        skip_existing: If True, skip if already cached; if False, always re-download
+    """
+    if skip_existing:
+        pokemon_dir = ensure_directory(pokemon_id)
+        cached_file = pokemon_dir / 'default_thumb.jpg'  # Check for card size (thumb)
+        if cached_file.exists():
+            return True
     
-    # Download and cache
+    # Download and cache (always re-download if not skip_existing)
     image_data = fetch_image_url(image_url)
     if image_data and is_valid_image(image_data):
         if process_and_cache_image(image_data, pokemon_id):
@@ -107,10 +133,15 @@ def cache_pokemon_image(pokemon_id: int, image_url: str) -> bool:
     return False
 
 
-def cache_all_pokemon():
-    """Cache all Pokémon from all generations."""
+def cache_all_pokemon(skip_existing: bool = False):
+    """Cache all Pokémon from all generations.
+    
+    Args:
+        skip_existing: If True, only cache missing images; if False, refresh all
+    """
+    mode = "Incremental" if skip_existing else "Full Refresh"
     logger.info("="*80)
-    logger.info("Binder Pokédex - Simple Image Cache Builder")
+    logger.info(f"Binder Pokédex - Image Cache Builder ({mode})")
     logger.info("="*80)
     logger.info(f"Cache directory: {CACHE_DIR}\n")
     
@@ -121,18 +152,14 @@ def cache_all_pokemon():
     # Use DataStorage to load data from consolidated or individual files
     storage = DataStorage(DATA_DIR)
     
-    # Process each generation
-    for gen_num in sorted(GENERATION_INFO.keys()):
-        gen_info = GENERATION_INFO[gen_num]
-        region = gen_info['region']
-        
-        logger.info(f"Generation {gen_num} - {region}")
-        
-        # Load JSON for this generation using DataStorage
+    # Process each generation (1-9)
+    for gen_num in range(1, 10):
         pokemon_list = storage.load_generation(gen_num)
         if not pokemon_list:
-            logger.warning(f"  ✗ No Pokémon data found for generation {gen_num}")
+            logger.warning(f"Generation {gen_num}: No Pokémon data found")
             continue
+        
+        logger.info(f"Generation {gen_num}")
         
         gen_cached = 0
         gen_failed = 0
@@ -146,7 +173,7 @@ def cache_all_pokemon():
             
             total_pokemon += 1
             
-            if cache_pokemon_image(pokemon_id, image_url):
+            if cache_pokemon_image(pokemon_id, image_url, skip_existing=skip_existing):
                 cached_count += 1
                 gen_cached += 1
             else:
@@ -189,7 +216,7 @@ def cache_all_pokemon():
                 
                 total_pokemon += 1
                 
-                if cache_pokemon_image(pokemon_id, image_url):
+                if cache_pokemon_image(pokemon_id, image_url, skip_existing=skip_existing):
                     cached_count += 1
                     var_cached += 1
                 else:
@@ -217,4 +244,20 @@ def cache_all_pokemon():
 
 
 if __name__ == '__main__':
-    cache_all_pokemon()
+    parser = argparse.ArgumentParser(
+        description='Cache Pokémon images for fast PDF generation',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  python cache_pokemon_images.py              # Full refresh (re-download everything)
+  python cache_pokemon_images.py --skip-existing  # Only cache missing images
+        """
+    )
+    parser.add_argument(
+        '--skip-existing',
+        action='store_true',
+        help='Only cache missing images (skip if already cached)'
+    )
+    args = parser.parse_args()
+    
+    cache_all_pokemon(skip_existing=args.skip_existing)

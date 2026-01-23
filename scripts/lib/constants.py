@@ -306,7 +306,10 @@ def get_generation_info(generation: int) -> dict:
                     'region': section.get('region', ''),
                     'count': len(section.get('pokemon', [])),  # Calculate from actual list
                     'range': section.get('range', [0, 0]),
-                    'iconic_pokemon': section.get('iconic_pokemon', [])
+                    'iconic_pokemon': section.get('iconic_pokemon', []),
+                    'title_mode': 'with_subtitle',  # Unified title rendering mode
+                    'title': {'en': f'Generation {generation}', 'de': f'Generation {generation}'},
+                    'subtitle': {'en': section.get('region', ''), 'de': section.get('region', '')},
                 }
         except (json.JSONDecodeError, IOError):
             pass
@@ -319,4 +322,14 @@ def get_generation_info(generation: int) -> dict:
     with open(gen_file, 'r', encoding='utf-8') as f:
         data = json.load(f)
     
-    return data.get('generation_info', {})
+    gen_info = data.get('generation_info', {})
+    
+    # Ensure title_mode is set for consistent rendering
+    if 'title_mode' not in gen_info:
+        gen_info['title_mode'] = 'with_subtitle'
+    if 'title' not in gen_info:
+        gen_info['title'] = {'en': f'Generation {generation}', 'de': f'Generation {generation}'}
+    if 'subtitle' not in gen_info:
+        gen_info['subtitle'] = {'en': gen_info.get('region', ''), 'de': gen_info.get('region', '')}
+    
+    return gen_info

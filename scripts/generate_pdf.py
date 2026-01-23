@@ -31,26 +31,29 @@ try:
     from reportlab.lib.units import mm
     from reportlab.lib.colors import HexColor
 except ImportError as e:
-    print("\n" + "=" * 80)
-    print("❌ Missing Python Dependencies")
-    print("=" * 80)
-    print(f"\nError: {e}")
-    print("\n💡 HINT: You need to activate the Python virtual environment first:")
-    print("\n   source venv/bin/activate")
-    print("\nOr run with the venv Python directly:")
-    print("\n   ./venv/bin/python scripts/generate_pdf.py")
-    print("\n" + "=" * 80 + "\n")
+    # Will use CLIFormatter after it's imported, but need to show error before
+    lines = [
+        "\n" + "=" * 80,
+        "❌ Missing Python Dependencies",
+        "=" * 80,
+        f"\nError: {e}",
+        "\n💡 HINT: You need to activate the Python virtual environment first:",
+        "\n   source venv/bin/activate",
+        "\nOr run with the venv Python directly:",
+        "\n   ./venv/bin/python scripts/generate_pdf.py",
+        "\n" + "=" * 80 + "\n"
+    ]
+    print("\n".join(lines))
     sys.exit(1)
 
 # Add lib to path for imports
 sys.path.insert(0, str(Path(__file__).parent / 'lib'))
 
 from lib.fonts import FontManager
-from lib.pdf_generator import PDFGenerator
 from lib.variant_pdf_generator import VariantPDFGenerator
-from lib.data_storage import DataStorage
-from lib.log_formatter import BatchSummary, SectionHeader
-from lib.constants import LANGUAGES, PAGE_WIDTH, PAGE_HEIGHT
+from lib.cli_formatter import CLIFormatter
+from lib.cli_validator import GenerationValidator, LanguageValidator, VariantValidator, DirectoryValidator
+from lib.constants import LANGUAGES
 
 # Configure logging - suppress INFO during generation for clean output
 logging.basicConfig(
@@ -261,16 +264,15 @@ Examples:
         with open(meta_file, 'r', encoding='utf-8') as f:
             meta = json.load(f)
         
-        print(f"\n{'=' * 80}")
-        print(f"Available Pokémon Variant Categories")
-        print(f"{'=' * 80}")
+        CLIFormatter.section_header("Available Pokémon Variant Categories")
         
         for cat in meta['variant_categories']:
             status_icon = "🟢" if cat['status'] == 'complete' else "🟡" if cat['status'] == 'in-progress' else "⚪"
             print(f"{status_icon} {cat['id']:20s} | {cat['pokemon_count']:3d} Pokémon, {cat['forms_count']:3d} Forms | {cat['icon']} {cat.get('short_code', 'N/A')}")
         
-        print(f"\n{meta['statistics']['total_categories']} categories | {meta['statistics']['total_pokemon']} Pokémon | {meta['statistics']['total_forms']} Forms")
-        print(f"{'=' * 80}\n")
+        stats = meta['statistics']
+        print(f"\n{stats['total_categories']} categories | {stats['total_pokemon']} Pokémon | {stats['total_forms']} Forms")
+        CLIFormatter.section_footer()
         return 0
     
     # Route based on type
@@ -336,22 +338,13 @@ def handle_variant_mode(args, script_dir, project_dir, data_dir, variants_dir):
     else:
         languages = list(LANGUAGES.keys())
     
-    # Register fonts
-    try:
-        FontManager.register_fonts()
-        logger.info("✅ Fonts registered successfully")
-    except Exception as e:
-        logger.error(f"❌ Failed to register fonts: {e}")
-        return 1
-    
+
     # Generate variant PDFs
-    print(f"\n{'=' * 80}")
-    print(f"PDF Generation - Pokémon Variants (v3.0)")
-    print(f"{'=' * 80}")
-    print(f"Variants:  {', '.join(variants_to_generate)}")
-    print(f"Languages: {', '.join(languages)}")
-    print(f"Output dir: {project_dir / 'output'}")
-    print(f"Data dir:  {variants_dir}")
+    CLIFormatter.section_header("PDF Generation - Pokémon Variants (v3.0)")
+    CLIFormatter.key_value("Variants:", ", ".join(variants_to_generate))
+    CLIFormatter.key_value("Languages:", ", ".join(languages))
+    CLIFormatter.key_value("Output dir:", str(project_dir / 'output'))
+    CLIFormatter.key_value("Data dir:", str(variants_dir))
     
     total_generated = 0
     total_failed = 0
@@ -392,12 +385,7 @@ def handle_variant_mode(args, script_dir, project_dir, data_dir, variants_dir):
                 total_failed += 1
     
     # Summary
-    print(f"\n{'=' * 80}")
-    print(f"Summary")
-    print(f"{'=' * 80}")
-    print(f"✅ Generated: {total_generated}")
-    print(f"❌ Failed:    {total_failed}")
-    print(f"{'=' * 80}\n")
+    CLIFormatter.progress_summary(total_generated, total_failed)
     
     return 0 if total_failed == 0 else 1
 
@@ -409,11 +397,11 @@ def _generate_variant_pdf(variant_data, language, output_dir, script_dir):
     # Ensure output directory exists
     output_dir.mkdir(parents=True, exist_ok=True)
     
-    # Extract variant info
-    variant_type = variant_data.get('variant', variant_data.get('variant_type', 'unknown'))
+    # Extract variant name for filename
+    variant_name = variant_data.get('name', 'Variant')
     
     # Generate output filename
-    output_file = output_dir / f"Variant_{variant_type}_{language.upper()}.pdf"
+    output_file = output_dir / f"{variant_name}_{language.upper()}.pdf"
     
     # Initialize image cache for loading Pokémon images
     image_cache = ImageCache()
@@ -455,22 +443,12 @@ def handle_pokedex_mode(args, script_dir, project_dir, data_dir):
     else:
         languages = list(LANGUAGES.keys())
     
-    # Register fonts
-    try:
-        FontManager.register_fonts()
-        logger.info("✅ Fonts registered successfully")
-    except Exception as e:
-        logger.error(f"❌ Failed to register fonts: {e}")
-        return 1
-    
     # Generate PDFs
     gen_label = f"Gen {gen_start}-{gen_end}" if gen_start != gen_end else f"Gen {gen_start}"
-    print(f"\n{'=' * 80}")
-    print(f"PDF Generation - Pokédex ({gen_label})")
-    print(f"{'=' * 80}")
-    print(f"Languages:   {', '.join(languages)}")
-    print(f"Generations: {', '.join(map(str, generations))}")
-    print(f"Output dir:  {project_dir / 'output'}")
+    CLIFormatter.section_header(f"PDF Generation - Pokédex ({gen_label})")
+    CLIFormatter.key_value("Languages:", ", ".join(languages))
+    CLIFormatter.key_value("Generations:", ", ".join(map(str, generations)))
+    CLIFormatter.key_value("Output dir:", str(project_dir / 'output'))
     
     total_generated = 0
     total_failed = 0
@@ -480,7 +458,10 @@ def handle_pokedex_mode(args, script_dir, project_dir, data_dir):
             output_dir = project_dir / 'output' / language
             output_dir.mkdir(parents=True, exist_ok=True)
             
-            if gen_start == gen_end:
+            # Only include generation range in filename if not all generations (1-9)
+            if gen_start == 1 and gen_end == 9:
+                output_file = output_dir / f"Pokedex_{language.upper()}.pdf"
+            elif gen_start == gen_end:
                 output_file = output_dir / f"Pokedex_Gen{gen_start}_{language.upper()}.pdf"
             else:
                 output_file = output_dir / f"Pokedex_Gen{gen_start}-{gen_end}_{language.upper()}.pdf"
@@ -513,12 +494,7 @@ def handle_pokedex_mode(args, script_dir, project_dir, data_dir):
             total_failed += 1
     
     # Summary
-    print(f"\n{'=' * 80}")
-    print(f"Summary")
-    print(f"{'=' * 80}")
-    print(f"✅ Generated: {total_generated}")
-    print(f"❌ Failed:    {total_failed}")
-    print(f"{'=' * 80}\n")
+    CLIFormatter.progress_summary(total_generated, total_failed)
     
     return 0 if total_failed == 0 else 1
 

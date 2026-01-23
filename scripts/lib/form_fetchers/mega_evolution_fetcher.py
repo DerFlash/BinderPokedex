@@ -149,25 +149,31 @@ class MegaEvolutionFetcher:
                 if form_suffix:
                     form_id += f"_{form_suffix.upper()}"
                 
-                mega_forms.append({
+                pokemon_entry = {
                     "id": form_id,
                     "mega_form_id": mega_form_id,
                     "pokemon_form_cache_id": None,
-                    "name_en": base_name,
-                    "name_de": translations.get("de", base_name),
-                    "name_fr": translations.get("fr", base_name),
-                    "name_es": translations.get("es", base_name),
-                    "name_it": translations.get("it", base_name),
-                    "name_ja": translations.get("ja", base_name),
-                    "name_ko": translations.get("ko", base_name),
-                    "name_zh_hans": translations.get("zh_hans", base_name),
-                    "name_zh_hant": translations.get("zh_hant", base_name),
-                    "variant_prefix": "Mega",
-                    "variant_form": form_suffix.lower() if form_suffix else "",
+                    "name": {
+                        "en": base_name,
+                        "de": translations.get("de", base_name),
+                        "fr": translations.get("fr", base_name),
+                        "es": translations.get("es", base_name),
+                        "it": translations.get("it", base_name),
+                        "ja": translations.get("ja", base_name),
+                        "ko": translations.get("ko", base_name),
+                        "zh_hans": translations.get("zh_hans", base_name),
+                        "zh_hant": translations.get("zh_hant", base_name)
+                    },
                     "types": types,
                     "image_url": image_url,
-                    "pokedex_number": pokemon_id,  # Temporary, for counting unique Pokemon
-                })
+                    "pokedex_number": pokemon_id  # Temporary, for counting unique Pokemon
+                }
+                
+                # Add variant_form only for X/Y forms
+                if form_suffix:
+                    pokemon_entry["variant_form"] = form_suffix.lower()
+                
+                mega_forms.append(pokemon_entry)
         
         print(f"   [{total}/{total}] Fetching complete!                 ")
         

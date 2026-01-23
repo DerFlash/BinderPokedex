@@ -21,31 +21,12 @@ from reportlab.lib.units import mm
 from reportlab.lib.colors import HexColor
 
 from .fonts import FontManager
-from .rendering import CardRenderer, CoverRenderer, PageRenderer, VariantCoverRenderer, VariantCoverStyle
-from .cover_template import CoverTemplate
-from .utils import TranslationHelper
-from .constants import PAGE_WIDTH, PAGE_HEIGHT, PAGE_MARGIN, CARD_WIDTH, CARD_HEIGHT, CARDS_PER_ROW, CARDS_PER_COLUMN, GAP_X, GAP_Y, VARIANT_COLORS
+from .rendering import CardRenderer, PageRenderer, CoverRenderer, CoverStyle
+from .utils import TranslationHelper, RendererInitializer
+from .constants import PAGE_WIDTH, PAGE_HEIGHT, PAGE_MARGIN, CARD_WIDTH, CARD_HEIGHT, CARDS_PER_ROW, CARDS_PER_COLUMN, GAP_X, GAP_Y
 from .log_formatter import PDFStatus, SectionHeader
 
 logger = logging.getLogger(__name__)
-
-
-# ⚠️ DEPRECATED - Use VARIANT_COLORS from constants.py instead
-# Keeping for backward compatibility during transition
-VARIANT_COLORS_DEPRECATED = {
-    'ex_gen1': '#1F51BA',             # Blue for Gen1
-    'ex_gen2': '#3D5A80',             # Dark Blue for Gen2
-    'ex_gen3': '#6B40D1',             # Purple for Gen3
-    'mega_evolution': '#FFD700',      # Gold
-    'gigantamax': '#C5283F',          # Red
-    'regional_alola': '#FDB927',      # Yellow
-    'regional_galar': '#0071BA',      # Blue
-    'regional_hisui': '#9D3F1D',      # Brown
-    'regional_paldea': '#D3337F',     # Pink
-    'primal_terastal': '#7B61FF',     # Purple
-    'patterns_unique': '#9D7A4C',     # Orange
-    'fusion_special': '#6F6F6F',      # Gray
-}
 
 
 class VariantPDFGenerator:
@@ -56,7 +37,9 @@ class VariantPDFGenerator:
         Initialize variant PDF generator.
         
         Args:
-            variant_data: Dictionary with variant info and pokemon list
+            variant_data: Dictionary with variant info - either:
+                          - New structure: sections dict with pokemon inside each section
+                          - Old structure: flat pokemon list at top level
             language: Language code (de, en, fr, etc.)
             output_file: Path to output PDF file
             image_cache: Optional image cache for loading Pokémon images
@@ -64,59 +47,32 @@ class VariantPDFGenerator:
         self.variant_data = variant_data
         self.language = language
         self.output_file = output_file
-        self.pokemon_list = variant_data.get('pokemon', [])
         self.image_cache = image_cache
+        
+        # Build complete pokemon list based on structure
+        self.pokemon_list = []
+        sections_dict = variant_data.get('sections', {})
+        
+        if isinstance(sections_dict, dict) and sections_dict:
+            # New hierarchical structure: sections is a dict with pokemon inside each section
+            for section_id in sorted(sections_dict.keys(), key=lambda k: sections_dict[k].get('section_order', 999)):
+                section = sections_dict[section_id]
+                self.pokemon_list.extend(section.get('pokemon', []))
+        else:
+            # Old/flat structure: pokemon at top level (e.g., variants_mega.json)
+            self.pokemon_list = variant_data.get('pokemon', [])
         
         logger.info(f"Loaded {len(self.pokemon_list)} Pokémon from variant data")
         
         # Load translations
         self.translations = TranslationHelper.load_translations(self.language)
         
-        # DO NOT SORT HERE - respect the order in the variant data
-        # The pokemon list order matters for section indices to work correctly
-        
-        # Initialize new unified rendering modules
-        self.card_renderer = CardRenderer(language=language, image_cache=image_cache, variant=variant_data.get('variant_type'), variant_data=variant_data)
-        # Modern VariantCoverRenderer for variant covers
-        self.variant_cover_renderer = VariantCoverRenderer(language=language, image_cache=image_cache)
-        self.page_renderer = PageRenderer()
-        
-        # Register fonts if not already done
-        try:
-            FontManager.register_fonts()
-        except:
-            pass
-    
-    def _load_translations(self) -> dict:
-        """
-        ⚠️ DEPRECATED - Use TranslationHelper.load_translations() instead.
-        Kept for backward compatibility.
-        
-        Load translations from i18n/translations.json
-        
-        Returns:
-            Dictionary with translations for current language
-        """
-        return TranslationHelper.load_translations(self.language)
-    
-    def _format_translation(self, key: str, **kwargs) -> str:
-        """
-        ⚠️ DEPRECATED - Use TranslationHelper.format_translation() instead.
-        Kept for backward compatibility.
-        
-        Get a translated string and format it with provided variables.
-        
-        Args:
-            key: Translation key (e.g., 'variant_species')
-            **kwargs: Variables to format into the string
-        
-        Returns:
-            Formatted translation or key if not found
-        """
-        return TranslationHelper.format_translation(self.translations, key, **kwargs)
+        # Initialize rendering modules using shared utility
+        self.card_renderer, self.page_renderer, self.variant_cover_renderer = \
+            RendererInitializer.initialize_renderers(language, image_cache, variant_data=variant_data)
     
     def generate(self) -> bool:
-        """Generate the PDF with optional separator pages for sections."""
+        """Generate the PDF with separator pages for each section."""
         try:
             self.output_file.parent.mkdir(parents=True, exist_ok=True)
             
@@ -124,25 +80,51 @@ class VariantPDFGenerator:
             
             c = canvas.Canvas(str(self.output_file), pagesize=(PAGE_WIDTH, PAGE_HEIGHT))
             
-            # Draw cover page
-            self._draw_cover_page(c)
-            c.showPage()
+            # Get sections - new hierarchical structure
+            sections_dict = self.variant_data.get('sections', {})
             
-            # Check if this variant has sections (like ex_gen3 with Normal/Tera/Mega)
-            sections = self.variant_data.get('sections', [])
+            if not sections_dict:
+                # Fallback: create default section with all pokemon
+                # Use variant_name as section name (for flat structures like mega_evolution)
+                default_name = self.variant_data.get('variant_name', 'Collection')
+                sections_dict = {
+                    'default': {
+                        'section_id': 'default',
+                        'section_order': 1,
+                        'name': {
+                            'en': default_name,
+                            'de': default_name,
+                            'fr': default_name,
+                            'es': default_name,
+                            'it': default_name,
+                            'ja': default_name,
+                            'ko': default_name,
+                            'zh_hans': default_name,
+                            'zh_hant': default_name
+                        },
+                        'subtitle': {
+                            'en': '',
+                            'de': '',
+                            'fr': '',
+                            'es': '',
+                            'it': '',
+                            'ja': '',
+                            'ko': '',
+                            'zh_hans': '',
+                            'zh_hant': ''
+                        },
+                        'color_hex': self.variant_data.get('color_hex', '#999999'),
+                        'iconic_pokemon': [],
+                        'pokemon': self.pokemon_list
+                    }
+                }
             
-            if sections:
-                # Render with section separators
-                self._generate_with_sections(c, sections, status)
-            else:
-                # Simple rendering without sections
-                cards_per_page = 9
-                for page_idx in range(0, len(self.pokemon_list), cards_per_page):
-                    page_pokemon = self.pokemon_list[page_idx:page_idx + cards_per_page]
-                    status.update(len(page_pokemon))
-                    status.print_progress()
-                    self._draw_cards_page(c, page_pokemon)
-                    c.showPage()
+            # Convert dict to list and sort by order
+            sections_list = list(sections_dict.values()) if isinstance(sections_dict, dict) else sections_dict
+            sections_list = sorted(sections_list, key=lambda s: s.get('section_order', 999))
+            
+            # Render all sections
+            self._generate_with_sections(c, sections_list, status)
             
             c.save()
             
@@ -156,12 +138,14 @@ class VariantPDFGenerator:
         except Exception as e:
             logger.error(f"❌ Error generating PDF: {e}")
             return False
+            return False
     
     def _generate_with_sections(self, c, sections: list, status: PDFStatus = None):
-        """Generate PDF with section separators and crystalline patterns."""
-        # Sort sections by order
-        sections = sorted(sections, key=lambda s: s.get('section_order', 999))
+        """
+        Generate PDF with section cover pages and card pages.
         
+        Each section now contains its pokemon directly (hierarchical structure).
+        """
         logger.info(f"Generating with {len(sections)} sections")
         
         # Calculate total cards for progress tracking
@@ -170,48 +154,45 @@ class VariantPDFGenerator:
         
         for section in sections:
             section_id = section.get('section_id')
-            is_separator = section.get('is_separator_page', False)
-            pattern = section.get('pattern', 'standard')
-            pokemon_indices = section.get('pokemon_indices', [])
+            # Pokemon are now INSIDE the section
+            section_pokemon = section.get('pokemon', [])
             
-            logger.info(f"  Section: {section_id}, separator={is_separator}, indices={pokemon_indices}")
+            logger.info(f"  Section: {section_id}, pokemon={len(section_pokemon)}")
             
-            # Get section Pokémon
-            section_pokemon = [self.pokemon_list[i] for i in pokemon_indices if i < len(self.pokemon_list)]
-            logger.info(f"    Found {len(section_pokemon)} Pokémon for section")
+            # Get section title (multilingual)
+            section_title_data = section.get('title', {})
+            if isinstance(section_title_data, dict):
+                section_title = section_title_data.get(self.language, section_title_data.get('en', section_id))
+            else:
+                section_title = str(section_title_data)
             
-            # Draw separator page if needed
-            if is_separator:
-                # section_name is always a dict with localized strings
-                section_name_data = section.get('section_name')
-                section_name = section_name_data.get(self.language, section_name_data.get('en', section_id))
-                
-                # Get featured pokémon from iconic_pokemon field in section
-                iconic_pokemon_ids = section.get('iconic_pokemon', [])
-                
-                # Build featured_pokemon list from IDs
-                featured_pokemon = []
-                for pid in iconic_pokemon_ids:
-                    for p in section_pokemon:
-                        if p.get('id') == pid:
-                            featured_pokemon.append(p)
-                            break
-                
-                logger.info(f"    Featured Pokémon: {[p['name']['en'] for p in featured_pokemon]}")
-                
-                # Use _draw_simple_separator for all patterns (which uses draw_variant_cover)
-                # This ensures consistent header styling across all variants
-                iconic_ids = [p.get('id') for p in featured_pokemon] if featured_pokemon else []
-                self._draw_simple_separator(
-                    c, section_name, section.get('color_hex', '#7851A9'),
-                    iconic_pokemon_ids=iconic_ids,
-                    pattern=pattern if pattern != 'standard' else None,
-                    section_id=section_id
-                )
-                
-                c.showPage()
+            # Get section subtitle (multilingual)
+            section_subtitle_data = section.get('subtitle', {})
+            if isinstance(section_subtitle_data, dict):
+                section_subtitle = section_subtitle_data.get(self.language, section_subtitle_data.get('en', section_id))
+            else:
+                section_subtitle = str(section_subtitle_data)
+            
+            logger.info(f"    Title: {section_title}, Subtitle: {section_subtitle}")
+            
+            # Get iconic pokemon
+            iconic_pokemon_ids = section.get('iconic_pokemon', [])
+            
+            # Draw cover page for this section
+            self._draw_section_cover(
+                c, section_title, section_subtitle, section.get('color_hex', '#7851A9'),
+                section_title_dict=section_title_data,
+                section_subtitle_dict=section_subtitle_data,
+                iconic_pokemon_ids=iconic_pokemon_ids,
+                section_pokemon=section_pokemon
+            )
+            c.showPage()
             
             # Draw cards for this section
+            # Get section prefix and suffix
+            section_prefix = section.get('prefix', '')
+            section_suffix = section.get('suffix', '')
+            
             cards_per_page = 9
             for page_idx in range(0, len(section_pokemon), cards_per_page):
                 page_pokemon = section_pokemon[page_idx:page_idx + cards_per_page]
@@ -223,63 +204,72 @@ class VariantPDFGenerator:
                     status.update(None, progress_pct)
                     status.print_progress()
                 else:
-                    # Fallback to inline progress bar if no status object
                     bar_width = 30
                     filled = int(bar_width * progress_pct / 100)
                     bar = '█' * filled + '░' * (bar_width - filled)
                     print(f"\r  [{bar}] {cards_rendered}/{total_cards} ({progress_pct:.0f}%)", end='', flush=True)
                 
-                self._draw_cards_page(c, page_pokemon)
+                self._draw_cards_page(c, page_pokemon, section_prefix, section_suffix)
                 c.showPage()
     
-    def _draw_simple_separator(self, c, title: str, color: str, iconic_pokemon_ids: list = None, pattern: str = None, section_id: str = None):
+    def _draw_section_cover(self, c, section_title_str: str, section_subtitle_str: str, color: str, 
+                           section_title_dict: dict = None, section_subtitle_dict: dict = None, 
+                           iconic_pokemon_ids: list = None, section_pokemon: list = None):
         """
-        Draw a separator page using VariantCoverRenderer.
-        Uses render_variant_cover() with section_title parameter for consistency.
+        Draw a cover page for a section.
         
         Args:
             c: Canvas object
-            title: Section title (e.g., "Pokémon-EX Mega") - displayed as subtitle
+            section_title_str: Section title string (localized)
+            section_subtitle_str: Section subtitle string (localized)
             color: Hex color for the stripe
-            iconic_pokemon_ids: Optional list of Pokémon IDs to display as featured Pokémon
-            pattern: Optional pattern type for the background
-            section_id: Optional section identifier for special logos (e.g., 'mega', 'primal')
+            section_title_dict: Full multilingual title dict for override
+            section_subtitle_dict: Full multilingual subtitle dict for override
+            iconic_pokemon_ids: List of Pokémon IDs to display as featured Pokémon
+            section_pokemon: The pokemon in this section (for featured pokemon lookup)
         """
-        # Create separator data by adding featured Pokémon to variant data
-        separator_data = dict(self.variant_data)
-        separator_data['iconic_pokemon_ids'] = iconic_pokemon_ids or []
+        # Create cover data with section-specific title and subtitle
+        cover_data = dict(self.variant_data)
+        cover_data['iconic_pokemon_ids'] = iconic_pokemon_ids or []
         
-        # Use VariantCoverRenderer.render_variant_cover() with section_title parameter
-        # This ensures identical spacing and styling to the main cover page
-        self.variant_cover_renderer.render_variant_cover(
-            c,
-            separator_data,
-            self.pokemon_list,
-            color,
-            section_title=title  # Mark this as a separator with the section name
-        )
-    
-    def _draw_cover_page(self, c):
-        """Draw the cover page using VariantCoverRenderer."""
-        variant_type = self.variant_data.get('variant_type', 'unknown')
-        color = VARIANT_COLORS.get(variant_type, '#FFD700')
+        # Override title with section-specific title dict
+        if section_title_dict:
+            cover_data['title'] = section_title_dict
         
-        self.variant_cover_renderer.render_variant_cover(
-            c,
-            self.variant_data,
-            self.pokemon_list,
-            color
-        )
+        # Override subtitle with section-specific subtitle dict
+        if section_subtitle_dict:
+            cover_data['subtitle'] = section_subtitle_dict
+        
+        # Use unified renderer for section cover pages
+        # Pass section_pokemon to allow rendering featured pokemon correctly
+        if section_pokemon:
+            self.variant_cover_renderer.render_cover(
+                c,
+                section_pokemon,
+                cover_data=cover_data,
+                color=color
+            )
+        else:
+            self.variant_cover_renderer.render_cover(
+                c,
+                self.pokemon_list,
+                cover_data=cover_data,
+                color=color
+            )
     
-    
-    def _draw_cards_page(self, c, pokemon_list):
+    def _draw_cards_page(self, c, pokemon_list, section_prefix: str = '', section_suffix: str = ''):
         """Draw a page with cards (3x3 grid) with cutting guides and footer."""
         # Create page using unified PageRenderer
         self.page_renderer.create_page(c)
         
-        # Draw cards using unified CardRenderer
+        # Draw cards using unified CardRenderer with section prefix/suffix
         for idx, pokemon in enumerate(pokemon_list):
-            self.page_renderer.add_card_to_page(c, self.card_renderer, pokemon, idx, variant_mode=True)
+            self.page_renderer.add_card_to_page(
+                c, self.card_renderer, pokemon, idx, 
+                variant_mode=True,
+                section_prefix=section_prefix,
+                section_suffix=section_suffix
+            )
         
         # Add footer
         self.page_renderer.add_footer(c)

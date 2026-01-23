@@ -1,298 +1,277 @@
-# Variants Documentation - Quick Start
+# Variants Quick Start - Adding New Variants
 
-**Updated:** January 19, 2026
-
----
-
-## 🎯 Start Here
-
-### What's This About?
-The **Variants feature** lets you generate separate PDF binder collections for Pokémon variants.
-
-**Currently Implemented:**
-- ✅ Mega Evolution (76 Pokémon with 79 forms)
+**Last Updated:** January 23, 2026
 
 ---
 
-## 📚 5 Documents, Choose Your Path
+## Prerequisites
 
+- Python 3.10+
+- Basic knowledge of JSON
+- Understanding of Pokémon variant types
+
+---
+
+## Step-by-Step Guide
+
+### 1. Research Your Variant
+
+**Identify:**
+- All Pokémon in the variant category
+- Special naming patterns (prefix/suffix)
+- Section groupings (if multiple)
+- Image sources (PokeAPI form IDs or URLs)
+
+**Example: Mega Evolution**
+- 79 Pokémon total
+- Prefix: "Mega"
+- Suffix: "ex"
+- Special: X/Y forms for Charizard, Mewtwo
+- Images: PokeAPI form IDs 10000+
+
+---
+
+### 2. Create Variant JSON File
+
+**File:** `/data/variants/variants_{type}.json`
+
+**Template:**
+```json
+{
+  "type": "variant",
+  "name": "Your Variant Name",
+  "sections": {
+    "normal": {
+      "section_id": "normal",
+      "color_hex": "#HEX_COLOR",
+      "prefix": "Prefix Text",
+      "suffix": "Suffix Text",
+      "title": {
+        "de": "German Title",
+        "en": "English Title",
+        "fr": "French Title",
+        "es": "Spanish Title",
+        "it": "Italian Title",
+        "ja": "Japanese Title",
+        "ko": "Korean Title",
+        "zh_hans": "Chinese Simplified Title",
+        "zh_hant": "Chinese Traditional Title"
+      },
+      "subtitle": {
+        "de": "German Subtitle",
+        "en": "English Subtitle",
+        // ... all 9 languages
+      },
+      "iconic_pokemon": [1, 25, 150],
+      "pokemon": []
+    }
+  }
+}
 ```
-START
-  ↓
-┌─────────────────────────────────────────────────────┐
-│                                                     │
-│  I want to:          READ THIS FIRST:             │
-│                                                     │
-│  📊 Understand       → VARIANTS_README.md          │
-│     the feature        (this guides you)            │
-│                                                     │
-│  🖨️  Generate PDF    → VARIANTS_FEATURE_SUMMARY   │
-│                        (usage & commands)           │
-│                                                     │
-│  🛠️  Understand      → VARIANTS_ARCHITECTURE      │
-│     architecture       (technical design)           │
-│                                                     │
-│  ➕ Add new          → VARIANTS_IMPLEMENTATION    │
-│     variants          (step-by-step)              │
-│                                                     │
-│  🔍 See details      → VARIANTS_TECHNICAL_SPEC    │
-│                        (implementation details)    │
-│                                                     │
-└─────────────────────────────────────────────────────┘
+
+---
+
+### 3. Add Pokémon Entries
+
+**Pokémon Template:**
+```json
+{
+  "id": 25,
+  "name": {
+    "de": "Pikachu",
+    "en": "Pikachu",
+    "fr": "Pikachu",
+    "es": "Pikachu",
+    "it": "Pikachu",
+    "ja": "ピカチュウ",
+    "ko": "피카츄",
+    "zh_hans": "皮卡丘",
+    "zh_hant": "皮卡丘"
+  },
+  "types": ["Electric"],
+  "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png"
+}
+```
+
+**Optional Fields:**
+```json
+{
+  "id": 6,
+  "variant_form": "x",           // For special forms: "delta", "x", "y"
+  "prefix": "Special Prefix",    // Override section prefix
+  "suffix": "Special Suffix",    // Override section suffix
+  "name": { ... }
+}
 ```
 
 ---
 
-## 🚀 Quick Commands
+### 4. Update Metadata
 
-Generate Mega Evolution PDFs:
+**File:** `/data/variants/meta.json`
 
+Add entry to `variant_categories` array:
+```json
+{
+  "id": "your_variant_type",
+  "order": 5,
+  "json_file": "variants_your_variant_type.json",
+  "pokemon_count": 50,
+  "description": {
+    "de": "German description",
+    "en": "English description",
+    // ... all 9 languages
+  }
+}
+```
+
+---
+
+### 5. Cache Images (Optional)
+
+**Cache Pokémon images locally:**
 ```bash
-# German only
-python scripts/generate_pdf.py --type variant --variant mega --language de
-
-# All 9 languages
-python scripts/generate_pdf.py --type variant --variant mega --language all
-
-# High quality
-python scripts/generate_pdf.py --type variant --variant mega --language de --high-res
-
-# Parallel (faster for all languages)
-python scripts/generate_pdf.py --type variant --variant mega --language all --parallel
+python scripts/cache_pokemon_images.py --type variant --variant your_variant_type
 ```
 
-PDFs stored in: `output/{language}/variants/variant_mega_*.pdf`
+**Benefits:**
+- Faster PDF generation
+- Works offline
+- Consistent quality
 
 ---
 
-## 📋 Document Map
+### 6. Generate PDFs
 
-| Document | Size | Purpose | Level |
-|----------|------|---------|-------|
-| **VARIANTS_README.md** | 9 KB | This document - navigation guide | Beginner |
-| **VARIANTS_FEATURE_SUMMARY.md** | 13 KB | What the feature does | Beginner |
-| **VARIANTS_ARCHITECTURE.md** | 16 KB | How it's built | Intermediate |
-| **VARIANTS_IMPLEMENTATION_GUIDE.md** | 17 KB | How to add new variants | Advanced |
-| **VARIANTS_TECHNICAL_SPEC.md** | 12 KB | Implementation details | Advanced |
-
-**Total:** ~67 KB of focused documentation
-
----
-
-## 🎓 By Role
-
-### 👔 Manager / Product Owner
-**Goal:** Understand what's delivered
-
-**Read:**
-1. [VARIANTS_FEATURE_SUMMARY.md](VARIANTS_FEATURE_SUMMARY.md) - Overview section
-2. [VARIANTS_ARCHITECTURE.md](VARIANTS_ARCHITECTURE.md) - Architecture section
-3. Done! ✓
-
-**Time:** ~10 minutes
-
----
-
-### 🖨️ User / Collector
-**Goal:** Generate PDFs for my collection
-
-**Read:**
-1. [VARIANTS_FEATURE_SUMMARY.md](VARIANTS_FEATURE_SUMMARY.md) - PDF Generation section
-2. Run the commands
-
-**Time:** ~5 minutes
-
----
-
-### 👨‍💻 Developer (Maintenance)
-**Goal:** Maintain and understand the code
-
-**Read:**
-1. [VARIANTS_ARCHITECTURE.md](VARIANTS_ARCHITECTURE.md) - Complete
-2. [VARIANTS_TECHNICAL_SPEC.md](VARIANTS_TECHNICAL_SPEC.md) - Complete
-3. Browse: `/scripts/lib/variant_pdf_generator.py`
-
-**Time:** ~30 minutes
-
----
-
-### 🚀 Developer (Adding Features)
-**Goal:** Implement new variant categories
-
-**Read:**
-1. [VARIANTS_IMPLEMENTATION_GUIDE.md](VARIANTS_IMPLEMENTATION_GUIDE.md) - Complete (essential!)
-2. [VARIANTS_ARCHITECTURE.md](VARIANTS_ARCHITECTURE.md) - Architecture section
-3. Reference: [VARIANTS_TECHNICAL_SPEC.md](VARIANTS_TECHNICAL_SPEC.md)
-
-**Time:** ~45 minutes to understand, ~2-4 hours to implement one variant
-
----
-
-### 🧪 QA / Tester
-**Goal:** Test new variants
-
-**Read:**
-1. [VARIANTS_IMPLEMENTATION_GUIDE.md](VARIANTS_IMPLEMENTATION_GUIDE.md) - Step 5 (Testing)
-2. [VARIANTS_TECHNICAL_SPEC.md](VARIANTS_TECHNICAL_SPEC.md) - Section 12 (Testing Checklist)
-
-**Time:** ~15 minutes
-
----
-
-## 🔑 Key Concepts
-
-### What's a Variant?
-A Pokémon form that can appear as a separate collection. Currently implemented:
-- Mega Venusaur
-- Mega Charizard (X & Y forms)
-- Mega Mewtwo (X & Y forms)
-- And 73 more Mega Evolution forms
-
-### Variant Architecture
-The variants feature is designed as an extensible system. New variant categories can be added following the same structure as Mega Evolution.
-
-### How It Works
-
-```
-Data (JSON)
-    ↓ Has: Pokémon names in 9 languages, image URLs, types
-    ↓
-Generator Script
-    ↓ Reads JSON, loads images, renders cards
-    ↓
-ReportLab
-    ↓ Creates PDF with proper layout
-    ↓
-Output PDF
-    ↓ Professional, print-ready binder collection
+**Test single language:**
+```bash
+python scripts/generate_pdf.py --type variant --variant your_variant_type --language en
 ```
 
-### Naming System
-Each Pokémon variant has a unique ID:
-
-```
-Format: #{number}_{TYPE}[_{FORM}]
-
-Examples:
-#003_MEGA               → Mega Venusaur
-#006_MEGA_X             → Mega Charizard X
-#006_MEGA_Y             → Mega Charizard Y
-#201_UNOWN_?            → Unown (Question Mark)
+**Generate all languages:**
+```bash
+python scripts/generate_pdf.py --type variant --variant your_variant_type --language all
 ```
 
----
-
-## 📊 Current Status
-
-**Mega Evolution:** ✅ Complete
-- 76 Pokémon
-- 79 forms (X/Y variants)
-- 9 languages
-- PDF generation working
-- Professional quality
-- Released in v2.2
+**Output:** `output/{language}/Your_Variant_Name_{LANG}.pdf`
 
 ---
 
-## 📁 Where Things Are
+## Special Cases
 
-```
-Project Structure:
-├── /docs/
-│   ├── VARIANTS_README.md              ← You are here
-│   ├── VARIANTS_FEATURE_SUMMARY.md     ← Feature overview
-│   ├── VARIANTS_ARCHITECTURE.md        ← Technical design
-│   ├── VARIANTS_IMPLEMENTATION_GUIDE.md ← How to extend
-│   └── VARIANTS_TECHNICAL_SPEC.md      ← Implementation details
-│
-├── /data/variants/
-│   ├── meta.json                       ← Metadata for all variants
-│   ├── variants_mega.json              ← Mega Evolution data
-│   ├── README.md                       ← Data format docs
-│   └── IMAGES.md                       ← Image sourcing
-│
-├── /scripts/lib/
-│   ├── variant_pdf_generator.py        ← Main engine
-│   ├── card_template.py                ← Card rendering
-│   ├── cover_template.py               ← Cover page
-│   └── fonts.py                        ← Text rendering
-│
-└── /output/{language}/variants/
-    └── variant_mega_*.pdf              ← Generated PDFs
+### Multiple Sections
+
+**Example: EX Generation 1** has 3 sections:
+```json
+{
+  "sections": {
+    "normal": { "prefix": "", "suffix": "ex", ... },
+    "rockets": { "prefix": "Rocket's", "suffix": "ex", ... },
+    "special": { "prefix": "", "suffix": "ex", ... }
+  }
+}
 ```
 
----
-
-## 🎯 Common Tasks
-
-### "How do I generate Mega PDFs?"
-→ [VARIANTS_FEATURE_SUMMARY.md](VARIANTS_FEATURE_SUMMARY.md) § PDF Generation
-
-### "How do I add Gigantamax?"
-→ [VARIANTS_IMPLEMENTATION_GUIDE.md](VARIANTS_IMPLEMENTATION_GUIDE.md) § Step 1-7
-
-### "How many Pokémon are in Mega Evolution?"
-→ 76 Pokémon with 79 forms
-
-### "What languages are supported?"
-→ 9 languages: DE, EN, FR, ES, IT, JA, KO, ZH-HANS, ZH-HANT
-
-### "Where's the code?"
-→ `/scripts/lib/variant_pdf_generator.py`
-
-### "How's the data organized?"
-→ [VARIANTS_TECHNICAL_SPEC.md](VARIANTS_TECHNICAL_SPEC.md) § Data Model
-
-### "What if an image is missing?"
-→ [VARIANTS_ARCHITECTURE.md](VARIANTS_ARCHITECTURE.md) § Image Sourcing (3-tier strategy)
+**Each section gets its own cover page.**
 
 ---
 
-## 🏃 Quick Start (5 Minutes)
+### Delta Species
 
-1. **Generate a test PDF:**
-   ```bash
-   python scripts/generate_pdf.py --type variant --variant mega --language de
-   ```
-
-2. **Check the output:**
-   ```bash
-   open output/de/variants/variant_mega_de.pdf
-   ```
-
-3. **Review the data:**
-   ```bash
-   cat data/variants/variants_mega.json | head -50
-   ```
-
-4. **Learn more:**
-   → Read [VARIANTS_FEATURE_SUMMARY.md](VARIANTS_FEATURE_SUMMARY.md)
+**Use `variant_form: "delta"` for Δ symbol:**
+```json
+{
+  "id": 149,
+  "variant_form": "delta",
+  "name": {"en": "Dragonite"}
+}
+```
+**Output:** "Dragonite ex δ"
 
 ---
 
-## ✅ Next Steps
+### Mega X/Y Forms
 
-- **For Users:** Jump to [VARIANTS_FEATURE_SUMMARY.md](VARIANTS_FEATURE_SUMMARY.md)
-- **For Developers:** Start with [VARIANTS_ARCHITECTURE.md](VARIANTS_ARCHITECTURE.md)
-- **For Extending:** Go to [VARIANTS_IMPLEMENTATION_GUIDE.md](VARIANTS_IMPLEMENTATION_GUIDE.md)
-
----
-
-## 📞 Questions?
-
-**Q: Where's the Gigantamax documentation?**
-A: Not yet implemented. See [VARIANTS_IMPLEMENTATION_GUIDE.md](VARIANTS_IMPLEMENTATION_GUIDE.md) to build it!
-
-**Q: Can I use this for other Pokémon variants?**
-A: Yes! Follow [VARIANTS_IMPLEMENTATION_GUIDE.md](VARIANTS_IMPLEMENTATION_GUIDE.md)
-
-**Q: How do I contribute?**
-A: See docs/CONTRIBUTING.md and then follow the implementation guide
-
-**Q: Is the feature complete?**
-A: Mega Evolution is complete. The architecture supports additional variant categories.
+**Use `variant_form: "x"` or `"y"`:**
+```json
+{
+  "id": 6,
+  "variant_form": "x",
+  "name": {"en": "Charizard"}
+}
+```
+**Output (with section prefix "Mega", suffix "ex"):** "Mega Charizard X ex"
 
 ---
 
-**Ready?** → Start with [VARIANTS_FEATURE_SUMMARY.md](VARIANTS_FEATURE_SUMMARY.md) 🚀
+### Pokémon-Specific Overrides
 
+**Example: Special trainers:**
+```json
+{
+  "id": 295,
+  "prefix": "Imakuni?'s",
+  "name": {"en": "Exploud"}
+}
+```
+**Output (with section suffix "ex"):** "Imakuni?'s Exploud ex"
+
+---
+
+## Name Rendering Rules
+
+**Construction Order:**
+1. Use pokémon-level `prefix` OR section `prefix`
+2. Add base `name`
+3. Add `variant_form` ("X", "Y" after name; "δ" in suffix)
+4. Use pokémon-level `suffix` OR section `suffix`
+
+**Formula:** `{prefix} {name} {form} {suffix}`
+
+**Examples:**
+| Section | Pokémon | Result |
+|---------|---------|--------|
+| prefix="Mega", suffix="ex" | name="Charizard", variant_form="x" | "Mega Charizard X ex" |
+| prefix="", suffix="ex" | name="Dragonite", variant_form="delta" | "Dragonite ex δ" |
+| prefix="Rocket's", suffix="ex" | name="Meowth" | "Rocket's Meowth ex" |
+| prefix="", suffix="ex" | name="Exploud", prefix="Imakuni?'s" | "Imakuni?'s Exploud ex" |
+
+---
+
+## Testing Checklist
+
+- [ ] JSON validates (no syntax errors)
+- [ ] All 9 languages have translations
+- [ ] Image URLs accessible
+- [ ] PDF generates without errors
+- [ ] Names render correctly (check prefix/suffix)
+- [ ] Special forms work (delta, X/Y)
+- [ ] Cover page displays iconic_pokemon
+- [ ] Multiple sections create separate covers
+
+---
+
+## Troubleshooting
+
+**PDF generation fails:**
+- Check JSON syntax: `python -m json.tool data/variants/variants_your_variant.json`
+- Verify all required fields present
+- Check image URLs are accessible
+
+**Names render incorrectly:**
+- Verify section prefix/suffix
+- Check pokémon-level overrides
+- Review variant_form values ("delta", "x", "y" only)
+
+**Missing translations:**
+- All title/subtitle must have 9 languages
+- All pokémon names must have 9 languages
+- Check language codes: de, en, fr, es, it, ja, ko, zh_hans, zh_hant
+
+---
+
+## Reference
+
+**Full Documentation:** [VARIANTS_ARCHITECTURE.md](VARIANTS_ARCHITECTURE.md)  
+**Feature Summary:** [VARIANTS_FEATURE_SUMMARY.md](VARIANTS_FEATURE_SUMMARY.md)  
+**Existing Examples:** `/data/variants/variants_*.json`

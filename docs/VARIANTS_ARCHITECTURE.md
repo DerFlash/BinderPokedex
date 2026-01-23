@@ -1,23 +1,280 @@
-# Pokémon Variants - Architecture & Implementation Guide
+# Pokémon Variants - Architecture & Data Structure
 
-**Current Status:** Mega Evolution (Phase 1) ✅  
-**Last Updated:** January 19, 2026  
-**Purpose:** Document the implementation and architecture for maintaining and extending variants
+**Current Status:** Mega Evolution + EX Generations 1-3 ✅  
+**Last Updated:** January 23, 2026  
+**Purpose:** Complete architecture and data structure specification for Pokémon variant collections
+
+---
+
+## Table of Contents
+
+1. [Overview](#overview)
+2. [Design Principles](#design-principles)
+3. [Data Structure Specification](#data-structure-specification)
+4. [Architecture & Data Flow](#architecture--data-flow)
+5. [Rendering Logic](#rendering-logic)
+6. [Multilingual Support](#multilingual-support)
+7. [Adding New Variants](#adding-new-variants)
 
 ---
 
 ## Overview
 
-The Variants feature enables generation of separate collection binders for Pokémon variants, analogous to generation-based binders. The architecture is designed to support multiple variant categories through a unified framework.
+The Variants feature enables generation of separate collection binders for Pokémon variants. The system uses a unified, data-driven architecture that works identically for both Pokédex (Generations) and Variants (EX, Mega, etc.).
 
 **Currently Implemented:**
-- **Mega Evolution:** 76 Pokémon with 79 unique forms
+- **Mega Evolution:** 79 Pokémon with X/Y forms
+- **EX Generation 1:** 119 Pokémon including Delta Species
+- **EX Generation 2:** 166 Pokémon with Mega/Primal forms
+- **EX Generation 3:** 40 Pokémon with Tera forms
 - Full 9-language support
 - Professional PDF generation with cutting guides
 
 ---
 
-## Architecture
+## Design Principles
+
+1. **Top-Level nur Metadaten** - keine Deckblatt-Informationen
+2. **Jede Section selbstbeschreibend** - title, subtitle, color_hex, prefix, suffix, iconic_pokemon
+3. **Daten-gesteuert** - keine Code-Sonderlocken oder Typ-Checks
+4. **Vollständig mehrsprachig** - alle Texte in allen 9 Sprachen
+5. **Einheitliche Struktur** - Pokédex und Variants verwenden identisches Schema
+
+---
+
+## Data Structure Specification
+
+### Top-Level Structure
+
+```json
+{
+  "type": "generation|variant",        // Typ der Collection
+  "name": "string",                    // Allgemeiner Name (PDF-Metadaten)
+  "sections": { ... }                  // Alle Section-Daten
+}
+```
+
+**NICHT auf Top-Level:**
+- title, subtitle, iconic_pokemon
+- color_hex, prefix, suffix (→ in Sections)
+
+### Section Structure
+
+**Jede Section ist völlig selbstständig und identisch aufgebaut:**
+
+```json
+"section_id": {
+  "section_id": "string",              // "normal", "rockets", "mega", "primal", etc.
+  "color_hex": "string",               // Header-Farbe (z.B. "#FFD700")
+  "prefix": "string",                  // Name-Präfix für ALLE Pokémon (z.B. "Mega", "Rocket's")
+  "suffix": "string",                  // Name-Suffix für ALLE Pokémon (z.B. "ex", "[EX]")
+  
+  "title": {
+    "de": "string",                    // Kann Logo-Tags enthalten: [EX], [M], etc.
+    "en": "string",
+    "fr": "string",
+    "es": "string",
+    "it": "string",
+    "ja": "string",
+    "ko": "string",
+    "zh_hans": "string",
+    "zh_hant": "string"
+  },
+  
+  "subtitle": {
+    "de": "string",                    // Kann Logo-Tags enthalten
+    "en": "string",
+    // ... alle Sprachen
+  },
+  
+  "iconic_pokemon": [1, 6, 9],         // Poster-Pokémon für Deckblatt (IDs)
+  "pokemon": [ ... ]                   // Array mit Pokémon-Daten
+}
+```
+
+### Pokémon Entry Structure
+
+**Basis-Struktur (alle erforderlich):**
+
+```json
+{
+  "id": 25,                            // Pokédex-Nummer
+  "name": {
+    "de": "Pikachu",
+    "en": "Pikachu",
+    "fr": "Pikachu",
+    "es": "Pikachu",
+    "it": "Pikachu",
+    "ja": "ピカチュウ",
+    "ko": "피카츄",
+    "zh_hans": "皮卡丘",
+    "zh_hant": "皮卡丘"
+  },
+  "types": ["Electric"],
+  "image_url": "https://raw.githubusercontent.com/.../25.png"
+}
+```
+
+**Optional - Überschreiben von Section-Werten:**
+
+```json
+{
+  "id": 295,
+  "prefix": "Imakuni?'s",              // OPTIONAL: Überschreibt Section-prefix
+  "suffix": "",                        // OPTIONAL: Überschreibt Section-suffix
+  "variant_form": "delta",             // OPTIONAL: Spezialform ("delta", "x", "y")
+  "name": { ... }
+}
+```
+
+### variant_form Spezialfälle
+
+**Verwendung:**
+- Section-Prefix/Suffix gelten für **ALLE** Pokémon in der Section
+- Pokémon-Prefix/Suffix überschreiben Section-Werte **nur für spezifische Pokémon**
+- `variant_form` wird für Spezial-Rendering verwendet
+
+**Unterstützte Werte:**
+
+| Wert | Verwendung | Beispiel-Output |
+|------|------------|-----------------|
+| `"delta"` | Delta Species (Δ Symbol an suffix) | "Dragoran ex δ" |
+| `"x"` | Mega Evolution X Form | "Mega Glurak X ex" |
+| `"y"` | Mega Evolution Y Form | "Mega Glurak Y ex" |
+
+**Rendering-Reihenfolge:**
+1. Prefix wird vor den Namen gestellt (falls vorhanden)
+2. variant_form "x"/"y" wird nach dem Namen eingefügt (falls vorhanden)
+3. Suffix wird am Ende angehängt (falls vorhanden)
+4. variant_form "delta" fügt δ an den Suffix an (falls vorhanden)
+
+**Beispiele:**
+
+```json
+// Delta Species
+{
+  "id": 149,
+  "variant_form": "delta",
+  "name": {"de": "Dragoran"}
+}
+// Section: prefix="", suffix="ex"
+// → Output: "Dragoran ex δ"
+
+// Mega X/Y
+{
+  "id": 6,
+  "variant_form": "x",
+  "name": {"de": "Glurak"}
+}
+// Section: prefix="Mega", suffix="ex"
+// → Output: "Mega Glurak X ex"
+
+// Pokémon-Override
+{
+  "id": 295,
+  "prefix": "Imakuni?'s",
+  "name": {"de": "Krawumms"}
+}
+// Section: prefix="", suffix="ex"
+// → Output: "Imakuni?'s Krawumms ex"
+```
+
+### Complete Example: variants_mega.json
+
+```json
+{
+  "type": "variant",
+  "name": "Mega Evolution",
+  "sections": {
+    "normal": {
+      "section_id": "normal",
+      "color_hex": "#FFD700",
+      "prefix": "Mega",
+      "suffix": "ex",
+      "title": {
+        "de": "Mega Entwicklung",
+        "en": "Mega Evolution",
+        "fr": "Méga-Évolution",
+        // ... other languages
+      },
+      "subtitle": {
+        "de": "[MEGA]",
+        "en": "[MEGA]",
+        // ... other languages
+      },
+      "iconic_pokemon": [6, 150, 384],
+      "pokemon": [
+        {
+          "id": 3,
+          "name": {
+            "en": "Venusaur",
+            "de": "Bisaflor",
+            // ... other languages
+          },
+          "types": ["Grass", "Poison"],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10033.png",
+          "form_id": 10033,
+          "form_code": "#003_MEGA"
+        },
+        {
+          "id": 6,
+          "variant_form": "x",
+          "name": {
+            "en": "Charizard",
+            "de": "Glurak",
+            // ... other languages
+          },
+          "types": ["Fire", "Flying"],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10034.png",
+          "form_id": 10034,
+          "form_code": "#006_MEGA_X"
+        }
+      ]
+    }
+  }
+}
+```
+
+**Key Fields:**
+- **Top-Level:**
+  - `type`: Always "variant"
+  - `name`: Collection name (for PDF metadata)
+  - `sections`: Object with section definitions
+
+- **Section-Level:**
+  - `section_id`: Identifier (e.g., "normal", "mega", "rockets")
+  - `color_hex`: Header color
+  - `prefix`: Name prefix for all Pokémon (e.g., "Mega", "Rocket's")
+  - `suffix`: Name suffix for all Pokémon (e.g., "ex", "[EX]")
+  - `title`, `subtitle`: Multilingual cover page text
+  - `iconic_pokemon`: Pokémon IDs for cover page
+  - `pokemon`: Array of Pokémon entries
+
+- **Pokémon-Level:**
+  - `id`: Base Pokémon ID
+  - `name`: Multilingual name object
+  - `types`: Type array
+  - `image_url`: Official artwork URL
+  - `form_id`, `form_code`: Form identifiers
+  - `variant_form`: Optional ("delta", "x", "y") for special rendering
+  - `prefix`, `suffix`: Optional overrides for section values
+
+### Pokédex vs. Variants Unterschiede
+
+| Aspekt | Pokédex (Generationen) | Variants (EX, Mega, etc.) |
+|--------|------------------------|---------------------------|
+| **type** | `"generation"` | `"variant"` |
+| **sections** | Nur `"normal"` Section | Mehrere möglich: normal, rockets, mega, etc. |
+| **prefix** | Leer | "Mega", "Rocket's", etc. |
+| **suffix** | Leer oder "Gen N" | Logo-Tags: "ex", "[EX]", "[M]", etc. |
+| **title** | Generation + Region | Serienname (z.B. "Klassische ex Serie") |
+| **subtitle** | Pokédex Range (#001 – #151) | Serienuntertitel mit ggf. Logo-Tag |
+
+**Wichtig:** Beide Typen verwenden die identische Section-Struktur. Der Renderer benötigt keine Typ-Checks.
+
+---
+
+## Architecture & Data Flow
 
 ### High-Level Data Flow
 
@@ -25,109 +282,126 @@ The Variants feature enables generation of separate collection binders for Poké
 Data Layer (JSON)
     ↓
     Variant JSON Files (/data/variants/)
-    ├── meta.json
-    └── variants_mega.json
+    ├── meta.json              → Metadata über alle Kategorien
+    ├── variants_mega.json     → 79 Pokémon (Mega Evolution)
+    ├── variants_ex_gen1.json  → 119 Pokémon (EX Gen1 + Delta Species)
+    ├── variants_ex_gen2.json  → 166 Pokémon (EX Gen2)
+    └── variants_ex_gen3.json  → 40 Pokémon (EX Gen3)
     
 Processing Layer
     ↓
-    generate_pdf.py --type variant --variant mega --language de
-    ├── VariantPDFGenerator
-    ├── CardTemplate
-    └── CoverTemplate
+    generate_pdf.py --type variant [--variant mega_evolution] [--language de]
+    ├── VariantPDFGenerator    → Liest sections, generiert cover + cards
+    ├── CardRenderer           → Konstruiert Namen: prefix + name + variant_form + suffix
+    ├── CoverTemplate          → Rendert Deckblätter mit title/subtitle/iconic_pokemon
+    └── LogoRenderer           → Konvertiert [EX], [M] Tags in Bilder
     
 Output Layer
     ↓
-    PDF Files (/output/{language}/variants/)
-    ├── variant_mega_de.pdf
-    ├── variant_mega_en.pdf
+    PDF Files (/output/{language}/)
+    ├── Mega_Evolution_DE.pdf
+    ├── Pokemon_EX_Generation_1_DE.pdf
     └── ...
 ```
 
 ### Core Components
 
-#### 1. Data Files Structure
+**Data Files:** `/data/variants/`
+- `meta.json`: Übersicht über alle Variant-Kategorien
+- `variants_*.json`: Einzelne Variant-Sammlungen
 
-**Location:** `/data/variants/`
+**Processing:** `/scripts/lib/`
+- `variant_pdf_generator.py`: Section-basierter PDF-Generator
+- `rendering/card_renderer.py`: Daten-gesteuertes Name-Rendering mit variant_form Support
+- `cover_template.py`: Deckblatt-Generator mit Logo-Tag Support
 
+**Output:** `/output/{language}/`
+- Separates PDF pro Variant-Kategorie und Sprache
+
+---
+
+## Rendering Logic
+
+### Section Processing (Data-Driven)
+
+```python
+for section in sections.values():  # JSON-Reihenfolge garantiert (JSON 7.3+)
+    # 1. Deckblatt aus Section-Metadaten rendern
+    render_cover(
+        title=section['title'][language],
+        subtitle=section['subtitle'][language],
+        color=section['color_hex'],
+        iconic_pokemon=section['iconic_pokemon']
+    )
+    
+    # 2. Kartenseiten aus Pokémon-Array rendern
+    for page in paginate(section['pokemon']):
+        for pokemon in page:
+            name = construct_variant_name(
+                pokemon, 
+                section['prefix'], 
+                section['suffix']
+            )
+            render_card(pokemon, name)
 ```
-variants/
-├── meta.json
-│   └── Metadata about all variant categories
-│       - Variant counts and statistics
-│       - Status information
-│       - File references
-│
-├── variants_mega.json
-│   └── Complete data for Mega Evolution variant
-│       - 76 Pokémon species
-│       - 79 unique forms (X/Y/Z variants)
-│       - Full multilingual support (9 languages)
-│       - Image URLs from PokeAPI
-│
-├── README.md
-│   └── Overview of variant data structure
-│
-└── IMAGES.md
-    └── Documentation on image sourcing strategies
+
+### Name Construction (Fully Data-Driven)
+
+```python
+def construct_variant_name(pokemon, section_prefix, section_suffix):
+    # 1. Get base name
+    name = pokemon['name'][language]
+    
+    # 2. Override-Logik: Pokémon > Section
+    prefix = pokemon.get('prefix', section_prefix)
+    suffix = pokemon.get('suffix', section_suffix)
+    
+    # 3. Add prefix
+    if prefix:
+        name = f"{prefix} {name}"
+    
+    # 4. Handle variant_form
+    variant_form = pokemon.get('variant_form')
+    if variant_form == 'delta':
+        # Delta Species: δ an suffix anhängen
+        suffix = f"{suffix} δ"
+    elif variant_form in ['x', 'y']:
+        # Mega X/Y: Form nach Name einfügen
+        name = f"{name} {variant_form.upper()}"
+    
+    # 5. Add suffix
+    if suffix:
+        name = f"{name} {suffix}"
+    
+    return name
 ```
 
-#### 2. Data Schema for Variant JSON Files
+**Beispiele:**
+- Input: `{"name": {"de": "Glurak"}, "variant_form": "x"}`, Section: `prefix="Mega", suffix="ex"`
+  - Output: **"Mega Glurak X ex"**
+- Input: `{"name": {"de": "Dragoran"}, "variant_form": "delta"}`, Section: `prefix="", suffix="ex"`
+  - Output: **"Dragoran ex δ"**
+- Input: `{"name": {"de": "Krawumms"}, "prefix": "Imakuni?'s"}`, Section: `prefix="", suffix="ex"`
+  - Output: **"Imakuni?'s Krawumms ex"**
 
-**File Structure:** `variants_{type}.json`
+### Logo-Tag Support
 
+**Logo-Tags werden automatisch in Bilder konvertiert:**
+
+- **In prefix/suffix:** `[EX]`, `[M]`, `[EX_NEW]`, `[EX_TERA]` auf Karten
+- **In title/subtitle:** Logo-Tags auf Deckblättern und Separator-Pages
+
+**Beispiel:**
 ```json
-{
-  "variant_type": "mega_evolution",
-  "variant_name": "Mega Evolution",
-  "variant_name_de": "Mega-Entwicklung",
-  "variant_name_fr": "Méga-Évolution",
-  // ... other languages
-  "short_code": "MEGA",
-  "icon": "⚡",
-  "color_hex": "#FFD700",
-  "pokemon_count": 76,
-  "forms_count": 79,
-  "pokemon": [
-    {
-      "id": "#003_MEGA",
-      "mega_form_id": 10033,
-      "name_en": "Venusaur",
-      "name_de": "Bisaflor",
-      // ... other languages
-      "variant_prefix": "Mega",
-      "variant_form": "",
-      "types": ["Grass", "Poison"],
-      "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10033.png"
-    },
-    {
-      "id": "#006_MEGA_X",
-      "mega_form_id": 10034,
-      "name_en": "Charizard",
-      "name_de": "Glurak",
-      // ... other languages
-      "variant_prefix": "Mega",
-      "variant_form": "x",
-      "types": ["Fire", "Flying"],
-      "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10034.png"
-    }
-  ]
-}
+"subtitle": {"de": "[EX_NEW] Serie (ab Karmesin & Purpur"}
 ```
+→ Wird gerendert als: `[echtes EXLogoNew-Bild] Serie (ab Karmesin & Purpur)`
 
-**Key Fields:**
-- `id`: Unique identifier format: `#{pokedex_number}_{VARIANT_TYPE}[_{FORM_SUFFIX}]`
-- `mega_form_id`: PokeAPI form ID (for image URLs)
-- Names in 9 languages: `name_en`, `name_de`, `name_fr`, `name_es`, `name_it`, `name_ja`, `name_ko`, `name_zh_hans`, `name_zh_hant`
-- `variant_prefix`: Prefix for display (e.g., "Mega", "Alolan")
-- `variant_form`: Optional suffix for multi-form variants (x, y, water, fire)
-- `types`: Pokémon type array
-- `image_url`: Full URL to official artwork from PokeAPI
+**Keine Sonderlocken:** Der Renderer benötigt keine Typ-Checks oder Speziallogik. Alles ist datengesteuert.
 
-#### 3. Naming Schema
+---
 
-The ID system follows this pattern:
-
-```
+## Multilingual Support
 #{pokedex_number}_{VARIANT_TYPE}[_{FORM_SUFFIX}]
 
 Examples:
@@ -286,15 +560,25 @@ Three-tier approach:
 ## Multilingual Support
 
 **Languages:** 9 languages supported
-- German (de): `name_de`
-- English (en): `name_en`
-- French (fr): `name_fr`
-- Spanish (es): `name_es`
-- Italian (it): `name_it`
-- Japanese (ja): `name_ja`
-- Korean (ko): `name_ko`
-- Simplified Chinese (zh_hans): `name_zh_hans`
-- Traditional Chinese (zh_hant): `name_zh_hant`
+- German (de)
+- English (en)
+- French (fr)
+- Spanish (es)
+- Italian (it)
+- Japanese (ja)
+- Korean (ko)
+- Simplified Chinese (zh_hans)
+- Traditional Chinese (zh_hant)
+
+**Data Structure:** All names stored in nested objects:
+```json
+"name": {
+  "de": "Glurak",
+  "en": "Charizard",
+  "fr": "Dracaufeu",
+  // ... other languages
+}
+```
 
 **Font System:** `/scripts/lib/fonts.py`
 
@@ -316,9 +600,9 @@ Contains UI strings for variant categories, cover pages, etc.
 #### 1. Research & Data Collection
 
 1. Identify all Pokémon in the variant category
-2. Gather English, German, French, Spanish, Italian, Japanese, Korean, Simplified Chinese, Traditional Chinese names
+2. Gather all 9 language names
 3. Determine image sources (PokeAPI form IDs or alternative URLs)
-4. Define variant icon and color code
+4. Define section color, prefix, and suffix
 
 #### 2. Create Variant JSON File
 
@@ -327,42 +611,55 @@ Contains UI strings for variant categories, cover pages, etc.
 Template:
 ```json
 {
-  "variant_type": "your_variant_type",
-  "variant_name": "English Name",
-  "variant_name_de": "Deutscher Name",
-  "variant_name_fr": "Nom Français",
-  "variant_name_es": "Nombre Español",
-  "variant_name_it": "Nome Italiano",
-  "variant_name_ja": "日本語名",
-  "variant_name_ko": "한국어 이름",
-  "variant_name_zh_hans": "简体中文",
-  "variant_name_zh_hant": "繁體中文",
-  "short_code": "SHORTCODE",
-  "icon": "🔣",
-  "color_hex": "#XXXXXX",
-  "pokemon_count": N,
-  "forms_count": N,
-  "pokemon": [
-    {
-      "id": "#NNN_TYPE[_FORM]",
-      "pokedex_number": NNN,
-      "name_en": "English Name",
-      "name_de": "Deutscher Name",
-      "name_fr": "Nom Français",
-      "name_es": "Nombre Español",
-      "name_it": "Nome Italiano",
-      "name_ja": "日本語名",
-      "name_ko": "한국어 이름",
-      "name_zh_hans": "简体中文",
-      "name_zh_hant": "繁體中文",
-      "variant_prefix": "Variant Prefix",
-      "variant_form": "",
-      "types": ["Type1", "Type2"],
-      "image_url": "https://..."
+  "type": "variant",
+  "name": "Display Name",
+  "sections": {
+    "normal": {
+      "section_id": "normal",
+      "color_hex": "#HEX_COLOR",
+      "prefix": "Prefix Text",
+      "suffix": "ex",
+      "title": {
+        "de": "Deutscher Titel",
+        "en": "English Title",
+        // ... all 9 languages
+      },
+      "subtitle": {
+        "de": "Untertitel",
+        "en": "Subtitle",
+        // ... all 9 languages
+      },
+      "iconic_pokemon": [1, 25, 150],
+      "pokemon": []
     }
-  ]
+  }
 }
 ```
+
+**Pokemon Entry Template:**
+```json
+{
+  "id": 25,
+  "name": {
+    "de": "Pikachu",
+    "en": "Pikachu",
+    "fr": "Pikachu",
+    "es": "Pikachu",
+    "it": "Pikachu",
+    "ja": "ピカチュウ",
+    "ko": "피카츄",
+    "zh_hans": "皮卡丘",
+    "zh_hant": "皮卡丘"
+  },
+  "types": ["Electric"],
+  "image_url": "https://raw.githubusercontent.com/.../25.png"
+}
+```
+
+**Optional Fields:**
+- `variant_form`: "delta", "x", "y" for special rendering
+- `prefix`, `suffix`: Override section-level values
+- `form_id`, `form_code`: Form identifiers
 
 #### 3. Update Metadata File
 

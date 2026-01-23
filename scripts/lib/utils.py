@@ -127,3 +127,51 @@ class TranslationHelper:
             text = text.replace(f'{{{{{var_name}}}}}', str(var_value))
         
         return text
+
+
+class RendererInitializer:
+    """
+    Utility for initializing rendering components in PDF generators.
+    
+    Consolidates common renderer initialization patterns from PokedexGenerator 
+    and VariantPDFGenerator to reduce code duplication.
+    """
+    
+    @staticmethod
+    def initialize_renderers(language: str, image_cache=None, variant_data: dict = None):
+        """
+        Initialize standard rendering components for PDF generation.
+        
+        Centralizes the initialization of CardRenderer, PageRenderer, and 
+        CoverRenderer used by both Pokédex and Variant generators.
+        
+        Args:
+            language: Language code (de, en, fr, etc.)
+            image_cache: Optional image cache for loading Pokémon images
+            variant_data: Optional variant data dict for variant-specific initialization
+        
+        Returns:
+            Tuple of (card_renderer, page_renderer, cover_renderer)
+        """
+        from .rendering.card_renderer import CardRenderer
+        from .rendering.page_renderer import PageRenderer
+        from .rendering.cover_renderer import CoverRenderer
+        
+        # Initialize CardRenderer with optional variant parameters
+        if variant_data:
+            card_renderer = CardRenderer(
+                language=language,
+                image_cache=image_cache,
+                variant=variant_data.get('variant_type'),
+                variant_data=variant_data
+            )
+        else:
+            card_renderer = CardRenderer(language=language, image_cache=image_cache)
+        
+        # Initialize common renderers
+        page_renderer = PageRenderer()
+        cover_renderer = CoverRenderer(language=language, image_cache=image_cache)
+        
+        logger.info(f"Renderers initialized for language: {language}")
+        
+        return card_renderer, page_renderer, cover_renderer

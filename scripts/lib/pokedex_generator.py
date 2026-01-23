@@ -19,8 +19,8 @@ from .fonts import FontManager
 from .data_storage import DataStorage
 from .rendering.card_renderer import CardRenderer
 from .rendering.page_renderer import PageRenderer
-from .cover_template import CoverTemplate
-from .utils import TranslationHelper
+from .rendering.cover_renderer import CoverRenderer
+from .utils import TranslationHelper, RendererInitializer
 from .log_formatter import PDFStatus
 from .constants import (
     PAGE_WIDTH, PAGE_HEIGHT, PAGE_MARGIN, CARD_WIDTH, CARD_HEIGHT,
@@ -70,16 +70,9 @@ class PokedexGenerator:
         # Load translations (same as VariantPDFGenerator)
         self.translations = TranslationHelper.load_translations(language)
         
-        # Initialize rendering components (same as VariantPDFGenerator)
-        self.card_renderer = CardRenderer(language=language, image_cache=image_cache)
-        self.page_renderer = PageRenderer()
-        self.cover_template = CoverTemplate(language=language, image_cache=image_cache)
-        
-        # Register fonts if not already done
-        try:
-            FontManager.register_fonts()
-        except:
-            pass
+        # Initialize rendering components using shared utility
+        self.card_renderer, self.page_renderer, self.cover_renderer = \
+            RendererInitializer.initialize_renderers(language, image_cache)
     
     def generate(self) -> bool:
         """
@@ -88,6 +81,8 @@ class PokedexGenerator:
         Returns:
             True if successful, False otherwise
         """
+        import time
+        
         try:
             self.output_file.parent.mkdir(parents=True, exist_ok=True)
             
@@ -101,9 +96,11 @@ class PokedexGenerator:
             logger.info(f"Generating Pokédex with {total_pokemon} Pokémon across {len(self.generations)} generations")
             
             cards_rendered = 0
+            gen_start_time = None
             
             # Generate each generation section (like variant sections)
             for gen_num in sorted(self.generations.keys()):
+                gen_start_time = time.time()
                 gen_data = self.generations[gen_num]
                 gen_info = gen_data['info']
                 pokemon_list = gen_data['pokemon']
@@ -126,6 +123,12 @@ class PokedexGenerator:
                     self._draw_cards_page(c, page_pokemon)
                     c.showPage()
             
+                # Log per-generation timing
+                gen_elapsed = time.time() - gen_start_time
+                gen_pokemon_count = len(gen_data['pokemon'])
+                avg_time_per_pokemon = (gen_elapsed / gen_pokemon_count * 1000) if gen_pokemon_count else 0
+                print(f"  ⚡ Gen {gen_num}: {gen_elapsed:.2f}s ({gen_pokemon_count} Pokémon, {avg_time_per_pokemon:.1f}ms/Pokémon)")
+            
             c.save()
             
             # Update summary info
@@ -143,14 +146,15 @@ class PokedexGenerator:
     
     def _draw_generation_separator(self, c, gen_num, gen_info, pokemon_list, featured_pokemon=None):
         """
-        Draw generation separator page using CoverTemplate.draw_generation_cover.
+        Draw generation separator page using unified CoverRenderer.
         
-        This uses the existing generation cover template which shows:
+        Displays:
         - "Binder Pokédex" title
         - "Generation X" subtitle  
         - Region name
         - Pokédex ID range
-        - Pokémon count (from pokemon_list, not featured_pokemon)
+        - Pokémon count
+        - Iconic Pokémon images
         
         Args:
             c: ReportLab canvas
@@ -159,18 +163,9 @@ class PokedexGenerator:
             pokemon_list: Full list of Pokémon in this generation (for count display)
             featured_pokemon: Optional featured Pokémon to display (currently unused)
         """
-        color = GENERATION_COLORS.get(gen_num, '#666666')
-        
-        # Use the existing draw_generation_cover method from CoverTemplate
-        # Pass full pokemon_list so the count is correct
-        self.cover_template.draw_generation_cover(
-            c,
-            generation=gen_num,
-            pokemon_list=pokemon_list,  # Full list for correct count!
-            color=color,
-            generation_info=gen_info,
-            generation_colors=GENERATION_COLORS
-        )
+        # Use cover renderer in Pokédex mode (generation parameter)
+        renderer = CoverRenderer(language=self.language, image_cache=self.image_cache)
+        renderer.render_cover(c, pokemon_list, generation=gen_num)
     
     def _draw_cards_page(self, c, pokemon_list):
         """

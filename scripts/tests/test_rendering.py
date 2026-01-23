@@ -164,11 +164,6 @@ class TestVariantCoverStyle:
         assert VARIANT_COLORS.get('ex_gen1') == '#1F51BA'
         assert VARIANT_COLORS.get('mega_evolution') == '#FFD700'
     
-    def test_variant_cover_style_has_variant_colors(self):
-        """Verify VariantCoverStyle has VARIANT_COLORS reference."""
-        assert hasattr(VariantCoverStyle, 'VARIANT_COLORS')
-        assert VariantCoverStyle.VARIANT_COLORS == VARIANT_COLORS
-    
     def test_styling_constants(self):
         """Verify styling constants are properly defined."""
         assert VariantCoverStyle.PAGE_WIDTH == PAGE_WIDTH

@@ -67,6 +67,8 @@ class CoverTemplate:
     def draw_generation_cover(self, canvas_obj, generation: int, pokemon_list: list,
                              color: str, generation_info: dict, generation_colors: dict):
         """
+        ⚠️  DEPRECATED - Use scripts.lib.rendering.CoverRenderer instead
+        
         Draw a generation cover page.
         
         Args:
@@ -176,9 +178,9 @@ class CoverTemplate:
         """
         self._draw_cover_base(canvas_obj, color, pattern)
         
-        # Get variant type early for multiple uses
-        variant = variant_data.get('variant', '')
-        is_gen2_ex = variant == 'ex_gen2'
+        # Get first section early (needed for both title and subtitle)
+        sections = variant_data.get('sections', {})
+        first_section = next(iter(sections.values())) if sections else None
         
         # Header content
         canvas_obj.setFont("Helvetica-Bold", 42)
@@ -194,50 +196,31 @@ class CoverTemplate:
         # Subtitle - either section name (for separators) or variant subtitle (for main cover)
         if section_title:
             # Separator mode: use section title as subtitle
-            # Check if this section has a special logo (Mega, Primal, etc.)
-            if section_id and section_id in ['mega', 'primal', 'tera']:
-                # Use logo-enhanced subtitle for special sections: "<M> Pokémon <EX>"
-                self._draw_subtitle_with_logos(canvas_obj, PAGE_WIDTH / 2, PAGE_HEIGHT - 55 * mm, section_id, section_title, font_size=14)
-            else:
-                # Regular subtitle for other sections
-                try:
-                    subtitle_font_name = FontManager.get_font_name(self.language, bold=False)
-                    canvas_obj.setFont(subtitle_font_name, 14)
-                except:
-                    canvas_obj.setFont("Helvetica", 14)
-                
-                canvas_obj.setFillColor(HexColor("#FFFFFF"))
-                canvas_obj.drawCentredString(PAGE_WIDTH / 2, PAGE_HEIGHT - 55 * mm, section_title)
+            # Use unified _draw_subtitle_with_logos for all subtitle rendering
+            # (supports all tags: [M], [EX], [EX_NEW], [EX_TERA])
+            self._draw_subtitle_with_logos(canvas_obj, PAGE_WIDTH / 2, PAGE_HEIGHT - 55 * mm, None, section_title, font_size=14)
         else:
-            # Main cover mode: use variant subtitle (or skip if null)
-            subtitle_dict = variant_data.get('subtitle', {})
+            # Main cover mode: use section subtitle (or skip if null)
+            # All variant types store subtitle in section level, not at top level
+            # For first section (normal), use subtitle if available
+            subtitle_dict = first_section.get('subtitle', {}) if first_section else {}
             if subtitle_dict is not None:  # Only draw if subtitle is not None
                 if isinstance(subtitle_dict, dict):
                     subtitle_text = subtitle_dict.get(self.language, subtitle_dict.get('en', 'Variant Series'))
                 else:
                     subtitle_text = str(subtitle_dict) if subtitle_dict else 'Variant Series'
                 
-                # Check if this is Gen2 (ex_gen2) or Gen3 (ex_gen3) to render EX logo in subtitle
-                if (is_gen2_ex and subtitle_text.startswith('EX-')) or ('[EX_NEW]' in subtitle_text):
-                    # Draw with EX logo prefix: "<EX-Logo>-Serie (...)" or "<EX_NEW> Serie (...)"
-                    self._draw_subtitle_with_ex_logo(canvas_obj, PAGE_WIDTH / 2, PAGE_HEIGHT - 55 * mm, subtitle_text, font_size=14)
-                else:
-                    # Regular subtitle
-                    try:
-                        subtitle_font_name = FontManager.get_font_name(self.language, bold=False)
-                        canvas_obj.setFont(subtitle_font_name, 14)
-                    except:
-                        canvas_obj.setFont("Helvetica", 14)
-                    
-                    canvas_obj.setFillColor(HexColor("#FFFFFF"))
-                    canvas_obj.drawCentredString(PAGE_WIDTH / 2, PAGE_HEIGHT - 55 * mm, subtitle_text)
+                # Use unified _draw_subtitle_with_logos for all subtitle rendering
+                # (supports all tags: [M], [EX], [EX_NEW], [EX_TERA])
+                self._draw_subtitle_with_logos(canvas_obj, PAGE_WIDTH / 2, PAGE_HEIGHT - 55 * mm, None, subtitle_text, font_size=14)
         
-        # Title (e.g., "Pokemon ex · Gen 1") - where Region would be
-        title_dict = variant_data.get('title', {})
+        # Title (e.g., "Pokemon ex · Gen 1") - get from first section's title
+        # Unified structure: all collections store title in section.title
+        title_dict = first_section.get('title', {}) if first_section else {}
         if isinstance(title_dict, dict):
-            title_text = title_dict.get(self.language, title_dict.get('en', 'Pokémon EX'))
+            title_text = title_dict.get(self.language, title_dict.get('en', 'Pokémon'))
         else:
-            title_text = str(title_dict) if title_dict else 'Pokémon EX'
+            title_text = str(title_dict) if title_dict else 'Pokémon'
         
         try:
             title_font_name = FontManager.get_font_name(self.language, bold=True)
@@ -306,93 +289,7 @@ class CoverTemplate:
         # else: No pattern - just solid color (already drawn in _draw_cover_base)
     
     
-    def _draw_subtitle_with_ex_logo(self, canvas_obj, x_center, y, subtitle_text, font_size=14):
-        """
-        Draw subtitle with EX logo prefix for Gen2/Gen3 covers.
-        E.g., "EX-Serie (Next Destinies+)" becomes "[EX-LOGO]-Serie (Next Destinies+)"
-        E.g., "[EX_NEW] Serie (Karmesin & Purpur+)" becomes "[EX_NEW_LOGO] Serie (...)"
-        
-        Args:
-            canvas_obj: ReportLab canvas
-            x_center: X coordinate of text center
-            y: Y coordinate of text
-            subtitle_text: Subtitle text (must start with "EX-" or contain "[EX_NEW]")
-            font_size: Font size to use
-        """
-        import os
-        
-        # Check for EX_NEW token (Gen3)
-        if '[EX_NEW]' in subtitle_text:
-            ex_logo_file = os.path.join(
-                os.path.dirname(__file__),
-                "../../data/variants/EXLogoNew.png"
-            )
-            remaining_text = subtitle_text.replace('[EX_NEW] ', '')
-            use_new_logo = True
-        elif subtitle_text.startswith('EX-'):
-            ex_logo_file = os.path.join(
-                os.path.dirname(__file__),
-                "../../data/variants/EXLogoBig.png"
-            )
-            remaining_text = subtitle_text[3:]  # Remove "EX-"
-            use_new_logo = False
-        else:
-            # Fallback to plain text
-            try:
-                subtitle_font_name = FontManager.get_font_name(self.language, bold=False)
-                canvas_obj.setFont(subtitle_font_name, font_size)
-            except:
-                canvas_obj.setFont("Helvetica", font_size)
-            canvas_obj.setFillColor(HexColor("#FFFFFF"))
-            canvas_obj.drawCentredString(x_center, y, subtitle_text)
-            return
-        
-        if not os.path.exists(ex_logo_file):
-            # Fallback to plain text
-            try:
-                subtitle_font_name = FontManager.get_font_name(self.language, bold=False)
-                canvas_obj.setFont(subtitle_font_name, font_size)
-            except:
-                canvas_obj.setFont("Helvetica", font_size)
-            canvas_obj.setFillColor(HexColor("#FFFFFF"))
-            canvas_obj.drawCentredString(x_center, y, subtitle_text)
-            return
-        
-        # Measure dimensions
-        try:
-            subtitle_font_name = FontManager.get_font_name(self.language, bold=False)
-            canvas_obj.setFont(subtitle_font_name, font_size)
-        except:
-            canvas_obj.setFont("Helvetica", font_size)
-        
-        text_width = canvas_obj.stringWidth(remaining_text, canvas_obj._fontname, font_size)
-        logo_width = 8.8 * mm
-        logo_height = 11 * mm
-        gap = 1 * mm
-        
-        total_width = logo_width + gap + text_width
-        start_x = x_center - total_width / 2
-        
-        # Draw logo
-        logo_x = start_x
-        logo_y = y - (logo_height / 2) + 1.5 * mm
-        
-        canvas_obj.drawImage(
-            ex_logo_file,
-            logo_x,
-            logo_y,
-            width=logo_width,
-            height=logo_height,
-            preserveAspectRatio=True,
-            mask='auto'
-        )
-        
-        # Draw text
-        text_x = logo_x + logo_width + gap
-        canvas_obj.setFillColor(HexColor("#FFFFFF"))
-        canvas_obj.drawString(text_x, y, remaining_text)
-        canvas_obj.drawString(text_x, y, remaining_text)
-    
+
     def _draw_subtitle_with_logos(self, canvas_obj, x_center, y, section_id, section_title, font_size=14):
         """
         Draw subtitle with token-based logos for special sections.
@@ -595,8 +492,16 @@ class CoverTemplate:
         if pokemon_count == 0:
             return
         
-        total_width = PAGE_WIDTH - (30 * mm)
-        spacing_per_pokemon = total_width / pokemon_count
+        # Use compact layout with fixed spacing between cards
+        # This creates a visually grouped appearance rather than distributed
+        card_width = 65 * mm
+        card_spacing = 8 * mm  # Gap between cards
+        
+        # Calculate total width needed for all cards
+        total_cards_width = card_width * pokemon_count + card_spacing * (pokemon_count - 1)
+        
+        # Center the group on the page
+        start_x = (PAGE_WIDTH - total_cards_width) / 2
         
         for idx, poke_id in enumerate(featured_ids[:3]):
             # Try to find pokemon first by full ID (for variants), then by integer ID
@@ -617,8 +522,8 @@ class CoverTemplate:
             if not pokemon:
                 continue
             
-            x_center = 15 * mm + spacing_per_pokemon * (idx + 0.5)
-            card_width = 65 * mm
+            # Position cards in a compact group
+            x_center = start_x + idx * (card_width + card_spacing) + card_width / 2
             card_height = 90 * mm
             x = x_center - card_width / 2
             y = 10 * mm
@@ -639,7 +544,7 @@ class CoverTemplate:
                         img_lookup_id = int(img_lookup_id) if img_lookup_id else 0
                     
                     if image_source.startswith('http://') or image_source.startswith('https://'):
-                        image_to_render = self.image_cache.get_image(img_lookup_id, url=image_source, timeout=3)
+                        image_to_render = self.image_cache.get_image(img_lookup_id, url=image_source, timeout=3, size='featured')
                     elif Path(image_source).exists():
                         image_to_render = image_source
                     

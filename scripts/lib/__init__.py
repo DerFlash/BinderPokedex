@@ -17,7 +17,7 @@ Usage:
 """
 
 from .fonts import FontManager
-from .text_renderer import TextRenderer
+from .utils import TextRenderer
 from .pdf_generator import PDFGenerator
 from .constants import (
     LANGUAGES,

@@ -50,85 +50,123 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 
-# ⚠️ DEPRECATED - Use TYPE_COLORS from constants.py instead
-# Keeping for backward compatibility during transition
-GENERATION_COLORS_DEPRECATED = {
-    1: '#FF0000',  # Red
-    2: '#FFAA00',  # Orange
-    3: '#0000FF',  # Blue
-    4: '#AA00FF',  # Purple
-    5: '#00AA00',  # Green
-    6: '#00AAAA',  # Cyan
-    7: '#FF00AA',  # Pink
-    8: '#AAAA00',  # Yellow
-    9: '#666666',  # Gray
-}
-
-# ⚠️ DEPRECATED - Use TYPE_COLORS from constants.py instead
-# Keeping for backward compatibility during transition
-TYPE_COLORS_DEPRECATED = {
-    'Normal': '#A8A878',
-    'Fire': '#F08030',
-    'Water': '#6890F0',
-    'Electric': '#F8D030',
-    'Grass': '#78C850',
-    'Ice': '#98D8D8',
-    'Fighting': '#C03028',
-    'Poison': '#A040A0',
-    'Ground': '#E0C068',
-    'Flying': '#A890F0',
-    'Psychic': '#F85888',
-    'Bug': '#A8B820',
-    'Rock': '#B8A038',
-    'Ghost': '#705898',
-    'Dragon': '#7038F8',
-    'Dark': '#705848',
-    'Steel': '#B8B8D0',
-    'Fairy': '#EE99AC',
-}
-
-
 class ImageCache:
-    """Image cache with fallback to network downloads."""
+    """Image cache with fallback to network downloads and optimized pre-resizing."""
+    
+    # Image sizes for different use cases
+    CARD_SIZE = (180, 180)          # Optimized: Pokémon cards for 150-300 DPI print (164-328px needed)
+    FEATURED_SIZE = (500, 500)      # Large: Featured Pokémon on covers (46×65mm, 234px needed)
+    MAX_CACHE_SIZE = 500            # ⚡ Keep only 500 most recent images in RAM
     
     def __init__(self):
         self.cache = {}
+        self.cache_order = []  # Track insertion order for LRU eviction
         self.disk_cache_dir = Path(__file__).parent.parent.parent / 'data' / 'pokemon_images_cache'
     
-    def _get_cached_file(self, pokemon_id: int, variant: str = 'default') -> Optional[Path]:
-        """Get path to cached image file if it exists."""
-        cache_file = self.disk_cache_dir / f'pokemon_{pokemon_id}' / f'{variant}.jpg'
+    def _get_cached_file(self, pokemon_id: int, variant: str = 'default', size: str = 'card') -> Optional[Path]:
+        """
+        Get path to cached image file if it exists.
+        
+        Args:
+            pokemon_id: Pokémon ID
+            variant: Variant name (default: 'default')
+            size: Image size ('card' for 100×100, 'featured' for 250×250)
+        
+        Returns:
+            Path to cached file or None
+        """
+        if size == 'featured':
+            cache_file = self.disk_cache_dir / f'pokemon_{pokemon_id}' / f'{variant}_featured.jpg'
+        else:  # 'card' size
+            cache_file = self.disk_cache_dir / f'pokemon_{pokemon_id}' / f'{variant}_thumb.jpg'
+        
         if cache_file.exists():
             return cache_file
         return None
     
-    def get_image(self, pokemon_id: int, url: Optional[str] = None, timeout: int = 5):
+    def _create_thumbnail(self, pil_image: Image.Image, target_size: tuple = None) -> Image.Image:
+        """
+        Create an optimized thumbnail from a PIL image.
+        
+        Args:
+            pil_image: PIL Image object
+            target_size: Target dimensions (width, height). Default: CARD_SIZE (100×100)
+        
+        Returns:
+            Resized PIL Image
+        """
+        if target_size is None:
+            target_size = self.CARD_SIZE
+        
+        # Use LANCZOS for high-quality downsampling
+        return pil_image.resize(target_size, Image.Resampling.LANCZOS)
+    
+    def _save_thumbnail(self, pil_image: Image.Image, pokemon_id: int, variant: str = 'default') -> Path:
+        """
+        Save a thumbnail to disk cache for future use.
+        
+        Args:
+            pil_image: PIL Image object (should already be thumbnail size)
+            pokemon_id: Pokémon ID
+            variant: Variant name (default: 'default')
+        
+        Returns:
+            Path to saved thumbnail
+        """
+        try:
+            pokemon_dir = self.disk_cache_dir / f'pokemon_{pokemon_id}'
+            pokemon_dir.mkdir(parents=True, exist_ok=True)
+            
+            thumbnail_file = pokemon_dir / f'{variant}_thumb.jpg'
+            pil_image.save(thumbnail_file, format='JPEG', quality=75, optimize=True)
+            return thumbnail_file
+        except Exception as e:
+            logger.debug(f"Could not save thumbnail for #{pokemon_id}: {e}")
+            return None
+    
+    def get_image(self, pokemon_id: int, url: Optional[str] = None, timeout: int = 5, size: str = 'card'):
         """
         Get ImageReader object from disk cache, RAM cache, or download.
+        
+        Performance optimization: Images are pre-resized to optimize for their use case:
+        - 'card' (100×100px): For small Pokémon cards in binder
+        - 'featured' (250×250px): For large featured Pokémon on cover pages
+        
+        ⚡ RAM Cache Optimization: Uses LRU (Least Recently Used) eviction to keep
+        at most MAX_CACHE_SIZE images in memory. This prevents memory bloat during
+        multi-generation PDF generation.
         
         Args:
             pokemon_id: Pokémon ID for disk cache lookup
             url: Fallback URL if not cached
             timeout: Download timeout in seconds
+            size: Image size ('card' for 100×100px, 'featured' for 250×250px). Default: 'card'
         
         Returns:
             ImageReader object if successful, None otherwise
         """
         # Check RAM cache first
-        cache_key = f'pokemon_{pokemon_id}'
+        cache_key = f'pokemon_{pokemon_id}_{size}'
         if cache_key in self.cache:
+            # Move to end (mark as recently used)
+            self.cache_order.remove(cache_key)
+            self.cache_order.append(cache_key)
             return self.cache[cache_key]
         
-        # Try disk cache
-        cached_file = self._get_cached_file(pokemon_id)
+        # Try disk cache - look for pre-resized version matching the requested size
+        cached_file = self._get_cached_file(pokemon_id, size=size)
         if cached_file:
             try:
-                logger.debug(f"✓ Loading from disk cache: {cached_file.name}")
+                logger.debug(f"✓ Loading from cache: {cached_file.name}")
+                # Load directly from cached file path - ReportLab handles file ownership
                 image_reader = ImageReader(str(cached_file))
-                self.cache[cache_key] = image_reader
+                
+                # Add to RAM cache with LRU eviction
+                self._add_to_cache(cache_key, image_reader)
+                
                 return image_reader
             except Exception as e:
-                logger.debug(f"✗ Failed to load cached file: {e}")
+                logger.debug(f"✗ Failed to load cached image: {e}")
         
         # Fallback to network download if URL provided
         if url:
@@ -155,20 +193,63 @@ class ImageCache:
                     elif pil_image.mode != 'RGB':
                         pil_image = pil_image.convert('RGB')
                     
-                    # Save to BytesIO with JPEG compression
-                    output = BytesIO()
-                    pil_image.save(output, format='JPEG', quality=85, optimize=True)
-                    output.seek(0)
+                    # ⚡ OPTIMIZATION: Pre-resize based on use case
+                    # Card size (100×100px): Small, fast (for binder cards)
+                    # Featured size (500×500px): Large, for cover displays
+                    target_size = self.FEATURED_SIZE if size == 'featured' else self.CARD_SIZE
+                    pil_image = self._create_thumbnail(pil_image, target_size)
                     
-                    # Wrap in ImageReader for ReportLab
-                    image_reader = ImageReader(output)
-                    self.cache[cache_key] = image_reader
-                    logger.debug(f"✓ Downloaded & cached (total: {len(self.cache)} images)")
+                    # ⚡ CRITICAL FIX: Always save to disk first, then load from disk
+                    # This ensures ImageReader gets a stable file path instead of a BytesIO
+                    # that might get garbage-collected, causing image data corruption
+                    pokemon_dir = Path(self.disk_cache_dir) / f'pokemon_{pokemon_id}'
+                    pokemon_dir.mkdir(parents=True, exist_ok=True)
+                    
+                    # Determine cache filename based on size
+                    if size == 'featured':
+                        cache_path = pokemon_dir / 'default_featured.jpg'
+                    else:
+                        cache_path = pokemon_dir / 'default_thumb.jpg'
+                    
+                    # Save to disk with JPEG compression (quality 75)
+                    pil_image.save(str(cache_path), format='JPEG', quality=75, optimize=True)
+                    
+                    # Load from disk file (not BytesIO) - ensures stable image data
+                    image_reader = ImageReader(str(cache_path))
+                    
+                    # Add to RAM cache with LRU eviction
+                    self._add_to_cache(cache_key, image_reader)
+                    
+                    logger.debug(f"✓ Downloaded & cached ({len(self.cache)}/{self.MAX_CACHE_SIZE} images, size={size})")
                     return image_reader
             except (urllib.error.URLError, urllib.error.HTTPError, Exception) as e:
                 logger.debug(f"✗ Failed to download image: {e}")
         
         return None
+    
+    def _add_to_cache(self, cache_key: str, image_reader):
+        """
+        Add image to RAM cache with LRU eviction.
+        
+        If cache exceeds MAX_CACHE_SIZE, removes the least recently used item.
+        
+        Args:
+            cache_key: Cache key (e.g., 'pokemon_1')
+            image_reader: ImageReader object to cache
+        """
+        # Remove if already cached (for re-insertion)
+        if cache_key in self.cache_order:
+            self.cache_order.remove(cache_key)
+        
+        # Add to end (most recently used)
+        self.cache[cache_key] = image_reader
+        self.cache_order.append(cache_key)
+        
+        # Evict oldest if needed
+        while len(self.cache) > self.MAX_CACHE_SIZE:
+            oldest_key = self.cache_order.pop(0)
+            del self.cache[oldest_key]
+            logger.debug(f"  ⚡ Cache full ({self.MAX_CACHE_SIZE}). Evicted oldest: {oldest_key}")
 
 
 class PDFGenerator:
