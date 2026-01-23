@@ -154,7 +154,7 @@ Examples:
         type=str,
         default=None,
         choices=["pokedex", "variant", "all"],
-        help="Type of PDF to generate: 'pokedex' (consolidated Pokédex), 'variant' (themed collections), or 'all'"
+        help="Type of PDF to generate: 'pokedex' (consolidated Pokédex), 'variant' (themed collections), or 'all'. OMIT to generate everything (default)."
     )
     
     parser.add_argument(
@@ -162,7 +162,7 @@ Examples:
         "-l",
         type=str,
         default=None,
-        help="Language code (de, en, fr, es, it, ja, ko, zh-hans, zh-hant). If not specified, generates all languages."
+        help="Language code (de, en, fr, es, it, ja, ko, zh-hans, zh-hant). OMIT to generate all languages (default). NEVER use 'all' as value."
     )
     
     parser.add_argument(
