@@ -1,0 +1,401 @@
+"""
+Transform Scarlet & Violet ex Cards to Variant Format (Single Card per Pokemon)
+
+Transforms TCGdex Scarlet & Violet ex card data from source format to the variant format
+expected by the PDF generator. Selects ONE card per Pokemon (priority: Base Set first,
+then alphabetically by set name).
+
+Input: data/source/tcg_sv_ex.json (366 cards)
+Output: data/ExGen3_Single.json (~130 unique Pokemon)
+"""
+
+import logging
+from pathlib import Path
+from typing import List, Dict, Any
+import sys
+import json
+import requests
+
+# Add parent directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from steps.base import BaseStep, PipelineContext
+
+logger = logging.getLogger(__name__)
+
+
+class TransformScarletVioletEXStep(BaseStep):
+    """
+    Transform Scarlet & Violet ex cards to variant format - ONE card per Pokemon.
+    
+    Selection priority when multiple cards exist:
+    1. SV - Base Set (first SV ex set, sv1)
+    2. Alphabetically by set name
+    
+    Excludes:
+    - Tera ex variants (separate Tera crystallization)
+    """
+    
+    def __init__(self, name: str):
+        super().__init__(name)
+    
+    def execute(self, context: PipelineContext, params: Dict[str, Any]) -> PipelineContext:
+        """
+        Execute the transformation.
+        
+        1. Load source data
+        2. Group by Pokemon (dexId)
+        3. Select one card per Pokemon (priority rules)
+        4. Transform to variant format
+        5. Save to output file
+        """
+        # Make paths absolute relative to project root (4 levels up from this file)
+        project_root = Path(__file__).parent.parent.parent.parent
+        
+        source_path = params.get('source_file', 'data/source/tcg_sv_ex.json')
+        if not Path(source_path).is_absolute():
+            source_file = project_root / source_path
+        else:
+            source_file = Path(source_path)
+        
+        output_path = params.get('output_file', 'data/ExGen3.json')
+        if not Path(output_path).is_absolute():
+            output_file = project_root / output_path
+        else:
+            output_file = Path(output_path)
+        
+        logger.info(f"Starting SV ex cards transformation (single card per Pokemon)")
+        
+        # Load source data
+        if not source_file.exists():
+            raise FileNotFoundError(f"Source file not found: {source_file}")
+        
+        with open(source_file, 'r', encoding='utf-8') as f:
+            source_data = json.load(f)
+        
+        cards = source_data['cards']
+        logger.info(f"Loaded {len(cards)} cards from source")
+        
+        # Group cards by type (normal, mega) and dexId
+        # For mega cards, we use a tuple (dexId, form_name) to handle X/Y variants
+        normal_cards: Dict[int, List[Dict[str, Any]]] = {}
+        mega_cards: Dict[tuple, List[Dict[str, Any]]] = {}
+        
+        for card in cards:
+            dex_ids = card.get('dexId', [])
+            if not dex_ids:
+                logger.warning(f"Card {card.get('name')} has no dexId")
+                continue
+            
+            dex_id = dex_ids[0]
+            name = card.get('name', '')
+            
+            # Categorize by card type
+            if name.startswith('Mega ') or 'Mega' in name:
+                # Mega Evolution variant - extract form suffix (e.g., "X", "Y")
+                # Name format: "Mega Pokemon X ex" or "Mega Pokemon Y ex"
+                form_suffix = ""
+                parts = name.replace(' ex', '').split()
+                if len(parts) > 2 and parts[-1] in ['X', 'Y']:
+                    form_suffix = parts[-1]
+                
+                # Use (dexId, form_suffix) as key to keep X and Y variants separate
+                mega_key = (dex_id, form_suffix)
+                if mega_key not in mega_cards:
+                    mega_cards[mega_key] = []
+                mega_cards[mega_key].append(card)
+            else:
+                # Normal ex variant (all other ex cards are tera by default in SV era)
+                if dex_id not in normal_cards:
+                    normal_cards[dex_id] = []
+                normal_cards[dex_id].append(card)
+        
+        logger.info(f"Grouped into normal={len(normal_cards)}, mega={len(mega_cards)} Pokemon")
+        
+        # Select one card per Pokemon for each type
+        selected_normal = self._select_best_cards(normal_cards)
+        selected_mega = self._select_best_cards(mega_cards)
+        
+        logger.info(f"Selected normal={len(selected_normal)}, mega={len(selected_mega)} cards")
+        
+        # Transform to variant format with 2 sections
+        variant_data = self._transform_to_variant_format(selected_normal, selected_mega, context)
+        
+        # Save to output file
+        output_file.parent.mkdir(parents=True, exist_ok=True)
+        
+        with open(output_file, 'w', encoding='utf-8') as f:
+            json.dump(variant_data, f, indent=2, ensure_ascii=False)
+        
+        logger.info(f"✅ Saved variant to {output_file}")
+        
+        # Store in context for subsequent enrichment steps
+        context.set_data(variant_data)
+        
+        return context
+    
+    def _select_best_cards(self, pokemon_cards: Dict) -> List[Dict[str, Any]]:
+        """
+        Select one card per Pokemon (or form) based on priority rules.
+        
+        Accepts either:
+        - Dict[int, List] for normal cards (grouped by dexId)
+        - Dict[tuple, List] for mega cards (grouped by dexId + form_suffix)
+        
+        Priority:
+        1. SV - Base Set (sv1)
+        2. Alphabetically by set name
+        """
+        selected_cards = []
+        
+        for key in sorted(pokemon_cards.keys()):
+            # Extract dex_id from key (either int or tuple)
+            dex_id = key if isinstance(key, int) else key[0]
+            cards_for_pokemon = pokemon_cards[key]
+            
+            if len(cards_for_pokemon) == 1:
+                selected_cards.append(cards_for_pokemon[0])
+            else:
+                # Apply priority rules
+                # 1. SV - Base Set (sv1)
+                sv1_cards = [c for c in cards_for_pokemon if c['set']['id'] == 'sv1']
+                if sv1_cards:
+                    selected_cards.append(sv1_cards[0])
+                    logger.debug(f"#{dex_id:03d}: Selected Base Set card")
+                    continue
+                
+                # 2. Alphabetically by set name
+                cards_sorted = sorted(cards_for_pokemon, key=lambda c: c['set']['name'])
+                selected_cards.append(cards_sorted[0])
+                logger.debug(f"#{dex_id:03d}: Selected {cards_sorted[0]['set']['name']} card (alphabetical)")
+        
+        return selected_cards
+    
+    def _transform_to_variant_format(self, normal_cards: List[Dict[str, Any]], mega_cards: List[Dict[str, Any]], context: PipelineContext) -> Dict[str, Any]:
+        """
+        Transform cards to the variant format expected by PDF generator.
+        
+        Creates 2 sections: normal, mega
+        """
+        # Get variant metadata from context
+        metadata = context.storage.get('metadata', {})
+        variant_meta = metadata.get('variants', {}).get('ExGen3', {})
+        
+        # Transform each card list
+        normal_pokemon = self._transform_card_list(normal_cards, suffix='[EX_NEW]', prefix=None)
+        mega_pokemon = self._transform_card_list(mega_cards, suffix='[EX_NEW]', prefix='Mega')
+        
+        # Create 2-section structure
+        variant_data = {
+            'type': 'variant',
+            'name': 'Pokémon ex - Generation 3',
+            'sections': {
+                'normal': {
+                    'section_id': 'normal',
+                    'color_hex': variant_meta.get('color', '#6B40D1'),
+                    'title': {
+                        'de': 'Pokémon [EX_NEW]',
+                        'en': 'Pokémon [EX_NEW]',
+                        'fr': 'Pokémon [EX_NEW]',
+                        'es': 'Pokémon [EX_NEW]',
+                        'it': 'Pokémon [EX_NEW]',
+                        'ja': 'ポケモン [EX_NEW]',
+                        'ko': '포켓몬 [EX_NEW]',
+                        'zh_hans': '宝可梦 [EX_NEW]',
+                        'zh_hant': '寶可夢 [EX_NEW]'
+                    },
+                    'subtitle': variant_meta.get('subtitle', {}),
+                    'suffix': '',
+                    'featured_pokemon': [],
+                    'pokemon': normal_pokemon
+                },
+                'mega': {
+                    'section_id': 'mega',
+                    'color_hex': '#7B2CBF',  # Same as ExGen2 mega
+                    'title': {
+                        'de': 'Mega-Pokémon [EX_NEW]',
+                        'en': 'Mega Pokémon [EX_NEW]',
+                        'fr': 'Méga-Pokémon [EX_NEW]',
+                        'es': 'Mega-Pokémon [EX_NEW]',
+                        'it': 'Mega-Pokémon [EX_NEW]',
+                        'ja': 'メガポケモン [EX_NEW]',
+                        'ko': '메가 포켓몬 [EX_NEW]',
+                        'zh_hans': '超级宝可梦 [EX_NEW]',
+                        'zh_hant': '超級寶可夢 [EX_NEW]'
+                    },
+                    'subtitle': {
+                        'de': 'Mega-Entwicklung',
+                        'en': 'Mega Evolution',
+                        'fr': 'Méga-Évolution',
+                        'es': 'Megaevolución',
+                        'it': 'Megaevoluzione',
+                        'ja': 'メガシンカ',
+                        'ko': '메가진화',
+                        'zh_hans': '超级进化',
+                        'zh_hant': '超級進化'
+                    },
+                    'suffix': '',
+                    'featured_pokemon': [],
+                    'pokemon': mega_pokemon
+                }
+            }
+        }
+        
+        logger.info(f"Created variant with normal={len(normal_pokemon)}, mega={len(mega_pokemon)} Pokemon")
+        
+        return variant_data
+    
+    def _get_pokeapi_artwork_url(self, dex_id: int, pokemon_name: str, is_mega: bool = False, form_suffix: str = None) -> str:
+        """
+        Generate PokeAPI official artwork URL for a Pokemon.
+        
+        Args:
+            dex_id: National Pokedex ID
+            pokemon_name: Pokemon name (e.g., "Charizard")
+            is_mega: Whether this is a Mega Evolution
+            form_suffix: Form suffix like "X" or "Y" for Mega variants
+        
+        Returns:
+            URL to official artwork PNG
+        """
+        # For normal Pokemon, use direct artwork URL
+        if not is_mega:
+            return f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{dex_id}.png"
+        
+        # For Mega Evolutions, need to fetch the form-specific Pokemon ID
+        try:
+            # Construct form name: "charizard-mega-x"
+            base_name = pokemon_name.lower().replace(' ', '-')
+            form_name = f"{base_name}-mega"
+            if form_suffix:
+                form_name += f"-{form_suffix.lower()}"
+            
+            # Query PokeAPI for this form
+            response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{form_name}", timeout=10)
+            if response.status_code == 200:
+                form_data = response.json()
+                form_id = form_data.get('id')
+                if form_id:
+                    return f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{form_id}.png"
+            
+            logger.warning(f"Could not fetch PokeAPI form data for {form_name}, using base artwork")
+        except Exception as e:
+            logger.warning(f"Error fetching PokeAPI artwork for {pokemon_name}: {e}")
+        
+        # Fallback to base Pokemon artwork
+        return f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{dex_id}.png"
+    
+    def _transform_card_list(self, cards: List[Dict[str, Any]], suffix: str = None, prefix: str = None) -> List[Dict[str, Any]]:
+        """Transform a list of cards to Pokemon entries."""
+        pokemon_list = []
+        
+        for card in cards:
+            dex_ids = card.get('dexId', [])
+            if not dex_ids:
+                continue
+            
+            dex_id = dex_ids[0]
+            name = card.get('name', '')
+            
+            # Extract Pokemon name (remove ex suffix and variants)
+            pokemon_name_raw = name.replace(' ex', '').replace('–ex-Tera', '').replace('-ex-Tera', '').replace('Mega ', '').strip()
+            
+            # Get image URL from PokeAPI official artwork
+            # Check if this is a Mega evolution with form suffix
+            form_suffix = None
+            pokemon_base_name = pokemon_name_raw
+            
+            if prefix == 'Mega':
+                # Extract X/Y suffix if present: "Charizard X" -> base="Charizard", suffix="X"
+                parts = pokemon_name_raw.split()
+                if len(parts) >= 2 and parts[-1] in ['X', 'Y']:
+                    form_suffix = parts[-1]
+                    pokemon_base_name = ' '.join(parts[:-1])  # Remove X/Y from name
+            
+            image_url = self._get_pokeapi_artwork_url(dex_id, pokemon_base_name, is_mega=(prefix == 'Mega'), form_suffix=form_suffix)
+            
+            pokemon_name = pokemon_name_raw
+            
+            pokemon_entry = {
+                'id': dex_id,
+                'types': card.get('types', []),
+                'image_url': image_url,
+                'name': {
+                    'en': pokemon_name,
+                    'de': pokemon_name,
+                    'fr': pokemon_name,
+                    'es': pokemon_name,
+                    'it': pokemon_name,
+                    'ja': pokemon_name,
+                    'ko': pokemon_name,
+                    'zh_hans': pokemon_name,
+                    'zh_hant': pokemon_name
+                },
+                'prefix': prefix,
+                'suffix': suffix,
+                'form_code': f"#{dex_id:03d}_EX3",
+                'tcg_card': {
+                    'id': card.get('id'),
+                    'localId': card.get('localId'),
+                    'set': card.get('set'),
+                    'hp': card.get('hp'),
+                    'rarity': card.get('rarity')
+                }
+            }
+            
+            pokemon_list.append(pokemon_entry)
+        
+        return pokemon_list
+    
+    def validate(self, context: PipelineContext) -> bool:
+        """Validate the transformation."""
+        if not self.output_file.exists():
+            logger.error(f"Output file does not exist: {self.output_file}")
+            return False
+        
+        with open(self.output_file, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        
+        if 'sections' not in data or 'normal' not in data['sections']:
+            logger.error("Invalid variant structure")
+            return False
+        
+        pokemon = data['sections']['normal']['pokemon']
+        
+        # Check for duplicates
+        dex_ids = [p['id'] for p in pokemon]
+        if len(dex_ids) != len(set(dex_ids)):
+            logger.error("Duplicate Pokemon found in variant")
+            return False
+        
+        logger.info(f"✅ Validation passed: {len(pokemon)} unique Pokemon")
+        return True
+
+
+if __name__ == '__main__':
+    # For testing the step directly
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+    
+    step_config = {
+        'source_file': 'data/source/tcg_sv_ex.json',
+        'output_file': 'data/ExGen3.json'
+    }
+    
+    step = TransformScarletVioletEXStep(step_config)
+    context = PipelineContext(config={'source_file': None, 'target_file': None})
+    
+    try:
+        context = step.execute(context)
+        if step.validate(context):
+            print("\n✅ Transformation completed and validated successfully!")
+        else:
+            print("\n❌ Transformation validation failed!")
+            sys.exit(1)
+    except Exception as e:
+        print(f"\n❌ Transformation failed: {e}")
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)

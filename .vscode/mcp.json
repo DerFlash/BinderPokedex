@@ -4,7 +4,7 @@
       "type": "stdio",
       "command": "${workspaceFolder}/.venv/bin/python3",
       "args": [
-        "${workspaceFolder}/mcp_server/binder_pokedex_server.py"
+        "${workspaceFolder}/.mcp_server/binder_pokedex_server.py"
       ]
     }
   }

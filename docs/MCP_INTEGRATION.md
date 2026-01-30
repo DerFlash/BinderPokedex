@@ -5,7 +5,8 @@
 The BinderPokedex MCP Server enables seamless integration with Claude, GitHub Copilot, and other AI assistants. Generate multilingual PDF collections through natural conversation.
 
 ### Features
-- 🌍 **9 Language Support**: DE, EN, FR, ES, IT, JA, KO, PT, RU
+- � **Scope-Based Architecture**: Generate any collection (Pokedex, TCG variants, etc.)
+- 🌍 **9 Language Support**: DE, EN, FR, ES, IT, JA, KO, ZH-HANS, ZH-HANT
 - 🤖 **AI-Native**: Talk to Claude or Copilot naturally
 - ⚡ **Local & Fast**: Runs on your machine
 - 🔄 **Seamless**: Automatic image download and processing
@@ -14,7 +15,7 @@ The BinderPokedex MCP Server enables seamless integration with Claude, GitHub Co
 
 ## Quick Start: Using BinderPokedex with Claude Desktop
 
-This guide shows you how to connect BinderPokedex MCP Server to Claude Desktop so you can delegate PDF generation and data fetching tasks to Claude.
+This guide shows you how to connect BinderPokedex MCP Server to Claude Desktop so you can delegate PDF generation tasks to Claude.
 
 ---
 
@@ -54,7 +55,7 @@ Replace your existing config with this (update the path):
         "--directory",
         "/Volumes/Daten/Entwicklung/BinderPokedex",
         "run",
-        "mcp_server/binder_pokedex_server.py"
+        ".mcp_server/binder_pokedex_server.py"
       ]
     }
   }
@@ -76,70 +77,88 @@ Replace your existing config with this (update the path):
 
 Once Claude restarts, look for an MCP indicator in the bottom-right corner of the chat input area. Click it to see available tools.
 
-You should see four tools:
+You should see three tools:
 - `generate_pdfs`
-- `fetch_pokemon`
-- `list_generations`
-- `get_generation_info`
+- `fetch_data`
+- `list_status`
 
 ---
 
 ## Using BinderPokedex in Claude
 
-### Example 1: Generate All PDFs
+### Example 1: Generate Pokedex PDF
 
 **You write:**
 ```
-"Generate PDF binders for all 8 generations of Pokémon"
+"Generate the Pokedex PDF in German"
 ```
 
 **Claude will:**
-1. Call `generate_pdfs` with generations "1-8"
+1. Call `generate_pdfs` with scope "Pokedex" and language "de"
 2. Execute the PDF generation script
 3. Report results and file locations
 
----
-
-### Example 2: Update Pokémon Data
+### Example 2: Generate TCG Variant PDFs
 
 **You write:**
 ```
-"Update the Pokémon data for generation 5"
+"Create the ExGen1_All PDF binder in English"
 ```
 
 **Claude will:**
-1. Call `fetch_pokemon` for generation 5
-2. Fetch fresh data from PokéAPI
-3. Cache it for later use
-4. Report the count and status
+1. Call `generate_pdfs` with scope "ExGen1_All" and language "en"
+2. Generate the TCG EX Generation 1 collection
+3. Report file size and location
 
----
-
-### Example 3: Check Generation Status
+### Example 3: Fetch Fresh Data
 
 **You write:**
 ```
-"Show me which generations are ready"
+"Fetch the latest Pokedex data from PokéAPI"
 ```
 
 **Claude will:**
-1. Call `list_generations`
-2. Show you which PDFs exist
-3. Display generation names and statistics
+1. Call `fetch_data` with scope "Pokedex"
+2. Execute the fetch pipeline
+3. Report completion and what was updated
 
----
-
-### Example 4: Get Specific Generation Details
+### Example 4: Complete Workflow
 
 **You write:**
 ```
-"What's the status of the Galar region?"
+"Fetch ExGen1_All data and then generate the PDF in English"
 ```
 
 **Claude will:**
-1. Call `get_generation_info` for generation 8
-2. Show file size and path
-3. Confirm generation status
+1. Call `fetch_data` with scope "ExGen1_All"
+2. Call `generate_pdfs` with scope "ExGen1_All" and language "en"
+3. Report both operations completed
+
+### Example 5: Check Available Scopes
+
+**You write:**
+```
+"Show me all available scopes"
+```
+
+**Claude will:**
+1. Call `list_status`
+2. Show you all available scopes from data/ folder
+3. Display which PDFs exist and their languages
+
+---
+
+### Example 6: Generate Multiple Languages
+
+**You write:**
+```
+"Generate the Pokedex in Japanese and Korean"
+```
+
+**Claude will:**
+1. Call `generate_pdfs` with scope "Pokedex" and language "ja"
+2. Call `generate_pdfs` with scope "Pokedex" and language "ko"
+3. Report completion for both languages
 
 ---
 
@@ -148,14 +167,14 @@ You should see four tools:
 You can now use Claude to fully automate your Pokémon binder workflow:
 
 ```
-"I need fresh PDFs for all generations. First, fetch the latest data 
-for generation 9, then generate all 8 generations we have data for."
+"Fetch fresh Pokedex data, then generate the Pokedex PDF in German and English."
 ```
 
 Claude will:
-1. Fetch Gen 9 data
-2. Generate Gen 1-8 PDFs
-3. Report completion and file locations
+1. Call `fetch_data` to update Pokedex data from PokéAPI
+2. Generate Pokedex PDF in German
+3. Generate Pokedex PDF in English
+4. Report completion and file locations
 
 ---
 
@@ -176,7 +195,7 @@ Claude will:
 3. **Test the server directly**:
    ```bash
    cd /path/to/BinderPokedex
-   uv run mcp_server/binder_pokedex_server.py
+   uv run .mcp_server/binder_pokedex_server.py
    ```
 
 4. **Check logs**: Look at `~/Library/Logs/Claude/mcp*.log` (macOS)
@@ -189,9 +208,9 @@ Claude will:
 
 ### Generation Fails
 
-- Ensure you have internet (for PokéAPI access)
+- Ensure you have internet (for image downloads)
 - Check that `output/` directory exists and is writable
-- Verify generation numbers are 1-9
+- Verify scope names match JSON files in data/ folder
 
 ---
 
@@ -201,7 +220,7 @@ Use the MCP Inspector to test without Claude:
 
 ```bash
 cd /path/to/BinderPokedex
-npx @modelcontextprotocol/inspector uv run mcp_server/binder_pokedex_server.py
+npx @modelcontextprotocol/inspector uv run .mcp_server/binder_pokedex_server.py
 ```
 
 This opens an interactive UI where you can:
@@ -213,9 +232,9 @@ This opens an interactive UI where you can:
 
 ## Next Steps
 
-- **Use Claude to**: Generate entire binder sets, update data, check status
+- **Use Claude to**: Generate entire binder sets, check status, manage collections
 - **Integrate with**: GitHub Copilot, other MCP clients (use same config)
-- **Extend the server**: Add new tools like analyzing PDFs, batch operations
+- **Extend the server**: Add new tools like batch operations, custom filters
 - **Share your setup**: Document your workflow for others
 
 ---
@@ -231,3 +250,19 @@ The MCP server:
 ---
 
 **You're all set!** Start chatting with Claude and delegating your Pokémon binder tasks! 🎴✨
+
+---
+
+## Available Scopes
+
+The following unified scopes work for both `fetch_data` and `generate_pdfs`:
+
+| Scope | Description | Source |
+|-------|-------------|--------|
+| **Pokedex** | National Pokédex, all 9 generations | PokéAPI |
+| **ExGen1_All** | TCG EX Gen 1 - all cards (128 cards) | TCGdex API |
+| **ExGen1_Single** | TCG EX Gen 1 - one per Pokémon (~94) | TCGdex API |
+
+**Pro Tip:** You can use these scope names interchangeably. For example:
+- "Fetch Pokedex data" → fetches from PokéAPI
+- "Generate Pokedex PDF" → uses the fetched data

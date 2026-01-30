@@ -1,0 +1,136 @@
+{
+  "generations": {
+    "gen1": {
+      "name": "Generation I",
+      "region": "Kanto",
+      "range": [1, 151],
+      "color": "#78C850"
+    },
+    "gen2": {
+      "name": "Generation II",
+      "region": "Johto",
+      "range": [152, 251],
+      "color": "#F85888"
+    },
+    "gen3": {
+      "name": "Generation III",
+      "region": "Hoenn",
+      "range": [252, 386],
+      "color": "#6890F0"
+    },
+    "gen4": {
+      "name": "Generation IV",
+      "region": "Sinnoh",
+      "range": [387, 493],
+      "color": "#F8D030"
+    },
+    "gen5": {
+      "name": "Generation V",
+      "region": "Unova",
+      "range": [494, 649],
+      "color": "#98D8D8"
+    },
+    "gen6": {
+      "name": "Generation VI",
+      "region": "Kalos",
+      "range": [650, 721],
+      "color": "#F85888"
+    },
+    "gen7": {
+      "name": "Generation VII",
+      "region": "Alola",
+      "range": [722, 809],
+      "color": "#F08030"
+    },
+    "gen8": {
+      "name": "Generation VIII",
+      "region": "Galar",
+      "range": [810, 905],
+      "color": "#7038F8"
+    },
+    "gen9": {
+      "name": "Generation IX",
+      "region": "Paldea",
+      "range": [906, 1025],
+      "color": "#705848"
+    }
+  },
+  "variants": {
+
+    "ExGen1": {
+      "color": "#1F51BA",
+      "title": {
+        "de": "Pokémon EX - Generation 1",
+        "en": "Pokémon EX - Generation 1",
+        "fr": "Pokémon EX - Génération 1",
+        "es": "Pokémon EX - Generación 1",
+        "it": "Pokémon EX - Generazione 1",
+        "ja": "ポケモンEX - ジェネレーション1",
+        "ko": "포켓몬 EX - 세대 1",
+        "zh_hans": "宝可梦EX - 第一代",
+        "zh_hant": "寶可夢EX - 第一代"
+      },
+      "subtitle": {
+        "de": "Klassische ex Serie",
+        "en": "Classic ex Series",
+        "fr": "Série ex Classique",
+        "es": "Serie ex Clásica",
+        "it": "Serie ex Classica",
+        "ja": "クラシックexシリーズ",
+        "ko": "클래식 ex 시리즈",
+        "zh_hans": "经典ex系列",
+        "zh_hant": "經典ex系列"
+      }
+    },
+    "ExGen2": {
+      "color": "#3D5A80",
+      "title": {
+        "de": "Pokémon EX - Generation 2",
+        "en": "Pokémon EX - Generation 2",
+        "fr": "Pokémon EX - Génération 2",
+        "es": "Pokémon EX - Generación 2",
+        "it": "Pokémon EX - Generazione 2",
+        "ja": "ポケモンEX - ジェネレーション2",
+        "ko": "포켓몬 EX - 세대 2",
+        "zh_hans": "宝可梦EX - 第二代",
+        "zh_hant": "寶可夢EX - 第二代"
+      },
+      "subtitle": {
+        "de": "[EX] Serie (ab Next Destinies)",
+        "en": "[EX] Series (from Next Destinies)",
+        "fr": "Série [EX] (à partir de Next Destinies)",
+        "es": "Serie [EX] (de Next Destinies)",
+        "it": "Serie [EX] (da Next Destinies)",
+        "ja": "[EX]シリーズ（ネクスト・デスティニーズより）",
+        "ko": "[EX] 시리즈 (넥스트 데스티니즈부터)",
+        "zh_hans": "[EX]系列（来自下一个命运）",
+        "zh_hant": "[EX]系列（來自下一個命運）"
+      }
+    },
+    "ExGen3": {
+      "color": "#6B40D1",
+      "title": {
+        "de": "Pokémon EX - Generation 3",
+        "en": "Pokémon EX - Generation 3",
+        "fr": "Pokémon EX - Génération 3",
+        "es": "Pokémon EX - Generación 3",
+        "it": "Pokémon EX - Generazione 3",
+        "ja": "ポケモンEX - ジェネレーション3",
+        "ko": "포켓몬 EX - 세대 3",
+        "zh_hans": "宝可梦EX - 第三代",
+        "zh_hant": "寶可夢EX - 第三代"
+      },
+      "subtitle": {
+        "de": "[EX_NEW] Serie (ab Karmesin & Purpur)",
+        "en": "[EX_NEW] Series (from Scarlet & Violet)",
+        "fr": "Série [EX_NEW] (à partir d'Écarlate & Violet)",
+        "es": "Serie [EX_NEW] (de Escarlata & Púrpura)",
+        "it": "Serie [EX_NEW] (da Rosso & Viola)",
+        "ja": "[EX_NEW]シリーズ（スカーレット&バイオレットより）",
+        "ko": "[EX_NEW] 시리즈 (스칼렛&바이올렛부터)",
+        "zh_hans": "[EX_NEW]系列（来自朱&紫）",
+        "zh_hant": "[EX_NEW]系列（來自朱&紫）"
+      }
+    }
+  }
+}

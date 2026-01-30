@@ -1,4 +1,6 @@
 reportlab==4.0.7
 Pillow>=10.0.0
 requests==2.31.0
+pokebase>=1.4.0
 mcp[cli]>=0.7.0
+PyYAML>=6.0

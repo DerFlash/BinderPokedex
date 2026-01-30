@@ -1,0 +1,181 @@
+# Changelog
+
+All notable changes to BinderPokedex are documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+---
+
+## [4.3.0] - 2026-01-30
+
+### Fixed
+- **Image Cache Collision Bug** - Mega Evolution forms (X/Y) and other variants now display correct images
+  - Root cause: Cache used only `pokemon_{id}_{size}` format, causing collisions
+  - Example: Charizard (ID 6) cache was shared between normal and Mega X/Y forms
+  - Solution: Redesigned cache to use `pokemon_{id}_{url_identifier}_{size}` format
+  - Impact: All 17 Mega variants in ExGen3 now show correct artwork
+  
+- **Form Suffix Preservation** - X/Y/Primal suffixes now appear correctly in all 9 languages
+  - Root cause: Name enrichment step stripped form suffixes during translation
+  - Example: "Mega Charizard X" became "Mega Glurak" (German) instead of "Mega Glurak X"
+  - Solution: Extract suffix from English name, apply to all language translations
+  - Impact: All form variants properly labeled in DE, EN, FR, ES, IT, JA, KO, ZH_HANS, ZH_HANT
+
+- **ExGen3 Featured Pokémon** - Corrected Mega section featured list
+  - Issue: Mewtwo (ID 150) was configured but doesn't exist in ExGen3 Mega section
+  - Changed: 150 (Mewtwo) → 448 (Lucario)
+  - Current: Charizard X (6), Gengar (94), Lucario (448)
+
+### Changed
+- **Code Cleanup** - Removed obsolete `use_pokeapi_artwork` configuration option
+  - Reason: TCGdex images include card frames, unsuitable for binder layout
+  - PokeAPI official artwork is now always used for all variants
+  - Files updated: 3 YAML configs, 3 transform steps
+  
+- **Unified Caching Strategy** - Synchronized cache implementation across components
+  - `cache_pokemon_images.py` (fetcher) and `pdf_generator.py` (PDF) use identical logic
+  - Both extract URL identifiers the same way (PokeAPI IDs, TCGdex card IDs)
+  - Ensures fetcher-cached images are properly found by PDF generator
+
+### Technical Details
+
+#### Image Cache Redesign
+**Old Format:**
+```
+data/pokemon_images_cache/pokemon_6/default_thumb.jpg  # Collision!
+```
+
+**New Format:**
+```
+data/pokemon_images_cache/
+  pokemon_6/
+    6_thumb.jpg         # Normal Charizard
+    10034_thumb.jpg     # Mega Charizard X
+    10035_thumb.jpg     # Mega Charizard Y
+```
+
+**URL Identifier Extraction:**
+- PokeAPI: `.../10034.png` → `"10034"` (Mega form ID)
+- TCGdex: `.../sv1/013/high.webp` → `"sv1-013"` (card ID)
+
+#### Name Enrichment Enhancement
+```python
+# Extract suffix from English name
+english_name = "Charizard X"
+base_name = "Charizard"
+suffix = " X"  # Extracted
+
+# Apply to all languages
+german_translation = "Glurak"
+final_german = german_translation + suffix  # "Glurak X"
+```
+
+**Affected Languages:** All 9 (de, en, fr, es, it, ja, ko, zh_hans, zh_hant)
+
+### Documentation
+- Added `docs/IMAGE_CACHE.md` - Complete cache architecture specification
+- Updated `docs/ARCHITECTURE.md` - Added image cache section
+- Updated `docs/DATA_FETCHER.md` - Removed obsolete artwork options
+- Updated `docs/VARIANTS_ARCHITECTURE.md` - Updated variant counts and features
+- Updated `docs/FEATURED_POKEMON.md` - Corrected ExGen3 featured list
+- Updated `README.md` and `README.de.md` - Added v4.3 release notes
+
+### Migration from 4.2
+1. Delete old cache: `rm -rf data/pokemon_images_cache/`
+2. Re-fetch all data: 
+   ```bash
+   python scripts/fetcher/fetch.py --scope Pokedex
+   python scripts/fetcher/fetch.py --scope ExGen1
+   python scripts/fetcher/fetch.py --scope ExGen2
+   python scripts/fetcher/fetch.py --scope ExGen3
+   ```
+3. Regenerate PDFs as needed
+
+**Data Size:** ~45 MB for 1,439 Pokémon entries (2,878 cache files)
+
+---
+
+## [4.2.0] - 2026-01-15
+
+### Added
+- **Comprehensive CJK Font Support** - WenQuanYi font integration
+- **Enhanced Font Detection** - Fallback mechanisms for Noto and system fonts
+- **Korean Rendering Improvements** - Using SongtiBold for better coverage
+
+### Fixed
+- Font path resolution for Ubuntu/Linux systems (OpenType fonts)
+- ReportLab font warnings suppressed (expected behavior)
+- PDF generation across all 9 languages in CI/CD environments
+
+### Changed
+- Consolidated font configuration with single source of truth
+- Verified Japanese, Chinese, Korean PDF generation
+
+**Result:** All 1,025+ Pokémon render correctly in all 9 languages
+
+---
+
+## [4.1.1] - 2026-01-10
+
+### Added
+- Fine dashed gray cutting guides for all PDFs
+- Improved preview screenshot
+
+### Fixed
+- Minor rendering issues
+
+---
+
+## [4.1.0] - 2026-01-05
+
+### Added
+- Unified logging system with clean output
+- Verbose mode for debugging
+- Section-based featured Pokémon support
+
+### Changed
+- Improved typography and rendering quality
+- Better error messages and progress indicators
+
+---
+
+## [4.0.0] - 2025-12-20
+
+### Added
+- **Variant Collections System** - Support for EX generations and Mega Evolution
+- **Pipeline Architecture** - Modular fetch/transform/enrich/save system
+- **Multi-Section Support** - Variants with different sections (normal/mega/primal)
+- **Featured Pokémon** - Configurable featured Pokémon per section
+
+### Changed
+- Complete rewrite of data fetching system
+- Unified data structure for Pokédex and variants
+- New JSON schema for flexibility
+
+### Documentation
+- Added comprehensive architecture documentation
+- Added variant system specification
+- Added pipeline step documentation
+
+---
+
+## [3.x] - Legacy Versions
+
+Earlier versions focused on basic Pokédex generation without variant support.
+See git history for details.
+
+---
+
+## Version Numbering
+
+**Format:** MAJOR.MINOR.PATCH
+
+- **MAJOR:** Breaking changes, incompatible data formats
+- **MINOR:** New features, backwards compatible
+- **PATCH:** Bug fixes, documentation updates
+
+**Current:** 4.3.0
+- Major version 4: Current architecture with pipeline system
+- Minor version 3: Image cache and name enrichment fixes
+- Patch version 0: Initial release of this version

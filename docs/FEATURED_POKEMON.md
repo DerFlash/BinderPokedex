@@ -90,13 +90,18 @@ When selecting featured Pokémon for a section:
 
 **Normal Note:** Original proposal was Gen 2 starters (Chikorita, Cyndaquil, Totodile), but they don't exist. Legendary trio is more appropriate for [EX] series.
 
-#### EX Generation 3 (variants_ex_gen3.json)
+#### EX Generation 3 (ExGen3.json) - Scarlet & Violet ex
 
 | Section | IDs | Pokémon | Rationale |
 |---------|-----|---------|-----------|
-| **normal** | `[149, 445, 373]` | Dragonite, Garchomp, Salamence | Pseudo-legendary dragons from Gens 1, 4, 3 |
-| **tera** | `[384, 445, 130]` | Rayquaza, Garchomp, Gyarados | Legendary + pseudo + fan favorite with Tera forms |
-| **mega** | `[150, 65, 248]` | Mewtwo, Alakazam, Tyranitar | Iconic Pokémon with powerful Mega Evolutions |
+| **normal** | `[6, 1007, 1008]` | Charizard, Koraidon, Miraidon | Iconic Gen 1 + Gen 9 legendary duo |
+| **mega** | `[6, 94, 448]` | Charizard X, Gengar, Lucario | Popular Mega Evolutions from different generations |
+
+**Notes:**
+- ExGen3 focuses on modern Scarlet & Violet ex series (2023-present)
+- Normal section includes both classic favorites and latest legendaries
+- Mega section previously listed Mewtwo (150), but it doesn't exist in this variant
+- Lucario (448) chosen as replacement - extremely popular with strong Mega form
 
 **Normal Note:** Gen 3 starters not available. Chose diverse pseudo-legendaries.
 

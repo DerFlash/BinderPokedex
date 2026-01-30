@@ -1,57 +1,90 @@
 # Scripts Directory - Binder Pokédex
 
-Clean, production-ready implementation for multi-language Pokémon PDF generation with CJK support.
+**Clean, modular architecture with separated concerns:**
+- `pdf/` - PDF generation for Pokémon binders
+- `fetcher/` - Data fetching and processing
+- `archive/` - Deprecated scripts
 
-## 🚀 Quick Start
+## 📂 Directory Structure
 
-### Generate PDFs
+```
+scripts/
+├── pdf/                        # PDF Generation
+│   ├── generate_pdf.py        # Main PDF generator
+│   ├── config.yaml            # PDF configuration
+│   └── lib/                   # PDF-specific libraries
+│
+├── fetcher/                    # Data Fetcher
+│   ├── fetch.py               # Fetcher CLI entry point
+│   ├── engine.py              # Fetcher execution engine
+│   ├── config/                # Fetcher configurations
+│   │   └── scopes/            # Scope definitions (pokedex, test, etc.)
+│   ├── steps/                 # Fetcher steps
+│   │   ├── base.py
+│   │   ├── fetch_pokeapi_national_dex.py
+│   │   ├── group_by_generation.py
+│   │   ├── enrich_featured_pokemon.py
+│   │   └── enrich_translations_es_it.py
+│   ├── lib/                   # Fetcher libraries
+│   │   └── pokeapi_client.py
+│   └── data/                  # Fetcher-specific data
+│       └── enrichments/       # Translation & feature data
+│
+└── archive/                    # Deprecated scripts
+```
+
+---
+
+## 🎨 PDF Generation
+
+### Quick Start
 
 **Generation PDFs (Individual Generations):**
 ```bash
 # German Gen 1
-python scripts/generate_pdf.py --type generation --language de --generation 1
+python scripts/pdf/generate_pdf.py --type generation --language de --generation 1
 
 # All languages Gen 1
-python scripts/generate_pdf.py --type generation --generation 1
+python scripts/pdf/generate_pdf.py --type generation --generation 1
 
 # Japanese Gen 1-3
-python scripts/generate_pdf.py --type generation --language ja --generation 1-3
+python scripts/pdf/generate_pdf.py --type generation --language ja --generation 1-3
 
 # All generations (1-9)
-python scripts/generate_pdf.py --type generation
+python scripts/pdf/generate_pdf.py --type generation
 ```
 
 **Pokédex PDFs (Multiple Generations in One PDF):**
 ```bash
 # German Pokédex Gen 1-2
-python scripts/generate_pdf.py --type pokedex --language de --generations 1-2
+python scripts/pdf/generate_pdf.py --type pokedex --language de --generations 1-2
 
 # All languages Pokédex Gen 1-5
-python scripts/generate_pdf.py --type pokedex --generations 1-5
+python scripts/pdf/generate_pdf.py --type pokedex --generations 1-5
 
 # Complete Pokédex (all 9 generations)
-python scripts/generate_pdf.py --type pokedex
+python scripts/pdf/generate_pdf.py --type pokedex
 
 # Complete Pokédex in German
-python scripts/generate_pdf.py --type pokedex --language de
+python scripts/pdf/generate_pdf.py --type pokedex --language de
 ```
 
 **Variant PDFs (EX, Mega Evolution, etc.):**
 ```bash
 # German EX Gen1
-python scripts/generate_pdf.py --type variant --variant ex_gen1 --language de
+python scripts/pdf/generate_pdf.py --type variant --variant ex_gen1 --language de
 
 # All languages EX Gen2
-python scripts/generate_pdf.py --type variant --variant ex_gen2
+python scripts/pdf/generate_pdf.py --type variant --variant ex_gen2
 
 # All EX variants in German
-python scripts/generate_pdf.py --type variant --variant all --language de
+python scripts/pdf/generate_pdf.py --type variant --variant all --language de
 
 # List all available variants
-python scripts/generate_pdf.py --type variant --list
+python scripts/pdf/generate_pdf.py --type variant --list
 
 # Mega Evolution variant
-python scripts/generate_pdf.py --type variant --variant mega_evolution --language en
+python scripts/pdf/generate_pdf.py --type variant --variant mega_evolution --language en
 ```
 
 **Available Variants:**
@@ -61,13 +94,15 @@ python scripts/generate_pdf.py --type variant --variant mega_evolution --languag
 - `mega_evolution` - Mega Evolution collection (87 Pokémon, 96 Forms)
 
 **Outputs:** 
-- Generations: `../output/<lang>/pokemon_gen<N>_<lang>.pdf`
-- Pokédex: `../output/<lang>/Pokedex_Gen<X>-<Y>_<LANG>.pdf` or `Pokedex_Gen<X>_<LANG>.pdf`
-- Variants: `../output/<lang>/Variant_<variant>_<LANG>.pdf`
+- Generations: `output/<lang>/pokemon_gen<N>_<lang>.pdf`
+- Pokédex: `output/<lang>/Pokedex_Gen<X>-<Y>_<LANG>.pdf` or `Pokedex_Gen<X>_<LANG>.pdf`
+- Variants: `output/<lang>/Variant_<variant>_<LANG>.pdf`
 
-## 📚 Main Entry Point
+---
 
-### `generate_pdf.py` ⭐
+## 📘 PDF Generator Reference
+
+### `pdf/generate_pdf.py`
 
 Complete PDF generation with real Pokémon data for both standard generations and variant collections.
 
@@ -110,27 +145,101 @@ zh_hant     繁體中文 (Traditional) ← CJK
 **Examples:**
 ```bash
 # Generation PDFs
-python generate_pdf.py --type generation --language de --generation 1
-python generate_pdf.py --type generation --generation 1-3
-python generate_pdf.py --type generation  # All gens, all languages
+python scripts/pdf/generate_pdf.py --type generation --language de --generation 1
+python scripts/pdf/generate_pdf.py --type generation --generation 1-3
+python scripts/pdf/generate_pdf.py --type generation  # All gens, all languages
 
 # Pokédex PDFs
-python generate_pdf.py --type pokedex --language de --generations 1-2
-python generate_pdf.py --type pokedex --generations 1-5
-python generate_pdf.py --type pokedex  # All gens, all languages
+python scripts/pdf/generate_pdf.py --type pokedex --language de --generations 1-2
+python scripts/pdf/generate_pdf.py --type pokedex --generations 1-5
+python scripts/pdf/generate_pdf.py --type pokedex  # All gens, all languages
 
 # Variant PDFs
-python generate_pdf.py --type variant --language de --variant ex_gen1
-python generate_pdf.py --type variant --language en --variant ex_gen2
-python generate_pdf.py --type variant --variant all --language de
-python generate_pdf.py --type variant --list
+python scripts/pdf/generate_pdf.py --type variant --language de --variant ex_gen1
+python scripts/pdf/generate_pdf.py --type variant --language en --variant ex_gen2
+python scripts/pdf/generate_pdf.py --type variant --variant all --language de
+python scripts/pdf/generate_pdf.py --type variant --list
 
 # Test mode (9 Pokémon only)
-python generate_pdf.py --type generation --generation 1 --language de --test
+python scripts/pdf/generate_pdf.py --type generation --generation 1 --language de --test
 
 # Verbose mode (show detailed logs)
-python generate_pdf.py --type pokedex --language de --verbose
+python scripts/pdf/generate_pdf.py --type pokedex --language de --verbose
 ```
+
+---
+
+## 🔄 Data Fetcher
+
+### Quick Start
+
+**Fetch all Pokémon data:**
+```bash
+# Fetch complete National Dex (1025 Pokémon, 9 generations)
+python scripts/fetcher/fetch.py --scope pokedex
+
+# Test with small dataset (3 Pokémon per generation)
+python scripts/fetcher/fetch.py --scope test_fetch
+
+# Dry-run to see what would be executed
+python scripts/fetcher/fetch.py --scope pokedex --dry-run
+```
+
+### Fetcher Architecture
+
+The fetcher uses a **config-driven step-based architecture** with YAML configurations:
+
+**Features:**
+- ✅ Modular step-based execution
+- ✅ Config-driven fetcher definitions
+- ✅ Data enrichment from multiple sources
+- ✅ Automatic retry logic with exponential backoff
+- ✅ Rate limiting for API stability
+- ✅ Source & target data separation
+
+### Available Steps
+
+1. **fetch_pokeapi_national_dex** - Fetch Pokémon data from PokeAPI
+2. **group_by_generation** - Transform flat list to generation-grouped structure
+3. **enrich_translations_es_it** - Add Spanish/Italian name overrides
+4. **enrich_featured_pokemon** - Add featured Pokémon IDs per generation
+
+### Configuration
+
+**Scope files:** `scripts/fetcher/config/scopes/`
+
+Example: `pokedex.yaml`
+```yaml
+scope: pokedex
+description: "National Pokédex with all 9 generations"
+
+pipeline:
+  - step: fetch_pokeapi_national_dex
+    params:
+      generations: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  
+  - step: enrich_translations_es_it
+    params:
+      es_file: scripts/fetcher/data/enrichments/translations_es.json
+      it_file: scripts/fetcher/data/enrichments/translations_it.json
+  
+  - step: group_by_generation
+  
+  - step: enrich_featured_pokemon
+    params:
+      featured_file: scripts/fetcher/data/enrichments/featured_pokemon.json
+
+target_file: data/Pokedex.json
+source_file: data/source/pokedex.json
+```
+
+### Creating Custom Scopes
+
+1. Create a new scope file in `scripts/fetcher/config/scopes/`
+2. Define fetcher steps with parameters
+3. Run with `python scripts/fetcher/fetch.py --scope <your_scope>`
+
+---
 
 ## 📊 Output Format
 
@@ -156,232 +265,174 @@ Shows detailed generation logs including data loading, image processing, and sec
 
 ## 📦 Library (lib/)
 
-### Core Modules (Production)
+### PDF Libraries (pdf/lib/)
 
 #### **fonts.py** - Font Management
 Handles font registration for all languages, including CJK.
 
 ```python
-from lib import FontManager
-FontManager.register_fonts()
-font = FontManager.get_font_name('ja')  # Returns 'SongtiBold'
+from lib.fonts import FontManager
 ```
 
-**Key Features:**
-- TrueType font support (Songti.ttc for CJK)
-- Language-to-font mapping
-- Automatic registration at startup
+#### **variant_pdf_generator.py** - Variant PDF Generation
+Generates PDFs for variant collections (EX, Mega Evolution, etc.)
 
-#### **text_renderer.py** - Text Rendering
-Unicode-aware text rendering with font selection.
+#### **cli_formatter.py** - CLI Output Formatting
+Progress bars and clean terminal output
+
+#### **cli_validator.py** - CLI Validation
+Input validation for generations, languages, variants
+
+#### **constants.py** - Constants & Configuration
+Language definitions, generation info, dimensions, colors
+
+### Fetcher Libraries (fetcher/lib/)
+
+#### **pokeapi_client.py** - PokeAPI Client
+Direct API calls with retry logic, timeout handling, and rate limiting.
 
 ```python
-from lib import TextRenderer
-TextRenderer.render_text(canvas, 100, 200, 'テキスト', 'SongtiBold', 12)
+from lib.pokeapi_client import PokéAPIClient
+
+client = PokéAPIClient()
+species = client.fetch_species_data(25)  # Pikachu
+pokemon = client.fetch_pokemon_data(25)
 ```
 
-**Key Features:**
-- Unicode symbol support
-- Per-language font selection
-- Clean error handling
+### Fetcher Steps (fetcher/steps/)
 
-#### **pdf_generator.py** - PDF Orchestration
-Complete PDF generation pipeline.
+#### **base.py** - Base Classes
+Abstract base class for all fetcher steps and context management.
 
-```python
-from lib import PDFGenerator
-generator = PDFGenerator('ja', 1)
-pdf_path = generator.generate(pokemon_list)
-```
+#### **fetch_pokeapi_national_dex.py** - Data Fetching
+Fetches Pokémon data from PokeAPI with generation filtering.
 
-**Key Features:**
-- Cover page generation
-- 3×3 card layout
-- Multi-page support
-- Professional styling
+#### **group_by_generation.py** - Data Transformation
+Converts flat Pokemon list to generation-grouped structure.
 
-#### **constants.py** - Configuration
-Centralized constants and configuration.
+#### **enrich_featured_pokemon.py** - Featured Pokemon Enrichment
+Adds featured_pokemon arrays from JSON file.
 
-```python
-from lib import LANGUAGES, GENERATION_INFO, CARD_WIDTH, PAGE_MARGIN
-```
+#### **enrich_translations_es_it.py** - Translation Enrichment
+Overwrites ES/IT names with better translations.
 
-**Contains:**
-- 9 language definitions
-- 9 generation info (1-9)
-- Card dimensions & layout
-- Color scheme
-- Page setup
+---
 
-### Archive (lib/_archive_old/)
+## 🧪 Tests
 
-Legacy modules (not used, kept for reference):
-- `data_storage.py` - Old data persistence
-- `image_processor.py` - Old image handling
-- `pdf_layout.py` - Old layout constants
-- `pdf_renderer.py` - Old PDF rendering
-- `pokeapi_client.py` - API client (not needed)
-- `pokemon_processor.py` - Old processing
-- `pokemon_enricher.py` - Old enrichment
+### PDF Tests (pdf/tests/)
 
-## 🧪 Tests (tests/)
-
-### Test Files
-
-#### **test_fonts.py**
-Tests for FontManager.
+Run all PDF tests:
 ```bash
-python -m pytest tests/test_fonts.py -v
-```
-
-#### **test_text_renderer.py**
-Tests for TextRenderer.
-```bash
-python -m pytest tests/test_text_renderer.py -v
-```
-
-#### **test_pdf_rendering.py**
-Integration tests for PDF generation.
-```bash
-python -m pytest tests/test_pdf_rendering.py -v
-```
-
-### Run All Tests
-```bash
+cd scripts/pdf
 python -m pytest tests/ -v
 ```
 
-## 📊 Data Input
+### Fetcher Tests
 
-Input files: `../data/pokemon_gen*.json`
-
-Each JSON file contains array of Pokémon with fields:
-```json
-{
-  "id": 1,
-  "num": "#001",
-  "name_en": "Bulbasaur",
-  "name_de": "Bisasam",
-  "name_ja": "フシギダネ",
-  "name_ko": "이상해씨",
-  "name_zh_hans": "妙蛙种子",
-  "name_zh_hant": "妙蛙種子",
-  "type1": "Grass",
-  "type2": "Poison",
-  "image_url": "...",
-  "generation": 1
-}
-```
-
-## 📄 PDF Output
-
-Output files: `../output/pokemon_gen<N>_<lang>.pdf`
-
-Each PDF contains:
-- **Page 1:** Cover page (generation info, Pokédex range)
-- **Pages 2+:** Pokémon cards in 3×3 grid (9 cards/page)
-
-Example for Gen 1:
-```
-pokemon_gen1_de.pdf      45 KB  (German, 151 Pokémon)
-pokemon_gen1_en.pdf      45 KB  (English)
-pokemon_gen1_ja.pdf      66 KB  (Japanese)
-pokemon_gen1_zh_hans.pdf 115 KB (Chinese Simplified)
-```
-
-## 🏗️ Architecture
-
-```
-generate_pdf.py (entry point)
-    ├→ Load pokemon_gen<N>.json
-    ├→ FontManager.register_fonts()
-    ├→ PDFGenerator(language, generation)
-    │   ├→ _draw_cover_page()
-    │   ├→ _draw_card() × 151
-    │   │   ├→ FontManager.get_font_name()
-    │   │   └→ TextRenderer.render_text()
-    │   └→ Save PDF
-    └→ Output: pokemon_gen<N>_<lang>.pdf
-```
-
-## 🎯 Clean Architecture Principles
-
-✅ **Separation of Concerns**
-- FontManager: Font handling only
-- TextRenderer: Text rendering only
-- PDFGenerator: Orchestration only
-
-✅ **No Workarounds**
-- Direct ReportLab API usage
-- Clean, maintainable code
-- Proper error handling
-
-✅ **Modular Design**
-- Independent modules
-- Clear interfaces
-- Extensible
-
-✅ **Well Tested**
-- Unit tests for each module
-- Integration tests
-- 100% test pass rate
-
-## 📋 Supported Generations
-
-| Gen | Region | Pokémon | Range |
-|-----|--------|---------|-------|
-| 1 | Kanto | 151 | #001-#151 |
-| 2 | Johto | 100 | #152-#251 |
-| 3 | Hoenn | 135 | #252-#386 |
-| 4 | Sinnoh | 107 | #387-#493 |
-| 5 | Unova | 156 | #494-#649 |
-| 6 | Kalos | 72 | #650-#721 |
-| 7 | Alola | 81 | #722-#802 |
-| 8 | Galar | 89 | #803-#891 |
-| 9 | Paldea | 103 | #892-#1024 |
-
-## 🔧 Requirements
-
-- Python 3.10+
-- ReportLab 4.4.9
-- macOS (for Songti fonts at `/System/Library/Fonts/Supplemental/Songti.ttc`)
-
-See `../requirements.txt` for full dependencies.
-
-## 📂 File Structure
-
-```
-scripts/
-├── generate_pdf.py          ⭐ Main entry point
-├── README.md                📖 This file
-├── README_old.md            📦 Legacy documentation
-├── lib/
-│   ├── __init__.py          Clean exports
-│   ├── fonts.py             Font management
-│   ├── text_renderer.py     Text rendering
-│   ├── pdf_generator.py     PDF generation
-│   ├── constants.py         Configuration
-│   └── _archive_old/        Legacy modules (archived)
-├── tests/
-│   ├── test_fonts.py
-│   ├── test_text_renderer.py
-│   └── test_pdf_rendering.py
-└── fetch_pokemon_from_pokeapi.py  (Legacy, not in use)
-```
-
-## 📝 Examples
-
-### Generate PDF for single language
+Test fetcher with small dataset:
 ```bash
-python scripts/generate_pdf.py --language ja --generation 1
-# Output: output/pokemon_gen1_ja.pdf (66 KB, 18 pages)
+python scripts/fetcher/fetch.py --scope test_fetch
 ```
 
-### Generate all languages for multiple generations
+---
+
+## 📊 Data Flow
+
+```
+PokeAPI
+   ↓
+[fetch_pokeapi_national_dex]
+   ↓
+data/source/pokedex.json (flat list)
+   ↓
+[enrich_translations_es_it]
+   ↓
+Enhanced source data
+   ↓
+[group_by_generation]
+   ↓
+Grouped by generation
+   ↓
+[enrich_featured_pokemon]
+   ↓
+data/Pokedex.json (final format)
+   ↓
+[PDF Generator]
+   ↓
+output/<lang>/Pokedex_*.pdf
+```
+
+---
+
+## 🗂️ Archive
+
+**Location:** `scripts/archive/`
+
+Deprecated scripts kept for reference:
+- `cache_pokemon_images.py` - Old image caching
+- `fetch_forms.py` - Old form fetching
+- `fetch_pokemon_from_pokeapi.py` - Old data fetching
+
+These have been replaced by the pipeline system.
+
+---
+
+## 📝 Development Notes
+
+### Adding New Fetcher Steps
+
+1. Create step class in `scripts/fetcher/steps/`
+2. Inherit from `BaseStep`
+3. Implement `execute(context, params)` method
+4. Register in `scripts/fetcher/fetch.py`
+5. Add to scope configuration
+
+Example:
+```python
+from .base import BaseStep, PipelineContext
+
+class MyNewStep(BaseStep):
+    def execute(self, context: PipelineContext, params: dict):
+        # Your logic here
+        return context
+```
+
+### Adding New Languages
+
+1. Add language to `scripts/pdf/lib/constants.py`
+2. Ensure font support for CJK languages
+3. Test with `--language <code>`
+
+### File Naming Convention
+
+- **PDF outputs:** `output/<lang>/Pokemon_Gen<N>_<LANG>.pdf`
+- **Source data:** `data/source/<scope>.json`
+- **Target data:** `data/Pokedex.json`
+- **Enrichments:** `scripts/fetcher/data/enrichments/<name>.json`
+
+---
+
+## 🎯 Summary
+
+| Component | Location | Purpose |
+|-----------|----------|---------|
+| **PDF Generator** | `scripts/pdf/` | Generate printable PDF binders |
+| **Data Fetcher** | `scripts/fetcher/` | Fetch & process Pokémon data |
+| **Output** | `output/` | Generated PDFs by language |
+| **Data** | `data/` | Source & target Pokemon data |
+| **Archive** | `scripts/archive/` | Deprecated scripts |
+
+**Key Commands:**
 ```bash
-python scripts/generate_pdf.py --generation 1-3
-# Output: 27 PDFs (3 generations × 9 languages)
+# Generate PDFs
+python scripts/pdf/generate_pdf.py --type pokedex --language de
+
+# Fetch data
+python scripts/fetcher/fetch.py --scope pokedex
+
+# Test
+python scripts/fetcher/fetch.py --scope test_fetch
 ```
 
 ### Batch generation script

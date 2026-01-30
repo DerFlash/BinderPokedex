@@ -6,7 +6,7 @@ Print 1,025+ Pokémon across 9 generations in 9 languages. All variants, all for
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-![v4.2](https://img.shields.io/badge/version-v4.2-green.svg)
+![v4.3](https://img.shields.io/badge/version-v4.3-green.svg)
 
 ---
 
@@ -36,6 +36,23 @@ Print 1,025+ Pokémon across 9 generations in 9 languages. All variants, all for
 ---
 
 ## 📝 Release Notes
+
+### v4.3 (Architecture & Data Quality)
+**Date:** January 2026
+
+**Fixed:**
+- 🔧 Image cache collision bug: Form variants (Mega X/Y) now use separate cache files
+- 🌐 Form suffix preservation: X/Y/Primal suffixes now correctly appear in all 9 languages
+- 🎨 ExGen3 Featured Pokémon: Corrected Mega section featured list (Charizard X, Gengar, Lucario)
+- 🧹 Code cleanup: Removed obsolete `use_pokeapi_artwork` configuration option
+
+**Technical Improvements:**
+- Redesigned ImageCache with URL-based identifiers (`pokemon_{id}_{url_identifier}_{size}`)
+- Unified caching strategy between fetcher and PDF generator
+- Enhanced name enrichment to preserve form suffixes across all languages
+- Synchronized cache implementation: `cache_pokemon_images.py` ↔ `pdf_generator.py`
+
+**Impact:** Mega Charizard X now shows correct image and name ("Mega Glurak X" in German, not just "Mega Glurak")
 
 ### v4.2 (Major Release - Font Support Complete)
 **Issue:** PDFs generated in GitHub Actions environments were failing to render CJK (Chinese, Japanese, Korean) and other non-Latin scripts correctly due to missing font mappings and ReportLab font detection issues.

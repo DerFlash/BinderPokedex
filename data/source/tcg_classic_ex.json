@@ -1,0 +1,2445 @@
+{
+  "cards": [
+    {
+      "id": "ex6-112",
+      "localId": "112",
+      "name": "Venusaur ex",
+      "dexId": [
+        3
+      ],
+      "hp": 150,
+      "types": [
+        "Grass"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex6/112",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex6",
+        "name": "FireRed & LeafGreen",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex6-105",
+      "localId": "105",
+      "name": "Charizard ex",
+      "dexId": [
+        6
+      ],
+      "hp": 160,
+      "types": [
+        "Fire"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex6/105",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex6",
+        "name": "FireRed & LeafGreen",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex6-104",
+      "localId": "104",
+      "name": "Blastoise ex",
+      "dexId": [
+        9
+      ],
+      "hp": 150,
+      "types": [
+        "Water"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex6/104",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex6",
+        "name": "FireRed & LeafGreen",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex2-98",
+      "localId": "98",
+      "name": "Raichu ex",
+      "dexId": [
+        26
+      ],
+      "hp": 100,
+      "types": [
+        "Lightning"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex2/98",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex2",
+        "name": "Sandstorm",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex9-97",
+      "localId": "97",
+      "name": "Raichu ex",
+      "dexId": [
+        26
+      ],
+      "hp": 100,
+      "types": [
+        "Lightning"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex9/97",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex9",
+        "name": "Emerald",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex6-106",
+      "localId": "106",
+      "name": "Clefable ex",
+      "dexId": [
+        36
+      ],
+      "hp": 100,
+      "types": [
+        "Colorless"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex6/106",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex6",
+        "name": "FireRed & LeafGreen",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex5-96",
+      "localId": "96",
+      "name": "Ninetales ex",
+      "dexId": [
+        38
+      ],
+      "hp": 90,
+      "types": [
+        "Fire"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex5/96",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex5",
+        "name": "Hidden Legends",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex5-101",
+      "localId": "101",
+      "name": "Wigglytuff ex",
+      "dexId": [
+        40
+      ],
+      "hp": 100,
+      "types": [
+        "Colorless"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex5/101",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex5",
+        "name": "Hidden Legends",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex5-100",
+      "localId": "100",
+      "name": "Vileplume ex",
+      "dexId": [
+        45
+      ],
+      "hp": 140,
+      "types": [
+        "Grass"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex5/100",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex5",
+        "name": "Hidden Legends",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex10-116",
+      "localId": "116",
+      "name": "Rocket's Persian ex",
+      "dexId": [
+        53
+      ],
+      "hp": 100,
+      "types": [
+        "Darkness"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex10/116",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex10",
+        "name": "Unseen Forces",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex12-83",
+      "localId": "83",
+      "name": "Arcanine ex",
+      "dexId": [
+        59
+      ],
+      "hp": 120,
+      "types": [
+        "Fire"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex12/83",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex12",
+        "name": "Legend Maker",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex3-91",
+      "localId": "91",
+      "name": "Golem ex",
+      "dexId": [
+        76
+      ],
+      "hp": 160,
+      "types": [
+        "Fighting"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex3/91",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex3",
+        "name": "Dragon",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex3-96",
+      "localId": "96",
+      "name": "Muk ex",
+      "dexId": [
+        89
+      ],
+      "hp": 100,
+      "types": [
+        "Grass"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex3/96",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex3",
+        "name": "Dragon",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex6-108",
+      "localId": "108",
+      "name": "Gengar ex",
+      "dexId": [
+        94
+      ],
+      "hp": 150,
+      "types": [
+        "Psychic"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex6/108",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex6",
+        "name": "FireRed & LeafGreen",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex6-107",
+      "localId": "107",
+      "name": "Electrode ex",
+      "dexId": [
+        101
+      ],
+      "hp": 90,
+      "types": [
+        "Lightning"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex6/107",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex6",
+        "name": "FireRed & LeafGreen",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex1-98",
+      "localId": "98",
+      "name": "Hitmonchan ex",
+      "dexId": [
+        107
+      ],
+      "hp": 90,
+      "types": [
+        "Fighting"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex1/98",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex1",
+        "name": "Ruby & Sapphire",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex7-98",
+      "localId": "98",
+      "name": "Rocket's Hitmonchan ex",
+      "dexId": [
+        107
+      ],
+      "hp": 100,
+      "types": [
+        "Darkness"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex7/98",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex7",
+        "name": "Team Rocket Returns",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex1-96",
+      "localId": "96",
+      "name": "Chansey ex",
+      "dexId": [
+        113
+      ],
+      "hp": 120,
+      "types": [
+        "Colorless"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex1/96",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex1",
+        "name": "Ruby & Sapphire",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex6-110",
+      "localId": "110",
+      "name": "Mr. Mime ex",
+      "dexId": [
+        122
+      ],
+      "hp": 80,
+      "types": [
+        "Psychic"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex6/110",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex6",
+        "name": "FireRed & LeafGreen",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex6-111",
+      "localId": "111",
+      "name": "Mr. Mime ex",
+      "dexId": [
+        122
+      ],
+      "hp": 80,
+      "types": [
+        "Psychic"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex6/111",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex6",
+        "name": "FireRed & LeafGreen",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex7-102",
+      "localId": "102",
+      "name": "Rocket's Scyther ex",
+      "dexId": [
+        123
+      ],
+      "hp": 80,
+      "types": [
+        "Darkness"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex7/102",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex7",
+        "name": "Team Rocket Returns",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex1-102",
+      "localId": "102",
+      "name": "Scyther ex",
+      "dexId": [
+        123
+      ],
+      "hp": 80,
+      "types": [
+        "Grass"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex1/102",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex1",
+        "name": "Ruby & Sapphire",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex1-97",
+      "localId": "97",
+      "name": "Electabuzz ex",
+      "dexId": [
+        125
+      ],
+      "hp": 90,
+      "types": [
+        "Lightning"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex1/97",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex1",
+        "name": "Ruby & Sapphire",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex1-100",
+      "localId": "100",
+      "name": "Magmar ex",
+      "dexId": [
+        126
+      ],
+      "hp": 90,
+      "types": [
+        "Fire"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex1/100",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex1",
+        "name": "Ruby & Sapphire",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex6-109",
+      "localId": "109",
+      "name": "Gyarados ex",
+      "dexId": [
+        130
+      ],
+      "hp": 130,
+      "types": [
+        "Water"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex6/109",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex6",
+        "name": "FireRed & LeafGreen",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex1-99",
+      "localId": "99",
+      "name": "Lapras ex",
+      "dexId": [
+        131
+      ],
+      "hp": 110,
+      "types": [
+        "Water"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex1/99",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex1",
+        "name": "Ruby & Sapphire",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex11-110",
+      "localId": "110",
+      "name": "Vaporeon ex",
+      "dexId": [
+        134
+      ],
+      "hp": 120,
+      "types": [
+        "Water"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex11/110",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex11",
+        "name": "Delta Species",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex11-109",
+      "localId": "109",
+      "name": "Jolteon ex",
+      "dexId": [
+        135
+      ],
+      "hp": 100,
+      "types": [
+        "Lightning"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex11/109",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex11",
+        "name": "Delta Species",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex11-108",
+      "localId": "108",
+      "name": "Flareon ex",
+      "dexId": [
+        136
+      ],
+      "hp": 110,
+      "types": [
+        "Fire"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex11/108",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex11",
+        "name": "Delta Species",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex2-97",
+      "localId": "97",
+      "name": "Kabutops ex",
+      "dexId": [
+        141
+      ],
+      "hp": 150,
+      "types": [
+        "Water"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex2/97",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex2",
+        "name": "Sandstorm",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex2-94",
+      "localId": "94",
+      "name": "Aerodactyl ex",
+      "dexId": [
+        142
+      ],
+      "hp": 100,
+      "types": [
+        "Colorless"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex2/94",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex2",
+        "name": "Sandstorm",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex7-104",
+      "localId": "104",
+      "name": "Rocket's Snorlax ex",
+      "dexId": [
+        143
+      ],
+      "hp": 100,
+      "types": [
+        "Darkness"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex7/104",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex7",
+        "name": "Team Rocket Returns",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex6-114",
+      "localId": "114",
+      "name": "Articuno ex",
+      "dexId": [
+        144
+      ],
+      "hp": 110,
+      "types": [
+        "Water"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex6/114",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex6",
+        "name": "FireRed & LeafGreen",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex7-96",
+      "localId": "96",
+      "name": "Rocket's Articuno ex",
+      "dexId": [
+        144
+      ],
+      "hp": 100,
+      "types": [
+        "Darkness"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex7/96",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex7",
+        "name": "Team Rocket Returns",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex7-106",
+      "localId": "106",
+      "name": "Rocket's Zapdos ex",
+      "dexId": [
+        145
+      ],
+      "hp": 100,
+      "types": [
+        "Darkness"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex7/106",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex7",
+        "name": "Team Rocket Returns",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex6-116",
+      "localId": "116",
+      "name": "Zapdos ex",
+      "dexId": [
+        145
+      ],
+      "hp": 110,
+      "types": [
+        "Lightning"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex6/116",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex6",
+        "name": "FireRed & LeafGreen",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex6-115",
+      "localId": "115",
+      "name": "Moltres ex",
+      "dexId": [
+        146
+      ],
+      "hp": 110,
+      "types": [
+        "Fire"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex6/115",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex6",
+        "name": "FireRed & LeafGreen",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex7-100",
+      "localId": "100",
+      "name": "Rocket's Moltres ex",
+      "dexId": [
+        146
+      ],
+      "hp": 100,
+      "types": [
+        "Darkness"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex7/100",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex7",
+        "name": "Team Rocket Returns",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex3-90",
+      "localId": "90",
+      "name": "Dragonite ex",
+      "dexId": [
+        149
+      ],
+      "hp": 150,
+      "types": [
+        "Colorless"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex3/90",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex3",
+        "name": "Dragon",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex1-101",
+      "localId": "101",
+      "name": "Mewtwo ex",
+      "dexId": [
+        150
+      ],
+      "hp": 100,
+      "types": [
+        "Psychic"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex1/101",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex1",
+        "name": "Ruby & Sapphire",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex7-99",
+      "localId": "99",
+      "name": "Rocket's Mewtwo ex",
+      "dexId": [
+        150
+      ],
+      "hp": 100,
+      "types": [
+        "Darkness"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex7/99",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex7",
+        "name": "Team Rocket Returns",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex12-88",
+      "localId": "88",
+      "name": "Mew ex",
+      "dexId": [
+        151
+      ],
+      "hp": 90,
+      "types": [
+        "Psychic"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex12/88",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex12",
+        "name": "Legend Maker",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex13-100",
+      "localId": "100",
+      "name": "Mew ex",
+      "dexId": [
+        151
+      ],
+      "hp": 90,
+      "types": [
+        "Psychic"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex13/100",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex13",
+        "name": "Holon Phantoms",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex10-106",
+      "localId": "106",
+      "name": "Meganium ex",
+      "dexId": [
+        154
+      ],
+      "hp": 150,
+      "types": [
+        "Grass"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex10/106",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex10",
+        "name": "Unseen Forces",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex2-99",
+      "localId": "99",
+      "name": "Typhlosion ex",
+      "dexId": [
+        157
+      ],
+      "hp": 160,
+      "types": [
+        "Fire"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex2/99",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex2",
+        "name": "Sandstorm",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex10-110",
+      "localId": "110",
+      "name": "Typhlosion ex",
+      "dexId": [
+        157
+      ],
+      "hp": 150,
+      "types": [
+        "Fire"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex10/110",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex10",
+        "name": "Unseen Forces",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex10-103",
+      "localId": "103",
+      "name": "Feraligatr ex",
+      "dexId": [
+        160
+      ],
+      "hp": 150,
+      "types": [
+        "Water"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex10/103",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex10",
+        "name": "Unseen Forces",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex8-96",
+      "localId": "96",
+      "name": "Crobat ex",
+      "dexId": [
+        169
+      ],
+      "hp": 130,
+      "types": [
+        "Grass"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex8/96",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex8",
+        "name": "Deoxys",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex3-89",
+      "localId": "89",
+      "name": "Ampharos ex",
+      "dexId": [
+        181
+      ],
+      "hp": 150,
+      "types": [
+        "Lightning"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex3/89",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex3",
+        "name": "Dragon",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex10-107",
+      "localId": "107",
+      "name": "Politoed ex",
+      "dexId": [
+        186
+      ],
+      "hp": 150,
+      "types": [
+        "Water"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex10/107",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex10",
+        "name": "Unseen Forces",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex10-102",
+      "localId": "102",
+      "name": "Espeon ex",
+      "dexId": [
+        196
+      ],
+      "hp": 110,
+      "types": [
+        "Psychic"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex10/102",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex10",
+        "name": "Unseen Forces",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex10-112",
+      "localId": "112",
+      "name": "Umbreon ex",
+      "dexId": [
+        197
+      ],
+      "hp": 110,
+      "types": [
+        "Darkness"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex10/112",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex10",
+        "name": "Unseen Forces",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex10-109",
+      "localId": "109",
+      "name": "Steelix ex",
+      "dexId": [
+        208
+      ],
+      "hp": 150,
+      "types": [
+        "Metal"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex10/109",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex10",
+        "name": "Unseen Forces",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex7-101",
+      "localId": "101",
+      "name": "Rocket's Scizor ex",
+      "dexId": [
+        212
+      ],
+      "hp": 120,
+      "types": [
+        "Darkness"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex7/101",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex7",
+        "name": "Team Rocket Returns",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex10-108",
+      "localId": "108",
+      "name": "Scizor ex",
+      "dexId": [
+        212
+      ],
+      "hp": 120,
+      "types": [
+        "Metal"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex10/108",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex10",
+        "name": "Unseen Forces",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex7-103",
+      "localId": "103",
+      "name": "Rocket's Sneasel ex",
+      "dexId": [
+        215
+      ],
+      "hp": 90,
+      "types": [
+        "Darkness"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex7/103",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex7",
+        "name": "Team Rocket Returns",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex1-103",
+      "localId": "103",
+      "name": "Sneasel ex",
+      "dexId": [
+        215
+      ],
+      "hp": 80,
+      "types": [
+        "Darkness"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex1/103",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex1",
+        "name": "Ruby & Sapphire",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex3-95",
+      "localId": "95",
+      "name": "Magcargo ex",
+      "dexId": [
+        219
+      ],
+      "hp": 100,
+      "types": [
+        "Fire"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex3/95",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex3",
+        "name": "Dragon",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex16-98",
+      "localId": "98",
+      "name": "Skarmory ex",
+      "dexId": [
+        227
+      ],
+      "hp": 100,
+      "types": [
+        "Metal"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex16/98",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex16",
+        "name": "Power Keepers",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex3-92",
+      "localId": "92",
+      "name": "Kingdra ex",
+      "dexId": [
+        230
+      ],
+      "hp": 150,
+      "types": [
+        "Water"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex3/92",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex3",
+        "name": "Dragon",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex10-101",
+      "localId": "101",
+      "name": "Blissey ex",
+      "dexId": [
+        242
+      ],
+      "hp": 160,
+      "types": [
+        "Colorless"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex10/101",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex10",
+        "name": "Unseen Forces",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex4-92",
+      "localId": "92",
+      "name": "Raikou ex",
+      "dexId": [
+        243
+      ],
+      "hp": 100,
+      "types": [
+        "Lightning"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex4/92",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex4",
+        "name": "Team Magma vs Team Aqua",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex8-108",
+      "localId": "108",
+      "name": "Rocket's Raikou ex",
+      "dexId": [
+        243
+      ],
+      "hp": 100,
+      "types": [
+        "Darkness"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex8/108",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex8",
+        "name": "Deoxys",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex4-91",
+      "localId": "91",
+      "name": "Entei ex",
+      "dexId": [
+        244
+      ],
+      "hp": 100,
+      "types": [
+        "Fire"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex4/91",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex4",
+        "name": "Team Magma vs Team Aqua",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex7-97",
+      "localId": "97",
+      "name": "Rocket's Entei ex",
+      "dexId": [
+        244
+      ],
+      "hp": 100,
+      "types": [
+        "Darkness"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex7/97",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex7",
+        "name": "Team Rocket Returns",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex7-105",
+      "localId": "105",
+      "name": "Rocket's Suicune ex",
+      "dexId": [
+        245
+      ],
+      "hp": 100,
+      "types": [
+        "Darkness"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex7/105",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex7",
+        "name": "Team Rocket Returns",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex4-94",
+      "localId": "94",
+      "name": "Suicune ex",
+      "dexId": [
+        245
+      ],
+      "hp": 100,
+      "types": [
+        "Water"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex4/94",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex4",
+        "name": "Team Magma vs Team Aqua",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex10-111",
+      "localId": "111",
+      "name": "Tyranitar ex",
+      "dexId": [
+        248
+      ],
+      "hp": 160,
+      "types": [
+        "Darkness"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex10/111",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex10",
+        "name": "Unseen Forces",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex10-105",
+      "localId": "105",
+      "name": "Lugia ex",
+      "dexId": [
+        249
+      ],
+      "hp": 100,
+      "types": [
+        "Colorless"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex10/105",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex10",
+        "name": "Unseen Forces",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex10-104",
+      "localId": "104",
+      "name": "Ho-Oh ex",
+      "dexId": [
+        250
+      ],
+      "hp": 110,
+      "types": [
+        "Fire"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex10/104",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex10",
+        "name": "Unseen Forces",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex10-117",
+      "localId": "117",
+      "name": "Celebi ex",
+      "dexId": [
+        251
+      ],
+      "hp": 70,
+      "types": [
+        "Grass"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex10/117",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex10",
+        "name": "Unseen Forces",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex4-93",
+      "localId": "93",
+      "name": "Sceptile ex",
+      "dexId": [
+        254
+      ],
+      "hp": 150,
+      "types": [
+        "Grass"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex4/93",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex4",
+        "name": "Team Magma vs Team Aqua",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex4-89",
+      "localId": "89",
+      "name": "Blaziken ex",
+      "dexId": [
+        257
+      ],
+      "hp": 150,
+      "types": [
+        "Fire"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex4/89",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex4",
+        "name": "Team Magma vs Team Aqua",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex14-90",
+      "localId": "90",
+      "name": "Blaziken ex",
+      "dexId": [
+        257
+      ],
+      "hp": 150,
+      "types": [
+        "Fighting"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex14/90",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex14",
+        "name": "Crystal Guardians",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex4-95",
+      "localId": "95",
+      "name": "Swampert ex",
+      "dexId": [
+        260
+      ],
+      "hp": 150,
+      "types": [
+        "Fighting"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex4/95",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex4",
+        "name": "Team Magma vs Team Aqua",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex14-98",
+      "localId": "98",
+      "name": "Swampert ex",
+      "dexId": [
+        260
+      ],
+      "hp": 150,
+      "types": [
+        "Water"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex14/98",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex14",
+        "name": "Crystal Guardians",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex13-101",
+      "localId": "101",
+      "name": "Mightyena ex",
+      "dexId": [
+        262
+      ],
+      "hp": 100,
+      "types": [
+        "Darkness"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex13/101",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex13",
+        "name": "Holon Phantoms",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex12-86",
+      "localId": "86",
+      "name": "Dustox ex",
+      "dexId": [
+        269
+      ],
+      "hp": 140,
+      "types": [
+        "Grass"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex12/86",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex12",
+        "name": "Legend Maker",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex14-97",
+      "localId": "97",
+      "name": "Shiftry ex",
+      "dexId": [
+        275
+      ],
+      "hp": 140,
+      "types": [
+        "Darkness"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex14/97",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex14",
+        "name": "Crystal Guardians",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex16-97",
+      "localId": "97",
+      "name": "Shiftry ex",
+      "dexId": [
+        275
+      ],
+      "hp": 140,
+      "types": [
+        "Darkness"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex16/97",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex16",
+        "name": "Power Keepers",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex2-96",
+      "localId": "96",
+      "name": "Gardevoir ex",
+      "dexId": [
+        282
+      ],
+      "hp": 150,
+      "types": [
+        "Psychic"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex2/96",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex2",
+        "name": "Sandstorm",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex14-92",
+      "localId": "92",
+      "name": "Exploud ex",
+      "dexId": [
+        295
+      ],
+      "hp": 150,
+      "types": [
+        "Colorless"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex14/92",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex14",
+        "name": "Crystal Guardians",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex8-100",
+      "localId": "100",
+      "name": "Hariyama ex",
+      "dexId": [
+        297
+      ],
+      "hp": 110,
+      "types": [
+        "Fighting"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex8/100",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex8",
+        "name": "Deoxys",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex14-91",
+      "localId": "91",
+      "name": "Delcatty ex",
+      "dexId": [
+        301
+      ],
+      "hp": 90,
+      "types": [
+        "Colorless"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex14/91",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex14",
+        "name": "Crystal Guardians",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex2-95",
+      "localId": "95",
+      "name": "Aggron ex",
+      "dexId": [
+        306
+      ],
+      "hp": 150,
+      "types": [
+        "Metal"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex2/95",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex2",
+        "name": "Sandstorm",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex14-89",
+      "localId": "89",
+      "name": "Aggron ex",
+      "dexId": [
+        306
+      ],
+      "hp": 150,
+      "types": [
+        "Metal"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex14/89",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex14",
+        "name": "Crystal Guardians",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex9-95",
+      "localId": "95",
+      "name": "Medicham ex",
+      "dexId": [
+        308
+      ],
+      "hp": 110,
+      "types": [
+        "Fighting"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex9/95",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex9",
+        "name": "Emerald",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex8-101",
+      "localId": "101",
+      "name": "Manectric ex",
+      "dexId": [
+        310
+      ],
+      "hp": 100,
+      "types": [
+        "Lightning"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex8/101",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex8",
+        "name": "Deoxys",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex8-104",
+      "localId": "104",
+      "name": "Sharpedo ex",
+      "dexId": [
+        319
+      ],
+      "hp": 100,
+      "types": [
+        "Darkness"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex8/104",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex8",
+        "name": "Deoxys",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex2-100",
+      "localId": "100",
+      "name": "Wailord ex",
+      "dexId": [
+        321
+      ],
+      "hp": 200,
+      "types": [
+        "Water"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex2/100",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex2",
+        "name": "Sandstorm",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex9-92",
+      "localId": "92",
+      "name": "Camerupt ex",
+      "dexId": [
+        323
+      ],
+      "hp": 120,
+      "types": [
+        "Fire"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex9/92",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex9",
+        "name": "Emerald",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex12-87",
+      "localId": "87",
+      "name": "Flygon ex",
+      "dexId": [
+        330
+      ],
+      "hp": 150,
+      "types": [
+        "Colorless"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex12/87",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex12",
+        "name": "Legend Maker",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex16-94",
+      "localId": "94",
+      "name": "Flygon ex",
+      "dexId": [
+        330
+      ],
+      "hp": 150,
+      "types": [
+        "Colorless"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex16/94",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex16",
+        "name": "Power Keepers",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex9-91",
+      "localId": "91",
+      "name": "Cacturne ex",
+      "dexId": [
+        332
+      ],
+      "hp": 110,
+      "types": [
+        "Grass"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex9/91",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex9",
+        "name": "Emerald",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex9-90",
+      "localId": "90",
+      "name": "Altaria ex",
+      "dexId": [
+        334
+      ],
+      "hp": 100,
+      "types": [
+        "Colorless"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex9/90",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex9",
+        "name": "Emerald",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex13-99",
+      "localId": "99",
+      "name": "Crawdaunt ex",
+      "dexId": [
+        342
+      ],
+      "hp": 110,
+      "types": [
+        "Water"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex13/99",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex13",
+        "name": "Holon Phantoms",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex16-93",
+      "localId": "93",
+      "name": "Claydol ex",
+      "dexId": [
+        344
+      ],
+      "hp": 120,
+      "types": [
+        "Psychic"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex16/93",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex16",
+        "name": "Power Keepers",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex4-90",
+      "localId": "90",
+      "name": "Cradily ex",
+      "dexId": [
+        346
+      ],
+      "hp": 150,
+      "types": [
+        "Grass"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex4/90",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex4",
+        "name": "Team Magma vs Team Aqua",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex12-84",
+      "localId": "84",
+      "name": "Armaldo ex",
+      "dexId": [
+        348
+      ],
+      "hp": 160,
+      "types": [
+        "Fighting"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex12/84",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex12",
+        "name": "Legend Maker",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex9-96",
+      "localId": "96",
+      "name": "Milotic ex",
+      "dexId": [
+        350
+      ],
+      "hp": 130,
+      "types": [
+        "Water"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex9/96",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex9",
+        "name": "Emerald",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex12-85",
+      "localId": "85",
+      "name": "Banette ex",
+      "dexId": [
+        354
+      ],
+      "hp": 90,
+      "types": [
+        "Psychic"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex12/85",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex12",
+        "name": "Legend Maker",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex9-94",
+      "localId": "94",
+      "name": "Dusclops ex",
+      "dexId": [
+        356
+      ],
+      "hp": 100,
+      "types": [
+        "Psychic"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex9/94",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex9",
+        "name": "Emerald",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex16-92",
+      "localId": "92",
+      "name": "Absol ex",
+      "dexId": [
+        359
+      ],
+      "hp": 100,
+      "types": [
+        "Darkness"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex16/92",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex16",
+        "name": "Power Keepers",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex12-89",
+      "localId": "89",
+      "name": "Walrein ex",
+      "dexId": [
+        365
+      ],
+      "hp": 150,
+      "types": [
+        "Water"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex12/89",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex12",
+        "name": "Legend Maker",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex16-99",
+      "localId": "99",
+      "name": "Walrein ex",
+      "dexId": [
+        365
+      ],
+      "hp": 150,
+      "types": [
+        "Water"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex16/99",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex16",
+        "name": "Power Keepers",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex8-103",
+      "localId": "103",
+      "name": "Salamence ex",
+      "dexId": [
+        373
+      ],
+      "hp": 160,
+      "types": [
+        "Colorless"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex8/103",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex8",
+        "name": "Deoxys",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex16-96",
+      "localId": "96",
+      "name": "Salamence ex",
+      "dexId": [
+        373
+      ],
+      "hp": 160,
+      "types": [
+        "Colorless"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex16/96",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex16",
+        "name": "Power Keepers",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex5-95",
+      "localId": "95",
+      "name": "Metagross ex",
+      "dexId": [
+        376
+      ],
+      "hp": 150,
+      "types": [
+        "Metal"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex5/95",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex5",
+        "name": "Hidden Legends",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex16-95",
+      "localId": "95",
+      "name": "Metagross ex",
+      "dexId": [
+        376
+      ],
+      "hp": 150,
+      "types": [
+        "Metal"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex16/95",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex16",
+        "name": "Power Keepers",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex5-98",
+      "localId": "98",
+      "name": "Regirock ex",
+      "dexId": [
+        377
+      ],
+      "hp": 100,
+      "types": [
+        "Fighting"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex5/98",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex5",
+        "name": "Hidden Legends",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex9-99",
+      "localId": "99",
+      "name": "Regirock ex",
+      "dexId": [
+        377
+      ],
+      "hp": 110,
+      "types": [
+        "Fighting"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex9/99",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex9",
+        "name": "Emerald",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex5-97",
+      "localId": "97",
+      "name": "Regice ex",
+      "dexId": [
+        378
+      ],
+      "hp": 90,
+      "types": [
+        "Water"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex5/97",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex5",
+        "name": "Hidden Legends",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex9-98",
+      "localId": "98",
+      "name": "Regice ex",
+      "dexId": [
+        378
+      ],
+      "hp": 100,
+      "types": [
+        "Water"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex9/98",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex9",
+        "name": "Emerald",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex5-99",
+      "localId": "99",
+      "name": "Registeel ex",
+      "dexId": [
+        379
+      ],
+      "hp": 90,
+      "types": [
+        "Metal"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex5/99",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex5",
+        "name": "Hidden Legends",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex9-100",
+      "localId": "100",
+      "name": "Registeel ex",
+      "dexId": [
+        379
+      ],
+      "hp": 90,
+      "types": [
+        "Metal"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex9/100",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex9",
+        "name": "Emerald",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex3-93",
+      "localId": "93",
+      "name": "Latias ex",
+      "dexId": [
+        380
+      ],
+      "hp": 90,
+      "types": [
+        "Colorless"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex3/93",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex3",
+        "name": "Dragon",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex3-94",
+      "localId": "94",
+      "name": "Latios ex",
+      "dexId": [
+        381
+      ],
+      "hp": 100,
+      "types": [
+        "Colorless"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex3/94",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex3",
+        "name": "Dragon",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex5-94",
+      "localId": "94",
+      "name": "Kyogre ex",
+      "dexId": [
+        382
+      ],
+      "hp": 100,
+      "types": [
+        "Water"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex5/94",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex5",
+        "name": "Hidden Legends",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex14-95",
+      "localId": "95",
+      "name": "Kyogre ex",
+      "dexId": [
+        382
+      ],
+      "hp": 100,
+      "types": [
+        "Water"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex14/95",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex14",
+        "name": "Crystal Guardians",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex5-93",
+      "localId": "93",
+      "name": "Groudon ex",
+      "dexId": [
+        383
+      ],
+      "hp": 100,
+      "types": [
+        "Fighting"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex5/93",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex5",
+        "name": "Hidden Legends",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex14-93",
+      "localId": "93",
+      "name": "Groudon ex",
+      "dexId": [
+        383
+      ],
+      "hp": 100,
+      "types": [
+        "Fighting"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex14/93",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex14",
+        "name": "Crystal Guardians",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex3-97",
+      "localId": "97",
+      "name": "Rayquaza ex",
+      "dexId": [
+        384
+      ],
+      "hp": 100,
+      "types": [
+        "Colorless"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex3/97",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex3",
+        "name": "Dragon",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex8-102",
+      "localId": "102",
+      "name": "Rayquaza ex",
+      "dexId": [
+        384
+      ],
+      "hp": 100,
+      "types": [
+        "Colorless"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex8/102",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex8",
+        "name": "Deoxys",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex14-94",
+      "localId": "94",
+      "name": "Jirachi ex",
+      "dexId": [
+        385
+      ],
+      "hp": 90,
+      "types": [
+        "Psychic"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex14/94",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex14",
+        "name": "Crystal Guardians",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex8-97",
+      "localId": "97",
+      "name": "Deoxys ex",
+      "dexId": [
+        386
+      ],
+      "hp": 100,
+      "types": [
+        "Psychic"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex8/97",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex8",
+        "name": "Deoxys",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex8-98",
+      "localId": "98",
+      "name": "Deoxys ex",
+      "dexId": [
+        386
+      ],
+      "hp": 110,
+      "types": [
+        "Psychic"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex8/98",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex8",
+        "name": "Deoxys",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex8-99",
+      "localId": "99",
+      "name": "Deoxys ex",
+      "dexId": [
+        386
+      ],
+      "hp": 90,
+      "types": [
+        "Psychic"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex8/99",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex8",
+        "name": "Deoxys",
+        "serie": "ex"
+      }
+    },
+    {
+      "id": "ex9-93",
+      "localId": "93",
+      "name": "Deoxys ex",
+      "dexId": [
+        386
+      ],
+      "hp": 110,
+      "types": [
+        "Psychic"
+      ],
+      "image": "https://assets.tcgdex.net/en/ex/ex9/93",
+      "category": "Pokemon",
+      "set": {
+        "id": "ex9",
+        "name": "Emerald",
+        "serie": "ex"
+      }
+    }
+  ],
+  "metadata": {
+    "total_cards": 128,
+    "series": "ex",
+    "series_name": "Classic EX (2003-2007)",
+    "date_fetched": "2026-01-29T20:51:59.635645",
+    "source": "TCGdex API v2",
+    "language": "en",
+    "sets_processed": 18
+  }
+}

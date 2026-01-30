@@ -142,6 +142,41 @@ from lib import GENERATION_INFO, DataStorage, draw_pokemon_card
 - Parallel image downloads
 - Multiple image source fallbacks
 - PNG optimization
+- URL-based image cache differentiation for form variants
+
+#### Image Cache Architecture
+
+**Purpose**: Efficiently cache Pokémon images while properly handling form variants (Mega X/Y, etc.)
+
+**Key Components**:
+- `ImageCache` class in `scripts/pdf/lib/pdf_generator.py`
+- `cache_pokemon_images` step in fetcher pipeline
+- Unified caching strategy between fetcher and PDF generator
+
+**Cache Key Design**:
+- **Old Format**: `pokemon_{id}_{size}` - caused collisions (Charizard ID 6 = normal & Mega X)
+- **New Format**: `pokemon_{id}_{url_identifier}_{size}` - properly differentiates forms
+
+**URL Identifier Extraction**:
+- **PokeAPI URLs**: Extract numeric ID from path (e.g., `.../10034.png` → `"10034"`)
+- **TCGdex URLs**: Extract card ID from path (e.g., `.../me02/013` → `"me02-013"`)
+
+**Disk Cache Structure**:
+```
+data/pokemon_images_cache/
+  pokemon_6/
+    6_thumb.jpg         # Normal Charizard (180×180)
+    6_featured.jpg      # Normal Charizard (500×500)
+    10034_thumb.jpg     # Mega Charizard X (180×180)
+    10034_featured.jpg  # Mega Charizard X (500×500)
+    10035_thumb.jpg     # Mega Charizard Y (180×180)
+    10035_featured.jpg  # Mega Charizard Y (500×500)
+```
+
+**Benefits**:
+- Prevents cache collisions between base and form variants
+- Consistent strategy across fetcher and PDF generator
+- Supports both PokeAPI (10033+) and TCGdex (card IDs) image sources
 
 #### `lib/pdf_renderer.py` [185 lines]
 **Purpose**: PDF canvas drawing functions

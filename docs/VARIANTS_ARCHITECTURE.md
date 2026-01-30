@@ -24,11 +24,12 @@ The Variants feature enables generation of separate collection binders for Poké
 
 **Currently Implemented:**
 - **Mega Evolution:** 79 Pokémon with X/Y forms
-- **EX Generation 1:** 119 Pokémon including Delta Species
-- **EX Generation 2:** 166 Pokémon with Mega/Primal forms
-- **EX Generation 3:** 40 Pokémon with Tera forms
-- Full 9-language support
+- **EX Generation 1:** 94 Pokémon (classic EX cards)
+- **EX Generation 2:** 125 Pokémon with Mega/Primal sections
+- **EX Generation 3:** 195 Pokémon with Mega section (Scarlet & Violet ex)
+- Full 9-language support with form suffix preservation
 - Professional PDF generation with cutting guides
+- URL-based image cache for proper form variant differentiation
 
 ---
 

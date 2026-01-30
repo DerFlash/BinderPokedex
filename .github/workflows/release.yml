@@ -44,8 +44,25 @@ jobs:
 
       - name: Generate PDFs
         run: |
-          python scripts/generate_pdf.py
-          ls -lh output/*/*pdf | wc -l
+          # Generate all scopes
+          for scope in Pokedex ExGen1 ExGen2 ExGen3; do
+            echo "Generating PDFs for scope: $scope"
+            python scripts/pdf/generate_pdf.py --scope $scope
+          done
+          
+          # Verify output directory and PDFs exist
+          if [ ! -d output ]; then
+            echo "Error: output directory not created"
+            exit 1
+          fi
+          
+          PDF_COUNT=$(find output -type f -name '*.pdf' | wc -l)
+          echo "Generated $PDF_COUNT PDFs"
+          
+          if [ "$PDF_COUNT" -eq 0 ]; then
+            echo "Error: No PDFs were generated"
+            exit 1
+          fi
       
       - name: Create PDF artifacts (all languages + individual language zips)
         run: |

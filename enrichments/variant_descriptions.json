@@ -1,0 +1,74 @@
+{
+  "ExGen1": {
+    "normal": {
+      "de": "EX-Serie (Rubin & Saphir bis Macht der Wächter, 2003–2007)",
+      "en": "EX Series (Ruby & Sapphire to Power Keepers, 2003–2007)",
+      "fr": "Série EX (Rubis & Saphir à Gardiens du Pouvoir, 2003–2007)",
+      "es": "Serie EX (Rubí & Zafiro a Guardianes del Poder, 2003–2007)",
+      "it": "Serie EX (Rubino & Zaffiro a Guardiani del Potere, 2003–2007)",
+      "ja": "EX シリーズ (ルビー&サファイアからホロンの研究塔まで, 2003–2007)",
+      "ko": "EX 시리즈 (루비&사파이어부터 파워 키퍼스까지, 2003–2007)",
+      "zh_hans": "EX 系列 (红宝石&蓝宝石至力量守护者, 2003–2007)",
+      "zh_hant": "EX 系列 (紅寶石&藍寶石至力量守護者, 2003–2007)"
+    }
+  },
+  "ExGen2": {
+    "normal": {
+      "de": "[EX] Serie (BW & XY, 2012–2016) • Pokémon-EX Grundformen",
+      "en": "[EX] Series (BW & XY, 2012–2016) • Pokémon-EX base forms",
+      "fr": "Série [EX] (NB & XY, 2012–2016) • Formes de base Pokémon-EX",
+      "es": "Serie [EX] (NB & XY, 2012–2016) • Formas base Pokémon-EX",
+      "it": "Serie [EX] (NB & XY, 2012–2016) • Forme base Pokémon-EX",
+      "ja": "[EX] シリーズ (BW & XY, 2012–2016) • ポケモンEX基本形態",
+      "ko": "[EX] 시리즈 (BW & XY, 2012–2016) • 포켓몬 EX 기본 형태",
+      "zh_hans": "[EX] 系列 (BW & XY, 2012–2016) • 宝可梦EX基本形态",
+      "zh_hant": "[EX] 系列 (BW & XY, 2012–2016) • 寶可夢EX基本形態"
+    },
+    "mega": {
+      "de": "XY-Serie (2014–2016) • Mega-Entwicklungen als Pokémon-EX",
+      "en": "XY Series (2014–2016) • Mega Evolutions as Pokémon-EX",
+      "fr": "Série XY (2014–2016) • Méga-Évolutions en Pokémon-EX",
+      "es": "Serie XY (2014–2016) • Megaevoluciones como Pokémon-EX",
+      "it": "Serie XY (2014–2016) • Megaevoluzioni come Pokémon-EX",
+      "ja": "XY シリーズ (2014–2016) • メガシンカポケモンEX",
+      "ko": "XY 시리즈 (2014–2016) • 메가진화 포켓몬 EX",
+      "zh_hans": "XY 系列 (2014–2016) • 超级进化宝可梦EX",
+      "zh_hant": "XY 系列 (2014–2016) • 超級進化寶可夢EX"
+    },
+    "primal": {
+      "de": "XY-Serie (2014–2015) • Urform-Reversionen: Groudon & Kyogre",
+      "en": "XY Series (2014–2015) • Primal Reversions: Groudon & Kyogre",
+      "fr": "Série XY (2014–2015) • Primo-Résurgence : Groudon & Kyogre",
+      "es": "Serie XY (2014–2015) • Regresiones primigenias: Groudon & Kyogre",
+      "it": "Serie XY (2014–2015) • Archeorisveglio: Groudon & Kyogre",
+      "ja": "XY シリーズ (2014–2015) • ゲンシカイキ：グラードン & カイオーガ",
+      "ko": "XY 시리즈 (2014–2015) • 원시회귀: 그란돈 & 가이오가",
+      "zh_hans": "XY 系列 (2014–2015) • 原始回归：固拉多 & 盖欧卡",
+      "zh_hant": "XY 系列 (2014–2015) • 原始回歸：固拉多 & 蓋歐卡"
+    }
+  },
+  "ExGen3": {
+    "normal": {
+      "de": "Scarlet & Violet Serie (2023–heute) • Pokémon-ex Grundformen",
+      "en": "Scarlet & Violet Series (2023–present) • Pokémon-ex base forms",
+      "fr": "Série Écarlate & Violet (2023–présent) • Formes de base Pokémon-ex",
+      "es": "Serie Escarlata & Púrpura (2023–presente) • Formas base Pokémon-ex",
+      "it": "Serie Rosso & Viola (2023–presente) • Forme base Pokémon-ex",
+      "ja": "スカーレット&バイオレット シリーズ (2023–現在) • ポケモンex基本形態",
+      "ko": "스칼렛 & 바이올렛 시리즈 (2023–현재) • 포켓몬 ex 기본 형태",
+      "zh_hans": "朱&紫系列 (2023–至今) • 宝可梦ex基本形态",
+      "zh_hant": "朱&紫系列 (2023–至今) • 寶可夢ex基本形態"
+    },
+    "mega": {
+      "de": "Scarlet & Violet Serie (2024–heute) • Mega-Entwicklungen als Pokémon-ex",
+      "en": "Scarlet & Violet Series (2024–present) • Mega Evolutions as Pokémon-ex",
+      "fr": "Série Écarlate & Violet (2024–présent) • Méga-Évolutions en Pokémon-ex",
+      "es": "Serie Escarlata & Púrpura (2024–presente) • Megaevoluciones como Pokémon-ex",
+      "it": "Serie Rosso & Viola (2024–presente) • Megaevoluzioni come Pokémon-ex",
+      "ja": "スカーレット&バイオレット シリーズ (2024–現在) • メガシンカポケモンex",
+      "ko": "스칼렛 & 바이올렛 시리즈 (2024–현재) • 메가진화 포켓몬 ex",
+      "zh_hans": "朱&紫系列 (2024–至今) • 超级进化宝可梦ex",
+      "zh_hant": "朱&紫系列 (2024–至今) • 超級進化寶可夢ex"
+    }
+  }
+}
