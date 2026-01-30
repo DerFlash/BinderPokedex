@@ -6,7 +6,7 @@ Drucke 1.025+ Pokémon über 9 Generationen in 9 Sprachen. Alle Varianten, alle 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-![v4.3](https://img.shields.io/badge/Version-v4.3-green.svg)
+![v6.0](https://img.shields.io/badge/Version-v6.0-green.svg)
 
 ---
 
@@ -21,49 +21,35 @@ Drucke 1.025+ Pokémon über 9 Generationen in 9 Sprachen. Alle Varianten, alle 
 ### Für normale Nutzer - einfach laden & drucken!
 
 
-**Aktuelle Version (v4.1.1):** [Alle 117 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v4.1.1) ✨ *Hotfix: feine gestrichelte Schnittkanten, verbessertes Preview, enthält v4.1 Features*
+**Aktuelle Version (v6.0):** [Alle 117 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v6.0) ✨ *Major: Image Cache Redesign, mehrsprachige Formen-Unterstützung, umfassende Dokumentation*
 
-**Nach Sprache (v4.1.1):** 🇩🇪 [DE](https://github.com/DerFlash/BinderPokedex/releases/download/v4.1.1/binder-pokedex-de.zip) | 🇬🇧 [EN](https://github.com/DerFlash/BinderPokedex/releases/download/v4.1.1/binder-pokedex-en.zip) | 🇫🇷 [FR](https://github.com/DerFlash/BinderPokedex/releases/download/v4.1.1/binder-pokedex-fr.zip) | 🇪🇸 [ES](https://github.com/DerFlash/BinderPokedex/releases/download/v4.1.1/binder-pokedex-es.zip) | 🇮🇹 [IT](https://github.com/DerFlash/BinderPokedex/releases/download/v4.1.1/binder-pokedex-it.zip) | 🇯🇵 [JA](https://github.com/DerFlash/BinderPokedex/releases/download/v4.1.1/binder-pokedex-ja.zip) | 🇰🇷 [KO](https://github.com/DerFlash/BinderPokedex/releases/download/v4.1.1/binder-pokedex-ko.zip) | 🇨🇳 [ZH](https://github.com/DerFlash/BinderPokedex/releases/download/v4.1.1/binder-pokedex-zh_hans.zip) | 🇹🇼 [ZH-T](https://github.com/DerFlash/BinderPokedex/releases/download/v4.1.1/binder-pokedex-zh_hant.zip)
+**Nach Sprache (v6.0):** 🇩🇪 [DE](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-de.zip) | 🇬🇧 [EN](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-en.zip) | 🇫🇷 [FR](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-fr.zip) | 🇪🇸 [ES](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-es.zip) | 🇮🇹 [IT](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-it.zip) | 🇯🇵 [JA](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-ja.zip) | 🇰🇷 [KO](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-ko.zip) | 🇨🇳 [ZH](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-zh_hans.zip) | 🇹🇼 [ZH-T](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-zh_hant.zip)
 ---
 
-## 📝 Release Notes
+## 📝 Neu in v6.0
 
-### v4.1.1 (Hotfix)
-- Feine gestrichelte graue Schnittkanten für alle PDFs
-- Verbesserter Preview Screenshot
-- Enthält alle Features aus v4.1
+**Major Release - Architektur & Pipeline Redesign** (Januar 2026)
 
-### v4.1
-- Vereinheitlichtes Logging, saubere Ausgabe, Verbose-Modus
-- Sektionsbasierte Featured Pokémon
-- Verbesserte Typografie und Rendering
+Komplettes Data-Fetcher Redesign mit modularer Pipeline, Image-Cache Überarbeitung zur Vermeidung von Form-Varianten-Kollisionen, und mehrsprachige Formen-Suffix Beibehaltung (X/Y/Primal) für alle 9 Sprachen.
 
-✅ Entpacken, öffnen, drucken!
+📄 **[Vollständige Release Notes & Changelog](CHANGELOG.md)**
 
 ---
 
-## 🚀 Für Entwickler
+## ✨ Hauptfeatures
 
-### PDFs selbst generieren
-
-```bash
-# Clone & Setup
-git clone https://github.com/DerFlash/BinderPokedex.git
-cd BinderPokedex
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-
-# PDFs generieren
-python scripts/generate_pdf.py --language de --generation 1
-```
-
-### Abdeckung
-
-- **Generationen:** Alle 9 (Kanto → Paldea)
-- **Varianten:** EX-Serie (Gen1, Gen2, Gen3) + Mega Evolution
-- **Sprachen:** 9 (DE, EN, FR, ES, IT, JA, KO, ZH, ZH-T)
-- **Pokémon:** 1.025+ insgesamt inkl. Varianten
-- **PDFs:** 117 generiert (81 Generationen + 36 Varianten)
+- **9 Sprachen** 🌍 mit vollständiger CJK-Unterstützung (Japanisch, Koreanisch, Chinesisch)
+- **1.025+ Pokémon** über alle 9 Generationen (Kanto → Paldea) im National Pokédex
+- **Offizielle Artwork** von PokéAPI und TCGdex - authentische Bilder aus Spielen und TCG
+- **3×3 Kartenlayout** (9 pro Seite) - perfekt für Standard-Binderblätter
+- **Generations- und Varianten-Cover** mit wunderschönem mehrsprachigem Design und lokalisierten Logos
+- **TCG-EX Varianten-Kollektionen** ✨ 
+  - ExGen1: Klassische ex-Karten aus der Rubin/Saphir-Ära (2003-2007)
+  - ExGen2: Pokémon-EX aus Black & White und XY-Serien (2012-2016)
+  - ExGen3: Moderne ex-Karten aus Karmesin & Purpur (2023+)
+- **Strukturierte PDFs** mit thematischen Trennern und Featured-Pokémon-Headern
+- **Modulare Pipeline** zum Daten-Fetching mit scope-basierter Konfiguration
+- **Druckfertig A4** - einfach laden, drucken und binden! 📎
 
 ---
 
@@ -76,28 +62,48 @@ python scripts/generate_pdf.py --language de --generation 1
 | **Installationsanleitung** | [docs/INSTALLATION.md](docs/INSTALLATION.md) |
 | **Druckanleitungen** | [docs/PRINTING_GUIDE.de.md](docs/PRINTING_GUIDE.de.md) |
 | **Architektur** | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
+| **Data Fetcher** | [docs/DATA_FETCHER.md](docs/DATA_FETCHER.md) |
+| **Image Cache** | [docs/IMAGE_CACHE.md](docs/IMAGE_CACHE.md) |
+| **MCP Integration** | [docs/MCP_INTEGRATION.md](docs/MCP_INTEGRATION.md) |
+| **Mitwirken** | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) |
 
 ---
 
-## ✨ Hauptfeatures
+## � Für Entwickler
 
-- **9 Sprachen** 🌍 mit vollständiger CJK-Unterstützung (Japanisch, Koreanisch, Chinesisch)
-- **1.025+ Pokémon** über alle 9 Generationen (Kanto → Paldea) ready zum Sammeln
-- **Offizielle Artwork** von PokéAPI - jede Karte bekommt die echten Bilder
-- **3×3 Kartenlayout** (9 pro Seite) - perfekt für Binderblätter
-- **Generations-Deckblätter** mit wunderschönem mehrsprachigem Design
-- **EX Varianten-Kollektionen** ✨ 
-  - EX Gen1: 119 Pokémon mit Retro-Feeling
-  - EX Gen2: 72 Pokémon + Mega Evolution Formen
-  - EX Gen3: 82 Pokémon + Tera Typen
-  - Klassische Mega Evolution: Alle 76 Pokémon mit Mega Formen
-- **Strukturierte PDFs** mit thematischen Trennern und Featured-Pokémon-Headern
-- **Druckfertig A4** - einfach laden, drucken und binden! 📎
-- **Vollständig getestet** und produktionsreif
+### PDFs selbst generieren
+
+```bash
+# Clone & Setup
+git clone https://github.com/DerFlash/BinderPokedex.git
+cd BinderPokedex
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+
+# Verfügbare Scopes anzeigen
+ls config/scopes/*.yaml
+
+# Daten für einen Scope holen
+python scripts/fetcher/fetch.py --scope Pokedex
+
+# PDFs generieren
+python scripts/pdf/generate_pdf.py --language de --scope Pokedex
+```
 
 ---
 
-## 🙏 Danksagung & Quellen
+## ⚖️ Rechtlicher Hinweis
+
+**Dies ist ein Fan-Projekt ohne kommerzielle Absichten.** Pokémon, Pokédex und alle zugehörigen Marken sind Eigentum von The Pokémon Company, Nintendo und GameFreak.
+
+✅ **Erlaubt:** Persönliche Nutzung, Bildungszwecke, private Sammlungen  
+❌ **Verboten:** Kommerzielle Nutzung, Verkauf von PDFs oder gedruckten Materialien, gewinnorientierte Weiterverbreitung
+
+Vollständige Details siehe [LICENSE](LICENSE).
+
+---
+
+## �🙏 Danksagung & Quellen
 
 Dieses Projekt verdankt seinen Erfolg diesen fantastischen Ressourcen und Personen:
 

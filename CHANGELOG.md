@@ -7,6 +7,94 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [6.0.0] - 2026-01-30
+
+### 🎯 Major Changes
+- **Complete Data Fetcher Redesign** - New modular pipeline architecture
+  - Step-based processing with clear separation of concerns
+  - Context-driven data flow between pipeline steps
+  - Scope-based configuration (Pokedex, ExGen1, ExGen2, ExGen3)
+  - Comprehensive documentation: DATA_FETCHER.md
+
+- **Image Cache Redesign** - URL-based identifiers prevent collisions
+  - New format: `pokemon_{id}_{url_identifier}_{size}.jpg`
+  - Prevents collisions for form variants (Mega X/Y, Primal forms)
+  - Unified caching between fetcher and PDF generator
+  - Complete specification: IMAGE_CACHE.md
+
+- **Multilingual Form Suffix Preservation** - X/Y/Primal suffixes across all 9 languages
+  - Extract suffix from English name (e.g., " X", " Y", "-Primal")
+  - Apply to all language translations automatically
+  - Example: "Mega Glurak X" (German) instead of just "Mega Glurak"
+
+- **Project Restructuring** - Clear separation of concerns
+  - `scripts/fetcher/` - Data fetching and pipeline processing
+  - `scripts/pdf/` - PDF generation and rendering
+  - Removed obsolete configuration options
+
+### 🐛 Fixes
+- Fixed image cache collisions for form variants (Mega X/Y)
+- Corrected ExGen3 featured Pokémon list (Mega section: 150→448)
+- Removed obsolete `use_pokeapi_artwork` configuration
+
+### 🔧 Technical Details
+- New pipeline engine with step-based processing
+- Enhanced name enrichment preserving form suffixes
+- GitHub Actions workflow fixes for automated releases
+- Updated all scopes to use new pipeline architecture
+
+### 📚 Documentation
+- Added `docs/DATA_FETCHER.md` - Pipeline architecture and usage
+- Added `docs/IMAGE_CACHE.md` - Cache specification and design
+- Updated `docs/ARCHITECTURE.md` - Overall project architecture
+- Updated `docs/VARIANTS_ARCHITECTURE.md` - Variant system details
+- Comprehensive README updates with v6.0 information
+
+### Impact
+**Mega Charizard X** now displays correct image and name ("Mega Glurak X" in German, not just "Mega Glurak")
+
+### Migration from 5.0
+1. Delete old cache: `rm -rf data/pokemon_images_cache/`
+2. Re-fetch all data using new scopes:
+   ```bash
+   python scripts/fetcher/fetch.py --scope Pokedex
+   python scripts/fetcher/fetch.py --scope ExGen1
+   python scripts/fetcher/fetch.py --scope ExGen2
+   python scripts/fetcher/fetch.py --scope ExGen3
+   ```
+3. Generate PDFs with new paths:
+   ```bash
+   python scripts/pdf/generate_pdf.py --language de --scope Pokedex
+   ```
+
+---
+
+## [5.0.0] - 2026-01-23
+
+### 🐛 Bug Fixes
+
+**CJK Font Rendering**
+- Fixed font warnings and missing CJK characters in GitHub Actions
+- Added Noto Sans CJK font installation for Linux environments
+- Implemented automatic font fallback support
+- Japanese, Korean, and Chinese characters now render properly in all PDFs
+
+### 🔧 Technical Details
+
+**Cross-Platform Font Support**
+- macOS: Songti SC/TC (system fonts)
+- Linux: Noto Sans CJK (auto-installed)
+- Automatic font fallback detection
+- Proper CJK character rendering in PDF generation
+
+### 📊 Stats
+- **Total PDFs:** 117 (81 generations + 36 variants)
+- **Total Pokémon:** 1,025+ including variants
+- **Languages:** 9 (DE, EN, FR, ES, IT, JA, KO, ZH, ZH-T)
+- **Size per PDF:** 5-8 MB with embedded images
+
+---
+
 ## [4.3.0] - 2026-01-30
 
 ### Fixed

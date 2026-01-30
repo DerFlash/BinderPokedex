@@ -6,7 +6,7 @@ Print 1,025+ Pokémon across 9 generations in 9 languages. All variants, all for
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-![v4.3](https://img.shields.io/badge/version-v4.3-green.svg)
+![v6.0](https://img.shields.io/badge/version-v6.0-green.svg)
 
 ---
 
@@ -21,76 +21,63 @@ Print 1,025+ Pokémon across 9 generations in 9 languages. All variants, all for
 ### For End Users - Just Download & Print!
 
 
-**Latest (v4.2):** [All 117 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v4.2) ✨ *Major: Comprehensive CJK/Asian font support, WenQuanYi integration, improved Unicode coverage*
+**Latest (v6.0):** [All 117 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v6.0) ✨ *Major: Image cache redesign, multilingual form suffix support, comprehensive documentation*
 
-**By Language (v4.2):**
-🇩🇪 [Deutsch](https://github.com/DerFlash/BinderPokedex/releases/download/v4.2/binder-pokedex-de.zip) |
-🇬🇧 [English](https://github.com/DerFlash/BinderPokedex/releases/download/v4.2/binder-pokedex-en.zip) |
-🇫🇷 [Français](https://github.com/DerFlash/BinderPokedex/releases/download/v4.2/binder-pokedex-fr.zip) |
-🇪🇸 [Español](https://github.com/DerFlash/BinderPokedex/releases/download/v4.2/binder-pokedex-es.zip) |
-🇮🇹 [Italiano](https://github.com/DerFlash/BinderPokedex/releases/download/v4.2/binder-pokedex-it.zip) |
-🇯🇵 [日本語](https://github.com/DerFlash/BinderPokedex/releases/download/v4.2/binder-pokedex-ja.zip) |
-🇰🇷 [한국어](https://github.com/DerFlash/BinderPokedex/releases/download/v4.2/binder-pokedex-ko.zip) |
-🇨🇳 [简体中文](https://github.com/DerFlash/BinderPokedex/releases/download/v4.2/binder-pokedex-zh_hans.zip) |
-🇹🇼 [繁體中文](https://github.com/DerFlash/BinderPokedex/releases/download/v4.2/binder-pokedex-zh_hant.zip)
+**By Language (v6.0):**
+🇩🇪 [Deutsch](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-de.zip) |
+🇬🇧 [English](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-en.zip) |
+🇫🇷 [Français](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-fr.zip) |
+🇪🇸 [Español](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-es.zip) |
+🇮🇹 [Italiano](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-it.zip) |
+🇯🇵 [日本語](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-ja.zip) |
+🇰🇷 [한국어](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-ko.zip) |
+🇨🇳 [简体中文](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-zh_hans.zip) |
+🇹🇼 [繁體中文](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-zh_hant.zip)
 ---
 
-## 📝 Release Notes
+## 📝 What's New in v6.0
 
-### v4.3 (Architecture & Data Quality)
-**Date:** January 2026
+**Major Release - Architecture & Pipeline Redesign** (January 2026)
 
-**Fixed:**
-- 🔧 Image cache collision bug: Form variants (Mega X/Y) now use separate cache files
-- 🌐 Form suffix preservation: X/Y/Primal suffixes now correctly appear in all 9 languages
-- 🎨 ExGen3 Featured Pokémon: Corrected Mega section featured list (Charizard X, Gengar, Lucario)
-- 🧹 Code cleanup: Removed obsolete `use_pokeapi_artwork` configuration option
+Complete data fetcher redesign with modular pipeline, image cache overhaul preventing form variant collisions, and multilingual form suffix preservation (X/Y/Primal) across all 9 languages.
 
-**Technical Improvements:**
-- Redesigned ImageCache with URL-based identifiers (`pokemon_{id}_{url_identifier}_{size}`)
-- Unified caching strategy between fetcher and PDF generator
-- Enhanced name enrichment to preserve form suffixes across all languages
-- Synchronized cache implementation: `cache_pokemon_images.py` ↔ `pdf_generator.py`
-
-**Impact:** Mega Charizard X now shows correct image and name ("Mega Glurak X" in German, not just "Mega Glurak")
-
-### v4.2 (Major Release - Font Support Complete)
-**Issue:** PDFs generated in GitHub Actions environments were failing to render CJK (Chinese, Japanese, Korean) and other non-Latin scripts correctly due to missing font mappings and ReportLab font detection issues.
-
-**Solution:** 
-- 🎯 Comprehensive CJK and Asian font support with WenQuanYi font integration
-- 📦 Install and configure WenQuanYi fonts for improved Unicode character coverage
-- 🔍 Enhanced font detection with fallback mechanisms for Noto fonts and system fonts
-- 🛠️ Fixed font path resolution for Ubuntu/Linux systems (OpenType fonts)
-- 🎨 Improved Korean rendering using SongtiBold (better coverage than AppleGothic)
-- 🔧 Consolidated font configuration with single source of truth
-- 📝 Suppressed expected ReportLab font warnings while maintaining error visibility
-- ✅ Verified Japanese, Chinese, Korean, and variant PDF generation across all platforms
-
-**Result:** All 1,025+ Pokémon now render correctly in all 9 languages, with proper Unicode support and consistent font handling across local and CI/CD environments.
-
-### v4.1.1 (Hotfix)
-- Fine dashed gray cutting guides for all PDFs
-- Improved preview screenshot
-- Includes all features from v4.1
-
-### v4.1
-- Unified logging, clean output, verbose mode
-- Section-based featured Pokémon
-- Improved typography and rendering
-
-✅ Extract, open PDFs, print, and bind!
+📄 **[Full Release Notes & Changelog](CHANGELOG.md)**
 
 ---
 
-## ⚖️ Legal Notice
+## ✨ Key Features
 
-**This is a fan-made, non-commercial project.** Pokémon, Pokédex, and all related trademarks are the property of The Pokémon Company, Nintendo, and GameFreak.
+- **9 Languages** 🌍 with proper CJK support (Japanese, Korean, Chinese)
+- **1,025+ Pokémon** across all 9 generations (Kanto → Paldea) in National Pokédex
+- **Official artwork** from PokéAPI and TCGdex - authentic images from games and TCG
+- **3×3 card layout** (9 per page) - perfect for standard binder sheets
+- **Generation & variant covers** with beautiful multilingual design and localized logos
+- **TCG-EX Variant Collections** ✨ 
+  - ExGen1: Classic ex cards from Ruby/Sapphire era (2003-2007)
+  - ExGen2: Pokémon-EX from Black & White and XY series (2012-2016)
+  - ExGen3: Modern ex cards from Scarlet & Violet (2023+)
+- **Sectioned PDFs** with themed dividers and featured Pokémon headers
+- **Modular pipeline** for data fetching with scope-based configuration
+- **Print-ready A4** - just download, print, and bind! 📎
 
-✅ **Permitted:** Personal use, educational purposes, private collections  
-❌ **Prohibited:** Commercial use, selling PDFs or printed materials, profit-driven redistribution
+---
 
-For full details, see [LICENSE](LICENSE).
+## 📚 Documentation
+
+| Topic | Link |
+|-------|------|
+| **Usage & Examples** | [docs/USAGE.md](docs/USAGE.md) |
+| **Features & Tech** | [docs/FEATURES.md](docs/FEATURES.md) |
+| **Installation Guide** | [docs/INSTALLATION.md](docs/INSTALLATION.md) |
+| **Printing Tips** | [docs/PRINTING_GUIDE.md](docs/PRINTING_GUIDE.md) |
+| **Architecture** | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
+| **Data Fetcher** | [docs/DATA_FETCHER.md](docs/DATA_FETCHER.md) |
+| **Image Cache** | [docs/IMAGE_CACHE.md](docs/IMAGE_CACHE.md) |
+| **MCP Integration** | [docs/MCP_INTEGRATION.md](docs/MCP_INTEGRATION.md) |
+| **Contribution** | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) |
+| **Pokémon Variants** | [docs/VARIANTS_FEATURE_SUMMARY.md](docs/VARIANTS_FEATURE_SUMMARY.md) |
+| **Variants Architecture** | [docs/VARIANTS_ARCHITECTURE.md](docs/VARIANTS_ARCHITECTURE.md) |
+| **Variants Quickstart** | [docs/VARIANTS_QUICKSTART.md](docs/VARIANTS_QUICKSTART.md) |
 
 ---
 
@@ -105,51 +92,26 @@ cd BinderPokedex
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
+# List available scopes
+ls config/scopes/*.yaml
+
+# Fetch data for a scope
+python scripts/fetcher/fetch.py --scope Pokedex
+
 # Generate PDFs
-python scripts/generate_pdf.py --language de --generation 1
+python scripts/pdf/generate_pdf.py --language de --scope Pokedex
 ```
 
-### Coverage
-
-- **Generations:** All 9 (Kanto → Paldea)
-- **Variants:** EX series (Gen1, Gen2, Gen3) + Mega Evolution
-- **Languages:** 9 (DE, EN, FR, ES, IT, JA, KO, ZH, ZH-T)
-- **Pokémon:** 1,025+ total including variants
-- **PDFs:** 117 generated (81 generations + 36 variants)
-
 ---
 
-## 📚 Documentation
+## ⚖️ Legal Notice
 
-| Topic | Link |
-|-------|------|
-| **Usage & Examples** | [docs/USAGE.md](docs/USAGE.md) |
-| **Features & Tech** | [docs/FEATURES.md](docs/FEATURES.md) |
-| **Installation Guide** | [docs/INSTALLATION.md](docs/INSTALLATION.md) |
-| **Printing Tips** | [docs/PRINTING_GUIDE.md](docs/PRINTING_GUIDE.md) |
-| **Architecture** | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
-| **Contribution** | [CONTRIBUTING.md](docs/CONTRIBUTING.md) |
-| **🆕 Pokémon Variants Feature** | [docs/VARIANTS_FEATURE_SUMMARY.md](docs/VARIANTS_FEATURE_SUMMARY.md) |
-| **🆕 Variants Technical Spec** | [docs/VARIANTS_TECHNICAL_SPEC.md](docs/VARIANTS_TECHNICAL_SPEC.md) |
-| **🆕 Variants Research** | [docs/VARIANTS_RESEARCH.md](docs/VARIANTS_RESEARCH.md) |
+**This is a fan-made, non-commercial project.** Pokémon, Pokédex, and all related trademarks are the property of The Pokémon Company, Nintendo, and GameFreak.
 
----
+✅ **Permitted:** Personal use, educational purposes, private collections  
+❌ **Prohibited:** Commercial use, selling PDFs or printed materials, profit-driven redistribution
 
-## ✨ Key Features
-
-- **9 Languages** 🌍 with proper CJK support (Japanese, Korean, Chinese)
-- **1,025+ Pokémon** across all 9 generations (Kanto → Paldea) ready to collect
-- **Official artwork** from PokéAPI - every card gets the real deal
-- **3×3 card layout** (9 per page) - perfect for binder sheets
-- **Generation cover pages** with beautiful multilingual design
-- **EX Variant Collections** ✨ 
-  - EX Gen1: 119 Pokémon with retro flair
-  - EX Gen2: 72 Pokémon + Mega Evolution forms
-  - EX Gen3: 82 Pokémon + Tera types
-  - Classic Mega Evolution: All 76 Pokémon with mega forms
-- **Sectioned PDFs** with themed dividers and featured Pokémon headers
-- **Print-ready A4** - just download, print, and bind! 📎
-- **Fully tested** and production-ready
+For full details, see [LICENSE](LICENSE).
 
 ---
 
