@@ -42,24 +42,23 @@ class FixMissingDexIdsStep(BaseStep):
         Fix missing dexIds in TCG card data.
         
         Required params:
-            - source_path: Path to TCG set source JSON (e.g., data/source/me02.5.json)
             - pokedex_path: Path to Pokedex JSON (e.g., data/output/Pokedex.json)
+            
+        Optional params:
+            - source_path: Path to save fixed data to file (for debugging/caching)
             
         Returns:
             Updated context with statistics
         """
         logger.info("🔧 Fixing missing dexIds in TCG cards (TCGdex API workaround)")
         
-        source_path = params.get('source_path')
+        # Load data from context (not from file!)
+        source_data = context.data.get('tcg_set_source')
+        if not source_data:
+            raise ValueError("No TCG set data found in context. Make sure fetch_tcgdex_set ran before this step.")
+        
         pokedex_path = params.get('pokedex_path')
-        
-        # Load data
-        source_file = Path(source_path)
-        if not source_file.exists():
-            raise FileNotFoundError(f"Source file not found: {source_path}")
-        
-        with open(source_file, 'r', encoding='utf-8') as f:
-            source_data = json.load(f)
+        source_path = params.get('source_path')  # Optional, for saving to file
         
         # Load Pokedex for name lookup
         pokedex_lookup = self._load_pokedex_lookup(pokedex_path)
@@ -115,9 +114,15 @@ class FixMissingDexIdsStep(BaseStep):
                 
                 logger.info(f"✓ Fixed '{card_name}' -> #{dex_id} {base_name} ({pattern})")
         
-        # Save fixed data
-        with open(source_file, 'w', encoding='utf-8') as f:
-            json.dump(source_data, f, indent=2, ensure_ascii=False)
+        # Update context data - this is the PRIMARY output!
+        context.data['tcg_set_source'] = source_data
+        
+        # Optionally save fixed data to file (for debugging/caching)
+        if source_path:
+            source_file = Path(source_path)
+            with open(source_file, 'w', encoding='utf-8') as f:
+                json.dump(source_data, f, indent=2, ensure_ascii=False)
+            logger.info(f"💾 Saved fixed data to {source_file}")
         
         # Report results
         logger.info(f"✅ Fixed {cards_fixed}/{cards_processed} cards with missing dexIds")
@@ -133,14 +138,17 @@ class FixMissingDexIdsStep(BaseStep):
             logger.warning("⚠️  No cards with missing dexIds found!")
             logger.warning("⚠️  The TCGdex API may have been fixed - consider removing this step from the pipeline.")
         
-        # Update context
-        context.metadata['fix_missing_dex_ids'] = {
+        # Update context metadata
+        metadata = {
             'status': 'success',
             'cards_processed': cards_processed,
             'cards_fixed': cards_fixed,
-            'fixes_by_pattern': fixes_by_pattern,
-            'saved_to': str(source_file)
+            'fixes_by_pattern': fixes_by_pattern
         }
+        if source_path:
+            metadata['saved_to'] = str(source_path)
+        
+        context.metadata['fix_missing_dex_ids'] = metadata
         
         return context
     

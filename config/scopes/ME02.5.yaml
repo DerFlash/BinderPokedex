@@ -14,7 +14,6 @@ pipeline:
     set_id: me02.5
 - step: fix_missing_dex_ids
   params:
-    source_path: data/source/me02.5.json
     pokedex_path: data/output/Pokedex.json
 - step: enrich_tcg_cards_from_pokedex
   params:

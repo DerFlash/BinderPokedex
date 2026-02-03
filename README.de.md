@@ -6,7 +6,7 @@ Drucke 1.025+ Pokémon über 9 Generationen in 9 Sprachen. Alle Varianten, alle 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-![v6.0](https://img.shields.io/badge/Version-v6.0-green.svg)
+![v7.1](https://img.shields.io/badge/Version-v7.1-green.svg)
 
 ---
 
@@ -21,16 +21,41 @@ Drucke 1.025+ Pokémon über 9 Generationen in 9 Sprachen. Alle Varianten, alle 
 ### Für normale Nutzer - einfach laden & drucken!
 
 
-**Aktuelle Version (v6.0):** [Alle 117 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v6.0) ✨ *Major: Image Cache Redesign, mehrsprachige Formen-Unterstützung, umfassende Dokumentation*
+**Aktuelle Version (v7.1):** [Alle 225 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v7.1) ✨ *Fix: Fehlende Pokémon-Bilder in TCG-Sets*
 
-**Nach Sprache (v6.0):** 🇩🇪 [DE](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-de.zip) | 🇬🇧 [EN](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-en.zip) | 🇫🇷 [FR](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-fr.zip) | 🇪🇸 [ES](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-es.zip) | 🇮🇹 [IT](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-it.zip) | 🇯🇵 [JA](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-ja.zip) | 🇰🇷 [KO](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-ko.zip) | 🇨🇳 [ZH](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-zh_hans.zip) | 🇹🇼 [ZH-T](https://github.com/DerFlash/BinderPokedex/releases/download/v6.0/binder-pokedex-zh_hant.zip)
+**Nach Sprache (v7.1):** 🇩🇪 [DE](https://github.com/DerFlash/BinderPokedex/releases/download/v7.1/binder-pokedex-de.zip) | 🇬🇧 [EN](https://github.com/DerFlash/BinderPokedex/releases/download/v7.1/binder-pokedex-en.zip) | 🇫🇷 [FR](https://github.com/DerFlash/BinderPokedex/releases/download/v7.1/binder-pokedex-fr.zip) | 🇪🇸 [ES](https://github.com/DerFlash/BinderPokedex/releases/download/v7.1/binder-pokedex-es.zip) | 🇮🇹 [IT](https://github.com/DerFlash/BinderPokedex/releases/download/v7.1/binder-pokedex-it.zip) | 🇯🇵 [JA](https://github.com/DerFlash/BinderPokedex/releases/download/v7.1/binder-pokedex-ja.zip) | 🇰🇷 [KO](https://github.com/DerFlash/BinderPokedex/releases/download/v7.1/binder-pokedex-ko.zip) | 🇨🇳 [ZH](https://github.com/DerFlash/BinderPokedex/releases/download/v7.1/binder-pokedex-zh_hans.zip) | 🇹🇼 [ZH-T](https://github.com/DerFlash/BinderPokedex/releases/download/v7.1/binder-pokedex-zh_hant.zip)
 ---
 
-## 📝 Neu in v6.0
+## 📝 Was ist neu
 
-**Major Release - Architektur & Pipeline Redesign** (Januar 2026)
+### v7.1 (Februar 2026)
 
-Komplettes Data-Fetcher Redesign mit modularer Pipeline, Image-Cache Überarbeitung zur Vermeidung von Form-Varianten-Kollisionen, und mehrsprachige Formen-Suffix Beibehaltung (X/Y/Primal) für alle 9 Sprachen.
+**Bugfix-Release - TCG-Bilder**
+
+🐛 **Kritischer Fix:**
+- Fehlende Pokémon-Bilder in allen TCG-Sets behoben
+- Pipeline-Architektur-Fehler im `fix_missing_dex_ids` Step behoben
+- Alle Pokémon-Karten zeigen jetzt korrekte Artworks in PDFs
+- Alle 225 PDFs mit vollständigen Bildern neu generiert
+
+### v7.0 (Februar 2026)
+
+**Major Release - Komplette TCG-Unterstützung & Scope-System**
+
+🎴 **25 Scopes Total:** National Pokédex + 24 TCG-Sets (3 EX-Generationen + 21 moderne Sets)
+
+**Neue TCG-Features:**
+- Komplette Unterstützung für alle Karmesin & Purpur TCG-Sets (SV01-SV10 + Spezial-Sets)
+- Paldea-Ära-Unterstützung (ME01, ME02, MEP)
+- Auto-Discovery-System mit Batch-Generierung
+- Logo-Validierung mit automatischem Fallback
+- Mehrsprachige TCG-Metadaten
+
+**System-Verbesserungen:**
+- Scope-basierte Konfiguration für flexibles Daten-Fetching
+- Erweiterter Pokemon-Image-Cache (1025+ Pokemon)
+- Typ-Übersetzungs-Anreicherungssystem
+- Batch-PDF-Generierung mit `--scope all`
 
 📄 **[Vollständige Release Notes & Changelog](CHANGELOG.md)**
 
@@ -43,12 +68,14 @@ Komplettes Data-Fetcher Redesign mit modularer Pipeline, Image-Cache Überarbeit
 - **Offizielle Artwork** von PokéAPI und TCGdex - authentische Bilder aus Spielen und TCG
 - **3×3 Kartenlayout** (9 pro Seite) - perfekt für Standard-Binderblätter
 - **Generations- und Varianten-Cover** mit wunderschönem mehrsprachigem Design und lokalisierten Logos
-- **TCG-EX Varianten-Kollektionen** ✨ 
-  - ExGen1: Klassische ex-Karten aus der Rubin/Saphir-Ära (2003-2007)
-  - ExGen2: Pokémon-EX aus Black & White und XY-Serien (2012-2016)
-  - ExGen3: Moderne ex-Karten aus Karmesin & Purpur (2023+)
+- **Komplette TCG-Unterstützung** 🎴
+  - **3 EX-Generationen:** ExGen1 (2003-2007), ExGen2 (2012-2016), ExGen3 (2023+)
+  - **21 Moderne Sets:** Komplette Karmesin & Purpur-Ära (SV01-SV10 + Spezial-Sets)
+  - **Paldea-Ära:** ME01, ME02, ME02.5, MEP
+  - Auto-Discovery und Batch-Generierung
+- **Scope-basiertes System** mit 25 Scopes insgesamt
 - **Strukturierte PDFs** mit thematischen Trennern und Featured-Pokémon-Headern
-- **Modulare Pipeline** zum Daten-Fetching mit scope-basierter Konfiguration
+- **Modulare Pipeline** zum Daten-Fetching mit flexibler Konfiguration
 - **Druckfertig A4** - einfach laden, drucken und binden! 📎
 
 ---

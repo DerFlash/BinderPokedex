@@ -7,6 +7,69 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [7.1.0] - 2026-02-03
+
+### 🐛 Bug Fixes
+
+**TCG Images Fixed**
+- **Critical Fix:** Fixed missing Pokémon images in all TCG sets
+- Resolved pipeline architecture flaw in `fix_missing_dex_ids` step
+- All Pokémon cards now display correct artwork in generated PDFs
+- Regenerated all 225 PDFs with complete images
+
+### 🔧 Technical Details
+- Made `fix_missing_dex_ids` step consistent with pipeline architecture
+- Now uses `context.data['tcg_set_source']` instead of file I/O
+- `source_path` parameter is now optional (only for debugging/caching)
+- Updated ME02.5.yaml config to remove redundant `source_path` parameter
+- 26 files updated with fixed pipeline and regenerated data
+
+### Impact
+**All TCG Sets** now show Pokémon artwork correctly in PDFs (previously only trainer/energy cards had images)
+
+---
+
+## [7.0.0] - 2026-02-02
+
+### 🎯 Major Changes
+
+**Complete TCG Support & Scope System**
+- **25 Scopes Total:** National Pokédex + 24 TCG sets
+  - 3 EX Generation sets (ExGen1, ExGen2, ExGen3)
+  - 21 Modern TCG sets (ME01, ME02, ME02.5, MEP, SV01-SV10, SVP)
+- All Scarlet & Violet TCG sets (SV01-SV10 + special sets)
+- Paldea Era support (ME01, ME02, ME02.5, MEP)
+- Auto-discovery system with batch generation
+- Logo validation with automatic fallback
+- Multilingual TCG metadata (up to 9 languages)
+
+**System Improvements**
+- Scope-based configuration for flexible data fetching
+- Extended Pokemon image cache (1025+ Pokemon)
+- Type translation enrichment system
+- Batch PDF generation with `--scope all`
+- Improved pipeline error handling and validation
+
+**PDF Generation**
+- 225 total PDFs across all scopes and languages
+- Per-language ZIP archives for easy distribution
+- Optimized file sizes and generation speed
+
+### 📊 Statistics
+- **Pokémon Coverage:** 1,025 Pokémon (all 9 generations)
+- **TCG Sets:** 24 complete sets with multilingual support
+- **Languages:** 9 (DE, EN, FR, ES, IT, JA, KO, ZH-Hans, ZH-Hant)
+- **Total PDFs:** 225 (9 for Pokedex + EX sets, 5 for most TCG sets)
+
+### 🔧 Technical Details
+- Enhanced scope system with YAML configuration
+- TCGdex API integration for all modern sets
+- Automatic dexId fixing for trainer-owned and special Pokémon
+- Section-based data format for TCG sets
+- Logo embedding with fallback handling
+
+---
+
 ## [6.0.0] - 2026-01-30
 
 ### 🎯 Major Changes

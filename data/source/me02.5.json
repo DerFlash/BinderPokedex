@@ -26,9 +26,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        43
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -40,9 +38,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        44
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -54,9 +50,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        45
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -68,9 +62,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        69
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -82,9 +74,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        70
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -96,9 +86,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        71
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -110,9 +98,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        114
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -124,9 +110,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        152
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -138,9 +122,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        153
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -152,9 +134,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        154
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -166,9 +146,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        265
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -180,9 +158,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        266
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -194,9 +170,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        267
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -208,9 +182,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        268
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -222,9 +194,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        269
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -236,9 +206,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        406
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -250,9 +218,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        736
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -264,9 +230,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        917
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -278,9 +242,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        918
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -292,9 +254,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        4
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -306,9 +266,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        5
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -320,9 +278,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        6
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -334,9 +290,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        218
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -348,9 +302,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        219
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -362,9 +314,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        244
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -376,9 +326,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        250
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -390,9 +338,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        322
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -404,9 +350,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        323
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -418,9 +362,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        498
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -432,9 +374,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        499
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -446,9 +386,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        500
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -460,9 +398,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        554
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -474,9 +410,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        555
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -488,9 +422,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        757
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -502,9 +434,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        758
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -516,9 +446,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        813
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -530,9 +458,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        814
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -544,9 +470,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        815
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -558,9 +482,7 @@
       "types": [
         "Water"
       ],
-      "dexId": [
-        54
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -572,9 +494,7 @@
       "types": [
         "Water"
       ],
-      "dexId": [
-        55
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -586,9 +506,7 @@
       "types": [
         "Water"
       ],
-      "dexId": [
-        158
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -600,9 +518,7 @@
       "types": [
         "Water"
       ],
-      "dexId": [
-        159
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -614,9 +530,7 @@
       "types": [
         "Water"
       ],
-      "dexId": [
-        160
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -628,9 +542,7 @@
       "types": [
         "Water"
       ],
-      "dexId": [
-        215
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -642,9 +554,7 @@
       "types": [
         "Water"
       ],
-      "dexId": [
-        461
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -656,9 +566,7 @@
       "types": [
         "Water"
       ],
-      "dexId": [
-        361
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -670,9 +578,7 @@
       "types": [
         "Water"
       ],
-      "dexId": [
-        478
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -684,9 +590,7 @@
       "types": [
         "Water"
       ],
-      "dexId": [
-        378
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -698,9 +602,7 @@
       "types": [
         "Water"
       ],
-      "dexId": [
-        582
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -712,9 +614,7 @@
       "types": [
         "Water"
       ],
-      "dexId": [
-        583
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -726,9 +626,7 @@
       "types": [
         "Water"
       ],
-      "dexId": [
-        584
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -740,9 +638,7 @@
       "types": [
         "Water"
       ],
-      "dexId": [
-        872
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -754,9 +650,7 @@
       "types": [
         "Water"
       ],
-      "dexId": [
-        873
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -768,9 +662,7 @@
       "types": [
         "Water"
       ],
-      "dexId": [
-        896
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -782,9 +674,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        25
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -796,9 +686,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        26
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -810,9 +698,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        25
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -824,9 +710,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        100
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -838,9 +722,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        602
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -852,9 +734,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        603
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -866,9 +746,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        604
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -880,9 +758,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        618
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -894,9 +770,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        694
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -908,9 +782,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        695
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -922,9 +794,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        737
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -936,9 +806,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        738
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -950,9 +818,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        785
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -964,9 +830,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        871
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -978,9 +842,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        938
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -992,9 +854,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        939
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1006,9 +866,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        940
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1020,9 +878,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        941
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1034,9 +890,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        1008
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1048,9 +902,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        35
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1062,9 +914,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        36
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1076,9 +926,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        35
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1090,9 +938,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        102
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1104,9 +950,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        103
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1118,9 +962,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        150
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1132,9 +974,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        175
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1146,9 +986,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        176
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1160,9 +998,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        468
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1174,9 +1010,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        183
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1188,9 +1022,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        184
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1202,9 +1034,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        200
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1216,9 +1046,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        429
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1230,9 +1058,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        280
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1244,9 +1070,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        281
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1258,9 +1082,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        282
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1272,9 +1094,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        353
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1286,9 +1106,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        354
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1300,9 +1118,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        479
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1314,9 +1130,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        684
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1328,9 +1142,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        685
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1342,9 +1154,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        708
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1356,9 +1166,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        709
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1370,9 +1178,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        778
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1384,9 +1190,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        897
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1398,9 +1202,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        1015
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1412,9 +1214,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        50
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1426,9 +1226,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        51
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1440,9 +1238,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        237
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1454,9 +1250,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        307
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1468,9 +1262,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        308
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1482,9 +1274,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        337
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1496,9 +1286,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        338
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1510,9 +1298,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        377
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1524,9 +1310,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        383
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1538,9 +1322,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        443
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1552,9 +1334,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        444
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1566,9 +1346,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        445
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1580,9 +1358,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        447
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1594,9 +1370,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        448
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1608,9 +1382,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        618
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1622,9 +1394,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        674
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1636,9 +1406,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        701
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1650,9 +1418,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        703
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1664,9 +1430,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        837
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1678,9 +1442,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        838
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1692,9 +1454,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        839
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1706,9 +1466,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        1007
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1720,9 +1478,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        1014
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1734,9 +1490,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        92
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1748,9 +1502,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        93
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1762,9 +1514,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        94
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1776,9 +1526,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        198
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1790,9 +1538,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        430
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1804,9 +1550,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        261
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1818,9 +1562,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        262
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1832,9 +1574,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        263
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1846,9 +1586,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        264
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1860,9 +1598,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        862
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1874,9 +1610,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        442
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1888,9 +1622,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        559
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1902,9 +1634,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        560
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1916,9 +1646,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        570
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1930,9 +1658,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        571
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1944,9 +1670,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        629
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1958,9 +1682,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        630
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1972,9 +1694,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        675
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -1986,9 +1706,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        720
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2000,9 +1718,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        1016
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2014,9 +1730,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        1025
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2028,9 +1742,7 @@
       "types": [
         "Metal"
       ],
-      "dexId": [
-        303
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2042,9 +1754,7 @@
       "types": [
         "Metal"
       ],
-      "dexId": [
-        379
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2056,9 +1766,7 @@
       "types": [
         "Metal"
       ],
-      "dexId": [
-        624
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2070,9 +1778,7 @@
       "types": [
         "Metal"
       ],
-      "dexId": [
-        625
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2084,9 +1790,7 @@
       "types": [
         "Metal"
       ],
-      "dexId": [
-        983
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2098,9 +1802,7 @@
       "types": [
         "Metal"
       ],
-      "dexId": [
-        777
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2112,9 +1814,7 @@
       "types": [
         "Dragon"
       ],
-      "dexId": [
-        147
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2126,9 +1826,7 @@
       "types": [
         "Dragon"
       ],
-      "dexId": [
-        148
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2140,9 +1838,7 @@
       "types": [
         "Dragon"
       ],
-      "dexId": [
-        149
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2154,9 +1850,7 @@
       "types": [
         "Dragon"
       ],
-      "dexId": [
-        384
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2168,9 +1862,7 @@
       "types": [
         "Dragon"
       ],
-      "dexId": [
-        643
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2182,9 +1874,7 @@
       "types": [
         "Dragon"
       ],
-      "dexId": [
-        644
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2196,9 +1886,7 @@
       "types": [
         "Dragon"
       ],
-      "dexId": [
-        714
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2210,9 +1898,7 @@
       "types": [
         "Dragon"
       ],
-      "dexId": [
-        715
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2224,9 +1910,7 @@
       "types": [
         "Dragon"
       ],
-      "dexId": [
-        885
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2238,9 +1922,7 @@
       "types": [
         "Dragon"
       ],
-      "dexId": [
-        886
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2252,9 +1934,7 @@
       "types": [
         "Dragon"
       ],
-      "dexId": [
-        887
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2266,9 +1946,7 @@
       "types": [
         "Colorless"
       ],
-      "dexId": [
-        52
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2280,9 +1958,7 @@
       "types": [
         "Colorless"
       ],
-      "dexId": [
-        115
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2294,9 +1970,7 @@
       "types": [
         "Colorless"
       ],
-      "dexId": [
-        206
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2308,9 +1982,7 @@
       "types": [
         "Colorless"
       ],
-      "dexId": [
-        982
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2322,9 +1994,7 @@
       "types": [
         "Colorless"
       ],
-      "dexId": [
-        300
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2336,9 +2006,7 @@
       "types": [
         "Colorless"
       ],
-      "dexId": [
-        301
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2350,9 +2018,7 @@
       "types": [
         "Colorless"
       ],
-      "dexId": [
-        335
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2364,9 +2030,7 @@
       "types": [
         "Colorless"
       ],
-      "dexId": [
-        396
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2378,9 +2042,7 @@
       "types": [
         "Colorless"
       ],
-      "dexId": [
-        397
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2392,9 +2054,7 @@
       "types": [
         "Colorless"
       ],
-      "dexId": [
-        398
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2406,9 +2066,7 @@
       "types": [
         "Colorless"
       ],
-      "dexId": [
-        479
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2420,9 +2078,7 @@
       "types": [
         "Colorless"
       ],
-      "dexId": [
-        531
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2434,9 +2090,7 @@
       "types": [
         "Colorless"
       ],
-      "dexId": [
-        627
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2448,9 +2102,7 @@
       "types": [
         "Colorless"
       ],
-      "dexId": [
-        628
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2462,9 +2114,7 @@
       "types": [
         "Colorless"
       ],
-      "dexId": [
-        775
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2476,9 +2126,7 @@
       "types": [
         "Colorless"
       ],
-      "dexId": [
-        780
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2490,9 +2138,7 @@
       "types": [
         "Colorless"
       ],
-      "dexId": [
-        845
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2504,9 +2150,7 @@
       "types": [
         "Colorless"
       ],
-      "dexId": [
-        1024
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2518,9 +2162,7 @@
       "types": [
         "Colorless"
       ],
-      "dexId": [
-        1024
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2912,9 +2554,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        114
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2926,9 +2566,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        267
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2940,9 +2578,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        269
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2954,9 +2590,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        406
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2968,9 +2602,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        219
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2982,9 +2614,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        322
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -2996,9 +2626,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        758
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3010,9 +2638,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        813
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3024,9 +2650,7 @@
       "types": [
         "Water"
       ],
-      "dexId": [
-        54
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3038,9 +2662,7 @@
       "types": [
         "Water"
       ],
-      "dexId": [
-        361
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3052,9 +2674,7 @@
       "types": [
         "Water"
       ],
-      "dexId": [
-        461
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3066,9 +2686,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        695
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3080,9 +2698,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        738
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3094,9 +2710,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        940
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3108,9 +2722,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        183
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3122,9 +2734,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        200
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3136,9 +2746,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        354
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3150,9 +2758,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        468
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3164,9 +2770,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        685
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3178,9 +2782,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        709
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3192,9 +2794,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        778
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3206,9 +2806,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        51
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3220,9 +2818,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        237
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3234,9 +2830,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        308
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3248,9 +2842,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        703
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3262,9 +2854,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        262
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3276,9 +2866,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        442
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3290,9 +2878,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        862
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3304,9 +2890,7 @@
       "types": [
         "Metal"
       ],
-      "dexId": [
-        303
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3318,9 +2902,7 @@
       "types": [
         "Dragon"
       ],
-      "dexId": [
-        885
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3332,9 +2914,7 @@
       "types": [
         "Dragon"
       ],
-      "dexId": [
-        886
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3346,9 +2926,7 @@
       "types": [
         "Colorless"
       ],
-      "dexId": [
-        398
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3360,9 +2938,7 @@
       "types": [
         "Colorless"
       ],
-      "dexId": [
-        479
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3374,9 +2950,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        906
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3388,9 +2962,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        618
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3402,9 +2974,7 @@
       "types": [
         "Colorless"
       ],
-      "dexId": [
-        531
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3526,9 +3096,7 @@
       "types": [
         "Water"
       ],
-      "dexId": [
-        478
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3540,9 +3108,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        604
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3554,9 +3120,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        719
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3568,9 +3132,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        701
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3582,9 +3144,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        94
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3596,9 +3156,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        560
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3610,9 +3168,7 @@
       "types": [
         "Dragon"
       ],
-      "dexId": [
-        149
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3624,9 +3180,7 @@
       "types": [
         "Grass"
       ],
-      "dexId": [
-        154
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3638,9 +3192,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        500
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3652,9 +3204,7 @@
       "types": [
         "Water"
       ],
-      "dexId": [
-        160
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3666,9 +3216,7 @@
       "types": [
         "Water"
       ],
-      "dexId": [
-        478
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3680,9 +3228,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        25
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3694,9 +3240,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        25
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3708,9 +3252,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        604
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3722,9 +3264,7 @@
       "types": [
         "Lightning"
       ],
-      "dexId": [
-        939
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3736,9 +3276,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        35
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3750,9 +3288,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        150
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3764,9 +3300,7 @@
       "types": [
         "Psychic"
       ],
-      "dexId": [
-        719
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3778,9 +3312,7 @@
       "types": [
         "Fighting"
       ],
-      "dexId": [
-        701
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3792,9 +3324,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        94
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3806,9 +3336,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        560
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3820,9 +3348,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        571
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3834,9 +3360,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        861
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3848,9 +3372,7 @@
       "types": [
         "Darkness"
       ],
-      "dexId": [
-        1016
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3862,9 +3384,7 @@
       "types": [
         "Metal"
       ],
-      "dexId": [
-        376
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3876,9 +3396,7 @@
       "types": [
         "Dragon"
       ],
-      "dexId": [
-        149
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3920,9 +3438,7 @@
       "types": [
         "Fire"
       ],
-      "dexId": [
-        6
-      ],
+      "dexId": [],
       "trainerType": ""
     },
     {
@@ -3934,16 +3450,14 @@
       "types": [
         "Dragon"
       ],
-      "dexId": [
-        149
-      ],
+      "dexId": [],
       "trainerType": ""
     }
   ],
   "metadata": {
     "total_cards": 295,
     "set_id": "me02.5",
-    "date_fetched": "2026-02-03T08:46:18.417018Z",
+    "date_fetched": "2026-02-03T17:08:25.622130Z",
     "source": "TCGdex API v2",
     "language": "en"
   }
