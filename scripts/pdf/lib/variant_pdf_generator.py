@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 class VariantPDFGenerator:
     """Generate PDFs for Pokémon variant collections using template system."""
     
-    def __init__(self, variant_data: dict, language: str, output_file: Path, image_cache=None):
+    def __init__(self, variant_data: dict, language: str, output_file: Path, image_cache=None, type_translations: dict = None):
         """
         Initialize variant PDF generator.
         
@@ -43,21 +43,23 @@ class VariantPDFGenerator:
             language: Language code (de, en, fr, etc.)
             output_file: Path to output PDF file
             image_cache: Optional image cache for loading Pokémon images
+            type_translations: Optional type translations dict from API (for multilingual types)
         """
         self.variant_data = variant_data
         self.language = language
         self.output_file = output_file
         self.image_cache = image_cache
+        self.type_translations = type_translations
         
         # Build complete pokemon list based on structure
         self.pokemon_list = []
         sections_dict = variant_data.get('sections', {})
         
         if isinstance(sections_dict, dict) and sections_dict:
-            # New hierarchical structure: sections is a dict with pokemon inside each section
+            # New hierarchical structure: sections is a dict with cards inside each section
             for section_id in sorted(sections_dict.keys(), key=lambda k: sections_dict[k].get('section_order', 999)):
                 section = sections_dict[section_id]
-                self.pokemon_list.extend(section.get('pokemon', []))
+                self.pokemon_list.extend(section.get('cards', []))
         else:
             # Old/flat structure: pokemon at top level (e.g., variants_mega.json)
             self.pokemon_list = variant_data.get('pokemon', [])
@@ -69,7 +71,9 @@ class VariantPDFGenerator:
         
         # Initialize rendering modules using shared utility
         self.card_renderer, self.page_renderer, self.variant_cover_renderer = \
-            RendererInitializer.initialize_renderers(language, image_cache, variant_data=variant_data)
+            RendererInitializer.initialize_renderers(
+                language, image_cache, variant_data=variant_data, type_translations=self.type_translations
+            )
     
     def generate(self) -> bool:
         """Generate the PDF with separator pages for each section."""
@@ -136,7 +140,9 @@ class VariantPDFGenerator:
             return True
             
         except Exception as e:
+            import traceback
             logger.error(f"❌ Error generating PDF: {e}")
+            logger.error(traceback.format_exc())
             return False
     
     def _generate_with_sections(self, c, sections: list, status: PDFStatus = None):
@@ -153,8 +159,8 @@ class VariantPDFGenerator:
         
         for section in sections:
             section_id = section.get('section_id')
-            # Pokemon are now INSIDE the section
-            section_pokemon = section.get('pokemon', [])
+            # Cards are now INSIDE the section
+            section_pokemon = section.get('cards', [])
             
             logger.info(f"  Section: {section_id}, pokemon={len(section_pokemon)}")
             

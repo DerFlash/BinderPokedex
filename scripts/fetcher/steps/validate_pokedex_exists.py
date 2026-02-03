@@ -41,7 +41,7 @@ class ValidatePokedexExistsStep(BaseStep):
         
         Checks if Pokedex.json exists. If not, raises an error with instructions.
         """
-        pokedex_path = params.get('pokedex_file', 'data/Pokedex.json')
+        pokedex_path = params.get('pokedex_file', 'data/output/Pokedex.json')
         
         # Make path absolute relative to project root (3 levels up from this file)
         if not Path(pokedex_path).is_absolute():
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     )
     
     step_config = {
-        'pokedex_file': 'data/Pokedex.json'
+        'pokedex_file': 'data/output/Pokedex.json'
     }
     
     step = ValidatePokedexExistsStep(step_config)

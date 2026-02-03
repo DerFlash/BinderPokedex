@@ -71,7 +71,7 @@ class PokémonEnricher:
         Returns:
             Bereichertes Pokémon-Dictionary
         """
-        pokemon_id = pokemon.get('id')
+        pokemon_id = pokemon.get('pokemon_id', pokemon.get('id'))  # Support both names
         
         if language.lower() == 'es':
             # Bereichere Spanisch mit manuellen Übersetzungen

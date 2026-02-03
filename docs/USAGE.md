@@ -1,133 +1,156 @@
 # 🎯 Usage Guide
 
-Quick reference for generating BinderPokedex PDFs.
+Quick reference for generating BinderPokedex PDFs using the scope-based system.
+
+## 📦 Available Scopes
+
+**25 Total Scopes:**
+- **Pokedex**: Complete National Pokédex (1025 Pokémon)
+- **ExGen1-3**: TCG EX variant collections (94/324/366 cards)
+- **ME01-MEP**: Pokémon TCG Scarlet & Violet - Mew series (4 sets)
+- **SV01-SVP**: Pokémon TCG Scarlet & Violet main series (17 sets)
+
+List all available scopes:
+```bash
+ls config/scopes/*.yaml
+```
 
 ## Basic Usage
 
-### Single Language PDFs
+### Single Scope, Single Language
 
 ```bash
-# German (default)
-python scripts/generate_pdf.py --language de
+# Generate German Pokedex
+python scripts/pdf/generate_pdf.py --scope Pokedex --language de
 
-# Specific language and generation
-python scripts/generate_pdf.py --language de --generation 1
+# Generate English TCG set
+python scripts/pdf/generate_pdf.py --scope ME01 --language en
 ```
 
-### Supported Languages
+### Single Scope, All Languages
+
+Omit `--language` to generate all 9 supported languages:
 
 ```bash
-python scripts/generate_pdf.py --language de    # Deutsch
-python scripts/generate_pdf.py --language en    # English
-python scripts/generate_pdf.py --language fr    # Français
-python scripts/generate_pdf.py --language es    # Español
-python scripts/generate_pdf.py --language it    # Italiano
-python scripts/generate_pdf.py --language ja    # 日本語
-python scripts/generate_pdf.py --language ko    # 한국어
-python scripts/generate_pdf.py --language zh-s  # 简体中文
-python scripts/generate_pdf.py --language zh-t  # 繁體中文
+# Generate Pokedex in all languages
+python scripts/pdf/generate_pdf.py --scope Pokedex
+
+# Generate TCG set in all languages
+python scripts/pdf/generate_pdf.py --scope SV01
 ```
 
-## 🌍 Advanced: All Languages
+### All Scopes, All Languages
 
-### Generate All Languages At Once
+Use `--scope all` to generate everything:
 
 ```bash
-python scripts/generate_pdf.py --language all
+# Generate all 25 scopes in all 9 languages
+python scripts/pdf/generate_pdf.py --scope all
 ```
 
-This creates **81 PDF files** (9 languages × 9 generations).
+**Output:** ~225 PDFs (25 scopes × 9 languages, where available)
+**Duration:** 10-20 minutes (with cached data)
+**Size:** ~377 MB total
 
-**Features:**
-- Automatic image download & caching from PokéAPI
-- Progressive compression (100px width, quality 40 JPEG)
-- Type-based header colors with subtle transparency
-- English subtitles on non-English language cards for context
-- Aligned cutting guides for precise card cutting
-
-**File Sizes:** 200-400 KB per PDF (Generation-dependent)
-**Expected Duration:** 10-15 minutes (with image caching)
-
-### Background Execution
-
-Run in background and monitor:
+## Supported Languages
 
 ```bash
-# Start generation
-nohup python scripts/generate_pdf.py --language all > pdf_all.log 2>&1 &
-
-# Monitor progress
-tail -f pdf_all.log
-
-# Check status
-ls -lh output/*.pdf | wc -l    # Count generated PDFs
-du -sh output/                  # Total size
+de      # Deutsch
+en      # English
+fr      # Français
+es      # Español
+it      # Italiano
+ja      # 日本語
+ko      # 한국어
+zh-hans # 简体中文
+zh-hant # 繁體中文
 ```
 
-### Parallel Execution (Manual)
+**Note:** Not all TCG sets are available in all languages. The generator will skip unavailable languages automatically.
 
-Generate multiple languages in parallel:
+## 🔄 Data Fetching
+
+Before generating PDFs, you need to fetch the data:
 
 ```bash
-# Terminal 1: German
-python scripts/generate_pdf.py --language de &
+# Fetch single scope
+python scripts/fetcher/fetch.py --scope Pokedex
+python scripts/fetcher/fetch.py --scope ME01
 
-# Terminal 2: French
-python scripts/generate_pdf.py --language fr &
-
-# Terminal 3: Japanese
-python scripts/generate_pdf.py --language ja &
-
-# Wait for all to complete
-wait
+# Fetch all scopes (takes ~5 minutes)
+for scope in Pokedex ExGen1 ExGen2 ExGen3 ME01 ME02 ME02.5 MEP SV01 SV02 SV03 SV03.5 SV04 SV04.5 SV05 SV06 SV06.5 SV07 SV08 SV08.5 SV09 SV10 SV10.5B SV10.5W SVP; do
+    python scripts/fetcher/fetch.py --scope $scope
+done
 ```
 
-## Output Files
+## 💾 Output Files
 
-PDFs are saved to `output/` with naming:
+PDFs are organized by language in subdirectories:
 ```
-BinderPokedex_Gen{1-9}_{LANGUAGE}.pdf
+output/
+  de/
+    Pokedex_DE.pdf
+    ME01_DE.pdf
+    ...
+  en/
+    Pokedex_EN.pdf
+    ME01_EN.pdf
+    ...
+  fr/
+  ...
 ```
 
 ### File Sizes (Approximate)
 
-| Generation | Pokémon | Gen 1 Size | File Size Pattern |
-|------------|---------|-----------|-------------------|
-| 1 | 151 | 25 MB | Largest |
-| 2 | 100 | 15 MB | Small |
-| 3 | 135 | 21 MB | Large |
-| 4 | 107 | 16 MB | Small-Medium |
-| 5 | 156 | 23 MB | Large |
-| 6 | 72 | 10 MB | Small |
-| 7 | 88 | 11 MB | Small |
-| 8 | 96 | 10 MB | Small |
-| 9 | 120 | 15 MB | Small-Medium |
+| Scope | Type | Cards/Pokémon | Size per Language |
+|-------|------|----------------|-------------------|
+| Pokedex | Pokédex | 1025 | ~60 MB |
+| ExGen1 | TCG | 94 | ~2 MB |
+| ExGen2 | TCG | 324 | ~5 MB |
+| ExGen3 | TCG | 366 | ~6 MB |
+| ME01 | TCG | 165 | ~2 MB |
+| SV01 | TCG | 198 | ~2.5 MB |
 
-**Total for all languages:** ~1.1 TB (if you generate all 81 files)
+**Total for all scopes & languages:** ~377 MB
 
-## Examples
+## 📝 Examples
 
-### Scenario 1: Print only English Gen 1
+### Example 1: Complete Pokédex in German
 
 ```bash
-python scripts/generate_pdf.py --language en
-# Use: output/BinderPokedex_Gen1_EN.pdf
+python scripts/fetcher/fetch.py --scope Pokedex
+python scripts/pdf/generate_pdf.py --scope Pokedex --language de
+# Output: output/de/Pokedex_DE.pdf (~60 MB)
 ```
 
-### Scenario 2: Print German & French binders
+### Example 2: All TCG Mew Sets in English
 
 ```bash
-# Terminal 1
-python scripts/generate_pdf.py --language de &
-# Terminal 2  
-python scripts/generate_pdf.py --language fr &
-wait
+# Fetch all Mew sets
+for scope in ME01 ME02 ME02.5 MEP; do
+    python scripts/fetcher/fetch.py --scope $scope
+done
+
+# Generate English PDFs
+for scope in ME01 ME02 ME02.5 MEP; do
+    python scripts/pdf/generate_pdf.py --scope $scope --language en
+done
 
 # Check results
-ls output/*_{DE,FR}.pdf
+ls output/en/ME*.pdf
 ```
 
-### Scenario 3: Full multilingual collection
+### Example 3: Complete Collection (All Scopes, All Languages)
+
+```bash
+# This generates all 225 PDFs (~377 MB total)
+python scripts/pdf/generate_pdf.py --scope all
+
+# Check results
+for lang in de en fr es it ja ko zh-hans zh-hant; do
+    echo "$lang: $(ls output/$lang/*.pdf 2>/dev/null | wc -l) PDFs"
+done
+```
 
 ```bash
 # Start all languages

@@ -1,79 +1,34 @@
-# Pokemon-EX - BW & XY Series (ALL-CAPS Logo)
-#
-# Fetches Pokemon-EX cards from TCGdex API:
-# - Black & White series (BW4-BW11, 2012-2013)
-# - XY series (XY1-XY12, 2014-2016)
-#
-# These cards feature the distinctive ALL-CAPS "POKEMON-EX" logo
-# and were the main special card type from Next Destinies through Evolutions.
-#
-# Pipeline Architecture:
-# - fetch → writes raw data to output_file (data/source/)
-# - transform → reads source_file, writes variant to output_file
-# - enrich steps → work with context only
-# - save_output → writes final file
-#
-# Priority when multiple cards exist:
-# 1. BW - Next Destinies (first BW EX set)
-# 2. Alphabetically by set name
-#
-# Expected output:
-# - Source: data/source/tcg_bw_ex.json (324 cards from 20 sets)
-# - Target: data/ExGen2.json (~96 Pokemon)
-
 scope: ExGen2
-description: "Pokemon-EX from BW & XY series - one card per Pokemon"
-
+description: Pokemon-EX from BW & XY series - one card per Pokemon
 pipeline:
-  # Load metadata
-  - step: enrich_metadata
-    params:
-      metadata_file: enrichments/metadata.json
-  
-  # Step 1: Validate that Pokedex exists (required for name translations)
-  - step: validate_pokedex_exists
-    params:
-      pokedex_file: data/Pokedex.json
-
-  # Step 2: Fetch BW EX cards from TCGdex API
-  - step: fetch_tcgdex_ex_gen2
-    params:
-      language: en
-      output_file: data/source/tcg_bw_ex.json
-
-  # Step 3: Transform to single card per Pokemon
-  - step: transform_ex_gen2
-    params:
-      source_file: data/source/tcg_bw_ex.json
-      output_file: data/ExGen2.json
-
-  # Step 4: Enrich with multilingual Pokemon names from Pokedex (context-only)
-  - step: enrich_names_from_pokedex
-    params:
-      pokedex_file: data/Pokedex.json
-
-  # Step 5: Add featured Pokemon (context-only)
-  - step: enrich_featured_pokemon
-    params:
-      featured_file: enrichments/featured_pokemon.json
-      mode: variant
-      variant_name: ExGen2
-
-  # Step 6: Add section descriptions from variant_descriptions.json (context-only)
-  - step: enrich_section_descriptions
-    params:
-      mode: variant
-      variant_name: ExGen2
-      descriptions_file: enrichments/variant_descriptions.json
-  
-  # Step 7: Save final output
-  - step: save_output
-    params:
-      output_file: data/ExGen2.json
-  
-  # Step 8: Cache images
-  - step: cache_pokemon_images
-    params:
-      skip_existing: true
-
-target_file: data/ExGen2.json
+- step: enrich_metadata
+  params:
+    metadata_file: enrichments/metadata.json
+- step: validate_pokedex_exists
+  params:
+    pokedex_file: data/output/Pokedex.json
+- step: fetch_tcgdex_ex_gen2
+  params:
+    language: en
+    output_file: data/source/tcg_bw_ex.json
+- step: transform_ex_gen2
+- step: enrich_names_from_pokedex
+  params:
+    pokedex_file: data/output/Pokedex.json
+- step: enrich_featured_pokemon
+  params:
+    featured_file: enrichments/featured_pokemon.json
+    mode: variant
+    variant_name: ExGen2
+- step: enrich_section_descriptions
+  params:
+    mode: variant
+    variant_name: ExGen2
+    descriptions_file: enrichments/variant_descriptions.json
+- step: save_output
+  params:
+    output_file: data/output/ExGen2.json
+- step: cache_pokemon_images
+  params:
+    skip_existing: true
+target_file: data/output/ExGen2.json

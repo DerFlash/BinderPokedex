@@ -66,7 +66,7 @@ class EnrichTranslationsESITStep(BaseStep):
             pokemon_list = gen_data.get('pokemon', [])
             
             for pokemon in pokemon_list:
-                pokemon_id = str(pokemon['id'])
+                pokemon_id = str(pokemon['pokemon_id'])
                 names = pokemon.get('name', {})
                 
                 # Update Spanish translation if available

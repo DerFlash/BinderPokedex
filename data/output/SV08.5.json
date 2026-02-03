@@ -1,0 +1,2436 @@
+{
+  "type": "tcg_set",
+  "name": "Prismatic Evolutions",
+  "available_languages": [
+    "de",
+    "en",
+    "fr",
+    "es",
+    "it"
+  ],
+  "serie": "sv",
+  "serie_name": "Scarlet & Violet",
+  "set_id": "SV08.5",
+  "release_date": "2025-01-17",
+  "logo_urls": {
+    "de": "https://assets.tcgdex.net/de/sv/sv08.5/logo.png",
+    "en": "https://assets.tcgdex.net/en/sv/sv08.5/logo.png",
+    "fr": "https://assets.tcgdex.net/fr/sv/sv08.5/logo.png",
+    "es": "https://assets.tcgdex.net/es/sv/sv08.5/logo.png",
+    "it": "https://assets.tcgdex.net/it/sv/sv08.5/logo.png"
+  },
+  "sections": {
+    "all": {
+      "title": {
+        "de": "Prismatische Entwicklungen",
+        "en": "Prismatic Evolutions",
+        "fr": "Évolutions Prismatiques",
+        "es": "Evoluciones Prismáticas",
+        "it": "Evoluzioni Prismatiche"
+      },
+      "description": {
+        "de": "Prismatische Entwicklungen - Veröffentlichung: 2025-01-17",
+        "en": "Prismatic Evolutions - Release: 2025-01-17",
+        "fr": "Évolutions Prismatiques - Sortie: 2025-01-17",
+        "es": "Evoluciones Prismáticas - Lanzamiento: 2025-01-17",
+        "it": "Evoluzioni Prismatiche - Uscita: 2025-01-17"
+      },
+      "subtitle": {
+        "de": "[image]https://assets.tcgdex.net/de/sv/sv08.5/logo.png[/image]",
+        "en": "[image]https://assets.tcgdex.net/en/sv/sv08.5/logo.png[/image]",
+        "fr": "[image]https://assets.tcgdex.net/fr/sv/sv08.5/logo.png[/image]",
+        "es": "[image]https://assets.tcgdex.net/es/sv/sv08.5/logo.png[/image]",
+        "it": "[image]https://assets.tcgdex.net/it/sv/sv08.5/logo.png[/image]"
+      },
+      "cards": [
+        {
+          "localId": "001",
+          "name": {
+            "en": "Exeggcute"
+          },
+          "type": "pokemon",
+          "pokemon_id": 102,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/102.png"
+        },
+        {
+          "localId": "002",
+          "name": {
+            "en": "Exeggutor"
+          },
+          "type": "pokemon",
+          "pokemon_id": 103,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/103.png"
+        },
+        {
+          "localId": "003",
+          "name": {
+            "en": "Pinsir"
+          },
+          "type": "pokemon",
+          "pokemon_id": 127,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/127.png"
+        },
+        {
+          "localId": "004",
+          "name": {
+            "en": "Budew"
+          },
+          "type": "pokemon",
+          "pokemon_id": 406,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/406.png"
+        },
+        {
+          "localId": "005",
+          "name": {
+            "en": "Leafeon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 470,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/470.png"
+        },
+        {
+          "localId": "006",
+          "name": {
+            "en": "Leafeon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 470,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/470.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "007",
+          "name": {
+            "en": "Cottonee"
+          },
+          "type": "pokemon",
+          "pokemon_id": 546,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/546.png"
+        },
+        {
+          "localId": "008",
+          "name": {
+            "en": "Whimsicott"
+          },
+          "type": "pokemon",
+          "pokemon_id": 547,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/547.png"
+        },
+        {
+          "localId": "009",
+          "name": {
+            "en": "Applin"
+          },
+          "type": "pokemon",
+          "pokemon_id": 840,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/840.png"
+        },
+        {
+          "localId": "010",
+          "name": {
+            "en": "Dipplin"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1011,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1011.png"
+        },
+        {
+          "localId": "011",
+          "name": {
+            "en": "Hydrapple"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1019,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1019.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "012",
+          "name": {
+            "en": "Teal Mask Ogerpon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1017,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1017.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "013",
+          "name": {
+            "en": "Flareon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 136,
+          "types": [
+            "Fire"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/136.png"
+        },
+        {
+          "localId": "014",
+          "name": {
+            "en": "Flareon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 136,
+          "types": [
+            "Fire"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/136.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "015",
+          "name": {
+            "en": "Litleo"
+          },
+          "type": "pokemon",
+          "pokemon_id": 667,
+          "types": [
+            "Fire"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/667.png"
+        },
+        {
+          "localId": "016",
+          "name": {
+            "en": "Pyroar"
+          },
+          "type": "pokemon",
+          "pokemon_id": 668,
+          "types": [
+            "Fire"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/668.png"
+        },
+        {
+          "localId": "017",
+          "name": {
+            "en": "Hearthflame Mask Ogerpon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1017,
+          "types": [
+            "Fire"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1017.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "018",
+          "name": {
+            "en": "Slowpoke"
+          },
+          "type": "pokemon",
+          "pokemon_id": 79,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/79.png"
+        },
+        {
+          "localId": "019",
+          "name": {
+            "en": "Slowking"
+          },
+          "type": "pokemon",
+          "pokemon_id": 199,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/199.png"
+        },
+        {
+          "localId": "020",
+          "name": {
+            "en": "Goldeen"
+          },
+          "type": "pokemon",
+          "pokemon_id": 118,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/118.png"
+        },
+        {
+          "localId": "021",
+          "name": {
+            "en": "Seaking"
+          },
+          "type": "pokemon",
+          "pokemon_id": 119,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/119.png"
+        },
+        {
+          "localId": "022",
+          "name": {
+            "en": "Vaporeon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 134,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/134.png"
+        },
+        {
+          "localId": "023",
+          "name": {
+            "en": "Vaporeon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 134,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/134.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "024",
+          "name": {
+            "en": "Suicune"
+          },
+          "type": "pokemon",
+          "pokemon_id": 245,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/245.png"
+        },
+        {
+          "localId": "025",
+          "name": {
+            "en": "Glaceon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 471,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/471.png"
+        },
+        {
+          "localId": "026",
+          "name": {
+            "en": "Glaceon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 471,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/471.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "027",
+          "name": {
+            "en": "Wellspring Mask Ogerpon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1017,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1017.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "028",
+          "name": {
+            "en": "Pikachu"
+          },
+          "type": "pokemon",
+          "pokemon_id": 25,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "029",
+          "name": {
+            "en": "Jolteon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 135,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/135.png"
+        },
+        {
+          "localId": "030",
+          "name": {
+            "en": "Jolteon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 135,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/135.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "031",
+          "name": {
+            "en": "Iron Hands"
+          },
+          "type": "pokemon",
+          "pokemon_id": 992,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/992.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "032",
+          "name": {
+            "en": "Iron Thorns"
+          },
+          "type": "pokemon",
+          "pokemon_id": 995,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/995.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "033",
+          "name": {
+            "en": "Espeon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 196,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/196.png"
+        },
+        {
+          "localId": "034",
+          "name": {
+            "en": "Espeon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 196,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/196.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "035",
+          "name": {
+            "en": "Duskull"
+          },
+          "type": "pokemon",
+          "pokemon_id": 355,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/355.png"
+        },
+        {
+          "localId": "036",
+          "name": {
+            "en": "Dusclops"
+          },
+          "type": "pokemon",
+          "pokemon_id": 356,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/356.png"
+        },
+        {
+          "localId": "037",
+          "name": {
+            "en": "Dusknoir"
+          },
+          "type": "pokemon",
+          "pokemon_id": 477,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/477.png"
+        },
+        {
+          "localId": "038",
+          "name": {
+            "en": "Spritzee"
+          },
+          "type": "pokemon",
+          "pokemon_id": 682,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/682.png"
+        },
+        {
+          "localId": "039",
+          "name": {
+            "en": "Aromatisse"
+          },
+          "type": "pokemon",
+          "pokemon_id": 683,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/683.png"
+        },
+        {
+          "localId": "040",
+          "name": {
+            "en": "Sylveon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 700,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/700.png"
+        },
+        {
+          "localId": "041",
+          "name": {
+            "en": "Sylveon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 700,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/700.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "042",
+          "name": {
+            "en": "Scream Tail"
+          },
+          "type": "pokemon",
+          "pokemon_id": 985,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/985.png"
+        },
+        {
+          "localId": "043",
+          "name": {
+            "en": "Flutter Mane"
+          },
+          "type": "pokemon",
+          "pokemon_id": 987,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/987.png"
+        },
+        {
+          "localId": "044",
+          "name": {
+            "en": "Munkidori"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1015,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1015.png"
+        },
+        {
+          "localId": "045",
+          "name": {
+            "en": "Fezandipiti"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1016,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1016.png"
+        },
+        {
+          "localId": "046",
+          "name": {
+            "en": "Iron Boulder"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1022,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1022.png"
+        },
+        {
+          "localId": "047",
+          "name": {
+            "en": "Larvitar"
+          },
+          "type": "pokemon",
+          "pokemon_id": 246,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/246.png"
+        },
+        {
+          "localId": "048",
+          "name": {
+            "en": "Pupitar"
+          },
+          "type": "pokemon",
+          "pokemon_id": 247,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/247.png"
+        },
+        {
+          "localId": "049",
+          "name": {
+            "en": "Groudon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 383,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/383.png"
+        },
+        {
+          "localId": "050",
+          "name": {
+            "en": "Riolu"
+          },
+          "type": "pokemon",
+          "pokemon_id": 447,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/447.png"
+        },
+        {
+          "localId": "051",
+          "name": {
+            "en": "Lucario"
+          },
+          "type": "pokemon",
+          "pokemon_id": 448,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/448.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "052",
+          "name": {
+            "en": "Hippopotas"
+          },
+          "type": "pokemon",
+          "pokemon_id": 449,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/449.png"
+        },
+        {
+          "localId": "053",
+          "name": {
+            "en": "Hippowdon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 450,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/450.png"
+        },
+        {
+          "localId": "054",
+          "name": {
+            "en": "Bloodmoon Ursaluna"
+          },
+          "type": "pokemon",
+          "pokemon_id": 901,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/901.png"
+        },
+        {
+          "localId": "055",
+          "name": {
+            "en": "Great Tusk"
+          },
+          "type": "pokemon",
+          "pokemon_id": 984,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/984.png"
+        },
+        {
+          "localId": "056",
+          "name": {
+            "en": "Sandy Shocks"
+          },
+          "type": "pokemon",
+          "pokemon_id": 989,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/989.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "057",
+          "name": {
+            "en": "Okidogi"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1014,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1014.png"
+        },
+        {
+          "localId": "058",
+          "name": {
+            "en": "Cornerstone Mask Ogerpon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1017,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1017.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "059",
+          "name": {
+            "en": "Umbreon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 197,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/197.png"
+        },
+        {
+          "localId": "060",
+          "name": {
+            "en": "Umbreon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 197,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/197.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "061",
+          "name": {
+            "en": "Sneasel"
+          },
+          "type": "pokemon",
+          "pokemon_id": 215,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/215.png"
+        },
+        {
+          "localId": "062",
+          "name": {
+            "en": "Houndour"
+          },
+          "type": "pokemon",
+          "pokemon_id": 228,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/228.png"
+        },
+        {
+          "localId": "063",
+          "name": {
+            "en": "Houndoom"
+          },
+          "type": "pokemon",
+          "pokemon_id": 229,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/229.png"
+        },
+        {
+          "localId": "064",
+          "name": {
+            "en": "Tyranitar"
+          },
+          "type": "pokemon",
+          "pokemon_id": 248,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/248.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "065",
+          "name": {
+            "en": "Roaring Moon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1005,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1005.png"
+        },
+        {
+          "localId": "066",
+          "name": {
+            "en": "Bronzor"
+          },
+          "type": "pokemon",
+          "pokemon_id": 436,
+          "types": [
+            "Metal"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/436.png"
+        },
+        {
+          "localId": "067",
+          "name": {
+            "en": "Bronzong"
+          },
+          "type": "pokemon",
+          "pokemon_id": 437,
+          "types": [
+            "Metal"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/437.png"
+        },
+        {
+          "localId": "068",
+          "name": {
+            "en": "Heatran"
+          },
+          "type": "pokemon",
+          "pokemon_id": 485,
+          "types": [
+            "Metal"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/485.png"
+        },
+        {
+          "localId": "069",
+          "name": {
+            "en": "Duraludon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 884,
+          "types": [
+            "Metal"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/884.png"
+        },
+        {
+          "localId": "070",
+          "name": {
+            "en": "Archaludon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1018,
+          "types": [
+            "Metal"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1018.png"
+        },
+        {
+          "localId": "071",
+          "name": {
+            "en": "Dreepy"
+          },
+          "type": "pokemon",
+          "pokemon_id": 885,
+          "types": [
+            "Dragon"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/885.png"
+        },
+        {
+          "localId": "072",
+          "name": {
+            "en": "Drakloak"
+          },
+          "type": "pokemon",
+          "pokemon_id": 886,
+          "types": [
+            "Dragon"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/886.png"
+        },
+        {
+          "localId": "073",
+          "name": {
+            "en": "Dragapult"
+          },
+          "type": "pokemon",
+          "pokemon_id": 887,
+          "types": [
+            "Dragon"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/887.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "074",
+          "name": {
+            "en": "Eevee"
+          },
+          "type": "pokemon",
+          "pokemon_id": 133,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png"
+        },
+        {
+          "localId": "075",
+          "name": {
+            "en": "Eevee"
+          },
+          "type": "pokemon",
+          "pokemon_id": 133,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "076",
+          "name": {
+            "en": "Snorlax"
+          },
+          "type": "pokemon",
+          "pokemon_id": 143,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/143.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "077",
+          "name": {
+            "en": "Hoothoot"
+          },
+          "type": "pokemon",
+          "pokemon_id": 163,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/163.png"
+        },
+        {
+          "localId": "078",
+          "name": {
+            "en": "Noctowl"
+          },
+          "type": "pokemon",
+          "pokemon_id": 164,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/164.png"
+        },
+        {
+          "localId": "079",
+          "name": {
+            "en": "Dunsparce"
+          },
+          "type": "pokemon",
+          "pokemon_id": 206,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/206.png"
+        },
+        {
+          "localId": "080",
+          "name": {
+            "en": "Dudunsparce"
+          },
+          "type": "pokemon",
+          "pokemon_id": 982,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/982.png"
+        },
+        {
+          "localId": "081",
+          "name": {
+            "en": "Miltank"
+          },
+          "type": "pokemon",
+          "pokemon_id": 241,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/241.png"
+        },
+        {
+          "localId": "082",
+          "name": {
+            "en": "Lugia"
+          },
+          "type": "pokemon",
+          "pokemon_id": 249,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/249.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "083",
+          "name": {
+            "en": "Buneary"
+          },
+          "type": "pokemon",
+          "pokemon_id": 427,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/427.png"
+        },
+        {
+          "localId": "084",
+          "name": {
+            "en": "Lopunny"
+          },
+          "type": "pokemon",
+          "pokemon_id": 428,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/428.png"
+        },
+        {
+          "localId": "085",
+          "name": {
+            "en": "Fan Rotom"
+          },
+          "type": "pokemon",
+          "pokemon_id": 479,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/479.png"
+        },
+        {
+          "localId": "086",
+          "name": {
+            "en": "Regigigas"
+          },
+          "type": "pokemon",
+          "pokemon_id": 486,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/486.png"
+        },
+        {
+          "localId": "087",
+          "name": {
+            "en": "Shaymin"
+          },
+          "type": "pokemon",
+          "pokemon_id": 492,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/492.png"
+        },
+        {
+          "localId": "088",
+          "name": {
+            "en": "Furfrou"
+          },
+          "type": "pokemon",
+          "pokemon_id": 676,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/676.png"
+        },
+        {
+          "localId": "089",
+          "name": {
+            "en": "Hawlucha"
+          },
+          "type": "pokemon",
+          "pokemon_id": 701,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/701.png"
+        },
+        {
+          "localId": "090",
+          "name": {
+            "en": "Noibat"
+          },
+          "type": "pokemon",
+          "pokemon_id": 714,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/714.png"
+        },
+        {
+          "localId": "091",
+          "name": {
+            "en": "Noivern"
+          },
+          "type": "pokemon",
+          "pokemon_id": 715,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/715.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "092",
+          "name": {
+            "en": "Terapagos"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1024,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1024.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "093",
+          "name": {
+            "de": "Erin",
+            "en": "Amarys",
+            "fr": "Nérine",
+            "es": "Nerina",
+            "it": "Erin"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "094",
+          "name": {
+            "de": "Höhlensystem Null",
+            "en": "Area Zero Underdepths",
+            "fr": "Abîme Zéro",
+            "es": "Caverna Abisal Cero",
+            "it": "Grande Abisso Zero"
+          },
+          "type": "trainer",
+          "trainer_type": "Stadium",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/stadium.png"
+        },
+        {
+          "localId": "095",
+          "name": {
+            "de": "Ketten-Mochi",
+            "en": "Binding Mochi",
+            "fr": "Mochi de Servitude",
+            "es": "Mochi Cadena",
+            "it": "Mochi Soggiogante"
+          },
+          "type": "trainer",
+          "trainer_type": "Tool",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/tool.png"
+        },
+        {
+          "localId": "096",
+          "name": {
+            "de": "Schwarzgurt-Training",
+            "en": "Black Belt's Training",
+            "fr": "Entraînement de Karatéka",
+            "es": "Entrenamiento de Karateka",
+            "it": "Allenamento di Cinturanera"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "097",
+          "name": {
+            "de": "Schwarzgurt-Training",
+            "en": "Black Belt's Training",
+            "fr": "Entraînement de Karatéka",
+            "es": "Entrenamiento de Karateka",
+            "it": "Allenamento di Cinturanera"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "098",
+          "name": {
+            "de": "Schwarzgurt-Training",
+            "en": "Black Belt's Training",
+            "fr": "Entraînement de Karatéka",
+            "es": "Entrenamiento de Karateka",
+            "it": "Allenamento di Cinturanera"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "099",
+          "name": {
+            "de": "Schwarzgurt-Training",
+            "en": "Black Belt's Training",
+            "fr": "Entraînement de Karatéka",
+            "es": "Entrenamiento de Karateka",
+            "it": "Allenamento di Cinturanera"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "100",
+          "name": {
+            "de": "Brianna",
+            "en": "Briar",
+            "fr": "Bria",
+            "es": "Brie",
+            "it": "Rea"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "101",
+          "name": {
+            "de": "Dicke-Freunde-Knursp",
+            "en": "Buddy-Buddy Poffin",
+            "fr": "Poffin Copain-Copain",
+            "es": "Pokochos Gemelos",
+            "it": "Poffin del Cuore"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "102",
+          "name": {
+            "de": "Käfersammlerset",
+            "en": "Bug Catching Set",
+            "fr": "Kit Attrape-Insecte",
+            "es": "Kit Capturabichos",
+            "it": "Set Pigliamosche"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "103",
+          "name": {
+            "de": "Hana",
+            "en": "Carmine",
+            "fr": "Roseille",
+            "es": "Corin",
+            "it": "Rubra"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "104",
+          "name": {
+            "de": "Ciphermaniacs Decodierung",
+            "en": "Ciphermaniac's Codebreaking",
+            "fr": "Décodage de Décryptomane",
+            "es": "Ciberentusiasta Descifracódigos",
+            "it": "Decrittazione Esperta"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "105",
+          "name": {
+            "de": "Matt",
+            "en": "Crispin",
+            "fr": "Rubépin",
+            "es": "Denis",
+            "it": "Piros"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "106",
+          "name": {
+            "de": "Irdengefäß",
+            "en": "Earthen Vessel",
+            "fr": "Urne Terrestre",
+            "es": "Vasija Terrestre",
+            "it": "Anfora Terrestre"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "107",
+          "name": {
+            "de": "Führung des Entdeckers",
+            "en": "Explorer's Guidance",
+            "fr": "Guide d'Exploration",
+            "es": "Guía de Exploración",
+            "it": "Guida dell'Esploratore"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "108",
+          "name": {
+            "de": "Festplatz",
+            "en": "Festival Grounds",
+            "fr": "Lieu de la Fête",
+            "es": "Recinto del Festival",
+            "it": "Area della Festa"
+          },
+          "type": "trainer",
+          "trainer_type": "Stadium",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/stadium.png"
+        },
+        {
+          "localId": "109",
+          "name": {
+            "de": "Freunde aus Paldea",
+            "en": "Friends in Paldea",
+            "fr": "Amis de Paldea",
+            "es": "Amigos de Paldea",
+            "it": "Amici a Paldea"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "110",
+          "name": {
+            "de": "Glastrompete",
+            "en": "Glass Trumpet",
+            "fr": "Trompette de Verre",
+            "es": "Trompeta de Cristal",
+            "it": "Tromba di Vetro"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "111",
+          "name": {
+            "de": "Terirobeere",
+            "en": "Haban Berry",
+            "fr": "Baie Fraigo",
+            "es": "Baya Anjiro",
+            "it": "Baccahaban"
+          },
+          "type": "trainer",
+          "trainer_type": "Tool",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/tool.png"
+        },
+        {
+          "localId": "112",
+          "name": {
+            "de": "Janinas Geheimkunst",
+            "en": "Janine's Secret Art",
+            "fr": "Art Secret de Jeannine",
+            "es": "Artes Secretas de Sachiko",
+            "it": "Arte Segreta di Nina"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "113",
+          "name": {
+            "de": "Jo",
+            "en": "Kieran",
+            "fr": "Kassis",
+            "es": "Cass",
+            "it": "Riben"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "114",
+          "name": {
+            "de": "Tara",
+            "en": "Lacey",
+            "fr": "Taro",
+            "es": "Aroa",
+            "it": "Rupi"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "115",
+          "name": {
+            "de": "Aokis Geschick",
+            "en": "Larry's Skill",
+            "fr": "Compétence d'Okuba",
+            "es": "Talento de Laureano",
+            "it": "Competenza di Ubaldo"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "116",
+          "name": {
+            "de": "Maximale Angel",
+            "en": "Max Rod",
+            "fr": "Max Canne",
+            "es": "Maxicaña",
+            "it": "Canna da pesca max"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "117",
+          "name": {
+            "de": "Maximalgürtel",
+            "en": "Maximum Belt",
+            "fr": "Ceinture Maximale",
+            "es": "Cinturón Colosal",
+            "it": "Maxicintura"
+          },
+          "type": "trainer",
+          "trainer_type": "Tool",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/tool.png"
+        },
+        {
+          "localId": "118",
+          "name": {
+            "de": "Maske des Oni",
+            "en": "Ogre's Mask",
+            "fr": "Masque de Monstre",
+            "es": "Máscara del Ogro",
+            "it": "Maschera dell'Orco"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "119",
+          "name": {
+            "de": "Erstklassiger Fänger",
+            "en": "Prime Catcher",
+            "fr": "Attrape-Ultime",
+            "es": "Capturador Supremo",
+            "it": "Acchiappa-Pokémon Eccellente"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "120",
+          "name": {
+            "de": "Prof. Antiquas Vitalität",
+            "en": "Professor Sada's Vitality",
+            "fr": "Vitalité de la Professeure Olim",
+            "es": "Vitalidad de la Profesora Albora",
+            "it": "Vitalità della Professoressa Olim"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "121",
+          "name": {
+            "de": "Prof. Futurus' Szenario",
+            "en": "Professor Turo's Scenario",
+            "fr": "Plan du Professeur Turum",
+            "es": "Plan del Profesor Turo",
+            "it": "Scenario del Professor Turum"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "122",
+          "name": {
+            "de": "Forschung des Professors",
+            "en": "Professor's Research",
+            "fr": "Recherches Professorales",
+            "es": "Investigación de Profesores",
+            "it": "Ricerca Accademica"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "123",
+          "name": {
+            "de": "Forschung des Professors",
+            "en": "Professor's Research",
+            "fr": "Recherches Professorales",
+            "es": "Investigación de Profesores",
+            "it": "Ricerca Accademica"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "124",
+          "name": {
+            "de": "Forschung des Professors",
+            "en": "Professor's Research",
+            "fr": "Recherches Professorales",
+            "es": "Investigación de Profesores",
+            "it": "Ricerca Accademica"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "125",
+          "name": {
+            "de": "Forschung des Professors",
+            "en": "Professor's Research",
+            "fr": "Recherches Professorales",
+            "es": "Investigación de Profesores",
+            "it": "Ricerca Accademica"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "126",
+          "name": {
+            "de": "Rettungsboard",
+            "en": "Rescue Board",
+            "fr": "Planche de Sauvetage",
+            "es": "Monopatín de Rescate",
+            "it": "Skateboard di Salvataggio"
+          },
+          "type": "trainer",
+          "trainer_type": "Tool",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/tool.png"
+        },
+        {
+          "localId": "127",
+          "name": {
+            "de": "Rotom-Stick",
+            "en": "Roto-Stick",
+            "fr": "Perche à Motismart",
+            "es": "Paloselfi Rotom",
+            "it": "Bastone Rotoselfie"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "128",
+          "name": {
+            "de": "Aufwischwirbel",
+            "en": "Scoop Up Cyclone",
+            "fr": "Rappel Cyclone",
+            "es": "Ciclón Levante",
+            "it": "Mega Recupero"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "129",
+          "name": {
+            "de": "Funkelnder Kristall",
+            "en": "Sparkling Crystal",
+            "fr": "Cristal Scintillant",
+            "es": "Cristal Brillante",
+            "it": "Cristallo Scintillante"
+          },
+          "type": "trainer",
+          "trainer_type": "Tool",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/tool.png"
+        },
+        {
+          "localId": "130",
+          "name": {
+            "de": "Techradar",
+            "en": "Techno Radar",
+            "fr": "Techno-Radar",
+            "es": "Tecnorradar",
+            "it": "Tecnoradar"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "131",
+          "name": {
+            "de": "Schatz-Tracker",
+            "en": "Treasure Tracker",
+            "fr": "Détecteur de Trésors",
+            "es": "Rastreador de Tesoros",
+            "it": "Rilevatore di Tesori"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "132",
+          "name": {
+            "de": "Erin",
+            "en": "Amarys",
+            "fr": "Nérine",
+            "es": "Nerina",
+            "it": "Erin"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "133",
+          "name": {
+            "de": "Shugi",
+            "en": "Atticus",
+            "fr": "Erio",
+            "es": "Henzo",
+            "it": "Henzo"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "134",
+          "name": {
+            "de": "Shugi",
+            "en": "Atticus",
+            "fr": "Erio",
+            "es": "Henzo",
+            "it": "Henzo"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "135",
+          "name": {
+            "de": "Colzo",
+            "en": "Brassius",
+            "fr": "Colza",
+            "es": "Brais",
+            "it": "Brassius"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "136",
+          "name": {
+            "de": "Rioba",
+            "en": "Eri",
+            "fr": "Nèflie",
+            "es": "Erin",
+            "it": "Nespera"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "137",
+          "name": {
+            "de": "Freunde aus Paldea",
+            "en": "Friends in Paldea",
+            "fr": "Amis de Paldea",
+            "es": "Amigos de Paldea",
+            "it": "Amici a Paldea"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "138",
+          "name": {
+            "de": "Pinio",
+            "en": "Giacomo",
+            "fr": "Brome",
+            "es": "Anán",
+            "it": "Romelio"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "139",
+          "name": {
+            "de": "Aokis Geschick",
+            "en": "Larry's Skill",
+            "fr": "Compétence d'Okuba",
+            "es": "Talento de Laureano",
+            "it": "Competenza di Ubaldo"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "140",
+          "name": {
+            "de": "Irsa",
+            "en": "Mela",
+            "fr": "Meloco",
+            "es": "Melo",
+            "it": "Pruna"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "141",
+          "name": {
+            "de": "Otis",
+            "en": "Ortega",
+            "fr": "Ortiga",
+            "es": "Gus",
+            "it": "Ortiz"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "142",
+          "name": {
+            "de": "Moira",
+            "en": "Raifort",
+            "fr": "Mora",
+            "es": "Cloe",
+            "it": "Morasia"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "143",
+          "name": {
+            "de": "Quendella",
+            "en": "Tyme",
+            "fr": "Thaïm",
+            "es": "Mila",
+            "it": "Thyma"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "144",
+          "name": {
+            "en": "Leafeon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 470,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/470.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "145",
+          "name": {
+            "en": "Teal Mask Ogerpon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1017,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1017.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "146",
+          "name": {
+            "en": "Flareon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 136,
+          "types": [
+            "Fire"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/136.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "147",
+          "name": {
+            "en": "Ceruledge"
+          },
+          "type": "pokemon",
+          "pokemon_id": 937,
+          "types": [
+            "Fire"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/937.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "148",
+          "name": {
+            "en": "Hearthflame Mask Ogerpon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1017,
+          "types": [
+            "Fire"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1017.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "149",
+          "name": {
+            "en": "Vaporeon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 134,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/134.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "150",
+          "name": {
+            "en": "Glaceon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 471,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/471.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "151",
+          "name": {
+            "en": "Palafin"
+          },
+          "type": "pokemon",
+          "pokemon_id": 964,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/964.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "152",
+          "name": {
+            "en": "Wellspring Mask Ogerpon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1017,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1017.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "153",
+          "name": {
+            "en": "Jolteon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 135,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/135.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "154",
+          "name": {
+            "en": "Iron Hands"
+          },
+          "type": "pokemon",
+          "pokemon_id": 992,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/992.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "155",
+          "name": {
+            "en": "Espeon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 196,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/196.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "156",
+          "name": {
+            "en": "Sylveon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 700,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/700.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "157",
+          "name": {
+            "en": "Iron Valiant"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1006,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1006.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "158",
+          "name": {
+            "en": "Iron Crown"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1023,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1023.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "159",
+          "name": {
+            "en": "Sandy Shocks"
+          },
+          "type": "pokemon",
+          "pokemon_id": 989,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/989.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "160",
+          "name": {
+            "en": "Cornerstone Mask Ogerpon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1017,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1017.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "161",
+          "name": {
+            "en": "Umbreon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 197,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/197.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "162",
+          "name": {
+            "en": "Roaring Moon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1005,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1005.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "163",
+          "name": {
+            "en": "Pecharunt"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1025,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1025.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "164",
+          "name": {
+            "en": "Gholdengo"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1000,
+          "types": [
+            "Metal"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1000.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "165",
+          "name": {
+            "en": "Dragapult"
+          },
+          "type": "pokemon",
+          "pokemon_id": 887,
+          "types": [
+            "Dragon"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/887.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "166",
+          "name": {
+            "en": "Raging Bolt"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1021,
+          "types": [
+            "Dragon"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1021.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "167",
+          "name": {
+            "en": "Eevee"
+          },
+          "type": "pokemon",
+          "pokemon_id": 133,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "168",
+          "name": {
+            "en": "Bloodmoon Ursaluna"
+          },
+          "type": "pokemon",
+          "pokemon_id": 901,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/901.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "169",
+          "name": {
+            "en": "Terapagos"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1024,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1024.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "170",
+          "name": {
+            "de": "Erin",
+            "en": "Amarys",
+            "fr": "Nérine",
+            "es": "Nerina",
+            "it": "Erin"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "171",
+          "name": {
+            "de": "Matt",
+            "en": "Crispin",
+            "fr": "Rubépin",
+            "es": "Denis",
+            "it": "Piros"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "172",
+          "name": {
+            "de": "Levy",
+            "en": "Drayton",
+            "fr": "Irido",
+            "es": "Levi",
+            "it": "Aris"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "173",
+          "name": {
+            "de": "Janinas Geheimkunst",
+            "en": "Janine's Secret Art",
+            "fr": "Art Secret de Jeannine",
+            "es": "Artes Secretas de Sachiko",
+            "it": "Arte Segreta di Nina"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "174",
+          "name": {
+            "de": "Jo",
+            "en": "Kieran",
+            "fr": "Kassis",
+            "es": "Cass",
+            "it": "Riben"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "175",
+          "name": {
+            "de": "Tara",
+            "en": "Lacey",
+            "fr": "Taro",
+            "es": "Aroa",
+            "it": "Rupi"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "176",
+          "name": {
+            "en": "Iron Leaves"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1010,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1010.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "177",
+          "name": {
+            "en": "Teal Mask Ogerpon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1017,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1017.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "178",
+          "name": {
+            "en": "Walking Wake"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1009,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1009.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "179",
+          "name": {
+            "en": "Pikachu"
+          },
+          "type": "pokemon",
+          "pokemon_id": 25,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
+          "suffix": "[EX_NEW]"
+        },
+        {
+          "localId": "180",
+          "name": {
+            "en": "Terapagos"
+          },
+          "type": "pokemon",
+          "pokemon_id": 1024,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1024.png",
+          "suffix": "[EX_NEW]"
+        }
+      ]
+    }
+  }
+}

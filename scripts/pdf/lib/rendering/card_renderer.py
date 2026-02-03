@@ -69,7 +69,7 @@ class CardStyle:
 class CardRenderer:
     """Unified renderer for Pokémon cards."""
     
-    def __init__(self, language: str = 'en', image_cache=None, variant: str = None, variant_data: dict = None) -> None:
+    def __init__(self, language: str = 'en', image_cache=None, variant: str = None, variant_data: dict = None, type_translations: dict = None) -> None:
         """
         Initialize card renderer.
         
@@ -78,6 +78,7 @@ class CardRenderer:
             image_cache: Optional image cache for loading Pokémon images
             variant: Optional variant ID (ex_gen1, ex_gen2, etc.) for variant-specific rendering
             variant_data: Optional variant data dict for accessing variant-level config (suffix, etc.)
+            type_translations: Optional dict with type translations from data (e.g., from Pokedex.json)
         """
         self.language: str = language
         self.image_cache = image_cache
@@ -85,8 +86,11 @@ class CardRenderer:
         self.variant_data = variant_data or {}
         self.style = CardStyle()
         
-        # Load type translations for this language
-        self.type_translations: Dict[str, str] = TranslationLoader.load_types(language)
+        # Load type translations - prefer passed translations, fallback to i18n files
+        if type_translations:
+            self.type_translations: Dict[str, str] = type_translations
+        else:
+            self.type_translations: Dict[str, str] = TranslationLoader.load_types(language)
     
     @staticmethod
     def _darken_color(hex_color: str, factor: float = 0.6) -> str:
@@ -166,11 +170,16 @@ class CardRenderer:
         if not types and pokemon_data.get('type1'):
             types = [pokemon_data.get('type1')]
         
+        # For special cards (Trainer, Energy) without types, use 'Colorless' as default
         if not types:
-            raise ValueError(
-                f"Pokémon '{pokemon_data.get('name', 'Unknown')}' "
-                f"(ID: {pokemon_data.get('id', 'N/A')}) has no types defined"
-            )
+            card_type = pokemon_data.get('type', '')
+            if card_type in ['trainer', 'energy']:
+                types = ['Colorless']
+            else:
+                raise ValueError(
+                    f"Pokémon '{pokemon_data.get('name', 'Unknown')}' "
+                    f"(ID: {pokemon_data.get('id', 'N/A')}) has no types defined"
+                )
         
         pokemon_type = types[0]
         header_color = self.style.TYPE_COLORS.get(pokemon_type, self.style.TYPE_COLORS['Normal'])
@@ -189,7 +198,21 @@ class CardRenderer:
         
         # ===== TYPE DISPLAY =====
         type_english = types[0]
-        type_translated = self.type_translations.get(type_english, type_english)
+        
+        # Get type translation - handle both dict (from API) and string (fallback) formats
+        type_translation_data = self.type_translations.get(type_english, type_english)
+        
+        if isinstance(type_translation_data, dict):
+            # New format: translations are a dict with language codes
+            type_translated = type_translation_data.get(self.language, type_english)
+        else:
+            # Old format: translation is already a string
+            type_translated = type_translation_data
+        
+        # Debug: Check if translation exists
+        if not type_translated:
+            logger.warning(f"No type translation for '{type_english}' in language '{self.language}'")
+            type_translated = type_english
         
         try:
             type_font: str = FontManager.get_font_name(self.language, bold=False)
@@ -208,7 +231,14 @@ class CardRenderer:
             name: str = self._construct_variant_name(pokemon_data, section_prefix, section_suffix)
         else:
             # For generation PDFs
-            name = pokemon_data.get('name', 'Unknown')
+            # Support both string and multilingual dict format
+            name_data = pokemon_data.get('name', 'Unknown')
+            if isinstance(name_data, dict):
+                # Multilingual format (TCG cards) - fallback to English
+                name = name_data.get(self.language, name_data.get('en', 'Unknown'))
+            else:
+                # String format (Pokedex cards)
+                name = name_data
         
         try:
             font_name: str = FontManager.get_font_name(self.language, bold=True)
@@ -278,7 +308,14 @@ class CardRenderer:
             Fully formatted variant name with prefix/suffix
         """
         # Get base name in target language (unified name object structure - required)
-        base_name = pokemon_data['name'][self.language]
+        # Fallback to English if language not available
+        name_obj = pokemon_data.get('name', {})
+        
+        # Handle both dict (multilingual) and string (monolingual) name formats
+        if isinstance(name_obj, dict):
+            base_name = name_obj.get(self.language, name_obj.get('en', 'Unknown'))
+        else:
+            base_name = str(name_obj) if name_obj else 'Unknown'
         
         # Get pokemon-specific prefix/suffix (can override section defaults)
         pokemon_prefix = pokemon_data.get('prefix', None)
@@ -325,7 +362,7 @@ class CardRenderer:
             
             if image_source.startswith(('http://', 'https://')):
                 # URL - load from cache or download
-                pokemon_id = pokemon_data.get('id')
+                pokemon_id = pokemon_data.get('pokemon_id') or pokemon_data.get('id')
                 logger.debug(f"Getting image for #{pokemon_id}...")
                 image_data = self.image_cache.get_image(pokemon_id, url=image_source)
                 if image_data:
@@ -348,10 +385,16 @@ class CardRenderer:
                 img_x: float = x + (card_width - max_width) / 2
                 img_y: float = y + (image_height - max_height) / 2 + padding
                 
+                # Use ImageReader for PNG transparency support
+                from reportlab.lib.utils import ImageReader
+                if isinstance(image_to_render, str):
+                    image_to_render = ImageReader(image_to_render)
+                
                 canvas_obj.drawImage(
                     image_to_render, img_x, img_y,
                     width=max_width, height=max_height,
-                    preserveAspectRatio=True
+                    preserveAspectRatio=True,
+                    mask='auto'  # Preserve PNG transparency
                 )
                 logger.debug(f"✓ Image drawn")
         

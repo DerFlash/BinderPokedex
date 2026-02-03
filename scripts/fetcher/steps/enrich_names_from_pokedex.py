@@ -46,7 +46,7 @@ class EnrichNamesFromPokedexStep(BaseStep):
         # Make paths absolute relative to project root (2 levels up from this file)
         project_root = Path(__file__).parent.parent.parent.parent
         
-        pokedex_path = params.get('pokedex_file', 'data/Pokedex.json')
+        pokedex_path = params.get('pokedex_file', 'data/output/Pokedex.json')
         if not Path(pokedex_path).is_absolute():
             pokedex_file = project_root / pokedex_path
         else:
@@ -91,10 +91,10 @@ class EnrichNamesFromPokedexStep(BaseStep):
         sections = target_data.get('sections', {})
         
         for section_id, section_data in sections.items():
-            pokemon_list = section_data.get('pokemon', [])
+            pokemon_list = section_data.get('cards', [])
             
             for pokemon in pokemon_list:
-                dex_id = pokemon.get('id')
+                dex_id = pokemon.get('pokemon_id')
                 
                 if dex_id and dex_id in name_lookup:
                     # Replace name with multilingual version
@@ -168,10 +168,10 @@ class EnrichNamesFromPokedexStep(BaseStep):
         sections = pokedex_data.get('sections', {})
         
         for section_id, section_data in sections.items():
-            pokemon_list = section_data.get('pokemon', [])
+            pokemon_list = section_data.get('cards', [])
             
             for pokemon in pokemon_list:
-                dex_id = pokemon.get('id')
+                dex_id = pokemon.get('pokemon_id')
                 name = pokemon.get('name')
                 
                 if dex_id and name:
@@ -205,7 +205,7 @@ if __name__ == '__main__':
     )
     
     step_config = {
-        'pokedex_file': 'data/Pokedex.json',
+        'pokedex_file': 'data/output/Pokedex.json',
         'target_file': 'data/ExGen1_Single.json'
     }
     

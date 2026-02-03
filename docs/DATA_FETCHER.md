@@ -69,26 +69,35 @@ The fetcher supports multiple API sources for different data types:
 
 ```
 scripts/fetcher/
-├── fetch.py                           # CLI entry point
-├── engine.py                          # Execution engine
+├── fetch.py                                  # CLI entry point
+├── engine.py                                 # Execution engine
 ├── config/scopes/
-│   ├── pokedex.yaml                  # Full National Dex (1025 Pokémon)
-│   ├── test_fetch.yaml               # Test scope (3 per gen)
-│   └── test.yaml                     # Engine test
+│   ├── pokedex.yaml                         # Full National Dex (1025 Pokémon)
+│   ├── ExGen1.yaml                          # Classic ex cards
+│   ├── ExGen2.yaml                          # BW/XY EX cards
+│   ├── ExGen3.yaml                          # SV ex cards
+│   ├── ME01.yaml                            # TCG set example
+│   ├── test_fetch.yaml                      # Test scope (3 per gen)
+│   └── test.yaml                            # Engine test
 ├── steps/
-│   ├── base.py                       # BaseStep, PipelineContext
-│   ├── fetch_pokeapi_national_dex.py # ✅ Implemented
-│   ├── group_by_generation.py        # ✅ Implemented
-│   ├── enrich_featured_pokemon.py    # ✅ Implemented
-│   └── enrich_translations_es_it.py  # ✅ Implemented
+│   ├── base.py                              # BaseStep, PipelineContext
+│   ├── fetch_pokeapi_national_dex.py        # ✅ Implemented
+│   ├── fetch_tcgdex_set.py                  # ✅ Implemented
+│   ├── enrich_tcg_names_multilingual.py     # ✅ Implemented
+│   ├── enrich_tcg_cards_from_pokedex.py     # ✅ Implemented
+│   ├── transform_tcg_set.py                 # ✅ Implemented
+│   ├── transform_to_sections_format.py      # ✅ Implemented
+│   ├── group_by_generation.py               # ✅ Implemented
+│   ├── enrich_featured_pokemon.py           # ✅ Implemented
+│   └── enrich_translations_es_it.py         # ✅ Implemented
 ├── lib/
-│   ├── pokeapi_client.py             # ✅ PokeAPI client
-│   ├── tcg_client.py                 # ✅ Pokémon TCG API client
-│   └── tcgdex_client.py              # ✅ TCGdex client
+│   ├── pokeapi_client.py                    # ✅ PokeAPI client
+│   ├── tcg_client.py                        # ✅ Pokémon TCG API client
+│   └── tcgdex_client.py                     # ✅ TCGdex client
 └── data/enrichments/
-    ├── featured_pokemon.json          # Featured IDs by generation
-    ├── translations_es.json           # Spanish overrides (52)
-    └── translations_it.json           # Italian overrides (52)
+    ├── featured_pokemon.json                 # Featured IDs by generation
+    ├── translations_es.json                  # Spanish overrides (52)
+    └── translations_it.json                  # Italian overrides (52)
 
 data/
 ├── source/
@@ -110,6 +119,12 @@ data/
 - Rate limiting: 0.2s between requests
 - Timeout: 10s per request
 - Saves to: `data/source/{scope}.json`
+
+**fetch_tcgdex_set** - Fetch TCG Set
+- Fetches complete TCG set from TCGdex API (e.g., ME01)
+- Retrieves set metadata including logos and release dates
+- English card names and localIds
+- Saves to: `data/source/{set_id}.json`
 
 **fetch_tcgdex_ex_gen{1,2,3}** - Fetch TCG ex/EX Cards
 - ExGen1: Classic ex series (Ruby/Sapphire era, 2003-2006)
@@ -169,6 +184,20 @@ data/
 - Supports all 9 languages
 - Applied at pipeline start (before other steps)
 
+**enrich_tcg_names_multilingual** - TCG Multilingual Names
+- Fetches set data in all 9 languages from TCGdex API
+- Enriches card names with translations (name_{lang} fields)
+- Extracts set names in all languages
+- Much more efficient than individual card fetching
+- Applied after fetch_tcgdex_set
+
+**transform_to_sections_format** - TCG Set to Sections
+- Converts flat TCG cards array to sections format
+- Generates multilingual metadata (title, description, subtitle)
+- Embeds set logos with [image] tag in subtitles
+- Formats release dates with localized labels
+- Applied after transform_tcg_set
+
 **cache_pokemon_images** - Image Caching
 - Downloads Pokemon images to local cache
 - Stores in scripts/data/pokemon_images_cache/
@@ -205,7 +234,7 @@ pipeline:
     params:
       featured_file: scripts/fetcher/data/enrichments/featured_pokemon.json
 
-target_file: data/Pokedex.json
+target_file: data/output/Pokedex.json
 source_file: data/source/pokedex.json
 ```
 
@@ -275,7 +304,7 @@ python scripts/fetcher/fetch.py --scope pokedex --dry-run
 📋 Loading scope: pokedex
 ✅ Config loaded: National Pokédex with all 9 generations
 📁 Source: data/source/pokedex.json
-📁 Target: data/Pokedex.json
+📁 Target: data/output/Pokedex.json
 🔧 Pipeline steps: 4
 
 📋 Pipeline:
@@ -323,7 +352,7 @@ python scripts/fetcher/fetch.py --scope pokedex --dry-run
     ✅ Added 3 featured Pokemon across 9 generations
     ✅ Completed
 
-💾 Saved final output to: data/Pokedex.json
+💾 Saved final output to: data/output/Pokedex.json
 ✅ Pipeline completed successfully!
 ```
 

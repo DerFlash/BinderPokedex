@@ -1,0 +1,2406 @@
+{
+  "set_info": {
+    "id": "sv10.5w",
+    "name": "White Flare",
+    "release_date": "2025-07-17",
+    "card_count": {
+      "firstEd": 0,
+      "holo": 0,
+      "normal": 0,
+      "official": 86,
+      "reverse": 0,
+      "total": 173
+    },
+    "logo": "https://assets.tcgdex.net/en/sv/sv10.5w/logo.png",
+    "symbol": "https://assets.tcgdex.net/univ/sv/sv10.5w/symbol",
+    "serie": "sv",
+    "serie_name": "Scarlet & Violet"
+  },
+  "cards": [
+    {
+      "id": "sv10.5w-001",
+      "localId": "001",
+      "name": "Sewaddle",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/001",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        540
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-002",
+      "localId": "002",
+      "name": "Swadloon",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/002",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        541
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-003",
+      "localId": "003",
+      "name": "Leavanny",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/003",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        542
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-004",
+      "localId": "004",
+      "name": "Cottonee",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/004",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        546
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-005",
+      "localId": "005",
+      "name": "Whimsicott ex",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/005",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        547
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-006",
+      "localId": "006",
+      "name": "Deerling",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/006",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        585
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-007",
+      "localId": "007",
+      "name": "Sawsbuck",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/007",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        586
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-008",
+      "localId": "008",
+      "name": "Shelmet",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/008",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        616
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-009",
+      "localId": "009",
+      "name": "Accelgor",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/009",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        617
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-010",
+      "localId": "010",
+      "name": "Virizion",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/010",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        640
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-011",
+      "localId": "011",
+      "name": "Tepig",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/011",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        498
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-012",
+      "localId": "012",
+      "name": "Pignite",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/012",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        499
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-013",
+      "localId": "013",
+      "name": "Emboar",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/013",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        500
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-014",
+      "localId": "014",
+      "name": "Pansear",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/014",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        513
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-015",
+      "localId": "015",
+      "name": "Simisear",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/015",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        514
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-016",
+      "localId": "016",
+      "name": "Litwick",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/016",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        607
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-017",
+      "localId": "017",
+      "name": "Lampent",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/017",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        608
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-018",
+      "localId": "018",
+      "name": "Chandelure",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/018",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        609
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-019",
+      "localId": "019",
+      "name": "Heatmor",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/019",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        631
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-020",
+      "localId": "020",
+      "name": "Reshiram ex",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/020",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        643
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-021",
+      "localId": "021",
+      "name": "Oshawott",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/021",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        501
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-022",
+      "localId": "022",
+      "name": "Dewott",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/022",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        502
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-023",
+      "localId": "023",
+      "name": "Samurott",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/023",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        503
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-024",
+      "localId": "024",
+      "name": "Basculin",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/024",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        550
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-025",
+      "localId": "025",
+      "name": "Ducklett",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/025",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        580
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-026",
+      "localId": "026",
+      "name": "Swanna",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/026",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        581
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-027",
+      "localId": "027",
+      "name": "Vanillite",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/027",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        582
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-028",
+      "localId": "028",
+      "name": "Vanillish",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/028",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        583
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-029",
+      "localId": "029",
+      "name": "Vanilluxe",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/029",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        584
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-030",
+      "localId": "030",
+      "name": "Keldeo ex",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/030",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        647
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-031",
+      "localId": "031",
+      "name": "Blitzle",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/031",
+      "category": "Pokemon",
+      "types": [
+        "Lightning"
+      ],
+      "dexId": [
+        522
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-032",
+      "localId": "032",
+      "name": "Zebstrika",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/032",
+      "category": "Pokemon",
+      "types": [
+        "Lightning"
+      ],
+      "dexId": [
+        523
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-033",
+      "localId": "033",
+      "name": "Joltik",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/033",
+      "category": "Pokemon",
+      "types": [
+        "Lightning"
+      ],
+      "dexId": [
+        595
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-034",
+      "localId": "034",
+      "name": "Galvantula",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/034",
+      "category": "Pokemon",
+      "types": [
+        "Lightning"
+      ],
+      "dexId": [
+        596
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-035",
+      "localId": "035",
+      "name": "Stunfisk",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/035",
+      "category": "Pokemon",
+      "types": [
+        "Lightning"
+      ],
+      "dexId": [
+        618
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-036",
+      "localId": "036",
+      "name": "Woobat",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/036",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        527
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-037",
+      "localId": "037",
+      "name": "Swoobat",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/037",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        528
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-038",
+      "localId": "038",
+      "name": "Sigilyph",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/038",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        561
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-039",
+      "localId": "039",
+      "name": "Yamask",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/039",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        562
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-040",
+      "localId": "040",
+      "name": "Cofagrigus",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/040",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        563
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-041",
+      "localId": "041",
+      "name": "Gothita",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/041",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        574
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-042",
+      "localId": "042",
+      "name": "Gothorita",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/042",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        575
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-043",
+      "localId": "043",
+      "name": "Gothitelle",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/043",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        576
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-044",
+      "localId": "044",
+      "name": "Frillish",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/044",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        592
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-045",
+      "localId": "045",
+      "name": "Jellicent ex",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/045",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        593
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-046",
+      "localId": "046",
+      "name": "Roggenrola",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/046",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        524
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-047",
+      "localId": "047",
+      "name": "Boldore",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/047",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        525
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-048",
+      "localId": "048",
+      "name": "Gigalith",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/048",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        526
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-049",
+      "localId": "049",
+      "name": "Sawk",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/049",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        539
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-050",
+      "localId": "050",
+      "name": "Archen",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/050",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        566
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-051",
+      "localId": "051",
+      "name": "Archeops",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/051",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        567
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-052",
+      "localId": "052",
+      "name": "Mienfoo",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/052",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        619
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-053",
+      "localId": "053",
+      "name": "Mienshao",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/053",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        620
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-054",
+      "localId": "054",
+      "name": "Terrakion",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/054",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        639
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-055",
+      "localId": "055",
+      "name": "Purrloin",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/055",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        509
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-056",
+      "localId": "056",
+      "name": "Liepard",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/056",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        510
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-057",
+      "localId": "057",
+      "name": "Scraggy",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/057",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        559
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-058",
+      "localId": "058",
+      "name": "Scrafty",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/058",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        560
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-059",
+      "localId": "059",
+      "name": "Trubbish",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/059",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        568
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-060",
+      "localId": "060",
+      "name": "Garbodor",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/060",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        569
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-061",
+      "localId": "061",
+      "name": "Zorua",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/061",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        570
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-062",
+      "localId": "062",
+      "name": "Zoroark",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/062",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        571
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-063",
+      "localId": "063",
+      "name": "Vullaby",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/063",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        629
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-064",
+      "localId": "064",
+      "name": "Mandibuzz",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/064",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        630
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-065",
+      "localId": "065",
+      "name": "Deino",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/065",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        633
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-066",
+      "localId": "066",
+      "name": "Zweilous",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/066",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        634
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-067",
+      "localId": "067",
+      "name": "Hydreigon ex",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/067",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        635
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-068",
+      "localId": "068",
+      "name": "Ferroseed",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/068",
+      "category": "Pokemon",
+      "types": [
+        "Metal"
+      ],
+      "dexId": [
+        597
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-069",
+      "localId": "069",
+      "name": "Ferrothorn",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/069",
+      "category": "Pokemon",
+      "types": [
+        "Metal"
+      ],
+      "dexId": [
+        598
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-070",
+      "localId": "070",
+      "name": "Durant",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/070",
+      "category": "Pokemon",
+      "types": [
+        "Metal"
+      ],
+      "dexId": [
+        632
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-071",
+      "localId": "071",
+      "name": "Druddigon",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/071",
+      "category": "Pokemon",
+      "types": [
+        "Dragon"
+      ],
+      "dexId": [
+        621
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-072",
+      "localId": "072",
+      "name": "Patrat",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/072",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        504
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-073",
+      "localId": "073",
+      "name": "Watchog",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/073",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        505
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-074",
+      "localId": "074",
+      "name": "Lillipup",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/074",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        506
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-075",
+      "localId": "075",
+      "name": "Herdier",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/075",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        507
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-076",
+      "localId": "076",
+      "name": "Stoutland",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/076",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        508
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-077",
+      "localId": "077",
+      "name": "Bouffalant ex",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/077",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        626
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-078",
+      "localId": "078",
+      "name": "Tornadus",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/078",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        641
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-079",
+      "localId": "079",
+      "name": "Antique Plume Fossil",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/079",
+      "category": "Trainer",
+      "types": [],
+      "dexId": [],
+      "trainerType": "Item"
+    },
+    {
+      "id": "sv10.5w-080",
+      "localId": "080",
+      "name": "Brave Bangle",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/080",
+      "category": "Trainer",
+      "types": [],
+      "dexId": [],
+      "trainerType": "Tool"
+    },
+    {
+      "id": "sv10.5w-081",
+      "localId": "081",
+      "name": "Cheren",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/081",
+      "category": "Trainer",
+      "types": [],
+      "dexId": [],
+      "trainerType": "Supporter"
+    },
+    {
+      "id": "sv10.5w-082",
+      "localId": "082",
+      "name": "Energy Retrieval",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/082",
+      "category": "Trainer",
+      "types": [],
+      "dexId": [],
+      "trainerType": "Item"
+    },
+    {
+      "id": "sv10.5w-083",
+      "localId": "083",
+      "name": "Harlequin",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/083",
+      "category": "Trainer",
+      "types": [],
+      "dexId": [],
+      "trainerType": "Supporter"
+    },
+    {
+      "id": "sv10.5w-084",
+      "localId": "084",
+      "name": "Hilda",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/084",
+      "category": "Trainer",
+      "types": [],
+      "dexId": [],
+      "trainerType": "Supporter"
+    },
+    {
+      "id": "sv10.5w-085",
+      "localId": "085",
+      "name": "Tool Scrapper",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/085",
+      "category": "Trainer",
+      "types": [],
+      "dexId": [],
+      "trainerType": "Item"
+    },
+    {
+      "id": "sv10.5w-086",
+      "localId": "086",
+      "name": "Ignition Energy",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/086",
+      "category": "Energy",
+      "types": [],
+      "dexId": [],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-087",
+      "localId": "087",
+      "name": "Sewaddle",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/087",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        540
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-088",
+      "localId": "088",
+      "name": "Swadloon",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/088",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        541
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-089",
+      "localId": "089",
+      "name": "Leavanny",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/089",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        542
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-090",
+      "localId": "090",
+      "name": "Cottonee",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/090",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        546
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-091",
+      "localId": "091",
+      "name": "Deerling",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/091",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        585
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-092",
+      "localId": "092",
+      "name": "Sawsbuck",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/092",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        586
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-093",
+      "localId": "093",
+      "name": "Shelmet",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/093",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        616
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-094",
+      "localId": "094",
+      "name": "Accelgor",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/094",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        617
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-095",
+      "localId": "095",
+      "name": "Virizion",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/095",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        640
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-096",
+      "localId": "096",
+      "name": "Tepig",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/096",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        498
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-097",
+      "localId": "097",
+      "name": "Pignite",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/097",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        499
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-098",
+      "localId": "098",
+      "name": "Emboar",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/098",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        500
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-099",
+      "localId": "099",
+      "name": "Pansear",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/099",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        513
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-100",
+      "localId": "100",
+      "name": "Simisear",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/100",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        514
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-101",
+      "localId": "101",
+      "name": "Litwick",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/101",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        607
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-102",
+      "localId": "102",
+      "name": "Lampent",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/102",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        608
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-103",
+      "localId": "103",
+      "name": "Chandelure",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/103",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        609
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-104",
+      "localId": "104",
+      "name": "Heatmor",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/104",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        631
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-105",
+      "localId": "105",
+      "name": "Oshawott",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/105",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        501
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-106",
+      "localId": "106",
+      "name": "Dewott",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/106",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        502
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-107",
+      "localId": "107",
+      "name": "Samurott",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/107",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        503
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-108",
+      "localId": "108",
+      "name": "Basculin",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/108",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        550
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-109",
+      "localId": "109",
+      "name": "Ducklett",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/109",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        580
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-110",
+      "localId": "110",
+      "name": "Swanna",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/110",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        581
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-111",
+      "localId": "111",
+      "name": "Vanillite",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/111",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        582
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-112",
+      "localId": "112",
+      "name": "Vanillish",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/112",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        583
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-113",
+      "localId": "113",
+      "name": "Vanilluxe",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/113",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        584
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-114",
+      "localId": "114",
+      "name": "Blitzle",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/114",
+      "category": "Pokemon",
+      "types": [
+        "Lightning"
+      ],
+      "dexId": [
+        522
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-115",
+      "localId": "115",
+      "name": "Zebstrika",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/115",
+      "category": "Pokemon",
+      "types": [
+        "Lightning"
+      ],
+      "dexId": [
+        523
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-116",
+      "localId": "116",
+      "name": "Joltik",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/116",
+      "category": "Pokemon",
+      "types": [
+        "Lightning"
+      ],
+      "dexId": [
+        595
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-117",
+      "localId": "117",
+      "name": "Galvantula",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/117",
+      "category": "Pokemon",
+      "types": [
+        "Lightning"
+      ],
+      "dexId": [
+        596
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-118",
+      "localId": "118",
+      "name": "Stunfisk",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/118",
+      "category": "Pokemon",
+      "types": [
+        "Lightning"
+      ],
+      "dexId": [
+        618
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-119",
+      "localId": "119",
+      "name": "Woobat",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/119",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        527
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-120",
+      "localId": "120",
+      "name": "Swoobat",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/120",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        528
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-121",
+      "localId": "121",
+      "name": "Sigilyph",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/121",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        561
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-122",
+      "localId": "122",
+      "name": "Yamask",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/122",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        562
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-123",
+      "localId": "123",
+      "name": "Cofagrigus",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/123",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        563
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-124",
+      "localId": "124",
+      "name": "Gothita",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/124",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        574
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-125",
+      "localId": "125",
+      "name": "Gothorita",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/125",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        575
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-126",
+      "localId": "126",
+      "name": "Frillish",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/126",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        592
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-127",
+      "localId": "127",
+      "name": "Roggenrola",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/127",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        524
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-128",
+      "localId": "128",
+      "name": "Boldore",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/128",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        525
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-129",
+      "localId": "129",
+      "name": "Gigalith",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/129",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        526
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-130",
+      "localId": "130",
+      "name": "Sawk",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/130",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        539
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-131",
+      "localId": "131",
+      "name": "Archen",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/131",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        566
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-132",
+      "localId": "132",
+      "name": "Archeops",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/132",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        567
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-133",
+      "localId": "133",
+      "name": "Mienfoo",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/133",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        619
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-134",
+      "localId": "134",
+      "name": "Mienshao",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/134",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        620
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-135",
+      "localId": "135",
+      "name": "Terrakion",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/135",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        639
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-136",
+      "localId": "136",
+      "name": "Purrloin",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/136",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        509
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-137",
+      "localId": "137",
+      "name": "Liepard",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/137",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        510
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-138",
+      "localId": "138",
+      "name": "Scraggy",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/138",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        559
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-139",
+      "localId": "139",
+      "name": "Scrafty",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/139",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        560
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-140",
+      "localId": "140",
+      "name": "Trubbish",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/140",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        568
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-141",
+      "localId": "141",
+      "name": "Garbodor",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/141",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        569
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-142",
+      "localId": "142",
+      "name": "Zorua",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/142",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        570
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-143",
+      "localId": "143",
+      "name": "Zoroark",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/143",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        571
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-144",
+      "localId": "144",
+      "name": "Vullaby",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/144",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        629
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-145",
+      "localId": "145",
+      "name": "Mandibuzz",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/145",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        630
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-146",
+      "localId": "146",
+      "name": "Deino",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/146",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        633
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-147",
+      "localId": "147",
+      "name": "Zweilous",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/147",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        634
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-148",
+      "localId": "148",
+      "name": "Ferroseed",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/148",
+      "category": "Pokemon",
+      "types": [
+        "Metal"
+      ],
+      "dexId": [
+        597
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-149",
+      "localId": "149",
+      "name": "Ferrothorn",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/149",
+      "category": "Pokemon",
+      "types": [
+        "Metal"
+      ],
+      "dexId": [
+        598
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-150",
+      "localId": "150",
+      "name": "Durant",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/150",
+      "category": "Pokemon",
+      "types": [
+        "Metal"
+      ],
+      "dexId": [
+        632
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-151",
+      "localId": "151",
+      "name": "Druddigon",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/151",
+      "category": "Pokemon",
+      "types": [
+        "Dragon"
+      ],
+      "dexId": [
+        621
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-152",
+      "localId": "152",
+      "name": "Patrat",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/152",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        504
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-153",
+      "localId": "153",
+      "name": "Watchog",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/153",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        505
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-154",
+      "localId": "154",
+      "name": "Lillipup",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/154",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        506
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-155",
+      "localId": "155",
+      "name": "Herdier",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/155",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        507
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-156",
+      "localId": "156",
+      "name": "Stoutland",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/156",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        508
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-157",
+      "localId": "157",
+      "name": "Whimsicott ex",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/157",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        547
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-158",
+      "localId": "158",
+      "name": "Reshiram ex",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/158",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        643
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-159",
+      "localId": "159",
+      "name": "Keldeo ex",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/159",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        647
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-160",
+      "localId": "160",
+      "name": "Jellicent ex",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/160",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        593
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-161",
+      "localId": "161",
+      "name": "Hydreigon ex",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/161",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        635
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-162",
+      "localId": "162",
+      "name": "Bouffalant ex",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/162",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        626
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-163",
+      "localId": "163",
+      "name": "Harlequin",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/163",
+      "category": "Trainer",
+      "types": [],
+      "dexId": [],
+      "trainerType": "Supporter"
+    },
+    {
+      "id": "sv10.5w-164",
+      "localId": "164",
+      "name": "Hilda",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/164",
+      "category": "Trainer",
+      "types": [],
+      "dexId": [],
+      "trainerType": "Supporter"
+    },
+    {
+      "id": "sv10.5w-165",
+      "localId": "165",
+      "name": "Whimsicott ex",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/165",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        547
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-166",
+      "localId": "166",
+      "name": "Reshiram ex",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/166",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        643
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-167",
+      "localId": "167",
+      "name": "Keldeo ex",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/167",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        647
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-168",
+      "localId": "168",
+      "name": "Jellicent ex",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/168",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        593
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-169",
+      "localId": "169",
+      "name": "Hydreigon ex",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/169",
+      "category": "Pokemon",
+      "types": [
+        "Darkness"
+      ],
+      "dexId": [
+        635
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-170",
+      "localId": "170",
+      "name": "Bouffalant ex",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/170",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        626
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-171",
+      "localId": "171",
+      "name": "Hilda",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/171",
+      "category": "Trainer",
+      "types": [],
+      "dexId": [],
+      "trainerType": "Supporter"
+    },
+    {
+      "id": "sv10.5w-172",
+      "localId": "172",
+      "name": "Victini",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/172",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        494
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "sv10.5w-173",
+      "localId": "173",
+      "name": "Reshiram ex",
+      "image": "https://assets.tcgdex.net/en/sv/sv10.5w/173",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        643
+      ],
+      "trainerType": ""
+    }
+  ],
+  "metadata": {
+    "total_cards": 173,
+    "set_id": "sv10.5w",
+    "date_fetched": "2026-02-03T08:57:21.619581Z",
+    "source": "TCGdex API v2",
+    "language": "en"
+  }
+}

@@ -229,7 +229,7 @@ pipeline:
     params:
       featured_file: scripts/fetcher/data/enrichments/featured_pokemon.json
 
-target_file: data/Pokedex.json
+target_file: data/output/Pokedex.json
 source_file: data/source/pokedex.json
 ```
 
@@ -356,7 +356,7 @@ Grouped by generation
    ↓
 [enrich_featured_pokemon]
    ↓
-data/Pokedex.json (final format)
+data/output/Pokedex.json (final format)
    ↓
 [PDF Generator]
    ↓
@@ -420,7 +420,8 @@ class MyNewStep(BaseStep):
 | **PDF Generator** | `scripts/pdf/` | Generate printable PDF binders |
 | **Data Fetcher** | `scripts/fetcher/` | Fetch & process Pokémon data |
 | **Output** | `output/` | Generated PDFs by language |
-| **Data** | `data/` | Source & target Pokemon data |
+| **Data (Source)** | `data/source/` | Raw API data |
+| **Data (Output)** | `data/output/` | Processed data for PDF generation |
 | **Archive** | `scripts/archive/` | Deprecated scripts |
 
 **Key Commands:**
@@ -459,12 +460,12 @@ import json
 FontManager.register_fonts()
 
 # Load data
-with open('data/pokemon_gen1.json') as f:
-    pokemon_list = json.load(f)
+with open('data/output/Pokedex.json') as f:
+    data = json.load(f)
 
 # Generate PDF
 generator = PDFGenerator('ja', 1)
-pdf_path = generator.generate(pokemon_list)
+pdf_path = generator.generate(data)
 
 print(f"✅ Created: {pdf_path}")
 ```

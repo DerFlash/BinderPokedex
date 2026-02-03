@@ -13,10 +13,18 @@ Usage:
 import argparse
 import sys
 import yaml
+import logging
 from pathlib import Path
 
 # Add parent directory to path for lib imports
 sys.path.insert(0, str(Path(__file__).parent))
+
+# Configure logging to show INFO level messages
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(message)s',
+    handlers=[logging.StreamHandler(sys.stdout)]
+)
 
 from engine import PipelineEngine, StepRegistry
 from steps.fetch_pokeapi_national_dex import FetchPokeAPIStep
@@ -24,6 +32,7 @@ from steps.group_by_generation import GroupByGenerationStep
 from steps.enrich_featured_pokemon import EnrichFeaturedPokemonStep
 from steps.enrich_metadata import EnrichMetadataStep
 from steps.enrich_translations_es_it import EnrichTranslationsESITStep
+from steps.enrich_type_translations import EnrichTypeTranslations
 from steps.fetch_tcgdex_ex_gen1 import FetchTCGdexClassicExStep
 from steps.transform_ex_gen1 import TransformClassicExStep
 from steps.validate_pokedex_exists import ValidatePokedexExistsStep
@@ -34,7 +43,31 @@ from steps.fetch_tcgdex_ex_gen2 import FetchTCGdexBlackWhiteEXStep
 from steps.fetch_tcgdex_ex_gen3 import FetchTCGdexScarletVioletEXStep
 from steps.transform_ex_gen2 import TransformBlackWhiteEXStep
 from steps.transform_ex_gen3 import TransformScarletVioletEXStep
+from steps.fetch_tcgdex_set import FetchTCGdexSetStep
+from steps.enrich_tcg_names_multilingual import EnrichTCGNamesMultilingualStep
+from steps.fix_missing_dex_ids import FixMissingDexIdsStep
+from steps.enrich_tcg_cards_from_pokedex import EnrichTCGCardsFromPokedexStep
+from steps.enrich_special_cards import EnrichSpecialCardsStep
+from steps.transform_tcg_set import TransformTCGSetStep
+from steps.transform_to_sections_format import TransformToSectionsFormatStep
 from steps.save_output import SaveOutputStep
+from steps.load_local_source import LoadLocalSourceStep
+
+
+def get_all_scopes() -> list:
+    """Get all available scope names from config directory."""
+    config_dir = Path(__file__).parent.parent.parent / "config" / "scopes"
+    
+    if not config_dir.exists():
+        return []
+    
+    # Find all YAML files and extract scope names
+    scopes = []
+    for yaml_file in config_dir.glob("*.yaml"):
+        scope_name = yaml_file.stem  # filename without .yaml extension
+        scopes.append(scope_name)
+    
+    return sorted(scopes)
 
 
 def load_config(scope: str) -> dict:
@@ -72,11 +105,15 @@ def create_registry() -> StepRegistry:
     """Create and populate the step registry with all available steps."""
     registry = StepRegistry()
     
+    # Register source loading steps
+    registry.register('load_local_source', LoadLocalSourceStep)
+    
     # Register PokeAPI steps
     registry.register('fetch_pokeapi_national_dex', FetchPokeAPIStep)
     registry.register('group_by_generation', GroupByGenerationStep)
     registry.register('enrich_featured_pokemon', EnrichFeaturedPokemonStep)
     registry.register('enrich_translations_es_it', EnrichTranslationsESITStep)
+    registry.register('enrich_type_translations', EnrichTypeTranslations)
     
     # Register enrichment steps
     registry.register('enrich_metadata', EnrichMetadataStep)
@@ -89,6 +126,13 @@ def create_registry() -> StepRegistry:
     registry.register('transform_ex_gen2', TransformBlackWhiteEXStep)
     registry.register('fetch_tcgdex_ex_gen3', FetchTCGdexScarletVioletEXStep)
     registry.register('transform_ex_gen3', TransformScarletVioletEXStep)
+    registry.register('fetch_tcgdex_set', FetchTCGdexSetStep)
+    registry.register('enrich_tcg_names_multilingual', EnrichTCGNamesMultilingualStep)
+    registry.register('fix_missing_dex_ids', FixMissingDexIdsStep)
+    registry.register('enrich_tcg_cards_from_pokedex', EnrichTCGCardsFromPokedexStep)
+    registry.register('enrich_special_cards', EnrichSpecialCardsStep)
+    registry.register('transform_tcg_set', TransformTCGSetStep)
+    registry.register('transform_to_sections_format', TransformToSectionsFormatStep)
     registry.register('validate_pokedex_exists', ValidatePokedexExistsStep)
     registry.register('enrich_names_from_pokedex', EnrichNamesFromPokedexStep)
     
@@ -107,19 +151,89 @@ def create_registry() -> StepRegistry:
 
 def main():
     parser = argparse.ArgumentParser(description='Fetch Pokémon data using pipeline')
-    parser.add_argument('--scope', required=True, help='Scope name (e.g., pokedex)')
+    parser.add_argument('--scope', required=True, help='Scope name (e.g., pokedex) or "all" for all scopes')
     parser.add_argument('--dry-run', action='store_true', help='Show what would be done without executing')
     parser.add_argument('--limit', type=int, help='Limit Pokemon per generation (test mode)')
     parser.add_argument('--generations', type=str, help='Comma-separated list of generations (e.g., 1,2,3)')
+    parser.add_argument('--fetch-only', action='store_true', help='Execute only fetch step(s), skip enrichment/transform')
+    parser.add_argument('--skip-fetch', action='store_true', help='Skip fetch step(s), run only enrichment/transform from existing source')
+    parser.add_argument('--start-from', type=int, help='Start pipeline from step N (1-indexed)')
+    parser.add_argument('--stop-after', type=int, help='Stop pipeline after step N (1-indexed)')
     
     args = parser.parse_args()
     
+    # Handle "all" scope
+    if args.scope.lower() == 'all':
+        scopes = get_all_scopes()
+        
+        if not scopes:
+            print("❌ No scopes found in config/scopes/")
+            sys.exit(1)
+        
+        # Ensure Pokedex is always first (it's the base for all other scopes)
+        if 'Pokedex' in scopes:
+            scopes.remove('Pokedex')
+            scopes.insert(0, 'Pokedex')
+        
+        print(f"🔍 Found {len(scopes)} scopes to process:")
+        for scope in scopes:
+            print(f"   • {scope}")
+        
+        if args.dry_run:
+            print("\n🏃 Dry run mode - not executing")
+            return
+        
+        print(f"\n{'='*80}")
+        
+        # Process each scope
+        failed_scopes = []
+        for i, scope in enumerate(scopes, 1):
+            print(f"\n[{i}/{len(scopes)}] Processing scope: {scope}")
+            print(f"{'='*80}\n")
+            
+            try:
+                success = process_scope(scope, args)
+                if not success:
+                    failed_scopes.append(scope)
+                    print(f"\n⚠️  Scope {scope} failed, continuing with next...")
+            except Exception as e:
+                print(f"\n❌ Error processing {scope}: {e}")
+                failed_scopes.append(scope)
+                print(f"⚠️  Continuing with next scope...")
+            
+            if i < len(scopes):
+                print(f"\n{'='*80}")
+        
+        # Summary
+        print(f"\n{'='*80}")
+        print(f"📊 Summary:")
+        print(f"   Total scopes:    {len(scopes)}")
+        print(f"   ✅ Successful:   {len(scopes) - len(failed_scopes)}")
+        print(f"   ❌ Failed:       {len(failed_scopes)}")
+        
+        if failed_scopes:
+            print(f"\n⚠️  Failed scopes: {', '.join(failed_scopes)}")
+            sys.exit(1)
+        
+        print(f"{'='*80}")
+        return
+    
+    # Single scope mode
+    success = process_scope(args.scope, args)
+    
+    if not success:
+        print("\n❌ Pipeline failed")
+        sys.exit(1)
+
+
+def process_scope(scope: str, args) -> bool:
+    """Process a single scope. Returns True on success, False on failure."""
     # Load and validate config
-    print(f"📋 Loading scope: {args.scope}")
-    config = load_config(args.scope)
+    print(f"📋 Loading scope: {scope}")
+    config = load_config(scope)
     
     if not validate_config(config):
-        sys.exit(1)
+        return False
     
     # Apply CLI overrides to config
     if args.limit or args.generations:
@@ -151,6 +265,39 @@ def main():
     print(f"📁 Target: {config['target_file']}")
     print(f"🔧 Pipeline steps: {len(config['pipeline'])}")
     
+    # Apply step filtering based on CLI arguments
+    original_pipeline = config['pipeline'].copy()
+    filtered_pipeline = config['pipeline']
+    
+    if args.fetch_only:
+        # Execute only fetch steps (steps with 'fetch' in name)
+        filtered_pipeline = [s for s in config['pipeline'] if 'fetch' in s['step'].lower()]
+        print(f"🎯 Fetch-only mode: {len(filtered_pipeline)}/{len(original_pipeline)} steps")
+    
+    elif args.skip_fetch:
+        # Skip fetch steps (steps with 'fetch' in name)
+        filtered_pipeline = [s for s in config['pipeline'] if 'fetch' not in s['step'].lower()]
+        
+        # Prepend load_local_source step to load cached source data
+        source_file = config.get('source_file', 'data/source/pokedex.json')
+        load_source_step = {
+            'step': 'load_local_source',
+            'params': {'source_file': source_file}
+        }
+        filtered_pipeline.insert(0, load_source_step)
+        
+        print(f"⏭️  Skip-fetch mode: {len(filtered_pipeline)}/{len(original_pipeline)} steps")
+        print(f"    (includes load_local_source for {source_file})")
+    
+    elif args.start_from or args.stop_after:
+        # Filter by step index
+        start_idx = (args.start_from - 1) if args.start_from else 0
+        stop_idx = args.stop_after if args.stop_after else len(config['pipeline'])
+        filtered_pipeline = config['pipeline'][start_idx:stop_idx]
+        print(f"🎯 Step range [{start_idx+1}-{stop_idx}]: {len(filtered_pipeline)}/{len(original_pipeline)} steps")
+    
+    config['pipeline'] = filtered_pipeline
+    
     # Show pipeline
     print("\n📋 Pipeline:")
     for i, step in enumerate(config['pipeline'], 1):
@@ -161,7 +308,7 @@ def main():
     
     if args.dry_run:
         print("\n🏃 Dry run mode - not executing")
-        return
+        return True
     
     # Create step registry and pipeline engine
     registry = create_registry()
@@ -170,12 +317,11 @@ def main():
     # Execute pipeline
     success = engine.execute()
     
-    if not success:
-        print("\n❌ Pipeline failed")
-        sys.exit(1)
+    if success:
+        print(f"\n✅ Pipeline completed successfully!")
+        print(f"📄 Output written to: {config['target_file']}")
     
-    print(f"\n✅ Pipeline completed successfully!")
-    print(f"📄 Output written to: {config['target_file']}")
+    return success
 
 
 if __name__ == '__main__':

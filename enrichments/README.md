@@ -2,26 +2,37 @@
 
 ## Overview
 
-The enrichment system allows optional enhancement of Pokémon data with additional languages and translations that are not available via PokéAPI.
+The enrichment system provides cached API data and manual enhancements for Pokémon data.
 
-This keeps the core data clean and minimal while enabling community contributions for expanded language support.
+All Pokémon names and type translations are now fetched automatically from PokeAPI and cached here for faster re-processing.
 
 ---
 
-## Supported Enrichments
+## Enrichment Files
 
-### Spanish (ES)
-- **Source:** [Bulbapedia - Spanish Pokémon Names](https://bulbapedia.bulbagarden.net/wiki/List_of_Spanish_Pok%C3%A9mon_names)
-- **Status:** Available for community contribution
-- **Note:** Most Gen 1-8 Pokémon names are identical to English (official names)
+### API-Cached Data
 
-### Italian (IT)
-- **Status:** Available for community contribution
-- **Note:** Limited official Italian translations available
+#### `type_translations.json`
+- **Source:** PokéAPI `/type/{name}` endpoint
+- **Purpose:** Pokemon type translations in all 9 languages
+- **Languages:** de, en, es, fr, it, ja, ko, zh_hans, zh_hant
+- **Format:** `{"Bug": {"de": "Käfer", "en": "Bug", "zh_hant": "蟲", ...}, ...}`
+- **Auto-generated:** Yes (via `enrich_type_translations` step)
 
-### Featured Pokémon
+### Manual Enrichments
+
+#### `featured_pokemon.json`
 - **Purpose:** Highlight specific Pokémon on cover pages
 - **Format:** Generation-based list of Pokémon IDs
+- **Maintained:** Manually
+
+#### `metadata.json`
+- **Purpose:** Generation names, regions, and variant metadata
+- **Maintained:** Manually
+
+#### `variant_descriptions.json`
+- **Purpose:** Section descriptions for variant collections
+- **Maintained:** Manually
 
 ---
 
@@ -29,34 +40,41 @@ This keeps the core data clean and minimal while enabling community contribution
 
 ```
 enrichments/
-├── translations_es.json      # Spanish translations
-├── translations_it.json      # Italian translations
-├── featured_pokemon.json     # Featured Pokémon for covers
-└── README.md                 # This file
+├── type_translations.json        # API-cached type translations (auto)
+├── featured_pokemon.json         # Featured Pokémon for covers (manual)
+├── metadata.json                 # Generation/variant metadata (manual)
+├── variant_descriptions.json     # Variant descriptions (manual)
+└── README.md                     # This file
 ```
 
 ---
 
-## Translation File Format
+## Type Translations Format
 
-Each translation file is a simple JSON mapping:
+Auto-generated from PokeAPI. Example structure:
 
 ```json
 {
-  "1": "Bisasaur",
-  "2": "Ivysaur",
-  "3": "Venusaur",
-  "4": "Charmander",
-  "25": "Pikachu",
-  "151": "Mew"
+  "Bug": {
+    "de": "Käfer",
+    "en": "Bug",
+    "es": "Bicho",
+    "fr": "Insecte",
+    "it": "Coleottero",
+    "ja": "むし",
+    "ko": "벌레",
+    "zh_hans": "虫",
+    "zh_hant": "蟲"
+  },
+  "Fire": {
+    "de": "Feuer",
+    "en": "Fire",
+    ...
+  }
 }
 ```
 
-**Format Rules:**
-- Keys are Pokémon IDs as strings (e.g., `"1"`, `"25"`)
-- Values are the translated Pokémon names
-- Only include Pokémon that differ from English names
-- For identical names, you can omit them or include them
+**Regeneration:** Run `fetch.py --scope Pokedex --start-from enrich_type_translations --stop-after enrich_type_translations`
 
 ---
 
@@ -82,10 +100,7 @@ The enrichments are automatically loaded during the fetch pipeline:
 ```yaml
 # In config/scopes/Pokedex.yaml
 pipeline:
-  - step: enrich_translations_es_it
-    params:
-      es_file: enrichments/translations_es.json
-      it_file: enrichments/translations_it.json
+  - step: enrich_type_translations  # Auto-fetches from PokeAPI
   
   - step: enrich_featured_pokemon
     params:
@@ -94,39 +109,34 @@ pipeline:
 
 ---
 
-## Contributing Translations
+## Data Sources
 
-### For Spanish (ES)
+### PokéAPI (Automatic)
+- **Pokémon Names:** All 9 languages via `/pokemon-species/{id}` endpoint
+- **Type Translations:** All 9 languages via `/type/{name}` endpoint  
+- **Cached:** Results cached in `enrichments/type_translations.json`
 
-1. Reference: [Bulbapedia Spanish List](https://bulbapedia.bulbagarden.net/wiki/List_of_Spanish_Pok%C3%A9mon_names)
-2. For most Pokémon (Gen 1-8), the English name is the official Spanish name
-3. Include different names for:
-   - Type: Null → `"Código Cero"`
-   - Paradox Pokémon (Gen 9)
-
-### For Italian (IT)
-
-1. Reference official Pokémon game localization
-2. Most Pokémon may not have official Italian translations
-3. Use English as fallback when not available
+### Manual Enrichments
+- **Featured Pokémon:** Curated list for cover pages
+- **Metadata:** Generation names, regions
+- **Variant Descriptions:** Section descriptions for variants
 
 ---
 
 ## Data Quality
 
-- **Enrichment is optional** - works without additional translations
-- **Fallback to English** - missing translations default to English name
-- **Community maintained** - translation files can be updated independently
-- **Version controlled** - enrichment files are tracked in Git
-- **Static configuration** - not generated, manually curated
+- **API-first approach** - Translations from official Pokémon API
+- **Automatic caching** - Speeds up subsequent pipeline runs
+- **Fallback to English** - Missing translations default to English
+- **Version controlled** - Cached data tracked in Git for consistency
 
 ---
 
 ## Future Expansion
 
 Possible additional enrichments:
-- Portuguese (PT) translations
-- Russian (RU) translations
+- Additional manual metadata as needed
+- Custom ordering/grouping rules
 - Regional variants (e.g., Latin American Spanish)
 - Game-specific names (different across generations)
 - Additional featured Pokémon for each generation

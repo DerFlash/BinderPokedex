@@ -56,7 +56,7 @@ class GroupByGenerationStep(BaseStep):
         
         source_data = context.get_data()
         if not source_data or 'pokemon' not in source_data:
-            print(f"    ⚠️  No source data found")
+            print(f"    ⚠️  No source data found in context")
             return context
         
         pokemon_list = source_data['pokemon']
@@ -96,12 +96,14 @@ class GroupByGenerationStep(BaseStep):
                 if lang_code_lower in lang_map:
                     names_dict[lang_map[lang_code_lower]] = name_entry['name']
             
+            # Build types array (filter out None)
+            types = [t for t in [type1, type2] if t is not None]
+            
             # Build target Pokemon entry
             target_entry = {
-                'id': pokemon['id'],
+                'pokemon_id': pokemon['id'],
                 'num': f"#{pokemon['id']:03d}",
-                'type1': type1,
-                'type2': type2,
+                'types': types,
                 'image_url': pokemon.get('image_url'),
                 'generation': gen,
                 'name': names_dict,
@@ -150,7 +152,7 @@ class GroupByGenerationStep(BaseStep):
                 'pokemon_count': len(pokemon_in_gen),
                 'range': list(gen_info['range']),
                 'featured_pokemon': [],  # Will be filled by preserve_featured_pokemon step
-                'pokemon': pokemon_in_gen,
+                'cards': pokemon_in_gen,
             }
             total_count += len(pokemon_in_gen)
         

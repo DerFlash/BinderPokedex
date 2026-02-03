@@ -144,6 +144,33 @@ from lib import GENERATION_INFO, DataStorage, draw_pokemon_card
 - PNG optimization
 - URL-based image cache differentiation for form variants
 
+#### `lib/rendering/logo_renderer.py`
+**Purpose**: Render logos and images in PDFs with [image] tag support
+**Key Functions**:
+- `parse_text_with_logos()` - Parse text with [image]URL[/image] tags
+- `download_image()` - Download and cache images from URLs with MD5 hashing
+- `draw_text_with_logos()` - Render text and inline images
+
+**Features**:
+- [image] tag parsing with regex
+- MD5-based URL caching in temp directory
+- ImageReader with mask='auto' for PNG transparency
+- Inline image rendering with text flow
+- Caching prevents re-downloads
+
+#### `lib/rendering/image_cache.py`
+**Purpose**: URL image caching system with MD5 hashing
+**Key Functions**:
+- `get_cached_image()` - Retrieve or download cached image
+- `_generate_cache_key()` - MD5 hash of URL
+- `_download_image()` - Download to cache directory
+
+**Features**:
+- Temporary directory storage
+- MD5-based cache keys
+- Automatic cache miss handling
+- Thread-safe operations
+
 #### Image Cache Architecture
 
 **Purpose**: Efficiently cache Pokémon images while properly handling form variants (Mega X/Y, etc.)
@@ -215,6 +242,31 @@ for each Pokémon:
     draw_pokemon_card() → image_processor → pdf_layout
     ↓
 [save PDF]
+```
+
+### TCG Set Pipeline
+```
+fetch.py --scope ME01
+    ↓
+fetch_tcgdex_set (TCGdex API)
+    ↓
+enrich_tcg_names_multilingual (9 languages)
+    ↓
+enrich_tcg_cards_from_pokedex (Pokémon IDs & images)
+    ↓
+transform_tcg_set (normalize structure)
+    ↓
+transform_to_sections_format (add metadata)
+    ↓
+[saves to data/ME01.json]
+    ↓
+generate_pdf.py --scope ME01
+    ↓
+logo_renderer parses [image] tags
+    ↓
+URL image caching (MD5 hashes)
+    ↓
+[PDF with logos & multilingual metadata]
 ```
 
 ### Data Fetching Pipeline

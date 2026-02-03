@@ -13,8 +13,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Complete Data Fetcher Redesign** - New modular pipeline architecture
   - Step-based processing with clear separation of concerns
   - Context-driven data flow between pipeline steps
-  - Scope-based configuration (Pokedex, ExGen1, ExGen2, ExGen3)
+  - Scope-based configuration (Pokedex, ExGen1, ExGen2, ExGen3, ME01)
   - Comprehensive documentation: DATA_FETCHER.md
+
+- **TCG Set Support** - Complete TCGdex integration
+  - Multilingual card names from TCGdex API (5 languages: DE, EN, FR, ES, IT)
+  - Set logos embedded in PDFs with [image] tag support
+  - Release dates in set descriptions with localized labels
+  - New pipeline steps: fetch_tcgdex_set, enrich_tcg_names_multilingual, transform_to_sections_format
+  - Example scope: ME01 (Miraidon ex Starter Deck)
+
+- **URL Image Caching** - MD5-based external image caching
+  - Temporary directory caching for logos and external images
+  - MD5 hash of URL as cache key
+  - ImageReader with mask='auto' for PNG transparency
+  - New logo_renderer module for [image] tag parsing
+  - Prevents duplicate downloads across PDF generation
 
 - **Image Cache Redesign** - URL-based identifiers prevent collisions
   - New format: `pokemon_{id}_{url_identifier}_{size}.jpg`
@@ -36,22 +50,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed image cache collisions for form variants (Mega X/Y)
 - Corrected ExGen3 featured Pokémon list (Mega section: 150→448)
 - Removed obsolete `use_pokeapi_artwork` configuration
+- Fixed Python syntax errors in docstrings (Unicode arrows, malformed strings)
 
 ### 🔧 Technical Details
 - New pipeline engine with step-based processing
 - Enhanced name enrichment preserving form suffixes
 - GitHub Actions workflow fixes for automated releases
 - Updated all scopes to use new pipeline architecture
+- Logo rendering with inline image support
+- MD5-based URL caching in temp directory
 
 ### 📚 Documentation
 - Added `docs/DATA_FETCHER.md` - Pipeline architecture and usage
 - Added `docs/IMAGE_CACHE.md` - Cache specification and design
 - Updated `docs/ARCHITECTURE.md` - Overall project architecture
 - Updated `docs/VARIANTS_ARCHITECTURE.md` - Variant system details
+- Updated `docs/FEATURES.md` - TCG set features and URL caching
+- Updated `README.md` - TCGdex integration and usage examples
 - Comprehensive README updates with v6.0 information
 
 ### Impact
 **Mega Charizard X** now displays correct image and name ("Mega Glurak X" in German, not just "Mega Glurak")
+**TCG Sets** now have proper multilingual metadata with logos and release dates
 
 ### Migration from 5.0
 1. Delete old cache: `rm -rf data/pokemon_images_cache/`
@@ -61,10 +81,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
    python scripts/fetcher/fetch.py --scope ExGen1
    python scripts/fetcher/fetch.py --scope ExGen2
    python scripts/fetcher/fetch.py --scope ExGen3
+   python scripts/fetcher/fetch.py --scope ME01
    ```
 3. Generate PDFs with new paths:
    ```bash
    python scripts/pdf/generate_pdf.py --language de --scope Pokedex
+   python scripts/pdf/generate_pdf.py --language de --scope ME01
    ```
 
 ---

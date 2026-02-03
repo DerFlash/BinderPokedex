@@ -105,3 +105,16 @@ class PokéAPIClient:
             'types': data.get('types', []),
             'sprites': data.get('sprites', {}),
         }
+    
+    def fetch_type_data(self, type_name: str) -> Optional[Dict]:
+        """
+        Fetch Pokemon type data including translations.
+        
+        Args:
+            type_name: Type name in English (e.g., 'fire', 'water')
+        
+        Returns:
+            Dict with type data including names array, or None on error
+        """
+        url = f"{self.BASE_URL}/type/{type_name}"
+        return self._make_request(url)

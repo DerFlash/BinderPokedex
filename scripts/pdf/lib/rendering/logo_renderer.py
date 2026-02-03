@@ -1,16 +1,29 @@
 """
 Unified Logo Renderer - Centralized logo rendering for variants
 
-Consolidates all logo rendering logic (EX, M, EX_NEW, EX_TERA) into a single,
-reusable component used by both cover pages and card rendering.
+Consolidates all logo rendering logic (EX, M, EX_NEW, EX_TERA, MEGA) and 
+image URL rendering ([image]URL[/image] tags) into a single, reusable component 
+used by both cover pages and card rendering.
 
 This ensures consistent logo placement, sizing, and rendering across all contexts.
+
+Features:
+- Logo tokens: [EX], [M], [EX_NEW], [EX_TERA], [MEGA]
+- Image URLs: [image]https://example.com/image.png[/image]
+- PNG transparency support via ImageReader with mask='auto'
+- Automatic image caching in temp directory
 """
 
 import logging
+import re
 from pathlib import Path
 from reportlab.lib.units import mm
 from reportlab.lib.colors import HexColor
+from reportlab.lib.utils import ImageReader
+import urllib.request
+import tempfile
+import hashlib
+import shutil
 
 logger = logging.getLogger(__name__)
 
@@ -81,25 +94,97 @@ class LogoRenderer:
         if default_logo.exists():
             return default_logo
         
-        # If neither exists, return the localized path (caller will handle missing file)
-        return localized_logo
+        return None
+    
+    @staticmethod
+    def download_image(url: str) -> Path:
+        """
+        Download image from URL and cache it locally in temp directory.
+        Supports both HTTP(S) URLs and local file paths.
+        
+        Uses MD5 hash of URL as cache key for efficient retrieval.
+        Returns cached file if already downloaded.
+        
+        Args:
+            url: Image URL or local file path to cache
+        
+        Returns:
+            Path to cached image file (may not exist if download/copy failed)
+        """
+        # Create cache directory in temp folder
+        cache_dir = Path(tempfile.gettempdir()) / "binderokedex_image_cache"
+        cache_dir.mkdir(exist_ok=True)
+        
+        # Generate filename from URL hash
+        url_hash = hashlib.md5(url.encode()).hexdigest()
+        file_extension = Path(url).suffix or '.png'
+        cache_file = cache_dir / f"{url_hash}{file_extension}"
+        
+        # Return cached file if it exists
+        if cache_file.exists():
+            return cache_file
+        
+        # Check if it's a local file path (relative or absolute)
+        if not url.startswith(('http://', 'https://')):
+            # Try to find the file relative to project root
+            # Get project root (5 levels up from this file: scripts/pdf/lib/rendering/logo_renderer.py)
+            project_root = Path(__file__).parent.parent.parent.parent.parent
+            local_path = project_root / url
+            
+            if local_path.exists():
+                try:
+                    logger.debug(f"Copying local image from {local_path} to cache")
+                    shutil.copy2(local_path, cache_file)
+                    logger.debug(f"Cached image to {cache_file}")
+                    return cache_file
+                except Exception as e:
+                    logger.warning(f"Failed to copy local image from {local_path}: {e}")
+                    return cache_file
+            else:
+                logger.warning(f"Local image not found: {local_path} (from url: {url})")
+                return cache_file
+        
+        # Download image from URL
+        try:
+            logger.debug(f"Downloading image from {url}")
+            with urllib.request.urlopen(url, timeout=10) as response:
+                with open(cache_file, 'wb') as f:
+                    f.write(response.read())
+            logger.debug(f"Cached image to {cache_file}")
+            return cache_file
+        except Exception as e:
+            logger.warning(f"Failed to download image from {url}: {e}")
+            # Return path even if download failed (caller will handle missing file)
+            return cache_file
     
     @staticmethod
     def parse_text_with_logos(text: str) -> list:
         """
-        Parse text into segments of plain text and logo tokens.
+        Parse text into segments of plain text, logo tokens, and image URLs.
         
         Args:
-            text: Text that may contain tokens like [M], [EX], [EX_NEW], [EX_TERA]
+            text: Text that may contain tokens like [M], [EX], [EX_NEW], [EX_TERA], [image]URL[/image]
         
         Returns:
-            List of tuples: [('text', 'plain text'), ('logo', 'ex'), ('text', 'more text'), ...]
+            List of tuples: [('text', 'plain text'), ('logo', 'ex'), ('image', 'https://...'), ...]
         """
         segments = []
         remaining = text
         
+        # Pattern for [image]URL[/image]
+        image_pattern = re.compile(r'\[image\](.*?)\[/image\]', re.IGNORECASE)
+        
         while remaining:
-            # Check for tokens (longest first)
+            # Check for [image] tags first
+            image_match = image_pattern.search(remaining)
+            if image_match and image_match.start() == 0:
+                # Found [image] at start
+                image_url = image_match.group(1).strip()
+                segments.append(('image', image_url))
+                remaining = remaining[image_match.end():].lstrip()
+                continue
+            
+            # Check for logo tokens (longest first)
             if remaining.startswith('[EX_TERA]'):
                 segments.append(('logo', 'ex_tera'))
                 remaining = remaining[9:].lstrip()
@@ -116,12 +201,17 @@ class LogoRenderer:
                 segments.append(('logo', 'ex'))
                 remaining = remaining[4:].lstrip()
             else:
-                # Find next token
+                # Find next token (logo or image)
                 token_positions = []
                 for token, idx in [('[EX_TERA]', 9), ('[EX_NEW]', 8), ('[MEGA]', 6), ('[M]', 3), ('[EX]', 4)]:
                     pos = remaining.find(token)
                     if pos >= 0:
                         token_positions.append((pos, idx))
+                
+                # Also check for next [image] tag
+                next_image = image_pattern.search(remaining)
+                if next_image:
+                    token_positions.append((next_image.start(), 0))
                 
                 if token_positions:
                     next_idx = min(token_positions)[0]
@@ -142,11 +232,11 @@ class LogoRenderer:
                             font_name: str, font_size: int, context: str = 'title',
                             text_color: str = '#2D2D2D', language: str = 'en') -> None:
         """
-        Draw text with embedded logos, centered at x_center.
+        Draw text with embedded logos and images, centered at x_center.
         
         Args:
             canvas_obj: ReportLab canvas
-            text: Text with optional logo tokens
+            text: Text with optional logo tokens and [image]URL[/image] tags
             x_center: X coordinate for centering
             y: Y coordinate (baseline for text)
             font_name: Font name
@@ -158,9 +248,12 @@ class LogoRenderer:
         canvas_obj.setFont(font_name, font_size)
         canvas_obj.setFillColor(HexColor(text_color))
         
-        # Check if text contains any logo tokens
-        if '[EX_TERA]' not in text and '[EX_NEW]' not in text and '[MEGA]' not in text and '[M]' not in text and '[EX]' not in text:
-            # No logos - render plain text
+        # Check if text contains any logo tokens or image tags
+        has_tokens = ('[EX_TERA]' in text or '[EX_NEW]' in text or '[MEGA]' in text or 
+                     '[M]' in text or '[EX]' in text or '[image]' in text.lower())
+        
+        if not has_tokens:
+            # No logos or images - render plain text
             canvas_obj.drawCentredString(x_center, y, text)
             return
         
@@ -171,6 +264,10 @@ class LogoRenderer:
         dims = LogoRenderer.LOGO_DIMENSIONS.get(context, LogoRenderer.LOGO_DIMENSIONS['title'])
         gap = 1.5 * mm
         
+        # Standard image dimensions for subtitle context (TCGdex set logos)
+        image_width = 60 * mm
+        image_height = 30 * mm
+        
         # Calculate total width
         total_width = 0
         for seg_type, seg_value in segments:
@@ -179,6 +276,8 @@ class LogoRenderer:
             elif seg_type == 'logo':
                 logo_width, _ = dims.get(seg_value, (6 * mm, 7.2 * mm))
                 total_width += logo_width + gap
+            elif seg_type == 'image':
+                total_width += image_width + gap
         
         # Draw segments starting from calculated position
         current_x = x_center - total_width / 2
@@ -207,6 +306,39 @@ class LogoRenderer:
                 except Exception as e:
                     logger.debug(f"Could not draw {seg_value} logo: {e}")
                     current_x += logo_width + gap
+            elif seg_type == 'image':
+                # Download and cache image from URL
+                image_file = LogoRenderer.download_image(seg_value)
+                # Align image top edge with text top edge for subtitle context
+                if context == 'subtitle':
+                    # y is text baseline, text top is at y + font_size * 0.8 (ascender)
+                    # Image top should align with text top: y + font_size * 0.8
+                    # Image bottom is at: (y + font_size * 0.8) - image_height
+                    image_y = y + (font_size * 0.8) - image_height
+                else:
+                    # Center image vertically for other contexts
+                    image_y = y - (image_height / 2) + 1.2 * mm
+                
+                try:
+                    if image_file.exists():
+                        # Use ImageReader to support PNG transparency
+                        img_reader = ImageReader(str(image_file))
+                        canvas_obj.drawImage(
+                            img_reader,
+                            current_x,
+                            image_y,
+                            width=image_width,
+                            height=image_height,
+                            preserveAspectRatio=True,
+                            mask='auto'
+                        )
+                        logger.debug(f"Rendered image from {seg_value}")
+                    else:
+                        logger.warning(f"Image file not found: {image_file}")
+                    current_x += image_width + gap
+                except Exception as e:
+                    logger.warning(f"Could not draw image from {seg_value}: {e}")
+                    current_x += image_width + gap
     
     @staticmethod
     def draw_text_with_suffix_logo(canvas_obj, text: str, suffix: str, x: float, width: float, y: float,

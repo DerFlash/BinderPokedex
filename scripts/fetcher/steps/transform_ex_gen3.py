@@ -6,7 +6,7 @@ expected by the PDF generator. Selects ONE card per Pokemon (priority: Base Set 
 then alphabetically by set name).
 
 Input: data/source/tcg_sv_ex.json (366 cards)
-Output: data/ExGen3_Single.json (~130 unique Pokemon)
+Output: data/output/ExGen3.json (~130 unique Pokemon)
 """
 
 import logging
@@ -20,6 +20,7 @@ import requests
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from steps.base import BaseStep, PipelineContext
+from steps.pokemon_utils import get_mega_artwork_url
 
 logger = logging.getLogger(__name__)
 
@@ -43,37 +44,18 @@ class TransformScarletVioletEXStep(BaseStep):
         """
         Execute the transformation.
         
-        1. Load source data
+        1. Load source data from context
         2. Group by Pokemon (dexId)
         3. Select one card per Pokemon (priority rules)
         4. Transform to variant format
-        5. Save to output file
         """
-        # Make paths absolute relative to project root (4 levels up from this file)
-        project_root = Path(__file__).parent.parent.parent.parent
-        
-        source_path = params.get('source_file', 'data/source/tcg_sv_ex.json')
-        if not Path(source_path).is_absolute():
-            source_file = project_root / source_path
-        else:
-            source_file = Path(source_path)
-        
-        output_path = params.get('output_file', 'data/ExGen3.json')
-        if not Path(output_path).is_absolute():
-            output_file = project_root / output_path
-        else:
-            output_file = Path(output_path)
-        
         logger.info(f"Starting SV ex cards transformation (single card per Pokemon)")
         
-        # Load source data
-        if not source_file.exists():
-            raise FileNotFoundError(f"Source file not found: {source_file}")
+        # Load cards from context
+        cards = context.data.get('tcg_sv_ex_cards')
+        if not cards:
+            raise ValueError("No SV ex cards found in context. Make sure fetch_tcgdex_ex_gen3 ran before this step.")
         
-        with open(source_file, 'r', encoding='utf-8') as f:
-            source_data = json.load(f)
-        
-        cards = source_data['cards']
         logger.info(f"Loaded {len(cards)} cards from source")
         
         # Group cards by type (normal, mega) and dexId
@@ -121,16 +103,10 @@ class TransformScarletVioletEXStep(BaseStep):
         # Transform to variant format with 2 sections
         variant_data = self._transform_to_variant_format(selected_normal, selected_mega, context)
         
-        # Save to output file
-        output_file.parent.mkdir(parents=True, exist_ok=True)
-        
-        with open(output_file, 'w', encoding='utf-8') as f:
-            json.dump(variant_data, f, indent=2, ensure_ascii=False)
-        
-        logger.info(f"✅ Saved variant to {output_file}")
-        
-        # Store in context for subsequent enrichment steps
+        # Store in context for subsequent enrichment steps and for save_output step
         context.set_data(variant_data)
+        
+        logger.info(f"✅ Transformed Scarlet & Violet ex cards to variant format")
         
         return context
     
@@ -207,7 +183,7 @@ class TransformScarletVioletEXStep(BaseStep):
                     'subtitle': variant_meta.get('subtitle', {}),
                     'suffix': '',
                     'featured_pokemon': [],
-                    'pokemon': normal_pokemon
+                    'cards': normal_pokemon
                 },
                 'mega': {
                     'section_id': 'mega',
@@ -236,7 +212,7 @@ class TransformScarletVioletEXStep(BaseStep):
                     },
                     'suffix': '',
                     'featured_pokemon': [],
-                    'pokemon': mega_pokemon
+                    'cards': mega_pokemon
                 }
             }
         }
@@ -262,28 +238,12 @@ class TransformScarletVioletEXStep(BaseStep):
         if not is_mega:
             return f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{dex_id}.png"
         
-        # For Mega Evolutions, need to fetch the form-specific Pokemon ID
-        try:
-            # Construct form name: "charizard-mega-x"
-            base_name = pokemon_name.lower().replace(' ', '-')
-            form_name = f"{base_name}-mega"
-            if form_suffix:
-                form_name += f"-{form_suffix.lower()}"
-            
-            # Query PokeAPI for this form
-            response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{form_name}", timeout=10)
-            if response.status_code == 200:
-                form_data = response.json()
-                form_id = form_data.get('id')
-                if form_id:
-                    return f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{form_id}.png"
-            
-            logger.warning(f"Could not fetch PokeAPI form data for {form_name}, using base artwork")
-        except Exception as e:
-            logger.warning(f"Error fetching PokeAPI artwork for {pokemon_name}: {e}")
-        
-        # Fallback to base Pokemon artwork
-        return f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{dex_id}.png"
+        # For Mega Evolutions, use shared utility function
+        return get_mega_artwork_url(
+            pokemon_name=pokemon_name,
+            base_id=dex_id,
+            form_suffix=form_suffix
+        )
     
     def _transform_card_list(self, cards: List[Dict[str, Any]], suffix: str = None, prefix: str = None) -> List[Dict[str, Any]]:
         """Transform a list of cards to Pokemon entries."""
@@ -317,7 +277,7 @@ class TransformScarletVioletEXStep(BaseStep):
             pokemon_name = pokemon_name_raw
             
             pokemon_entry = {
-                'id': dex_id,
+                'pokemon_id': dex_id,
                 'types': card.get('types', []),
                 'image_url': image_url,
                 'name': {
@@ -347,55 +307,3 @@ class TransformScarletVioletEXStep(BaseStep):
         
         return pokemon_list
     
-    def validate(self, context: PipelineContext) -> bool:
-        """Validate the transformation."""
-        if not self.output_file.exists():
-            logger.error(f"Output file does not exist: {self.output_file}")
-            return False
-        
-        with open(self.output_file, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        
-        if 'sections' not in data or 'normal' not in data['sections']:
-            logger.error("Invalid variant structure")
-            return False
-        
-        pokemon = data['sections']['normal']['pokemon']
-        
-        # Check for duplicates
-        dex_ids = [p['id'] for p in pokemon]
-        if len(dex_ids) != len(set(dex_ids)):
-            logger.error("Duplicate Pokemon found in variant")
-            return False
-        
-        logger.info(f"✅ Validation passed: {len(pokemon)} unique Pokemon")
-        return True
-
-
-if __name__ == '__main__':
-    # For testing the step directly
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    )
-    
-    step_config = {
-        'source_file': 'data/source/tcg_sv_ex.json',
-        'output_file': 'data/ExGen3.json'
-    }
-    
-    step = TransformScarletVioletEXStep(step_config)
-    context = PipelineContext(config={'source_file': None, 'target_file': None})
-    
-    try:
-        context = step.execute(context)
-        if step.validate(context):
-            print("\n✅ Transformation completed and validated successfully!")
-        else:
-            print("\n❌ Transformation validation failed!")
-            sys.exit(1)
-    except Exception as e:
-        print(f"\n❌ Transformation failed: {e}")
-        import traceback
-        traceback.print_exc()
-        sys.exit(1)

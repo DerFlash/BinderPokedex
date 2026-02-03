@@ -73,7 +73,6 @@ Complete data fetcher redesign with modular pipeline, image cache overhaul preve
 | **Architecture** | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
 | **Data Fetcher** | [docs/DATA_FETCHER.md](docs/DATA_FETCHER.md) |
 | **Image Cache** | [docs/IMAGE_CACHE.md](docs/IMAGE_CACHE.md) |
-| **MCP Integration** | [docs/MCP_INTEGRATION.md](docs/MCP_INTEGRATION.md) |
 | **Contribution** | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) |
 | **Pokémon Variants** | [docs/VARIANTS_FEATURE_SUMMARY.md](docs/VARIANTS_FEATURE_SUMMARY.md) |
 | **Variants Architecture** | [docs/VARIANTS_ARCHITECTURE.md](docs/VARIANTS_ARCHITECTURE.md) |
@@ -92,14 +91,20 @@ cd BinderPokedex
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
-# List available scopes
+# List available scopes (25 total: 1 Pokedex + 3 ExGen + 21 TCG sets)
 ls config/scopes/*.yaml
 
 # Fetch data for a scope
 python scripts/fetcher/fetch.py --scope Pokedex
 
-# Generate PDFs
+# Generate PDF for a specific language and scope
 python scripts/pdf/generate_pdf.py --language de --scope Pokedex
+
+# Generate all languages for a scope
+python scripts/pdf/generate_pdf.py --scope ME01
+
+# Generate all scopes in all languages
+python scripts/pdf/generate_pdf.py --scope all
 ```
 
 ---
@@ -127,6 +132,7 @@ MIT License - See [LICENSE](LICENSE) for details.
 This project couldn't exist without these amazing resources and people:
 
 - **[PokéAPI](https://pokeapi.co/)** 📊 - The backbone of our Pokémon knowledge
+- **[TCGdex](https://www.tcgdex.net/)** 🎴 - Comprehensive multilingual TCG card database
 - **[Bulbapedia](https://bulbapedia.bulbagarden.net/)** 📚 - The Pokémon fan wiki that never lets us down
 - **[The Pokémon Company](https://www.pokemon.com/)** 🎮 - For keeping the dream alive for 30 years
 - **ReportLab** 🎨 - For turning data into gorgeous PDFs without breaking a sweat

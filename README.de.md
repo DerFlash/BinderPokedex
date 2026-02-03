@@ -64,7 +64,6 @@ Komplettes Data-Fetcher Redesign mit modularer Pipeline, Image-Cache Überarbeit
 | **Architektur** | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
 | **Data Fetcher** | [docs/DATA_FETCHER.md](docs/DATA_FETCHER.md) |
 | **Image Cache** | [docs/IMAGE_CACHE.md](docs/IMAGE_CACHE.md) |
-| **MCP Integration** | [docs/MCP_INTEGRATION.md](docs/MCP_INTEGRATION.md) |
 | **Mitwirken** | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) |
 
 ---
@@ -80,14 +79,20 @@ cd BinderPokedex
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
-# Verfügbare Scopes anzeigen
+# Verfügbare Scopes anzeigen (25 gesamt: 1 Pokedex + 3 ExGen + 21 TCG Sets)
 ls config/scopes/*.yaml
 
 # Daten für einen Scope holen
 python scripts/fetcher/fetch.py --scope Pokedex
 
-# PDFs generieren
+# PDF für eine bestimmte Sprache und Scope generieren
 python scripts/pdf/generate_pdf.py --language de --scope Pokedex
+
+# Alle Sprachen für einen Scope generieren
+python scripts/pdf/generate_pdf.py --scope ME01
+
+# Alle Scopes in allen Sprachen generieren
+python scripts/pdf/generate_pdf.py --scope all
 ```
 
 ---

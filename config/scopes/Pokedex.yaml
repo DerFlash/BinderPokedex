@@ -1,59 +1,34 @@
-# Pokedex Scope Configuration
-# National Pokedex with all generations
-#
-# Pipeline Architecture:
-# - Most steps work with Context (in-memory data flow)
-# - Only steps with output_file/source_file/target_file actually read/write files
-# - Data flows through context.data between steps
-#
-# For testing with fewer Pokemon, use CLI parameters:
-#   --limit 3              # Only 3 Pokemon per generation
-#   --generations 1,2,3    # Only specific generations
-#
-# Example: python scripts/fetcher/fetch.py --scope Pokedex --limit 3 --generations 1,2,3
-
 scope: Pokedex
-description: "National Pokédex with all 9 generations"
-
+description: National Pokédex with all 9 generations
 pipeline:
-  # Load metadata
-  - step: enrich_metadata
-    params:
-      metadata_file: enrichments/metadata.json
-  
-  # Source: Load from PokeAPI National Dex
-  - step: fetch_pokeapi_national_dex
-    params:
-      generations: [1, 2, 3, 4, 5, 6, 7, 8, 9]
-      output_file: data/source/pokedex.json
-  
-  # Enrichment: Add translations for ES/IT (context-only)
-  - step: enrich_translations_es_it
-    params:
-      es_file: enrichments/translations_es.json
-      it_file: enrichments/translations_it.json
-  
-  # Transform: Group by generation (context-only)
-  - step: group_by_generation
-  
-  # Enrichment: Merge featured Pokémon (context-only)
-  - step: enrich_featured_pokemon
-    params:
-      featured_file: enrichments/featured_pokemon.json
-
-  # Enrichment: Add section descriptions from variant_descriptions.json (context-only)
-  - step: enrich_section_descriptions
-    params:
-      mode: pokedex
-  
-  # Save: Write final output
-  - step: save_output
-    params:
-      output_file: data/Pokedex.json
-  
-  # Cache: Download and cache all Pokemon images
-  - step: cache_pokemon_images
-    params:
-      skip_existing: true
-
-target_file: data/Pokedex.json
+- step: enrich_metadata
+  params:
+    metadata_file: enrichments/metadata.json
+- step: fetch_pokeapi_national_dex
+  params:
+    generations:
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+    - 9
+    output_file: data/source/pokedex.json
+- step: group_by_generation
+- step: enrich_featured_pokemon
+  params:
+    featured_file: enrichments/featured_pokemon.json
+- step: enrich_section_descriptions
+  params:
+    mode: pokedex
+- step: enrich_type_translations
+- step: save_output
+  params:
+    output_file: data/output/Pokedex.json
+- step: cache_pokemon_images
+  params:
+    skip_existing: true
+target_file: data/output/Pokedex.json

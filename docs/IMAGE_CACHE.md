@@ -9,6 +9,18 @@
 
 The BinderPokedex uses a sophisticated image caching system to efficiently store Pokémon artwork while properly handling form variants (Mega X/Y, Primal, etc.). The system prevents cache collisions between base forms and their variants through URL-based cache keys.
 
+### Cache Types
+
+**1. Pokémon Artwork Cache** (`data/pokemon_images_cache/`)
+- Form-specific cache with URL identifier differentiation
+- Prevents collisions between base and variant forms
+- Stores as `pokemon_{id}_{url_id}_{size}.jpg`
+
+**2. External URL Cache** (`tempfile.gettempdir()`)
+- MD5-based caching for external images (TCG logos, etc.)
+- Temporary storage with automatic cleanup
+- Used by logo_renderer for [image] tag support
+
 ## The Problem
 
 **Before (Cache Collision):**

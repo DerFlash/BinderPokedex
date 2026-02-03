@@ -116,7 +116,6 @@ PAGE_WIDTH, PAGE_HEIGHT = A4
 
 # Header section
 CARD_HEADER_HEIGHT = 15 * mm
-CARD_IMAGE_HEIGHT = 40 * mm
 
 # Text sections
 CARD_NAME_SIZE = 11

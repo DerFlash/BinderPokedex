@@ -44,13 +44,18 @@ jobs:
 
       - name: Generate PDFs
         run: |
-          # Generate all scopes
-          for scope in Pokedex ExGen1 ExGen2 ExGen3; do
-            echo "Generating PDFs for scope: $scope"
-            python scripts/pdf/generate_pdf.py --scope $scope
+          # Fetch all data first
+          echo "Fetching data for all scopes..."
+          for scope in Pokedex ExGen1 ExGen2 ExGen3 ME01 ME02 ME02.5 MEP SV01 SV02 SV03.5 SV03 SV04.5 SV04 SV05 SV06.5 SV06 SV07 SV08.5 SV08 SV09 SV10.5B SV10.5W SV10 SVP; do
+            echo "  → Fetching $scope"
+            python scripts/fetcher/fetch.py --scope $scope
           done
           
-          # Verify output directory and PDFs exist
+          # Generate all PDFs (all scopes, all languages)
+          echo "Generating all PDFs..."
+          python scripts/pdf/generate_pdf.py --scope all
+          
+          # Verify output
           if [ ! -d output ]; then
             echo "Error: output directory not created"
             exit 1
@@ -64,16 +69,14 @@ jobs:
             exit 1
           fi
       
-      - name: Create PDF artifacts (all languages + individual language zips)
+      - name: Create language-specific PDF zips
         run: |
           cd output
           
-          # Create complete zip with all languages
-          zip -r ../binder-pokedex-all-languages.zip . -x ".*" "*/.*"
-          
-          # Create individual zips per language
-          for lang in de en fr es it ja ko zh_hans zh_hant; do
+          # Create individual zips per language (each containing all scopes)
+          for lang in de en fr es it ja ko zh-hans zh-hant; do
             if [ -d "$lang" ]; then
+              echo "Creating ZIP for $lang..."
               zip -r ../binder-pokedex-${lang}.zip $lang -x ".*"
             fi
           done
@@ -87,7 +90,6 @@ jobs:
           tag_name: ${{ steps.tag.outputs.tag_name }}
           name: Binder Pokédex ${{ steps.tag.outputs.tag_name }}
           files: |
-            binder-pokedex-all-languages.zip
             binder-pokedex-de.zip
             binder-pokedex-en.zip
             binder-pokedex-fr.zip
@@ -95,44 +97,44 @@ jobs:
             binder-pokedex-it.zip
             binder-pokedex-ja.zip
             binder-pokedex-ko.zip
-            binder-pokedex-zh_hans.zip
-            binder-pokedex-zh_hant.zip
+            binder-pokedex-zh-hans.zip
+            binder-pokedex-zh-hant.zip
           body: |
-            ## 🚀 Binder Pokédex ${{ steps.tag.outputs.tag_name }} Released!
+            ## Release ${{ steps.tag.outputs.tag_name }}
             
-            ✅ **Release complete with all 117 PDFs!**
+            Complete release with all PDFs across 25 scopes and 9 languages!
             
-            ### � Bug Fixes
-            - **Fixed CJK Font Rendering**: Resolved font warnings and missing CJK characters in GitHub Actions
-            - Added Noto Sans CJK font installation and fallback support for Linux environments
-            - Japanese, Korean, and Chinese characters now render properly in all PDFs
+            ### Downloads (by Language)
+            Each ZIP contains all 25 scopes in that language:
             
-            ### 📦 Downloads
-            - **binder-pokedex-all-languages.zip** - Complete set with all 9 languages (117 PDFs)
-            - **binder-pokedex-de.zip** - Deutsch
-            - **binder-pokedex-en.zip** - English
-            - **binder-pokedex-fr.zip** - Français
-            - **binder-pokedex-es.zip** - Español
-            - **binder-pokedex-it.zip** - Italiano
-            - **binder-pokedex-ja.zip** - 日本語
-            - **binder-pokedex-ko.zip** - 한국어
-            - **binder-pokedex-zh_hans.zip** - 简体中文
-            - **binder-pokedex-zh_hant.zip** - 繁體中文
+            - binder-pokedex-de.zip - Deutsch (25 PDFs)
+            - binder-pokedex-en.zip - English (25 PDFs)
+            - binder-pokedex-fr.zip - Français (25 PDFs)
+            - binder-pokedex-es.zip - Español (25 PDFs)
+            - binder-pokedex-it.zip - Italiano (25 PDFs)
+            - binder-pokedex-ja.zip - Japanese (5 PDFs, available sets)
+            - binder-pokedex-ko.zip - Korean (4 PDFs, available sets)
+            - binder-pokedex-zh-hans.zip - Simplified Chinese (where available)
+            - binder-pokedex-zh-hant.zip - Traditional Chinese (where available)
             
-            Each ZIP contains:
-            - 81 Generation PDFs (Kanto to Paldea)
-            - 36 Variant PDFs (EX Gen1/Gen2/Gen3 + Mega Evolution)
+            ### Content Overview
+            25 Total Scopes:
+            - Pokedex: Complete National Pokédex (1,025 Pokémon)
+            - ExGen1-3: TCG EX variant collections (94/324/366 cards)
+            - ME01-MEP: Pokémon TCG Mew series (4 sets)
+            - SV01-SVP: Pokémon TCG Scarlet & Violet series (17 sets)
             
-            ### 📊 Stats
-            - **Total PDFs:** 117 (81 generations + 36 variants)
-            - **Total Pokémon:** 1,025+ including variants
-            - **Languages:** 9 (DE, EN, FR, ES, IT, JA, KO, ZH, ZH-T)
-            - **Size per PDF:** 5-8 MB with embedded images
+            ### Stats
+            - Total Scopes: 25 (1 Pokédex + 3 ExGen + 21 TCG sets)
+            - Languages: 9 (DE, EN, FR, ES, IT, JA, KO, ZH-Hans, ZH-Hant)
+            - Total Size: ~377 MB (all languages combined)
+            - Cards/Pokémon: 1,025+ Pokémon + 4,000+ TCG cards
             
-            ### 🔧 Technical Details
+            ### Technical Details
             - Cross-platform font support (macOS Songti + Linux Noto Sans CJK)
-            - Automatic font fallback detection
-            - Proper CJK character rendering in PDF generation
+            - Scope-based modular architecture
+            - Multilingual trainer card names
+            - Proper CJK character rendering
           draft: false
           prerelease: false
         env:

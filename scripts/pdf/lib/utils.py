@@ -138,7 +138,7 @@ class RendererInitializer:
     """
     
     @staticmethod
-    def initialize_renderers(language: str, image_cache=None, variant_data: dict = None):
+    def initialize_renderers(language: str, image_cache=None, variant_data: dict = None, type_translations: dict = None):
         """
         Initialize standard rendering components for PDF generation.
         
@@ -149,6 +149,7 @@ class RendererInitializer:
             language: Language code (de, en, fr, etc.)
             image_cache: Optional image cache for loading Pokémon images
             variant_data: Optional variant data dict for variant-specific initialization
+            type_translations: Optional type translations dict from API
         
         Returns:
             Tuple of (card_renderer, page_renderer, cover_renderer)
@@ -163,10 +164,15 @@ class RendererInitializer:
                 language=language,
                 image_cache=image_cache,
                 variant=variant_data.get('variant_type'),
-                variant_data=variant_data
+                variant_data=variant_data,
+                type_translations=type_translations
             )
         else:
-            card_renderer = CardRenderer(language=language, image_cache=image_cache)
+            card_renderer = CardRenderer(
+                language=language,
+                image_cache=image_cache,
+                type_translations=type_translations
+            )
         
         # Initialize common renderers
         page_renderer = PageRenderer()

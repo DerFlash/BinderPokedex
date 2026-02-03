@@ -1,0 +1,31 @@
+scope: MEP
+description: 'TCG Set: MEP Black Star Promos (mep) - Complete set with all cards'
+target_file: data/output/MEP.json
+pipeline:
+- step: validate_pokedex_exists
+  params:
+    pokedex_file: data/output/Pokedex.json
+- step: fetch_tcgdex_set
+  params:
+    set_id: mep
+    output_file: data/source/mep.json
+- step: enrich_tcg_names_multilingual
+  params:
+    set_id: mep
+- step: enrich_tcg_cards_from_pokedex
+  params:
+    pokedex_file: data/output/Pokedex.json
+- step: enrich_special_cards
+  params:
+    images_dir: images/special_cards
+- step: transform_tcg_set
+  params:
+    set_id: MEP
+- step: transform_to_sections_format
+- step: save_output
+  params:
+    output_file: data/output/MEP.json
+- step: cache_pokemon_images
+  params:
+    cache_dir: data/pokemon_images_cache
+    skip_existing: true

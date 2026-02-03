@@ -30,13 +30,17 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 4. Generate PDFs
+### 4. Fetch Data & Generate PDFs
 
 ```bash
-python scripts/generate_pdf.py --language de --generation 1
+# Fetch Pokédex data
+python scripts/fetcher/fetch.py --scope Pokedex
+
+# Generate German Pokédex PDF
+python scripts/pdf/generate_pdf.py --scope Pokedex --language de
 ```
 
-**Output:** PDFs saved to `output/pokemon_gen1_de.pdf`
+**Output:** PDFs saved to `output/de/Pokedex_DE.pdf`
 
 ---
 

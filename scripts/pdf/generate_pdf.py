@@ -77,6 +77,20 @@ logging.getLogger('reportlab.pdfbase.ttfonts').setLevel(logging.ERROR)
 logger = logging.getLogger(__name__)
 
 
+def get_all_scopes(data_dir: Path) -> list:
+    """Get all available scope names from data directory."""
+    if not data_dir.exists():
+        return []
+    
+    # Find all JSON files in data directory (excluding subdirectories and source/)
+    json_files = sorted([f for f in data_dir.glob("*.json") if f.is_file()])
+    
+    # Extract scope names (filename without .json)
+    scopes = [f.stem for f in json_files]
+    
+    return scopes
+
+
 def get_pokemon_name_for_language(pokemon: dict, language: str) -> str:
     """
     Get the Pokémon name for the specified language.
@@ -106,22 +120,26 @@ def prepare_pokemon_data(pokemon_list: list, language: str, skip_images: bool = 
     prepared = []
     
     for pokemon in pokemon_list:
+        # Get types from unified types[] array or fall back to type1/type2
+        pokemon_types = pokemon.get('types', [])
+        if not pokemon_types:
+            # Fallback for old format
+            pokemon_types = [pokemon.get('type1', 'Normal')]
+            if pokemon.get('type2'):
+                pokemon_types.append(pokemon['type2'])
+        
         prepared_pokemon = {
-            'id': pokemon.get('id'),  # Numeric ID for image cache lookup
+            'id': pokemon.get('pokemon_id', pokemon.get('id')),  # Numeric ID for image cache lookup
             'num': pokemon.get('num', '#???'),
             'name': get_pokemon_name_for_language(pokemon, language),
             'name_en': pokemon['name']['en'],  # English name for subtitle
-            'types': [pokemon.get('type1', 'Normal')],
+            'types': pokemon_types,
             'generation': pokemon.get('generation', 1),
         }
         
         # Only include image_url if images are enabled
         if not skip_images:
             prepared_pokemon['image_url'] = pokemon.get('image_url')
-        
-        # Add second type if available
-        if pokemon.get('type2'):
-            prepared_pokemon['types'].append(pokemon['type2'])
         
         prepared.append(prepared_pokemon)
     
@@ -214,7 +232,7 @@ Examples:
     # Get workspace directories
     script_dir = Path(__file__).parent  # scripts/pdf/
     project_dir = script_dir.parent.parent  # project root
-    data_dir = project_dir / "data"
+    data_dir = project_dir / "data" / "output"  # Read from output directory
     
     if not data_dir.exists():
         logger.error(f"❌ Data directory not found: {data_dir}")
@@ -224,6 +242,93 @@ Examples:
     if args.list or args.scope is None:
         return list_available_scopes(data_dir)
     
+    # Handle --scope all: generate PDFs for all scopes
+    if args.scope.lower() == 'all':
+        scopes = get_all_scopes(data_dir)
+        
+        if not scopes:
+            logger.error(f"❌ No scopes found in {data_dir}")
+            return 1
+        
+        # Ensure Pokedex is first if it exists
+        if 'Pokedex' in scopes:
+            scopes.remove('Pokedex')
+            scopes.insert(0, 'Pokedex')
+        
+        CLIFormatter.section_header(f"PDF Generation - All Scopes ({len(scopes)})")
+        print(f"\n📋 Processing {len(scopes)} scopes:\n")
+        for scope in scopes:
+            print(f"   • {scope}")
+        print()
+        
+        # Determine languages
+        if args.language:
+            languages = [args.language]
+            if args.language not in LANGUAGES:
+                logger.error(f"❌ Invalid language: {args.language}")
+                logger.info(f"   Valid languages: {', '.join(LANGUAGES.keys())}")
+                return 1
+        else:
+            languages = list(LANGUAGES.keys())  # All 9 languages
+        
+        print(f"🌍 Languages: {', '.join([LANGUAGES[l]['name'] for l in languages])}\n")
+        print("=" * 80)
+        
+        # Process each scope
+        failed_scopes = []
+        total_pdfs_generated = 0
+        
+        for i, scope in enumerate(scopes, 1):
+            scope_file = data_dir / f"{scope}.json"
+            
+            if not scope_file.exists():
+                logger.warning(f"⚠️  Skipping {scope}: File not found")
+                failed_scopes.append(scope)
+                continue
+            
+            print(f"\n[{i}/{len(scopes)}] Generating PDFs for: {scope}")
+            print("-" * 80)
+            
+            try:
+                result = generate_scope_pdf(
+                    scope_name=scope,
+                    scope_file=scope_file,
+                    languages=languages,
+                    output_dir=project_dir / 'output',
+                    script_dir=script_dir,
+                    skip_images=args.skip_images,
+                    test_mode=args.test
+                )
+                
+                if result != 0:
+                    failed_scopes.append(scope)
+                    logger.warning(f"⚠️  Scope {scope} failed, continuing with next...")
+                else:
+                    total_pdfs_generated += len(languages)  # Approx count
+            
+            except Exception as e:
+                logger.error(f"❌ Error processing {scope}: {e}")
+                failed_scopes.append(scope)
+                logger.warning(f"⚠️  Continuing with next scope...")
+            
+            if i < len(scopes):
+                print("=" * 80)
+        
+        # Summary
+        print("\n" + "=" * 80)
+        CLIFormatter.section_header("Summary - All Scopes")
+        print(f"\n   Total scopes:    {len(scopes)}")
+        print(f"   ✅ Successful:   {len(scopes) - len(failed_scopes)}")
+        print(f"   ❌ Failed:       {len(failed_scopes)}")
+        
+        if failed_scopes:
+            print(f"\n⚠️  Failed scopes: {', '.join(failed_scopes)}")
+        
+        CLIFormatter.section_footer()
+        
+        return 1 if failed_scopes else 0
+    
+    # Single scope mode
     # Validate scope exists
     scope_file = data_dir / f"{args.scope}.json"
     if not scope_file.exists():
@@ -278,11 +383,11 @@ def list_available_scopes(data_dir: Path) -> int:
             scope_type = data.get('type', 'unknown')
             sections = data.get('sections', {})
             
-            # Count total Pokemon across all sections
+            # Count total cards across all sections
             total_pokemon = 0
             for section_data in sections.values():
-                pokemon_list = section_data.get('pokemon', [])
-                total_pokemon += len(pokemon_list)
+                cards_list = section_data.get('cards', [])
+                total_pokemon += len(cards_list)
             
             # Get title from first section (usually 'normal')
             title = "Unknown"
@@ -333,10 +438,19 @@ def generate_scope_pdf(scope_name: str, scope_file: Path, languages: list,
         with open(scope_file, 'r', encoding='utf-8') as f:
             scope_data = json.load(f)
         
+        # Check for language availability metadata (TCG sets)
+        available_languages = scope_data.get('available_languages', None)
+        
         total_generated = 0
         total_failed = 0
+        total_skipped = 0
         
         for language in languages:
+            # Check if language is available for this scope
+            if available_languages and language not in available_languages:
+                logger.warning(f"⚠️  Skipping {LANGUAGES.get(language, {}).get('name', language.upper())}: Not available for {scope_name} (set not released in this language)")
+                total_skipped += 1
+                continue
             try:
                 logger.info(f"\n📊 Generating {scope_name} → {LANGUAGES.get(language, {}).get('name', language.upper())}")
                 
@@ -362,7 +476,10 @@ def generate_scope_pdf(scope_name: str, scope_file: Path, languages: list,
         
         # Summary
         CLIFormatter.section_footer()
-        print(f"✅ Generated: {total_generated} | ❌ Failed: {total_failed}")
+        if total_skipped > 0:
+            print(f"✅ Generated: {total_generated} | ⚠️  Skipped: {total_skipped} | ❌ Failed: {total_failed}")
+        else:
+            print(f"✅ Generated: {total_generated} | ❌ Failed: {total_failed}")
         
         return 0 if total_failed == 0 else 1
         
@@ -492,12 +609,16 @@ def _generate_variant_pdf(variant_data, language, output_dir, script_dir, skip_i
     # Initialize image cache for loading Pokémon images
     image_cache = ImageCache()
     
+    # Extract type_translations if present in data
+    type_translations = variant_data.get('type_translations')
+    
     # Create and generate PDF
     pdf_gen = VariantPDFGenerator(
         variant_data=variant_data,
         language=language,
         output_file=output_file,
-        image_cache=image_cache
+        image_cache=image_cache,
+        type_translations=type_translations
     )
     
     return pdf_gen.generate()

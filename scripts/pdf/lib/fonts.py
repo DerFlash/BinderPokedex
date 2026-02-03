@@ -37,16 +37,22 @@ class FontManager:
         'fr': {'font': 'Helvetica', 'font_bold': 'Helvetica-Bold'},
         'it': {'font': 'Helvetica', 'font_bold': 'Helvetica-Bold'},
         'ja': {'font': 'SongtiBold', 'font_bold': 'SongtiBold'},          # Japanese
-        'ko': {'font': 'SongtiBold', 'font_bold': 'SongtiBold'},          # Korean (Songti supports CJK)
+        'ko': {'font': 'AppleGothic', 'font_bold': 'AppleGothic'},        # Korean (AppleGothic for Hangul)
         'zh_hans': {'font': 'SongtiBold', 'font_bold': 'SongtiBold'},     # Simplified Chinese
-        'zh_hant': {'font': 'SongtiBold', 'font_bold': 'SongtiBold'},     # Traditional Chinese
+        'zh_hant': {'font': 'STHeitiMedium', 'font_bold': 'STHeitiMedium'},     # Traditional Chinese
     }
     
     # CJK Languages that need TrueType fonts
     CJK_LANGUAGES = ['ja', 'ko', 'zh_hans', 'zh_hant']
     
-    # Path to Songti TrueType Collection (primary CJK font)
+    # Path to Songti TrueType Collection (Japanese, Simplified Chinese)
     SONGTI_PATH = Path('/System/Library/Fonts/Supplemental/Songti.ttc')
+    
+    # Path to STHeiti font (Traditional Chinese)
+    STHEITI_PATH = Path('/System/Library/Fonts/STHeiti Medium.ttc')
+    
+    # Path to AppleGothic font (Korean)
+    APPLEGOTHIC_PATH = Path('/System/Library/Fonts/Supplemental/AppleGothic.ttf')
     
     # Fallback CJK fonts for Linux systems
     NOTO_CJK_PATHS = [
@@ -82,18 +88,44 @@ class FontManager:
         
         logger.info("Registering fonts for multi-language support...")
         
-        # Register Songti font for CJK if available
+        # Register Songti font for Japanese and Simplified Chinese
         if cls.SONGTI_PATH.exists():
             try:
                 font = TTFont('SongtiBold', str(cls.SONGTI_PATH))
                 pdfmetrics.registerFont(font)
-                logger.info(f"✓ Registered Songti font (JA, KO, ZH)")
+                logger.info(f"✓ Registered Songti font (JA, ZH_HANS)")
                 logger.debug(f"  Path: {cls.SONGTI_PATH}")
                 cls._font_cache['SongtiBold'] = True
             except Exception as e:
                 logger.warning(f"✗ Could not register Songti: {e}")
                 logger.warning(f"  Some CJK characters may not render properly")
                 cls._font_cache['SongtiBold'] = False
+        
+        # Register STHeiti font for Traditional Chinese
+        if cls.STHEITI_PATH.exists():
+            try:
+                font = TTFont('STHeitiMedium', str(cls.STHEITI_PATH))
+                pdfmetrics.registerFont(font)
+                logger.info(f"✓ Registered STHeiti font (ZH_HANT)")
+                logger.debug(f"  Path: {cls.STHEITI_PATH}")
+                cls._font_cache['STHeitiMedium'] = True
+            except Exception as e:
+                logger.warning(f"✗ Could not register STHeiti: {e}")
+                logger.warning(f"  Traditional Chinese characters may not render properly")
+                cls._font_cache['STHeitiMedium'] = False
+        
+        # Register AppleGothic font for Korean
+        if cls.APPLEGOTHIC_PATH.exists():
+            try:
+                font = TTFont('AppleGothic', str(cls.APPLEGOTHIC_PATH))
+                pdfmetrics.registerFont(font)
+                logger.info(f"✓ Registered AppleGothic font (KO)")
+                logger.debug(f"  Path: {cls.APPLEGOTHIC_PATH}")
+                cls._font_cache['AppleGothic'] = True
+            except Exception as e:
+                logger.warning(f"✗ Could not register AppleGothic: {e}")
+                logger.warning(f"  Korean characters may not render properly")
+                cls._font_cache['AppleGothic'] = False
         else:
             logger.warning(f"⚠️  Songti font not found at {cls.SONGTI_PATH}")
             logger.warning(f"  CJK characters may not render - install fonts or use Noto Sans CJK")

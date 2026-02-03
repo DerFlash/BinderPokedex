@@ -159,6 +159,6 @@ class FetchTCGdexBlackWhiteEXStep(BaseStep):
             print(f"    💾 Saved to: {output_file}")
         
         # Store cards in context for next steps
-        context.storage['tcg_cards'] = all_ex_cards
+        context.data['tcg_bw_xy_ex_cards'] = all_ex_cards
         
         return context

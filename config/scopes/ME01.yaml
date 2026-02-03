@@ -1,0 +1,31 @@
+scope: ME01
+description: 'TCG Set: Mega Evolution (me01) - Complete set with all cards'
+target_file: data/output/ME01.json
+pipeline:
+- step: validate_pokedex_exists
+  params:
+    pokedex_file: data/output/Pokedex.json
+- step: fetch_tcgdex_set
+  params:
+    set_id: me01
+    output_file: data/source/me01.json
+- step: enrich_tcg_names_multilingual
+  params:
+    set_id: me01
+- step: enrich_tcg_cards_from_pokedex
+  params:
+    pokedex_file: data/output/Pokedex.json
+- step: enrich_special_cards
+  params:
+    images_dir: images/special_cards
+- step: transform_tcg_set
+  params:
+    set_id: ME01
+- step: transform_to_sections_format
+- step: save_output
+  params:
+    output_file: data/output/ME01.json
+- step: cache_pokemon_images
+  params:
+    cache_dir: data/pokemon_images_cache
+    skip_existing: true

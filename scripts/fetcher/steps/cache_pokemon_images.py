@@ -106,8 +106,11 @@ class CachePokemonImages(BaseStep):
         if 'sections' in data:
             # Variant or Pokedex structure with sections
             for section_name, section in data['sections'].items():
-                if 'pokemon' in section and isinstance(section['pokemon'], list):
-                    for pokemon in section['pokemon']:
+                # Get cards list
+                pokemon_list = section.get('cards')
+                
+                if pokemon_list and isinstance(pokemon_list, list):
+                    for pokemon in pokemon_list:
                         pokemon_id = self._extract_pokemon_id(pokemon)
                         image_url = pokemon.get('image_url') or pokemon.get('image_path')
                         
@@ -130,7 +133,7 @@ class CachePokemonImages(BaseStep):
     
     def _extract_pokemon_id(self, pokemon: Dict[str, Any]) -> int:
         """Extract numeric Pokemon ID from various formats."""
-        pokemon_id = pokemon.get('id')
+        pokemon_id = pokemon.get('pokemon_id')
         
         if isinstance(pokemon_id, int):
             return pokemon_id

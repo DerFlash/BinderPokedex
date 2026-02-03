@@ -86,7 +86,14 @@ class TCGdexClient:
                     time.sleep(2 ** attempt)  # Exponential backoff
                     
             except RequestException as e:
+                # 404 for sets endpoints means language not available - don't retry
+                # Retrying won't make the translation magically appear
+                if e.response is not None and e.response.status_code == 404 and '/sets/' in endpoint:
+                    logger.debug(f"Set not available in {self.language}: {url}")
+                    return None  # Skip retries for missing translations
+                
                 logger.error(f"Request failed for {url}: {e}")
+                
                 if attempt < self.MAX_RETRIES - 1:
                     time.sleep(2 ** attempt)
                     

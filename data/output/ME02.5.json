@@ -1,0 +1,3745 @@
+{
+  "type": "tcg_set",
+  "name": "Ascended Heroes",
+  "available_languages": [
+    "de",
+    "en",
+    "fr",
+    "es",
+    "it"
+  ],
+  "serie": "me",
+  "serie_name": "Mega Evolution",
+  "set_id": "ME02.5",
+  "release_date": "2026-01-30",
+  "logo_urls": {
+    "de": "https://assets.tcgdex.net/de/me/me02.5/logo.png",
+    "en": "https://assets.tcgdex.net/en/me/me02.5/logo.png",
+    "fr": "https://assets.tcgdex.net/fr/me/me02.5/logo.png",
+    "es": "https://assets.tcgdex.net/es/me/me02.5/logo.png",
+    "it": "https://assets.tcgdex.net/it/me/me02.5/logo.png"
+  },
+  "sections": {
+    "all": {
+      "title": {
+        "de": "Erhabene Helden",
+        "en": "Ascended Heroes",
+        "fr": "Héros Transcendants",
+        "es": "Héroes Ascendentes",
+        "it": "Ascesa Eroica"
+      },
+      "description": {
+        "de": "Erhabene Helden - Veröffentlichung: 2026-01-30",
+        "en": "Ascended Heroes - Release: 2026-01-30",
+        "fr": "Héros Transcendants - Sortie: 2026-01-30",
+        "es": "Héroes Ascendentes - Lanzamiento: 2026-01-30",
+        "it": "Ascesa Eroica - Uscita: 2026-01-30"
+      },
+      "subtitle": {
+        "de": "[image]https://assets.tcgdex.net/de/me/me02.5/logo.png[/image]",
+        "en": "[image]https://assets.tcgdex.net/en/me/me02.5/logo.png[/image]",
+        "fr": "[image]https://assets.tcgdex.net/fr/me/me02.5/logo.png[/image]",
+        "es": "[image]https://assets.tcgdex.net/es/me/me02.5/logo.png[/image]",
+        "it": "[image]https://assets.tcgdex.net/it/me/me02.5/logo.png[/image]"
+      },
+      "cards": [
+        {
+          "localId": "001",
+          "name": {
+            "en": "Erika's Oddish"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "002",
+          "name": {
+            "en": "Erika's Gloom"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "003",
+          "name": {
+            "en": "Erika's Vileplume ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "004",
+          "name": {
+            "en": "Erika's Bellsprout"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "005",
+          "name": {
+            "en": "Erika's Weepinbell"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "006",
+          "name": {
+            "en": "Erika's Victreebel"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "007",
+          "name": {
+            "en": "Erika's Tangela"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "008",
+          "name": {
+            "en": "Chikorita"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "009",
+          "name": {
+            "en": "Bayleef"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "010",
+          "name": {
+            "en": "Mega Meganium ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "011",
+          "name": {
+            "en": "Wurmple"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "012",
+          "name": {
+            "en": "Silcoon"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "013",
+          "name": {
+            "en": "Beautifly"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "014",
+          "name": {
+            "en": "Cascoon"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "015",
+          "name": {
+            "en": "Dustox"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "016",
+          "name": {
+            "en": "Budew"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "017",
+          "name": {
+            "en": "Grubbin"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "018",
+          "name": {
+            "en": "Team Rocket's Tarountula"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "019",
+          "name": {
+            "en": "Team Rocket's Spidops"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "020",
+          "name": {
+            "en": "Charmander"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "021",
+          "name": {
+            "en": "Charmeleon"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "022",
+          "name": {
+            "en": "Mega Charizard Y ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "023",
+          "name": {
+            "en": "Ethan's Slugma"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "024",
+          "name": {
+            "en": "Ethan's Magcargo"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "025",
+          "name": {
+            "en": "Entei"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "026",
+          "name": {
+            "en": "Ethan's Ho-Oh ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "027",
+          "name": {
+            "en": "Numel"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "028",
+          "name": {
+            "en": "Camerupt"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "029",
+          "name": {
+            "en": "Tepig"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "030",
+          "name": {
+            "en": "Pignite"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "031",
+          "name": {
+            "en": "Mega Emboar ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "032",
+          "name": {
+            "en": "N's Darumaka"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "033",
+          "name": {
+            "en": "N's Darmanitan"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "034",
+          "name": {
+            "en": "Salandit"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "035",
+          "name": {
+            "en": "Salazzle"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "036",
+          "name": {
+            "en": "Scorbunny"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "037",
+          "name": {
+            "en": "Raboot"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "038",
+          "name": {
+            "en": "Cinderace ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "039",
+          "name": {
+            "en": "Psyduck"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Water"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "040",
+          "name": {
+            "en": "Golduck"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Water"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "041",
+          "name": {
+            "en": "Totodile"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Water"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "042",
+          "name": {
+            "en": "Croconaw"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Water"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "043",
+          "name": {
+            "en": "Mega Feraligatr ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Water"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "044",
+          "name": {
+            "en": "Sneasel"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Water"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "045",
+          "name": {
+            "en": "Weavile"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Water"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "046",
+          "name": {
+            "en": "Snorunt"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Water"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "047",
+          "name": {
+            "en": "Mega Froslass ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Water"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "048",
+          "name": {
+            "en": "Regice ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Water"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "049",
+          "name": {
+            "en": "N's Vanillite"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Water"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "050",
+          "name": {
+            "en": "N's Vanillish"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Water"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "051",
+          "name": {
+            "en": "N's Vanilluxe"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Water"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "052",
+          "name": {
+            "en": "Snom"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Water"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "053",
+          "name": {
+            "en": "Frosmoth"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Water"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "054",
+          "name": {
+            "en": "Glastrier"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Water"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "055",
+          "name": {
+            "en": "Pikachu"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "056",
+          "name": {
+            "en": "Raichu"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "057",
+          "name": {
+            "en": "Pikachu ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "058",
+          "name": {
+            "en": "Voltorb ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "059",
+          "name": {
+            "en": "Tynamo"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "060",
+          "name": {
+            "en": "Eelektrik"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "061",
+          "name": {
+            "en": "Mega Eelektross ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "062",
+          "name": {
+            "en": "Stunfisk"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "063",
+          "name": {
+            "en": "Helioptile"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "064",
+          "name": {
+            "en": "Heliolisk"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "065",
+          "name": {
+            "en": "Charjabug"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "066",
+          "name": {
+            "en": "Vikavolt"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "067",
+          "name": {
+            "en": "Tapu Koko"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "068",
+          "name": {
+            "en": "Hop's Pincurchin ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "069",
+          "name": {
+            "en": "Iono's Tadbulb"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "070",
+          "name": {
+            "en": "Iono's Bellibolt ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "071",
+          "name": {
+            "en": "Iono's Wattrel"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "072",
+          "name": {
+            "en": "Iono's Kilowattrel"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "073",
+          "name": {
+            "en": "Miraidon ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "074",
+          "name": {
+            "en": "Clefairy"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "075",
+          "name": {
+            "en": "Clefable"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "076",
+          "name": {
+            "en": "Lillie's Clefairy ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "077",
+          "name": {
+            "en": "Team Rocket's Exeggcute"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "078",
+          "name": {
+            "en": "Team Rocket's Exeggutor"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "079",
+          "name": {
+            "en": "Team Rocket's Mewtwo ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "080",
+          "name": {
+            "en": "Togepi"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "081",
+          "name": {
+            "en": "Togetic"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "082",
+          "name": {
+            "en": "Togekiss"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "083",
+          "name": {
+            "en": "Marill"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "084",
+          "name": {
+            "en": "Azumarill ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "085",
+          "name": {
+            "en": "Misdreavus"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "086",
+          "name": {
+            "en": "Mismagius"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "087",
+          "name": {
+            "en": "Ralts"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "088",
+          "name": {
+            "en": "Kirlia"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "089",
+          "name": {
+            "en": "Mega Gardevoir ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "090",
+          "name": {
+            "en": "Shuppet"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "091",
+          "name": {
+            "en": "Banette"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "092",
+          "name": {
+            "en": "Rotom"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "093",
+          "name": {
+            "en": "Swirlix"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "094",
+          "name": {
+            "en": "Slurpuff"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "095",
+          "name": {
+            "en": "Hop's Phantump"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "096",
+          "name": {
+            "en": "Hop's Trevenant"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "097",
+          "name": {
+            "en": "Team Rocket's Mimikyu"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "098",
+          "name": {
+            "en": "Spectrier"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "099",
+          "name": {
+            "en": "Munkidori"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "100",
+          "name": {
+            "en": "Team Rocket's Diglett"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "101",
+          "name": {
+            "en": "Team Rocket's Dugtrio"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "102",
+          "name": {
+            "en": "Hitmontop"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "103",
+          "name": {
+            "en": "Meditite"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "104",
+          "name": {
+            "en": "Medicham"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "105",
+          "name": {
+            "en": "Lunatone"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "106",
+          "name": {
+            "en": "Solrock"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "107",
+          "name": {
+            "en": "Regirock ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "108",
+          "name": {
+            "en": "Groudon"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "109",
+          "name": {
+            "en": "Cynthia's Gible"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "110",
+          "name": {
+            "en": "Cynthia's Gabite"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "111",
+          "name": {
+            "en": "Cynthia's Garchomp ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "112",
+          "name": {
+            "en": "Riolu"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "113",
+          "name": {
+            "en": "Mega Lucario ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "114",
+          "name": {
+            "en": "Stunfisk ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "115",
+          "name": {
+            "en": "Pancham"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "116",
+          "name": {
+            "en": "Mega Hawlucha ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "117",
+          "name": {
+            "en": "Carbink"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "118",
+          "name": {
+            "en": "Rolycoly"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "119",
+          "name": {
+            "en": "Carkol"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "120",
+          "name": {
+            "en": "Coalossal"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "121",
+          "name": {
+            "en": "Koraidon ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "122",
+          "name": {
+            "en": "Okidogi"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "123",
+          "name": {
+            "en": "Gastly"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "124",
+          "name": {
+            "en": "Haunter"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "125",
+          "name": {
+            "en": "Mega Gengar ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "126",
+          "name": {
+            "en": "Team Rocket's Murkrow"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "127",
+          "name": {
+            "en": "Team Rocket's Honchkrow"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "128",
+          "name": {
+            "en": "Poochyena"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "129",
+          "name": {
+            "en": "Mightyena"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "130",
+          "name": {
+            "en": "Galarian Zigzagoon"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "131",
+          "name": {
+            "en": "Galarian Linoone"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "132",
+          "name": {
+            "en": "Galarian Obstagoon"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "133",
+          "name": {
+            "en": "Cynthia's Spiritomb"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "134",
+          "name": {
+            "en": "Scraggy"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "135",
+          "name": {
+            "en": "Mega Scrafty ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "136",
+          "name": {
+            "en": "N's Zorua"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "137",
+          "name": {
+            "en": "N's Zoroark ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "138",
+          "name": {
+            "en": "Vullaby"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "139",
+          "name": {
+            "en": "Mandibuzz ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "140",
+          "name": {
+            "en": "Pangoro"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "141",
+          "name": {
+            "en": "Hoopa"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "142",
+          "name": {
+            "en": "Fezandipiti ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "143",
+          "name": {
+            "en": "Pecharunt"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "144",
+          "name": {
+            "en": "Mawile"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Metal"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "145",
+          "name": {
+            "en": "Registeel ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Metal"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "146",
+          "name": {
+            "en": "Pawniard"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Metal"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "147",
+          "name": {
+            "en": "Bisharp"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Metal"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "148",
+          "name": {
+            "en": "Kingambit"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Metal"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "149",
+          "name": {
+            "en": "Togedemaru ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Metal"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "150",
+          "name": {
+            "en": "Dratini"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Dragon"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "151",
+          "name": {
+            "en": "Dragonair"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Dragon"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "152",
+          "name": {
+            "en": "Mega Dragonite ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Dragon"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "153",
+          "name": {
+            "en": "Rayquaza"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Dragon"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "154",
+          "name": {
+            "en": "N's Reshiram"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Dragon"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "155",
+          "name": {
+            "en": "N's Zekrom"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Dragon"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "156",
+          "name": {
+            "en": "Noibat"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Dragon"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "157",
+          "name": {
+            "en": "Noivern"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Dragon"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "158",
+          "name": {
+            "en": "Dreepy"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Dragon"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "159",
+          "name": {
+            "en": "Drakloak"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Dragon"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "160",
+          "name": {
+            "en": "Dragapult ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Dragon"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "161",
+          "name": {
+            "en": "Team Rocket's Meowth"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "162",
+          "name": {
+            "en": "Team Rocket's Kangaskhan ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "163",
+          "name": {
+            "en": "Larry's Dunsparce"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "164",
+          "name": {
+            "en": "Larry's Dudunsparce ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "165",
+          "name": {
+            "en": "Skitty"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "166",
+          "name": {
+            "en": "Delcatty"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "167",
+          "name": {
+            "en": "Zangoose ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "168",
+          "name": {
+            "en": "Larry's Starly"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "169",
+          "name": {
+            "en": "Larry's Staravia"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "170",
+          "name": {
+            "en": "Larry's Staraptor"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "171",
+          "name": {
+            "en": "Fan Rotom"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "172",
+          "name": {
+            "en": "Mega Audino ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "173",
+          "name": {
+            "en": "Larry's Rufflet"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "174",
+          "name": {
+            "en": "Larry's Braviary"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "175",
+          "name": {
+            "en": "Larry's Komala"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "176",
+          "name": {
+            "en": "Drampa"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "177",
+          "name": {
+            "en": "Hop's Cramorant"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "178",
+          "name": {
+            "en": "Terapagos"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "179",
+          "name": {
+            "en": "Terapagos ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "180",
+          "name": {
+            "de": "Lolas Schabernack",
+            "en": "Acerola's Mischief",
+            "fr": "Espièglerie de Margie",
+            "es": "Travesura de Zarala",
+            "it": "Birichinata di Malpi"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "181",
+          "name": {
+            "de": "Luftballon",
+            "en": "Air Balloon",
+            "fr": "Ballon",
+            "es": "Globo Helio",
+            "it": "Palloncino"
+          },
+          "type": "trainer",
+          "trainer_type": "Tool",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/tool.png"
+        },
+        {
+          "localId": "182",
+          "name": {
+            "de": "Minna und Elfriede",
+            "en": "Anthea & Concordia",
+            "fr": "Vénus et Colombe",
+            "es": "Amor y Paz",
+            "it": "Antea e Concordia"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "183",
+          "name": {
+            "de": "Befehl vom Boss",
+            "en": "Boss's Orders",
+            "fr": "Ordres du Boss",
+            "es": "Órdenes de Jefes",
+            "it": "Ordini del Capo"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "184",
+          "name": {
+            "de": "Dicke-Freunde-Knursp",
+            "en": "Buddy-Buddy Poffin",
+            "fr": "Poffin Copain-Copain",
+            "es": "Pokochos Gemelos",
+            "it": "Poffin del Cuore"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "185",
+          "name": {
+            "de": "Canary",
+            "en": "Canari",
+            "fr": "Narica",
+            "es": "Naria",
+            "it": "Canary"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "186",
+          "name": {
+            "de": "Kontergewinn",
+            "en": "Counter Gain",
+            "fr": "Rattrape-Riposte",
+            "es": "Alcance Contraataque",
+            "it": "Contrappeso"
+          },
+          "type": "trainer",
+          "trainer_type": "Tool",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/tool.png"
+        },
+        {
+          "localId": "187",
+          "name": {
+            "de": "Kampfgong",
+            "en": "Fighting Gong",
+            "fr": "Gong de Combat",
+            "es": "Gong de Lucha",
+            "it": "Gong di Lotta"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "188",
+          "name": {
+            "de": "Wald der Vitalität",
+            "en": "Forest of Vitality",
+            "fr": "Forêt de Vitalité",
+            "es": "Bosque Vitalidad",
+            "it": "Bosco della Vitalità"
+          },
+          "type": "trainer",
+          "trainer_type": "Stadium",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/stadium.png"
+        },
+        {
+          "localId": "189",
+          "name": {
+            "de": "Glastrompete",
+            "en": "Glass Trumpet",
+            "fr": "Trompette de Verre",
+            "es": "Trompeta de Cristal",
+            "it": "Tromba di Vetro"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "190",
+          "name": {
+            "de": "Lilias Kampfgeist",
+            "en": "Iris's Fighting Spirit",
+            "fr": "Esprit Combatif d'Iris",
+            "es": "Espíritu de Lucha de Iris",
+            "it": "Spirito Combattivo di Iris"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "191",
+          "name": {
+            "de": "Kugelblitz",
+            "en": "Light Ball",
+            "fr": "Balle Lumière",
+            "es": "Bola Luminosa",
+            "it": "Elettropalla"
+          },
+          "type": "trainer",
+          "trainer_type": "Tool",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/tool.png"
+        },
+        {
+          "localId": "192",
+          "name": {
+            "de": "Lillys Entschlossenheit",
+            "en": "Lillie's Determination",
+            "fr": "Détermination de Lilie",
+            "es": "Determinación de Lylia",
+            "it": "Determinazione di Lylia"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "193",
+          "name": {
+            "de": "Mega-Signal",
+            "en": "Mega Signal",
+            "fr": "Méga Signal",
+            "es": "Megaseñal",
+            "it": "Megasegnale"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "194",
+          "name": {
+            "de": "Geheimnisvoller Garten",
+            "en": "Mystery Garden",
+            "fr": "Jardin Mystère",
+            "es": "Jardín Misterioso",
+            "it": "Giardino dei Misteri"
+          },
+          "type": "trainer",
+          "trainer_type": "Stadium",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/stadium.png"
+        },
+        {
+          "localId": "195",
+          "name": {
+            "de": "Ns AP-Plus",
+            "en": "N's PP Up",
+            "fr": "PP Plus de N",
+            "es": "Más PP de N",
+            "it": "PP-su di N"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "196",
+          "name": {
+            "de": "Nachttrage",
+            "en": "Night Stretcher",
+            "fr": "Civière Nocturne",
+            "es": "Camilla Nocturna",
+            "it": "Barella Notturna"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "197",
+          "name": {
+            "de": "Nachtmine",
+            "en": "Nighttime Mine",
+            "fr": "Mine de Nuit",
+            "es": "Mina Nocturna",
+            "it": "Miniera di Notte"
+          },
+          "type": "trainer",
+          "trainer_type": "Stadium",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/stadium.png"
+        },
+        {
+          "localId": "198",
+          "name": {
+            "de": "Poképad",
+            "en": "Poké Pad",
+            "fr": "Poké Registre",
+            "es": "Pokétableta",
+            "it": "Poké Pad"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "199",
+          "name": {
+            "de": "Premium Power Pro",
+            "en": "Premium Power Pro",
+            "fr": "Puissance Premium Pro",
+            "es": "Potencia Prémium Plus",
+            "it": "Potenza Premium Pro"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "200",
+          "name": {
+            "de": "Surfer",
+            "en": "Surfer",
+            "fr": "Surfeur",
+            "es": "Surfista",
+            "it": "Surfista"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "201",
+          "name": {
+            "de": "Team Rockets Atlas",
+            "en": "Team Rocket's Archer",
+            "fr": "Amos de la Team Rocket",
+            "es": "Atlas del Team Rocket",
+            "it": "Archer del Team Rocket"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "202",
+          "name": {
+            "de": "Team Rockets Athena",
+            "en": "Team Rocket's Ariana",
+            "fr": "Ariane de la Team Rocket",
+            "es": "Atenea del Team Rocket",
+            "it": "Atena del Team Rocket"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "203",
+          "name": {
+            "de": "Team Rockets Fabrik",
+            "en": "Team Rocket's Factory",
+            "fr": "Usine de la Team Rocket",
+            "es": "Fábrica del Team Rocket",
+            "it": "Fabbrica del Team Rocket"
+          },
+          "type": "trainer",
+          "trainer_type": "Stadium",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/stadium.png"
+        },
+        {
+          "localId": "204",
+          "name": {
+            "de": "Team Rockets Giovanni",
+            "en": "Team Rocket's Giovanni",
+            "fr": "Giovanni de la Team Rocket",
+            "es": "Giovanni del Team Rocket",
+            "it": "Giovanni del Team Rocket"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "205",
+          "name": {
+            "de": "Team Rockets Superball",
+            "en": "Team Rocket's Great Ball",
+            "fr": "Super Ball de la Team Rocket",
+            "es": "Super Ball del Team Rocket",
+            "it": "Mega Ball del Team Rocket"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "206",
+          "name": {
+            "de": "Team Rockets Hypnotizer",
+            "en": "Team Rocket's Hypnotizer",
+            "fr": "Hypnotiseur de la Team Rocket",
+            "es": "Hipnotizador del Team Rocket",
+            "it": "Ipnotizzatore del Team Rocket"
+          },
+          "type": "trainer",
+          "trainer_type": "Tool",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/tool.png"
+        },
+        {
+          "localId": "207",
+          "name": {
+            "de": "Team Rockets Lambda",
+            "en": "Team Rocket's Petrel",
+            "fr": "Lambda de la Team Rocket",
+            "es": "Petrel del Team Rocket",
+            "it": "Maxus del Team Rocket"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "208",
+          "name": {
+            "de": "Team Rockets Lance",
+            "en": "Team Rocket's Proton",
+            "fr": "Lance de la Team Rocket",
+            "es": "Protón del Team Rocket",
+            "it": "Milas del Team Rocket"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "209",
+          "name": {
+            "de": "Team Rockets Transceiver",
+            "en": "Team Rocket's Transceiver",
+            "fr": "Émetteur-Récepteur de la Team Rocket",
+            "es": "Walkie-talkie del Team Rocket",
+            "it": "Ricetrasmettitore del Team Rocket"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "210",
+          "name": {
+            "de": "Team Rockets Wachturm",
+            "en": "Team Rocket's Watchtower",
+            "fr": "Tour d'Observation de la Team Rocket",
+            "es": "Torre de Defensa del Team Rocket",
+            "it": "Torre di Guardia del Team Rocket"
+          },
+          "type": "trainer",
+          "trainer_type": "Stadium",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/stadium.png"
+        },
+        {
+          "localId": "211",
+          "name": {
+            "de": "Harte Schuppe",
+            "en": "Thick Scale",
+            "fr": "Écaille Épaisse",
+            "es": "Escama Gruesa",
+            "it": "Squama Spessa"
+          },
+          "type": "trainer",
+          "trainer_type": "Tool",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/tool.png"
+        },
+        {
+          "localId": "212",
+          "name": {
+            "de": "Ausrüstungsentsorger",
+            "en": "Tool Scrapper",
+            "fr": "Arrache-Outil",
+            "es": "Reciclaherramientas",
+            "it": "Scartaoggetti"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "213",
+          "name": {
+            "de": "Hyperball",
+            "en": "Ultra Ball",
+            "fr": "Hyper Ball",
+            "es": "Ultra Ball",
+            "it": "Ultra Ball"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "214",
+          "name": {
+            "de": "Alton",
+            "en": "Urbain",
+            "fr": "Boro",
+            "es": "Urbi",
+            "it": "Ryon"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "215",
+          "name": {
+            "de": "Serviererin",
+            "en": "Waitress",
+            "fr": "Serveuse",
+            "es": "Camarera",
+            "it": "Cameriera"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "216",
+          "name": {
+            "de": "Prisma-Energie",
+            "en": "Prism Energy",
+            "fr": "Énergie Prisme",
+            "es": "Energía Prisma",
+            "it": "Energia Prisma"
+          },
+          "type": "trainer",
+          "trainer_type": "Energy",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/energy.png"
+        },
+        {
+          "localId": "217",
+          "name": {
+            "de": "Team Rockets Energie",
+            "en": "Team Rocket's Energy",
+            "fr": "Énergie de la Team Rocket",
+            "es": "Energía del Team Rocket",
+            "it": "Energia del Team Rocket"
+          },
+          "type": "trainer",
+          "trainer_type": "Energy",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/energy.png"
+        },
+        {
+          "localId": "218",
+          "name": {
+            "en": "Erika's Tangela"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "219",
+          "name": {
+            "en": "Beautifly"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "220",
+          "name": {
+            "en": "Dustox"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "221",
+          "name": {
+            "en": "Budew"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "222",
+          "name": {
+            "en": "Ethan's Magcargo"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "223",
+          "name": {
+            "en": "Numel"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "224",
+          "name": {
+            "en": "Salazzle"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "225",
+          "name": {
+            "en": "Scorbunny"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "226",
+          "name": {
+            "en": "Psyduck"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Water"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "227",
+          "name": {
+            "en": "Snorunt"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Water"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "228",
+          "name": {
+            "en": "Weavile"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Water"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "229",
+          "name": {
+            "en": "Heliolisk"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "230",
+          "name": {
+            "en": "Vikavolt"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "231",
+          "name": {
+            "en": "Iono's Wattrel"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "232",
+          "name": {
+            "en": "Marill"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "233",
+          "name": {
+            "en": "Misdreavus"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "234",
+          "name": {
+            "en": "Banette"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "235",
+          "name": {
+            "en": "Togekiss"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "236",
+          "name": {
+            "en": "Slurpuff"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "237",
+          "name": {
+            "en": "Hop's Trevenant"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "238",
+          "name": {
+            "en": "Team Rocket's Mimikyu"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "239",
+          "name": {
+            "en": "Team Rocket's Dugtrio"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "240",
+          "name": {
+            "en": "Hitmontop"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "241",
+          "name": {
+            "en": "Medicham"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "242",
+          "name": {
+            "en": "Carbink"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "243",
+          "name": {
+            "en": "Mightyena"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "244",
+          "name": {
+            "en": "Cynthia's Spiritomb"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "245",
+          "name": {
+            "en": "Galarian Obstagoon"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "246",
+          "name": {
+            "en": "Mawile"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Metal"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "247",
+          "name": {
+            "en": "Dreepy"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Dragon"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "248",
+          "name": {
+            "en": "Drakloak"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Dragon"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "249",
+          "name": {
+            "en": "Larry's Staraptor"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "250",
+          "name": {
+            "en": "Fan Rotom"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "251",
+          "name": {
+            "en": "Sprigatito ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "252",
+          "name": {
+            "en": "Stunfisk ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "253",
+          "name": {
+            "en": "Mega Audino ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "254",
+          "name": {
+            "de": "Minna und Elfriede",
+            "en": "Anthea & Concordia",
+            "fr": "Vénus et Colombe",
+            "es": "Amor y Paz",
+            "it": "Antea e Concordia"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "255",
+          "name": {
+            "de": "Schwarzgurt-Training",
+            "en": "Black Belt's Training",
+            "fr": "Entraînement de Karatéka",
+            "es": "Entrenamiento de Karateka",
+            "it": "Allenamento di Cinturanera"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "256",
+          "name": {
+            "de": "Befehl vom Boss",
+            "en": "Boss's Orders",
+            "fr": "Ordres du Boss",
+            "es": "Órdenes de Jefes",
+            "it": "Ordini del Capo"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "257",
+          "name": {
+            "de": "Canary",
+            "en": "Canari",
+            "fr": "Narica",
+            "es": "Naria",
+            "it": "Canary"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "258",
+          "name": {
+            "de": "Cheren",
+            "en": "Cheren",
+            "fr": "Tcheren",
+            "es": "Cheren",
+            "it": "Komor"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "259",
+          "name": {
+            "de": "Kontergewinn",
+            "en": "Counter Gain",
+            "fr": "Rattrape-Riposte",
+            "es": "Alcance Contraataque",
+            "it": "Contrappeso"
+          },
+          "type": "trainer",
+          "trainer_type": "Tool",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/tool.png"
+        },
+        {
+          "localId": "260",
+          "name": {
+            "de": "Glastrompete",
+            "en": "Glass Trumpet",
+            "fr": "Trompette de Verre",
+            "es": "Trompeta de Cristal",
+            "it": "Tromba di Vetro"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "261",
+          "name": {
+            "de": "Störturm",
+            "en": "Jamming Tower",
+            "fr": "Tour de Brouillage",
+            "es": "Torre de Interferencia",
+            "it": "Torre di Interferenza"
+          },
+          "type": "trainer",
+          "trainer_type": "Stadium",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/stadium.png"
+        },
+        {
+          "localId": "262",
+          "name": {
+            "de": "Ns AP-Plus",
+            "en": "N's PP Up",
+            "fr": "PP Plus de N",
+            "es": "Más PP de N",
+            "it": "PP-su di N"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "263",
+          "name": {
+            "de": "Team Rockets Transceiver",
+            "en": "Team Rocket's Transceiver",
+            "fr": "Émetteur-Récepteur de la Team Rocket",
+            "es": "Walkie-talkie del Team Rocket",
+            "it": "Ricetrasmettitore del Team Rocket"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "264",
+          "name": {
+            "de": "Hyperball",
+            "en": "Ultra Ball",
+            "fr": "Hyper Ball",
+            "es": "Ultra Ball",
+            "it": "Ultra Ball"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "265",
+          "name": {
+            "en": "Mega Froslass ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Water"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "266",
+          "name": {
+            "en": "Mega Eelektross ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "267",
+          "name": {
+            "en": "Mega Diancie ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "268",
+          "name": {
+            "en": "Mega Hawlucha ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "269",
+          "name": {
+            "en": "Mega Gengar ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "270",
+          "name": {
+            "en": "Mega Scrafty ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "271",
+          "name": {
+            "en": "Mega Dragonite ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Dragon"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "272",
+          "name": {
+            "en": "Mega Meganium ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Grass"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "273",
+          "name": {
+            "en": "Mega Emboar ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "274",
+          "name": {
+            "en": "Mega Feraligatr ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Water"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "275",
+          "name": {
+            "en": "Mega Froslass ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Water"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "276",
+          "name": {
+            "en": "Pikachu ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "277",
+          "name": {
+            "en": "Pikachu ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "278",
+          "name": {
+            "en": "Mega Eelektross ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "279",
+          "name": {
+            "en": "Iono's Bellibolt ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "280",
+          "name": {
+            "en": "Lillie's Clefairy ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "281",
+          "name": {
+            "en": "Team Rocket's Mewtwo ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "282",
+          "name": {
+            "en": "Mega Diancie ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "283",
+          "name": {
+            "en": "Mega Hawlucha ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "284",
+          "name": {
+            "en": "Mega Gengar ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "285",
+          "name": {
+            "en": "Mega Scrafty ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "286",
+          "name": {
+            "en": "N's Zoroark ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "287",
+          "name": {
+            "en": "Marnie's Grimmsnarl ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "288",
+          "name": {
+            "en": "Fezandipiti ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Darkness"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "289",
+          "name": {
+            "en": "Steven's Metagross ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Metal"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "290",
+          "name": {
+            "en": "Mega Dragonite ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Dragon"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "291",
+          "name": {
+            "de": "Canary",
+            "en": "Canari",
+            "fr": "Narica",
+            "es": "Naria",
+            "it": "Canary"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "292",
+          "name": {
+            "de": "Lilias Kampfgeist",
+            "en": "Iris's Fighting Spirit",
+            "fr": "Esprit Combatif d'Iris",
+            "es": "Espíritu de Lucha de Iris",
+            "it": "Spirito Combattivo di Iris"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "293",
+          "name": {
+            "de": "Surfer",
+            "en": "Surfer",
+            "fr": "Surfeur",
+            "es": "Surfista",
+            "it": "Surfista"
+          },
+          "type": "trainer",
+          "trainer_type": "Supporter",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/supporter.png"
+        },
+        {
+          "localId": "294",
+          "name": {
+            "en": "Mega Charizard Y ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Fire"
+          ],
+          "image_url": ""
+        },
+        {
+          "localId": "295",
+          "name": {
+            "en": "Mega Dragonite ex"
+          },
+          "type": "pokemon",
+          "pokemon_id": null,
+          "types": [
+            "Dragon"
+          ],
+          "image_url": ""
+        }
+      ]
+    }
+  }
+}

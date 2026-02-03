@@ -37,7 +37,7 @@ Each scope is defined by a YAML configuration file that specifies:
 
 | Scope | Description | Source | Target |
 |-------|-------------|--------|--------|
-| **Pokedex** | National Pokédex, all 9 generations | PokéAPI | data/Pokedex.json |
+| **Pokedex** | National Pokédex, all 9 generations | PokéAPI | data/output/Pokedex.json |
 | **ExGen1_All** | TCG EX Gen 1 - all cards | TCGdex API | data/ExGen1_All.json |
 | **ExGen1_Single** | TCG EX Gen 1 - one per Pokémon | TCGdex API | data/ExGen1_Single.json |
 
@@ -55,15 +55,6 @@ python scripts/fetcher/fetch.py --scope ExGen1_All
 ```bash
 python scripts/pdf/generate_pdf.py --scope Pokedex --language de
 python scripts/pdf/generate_pdf.py --scope ExGen1_Single --language en
-```
-
-### With MCP Server
-
-The same scope names work through the MCP server:
-
-```
-"Fetch Pokedex data"
-"Generate ExGen1_All PDF in German"
 ```
 
 ## Pipeline Steps
@@ -85,5 +76,4 @@ See [../enrichments/README.md](../enrichments/README.md) for enrichment data doc
 
 1. Create a new YAML file in `config/scopes/`
 2. Define the scope name, description, and pipeline
-3. Add to `SCOPE_MAPPING` in `.mcp_server/binder_pokedex_server.py`
-4. Test with fetch script: `python scripts/fetcher/fetch.py --scope YourScope`
+3. Test with fetch script: `python scripts/fetcher/fetch.py --scope YourScope`

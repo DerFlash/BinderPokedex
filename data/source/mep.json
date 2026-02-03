@@ -1,0 +1,168 @@
+{
+  "set_info": {
+    "id": "mep",
+    "name": "MEP Black Star Promos",
+    "release_date": "2025-09-26",
+    "card_count": {
+      "firstEd": 0,
+      "holo": 16,
+      "normal": 0,
+      "official": 0,
+      "reverse": 0,
+      "total": 10
+    },
+    "logo": "",
+    "symbol": "",
+    "serie": "me",
+    "serie_name": "Mega Evolution"
+  },
+  "cards": [
+    {
+      "id": "mep-001",
+      "localId": "001",
+      "name": "Meganium",
+      "image": "",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        154
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "mep-002",
+      "localId": "002",
+      "name": "Inteleon",
+      "image": "",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        818
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "mep-003",
+      "localId": "003",
+      "name": "Alakazam",
+      "image": "",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        65
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "mep-004",
+      "localId": "004",
+      "name": "Lunatone",
+      "image": "",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        337
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "mep-005",
+      "localId": "005",
+      "name": "Drifloon",
+      "image": "",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        425
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "mep-006",
+      "localId": "006",
+      "name": "Drifblim",
+      "image": "",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        426
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "mep-007",
+      "localId": "007",
+      "name": "Psyduck",
+      "image": "",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        54
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "mep-008",
+      "localId": "008",
+      "name": "Golduck",
+      "image": "",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        55
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "mep-009",
+      "localId": "009",
+      "name": "Alakazam",
+      "image": "",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        65
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "mep-010",
+      "localId": "010",
+      "name": "Riolu",
+      "image": "",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        447
+      ],
+      "trainerType": ""
+    }
+  ],
+  "metadata": {
+    "total_cards": 10,
+    "set_id": "mep",
+    "date_fetched": "2026-02-03T08:46:21.272060Z",
+    "source": "TCGdex API v2",
+    "language": "en"
+  }
+}

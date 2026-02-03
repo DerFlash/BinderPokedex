@@ -1,0 +1,31 @@
+scope: SV06
+description: 'TCG Set: Twilight Masquerade (sv06) - Complete set with all cards'
+target_file: data/output/SV06.json
+pipeline:
+- step: validate_pokedex_exists
+  params:
+    pokedex_file: data/output/Pokedex.json
+- step: fetch_tcgdex_set
+  params:
+    set_id: sv06
+    output_file: data/source/sv06.json
+- step: enrich_tcg_names_multilingual
+  params:
+    set_id: sv06
+- step: enrich_tcg_cards_from_pokedex
+  params:
+    pokedex_file: data/output/Pokedex.json
+- step: enrich_special_cards
+  params:
+    images_dir: images/special_cards
+- step: transform_tcg_set
+  params:
+    set_id: SV06
+- step: transform_to_sections_format
+- step: save_output
+  params:
+    output_file: data/output/SV06.json
+- step: cache_pokemon_images
+  params:
+    cache_dir: data/pokemon_images_cache
+    skip_existing: true

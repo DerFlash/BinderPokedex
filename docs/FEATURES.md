@@ -62,8 +62,11 @@
 
 ### Content
 - **Official Pokémon artwork** from PokéAPI
+- **TCG set logos** embedded in PDF subtitles with [image] tag support
 - **Species names** in target language
 - **Variant names** (e.g., "Mega Venusaur" → "Mega Bisaflor" in German)
+- **Multilingual set names** from TCGdex API (5 languages: DE, EN, FR, ES, IT)
+- **Release dates** in set descriptions with localized labels
 - **Type information** with type colors
 - **National Pokédex number**
 - **Height & weight** in metric units
@@ -89,6 +92,7 @@
 - **Image compression:** JPEG quality 85 (balanced for crisp printing)
 - **Image resolution:** Up to 100px on cards, 250px for featured images
 - **In-memory caching:** Efficient batch processing with disk cache
+- **URL image caching:** MD5-based temp directory caching for logos and external images
 
 ## Architecture
 
@@ -108,6 +112,9 @@ scripts/lib/
 ├── pokemon_processor.py     # Data preprocessing
 ├── pokemon_enricher.py      # Language enrichment
 ├── data_storage.py          # File I/O & caching
+├── rendering/
+│   ├── logo_renderer.py     # Logo & image rendering with [image] tag support
+│   └── image_cache.py       # URL image caching with MD5 hashing
 └── form_fetchers/
     ├── __init__.py
     └── mega_evolution_fetcher.py  # Mega form fetching

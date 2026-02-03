@@ -1,0 +1,169 @@
+{
+  "type": "tcg_set",
+  "name": "MEP Black Star Promos",
+  "available_languages": [
+    "de",
+    "en",
+    "fr",
+    "es",
+    "it"
+  ],
+  "serie": "me",
+  "serie_name": "Mega Evolution",
+  "set_id": "MEP",
+  "release_date": "2025-09-26",
+  "logo_urls": {
+    "de": "images/logos/promo/default.png",
+    "en": "images/logos/promo/default.png",
+    "fr": "images/logos/promo/default.png",
+    "es": "images/logos/promo/default.png",
+    "it": "images/logos/promo/default.png"
+  },
+  "sections": {
+    "all": {
+      "title": {
+        "de": "MEP Black Star Promos",
+        "en": "MEP Black Star Promos",
+        "fr": "MEP Black Star Promos",
+        "es": "MEP Black Star Promos",
+        "it": "MEP Black Star Promos"
+      },
+      "description": {
+        "de": "MEP Black Star Promos - Veröffentlichung: 2025-09-26",
+        "en": "MEP Black Star Promos - Release: 2025-09-26",
+        "fr": "MEP Black Star Promos - Sortie: 2025-09-26",
+        "es": "MEP Black Star Promos - Lanzamiento: 2025-09-26",
+        "it": "MEP Black Star Promos - Uscita: 2025-09-26"
+      },
+      "subtitle": {
+        "de": "[image]images/logos/promo/default.png[/image]",
+        "en": "[image]images/logos/promo/default.png[/image]",
+        "fr": "[image]images/logos/promo/default.png[/image]",
+        "es": "[image]images/logos/promo/default.png[/image]",
+        "it": "[image]images/logos/promo/default.png[/image]"
+      },
+      "cards": [
+        {
+          "localId": "001",
+          "name": {
+            "en": "Meganium"
+          },
+          "type": "pokemon",
+          "pokemon_id": 154,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/154.png"
+        },
+        {
+          "localId": "002",
+          "name": {
+            "en": "Inteleon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 818,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/818.png"
+        },
+        {
+          "localId": "003",
+          "name": {
+            "en": "Alakazam"
+          },
+          "type": "pokemon",
+          "pokemon_id": 65,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/65.png"
+        },
+        {
+          "localId": "004",
+          "name": {
+            "en": "Lunatone"
+          },
+          "type": "pokemon",
+          "pokemon_id": 337,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/337.png"
+        },
+        {
+          "localId": "005",
+          "name": {
+            "en": "Drifloon"
+          },
+          "type": "pokemon",
+          "pokemon_id": 425,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/425.png"
+        },
+        {
+          "localId": "006",
+          "name": {
+            "en": "Drifblim"
+          },
+          "type": "pokemon",
+          "pokemon_id": 426,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/426.png"
+        },
+        {
+          "localId": "007",
+          "name": {
+            "en": "Psyduck"
+          },
+          "type": "pokemon",
+          "pokemon_id": 54,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/54.png"
+        },
+        {
+          "localId": "008",
+          "name": {
+            "en": "Golduck"
+          },
+          "type": "pokemon",
+          "pokemon_id": 55,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/55.png"
+        },
+        {
+          "localId": "009",
+          "name": {
+            "en": "Alakazam"
+          },
+          "type": "pokemon",
+          "pokemon_id": 65,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/65.png"
+        },
+        {
+          "localId": "010",
+          "name": {
+            "en": "Riolu"
+          },
+          "type": "pokemon",
+          "pokemon_id": 447,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/447.png"
+        }
+      ]
+    }
+  }
+}

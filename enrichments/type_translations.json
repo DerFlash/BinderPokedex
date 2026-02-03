@@ -1,0 +1,200 @@
+{
+  "Normal": {
+    "ja": "ノーマル",
+    "ko": "노말",
+    "zh_hant": "一般",
+    "fr": "Normal",
+    "de": "Normal",
+    "es": "Normal",
+    "it": "Normale",
+    "en": "Normal",
+    "zh_hans": "一般"
+  },
+  "Fire": {
+    "ja": "ほのお",
+    "ko": "불꽃",
+    "zh_hant": "火",
+    "fr": "Feu",
+    "de": "Feuer",
+    "es": "Fuego",
+    "it": "Fuoco",
+    "en": "Fire",
+    "zh_hans": "火"
+  },
+  "Water": {
+    "ja": "みず",
+    "ko": "물",
+    "zh_hant": "水",
+    "fr": "Eau",
+    "de": "Wasser",
+    "es": "Agua",
+    "it": "Acqua",
+    "en": "Water",
+    "zh_hans": "水"
+  },
+  "Electric": {
+    "ja": "でんき",
+    "ko": "전기",
+    "zh_hant": "電",
+    "fr": "Électrik",
+    "de": "Elektro",
+    "es": "Eléctrico",
+    "it": "Elettro",
+    "en": "Electric",
+    "zh_hans": "电"
+  },
+  "Grass": {
+    "ja": "くさ",
+    "ko": "풀",
+    "zh_hant": "草",
+    "fr": "Plante",
+    "de": "Pflanze",
+    "es": "Planta",
+    "it": "Erba",
+    "en": "Grass",
+    "zh_hans": "草"
+  },
+  "Ice": {
+    "ja": "こおり",
+    "ko": "얼음",
+    "zh_hant": "冰",
+    "fr": "Glace",
+    "de": "Eis",
+    "es": "Hielo",
+    "it": "Ghiaccio",
+    "en": "Ice",
+    "zh_hans": "冰"
+  },
+  "Fighting": {
+    "ja": "かくとう",
+    "ko": "격투",
+    "zh_hant": "格鬥",
+    "fr": "Combat",
+    "de": "Kampf",
+    "es": "Lucha",
+    "it": "Lotta",
+    "en": "Fighting",
+    "zh_hans": "格斗"
+  },
+  "Poison": {
+    "ja": "どく",
+    "ko": "독",
+    "zh_hant": "毒",
+    "fr": "Poison",
+    "de": "Gift",
+    "es": "Veneno",
+    "it": "Veleno",
+    "en": "Poison",
+    "zh_hans": "毒"
+  },
+  "Ground": {
+    "ja": "じめん",
+    "ko": "땅",
+    "zh_hant": "地面",
+    "fr": "Sol",
+    "de": "Boden",
+    "es": "Tierra",
+    "it": "Terra",
+    "en": "Ground",
+    "zh_hans": "地面"
+  },
+  "Flying": {
+    "ja": "ひこう",
+    "ko": "비행",
+    "zh_hant": "飛行",
+    "fr": "Vol",
+    "de": "Flug",
+    "es": "Volador",
+    "it": "Volante",
+    "en": "Flying",
+    "zh_hans": "飞行"
+  },
+  "Psychic": {
+    "ja": "エスパー",
+    "ko": "에스퍼",
+    "zh_hant": "超能力",
+    "fr": "Psy",
+    "de": "Psycho",
+    "es": "Psíquico",
+    "it": "Psico",
+    "en": "Psychic",
+    "zh_hans": "超能力"
+  },
+  "Bug": {
+    "ja": "むし",
+    "ko": "벌레",
+    "zh_hant": "蟲",
+    "fr": "Insecte",
+    "de": "Käfer",
+    "es": "Bicho",
+    "it": "Coleottero",
+    "en": "Bug",
+    "zh_hans": "虫"
+  },
+  "Rock": {
+    "ja": "いわ",
+    "ko": "바위",
+    "zh_hant": "岩石",
+    "fr": "Roche",
+    "de": "Gestein",
+    "es": "Roca",
+    "it": "Roccia",
+    "en": "Rock",
+    "zh_hans": "岩石"
+  },
+  "Ghost": {
+    "ja": "ゴースト",
+    "ko": "고스트",
+    "zh_hant": "幽靈",
+    "fr": "Spectre",
+    "de": "Geist",
+    "es": "Fantasma",
+    "it": "Spettro",
+    "en": "Ghost",
+    "zh_hans": "幽灵"
+  },
+  "Dragon": {
+    "ja": "ドラゴン",
+    "ko": "드래곤",
+    "zh_hant": "龍",
+    "fr": "Dragon",
+    "de": "Drache",
+    "es": "Dragón",
+    "it": "Drago",
+    "en": "Dragon",
+    "zh_hans": "龙"
+  },
+  "Dark": {
+    "ja": "あく",
+    "ko": "악",
+    "zh_hant": "惡",
+    "fr": "Ténèbres",
+    "de": "Unlicht",
+    "es": "Siniestro",
+    "it": "Buio",
+    "en": "Dark",
+    "zh_hans": "恶"
+  },
+  "Steel": {
+    "ja": "はがね",
+    "ko": "강철",
+    "zh_hant": "鋼",
+    "fr": "Acier",
+    "de": "Stahl",
+    "es": "Acero",
+    "it": "Acciaio",
+    "en": "Steel",
+    "zh_hans": "钢"
+  },
+  "Fairy": {
+    "ja": "フェアリー",
+    "ko": "페어리",
+    "zh_hant": "妖精",
+    "fr": "Fée",
+    "de": "Fee",
+    "es": "Hada",
+    "it": "Folletto",
+    "en": "Fairy",
+    "zh_hans": "妖精"
+  }
+}

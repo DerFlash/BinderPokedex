@@ -17,7 +17,7 @@ class PipelineContext:
     
     def __init__(self, config: dict):
         self.config = config
-        self.data: Optional[Dict[str, Any]] = None
+        self.data: Dict[str, Any] = {}  # Initialize as empty dict instead of None
         self.target_file = config.get('target_file')  # Final pipeline output for documentation
         self.metadata: Dict[str, Any] = {}
         self.storage: Dict[str, Any] = {}  # For storing enrichment data like metadata, translations, etc.

@@ -23,10 +23,10 @@ class DataStorage:
             data_dir: Pfad zum data-Verzeichnis. Wenn None, wird data/ neben diesem Script verwendet.
         """
         if data_dir is None:
-            # Standard: data/ Verzeichnis im Projekt-Root
-            # scripts/pdf/lib/data_storage.py -> data/
+            # Standard: data/output/ Verzeichnis im Projekt-Root
+            # scripts/pdf/lib/data_storage.py -> data/output/
             script_dir = Path(__file__).parent.parent.parent.parent
-            data_dir = script_dir / "data"
+            data_dir = script_dir / "data" / "output"
         
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
@@ -51,13 +51,9 @@ class DataStorage:
         if self._consolidated_data is not None:
             return self._consolidated_data
         
-        # Try Pokedex.json first (new naming)
         consolidated_file = self.data_dir / "Pokedex.json"
         if not consolidated_file.exists():
-            # Fallback to pokemon.json (old naming)
-            consolidated_file = self.data_dir / "pokemon.json"
-            if not consolidated_file.exists():
-                return None
+            return None
         
         try:
             with open(consolidated_file, 'r', encoding='utf-8') as f:
@@ -83,7 +79,7 @@ class DataStorage:
         section_key = f'gen{generation}'
         if section_key in consolidated.get('sections', {}):
             section = consolidated['sections'][section_key]
-            return section.get('pokemon', [])
+            return section.get('cards', [])
         
         return []
     
@@ -105,7 +101,8 @@ class DataStorage:
         if section_key in consolidated.get('sections', {}):
             section = consolidated['sections'][section_key]
             # Build generation_info from section metadata
-            pokemon_count = len(section.get('pokemon', []))
+            cards = section.get('cards', [])
+            pokemon_count = len(cards)
             return {
                 'name': section.get('name', f'Generation {generation}'),
                 'region': section.get('region', ''),
