@@ -184,9 +184,6 @@ class TransformClassicExStep(BaseStep):
             
             pokemon_list.append(pokemon_entry)
         
-        # Featured Pokemon will be added by enrich_featured_pokemon step
-        featured = []
-        
         variant_data = {
             'type': 'variant',
             'name': 'Pokémon EX - Generation 1',
@@ -198,12 +195,11 @@ class TransformClassicExStep(BaseStep):
                     'subtitle': variant_meta.get('subtitle', {}),
                     'suffix': '',  # Suffix is stored per Pokemon, not at section level
                     'subtitle': variant_meta.get('subtitle', {}),
-                    'featured_pokemon': featured,
                     'cards': pokemon_list
                 }
             }
         }
         
-        logger.info(f"Created variant with {len(pokemon_list)} Pokemon, featured: {featured}")
+        logger.info(f"Created variant with {len(pokemon_list)} Pokemon")
         
         return variant_data

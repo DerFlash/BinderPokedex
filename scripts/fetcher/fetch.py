@@ -29,7 +29,6 @@ logging.basicConfig(
 from engine import PipelineEngine, StepRegistry
 from steps.fetch_pokeapi_national_dex import FetchPokeAPIStep
 from steps.group_by_generation import GroupByGenerationStep
-from steps.enrich_featured_pokemon import EnrichFeaturedPokemonStep
 from steps.enrich_metadata import EnrichMetadataStep
 from steps.enrich_translations_es_it import EnrichTranslationsESITStep
 from steps.enrich_type_translations import EnrichTypeTranslations
@@ -111,7 +110,6 @@ def create_registry() -> StepRegistry:
     # Register PokeAPI steps
     registry.register('fetch_pokeapi_national_dex', FetchPokeAPIStep)
     registry.register('group_by_generation', GroupByGenerationStep)
-    registry.register('enrich_featured_pokemon', EnrichFeaturedPokemonStep)
     registry.register('enrich_translations_es_it', EnrichTranslationsESITStep)
     registry.register('enrich_type_translations', EnrichTypeTranslations)
     

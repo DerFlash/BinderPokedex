@@ -151,7 +151,6 @@ class GroupByGenerationStep(BaseStep):
                 'color_hex': gen_info['color'],
                 'pokemon_count': len(pokemon_in_gen),
                 'range': list(gen_info['range']),
-                'featured_pokemon': [],  # Will be filled by preserve_featured_pokemon step
                 'cards': pokemon_in_gen,
             }
             total_count += len(pokemon_in_gen)

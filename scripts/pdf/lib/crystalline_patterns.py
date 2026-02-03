@@ -121,7 +121,7 @@ class CrystallinePatterns:
         c.rect(bound_x, bound_y, bound_width, bound_height, fill=True, stroke=False)
     
     @staticmethod
-    def draw_tera_separator(c, page_width, page_height, title_text: str = "", featured_pokemon: list = None):
+    def draw_tera_separator(c, page_width, page_height, title_text: str = ""):
         """
         Draw Tera separator page with rainbow crystalline pattern in upper section.
         Layout matches cover page but with crystalline pattern instead of solid bar.
@@ -131,7 +131,6 @@ class CrystallinePatterns:
             page_width: Page width
             page_height: Page height
             title_text: Optional title text to display
-            featured_pokemon: Optional list of 3 Pokémon dicts to display
         """
         # White background
         c.setFillColor(HexColor("#FFFFFF"))
@@ -168,15 +167,9 @@ class CrystallinePatterns:
         c.setStrokeColor(HexColor("#A335EE"), alpha=0.3)
         c.setLineWidth(1)
         c.line(30 * mm, 50 * mm, page_width - 30 * mm, 50 * mm)
-        
-        # Draw featured Pokémon at bottom (3 images)
-        if featured_pokemon:
-            CrystallinePatterns._draw_featured_pokemon_images(
-                c, page_width, page_height, featured_pokemon, accent_color="#A335EE"
-            )
     
     @staticmethod
-    def draw_mega_separator(c, page_width, page_height, title_text: str = "", featured_pokemon: list = None):
+    def draw_mega_separator(c, page_width, page_height, title_text: str = ""):
         """
         Draw Mega separator page with gold crystalline pattern in upper section.
         Layout matches cover page but with crystalline pattern instead of solid bar.
@@ -186,7 +179,6 @@ class CrystallinePatterns:
             page_width: Page width
             page_height: Page height
             title_text: Optional title text to display
-            featured_pokemon: Optional list of 3 Pokémon dicts to display
         """
         # White background
         c.setFillColor(HexColor("#FFFFFF"))
@@ -223,12 +215,6 @@ class CrystallinePatterns:
         c.setStrokeColor(HexColor("#FFD700"), alpha=0.4)
         c.setLineWidth(1.5)
         c.line(30 * mm, 50 * mm, page_width - 30 * mm, 50 * mm)
-        
-        # Draw featured Pokémon at bottom (3 images)
-        if featured_pokemon:
-            CrystallinePatterns._draw_featured_pokemon_images(
-                c, page_width, page_height, featured_pokemon, accent_color="#FFD700"
-            )
     
     @staticmethod
     def _draw_crystalline_fragments_bounded(c, bound_x, bound_y, bound_width, bound_height,
@@ -304,44 +290,6 @@ class CrystallinePatterns:
             path.lineTo(point[0], point[1])
         path.close()
         c.drawPath(path, stroke=True, fill=True)
-    
-    @staticmethod
-    def _draw_featured_pokemon_images(c, page_width, page_height, featured_pokemon: list, accent_color: str = "#A335EE"):
-        """
-        Draw 3 featured Pokémon images at the bottom of separator page.
-        
-        Args:
-            c: Canvas object
-            page_width: Page width
-            page_height: Page height
-            featured_pokemon: List of up to 3 Pokémon dicts (must have 'image_url' or 'name_en')
-            accent_color: Color for accent elements
-        """
-        if not featured_pokemon or len(featured_pokemon) == 0:
-            return
-        
-        # Show up to 3 Pokémon
-        pokemon_to_show = featured_pokemon[:3]
-        
-        # Positions for 3 Pokémon at bottom
-        spacing = page_width / 4
-        base_y = 20 * mm
-        
-        for idx, pokemon in enumerate(pokemon_to_show):
-            x = spacing * (idx + 1)
-            
-            # Draw small frame box
-            box_size = 25 * mm
-            c.setStrokeColor(HexColor(accent_color), alpha=0.5)
-            c.setLineWidth(1)
-            c.rect(x - box_size / 2, base_y - box_size / 2, box_size, box_size, 
-                   fill=False, stroke=True)
-            
-            # Display Pokémon name (from unified name object structure)
-            pokemon_name = pokemon['name']['en']
-            c.setFont("Helvetica", 7)
-            c.setFillColor(HexColor("#666666"))
-            c.drawCentredString(x, base_y - 15 * mm, pokemon_name[:15])  # Truncate if too long
 
 
 def add_separator_pages_to_pdf(pdf_generator, sections: list, pokemon_by_section: dict):

@@ -107,8 +107,7 @@ class DataStorage:
                 'name': section.get('name', f'Generation {generation}'),
                 'region': section.get('region', ''),
                 'count': pokemon_count,  # Calculated from actual pokemon list
-                'range': section.get('range', [0, 0]),
-                'featured_pokemon': section.get('featured_pokemon', [])
+                'range': section.get('range', [0, 0])
             }
         
         return {}

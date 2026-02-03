@@ -21,11 +21,6 @@ All Pokémon names and type translations are now fetched automatically from Poke
 
 ### Manual Enrichments
 
-#### `featured_pokemon.json`
-- **Purpose:** Highlight specific Pokémon on cover pages
-- **Format:** Generation-based list of Pokémon IDs
-- **Maintained:** Manually
-
 #### `metadata.json`
 - **Purpose:** Generation names, regions, and variant metadata
 - **Maintained:** Manually
@@ -41,7 +36,6 @@ All Pokémon names and type translations are now fetched automatically from Poke
 ```
 enrichments/
 ├── type_translations.json        # API-cached type translations (auto)
-├── featured_pokemon.json         # Featured Pokémon for covers (manual)
 ├── metadata.json                 # Generation/variant metadata (manual)
 ├── variant_descriptions.json     # Variant descriptions (manual)
 └── README.md                     # This file
@@ -101,10 +95,6 @@ The enrichments are automatically loaded during the fetch pipeline:
 # In config/scopes/Pokedex.yaml
 pipeline:
   - step: enrich_type_translations  # Auto-fetches from PokeAPI
-  
-  - step: enrich_featured_pokemon
-    params:
-      featured_file: enrichments/featured_pokemon.json
 ```
 
 ---

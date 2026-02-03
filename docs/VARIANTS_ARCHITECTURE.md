@@ -314,7 +314,6 @@ Output Layer
 **Processing:** `/scripts/lib/`
 - `variant_pdf_generator.py`: Section-basierter PDF-Generator
 - `rendering/card_renderer.py`: Daten-gesteuertes Name-Rendering mit variant_form Support
-- `cover_template.py`: Deckblatt-Generator mit Logo-Tag Support
 
 **Output:** `/output/{language}/`
 - Separates PDF pro Variant-Kategorie und Sprache
@@ -498,7 +497,6 @@ Renders individual Pokémon cards with:
 
 #### CoverTemplate
 
-**Location:** `/scripts/lib/cover_template.py`
 
 Generates variant cover pages with:
 - Variant name and icon
@@ -729,12 +727,10 @@ python scripts/generate_pdf.py --type variant --variant your_type --language all
 ├── lib/
 │   ├── variant_pdf_generator.py      # Variant PDF generation
 │   ├── card_template.py              # Card rendering
-│   ├── cover_template.py             # Cover page rendering
 │   ├── fonts.py                      # Font management (CJK support)
 │   ├── constants.py                  # Page dimensions, margins
 │   ├── pdf_generator.py              # Base PDF generation
 │   ├── pokeapi_client.py            # API interaction
-│   ├── pokemon_processor.py          # Data processing
 │   └── form_fetchers/                # Form-specific data fetchers
 │
 /data/

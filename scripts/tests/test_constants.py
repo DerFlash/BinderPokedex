@@ -79,7 +79,7 @@ def test_generations_structure():
     from data_storage import DataStorage
     storage = DataStorage()
     
-    required_fields = {'name', 'count', 'range', 'region', 'featured_pokemon'}
+    required_fields = {'name', 'count', 'range', 'region'}
     
     for gen_num in range(1, 10):
         gen_data = storage.load_generation_info(gen_num)
@@ -96,10 +96,6 @@ def test_generations_structure():
         range_start, range_end = gen_data['range']
         assert range_start < range_end, f"Gen {gen_num}: invalid range"
         assert gen_data['count'] == range_end - range_start + 1, f"Gen {gen_num}: count mismatch"
-        
-        # Iconic pokemon should be list
-        assert isinstance(gen_data['featured_pokemon'], list), f"Gen {gen_num}: iconic_pokemon must be list"
-        assert len(gen_data['featured_pokemon']) > 0, f"Gen {gen_num}: must have iconic pokemon"
         
         logger.info(f"✓ Gen {gen_num}: {gen_data['name']}")
 

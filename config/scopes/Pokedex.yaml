@@ -18,9 +18,6 @@ pipeline:
     - 9
     output_file: data/source/pokedex.json
 - step: group_by_generation
-- step: enrich_featured_pokemon
-  params:
-    featured_file: enrichments/featured_pokemon.json
 - step: enrich_section_descriptions
   params:
     mode: pokedex

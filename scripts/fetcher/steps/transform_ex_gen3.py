@@ -182,7 +182,6 @@ class TransformScarletVioletEXStep(BaseStep):
                     },
                     'subtitle': variant_meta.get('subtitle', {}),
                     'suffix': '',
-                    'featured_pokemon': [],
                     'cards': normal_pokemon
                 },
                 'mega': {
@@ -211,7 +210,6 @@ class TransformScarletVioletEXStep(BaseStep):
                         'zh_hant': '超級進化'
                     },
                     'suffix': '',
-                    'featured_pokemon': [],
                     'cards': mega_pokemon
                 }
             }

@@ -27,7 +27,6 @@ try:
     from ..utils import TranslationHelper
     from .translation_loader import TranslationLoader
     from .title_renderer import TitleRenderer
-    from .featured_pokemon_renderer import FeaturedPokemonRenderer
     from .footer_renderer import FooterRenderer
 except ImportError:
     # Fallback for direct imports
@@ -36,7 +35,6 @@ except ImportError:
     from scripts.lib.utils import TranslationHelper
     from scripts.lib.rendering.translation_loader import TranslationLoader
     from scripts.lib.rendering.title_renderer import TitleRenderer
-    from scripts.lib.rendering.featured_pokemon_renderer import FeaturedPokemonRenderer
     from scripts.lib.rendering.footer_renderer import FooterRenderer
 
 logger = logging.getLogger(__name__)
@@ -113,7 +111,7 @@ class CoverRenderer:
         Args:
             canvas_obj: ReportLab canvas object
             pokemon_list: List of Pokémon to display
-            cover_data: Section data dict with title, subtitle, color_hex, featured_pokemon, description
+            cover_data: Section data dict with title, subtitle, color_hex, description
             color: Optional color override for header stripe. If None, uses color_hex from cover_data.
         """
         # Get color from cover_data or use provided override
@@ -130,11 +128,6 @@ class CoverRenderer:
         # ===== MIDDLE CONTENT SECTION =====
         self._draw_title_section(canvas_obj, cover_data)
         self._draw_pokemon_count(canvas_obj, len(pokemon_list), cover_data, color)
-        
-        # ===== BOTTOM SECTION: ICONIC POKÉMON =====
-        iconic_ids = cover_data.get('featured_pokemon_ids') or cover_data.get('featured_pokemon', [])
-        if iconic_ids and pokemon_list:
-            self._draw_iconic_pokemon(canvas_obj, iconic_ids, pokemon_list)
         
         # ===== FOOTER =====
         self._draw_footer(canvas_obj)
@@ -232,12 +225,6 @@ class CoverRenderer:
                 text_color=self.style.TEXT_GRAY,
                 language=self.language
             )
-    
-    def _draw_iconic_pokemon(self, canvas_obj, iconic_ids: List[int], pokemon_list: List[Dict]) -> None:
-        """Draw featured Pokémon at the bottom of the cover."""
-        FeaturedPokemonRenderer.draw_iconic_pokemon(
-            canvas_obj, iconic_ids, pokemon_list, self.image_cache, PAGE_WIDTH
-        )
     
     def _draw_footer(self, canvas_obj) -> None:
         """Draw footer using canonical renderer."""

@@ -36,7 +36,6 @@ The Data Fetcher is a config-driven, step-based system for fetching and processi
 - Target hat Anreicherungen und bleibt stabil
 
 **US5: Manuelle Anpassungen erhalten**
-- featured_pokemon, custom fields bleiben erhalten
 - Nur API-generierte Daten werden aktualisiert
 
 ## Architecture: Fetcher Pattern
@@ -88,14 +87,12 @@ scripts/fetcher/
 │   ├── transform_tcg_set.py                 # ✅ Implemented
 │   ├── transform_to_sections_format.py      # ✅ Implemented
 │   ├── group_by_generation.py               # ✅ Implemented
-│   ├── enrich_featured_pokemon.py           # ✅ Implemented
 │   └── enrich_translations_es_it.py         # ✅ Implemented
 ├── lib/
 │   ├── pokeapi_client.py                    # ✅ PokeAPI client
 │   ├── tcg_client.py                        # ✅ Pokémon TCG API client
 │   └── tcgdex_client.py                     # ✅ TCGdex client
 └── data/enrichments/
-    ├── featured_pokemon.json                 # Featured IDs by generation
     ├── translations_es.json                  # Spanish overrides (52)
     └── translations_it.json                  # Italian overrides (52)
 
@@ -159,9 +156,6 @@ data/
 - Overwrites Pokemon names where better translations exist
 - Applied before grouping (on source data)
 
-**enrich_featured_pokemon** - Featured Pokemon
-- Loads: `scripts/fetcher/data/enrichments/featured_pokemon.json`
-- Adds `featured_pokemon` array to each generation/variant section
 - Works for both Pokedex (generations) and Variants (sections)
 - Example: ExGen3 mega section has [6, 94, 150] (Charizard, Gengar, Mewtwo)
 - Applied after grouping (on target data)
@@ -230,9 +224,7 @@ pipeline:
   
   - step: group_by_generation
   
-  - step: enrich_featured_pokemon
     params:
-      featured_file: scripts/fetcher/data/enrichments/featured_pokemon.json
 
 target_file: data/output/Pokedex.json
 source_file: data/source/pokedex.json
@@ -256,9 +248,7 @@ pipeline:
       es_file: scripts/fetcher/data/enrichments/translations_es.json
       it_file: scripts/fetcher/data/enrichments/translations_it.json
   
-  - step: enrich_featured_pokemon
     params:
-      featured_file: scripts/fetcher/data/enrichments/featured_pokemon.json
 
 target_file: data/test_fetch_output.json
 source_file: data/source/test_fetch.json
@@ -275,7 +265,6 @@ source_file: data/source/test_fetch.json
   - Timeout: 10s per request
 
 - **Manual JSON Files** - Curated enrichments
-  - `featured_pokemon.json` - Featured Pokemon by generation
   - `translations_es.json` - Spanish name overrides (52)
   - `translations_it.json` - Italian name overrides (52)
 
@@ -311,7 +300,6 @@ python scripts/fetcher/fetch.py --scope pokedex --dry-run
   1. fetch_pokeapi_national_dex with 1 params
   2. enrich_translations_es_it with 2 params
   3. group_by_generation
-  4. enrich_featured_pokemon with 1 params
 
 🚀 Starting pipeline with 4 steps
 
@@ -344,12 +332,6 @@ python scripts/fetcher/fetch.py --scope pokedex --dry-run
        gen7: 88 Pokemon
        gen8: 96 Pokemon
        gen9: 120 Pokemon
-    ✅ Completed
-
-[4/4] Executing: enrich_featured_pokemon
-    📝 Loading featured Pokemon from: scripts/fetcher/data/enrichments/featured_pokemon.json
-       gen1: 3 featured Pokemon
-    ✅ Added 3 featured Pokemon across 9 generations
     ✅ Completed
 
 💾 Saved final output to: data/output/Pokedex.json

@@ -14,7 +14,6 @@ config/
 enrichments/         # Static enrichment data
 ├── translations_es.json
 ├── translations_it.json
-├── featured_pokemon.json
 └── README.md
 
 data/                # Generated/temporary data
@@ -65,7 +64,6 @@ Scopes define a pipeline of steps that process data. Available steps:
 - `fetch_tcgdex_classic_ex` - Fetch from TCGdex API
 - `enrich_translations_es_it` - Add ES/IT translations
 - `group_by_generation` - Organize by generation
-- `enrich_featured_pokemon` - Add featured Pokémon metadata
 - `validate_pokedex_exists` - Ensure dependency exists
 - `transform_classic_ex_single` - One card per Pokémon
 - `enrich_names_from_pokedex` - Add multilingual names

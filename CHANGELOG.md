@@ -251,7 +251,6 @@ final_german = german_translation + suffix  # "Glurak X"
 - Updated `docs/ARCHITECTURE.md` - Added image cache section
 - Updated `docs/DATA_FETCHER.md` - Removed obsolete artwork options
 - Updated `docs/VARIANTS_ARCHITECTURE.md` - Updated variant counts and features
-- Updated `docs/FEATURED_POKEMON.md` - Corrected ExGen3 featured list
 - Updated `README.md` and `README.de.md` - Added v4.3 release notes
 
 ### Migration from 4.2

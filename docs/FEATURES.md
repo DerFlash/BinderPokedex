@@ -104,13 +104,10 @@ scripts/lib/
 ├── constants.py             # Language configs & URLs
 ├── fonts.py                 # Font management & registration
 ├── card_template.py         # Reusable card rendering
-├── cover_template.py        # Reusable cover page rendering
 ├── text_renderer.py         # Unicode-aware text rendering
 ├── pdf_generator.py         # Generation PDF orchestration
 ├── variant_pdf_generator.py # Variant PDF orchestration
 ├── pokeapi_client.py        # PokéAPI data fetching
-├── pokemon_processor.py     # Data preprocessing
-├── pokemon_enricher.py      # Language enrichment
 ├── data_storage.py          # File I/O & caching
 ├── rendering/
 │   ├── logo_renderer.py     # Logo & image rendering with [image] tag support

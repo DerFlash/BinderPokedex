@@ -20,9 +20,7 @@ scripts/
     ├── image_processor.py         [174 lines] - Font setup and image handling
     ├── pdf_layout.py              [58 lines]  - Layout constants and styling
     ├── pdf_renderer.py            [185 lines] - PDF canvas drawing functions
-    ├── pokeapi_client.py          [52 lines]  - PokéAPI HTTP client
-    ├── pokemon_enricher.py        [137 lines] - ES/IT enrichment processor
-    └── pokemon_processor.py       [157 lines] - Data transformation pipeline
+    └── pokeapi_client.py          [52 lines]  - PokéAPI HTTP client
 ```
 
 ## Module Responsibilities
@@ -105,19 +103,6 @@ from lib import GENERATION_INFO, DataStorage, draw_pokemon_card
 - `PokéAPIClient.fetch_species()` - Fetch species information
 - Handles retries and error handling
 - Implements caching for efficiency
-
-#### `lib/pokemon_processor.py` [157 lines]
-**Purpose**: Transform raw PokéAPI data into desired format
-- `PokémonProcessor.process_generation()` - Process all Pokémon of a generation
-- `PokémonProcessor.download_images()` - Download and optimize images
-- Normalizes data structure
-- Handles multi-language support
-
-#### `lib/pokemon_enricher.py` [137 lines]
-**Purpose**: Enrich Pokémon data with additional translations (ES, IT)
-- `PokémonEnricher.enrich_generation()` - Add ES/IT names and descriptions
-- Manages enrichment data sources
-- Integrates with generation data
 
 #### `lib/pdf_layout.py` [58 lines]
 **Purpose**: Centralized PDF layout constants and styling
@@ -346,8 +331,6 @@ All layout and styling constants in `pdf_layout.py`:
 Each module has a single responsibility:
 - `data_storage` - File I/O
 - `pokeapi_client` - API communication
-- `pokemon_processor` - Data transformation
-- `pokemon_enricher` - Enrichment logic
 - `image_processor` - Image/font handling
 - `pdf_renderer` - PDF rendering
 - `pdf_layout` - Constants and styling

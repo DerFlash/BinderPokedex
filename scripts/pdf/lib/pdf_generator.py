@@ -417,53 +417,6 @@ class PDFGenerator:
         canvas_obj.setLineWidth(1)
         canvas_obj.line(40 * mm, 105 * mm, PAGE_WIDTH - 40 * mm, 105 * mm)
         
-        # ===== BOTTOM SECTION: ICONIC POKÉMON IN A CLEAN ROW =====
-        iconic_ids = get_info.get('featured_pokemon', [])
-        
-        if iconic_ids:
-            pokemon_by_id = {int(p.get('id', p.get('num', '0').lstrip('#'))): p for p in self.pokemon_list}
-            
-            # Calculate positions for 3 Pokémon in a horizontal line
-            pokemon_count = len(iconic_ids[:3])
-            total_width = PAGE_WIDTH - (30 * mm)
-            spacing_per_pokemon = total_width / pokemon_count
-            
-            for idx, poke_id in enumerate(iconic_ids[:3]):
-                # Center position for this Pokémon
-                x_center = 15 * mm + spacing_per_pokemon * (idx + 0.5)
-                
-                # Pokemon dimensions - large and prominent
-                card_width = 65 * mm
-                card_height = 90 * mm
-                x = x_center - card_width / 2
-                y = 10 * mm  # Lower position
-                
-                pokemon = pokemon_by_id.get(poke_id)
-                
-                if pokemon:
-                    # Try to draw image - that's it
-                    image_source = pokemon.get('image_path') or pokemon.get('image_url')
-                    if image_source:
-                        try:
-                            image_to_render = None
-                            if image_source.startswith('http://') or image_source.startswith('https://'):
-                                image_to_render = self.image_cache.get_image(poke_id, url=image_source, timeout=3)
-                            elif Path(image_source).exists():
-                                image_to_render = image_source
-                            
-                            if image_to_render:
-                                img_width = card_width * 0.72
-                                img_height = card_height * 0.72
-                                img_x = x_center - img_width / 2
-                                img_y = y
-                                canvas_obj.drawImage(
-                                    image_to_render, img_x, img_y,
-                                    width=img_width, height=img_height,
-                                    preserveAspectRatio=True
-                                )
-                        except Exception as e:
-                            logger.debug(f"Could not load image for featured Pokémon {poke_id}: {e}")
-        
         # Bottom info - single line with print instructions (multilingual)
         try:
             font_name = FontManager.get_font_name(self.language, bold=False)

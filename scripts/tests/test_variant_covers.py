@@ -14,8 +14,8 @@ from reportlab.pdfgen import canvas as rl_canvas
 from reportlab.lib.units import mm
 from reportlab.lib.pagesizes import A4
 
-from scripts.lib.rendering.variant_cover_renderer import VariantCoverRenderer
-from scripts.lib.fonts import FontManager
+from scripts.pdf.lib.rendering.cover_renderer import CoverRenderer
+from scripts.pdf.lib.fonts import FontManager
 
 
 class TestVariantCoverSubtitles:
@@ -30,8 +30,8 @@ class TestVariantCoverSubtitles:
 
     @pytest.fixture
     def renderer(self):
-        """Create a VariantCoverRenderer for testing."""
-        return VariantCoverRenderer(language='de')
+        """Create a CoverRenderer for testing."""
+        return CoverRenderer(language='de')
 
     @pytest.fixture
     def basic_variant_data(self):
@@ -147,7 +147,7 @@ class TestVariantCoverSubtitles:
         section_title = "EX-Serie (Special Edition)"
         
         for lang in languages:
-            renderer = VariantCoverRenderer(language=lang)
+            renderer = CoverRenderer(language=lang)
             try:
                 renderer.render_variant_cover(
                     canvas,
@@ -195,8 +195,8 @@ class TestVariantCoverWithLogos:
 
     @pytest.fixture
     def renderer(self):
-        """Create a VariantCoverRenderer for testing."""
-        return VariantCoverRenderer(language='de')
+        """Create a CoverRenderer for testing."""
+        return CoverRenderer(language='de')
 
     @pytest.fixture
     def variant_data(self):
@@ -206,8 +206,7 @@ class TestVariantCoverWithLogos:
             'variant_type': 'ex_gen1',
             'variant_display_name': 'Generation 1 EX',
             'region': 'Kanto',
-            'description': 'Test variant',
-            'featured_pokemon_ids': [1, 25, 130]
+            'description': 'Test variant'
         }
 
     def test_ex_logo_rendering(self, canvas, renderer, variant_data):
@@ -293,8 +292,8 @@ class TestVariantCoverEdgeCases:
 
     @pytest.fixture
     def renderer(self):
-        """Create a VariantCoverRenderer for testing."""
-        return VariantCoverRenderer(language='de')
+        """Create a CoverRenderer for testing."""
+        return CoverRenderer(language='de')
 
     @pytest.fixture
     def variant_data(self):

@@ -14,8 +14,7 @@ from reportlab.pdfgen import canvas as rl_canvas
 from reportlab.lib.pagesizes import A4
 from unittest.mock import MagicMock, patch
 
-from scripts.lib.rendering.variant_cover_renderer import VariantCoverRenderer
-from scripts.lib.rendering.cover_renderer import CoverRenderer
+from scripts.pdf.lib.rendering.cover_renderer import CoverRenderer
 
 
 class TestLogoRendering:
@@ -52,7 +51,7 @@ class TestLogoRendering:
         
         This is the main bug: Currently it renders as plain text.
         """
-        renderer = VariantCoverRenderer(language='de')
+        renderer = CoverRenderer(language='de')
         section_title = "EX-Serie (Plasma)"
         
         # Track canvas.drawImage calls
@@ -83,7 +82,7 @@ class TestLogoRendering:
         CRITICAL: When section_title contains "[EX_NEW]",
         it should be replaced with EX_NEW logo image, not shown as text.
         """
-        renderer = VariantCoverRenderer(language='de')
+        renderer = CoverRenderer(language='de')
         section_title = "[EX_NEW] Serie (Karmesin & Purpur+)"
         
         original_drawImage = canvas.drawImage
@@ -114,7 +113,7 @@ class TestLogoRendering:
             'variant_type': 'mega_evolution',
             'region': 'Various',
         }
-        renderer = VariantCoverRenderer(language='de')
+        renderer = CoverRenderer(language='de')
         section_title = "[M] Pokémon Serie"
         
         original_drawImage = canvas.drawImage
@@ -167,7 +166,7 @@ class TestLogoTextLayout:
         2. Text "Serie (Plasma)" is on the right
         3. Both are vertically centered
         """
-        renderer = VariantCoverRenderer(language='de')
+        renderer = CoverRenderer(language='de')
         section_title = "EX-Serie (Plasma)"
         
         draw_calls = {
@@ -245,7 +244,7 @@ class TestLogoFallbacks:
         When logo files are not found, rendering should not crash.
         Instead it should render as plain text.
         """
-        renderer = VariantCoverRenderer(language='de')
+        renderer = CoverRenderer(language='de')
         section_title = "EX-Serie (Plasma)"
         
         # Just verify it doesn't crash when logos are not found
@@ -288,7 +287,7 @@ class TestSeparatorPages:
             for i in range(1, 120)
         ]
         
-        renderer = VariantCoverRenderer(language='de')
+        renderer = CoverRenderer(language='de')
         section_title = "Pokémon-EX Mega"  # Separator title
         
         try:
@@ -312,7 +311,7 @@ class TestSeparatorPages:
         }
         pokemon_list = [{'id': 1, 'name': 'Pokemon', 'type1': 'Normal'}]
         
-        renderer = VariantCoverRenderer(language='de')
+        renderer = CoverRenderer(language='de')
         
         # Both should render without error
         try:

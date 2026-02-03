@@ -146,19 +146,3 @@ class CLIFormatter:
         else:
             cls.success(f"Failed: {failed}")
         cls.section_footer()
-
-
-# Legacy integration functions for gradual migration
-def print_separator() -> None:
-    """Print a separator line. (Legacy - prefer CLIFormatter.section_header)"""
-    print(f"\n{'=' * 80}")
-
-
-def print_section_header(title: str) -> None:
-    """Print section header. (Legacy - prefer CLIFormatter.section_header)"""
-    CLIFormatter.section_header(title)
-
-
-def print_section_footer() -> None:
-    """Print section footer. (Legacy - prefer CLIFormatter.section_footer)"""
-    CLIFormatter.section_footer()

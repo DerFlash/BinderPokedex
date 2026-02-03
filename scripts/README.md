@@ -23,7 +23,6 @@ scripts/
 │   │   ├── base.py
 │   │   ├── fetch_pokeapi_national_dex.py
 │   │   ├── group_by_generation.py
-│   │   ├── enrich_featured_pokemon.py
 │   │   └── enrich_translations_es_it.py
 │   ├── lib/                   # Fetcher libraries
 │   │   └── pokeapi_client.py
@@ -202,7 +201,6 @@ The fetcher uses a **config-driven step-based architecture** with YAML configura
 1. **fetch_pokeapi_national_dex** - Fetch Pokémon data from PokeAPI
 2. **group_by_generation** - Transform flat list to generation-grouped structure
 3. **enrich_translations_es_it** - Add Spanish/Italian name overrides
-4. **enrich_featured_pokemon** - Add featured Pokémon IDs per generation
 
 ### Configuration
 
@@ -224,10 +222,6 @@ pipeline:
       it_file: scripts/fetcher/data/enrichments/translations_it.json
   
   - step: group_by_generation
-  
-  - step: enrich_featured_pokemon
-    params:
-      featured_file: scripts/fetcher/data/enrichments/featured_pokemon.json
 
 target_file: data/output/Pokedex.json
 source_file: data/source/pokedex.json
@@ -310,9 +304,6 @@ Fetches Pokémon data from PokeAPI with generation filtering.
 #### **group_by_generation.py** - Data Transformation
 Converts flat Pokemon list to generation-grouped structure.
 
-#### **enrich_featured_pokemon.py** - Featured Pokemon Enrichment
-Adds featured_pokemon arrays from JSON file.
-
 #### **enrich_translations_es_it.py** - Translation Enrichment
 Overwrites ES/IT names with better translations.
 
@@ -353,8 +344,6 @@ Enhanced source data
 [group_by_generation]
    ↓
 Grouped by generation
-   ↓
-[enrich_featured_pokemon]
    ↓
 data/output/Pokedex.json (final format)
    ↓

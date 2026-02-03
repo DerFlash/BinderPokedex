@@ -15,11 +15,6 @@ pipeline:
 - step: enrich_names_from_pokedex
   params:
     pokedex_file: data/output/Pokedex.json
-- step: enrich_featured_pokemon
-  params:
-    featured_file: enrichments/featured_pokemon.json
-    mode: variant
-    variant_name: ExGen3
 - step: enrich_section_descriptions
   params:
     mode: variant
