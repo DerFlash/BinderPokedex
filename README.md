@@ -16,6 +16,25 @@ Print 1,025+ Pokémon across 9 generations in 9 languages. All variants, all for
 
 ---
 
+## ✨ Key Features
+
+- **9 Languages** 🌍 with proper CJK support (Japanese, Korean, Chinese)
+- **1,025+ Pokémon** across all 9 generations (Kanto → Paldea) in National Pokédex
+- **Official artwork** from PokéAPI and TCGdex - authentic images from games and TCG
+- **3×3 card layout** (9 per page) - perfect for standard binder sheets
+- **Generation & variant covers** with beautiful multilingual design and localized logos
+- **Complete TCG Support** 🎴
+  - **3 EX Generations:** ExGen1 (2003-2007), ExGen2 (2012-2016), ExGen3 (2023+)
+  - **21 Modern Sets:** Full Scarlet & Violet era (SV01-SV10 + specials)
+  - **Paldea Era:** ME01, ME02, ME02.5, MEP
+  - Auto-discovery and batch generation
+- **Scope-Based System** with 25 total scopes
+- **Sectioned PDFs** with themed dividers and featured Pokémon headers
+- **Modular pipeline** for data fetching with flexible configuration
+- **Print-ready A4** - just download, print, and bind! 📎
+
+---
+
 ## 📥 Download Ready-Made PDFs
 
 ### For End Users - Just Download & Print!
@@ -86,25 +105,6 @@ Print 1,025+ Pokémon across 9 generations in 9 languages. All variants, all for
 - Batch PDF generation with `--scope all`
 
 📄 **[Full Release Notes & Changelog](CHANGELOG.md)**
-
----
-
-## ✨ Key Features
-
-- **9 Languages** 🌍 with proper CJK support (Japanese, Korean, Chinese)
-- **1,025+ Pokémon** across all 9 generations (Kanto → Paldea) in National Pokédex
-- **Official artwork** from PokéAPI and TCGdex - authentic images from games and TCG
-- **3×3 card layout** (9 per page) - perfect for standard binder sheets
-- **Generation & variant covers** with beautiful multilingual design and localized logos
-- **Complete TCG Support** 🎴
-  - **3 EX Generations:** ExGen1 (2003-2007), ExGen2 (2012-2016), ExGen3 (2023+)
-  - **21 Modern Sets:** Full Scarlet & Violet era (SV01-SV10 + specials)
-  - **Paldea Era:** ME01, ME02, ME02.5, MEP
-  - Auto-discovery and batch generation
-- **Scope-Based System** with 25 total scopes
-- **Sectioned PDFs** with themed dividers and featured Pokémon headers
-- **Modular pipeline** for data fetching with flexible configuration
-- **Print-ready A4** - just download, print, and bind! 📎
 
 ---
 

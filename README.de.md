@@ -16,6 +16,25 @@ Drucke 1.025+ Pokémon über 9 Generationen in 9 Sprachen. Alle Varianten, alle 
 
 ---
 
+## ✨ Hauptfeatures
+
+- **9 Sprachen** 🌍 mit vollständiger CJK-Unterstützung (Japanisch, Koreanisch, Chinesisch)
+- **1.025+ Pokémon** über alle 9 Generationen (Kanto → Paldea) im National Pokédex
+- **Offizielle Artwork** von PokéAPI und TCGdex - authentische Bilder aus Spielen und TCG
+- **3×3 Kartenlayout** (9 pro Seite) - perfekt für Standard-Binderblätter
+- **Generations- und Varianten-Cover** mit wunderschönem mehrsprachigem Design und lokalisierten Logos
+- **Komplette TCG-Unterstützung** 🎴
+  - **3 EX-Generationen:** ExGen1 (2003-2007), ExGen2 (2012-2016), ExGen3 (2023+)
+  - **21 Moderne Sets:** Komplette Karmesin & Purpur-Ära (SV01-SV10 + Spezial-Sets)
+  - **Paldea-Ära:** ME01, ME02, ME02.5, MEP
+  - Auto-Discovery und Batch-Generierung
+- **Scope-basiertes System** mit 25 Scopes insgesamt
+- **Strukturierte PDFs** mit thematischen Trennern und Featured-Pokémon-Headern
+- **Modulare Pipeline** zum Daten-Fetching mit flexibler Konfiguration
+- **Druckfertig A4** - einfach laden, drucken und binden! 📎
+
+---
+
 ## 📥 Fertige PDFs Herunterladen
 
 ### Für normale Nutzer - einfach laden & drucken!
@@ -77,25 +96,6 @@ Drucke 1.025+ Pokémon über 9 Generationen in 9 Sprachen. Alle Varianten, alle 
 - Batch-PDF-Generierung mit `--scope all`
 
 📄 **[Vollständige Release Notes & Changelog](CHANGELOG.md)**
-
----
-
-## ✨ Hauptfeatures
-
-- **9 Sprachen** 🌍 mit vollständiger CJK-Unterstützung (Japanisch, Koreanisch, Chinesisch)
-- **1.025+ Pokémon** über alle 9 Generationen (Kanto → Paldea) im National Pokédex
-- **Offizielle Artwork** von PokéAPI und TCGdex - authentische Bilder aus Spielen und TCG
-- **3×3 Kartenlayout** (9 pro Seite) - perfekt für Standard-Binderblätter
-- **Generations- und Varianten-Cover** mit wunderschönem mehrsprachigem Design und lokalisierten Logos
-- **Komplette TCG-Unterstützung** 🎴
-  - **3 EX-Generationen:** ExGen1 (2003-2007), ExGen2 (2012-2016), ExGen3 (2023+)
-  - **21 Moderne Sets:** Komplette Karmesin & Purpur-Ära (SV01-SV10 + Spezial-Sets)
-  - **Paldea-Ära:** ME01, ME02, ME02.5, MEP
-  - Auto-Discovery und Batch-Generierung
-- **Scope-basiertes System** mit 25 Scopes insgesamt
-- **Strukturierte PDFs** mit thematischen Trennern und Featured-Pokémon-Headern
-- **Modulare Pipeline** zum Daten-Fetching mit flexibler Konfiguration
-- **Druckfertig A4** - einfach laden, drucken und binden! 📎
 
 ---
 
