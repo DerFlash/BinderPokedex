@@ -2753,6 +2753,38 @@
           ],
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1024.png"
         }
+      ],
+      "featured_elements": [
+        {
+          "pokemon_id": 906,
+          "pokemon_name": "Sprigatito",
+          "card_id": "svp-001",
+          "set_name": "SVP Black Star Promos",
+          "image_url": "https://assets.tcgdex.net/en/sv/svp/001/high.png",
+          "local_image_path": "data/section_artwork/pokemon_906_svp-001.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 909,
+          "pokemon_name": "Fuecoco",
+          "card_id": "svp-002",
+          "set_name": "SVP Black Star Promos",
+          "image_url": "https://assets.tcgdex.net/en/sv/svp/002/high.png",
+          "local_image_path": "data/section_artwork/pokemon_909_svp-002.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 912,
+          "pokemon_name": "Quaxly",
+          "card_id": "svp-003",
+          "set_name": "SVP Black Star Promos",
+          "image_url": "https://assets.tcgdex.net/en/sv/svp/003/high.png",
+          "local_image_path": "data/section_artwork/pokemon_912_svp-003.png",
+          "rarity": null,
+          "hp": null
+        }
       ]
     }
   }

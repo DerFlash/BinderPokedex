@@ -2915,6 +2915,38 @@
           "pokemon_id": null,
           "image_url": "images/special_cards/energy.png"
         }
+      ],
+      "featured_elements": [
+        {
+          "pokemon_id": 810,
+          "pokemon_name": "Grookey",
+          "card_id": "sv06-014",
+          "set_name": "Twilight Masquerade",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv06/014/high.png",
+          "local_image_path": "data/section_artwork/pokemon_810_sv06-014.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 390,
+          "pokemon_name": "Chimchar",
+          "card_id": "sv06-031",
+          "set_name": "Twilight Masquerade",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv06/031/high.png",
+          "local_image_path": "data/section_artwork/pokemon_390_sv06-031.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 656,
+          "pokemon_name": "Froakie",
+          "card_id": "sv06-056",
+          "set_name": "Twilight Masquerade",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv06/056/high.png",
+          "local_image_path": "data/section_artwork/pokemon_656_sv06-056.png",
+          "rarity": null,
+          "hp": null
+        }
       ]
     }
   }

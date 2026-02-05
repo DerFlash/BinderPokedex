@@ -2235,6 +2235,38 @@
           "pokemon_id": null,
           "image_url": "images/special_cards/tool.png"
         }
+      ],
+      "featured_elements": [
+        {
+          "pokemon_id": 251,
+          "pokemon_name": "Celebi",
+          "card_id": "sv07-004",
+          "set_name": "Stellar Crown",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv07/004/high.png",
+          "local_image_path": "data/section_artwork/pokemon_251_sv07-004.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 643,
+          "pokemon_name": "Reshiram",
+          "card_id": "sv07-022",
+          "set_name": "Stellar Crown",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv07/022/high.png",
+          "local_image_path": "data/section_artwork/pokemon_643_sv07-022.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 813,
+          "pokemon_name": "Scorbunny",
+          "card_id": "sv07-026",
+          "set_name": "Stellar Crown",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv07/026/high.png",
+          "local_image_path": "data/section_artwork/pokemon_813_sv07-026.png",
+          "rarity": null,
+          "hp": null
+        }
       ]
     }
   }

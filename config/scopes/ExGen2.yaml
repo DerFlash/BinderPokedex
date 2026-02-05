@@ -7,6 +7,10 @@ pipeline:
 - step: validate_pokedex_exists
   params:
     pokedex_file: data/output/Pokedex.json
+- step: load_ex_cards
+  params:
+    source_file: data/source/tcg_bw_ex.json
+    context_key: tcg_bw_xy_ex_cards
 - step: fetch_tcgdex_ex_gen2
   params:
     language: en
@@ -20,6 +24,11 @@ pipeline:
     mode: variant
     variant_name: ExGen2
     descriptions_file: enrichments/variant_descriptions.json
+- step: enrich_featured_elements
+  params:
+    max_cards: 3
+    force: false
+    cache_dir: data/section_artwork
 - step: save_output
   params:
     output_file: data/output/ExGen2.json

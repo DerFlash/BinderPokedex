@@ -54,11 +54,11 @@
 
 ### Layout
 - **3×3 card grid** (9 cards per page)
-- **Cover page** for each generation/variant with featured Pokémon
+- **Cover page** for each generation/variant with featured elements
 - **A4 format** (210 × 297 mm)
 - **Print-ready** with precise measurements
 - **Type-based header colors** with transparency
-- **Featured Pokémon images** on cover (up to 3 iconic species)
+- **Featured Elements** on cover (up to 3 iconic Pokémon with trading cards or artwork)
 
 ### Content
 - **Official Pokémon artwork** from PokéAPI

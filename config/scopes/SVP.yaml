@@ -1,66 +1,39 @@
-# TCG Set: SVP Black Star Promos (svp)
-#
-# Fetches the complete svp "SVP Black Star Promos" set from TCGdex API
-# and transforms it to target format for PDF generation.
-#
-# This is a COMPLETE SET (not a variant), including:
-# - All Pokemon cards
-# - Trainer cards
-# - Energy cards
-#
-# Set Info:
-# - ID: svp
-# - Name: SVP Black Star Promos (DE) / SVP Black Star Promos (EN)
-# - Release: 2023-03-31
-# - Series: Scarlet & Violet (sv)
-# - Cards: 219
-
 scope: SVP
-description: "TCG Set: SVP Black Star Promos (svp) - Complete set with all cards"
+description: 'TCG Set: SVP Black Star Promos (svp) - Complete set with all cards'
 target_file: data/output/SVP.json
-
 pipeline:
-  # Step 1: Validate that Pokedex exists (required for Pokemon name mapping)
-  - step: validate_pokedex_exists
-    params:
-      pokedex_file: data/output/Pokedex.json
-
-  # Step 2: Fetch set data from TCGdex API (English only - master language)
-  - step: fetch_tcgdex_set
-    params:
-      set_id: svp
-      output_file: data/source/svp.json
-
-  # Step 3: Enrich with multilingual names from TCGdex (9 API calls, one per language)
-  - step: enrich_tcg_names_multilingual
-    params:
-      set_id: svp
-
-  # Step 4: Enrich cards with Pokemon IDs and types from Pokedex
-  - step: enrich_tcg_cards_from_pokedex
-    params:
-      pokedex_file: data/output/Pokedex.json
-
-  # Step 5: Enrich special cards with generic type images
-  - step: enrich_special_cards
-    params:
-      images_dir: images/special_cards
-
-  # Step 6: Transform to target format (combines raw source + context enrichments)
-  - step: transform_tcg_set
-    params:
-      set_id: SVP
-
-  # Step 7: Transform to sections format for PDF generation
-  - step: transform_to_sections_format
-
-  # Step 8: Save output to disk
-  - step: save_output
-    params:
-      output_file: data/output/SVP.json
-
-  # Step 9: Cache Pokemon images
-  - step: cache_pokemon_images
-    params:
-      cache_dir: data/pokemon_images_cache
-      skip_existing: true
+- step: validate_pokedex_exists
+  params:
+    pokedex_file: data/output/Pokedex.json
+- step: load_tcg_set
+  params:
+    source_file: data/source/svp.json
+- step: fetch_tcgdex_set
+  params:
+    set_id: svp
+    output_file: data/source/svp.json
+- step: enrich_tcg_names_multilingual
+  params:
+    set_id: svp
+- step: enrich_tcg_cards_from_pokedex
+  params:
+    pokedex_file: data/output/Pokedex.json
+- step: enrich_special_cards
+  params:
+    images_dir: images/special_cards
+- step: transform_tcg_set
+  params:
+    set_id: SVP
+- step: transform_to_sections_format
+- step: enrich_featured_elements
+  params:
+    max_cards: 3
+    force: false
+    cache_dir: data/section_artwork
+- step: save_output
+  params:
+    output_file: data/output/SVP.json
+- step: cache_pokemon_images
+  params:
+    cache_dir: data/pokemon_images_cache
+    skip_existing: true

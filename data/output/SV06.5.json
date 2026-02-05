@@ -1312,6 +1312,38 @@
           "pokemon_id": null,
           "image_url": "images/special_cards/energy.png"
         }
+      ],
+      "featured_elements": [
+        {
+          "pokemon_id": 722,
+          "pokemon_name": "Rowlet",
+          "card_id": "sv06.5-003",
+          "set_name": "Shrouded Fable",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv06.5/003/high.png",
+          "local_image_path": "data/section_artwork/pokemon_722_sv06.5-003.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 717,
+          "pokemon_name": "Yveltal",
+          "card_id": "sv06.5-035",
+          "set_name": "Shrouded Fable",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv06.5/035/high.png",
+          "local_image_path": "data/section_artwork/pokemon_717_sv06.5-035.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 649,
+          "pokemon_name": "Genesect",
+          "card_id": "sv06.5-040",
+          "set_name": "Shrouded Fable",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv06.5/040/high.png",
+          "local_image_path": "data/section_artwork/pokemon_649_sv06.5-040.png",
+          "rarity": null,
+          "hp": null
+        }
       ]
     }
   }

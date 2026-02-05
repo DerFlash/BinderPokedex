@@ -3243,6 +3243,38 @@
           "pokemon_id": null,
           "image_url": "images/special_cards/energy.png"
         }
+      ],
+      "featured_elements": [
+        {
+          "pokemon_id": 250,
+          "pokemon_name": "Ho-Oh",
+          "card_id": "sv08-019",
+          "set_name": "Surging Sparks",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv08/019/high.png",
+          "local_image_path": "data/section_artwork/pokemon_250_sv08-019.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 909,
+          "pokemon_name": "Fuecoco",
+          "card_id": "sv08-029",
+          "set_name": "Surging Sparks",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv08/029/high.png",
+          "local_image_path": "data/section_artwork/pokemon_909_sv08-029.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 646,
+          "pokemon_name": "Black Kyurem",
+          "card_id": "sv08-048",
+          "set_name": "Surging Sparks",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv08/048/high.png",
+          "local_image_path": "data/section_artwork/pokemon_646_sv08-048.png",
+          "rarity": null,
+          "hp": null
+        }
       ]
     }
   }

@@ -3417,6 +3417,38 @@
           "pokemon_id": null,
           "image_url": "images/special_cards/energy.png"
         }
+      ],
+      "featured_elements": [
+        {
+          "pokemon_id": 909,
+          "pokemon_name": "Fuecoco",
+          "card_id": "sv04-023",
+          "set_name": "Paradox Rift",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv04/023/high.png",
+          "local_image_path": "data/section_artwork/pokemon_909_sv04-023.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 484,
+          "pokemon_name": "Palkia",
+          "card_id": "sv04-040",
+          "set_name": "Paradox Rift",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv04/040/high.png",
+          "local_image_path": "data/section_artwork/pokemon_484_sv04-040.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 150,
+          "pokemon_name": "Mewtwo",
+          "card_id": "sv04-058",
+          "set_name": "Paradox Rift",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv04/058/high.png",
+          "local_image_path": "data/section_artwork/pokemon_150_sv04-058.png",
+          "rarity": null,
+          "hp": null
+        }
       ]
     }
   }

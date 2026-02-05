@@ -2421,6 +2421,38 @@
           "pokemon_id": null,
           "image_url": "images/special_cards/energy.png"
         }
+      ],
+      "featured_elements": [
+        {
+          "pokemon_id": 906,
+          "pokemon_name": "Sprigatito",
+          "card_id": "sv09-016",
+          "set_name": "Journey Together",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv09/016/high.png",
+          "local_image_path": "data/section_artwork/pokemon_906_sv09-016.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 255,
+          "pokemon_name": "Torchic",
+          "card_id": "sv09-022",
+          "set_name": "Journey Together",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv09/022/high.png",
+          "local_image_path": "data/section_artwork/pokemon_255_sv09-022.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 643,
+          "pokemon_name": "Reshiram",
+          "card_id": "sv09-030",
+          "set_name": "Journey Together",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv09/030/high.png",
+          "local_image_path": "data/section_artwork/pokemon_643_sv09-030.png",
+          "rarity": null,
+          "hp": null
+        }
       ]
     }
   }

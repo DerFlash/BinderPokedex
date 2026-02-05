@@ -185,7 +185,8 @@ class VariantPDFGenerator:
                 section_title_dict=section_title_data,
                 section_subtitle_dict=section_subtitle_data,
                 section_pokemon=section_pokemon,
-                section_description=section.get('description', {})
+                section_description=section.get('description', {}),
+                section_data=section  # Pass full section data including featured_elements
             )
             c.showPage()
             
@@ -218,7 +219,8 @@ class VariantPDFGenerator:
     def _draw_section_cover(self, c, section_title_str: str, section_subtitle_str: str, color: str, 
                            section_title_dict: dict = None, section_subtitle_dict: dict = None, 
                            section_pokemon: list = None,
-                           section_description: dict = None):
+                           section_description: dict = None,
+                           section_data: dict = None):
         """
         Draw a cover page for a section.
         
@@ -230,6 +232,8 @@ class VariantPDFGenerator:
             section_title_dict: Full multilingual title dict for override
             section_subtitle_dict: Full multilingual subtitle dict for override
             section_pokemon: The pokemon in this section (for featured pokemon lookup)
+            section_description: Section description dict
+            section_data: Full section data dict (including featured_elements)
         """
         # Create cover data with section-specific title and subtitle
         cover_data = dict(self.variant_data)
@@ -245,6 +249,12 @@ class VariantPDFGenerator:
         # Override description with section-specific description
         if section_description:
             cover_data['description'] = section_description
+        
+        # Add featured_elements from section_data (check both old and new names)
+        if section_data and 'featured_elements' in section_data:
+            cover_data['featured_elements'] = section_data['featured_elements']
+        elif section_data and 'featured_cards' in section_data:  # Backward compatibility
+            cover_data['featured_elements'] = section_data['featured_cards']
         
         # Use unified renderer for section cover pages
         # Pass section_pokemon to allow rendering featured pokemon correctly

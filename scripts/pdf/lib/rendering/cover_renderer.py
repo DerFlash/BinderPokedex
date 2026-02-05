@@ -70,9 +70,9 @@ class CoverStyle:
     TITLE_Y_OFFSET = 30 * mm
     GENERATION_Y_OFFSET = 55 * mm
     REGION_Y_OFFSET = 65 * mm
-    POKEDEX_RANGE_Y = 110 * mm     # Pokédex ID range (optional, above count)
-    POKEMOM_COUNT_Y = 100 * mm     # Pokémon count (always above decorative line)
-    DECORATIVE_LINE_Y = 95 * mm    # Decorative line position
+    POKEDEX_RANGE_Y = 160 * mm     # Pokédex ID range (optional, above count)
+    POKEMOM_COUNT_Y = 150 * mm     # Pokémon count (always above decorative line)
+    DECORATIVE_LINE_Y = 145 * mm   # Decorative line position
     ICONIC_POKEMON_Y = 10 * mm
     FOOTER_Y = 2.5 * mm
     
@@ -111,7 +111,7 @@ class CoverRenderer:
         Args:
             canvas_obj: ReportLab canvas object
             pokemon_list: List of Pokémon to display
-            cover_data: Section data dict with title, subtitle, color_hex, description
+            cover_data: Section data dict with title, subtitle, color_hex, description, featured_elements
             color: Optional color override for header stripe. If None, uses color_hex from cover_data.
         """
         # Get color from cover_data or use provided override
@@ -128,6 +128,9 @@ class CoverRenderer:
         # ===== MIDDLE CONTENT SECTION =====
         self._draw_title_section(canvas_obj, cover_data)
         self._draw_pokemon_count(canvas_obj, len(pokemon_list), cover_data, color)
+        
+        # ===== FEATURED CARDS =====
+        self._draw_featured_elements(canvas_obj, cover_data)
         
         # ===== FOOTER =====
         self._draw_footer(canvas_obj)
@@ -225,6 +228,58 @@ class CoverRenderer:
                 text_color=self.style.TEXT_GRAY,
                 language=self.language
             )
+    
+    def _draw_featured_elements(self, canvas_obj, cover_data: Dict) -> None:
+        """Draw featured element images in the lower section of the cover."""
+        # Support both old and new field names for backward compatibility
+        featured_elements = cover_data.get('featured_elements') or cover_data.get('featured_cards', [])
+        
+        if not featured_elements:
+            return
+        
+        # Position for featured elements (lower section, above footer)
+        card_y_base = 35 * mm
+        card_width = 45 * mm
+        card_height = 63 * mm
+        
+        num_elements = len(featured_elements)
+        
+        # Calculate spacing to center elements horizontally
+        if num_elements == 1:
+            spacing = 0
+            start_x = (PAGE_WIDTH - card_width) / 2
+        elif num_elements == 2:
+            spacing = 10 * mm
+            total_width = 2 * card_width + spacing
+            start_x = (PAGE_WIDTH - total_width) / 2
+        else:  # 3 elements
+            spacing = 8 * mm
+            total_width = 3 * card_width + 2 * spacing
+            start_x = (PAGE_WIDTH - total_width) / 2
+        
+        # Draw each featured element
+        for i, element in enumerate(featured_elements[:3]):  # Max 3 elements
+            element_x = start_x + i * (card_width + spacing)
+            
+            # Get local image path
+            image_path = element.get('local_image_path')
+            if not image_path or not Path(image_path).exists():
+                logger.warning(f"Featured element image not found: {image_path}")
+                continue
+            
+            try:
+                # Draw element image
+                canvas_obj.drawImage(
+                    str(image_path),
+                    element_x,
+                    card_y_base,
+                    width=card_width,
+                    height=card_height,
+                    preserveAspectRatio=True,
+                    mask='auto'
+                )
+            except Exception as e:
+                logger.error(f"Failed to draw featured element image {image_path}: {e}")
     
     def _draw_footer(self, canvas_obj) -> None:
         """Draw footer using canonical renderer."""

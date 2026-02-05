@@ -28,11 +28,6 @@
         "zh_hant": "[EX]系列（來自下一個命運）"
       },
       "suffix": "",
-      "featured_pokemon": [
-        150,
-        249,
-        646
-      ],
       "cards": [
         {
           "pokemon_id": 3,
@@ -3598,7 +3593,39 @@
         "ko": "[EX] 시리즈 (BW & XY, 2012–2016) • 포켓몬 EX 기본 형태",
         "zh_hans": "[EX] 系列 (BW & XY, 2012–2016) • 宝可梦EX基本形态",
         "zh_hant": "[EX] 系列 (BW & XY, 2012–2016) • 寶可夢EX基本形態"
-      }
+      },
+      "featured_elements": [
+        {
+          "pokemon_id": 150,
+          "pokemon_name": "Mewtwo",
+          "card_id": "bw4-54",
+          "set_name": "Next Destinies",
+          "image_url": "https://assets.tcgdex.net/en/bw/bw4/54/high.png",
+          "local_image_path": "data/section_artwork/pokemon_150_bw4-54.png",
+          "rarity": "Rare",
+          "hp": 170
+        },
+        {
+          "pokemon_id": 151,
+          "pokemon_name": "Mew",
+          "card_id": "bw6-46",
+          "set_name": "Dragons Exalted",
+          "image_url": "https://assets.tcgdex.net/en/bw/bw6/46/high.png",
+          "local_image_path": "data/section_artwork/pokemon_151_bw6-46.png",
+          "rarity": "Rare",
+          "hp": 120
+        },
+        {
+          "pokemon_id": 249,
+          "pokemon_name": "Lugia",
+          "card_id": "xy7-68",
+          "set_name": "Ancient Origins",
+          "image_url": "https://assets.tcgdex.net/en/xy/xy7/68/high.png",
+          "local_image_path": "data/section_artwork/pokemon_249_xy7-68.png",
+          "rarity": "Ultra Rare",
+          "hp": 170
+        }
+      ]
     },
     "mega": {
       "section_id": "mega",
@@ -3626,11 +3653,6 @@
         "zh_hant": "超級進化"
       },
       "suffix": "",
-      "featured_pokemon": [
-        6,
-        150,
-        384
-      ],
       "cards": [
         {
           "pokemon_id": 3,
@@ -4643,7 +4665,39 @@
         "ko": "XY 시리즈 (2014–2016) • 메가진화 포켓몬 EX",
         "zh_hans": "XY 系列 (2014–2016) • 超级进化宝可梦EX",
         "zh_hant": "XY 系列 (2014–2016) • 超級進化寶可夢EX"
-      }
+      },
+      "featured_elements": [
+        {
+          "pokemon_id": 150,
+          "pokemon_name": "Mewtwo",
+          "card_id": "xy8-63",
+          "set_name": "BREAKthrough",
+          "image_url": "https://assets.tcgdex.net/en/xy/xy8/63/high.png",
+          "local_image_path": "data/section_artwork/pokemon_150_xy8-63.png",
+          "rarity": "Ultra Rare",
+          "hp": 230
+        },
+        {
+          "pokemon_id": 384,
+          "pokemon_name": "Rayquaza",
+          "card_id": "xy7-98",
+          "set_name": "Ancient Origins",
+          "image_url": "https://assets.tcgdex.net/en/xy/xy7/98/high.png",
+          "local_image_path": "data/section_artwork/pokemon_384_xy7-98.png",
+          "rarity": "Secret Rare",
+          "hp": 220
+        },
+        {
+          "pokemon_id": 381,
+          "pokemon_name": "Latios",
+          "card_id": "xy6-59",
+          "set_name": "Roaring Skies",
+          "image_url": "https://assets.tcgdex.net/en/xy/xy6/59/high.png",
+          "local_image_path": "data/section_artwork/pokemon_381_xy6-59.png",
+          "rarity": "Ultra Rare",
+          "hp": 220
+        }
+      ]
     },
     "primal": {
       "section_id": "primal",
@@ -4671,10 +4725,6 @@
         "zh_hant": "原始回歸"
       },
       "suffix": "",
-      "featured_pokemon": [
-        382,
-        383
-      ],
       "cards": [
         {
           "pokemon_id": 382,
@@ -4761,7 +4811,29 @@
         "ko": "XY 시리즈 (2014–2015) • 원시회귀: 그란돈 & 가이오가",
         "zh_hans": "XY 系列 (2014–2015) • 原始回归：固拉多 & 盖欧卡",
         "zh_hant": "XY 系列 (2014–2015) • 原始回歸：固拉多 & 蓋歐卡"
-      }
+      },
+      "featured_elements": [
+        {
+          "pokemon_id": 382,
+          "pokemon_name": "Kyogre",
+          "card_id": "xy7-96",
+          "set_name": "Ancient Origins",
+          "image_url": "https://assets.tcgdex.net/en/xy/xy7/96/high.png",
+          "local_image_path": "data/section_artwork/pokemon_382_xy7-96.png",
+          "rarity": "Secret Rare",
+          "hp": 240
+        },
+        {
+          "pokemon_id": 383,
+          "pokemon_name": "Groudon",
+          "card_id": "xy7-97",
+          "set_name": "Ancient Origins",
+          "image_url": "https://assets.tcgdex.net/en/xy/xy7/97/high.png",
+          "local_image_path": "data/section_artwork/pokemon_383_xy7-97.png",
+          "rarity": "Secret Rare",
+          "hp": 240
+        }
+      ]
     }
   }
 }

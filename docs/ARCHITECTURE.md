@@ -190,6 +190,86 @@ data/pokemon_images_cache/
 - Consistent strategy across fetcher and PDF generator
 - Supports both PokeAPI (10033+) and TCGdex (card IDs) image sources
 
+#### Featured Elements Architecture
+
+**Purpose**: Automatically select and display 3 iconic Pokémon on section cover pages with appropriate visual content (TCG cards or official artwork)
+
+**Key Components**:
+- `enrich_featured_elements` step in `scripts/fetcher/steps/enrich_featured_cards.py`
+- `CoverRenderer._draw_featured_elements()` in `scripts/pdf/lib/rendering/cover_renderer.py`
+- Priority ranking system with 200+ Pokémon (0-100 scale)
+- Format auto-detection with 3 handlers
+
+**Architecture Layers**:
+```
+Selection Layer (Priority System)
+    ↓
+Detection Layer (Format Auto-Detection)
+    ↓
+Fetching Layer (TCGdex, PokeAPI, Cache)
+    ↓
+Storage Layer (JSON + Image Cache)
+    ↓
+Rendering Layer (PDF Cover Pages)
+```
+
+**Format Detection Logic**:
+1. **ExGen Format**: `tcg_card` sub-object present → Use embedded TCGdex URL
+2. **TCG-Set Format**: `localId` + `set_info` present → Construct TCGdex URL
+3. **Pokédex Format**: `image_url` present → Use PokeAPI artwork
+4. **Unknown Format**: Skip element
+
+**Fallback Chain** (TCG-Set handler only):
+```
+Try TCGdex URL
+    ↓ (404 Not Found)
+Try PokeAPI official artwork
+    ↓ (Success)
+Cache as fallback variant
+    ↓
+Return element data
+```
+
+**Priority Selection**:
+- Starters: 100 priority (Bulbasaur, Charmander, Squirtle)
+- Cover Legendaries: 100 priority (Mewtwo, Rayquaza, Zacian)
+- Major Legendaries: 95-98 (Articuno, Dialga, Reshiram)
+- Pseudo-Legendaries: 90-95 (Dragonite, Garchomp)
+- Final starter evolutions: 90 (Charizard, Blastoise)
+
+**Data Structure**:
+```json
+{
+  "pokemon_id": 150,
+  "pokemon_name": "Mewtwo",
+  "card_id": "ex1-101",
+  "set_name": "Ruby & Sapphire",
+  "image_url": "https://assets.tcgdex.net/...",
+  "local_image_path": "data/section_artwork/pokemon_150_ex1-101.png",
+  "rarity": "Rare Holo ex",
+  "hp": "100"
+}
+```
+
+**Image Sources**:
+- **TCGdex**: `https://assets.tcgdex.net/en/{series}/{set}/{localId}/high.png`
+- **PokeAPI**: `https://raw.githubusercontent.com/PokeAPI/sprites/.../official-artwork/{id}.png`
+- **Cache**: `data/section_artwork/pokemon_{id}_{card_id}[_fallback].png`
+
+**Rendering Specs**:
+- Position: 35mm from bottom
+- Size: 45mm × 63mm per element
+- Spacing: 8-10mm between elements
+- Alignment: Centered horizontally
+- Aspect ratio: Preserved with proportional scaling
+
+**Benefits**:
+- Universal support across all scope types (Pokédex, ExGen, TCG-Set)
+- Automatic format detection (no manual configuration)
+- PokeAPI fallback ensures 100% coverage (MEP uses this)
+- Priority-based selection highlights iconic Pokémon
+- Cached images prevent re-downloads
+
 #### `lib/pdf_renderer.py` [185 lines]
 **Purpose**: PDF canvas drawing functions
 **Key Functions**:
@@ -243,7 +323,9 @@ transform_tcg_set (normalize structure)
     ↓
 transform_to_sections_format (add metadata)
     ↓
-[saves to data/ME01.json]
+enrich_featured_elements (auto-detect format & fetch images)
+    ↓
+[saves to data/output/ME01.json]
     ↓
 generate_pdf.py --scope ME01
     ↓
@@ -251,7 +333,9 @@ logo_renderer parses [image] tags
     ↓
 URL image caching (MD5 hashes)
     ↓
-[PDF with logos & multilingual metadata]
+cover_renderer draws featured_elements
+    ↓
+[PDF with logos, featured elements & multilingual metadata]
 ```
 
 ### Data Fetching Pipeline
@@ -409,6 +493,16 @@ python scripts/fetch_pokemon_from_pokeapi.py -g 1
 - Adjust `PARALLEL_WORKERS` if rate-limited
 
 ## Version History
+
+### v7.2 - Featured Elements System
+- Unified visual enhancement system for all scope types
+- Auto-detecting format handlers (ExGen, TCG-Set, Pokédex)
+- PokeAPI fallback for missing TCG images
+- Priority-based Pokémon selection (200+ species ranked)
+- Seamless integration with 25 scopes
+- `enrich_featured_elements` pipeline step
+- Cover renderer with aspect ratio handling
+- Backward compatibility with `featured_cards` naming
 
 ### v1.0 - Initial Modularization
 - Split monolithic 659-line script into 8 focused modules

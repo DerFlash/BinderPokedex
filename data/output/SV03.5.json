@@ -2625,6 +2625,38 @@
           "pokemon_id": null,
           "image_url": "images/special_cards/energy.png"
         }
+      ],
+      "featured_elements": [
+        {
+          "pokemon_id": 1,
+          "pokemon_name": "Bulbasaur",
+          "card_id": "sv03.5-001",
+          "set_name": "151",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv03.5/001/high.png",
+          "local_image_path": "data/section_artwork/pokemon_1_sv03.5-001.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 4,
+          "pokemon_name": "Charmander",
+          "card_id": "sv03.5-004",
+          "set_name": "151",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv03.5/004/high.png",
+          "local_image_path": "data/section_artwork/pokemon_4_sv03.5-004.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 7,
+          "pokemon_name": "Squirtle",
+          "card_id": "sv03.5-007",
+          "set_name": "151",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv03.5/007/high.png",
+          "local_image_path": "data/section_artwork/pokemon_7_sv03.5-007.png",
+          "rarity": null,
+          "hp": null
+        }
       ]
     }
   }

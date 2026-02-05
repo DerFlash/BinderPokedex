@@ -2430,6 +2430,38 @@
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1024.png",
           "suffix": "[EX_NEW]"
         }
+      ],
+      "featured_elements": [
+        {
+          "pokemon_id": 25,
+          "pokemon_name": "Pikachu",
+          "card_id": "sv08.5-028",
+          "set_name": "Prismatic Evolutions",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv08.5/028/high.png",
+          "local_image_path": "data/section_artwork/pokemon_25_sv08.5-028.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 383,
+          "pokemon_name": "Groudon",
+          "card_id": "sv08.5-049",
+          "set_name": "Prismatic Evolutions",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv08.5/049/high.png",
+          "local_image_path": "data/section_artwork/pokemon_383_sv08.5-049.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 249,
+          "pokemon_name": "Lugia",
+          "card_id": "sv08.5-082",
+          "set_name": "Prismatic Evolutions",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv08.5/082/high.png",
+          "local_image_path": "data/section_artwork/pokemon_249_sv08.5-082.png",
+          "rarity": null,
+          "hp": null
+        }
       ]
     }
   }

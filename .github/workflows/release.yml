@@ -100,41 +100,61 @@ jobs:
             binder-pokedex-zh-hans.zip
             binder-pokedex-zh-hant.zip
           body: |
-            ## Release ${{ steps.tag.outputs.tag_name }}
+            ## 🎨 Featured Elements - Visual Highlights on Covers
             
-            Complete release with all PDFs across 25 scopes and 9 languages!
+            **What's New in v7.2:**
             
-            ### Downloads (by Language)
-            Each ZIP contains all 25 scopes in that language:
+            ✨ **Featured Elements System:**
+            - Beautiful featured elements (trading cards/artwork) on every section cover
+            - 3 most iconic Pokémon automatically selected per section
+            - Smart content detection:
+              - TCG Sets: Trading card images from TCGdex
+              - Pokédex: Official artwork from PokeAPI
+            - Automatic fallback to PokeAPI when TCG images unavailable
+            - Priority-based selection (starters, legendaries, pseudo-legendaries)
             
-            - binder-pokedex-de.zip - Deutsch (25 PDFs)
-            - binder-pokedex-en.zip - English (25 PDFs)
-            - binder-pokedex-fr.zip - Français (25 PDFs)
-            - binder-pokedex-es.zip - Español (25 PDFs)
-            - binder-pokedex-it.zip - Italiano (25 PDFs)
-            - binder-pokedex-ja.zip - Japanese (5 PDFs, available sets)
-            - binder-pokedex-ko.zip - Korean (4 PDFs, available sets)
-            - binder-pokedex-zh-hans.zip - Simplified Chinese (where available)
-            - binder-pokedex-zh-hant.zip - Traditional Chinese (where available)
+            🔧 **Technical Improvements:**
+            - Format-agnostic architecture with 3 auto-detecting handlers
+            - Unified `featured_elements` data structure
+            - Image caching (~800KB-1MB per element)
+            - Works seamlessly across all 25 scopes
             
-            ### Content Overview
-            25 Total Scopes:
-            - Pokedex: Complete National Pokédex (1,025 Pokémon)
-            - ExGen1-3: TCG EX variant collections (94/324/366 cards)
-            - ME01-MEP: Pokémon TCG Mew series (4 sets)
-            - SV01-SVP: Pokémon TCG Scarlet & Violet series (17 sets)
+            ---
             
-            ### Stats
-            - Total Scopes: 25 (1 Pokédex + 3 ExGen + 21 TCG sets)
-            - Languages: 9 (DE, EN, FR, ES, IT, JA, KO, ZH-Hans, ZH-Hant)
-            - Total Size: ~377 MB (all languages combined)
-            - Cards/Pokémon: 1,025+ Pokémon + 4,000+ TCG cards
+            ### 📥 Downloads (by Language)
+            Each ZIP contains all 25 scopes (Pokédex + 24 TCG sets) in that language:
             
-            ### Technical Details
+            - 🇩🇪 **binder-pokedex-de.zip** - Deutsch (25 PDFs)
+            - 🇬🇧 **binder-pokedex-en.zip** - English (25 PDFs)
+            - 🇫🇷 **binder-pokedex-fr.zip** - Français (25 PDFs)
+            - 🇪🇸 **binder-pokedex-es.zip** - Español (25 PDFs)
+            - 🇮🇹 **binder-pokedex-it.zip** - Italiano (25 PDFs)
+            - 🇯🇵 **binder-pokedex-ja.zip** - 日本語 (25 PDFs)
+            - 🇰🇷 **binder-pokedex-ko.zip** - 한국어 (25 PDFs)
+            - 🇨🇳 **binder-pokedex-zh-hans.zip** - 简体中文 (25 PDFs)
+            - 🇹🇼 **binder-pokedex-zh-hant.zip** - 繁體中文 (25 PDFs)
+            
+            ### 📋 Content Overview
+            **25 Total Scopes:**
+            - **Pokédex:** Complete National Pokédex (1,025 Pokémon across 9 generations)
+            - **ExGen1-3:** TCG EX collections (94/324/366 cards)
+            - **ME01-MEP:** Pokémon TCG Mew era (4 sets)
+            - **SV01-SV10 + SVP:** Scarlet & Violet era (17 sets)
+            
+            ### 📊 Stats
+            - **Total Scopes:** 25 (1 Pokédex + 3 ExGen + 21 TCG sets)
+            - **Languages:** 9 (DE, EN, FR, ES, IT, JA, KO, ZH-Hans, ZH-Hant)
+            - **Cards/Pokémon:** 1,025+ Pokémon + 4,000+ TCG cards
+            - **Featured Elements:** 75+ iconic Pokémon showcased across all covers
+            
+            ### 🔧 Technical Details
+            - Featured elements with automatic format detection
             - Cross-platform font support (macOS Songti + Linux Noto Sans CJK)
             - Scope-based modular architecture
-            - Multilingual trainer card names
+            - PokeAPI fallback for universal coverage
             - Proper CJK character rendering
+            
+            📚 **[Full Changelog & Documentation](https://github.com/DerFlash/BinderPokedex)**
           draft: false
           prerelease: false
         env:

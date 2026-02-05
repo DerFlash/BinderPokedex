@@ -1700,6 +1700,38 @@
           "suffix": "[EX_NEW]",
           "prefix": "Mega"
         }
+      ],
+      "featured_elements": [
+        {
+          "pokemon_id": 649,
+          "pokemon_name": "Genesect",
+          "card_id": "me02-008",
+          "set_name": "Phantasmal Flames",
+          "image_url": "https://assets.tcgdex.net/en/me/me02/008/high.png",
+          "local_image_path": "data/section_artwork/pokemon_649_me02-008.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 4,
+          "pokemon_name": "Charmander",
+          "card_id": "me02-011",
+          "set_name": "Phantasmal Flames",
+          "image_url": "https://assets.tcgdex.net/en/me/me02/011/high.png",
+          "local_image_path": "data/section_artwork/pokemon_4_me02-011.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 643,
+          "pokemon_name": "Reshiram",
+          "card_id": "me02-017",
+          "set_name": "Phantasmal Flames",
+          "image_url": "https://assets.tcgdex.net/en/me/me02/017/high.png",
+          "local_image_path": "data/section_artwork/pokemon_643_me02-017.png",
+          "rarity": null,
+          "hp": null
+        }
       ]
     }
   }

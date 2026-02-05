@@ -7,6 +7,61 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [7.2.0] - 2026-02-05
+
+### ✨ New Features
+
+**Featured Elements on Section Covers**
+- Added visual highlights to every section cover page
+- 3 most iconic Pokémon automatically selected per section based on priority rankings
+- Smart content detection:
+  - TCG Sets: Trading card images from TCGdex API
+  - National Pokédex: Official artwork from PokeAPI
+- Priority system ranks Pokémon by importance (starters: 100, legendaries: 95-100, others: 0-90)
+
+### 🔧 Technical Improvements
+
+**Featured Elements Architecture**
+- Implemented format-agnostic pipeline step: `enrich_featured_elements`
+- 3 card format handlers with automatic detection:
+  - ExGen: TCG cards with `tcg_card` sub-object
+  - TCG-Set: Modern cards with `localId` (ME*, SV* scopes)
+  - Pokédex: PokeAPI official artwork
+- Automatic fallback to PokeAPI artwork when TCG images unavailable (e.g., MEP set)
+- Unified data structure for all content types
+- Efficient caching system (~800KB-1MB per element)
+
+**Code Quality**
+- Refactored image download logic into reusable method
+- Centralized series mapping for TCGdex URLs
+- Improved error handling with graceful fallbacks
+- Backward compatibility maintained (`featured_cards` → `featured_elements`)
+
+### 📦 Scope Coverage
+
+**All 25 Scopes Supported:**
+- ✅ Pokédex (9 generations with starter Pokémon)
+- ✅ ExGen1-3 (Classic ex cards)
+- ✅ ME01, ME02, ME02.5 (Mega Evolution sets)
+- ✅ MEP (with PokeAPI fallback)
+- ✅ SV01-SV10, SVP (Scarlet & Violet sets)
+- ✅ All special sets (SV03.5, SV04.5, SV06.5, SV08.5, SV10.5B, SV10.5W)
+
+### 🎨 Visual Improvements
+
+- Section covers now display 3 featured cards/artwork elements
+- Consistent layout across all scope types
+- Proper aspect ratio handling (TCG portrait vs. Pokédex square)
+- High-quality images (400×550px for TCG, 475×475px for Pokédex)
+
+### 📄 Documentation
+
+- Added `docs/FEATURED_CARDS.md` (will be updated to FEATURED_ELEMENTS.md)
+- Updated architecture documentation
+- Enhanced code documentation with handler details
+
+---
+
 ## [7.1.0] - 2026-02-03
 
 ### 🐛 Bug Fixes

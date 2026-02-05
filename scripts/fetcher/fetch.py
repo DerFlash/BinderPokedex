@@ -37,6 +37,7 @@ from steps.transform_ex_gen1 import TransformClassicExStep
 from steps.validate_pokedex_exists import ValidatePokedexExistsStep
 from steps.enrich_names_from_pokedex import EnrichNamesFromPokedexStep
 from steps.enrich_section_descriptions import EnrichSectionDescriptionsStep
+from steps.enrich_featured_cards import EnrichFeaturedElementsStep
 from steps.cache_pokemon_images import CachePokemonImages
 from steps.fetch_tcgdex_ex_gen2 import FetchTCGdexBlackWhiteEXStep
 from steps.fetch_tcgdex_ex_gen3 import FetchTCGdexScarletVioletEXStep
@@ -51,6 +52,8 @@ from steps.transform_tcg_set import TransformTCGSetStep
 from steps.transform_to_sections_format import TransformToSectionsFormatStep
 from steps.save_output import SaveOutputStep
 from steps.load_local_source import LoadLocalSourceStep
+from steps.load_tcg_set import LoadTCGSetStep
+from steps.load_ex_cards import LoadExCardsStep
 
 
 def get_all_scopes() -> list:
@@ -106,6 +109,8 @@ def create_registry() -> StepRegistry:
     
     # Register source loading steps
     registry.register('load_local_source', LoadLocalSourceStep)
+    registry.register('load_tcg_set', LoadTCGSetStep)
+    registry.register('load_ex_cards', LoadExCardsStep)
     
     # Register PokeAPI steps
     registry.register('fetch_pokeapi_national_dex', FetchPokeAPIStep)
@@ -116,6 +121,8 @@ def create_registry() -> StepRegistry:
     # Register enrichment steps
     registry.register('enrich_metadata', EnrichMetadataStep)
     registry.register('enrich_section_descriptions', EnrichSectionDescriptionsStep)
+    registry.register('enrich_featured_cards', EnrichFeaturedElementsStep)
+    registry.register('enrich_featured_elements', EnrichFeaturedElementsStep)  # New name, keep old for backward compat
     
     # Register TCG steps
     registry.register('fetch_tcgdex_ex_gen1', FetchTCGdexClassicExStep)
@@ -157,6 +164,7 @@ def main():
     parser.add_argument('--skip-fetch', action='store_true', help='Skip fetch step(s), run only enrichment/transform from existing source')
     parser.add_argument('--start-from', type=int, help='Start pipeline from step N (1-indexed)')
     parser.add_argument('--stop-after', type=int, help='Stop pipeline after step N (1-indexed)')
+    parser.add_argument('--force-featured-cards', action='store_true', help='Force regeneration of featured cards even if they exist')
     
     args = parser.parse_args()
     
@@ -234,12 +242,14 @@ def process_scope(scope: str, args) -> bool:
         return False
     
     # Apply CLI overrides to config
-    if args.limit or args.generations:
+    if args.limit or args.generations or args.force_featured_cards:
         print(f"🔧 Applying CLI overrides:")
         if args.limit:
             print(f"   --limit {args.limit}")
         if args.generations:
             print(f"   --generations {args.generations}")
+        if args.force_featured_cards:
+            print('   --force-featured-elements')
         
         # Apply overrides to relevant steps
         for step_config in config['pipeline']:
@@ -254,6 +264,10 @@ def process_scope(scope: str, args) -> bool:
             if args.generations and step_name == 'fetch_pokeapi_national_dex':
                 gens = [int(g.strip()) for g in args.generations.split(',')]
                 params['generations'] = gens
+            
+            # Apply force to featured cards enrichment
+            if args.force_featured_cards and step_name == 'enrich_featured_cards':
+                params['force'] = True
             
             step_config['params'] = params
     

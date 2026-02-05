@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "consolidated_date": "2026-02-03",
+  "consolidated_date": "2026-02-05",
   "total_generations": 9,
   "sections": {
     "gen1": {
@@ -35,11 +35,6 @@
       "range": [
         1,
         151
-      ],
-      "featured_pokemon": [
-        25,
-        6,
-        150
       ],
       "cards": [
         {
@@ -3140,7 +3135,39 @@
         "ko": "포켓몬 도감 #001 – #151",
         "zh_hans": "宝可梦图鉴 #001 – #151",
         "zh_hant": "寶可夢圖鑑 #001 – #151"
-      }
+      },
+      "featured_elements": [
+        {
+          "pokemon_id": 1,
+          "pokemon_name": "Bulbasaur",
+          "card_id": "pokedex-1",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
+          "local_image_path": "data/section_artwork/pokemon_1_pokedex.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 4,
+          "pokemon_name": "Charmander",
+          "card_id": "pokedex-4",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png",
+          "local_image_path": "data/section_artwork/pokemon_4_pokedex.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 7,
+          "pokemon_name": "Squirtle",
+          "card_id": "pokedex-7",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png",
+          "local_image_path": "data/section_artwork/pokemon_7_pokedex.png",
+          "rarity": null,
+          "hp": null
+        }
+      ]
     },
     "gen2": {
       "section_id": "gen2",
@@ -3173,11 +3200,6 @@
       "pokemon_count": 100,
       "range": [
         152,
-        251
-      ],
-      "featured_pokemon": [
-        249,
-        250,
         251
       ],
       "cards": [
@@ -5241,7 +5263,39 @@
         "ko": "포켓몬 도감 #152 – #251",
         "zh_hans": "宝可梦图鉴 #152 – #251",
         "zh_hant": "寶可夢圖鑑 #152 – #251"
-      }
+      },
+      "featured_elements": [
+        {
+          "pokemon_id": 152,
+          "pokemon_name": "Chikorita",
+          "card_id": "pokedex-152",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/152.png",
+          "local_image_path": "data/section_artwork/pokemon_152_pokedex.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 155,
+          "pokemon_name": "Cyndaquil",
+          "card_id": "pokedex-155",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/155.png",
+          "local_image_path": "data/section_artwork/pokemon_155_pokedex.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 158,
+          "pokemon_name": "Totodile",
+          "card_id": "pokedex-158",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/158.png",
+          "local_image_path": "data/section_artwork/pokemon_158_pokedex.png",
+          "rarity": null,
+          "hp": null
+        }
+      ]
     },
     "gen3": {
       "section_id": "gen3",
@@ -5275,11 +5329,6 @@
       "range": [
         252,
         386
-      ],
-      "featured_pokemon": [
-        384,
-        383,
-        382
       ],
       "cards": [
         {
@@ -8059,7 +8108,39 @@
         "ko": "포켓몬 도감 #252 – #386",
         "zh_hans": "宝可梦图鉴 #252 – #386",
         "zh_hant": "寶可夢圖鑑 #252 – #386"
-      }
+      },
+      "featured_elements": [
+        {
+          "pokemon_id": 252,
+          "pokemon_name": "Treecko",
+          "card_id": "pokedex-252",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/252.png",
+          "local_image_path": "data/section_artwork/pokemon_252_pokedex.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 255,
+          "pokemon_name": "Torchic",
+          "card_id": "pokedex-255",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/255.png",
+          "local_image_path": "data/section_artwork/pokemon_255_pokedex.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 258,
+          "pokemon_name": "Mudkip",
+          "card_id": "pokedex-258",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/258.png",
+          "local_image_path": "data/section_artwork/pokemon_258_pokedex.png",
+          "rarity": null,
+          "hp": null
+        }
+      ]
     },
     "gen4": {
       "section_id": "gen4",
@@ -8093,11 +8174,6 @@
       "range": [
         387,
         493
-      ],
-      "featured_pokemon": [
-        483,
-        484,
-        487
       ],
       "cards": [
         {
@@ -10304,7 +10380,39 @@
         "ko": "포켓몬 도감 #387 – #493",
         "zh_hans": "宝可梦图鉴 #387 – #493",
         "zh_hant": "寶可夢圖鑑 #387 – #493"
-      }
+      },
+      "featured_elements": [
+        {
+          "pokemon_id": 387,
+          "pokemon_name": "Turtwig",
+          "card_id": "pokedex-387",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/387.png",
+          "local_image_path": "data/section_artwork/pokemon_387_pokedex.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 390,
+          "pokemon_name": "Chimchar",
+          "card_id": "pokedex-390",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/390.png",
+          "local_image_path": "data/section_artwork/pokemon_390_pokedex.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 393,
+          "pokemon_name": "Piplup",
+          "card_id": "pokedex-393",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/393.png",
+          "local_image_path": "data/section_artwork/pokemon_393_pokedex.png",
+          "rarity": null,
+          "hp": null
+        }
+      ]
     },
     "gen5": {
       "section_id": "gen5",
@@ -10338,11 +10446,6 @@
       "range": [
         494,
         649
-      ],
-      "featured_pokemon": [
-        643,
-        644,
-        646
       ],
       "cards": [
         {
@@ -13550,7 +13653,39 @@
         "ko": "포켓몬 도감 #494 – #649",
         "zh_hans": "宝可梦图鉴 #494 – #649",
         "zh_hant": "寶可夢圖鑑 #494 – #649"
-      }
+      },
+      "featured_elements": [
+        {
+          "pokemon_id": 495,
+          "pokemon_name": "Snivy",
+          "card_id": "pokedex-495",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/495.png",
+          "local_image_path": "data/section_artwork/pokemon_495_pokedex.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 498,
+          "pokemon_name": "Tepig",
+          "card_id": "pokedex-498",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/498.png",
+          "local_image_path": "data/section_artwork/pokemon_498_pokedex.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 501,
+          "pokemon_name": "Oshawott",
+          "card_id": "pokedex-501",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/501.png",
+          "local_image_path": "data/section_artwork/pokemon_501_pokedex.png",
+          "rarity": null,
+          "hp": null
+        }
+      ]
     },
     "gen6": {
       "section_id": "gen6",
@@ -13584,11 +13719,6 @@
       "range": [
         650,
         721
-      ],
-      "featured_pokemon": [
-        716,
-        717,
-        718
       ],
       "cards": [
         {
@@ -15083,7 +15213,39 @@
         "ko": "포켓몬 도감 #650 – #721",
         "zh_hans": "宝可梦图鉴 #650 – #721",
         "zh_hant": "寶可夢圖鑑 #650 – #721"
-      }
+      },
+      "featured_elements": [
+        {
+          "pokemon_id": 650,
+          "pokemon_name": "Chespin",
+          "card_id": "pokedex-650",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/650.png",
+          "local_image_path": "data/section_artwork/pokemon_650_pokedex.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 653,
+          "pokemon_name": "Fennekin",
+          "card_id": "pokedex-653",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/653.png",
+          "local_image_path": "data/section_artwork/pokemon_653_pokedex.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 656,
+          "pokemon_name": "Froakie",
+          "card_id": "pokedex-656",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/656.png",
+          "local_image_path": "data/section_artwork/pokemon_656_pokedex.png",
+          "rarity": null,
+          "hp": null
+        }
+      ]
     },
     "gen7": {
       "section_id": "gen7",
@@ -15117,11 +15279,6 @@
       "range": [
         722,
         809
-      ],
-      "featured_pokemon": [
-        791,
-        792,
-        800
       ],
       "cards": [
         {
@@ -16950,7 +17107,39 @@
         "ko": "포켓몬 도감 #722 – #809",
         "zh_hans": "宝可梦图鉴 #722 – #809",
         "zh_hant": "寶可夢圖鑑 #722 – #809"
-      }
+      },
+      "featured_elements": [
+        {
+          "pokemon_id": 722,
+          "pokemon_name": "Rowlet",
+          "card_id": "pokedex-722",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/722.png",
+          "local_image_path": "data/section_artwork/pokemon_722_pokedex.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 725,
+          "pokemon_name": "Litten",
+          "card_id": "pokedex-725",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/725.png",
+          "local_image_path": "data/section_artwork/pokemon_725_pokedex.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 728,
+          "pokemon_name": "Popplio",
+          "card_id": "pokedex-728",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/728.png",
+          "local_image_path": "data/section_artwork/pokemon_728_pokedex.png",
+          "rarity": null,
+          "hp": null
+        }
+      ]
     },
     "gen8": {
       "section_id": "gen8",
@@ -16984,11 +17173,6 @@
       "range": [
         810,
         905
-      ],
-      "featured_pokemon": [
-        888,
-        889,
-        890
       ],
       "cards": [
         {
@@ -18966,7 +19150,39 @@
         "ko": "포켓몬 도감 #810 – #905",
         "zh_hans": "宝可梦图鉴 #810 – #905",
         "zh_hant": "寶可夢圖鑑 #810 – #905"
-      }
+      },
+      "featured_elements": [
+        {
+          "pokemon_id": 810,
+          "pokemon_name": "Grookey",
+          "card_id": "pokedex-810",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/810.png",
+          "local_image_path": "data/section_artwork/pokemon_810_pokedex.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 813,
+          "pokemon_name": "Scorbunny",
+          "card_id": "pokedex-813",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/813.png",
+          "local_image_path": "data/section_artwork/pokemon_813_pokedex.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 816,
+          "pokemon_name": "Sobble",
+          "card_id": "pokedex-816",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/816.png",
+          "local_image_path": "data/section_artwork/pokemon_816_pokedex.png",
+          "rarity": null,
+          "hp": null
+        }
+      ]
     },
     "gen9": {
       "section_id": "gen9",
@@ -19000,11 +19216,6 @@
       "range": [
         906,
         1025
-      ],
-      "featured_pokemon": [
-        1007,
-        1008,
-        1024
       ],
       "cards": [
         {
@@ -21495,7 +21706,39 @@
         "ko": "포켓몬 도감 #906 – #1025",
         "zh_hans": "宝可梦图鉴 #906 – #1025",
         "zh_hant": "寶可夢圖鑑 #906 – #1025"
-      }
+      },
+      "featured_elements": [
+        {
+          "pokemon_id": 906,
+          "pokemon_name": "Sprigatito",
+          "card_id": "pokedex-906",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/906.png",
+          "local_image_path": "data/section_artwork/pokemon_906_pokedex.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 909,
+          "pokemon_name": "Fuecoco",
+          "card_id": "pokedex-909",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/909.png",
+          "local_image_path": "data/section_artwork/pokemon_909_pokedex.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 912,
+          "pokemon_name": "Quaxly",
+          "card_id": "pokedex-912",
+          "set_name": "National Pokédex",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/912.png",
+          "local_image_path": "data/section_artwork/pokemon_912_pokedex.png",
+          "rarity": null,
+          "hp": null
+        }
+      ]
     }
   },
   "type_translations": {

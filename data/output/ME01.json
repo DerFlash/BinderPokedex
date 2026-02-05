@@ -2463,6 +2463,38 @@
           "suffix": "[EX_NEW]",
           "prefix": "Mega"
         }
+      ],
+      "featured_elements": [
+        {
+          "pokemon_id": 1,
+          "pokemon_name": "Bulbasaur",
+          "card_id": "me01-001",
+          "set_name": "Mega Evolution",
+          "image_url": "https://assets.tcgdex.net/en/me/me01/001/high.png",
+          "local_image_path": "data/section_artwork/pokemon_1_me01-001.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 152,
+          "pokemon_name": "Chikorita",
+          "card_id": "me01-008",
+          "set_name": "Mega Evolution",
+          "image_url": "https://assets.tcgdex.net/en/me/me01/008/high.png",
+          "local_image_path": "data/section_artwork/pokemon_152_me01-008.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 251,
+          "pokemon_name": "Celebi",
+          "card_id": "me01-012",
+          "set_name": "Mega Evolution",
+          "image_url": "https://assets.tcgdex.net/en/me/me01/012/high.png",
+          "local_image_path": "data/section_artwork/pokemon_251_me01-012.png",
+          "rarity": null,
+          "hp": null
+        }
       ]
     }
   }

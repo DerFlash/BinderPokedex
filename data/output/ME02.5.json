@@ -3842,6 +3842,38 @@
           "suffix": "[EX_NEW]",
           "prefix": "Mega"
         }
+      ],
+      "featured_elements": [
+        {
+          "pokemon_id": 152,
+          "pokemon_name": "Chikorita",
+          "card_id": "me02.5-008",
+          "set_name": "Ascended Heroes",
+          "image_url": "https://assets.tcgdex.net/en/me/me02.5/008/high.png",
+          "local_image_path": "data/section_artwork/pokemon_152_me02.5-008.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 4,
+          "pokemon_name": "Charmander",
+          "card_id": "me02.5-020",
+          "set_name": "Ascended Heroes",
+          "image_url": "https://assets.tcgdex.net/en/me/me02.5/020/high.png",
+          "local_image_path": "data/section_artwork/pokemon_4_me02.5-020.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 250,
+          "pokemon_name": "Ethan's Ho-Oh",
+          "card_id": "me02.5-026",
+          "set_name": "Ascended Heroes",
+          "image_url": "https://assets.tcgdex.net/en/me/me02.5/026/high.png",
+          "local_image_path": "data/section_artwork/pokemon_250_me02.5-026.png",
+          "rarity": null,
+          "hp": null
+        }
       ]
     }
   }

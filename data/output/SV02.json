@@ -3567,6 +3567,38 @@
           "pokemon_id": null,
           "image_url": "images/special_cards/energy.png"
         }
+      ],
+      "featured_elements": [
+        {
+          "pokemon_id": 906,
+          "pokemon_name": "Sprigatito",
+          "card_id": "sv02-012",
+          "set_name": "Paldea Evolved",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv02/012/high.png",
+          "local_image_path": "data/section_artwork/pokemon_906_sv02-012.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 909,
+          "pokemon_name": "Fuecoco",
+          "card_id": "sv02-034",
+          "set_name": "Paldea Evolved",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv02/034/high.png",
+          "local_image_path": "data/section_artwork/pokemon_909_sv02-034.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 912,
+          "pokemon_name": "Quaxly",
+          "card_id": "sv02-049",
+          "set_name": "Paldea Evolved",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv02/049/high.png",
+          "local_image_path": "data/section_artwork/pokemon_912_sv02-049.png",
+          "rarity": null,
+          "hp": null
+        }
       ]
     }
   }

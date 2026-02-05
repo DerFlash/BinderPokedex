@@ -28,11 +28,6 @@
         "zh_hant": "經典ex系列"
       },
       "suffix": "",
-      "featured_pokemon": [
-        3,
-        6,
-        9
-      ],
       "cards": [
         {
           "pokemon_id": 3,
@@ -2959,7 +2954,39 @@
         "ko": "EX 시리즈 (루비&사파이어부터 파워 키퍼스까지, 2003–2007)",
         "zh_hans": "EX 系列 (红宝石&蓝宝石至力量守护者, 2003–2007)",
         "zh_hant": "EX 系列 (紅寶石&藍寶石至力量守護者, 2003–2007)"
-      }
+      },
+      "featured_elements": [
+        {
+          "pokemon_id": 150,
+          "pokemon_name": "Mewtwo",
+          "card_id": "ex1-101",
+          "set_name": "Ruby & Sapphire",
+          "image_url": "https://assets.tcgdex.net/en/ex/ex1/101/high.png",
+          "local_image_path": "data/section_artwork/pokemon_150_ex1-101.png",
+          "rarity": null,
+          "hp": 100
+        },
+        {
+          "pokemon_id": 151,
+          "pokemon_name": "Mew",
+          "card_id": "ex13-100",
+          "set_name": "Holon Phantoms",
+          "image_url": "https://assets.tcgdex.net/en/ex/ex13/100/high.png",
+          "local_image_path": "data/section_artwork/pokemon_151_ex13-100.png",
+          "rarity": null,
+          "hp": 90
+        },
+        {
+          "pokemon_id": 249,
+          "pokemon_name": "Lugia",
+          "card_id": "ex10-105",
+          "set_name": "Unseen Forces",
+          "image_url": "https://assets.tcgdex.net/en/ex/ex10/105/high.png",
+          "local_image_path": "data/section_artwork/pokemon_249_ex10-105.png",
+          "rarity": null,
+          "hp": 100
+        }
+      ]
     }
   }
 }

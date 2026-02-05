@@ -21,6 +21,11 @@ pipeline:
 - step: enrich_section_descriptions
   params:
     mode: pokedex
+- step: enrich_featured_elements
+  params:
+    max_cards: 3
+    force: false
+    cache_dir: data/section_artwork
 - step: enrich_type_translations
 - step: save_output
   params:

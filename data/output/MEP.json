@@ -163,6 +163,38 @@
           ],
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/447.png"
         }
+      ],
+      "featured_elements": [
+        {
+          "pokemon_id": 447,
+          "pokemon_name": "Riolu",
+          "card_id": "mep-010",
+          "set_name": "MEP Black Star Promos",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/447.png",
+          "local_image_path": "data/section_artwork/pokemon_447_mep-010_fallback.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 154,
+          "pokemon_name": "Meganium",
+          "card_id": "mep-001",
+          "set_name": "MEP Black Star Promos",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/154.png",
+          "local_image_path": "data/section_artwork/pokemon_154_mep-001_fallback.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 818,
+          "pokemon_name": "Inteleon",
+          "card_id": "mep-002",
+          "set_name": "MEP Black Star Promos",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/818.png",
+          "local_image_path": "data/section_artwork/pokemon_818_mep-002_fallback.png",
+          "rarity": null,
+          "hp": null
+        }
       ]
     }
   }

@@ -6,7 +6,7 @@ Drucke 1.025+ Pokémon über 9 Generationen in 9 Sprachen. Alle Varianten, alle 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-![v7.1](https://img.shields.io/badge/Version-v7.1-green.svg)
+![v7.2](https://img.shields.io/badge/Version-v7.2-green.svg)
 
 ---
 
@@ -21,12 +21,31 @@ Drucke 1.025+ Pokémon über 9 Generationen in 9 Sprachen. Alle Varianten, alle 
 ### Für normale Nutzer - einfach laden & drucken!
 
 
-**Aktuelle Version (v7.1):** [Alle 225 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v7.1) ✨ *Fix: Fehlende Pokémon-Bilder in TCG-Sets*
+**Aktuelle Version (v7.2):** [Alle 225 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v7.2) ✨ *Neu: Featured Elements auf Titelseiten!*
 
-**Nach Sprache (v7.1):** 🇩🇪 [DE](https://github.com/DerFlash/BinderPokedex/releases/download/v7.1/binder-pokedex-de.zip) | 🇬🇧 [EN](https://github.com/DerFlash/BinderPokedex/releases/download/v7.1/binder-pokedex-en.zip) | 🇫🇷 [FR](https://github.com/DerFlash/BinderPokedex/releases/download/v7.1/binder-pokedex-fr.zip) | 🇪🇸 [ES](https://github.com/DerFlash/BinderPokedex/releases/download/v7.1/binder-pokedex-es.zip) | 🇮🇹 [IT](https://github.com/DerFlash/BinderPokedex/releases/download/v7.1/binder-pokedex-it.zip) | 🇯🇵 [JA](https://github.com/DerFlash/BinderPokedex/releases/download/v7.1/binder-pokedex-ja.zip) | 🇰🇷 [KO](https://github.com/DerFlash/BinderPokedex/releases/download/v7.1/binder-pokedex-ko.zip) | 🇨🇳 [ZH](https://github.com/DerFlash/BinderPokedex/releases/download/v7.1/binder-pokedex-zh_hans.zip) | 🇹🇼 [ZH-T](https://github.com/DerFlash/BinderPokedex/releases/download/v7.1/binder-pokedex-zh_hant.zip)
+**Nach Sprache (v7.2):** 🇩🇪 [DE](https://github.com/DerFlash/BinderPokedex/releases/download/v7.2/binder-pokedex-de.zip) | 🇬🇧 [EN](https://github.com/DerFlash/BinderPokedex/releases/download/v7.2/binder-pokedex-en.zip) | 🇫🇷 [FR](https://github.com/DerFlash/BinderPokedex/releases/download/v7.2/binder-pokedex-fr.zip) | 🇪🇸 [ES](https://github.com/DerFlash/BinderPokedex/releases/download/v7.2/binder-pokedex-es.zip) | 🇮🇹 [IT](https://github.com/DerFlash/BinderPokedex/releases/download/v7.2/binder-pokedex-it.zip) | 🇯🇵 [JA](https://github.com/DerFlash/BinderPokedex/releases/download/v7.2/binder-pokedex-ja.zip) | 🇰🇷 [KO](https://github.com/DerFlash/BinderPokedex/releases/download/v7.2/binder-pokedex-ko.zip) | 🇨🇳 [ZH](https://github.com/DerFlash/BinderPokedex/releases/download/v7.2/binder-pokedex-zh_hans.zip) | 🇹🇼 [ZH-T](https://github.com/DerFlash/BinderPokedex/releases/download/v7.2/binder-pokedex-zh_hant.zip)
 ---
 
 ## 📝 Was ist neu
+
+### v7.2 (Februar 2026)
+
+**Featured Elements - Visuelle Highlights auf Titelseiten** 🎨
+
+✨ **Neue Features:**
+- Wunderschöne Featured Elements (Karten/Artworks) auf jeder Abschnitts-Titelseite
+- 3 ikonischste Pokémon automatisch ausgewählt pro Abschnitt
+- Intelligente Content-Erkennung:
+  - TCG-Sets: Trading Card Bilder von TCGdex
+  - Pokédex: Offizielle Artworks von PokeAPI  
+- Automatischer Fallback zu PokeAPI wenn TCG-Bilder nicht verfügbar
+- Prioritäts-basierte Auswahl (Starter, Legendäre, Pseudo-Legendäre)
+
+🔧 **Technisch:**
+- Format-agnostische Architektur mit 3 Karten-Handlern
+- Einheitliche `featured_elements` Datenstruktur
+- ~800KB-1MB gecachte Bilder pro Element
+- Funktioniert über alle 25 Scopes (Pokédex + 24 TCG-Sets)
 
 ### v7.1 (Februar 2026)
 

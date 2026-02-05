@@ -3322,6 +3322,38 @@
           "pokemon_id": null,
           "image_url": "images/special_cards/energy.png"
         }
+      ],
+      "featured_elements": [
+        {
+          "pokemon_id": 906,
+          "pokemon_name": "Sprigatito",
+          "card_id": "sv01-013",
+          "set_name": "Scarlet & Violet",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv01/013/high.png",
+          "local_image_path": "data/section_artwork/pokemon_906_sv01-013.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 909,
+          "pokemon_name": "Fuecoco",
+          "card_id": "sv01-036",
+          "set_name": "Scarlet & Violet",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv01/036/high.png",
+          "local_image_path": "data/section_artwork/pokemon_909_sv01-036.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 912,
+          "pokemon_name": "Quaxly",
+          "card_id": "sv01-052",
+          "set_name": "Scarlet & Violet",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv01/052/high.png",
+          "local_image_path": "data/section_artwork/pokemon_912_sv01-052.png",
+          "rarity": null,
+          "hp": null
+        }
       ]
     }
   }

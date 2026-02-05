@@ -7229,7 +7229,39 @@
         "ko": "스칼렛 & 바이올렛 시리즈 (2023–현재) • 포켓몬 ex 기본 형태",
         "zh_hans": "朱&紫系列 (2023–至今) • 宝可梦ex基本形态",
         "zh_hant": "朱&紫系列 (2023–至今) • 寶可夢ex基本形態"
-      }
+      },
+      "featured_elements": [
+        {
+          "pokemon_id": 25,
+          "pokemon_name": "Pikachu",
+          "card_id": "me02.5-057",
+          "set_name": "Ascended Heroes",
+          "image_url": "https://assets.tcgdex.net/en/me/me02.5/057/high.png",
+          "local_image_path": "data/section_artwork/pokemon_25_me02.5-057.png",
+          "rarity": "Double rare",
+          "hp": 200
+        },
+        {
+          "pokemon_id": 150,
+          "pokemon_name": "Team Rocket's Mewtwo",
+          "card_id": "me02.5-079",
+          "set_name": "Ascended Heroes",
+          "image_url": "https://assets.tcgdex.net/en/me/me02.5/079/high.png",
+          "local_image_path": "data/section_artwork/pokemon_150_me02.5-079.png",
+          "rarity": "Double rare",
+          "hp": 280
+        },
+        {
+          "pokemon_id": 151,
+          "pokemon_name": "Mew",
+          "card_id": "sv03.5-151",
+          "set_name": "151",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv03.5/151/high.png",
+          "local_image_path": "data/section_artwork/pokemon_151_sv03.5-151.png",
+          "rarity": "Double rare",
+          "hp": 180
+        }
+      ]
     },
     "mega": {
       "section_id": "mega",
@@ -8297,7 +8329,39 @@
         "ko": "스칼렛 & 바이올렛 시리즈 (2024–현재) • 메가진화 포켓몬 ex",
         "zh_hans": "朱&紫系列 (2024–至今) • 超级进化宝可梦ex",
         "zh_hant": "朱&紫系列 (2024–至今) • 超級進化寶可夢ex"
-      }
+      },
+      "featured_elements": [
+        {
+          "pokemon_id": 380,
+          "pokemon_name": "Latias",
+          "card_id": "me01-100",
+          "set_name": "Mega Evolution",
+          "image_url": "https://assets.tcgdex.net/en/me/me01/100/high.png",
+          "local_image_path": "data/section_artwork/pokemon_380_me01-100.png",
+          "rarity": "Double rare",
+          "hp": 280
+        },
+        {
+          "pokemon_id": 719,
+          "pokemon_name": "Diancie",
+          "card_id": "me02.5-267",
+          "set_name": "Ascended Heroes",
+          "image_url": "https://assets.tcgdex.net/en/me/me02.5/267/high.png",
+          "local_image_path": "data/section_artwork/pokemon_719_me02.5-267.png",
+          "rarity": "Ultra Rare",
+          "hp": 270
+        },
+        {
+          "pokemon_id": 448,
+          "pokemon_name": "Lucario",
+          "card_id": "me02.5-113",
+          "set_name": "Ascended Heroes",
+          "image_url": "https://assets.tcgdex.net/en/me/me02.5/113/high.png",
+          "local_image_path": "data/section_artwork/pokemon_448_me02.5-113.png",
+          "rarity": "Double rare",
+          "hp": 340
+        }
+      ]
     }
   }
 }

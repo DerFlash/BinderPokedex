@@ -3124,6 +3124,38 @@
           "pokemon_id": null,
           "image_url": "images/special_cards/stadium.png"
         }
+      ],
+      "featured_elements": [
+        {
+          "pokemon_id": 155,
+          "pokemon_name": "Ethan's Cyndaquil",
+          "card_id": "sv10-032",
+          "set_name": "Destined Rivals",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv10/032/high.png",
+          "local_image_path": "data/section_artwork/pokemon_155_sv10-032.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 250,
+          "pokemon_name": "Ethan's Ho-Oh",
+          "card_id": "sv10-039",
+          "set_name": "Destined Rivals",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv10/039/high.png",
+          "local_image_path": "data/section_artwork/pokemon_250_sv10-039.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 255,
+          "pokemon_name": "Torchic",
+          "card_id": "sv10-040",
+          "set_name": "Destined Rivals",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv10/040/high.png",
+          "local_image_path": "data/section_artwork/pokemon_255_sv10-040.png",
+          "rarity": null,
+          "hp": null
+        }
       ]
     }
   }

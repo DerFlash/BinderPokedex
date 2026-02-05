@@ -2899,6 +2899,38 @@
           "pokemon_id": null,
           "image_url": "images/special_cards/energy.png"
         }
+      ],
+      "featured_elements": [
+        {
+          "pokemon_id": 722,
+          "pokemon_name": "Rowlet",
+          "card_id": "sv03-013",
+          "set_name": "Obsidian Flames",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv03/013/high.png",
+          "local_image_path": "data/section_artwork/pokemon_722_sv03-013.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 4,
+          "pokemon_name": "Charmander",
+          "card_id": "sv03-026",
+          "set_name": "Obsidian Flames",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv03/026/high.png",
+          "local_image_path": "data/section_artwork/pokemon_4_sv03-026.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 656,
+          "pokemon_name": "Froakie",
+          "card_id": "sv03-056",
+          "set_name": "Obsidian Flames",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv03/056/high.png",
+          "local_image_path": "data/section_artwork/pokemon_656_sv03-056.png",
+          "rarity": null,
+          "hp": null
+        }
       ]
     }
   }

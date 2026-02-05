@@ -2793,6 +2793,38 @@
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1021.png",
           "suffix": "[EX_NEW]"
         }
+      ],
+      "featured_elements": [
+        {
+          "pokemon_id": 387,
+          "pokemon_name": "Turtwig",
+          "card_id": "sv05-010",
+          "set_name": "Temporal Forces",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv05/010/high.png",
+          "local_image_path": "data/section_artwork/pokemon_387_sv05-010.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 725,
+          "pokemon_name": "Litten",
+          "card_id": "sv05-032",
+          "set_name": "Temporal Forces",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv05/032/high.png",
+          "local_image_path": "data/section_artwork/pokemon_725_sv05-032.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 158,
+          "pokemon_name": "Totodile",
+          "card_id": "sv05-039",
+          "set_name": "Temporal Forces",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv05/039/high.png",
+          "local_image_path": "data/section_artwork/pokemon_158_sv05-039.png",
+          "rarity": null,
+          "hp": null
+        }
       ]
     }
   }
