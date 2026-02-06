@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" 
+     width="63mm" height="88mm" 
+     viewBox="0 0 63 88"
+     version="1.1">
+  
+  <!-- Card Template: Classic Design (63mm × 88mm) -->
+  <!-- Matches current CardRenderer design -->
+  
+  <defs>
+    <!-- Gradient definitions -->
+    <linearGradient id="headerGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:{{type_color}};stop-opacity:1" />
+      <stop offset="100%" style="stop-color:{{type_color_dark}};stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect x="0" y="0" width="63" height="88" fill="#FFFFFF" />
+  
+  <!-- Border (2mm inner spacing) -->
+  <rect x="2" y="2" width="59" height="84" 
+        fill="none" 
+        stroke="#D0D0D0" 
+        stroke-width="0.5" 
+        rx="3" ry="3" />
+  
+  <!-- Header section with gradient -->
+  <rect x="3" y="3" width="57" height="10" 
+        fill="url(#headerGradient)" 
+        rx="2" ry="2" />
+  
+  <!-- Type badge (left side) -->
+  <rect x="5" y="5" width="15" height="6" 
+        fill="{{type_color_dark}}" 
+        rx="1.5" ry="1.5" />
+  
+  <!-- Type text -->
+  <text x="12.5" y="9.5" 
+        font-family="Helvetica-Bold" 
+        font-size="4" 
+        fill="#FFFFFF" 
+        text-anchor="middle">{{type}}</text>
+  
+  <!-- Pokemon ID (right side) -->
+  <text x="55" y="9.5" 
+        font-family="Helvetica" 
+        font-size="3.5" 
+        fill="#FFFFFF" 
+        text-anchor="end">{{id}}</text>
+  
+  <!-- Name area anchor point (for Python rendering) -->
+  <!-- Name will be rendered at x=31.5, y=82 by Python (centered) -->
+  <!-- This comment serves as documentation only -->
+  
+  <!-- Image area (50mm × 50mm) -->
+  <!-- Python will render Pokemon image centered at x=6.5, y=30 -->
+  <rect x="6.5" y="30" width="50" height="50" 
+        fill="#F5F5F5" 
+        stroke="#E0E0E0" 
+        stroke-width="0.3" 
+        rx="2" ry="2" />
+  
+  <!-- Bottom info section -->
+  <rect x="3" y="15" width="57" height="10" 
+        fill="#F9F9F9" 
+        stroke="#E0E0E0" 
+        stroke-width="0.3" 
+        rx="2" ry="2" />
+  
+  <!-- Decorative elements (optional) -->
+  <circle cx="8" cy="20" r="1.5" fill="{{type_color}}" opacity="0.3" />
+  <circle cx="55" cy="20" r="1.5" fill="{{type_color}}" opacity="0.3" />
+  
+</svg>

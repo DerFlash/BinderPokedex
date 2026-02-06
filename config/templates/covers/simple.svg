@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" 
+     width="210mm" height="297mm" 
+     viewBox="0 0 210 297"
+     version="1.1">
+  
+  <!-- Cover Template: Simple Design (A4) -->
+  
+  <defs>
+    <linearGradient id="coverGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#667EEA;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764BA2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background with gradient -->
+  <rect x="0" y="0" width="210" height="297" fill="url(#coverGradient)" />
+  
+  <!-- Decorative frame -->
+  <rect x="15" y="20" width="180" height="257" 
+        fill="none" 
+        stroke="#FFFFFF" 
+        stroke-width="2" 
+        opacity="0.6" 
+        rx="8" ry="8" />
+  
+  <!-- Title section -->
+  <text x="105" y="80" 
+        font-family="Helvetica-Bold" 
+        font-size="28" 
+        fill="#FFFFFF" 
+        text-anchor="middle">{{title}}</text>
+  
+  <!-- Subtitle -->
+  <text x="105" y="105" 
+        font-family="Helvetica" 
+        font-size="14" 
+        fill="#FFFFFF" 
+        text-anchor="middle" 
+        opacity="0.9">{{subtitle}}</text>
+  
+  <!-- Pokemon range (large centered) -->
+  <text x="105" y="160" 
+        font-family="Helvetica-Bold" 
+        font-size="48" 
+        fill="#FFFFFF" 
+        text-anchor="middle">{{range_start}} – {{range_end}}</text>
+  
+  <!-- Set/Scope info -->
+  <text x="105" y="190" 
+        font-family="Helvetica" 
+        font-size="16" 
+        fill="#FFFFFF" 
+        text-anchor="middle" 
+        opacity="0.8">{{scope_name}}</text>
+  
+  <!-- Language indicator -->
+  <rect x="80" y="220" width="50" height="20" 
+        fill="#FFFFFF" 
+        opacity="0.2" 
+        rx="10" ry="10" />
+  
+  <text x="105" y="234" 
+        font-family="Helvetica-Bold" 
+        font-size="12" 
+        fill="#FFFFFF" 
+        text-anchor="middle">{{language}}</text>
+  
+  <!-- Footer info -->
+  <text x="105" y="270" 
+        font-family="Helvetica" 
+        font-size="10" 
+        fill="#FFFFFF" 
+        text-anchor="middle" 
+        opacity="0.7">Generated with BinderPokedex</text>
+  
+  <!-- Decorative Pokéball (optional) -->
+  <circle cx="105" cy="148" r="65" fill="none" stroke="#FFFFFF" stroke-width="1" opacity="0.15" />
+  <line x1="50" y1="148" x2="160" y2="148" stroke="#FFFFFF" stroke-width="1" opacity="0.15" />
+  
+</svg>

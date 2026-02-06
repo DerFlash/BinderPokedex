@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" 
+     width="210mm" height="297mm" 
+     viewBox="0 0 210 297"
+     version="1.1">
+  
+  <!-- Page Template: 3×3 Grid Layout (A4) -->
+  <!-- 9 card slots at 63mm × 88mm with crop marks -->
+  
+  <!-- Background -->
+  <rect x="0" y="0" width="210" height="297" fill="#FFFFFF" />
+  
+  <!-- Grid configuration:
+       - Card size: 63mm × 88mm
+       - Spacing: 4mm between cards
+       - Margins: 10mm top/left
+  -->
+  
+  <!-- Crop marks for cards -->
+  <defs>
+    <g id="cropMarks">
+      <!-- Top-left -->
+      <line x1="-2" y1="0" x2="-5" y2="0" stroke="#CCCCCC" stroke-width="0.2" />
+      <line x1="0" y1="-2" x2="0" y2="-5" stroke="#CCCCCC" stroke-width="0.2" />
+      
+      <!-- Top-right -->
+      <line x1="65" y1="0" x2="68" y2="0" stroke="#CCCCCC" stroke-width="0.2" />
+      <line x1="63" y1="-2" x2="63" y2="-5" stroke="#CCCCCC" stroke-width="0.2" />
+      
+      <!-- Bottom-left -->
+      <line x1="-2" y1="88" x2="-5" y2="88" stroke="#CCCCCC" stroke-width="0.2" />
+      <line x1="0" y1="90" x2="0" y2="93" stroke="#CCCCCC" stroke-width="0.2" />
+      
+      <!-- Bottom-right -->
+      <line x1="65" y1="88" x2="68" y2="88" stroke="#CCCCCC" stroke-width="0.2" />
+      <line x1="63" y1="90" x2="63" y2="93" stroke="#CCCCCC" stroke-width="0.2" />
+    </g>
+  </defs>
+  
+  <!-- Row 1 -->
+  <use href="#cropMarks" transform="translate(10, 10)" />
+  <rect x="10" y="10" width="63" height="88" fill="none" stroke="#E0E0E0" stroke-width="0.3" />
+  
+  <use href="#cropMarks" transform="translate(77, 10)" />
+  <rect x="77" y="10" width="63" height="88" fill="none" stroke="#E0E0E0" stroke-width="0.3" />
+  
+  <use href="#cropMarks" transform="translate(144, 10)" />
+  <rect x="144" y="10" width="63" height="88" fill="none" stroke="#E0E0E0" stroke-width="0.3" />
+  
+  <!-- Row 2 -->
+  <use href="#cropMarks" transform="translate(10, 102)" />
+  <rect x="10" y="102" width="63" height="88" fill="none" stroke="#E0E0E0" stroke-width="0.3" />
+  
+  <use href="#cropMarks" transform="translate(77, 102)" />
+  <rect x="77" y="102" width="63" height="88" fill="none" stroke="#E0E0E0" stroke-width="0.3" />
+  
+  <use href="#cropMarks" transform="translate(144, 102)" />
+  <rect x="144" y="102" width="63" height="88" fill="none" stroke="#E0E0E0" stroke-width="0.3" />
+  
+  <!-- Row 3 -->
+  <use href="#cropMarks" transform="translate(10, 194)" />
+  <rect x="10" y="194" width="63" height="88" fill="none" stroke="#E0E0E0" stroke-width="0.3" />
+  
+  <use href="#cropMarks" transform="translate(77, 194)" />
+  <rect x="77" y="194" width="63" height="88" fill="none" stroke="#E0E0E0" stroke-width="0.3" />
+  
+  <use href="#cropMarks" transform="translate(144, 194)" />
+  <rect x="144" y="194" width="63" height="88" fill="none" stroke="#E0E0E0" stroke-width="0.3" />
+  
+  <!-- Page number (bottom right) -->
+  <text x="200" y="290" 
+        font-family="Helvetica" 
+        font-size="8" 
+        fill="#666666" 
+        text-anchor="end">{{page_number}} / {{total_pages}}</text>
+  
+</svg>
