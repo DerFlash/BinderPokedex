@@ -12,6 +12,7 @@ from typing import Dict, Optional, Tuple
 from io import BytesIO
 
 from reportlab.lib.units import mm
+from PIL import Image
 
 try:
     from svglib.svglib import svg2rlg
@@ -259,15 +260,48 @@ class CardTemplateRenderer:
                         image_x = x + (63 * mm - image_width) / 2  # Center horizontally
                         image_y = y + 30 * mm  # Position from bottom
                         
-                        canvas.drawImage(
-                            image_reader,
-                            image_x,
-                            image_y,
-                            width=image_width,
-                            height=image_height,
-                            preserveAspectRatio=True,
-                            mask='auto'
-                        )
+                        # For better transparency support, extract PIL image and alpha channel
+                        try:
+                            # Get PIL image from ImageReader
+                            pil_image = image_reader._image if hasattr(image_reader, '_image') else Image.open(image_reader.fp)
+                            
+                            # Check if image has alpha channel
+                            if pil_image.mode in ('RGBA', 'LA') or (pil_image.mode == 'P' and 'transparency' in pil_image.info):
+                                # Convert to RGBA if needed
+                                if pil_image.mode != 'RGBA':
+                                    pil_image = pil_image.convert('RGBA')
+                                
+                                # Draw with explicit alpha mask
+                                canvas.drawImage(
+                                    image_reader,
+                                    image_x,
+                                    image_y,
+                                    width=image_width,
+                                    height=image_height,
+                                    preserveAspectRatio=True,
+                                    mask='auto'
+                                )
+                            else:
+                                # No transparency, draw normally
+                                canvas.drawImage(
+                                    image_reader,
+                                    image_x,
+                                    image_y,
+                                    width=image_width,
+                                    height=image_height,
+                                    preserveAspectRatio=True
+                                )
+                        except:
+                            # Fallback: draw without special transparency handling
+                            canvas.drawImage(
+                                image_reader,
+                                image_x,
+                                image_y,
+                                width=image_width,
+                                height=image_height,
+                                preserveAspectRatio=True,
+                                mask='auto'
+                            )
                 except Exception as e:
                     logger.warning(f"Failed to render Pokemon image for {pokemon_id}: {e}")
         

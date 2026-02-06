@@ -14,6 +14,7 @@ from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.lib.colors import HexColor
 from reportlab.lib.units import mm
 from reportlab.lib.utils import ImageReader
+from PIL import Image
 
 logger = logging.getLogger(__name__)
 
@@ -218,15 +219,40 @@ class InlineLogoRenderer:
                         logo_y = y + (font_size * 0.2)  # 20% above baseline
                         
                         try:
-                            canvas.drawImage(
-                                str(logo_path),
-                                current_x,
-                                logo_y,
-                                width=logo_width * mm,
-                                height=logo_height * mm,
-                                preserveAspectRatio=True,
-                                mask='auto'  # PNG transparency
-                            )
+                            # Open image to check for transparency
+                            pil_image = Image.open(logo_path)
+                            
+                            # Check if image has alpha channel (PNG transparency)
+                            if pil_image.mode in ('RGBA', 'LA') or (pil_image.mode == 'P' and 'transparency' in pil_image.info):
+                                # Convert to RGBA for consistent handling
+                                if pil_image.mode != 'RGBA':
+                                    pil_image = pil_image.convert('RGBA')
+                                
+                                # Create ImageReader with PIL image
+                                from io import BytesIO
+                                img_buffer = BytesIO()
+                                pil_image.save(img_buffer, format='PNG')
+                                img_buffer.seek(0)
+                                
+                                canvas.drawImage(
+                                    ImageReader(img_buffer),
+                                    current_x,
+                                    logo_y,
+                                    width=logo_width * mm,
+                                    height=logo_height * mm,
+                                    preserveAspectRatio=True,
+                                    mask='auto'
+                                )
+                            else:
+                                # No transparency, draw directly
+                                canvas.drawImage(
+                                    str(logo_path),
+                                    current_x,
+                                    logo_y,
+                                    width=logo_width * mm,
+                                    height=logo_height * mm,
+                                    preserveAspectRatio=True
+                                )
                         except Exception as e:
                             logger.warning(f"Failed to render logo {logo_path}: {e}")
                             # Fallback to token text

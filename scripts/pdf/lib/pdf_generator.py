@@ -76,12 +76,22 @@ class ImageCache:
             Path to cached file or None
         """
         if size == 'featured':
-            cache_file = self.disk_cache_dir / f'pokemon_{pokemon_id}' / f'{variant}_featured.jpg'
+            cache_file = self.disk_cache_dir / f'pokemon_{pokemon_id}' / f'{variant}_featured.png'
         else:  # 'card' size
-            cache_file = self.disk_cache_dir / f'pokemon_{pokemon_id}' / f'{variant}_thumb.jpg'
+            cache_file = self.disk_cache_dir / f'pokemon_{pokemon_id}' / f'{variant}_thumb.png'
         
         if cache_file.exists():
             return cache_file
+        
+        # Fallback: check for old JPG format
+        if size == 'featured':
+            old_cache_file = self.disk_cache_dir / f'pokemon_{pokemon_id}' / f'{variant}_featured.jpg'
+        else:
+            old_cache_file = self.disk_cache_dir / f'pokemon_{pokemon_id}' / f'{variant}_thumb.jpg'
+        
+        if old_cache_file.exists():
+            return old_cache_file
+        
         return None
     
     def _create_thumbnail(self, pil_image: Image.Image, target_size: tuple = None) -> Image.Image:
@@ -117,8 +127,20 @@ class ImageCache:
             pokemon_dir = self.disk_cache_dir / f'pokemon_{pokemon_id}'
             pokemon_dir.mkdir(parents=True, exist_ok=True)
             
-            thumbnail_file = pokemon_dir / f'{variant}_thumb.jpg'
-            pil_image.save(thumbnail_file, format='JPEG', quality=75, optimize=True)
+            # Save as PNG to preserve transparency (if present)
+            thumbnail_file = pokemon_dir / f'{variant}_thumb.png'
+            
+            # Convert to RGBA if image has transparency
+            if pil_image.mode in ('RGBA', 'LA') or (pil_image.mode == 'P' and 'transparency' in pil_image.info):
+                if pil_image.mode != 'RGBA':
+                    pil_image = pil_image.convert('RGBA')
+                pil_image.save(thumbnail_file, format='PNG', optimize=True)
+            else:
+                # No transparency - can use RGB for smaller file size
+                if pil_image.mode not in ('RGB', 'L'):
+                    pil_image = pil_image.convert('RGB')
+                pil_image.save(thumbnail_file, format='PNG', optimize=True)
+            
             return thumbnail_file
         except Exception as e:
             logger.debug(f"Could not save thumbnail for #{pokemon_id}: {e}")
@@ -198,18 +220,15 @@ class ImageCache:
                     # Load with PIL
                     pil_image = Image.open(image_data)
                     
-                    # Convert to RGB
-                    if pil_image.mode in ('RGBA', 'LA', 'P'):
-                        background = Image.new('RGB', pil_image.size, (255, 255, 255))
-                        if pil_image.mode == 'P':
-                            pil_image = pil_image.convert('RGBA')
-                        background.paste(pil_image, mask=pil_image.split()[-1] if pil_image.mode in ('RGBA', 'LA') else None)
-                        pil_image = background
-                    elif pil_image.mode != 'RGB':
-                        pil_image = pil_image.convert('RGB')
+                    # Preserve transparency - DO NOT convert RGBA to RGB
+                    # Keep alpha channel for transparent backgrounds
+                    if pil_image.mode == 'P':
+                        # Convert palette images to RGBA to preserve transparency
+                        pil_image = pil_image.convert('RGBA')
+                    # Note: We keep RGBA mode to preserve transparency!
                     
                     # ⚡ OPTIMIZATION: Pre-resize based on use case
-                    # Card size (100×100px): Small, fast (for binder cards)
+                    # Card size (180×180px): Small, fast (for binder cards)
                     # Featured size (500×500px): Large, for cover displays
                     target_size = self.FEATURED_SIZE if size == 'featured' else self.CARD_SIZE
                     pil_image = self._create_thumbnail(pil_image, target_size)
@@ -221,13 +240,20 @@ class ImageCache:
                     pokemon_dir.mkdir(parents=True, exist_ok=True)
                     
                     # Determine cache filename based on size and variant (to differentiate forms)
+                    # Use PNG format to preserve transparency
                     if size == 'featured':
-                        cache_path = pokemon_dir / f'{url_identifier}_featured.jpg'
+                        cache_path = pokemon_dir / f'{url_identifier}_featured.png'
                     else:
-                        cache_path = pokemon_dir / f'{url_identifier}_thumb.jpg'
+                        cache_path = pokemon_dir / f'{url_identifier}_thumb.png'
                     
-                    # Save to disk with JPEG compression (quality 75)
-                    pil_image.save(str(cache_path), format='JPEG', quality=75, optimize=True)
+                    # Save to disk as PNG to preserve transparency
+                    if pil_image.mode in ('RGBA', 'LA'):
+                        pil_image.save(str(cache_path), format='PNG', optimize=True)
+                    else:
+                        # Convert to RGB for non-transparent images (smaller file size)
+                        if pil_image.mode not in ('RGB', 'L'):
+                            pil_image = pil_image.convert('RGB')
+                        pil_image.save(str(cache_path), format='PNG', optimize=True)
                     
                     # Load from disk file (not BytesIO) - ensures stable image data
                     image_reader = ImageReader(str(cache_path))
