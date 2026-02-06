@@ -457,9 +457,6 @@ Examples:
         page_template=args.page_template,
         cover_template=args.cover_template
     )
-        skip_images=args.skip_images,
-        test_mode=args.test
-    )
 
 
 def list_available_scopes(data_dir: Path) -> int:

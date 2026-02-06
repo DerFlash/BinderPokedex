@@ -14,11 +14,13 @@ from io import BytesIO
 from reportlab.lib.units import mm
 
 try:
-    from svglib.svglib import renderSVG
+    from svglib.svglib import svg2rlg
     from reportlab.graphics import renderPDF
+    SVG_AVAILABLE = True
 except ImportError:
-    renderSVG = None
+    svg2rlg = None
     renderPDF = None
+    SVG_AVAILABLE = False
     logging.warning("svglib not available - template rendering disabled")
 
 from .inline_logo_renderer import InlineLogoRenderer
@@ -29,8 +31,10 @@ logger = logging.getLogger(__name__)
 class TemplateLoader:
     """Loads and processes SVG templates."""
     
-    # Template base directory
-    TEMPLATE_DIR = Path(__file__).parent.parent.parent.parent / 'config' / 'templates'
+    # Template base directory - from scripts/pdf/lib/rendering/ → project root
+    # template_loader.py is at: project_root/scripts/pdf/lib/rendering/
+    # So we need 4 levels up: rendering → lib → pdf → scripts → project_root
+    TEMPLATE_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent / 'config' / 'templates'
     
     @classmethod
     def load_card_template(cls, template_name: str) -> Optional[str]:
@@ -130,14 +134,14 @@ class TemplateLoader:
         Returns:
             True if successful, False otherwise
         """
-        if not renderSVG or not renderPDF:
+        if not SVG_AVAILABLE or not svg2rlg:
             logger.error("svglib not available")
             return False
         
         try:
             # SVG string → Drawing object
             svg_io = BytesIO(svg_content.encode('utf-8'))
-            drawing = renderSVG.svg2rlg(svg_io)
+            drawing = svg2rlg(svg_io)
             
             if not drawing:
                 logger.error("Failed to parse SVG")
@@ -220,6 +224,11 @@ class CardTemplateRenderer:
         # Template should define anchor point for name (e.g., at 31.5mm, 82mm)
         # For now, use hardcoded positions (will be extracted from template later)
         pokemon_name = pokemon_data.get('name', '???')
+        
+        # Handle multi-language name format (dict) vs simple string
+        if isinstance(pokemon_name, dict):
+            pokemon_name = pokemon_name.get(language, pokemon_name.get('en', '???'))
+        
         InlineLogoRenderer.render_text_with_inline_logos(
             canvas,
             pokemon_name,
@@ -237,8 +246,12 @@ class CardTemplateRenderer:
             pokemon_id = pokemon_data.get('id') or pokemon_data.get('num')
             if pokemon_id:
                 try:
-                    image_path = image_cache.get_pokemon_image(pokemon_id)
-                    if image_path and image_path.exists():
+                    # ImageCache.get_image returns ImageReader, not Path
+                    # We need to use it directly or get the image from data
+                    image_url = pokemon_data.get('image_url')
+                    image_reader = image_cache.get_image(pokemon_id, image_url, size='card')
+                    
+                    if image_reader:
                         # Image area: 63mm × 88mm card, ~50mm × 50mm image area
                         # Centered at x + 31.5mm, positioned at y + 30mm
                         image_width = 50 * mm
@@ -247,7 +260,7 @@ class CardTemplateRenderer:
                         image_y = y + 30 * mm  # Position from bottom
                         
                         canvas.drawImage(
-                            str(image_path),
+                            image_reader,
                             image_x,
                             image_y,
                             width=image_width,
