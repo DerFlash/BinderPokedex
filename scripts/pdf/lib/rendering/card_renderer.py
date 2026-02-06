@@ -29,6 +29,7 @@ try:
     from ..utils import TextRenderer
     from .translation_loader import TranslationLoader
     from .logo_renderer import LogoRenderer
+    from .template_loader import TemplateLoader, CardTemplateRenderer
 except ImportError:
     # Fallback for direct imports
     from scripts.lib.fonts import FontManager
@@ -36,6 +37,7 @@ except ImportError:
     from scripts.lib.utils import TextRenderer
     from scripts.lib.rendering.translation_loader import TranslationLoader
     from scripts.lib.rendering.logo_renderer import LogoRenderer
+    from scripts.lib.rendering.template_loader import TemplateLoader, CardTemplateRenderer
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -69,7 +71,7 @@ class CardStyle:
 class CardRenderer:
     """Unified renderer for Pokémon cards."""
     
-    def __init__(self, language: str = 'en', image_cache=None, variant: str = None, variant_data: dict = None, type_translations: dict = None) -> None:
+    def __init__(self, language: str = 'en', image_cache=None, variant: str = None, variant_data: dict = None, type_translations: dict = None, card_template: str = None) -> None:
         """
         Initialize card renderer.
         
@@ -79,6 +81,7 @@ class CardRenderer:
             variant: Optional variant ID (ex_gen1, ex_gen2, etc.) for variant-specific rendering
             variant_data: Optional variant data dict for accessing variant-level config (suffix, etc.)
             type_translations: Optional dict with type translations from data (e.g., from Pokedex.json)
+            card_template: Optional name of SVG template to use (e.g., 'classic'). If None, uses legacy rendering.
         """
         self.language: str = language
         self.image_cache = image_cache
@@ -91,6 +94,16 @@ class CardRenderer:
             self.type_translations: Dict[str, str] = type_translations
         else:
             self.type_translations: Dict[str, str] = TranslationLoader.load_types(language)
+        
+        # Template-based rendering (optional)
+        self.template_renderer: Optional[CardTemplateRenderer] = None
+        if card_template:
+            try:
+                self.template_renderer = CardTemplateRenderer(card_template)
+                logger.info(f"Using SVG template: {card_template}")
+            except Exception as e:
+                logger.warning(f"Failed to load template '{card_template}': {e}. Falling back to legacy rendering.")
+                self.template_renderer = None
     
     @staticmethod
     def _darken_color(hex_color: str, factor: float = 0.6) -> str:
@@ -157,6 +170,19 @@ class CardRenderer:
             section_prefix: Prefix from section-level data (e.g., "Mega", "Rocket's")
             section_suffix: Suffix from section-level data (e.g., "[EX]", "ex")
         """
+        # If template renderer is available, use it instead of legacy rendering
+        if self.template_renderer:
+            return self.template_renderer.render(
+                canvas_obj, 
+                pokemon_data, 
+                x, 
+                y, 
+                self.language,
+                self.image_cache
+            )
+        
+        # === LEGACY RENDERING (original code) ===
+        
         if card_width is None:
             card_width = self.style.CARD_WIDTH
         if card_height is None:
