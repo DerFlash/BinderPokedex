@@ -89,16 +89,18 @@ class CoverStyle:
 class CoverRenderer:
     """Renderer for both Pokédex and Variant cover pages."""
     
-    def __init__(self, language: str = 'en', image_cache=None):
+    def __init__(self, language: str = 'en', image_cache=None, cover_template: str = None):
         """
         Initialize cover renderer.
         
         Args:
             language: Language code (e.g., 'en', 'de', 'fr')
             image_cache: Optional image cache for loading Pokémon images
+            cover_template: Optional SVG template name for covers
         """
         self.language = language
         self.image_cache = image_cache
+        self.cover_template = cover_template
         self.style = CoverStyle()
         self.translation_loader = TranslationLoader()
         self.translations = TranslationHelper.load_translations(language)
@@ -114,6 +116,15 @@ class CoverRenderer:
             cover_data: Section data dict with title, subtitle, color_hex, description, featured_elements
             color: Optional color override for header stripe. If None, uses color_hex from cover_data.
         """
+        # If template is specified, use template rendering
+        if self.cover_template:
+            self._render_with_template(canvas_obj, pokemon_list, cover_data, color)
+        else:
+            # Use legacy hardcoded rendering
+            self._render_legacy(canvas_obj, pokemon_list, cover_data, color)
+    
+    def _render_legacy(self, canvas_obj, pokemon_list: List[Dict], cover_data: Dict, color: Optional[str] = None) -> None:
+        """Legacy hardcoded cover rendering."""
         # Get color from cover_data or use provided override
         if color is None:
             color = cover_data.get('color_hex', '#999999')
@@ -134,6 +145,12 @@ class CoverRenderer:
         
         # ===== FOOTER =====
         self._draw_footer(canvas_obj)
+    
+    def _render_with_template(self, canvas_obj, pokemon_list: List[Dict], cover_data: Dict, color: Optional[str] = None) -> None:
+        """Render cover using SVG template (currently delegates to legacy for identical output)."""
+        # For now, delegate to legacy rendering to maintain identical output
+        # Template rendering will be fully implemented in future iteration
+        self._render_legacy(canvas_obj, pokemon_list, cover_data, color)
     
     def _draw_header_stripe(self, canvas_obj, color: str) -> None:
         """Draw the colored top stripe with title."""

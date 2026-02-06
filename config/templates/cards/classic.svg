@@ -50,11 +50,11 @@
         text-anchor="end">{{id}}</text>
   
   <!-- Name area anchor point (for Python rendering) -->
-  <!-- Name will be rendered at x=31.5, y=82 by Python (centered) -->
+  <!-- Name will be rendered at x=31.5, y=20mm from top (= 68mm from bottom in ReportLab) -->
   <!-- This comment serves as documentation only -->
   
   <!-- Image area (50mm × 50mm) -->
-  <!-- Python will render Pokemon image centered at x=6.5, y=30 -->
+  <!-- Python will render Pokemon image at y=30mm from top (= 8mm from bottom in ReportLab) -->
   <rect x="6.5" y="30" width="50" height="50" 
         fill="#F5F5F5" 
         stroke="#E0E0E0" 

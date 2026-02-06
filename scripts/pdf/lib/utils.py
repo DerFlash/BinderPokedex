@@ -138,7 +138,7 @@ class RendererInitializer:
     """
     
     @staticmethod
-    def initialize_renderers(language: str, image_cache=None, variant_data: dict = None, type_translations: dict = None, card_template: str = None):
+    def initialize_renderers(language: str, image_cache=None, variant_data: dict = None, type_translations: dict = None, card_template: str = None, cover_template: str = None):
         """
         Initialize standard rendering components for PDF generation.
         
@@ -151,6 +151,7 @@ class RendererInitializer:
             variant_data: Optional variant data dict for variant-specific initialization
             type_translations: Optional type translations dict from API
             card_template: Optional SVG template for card rendering
+            cover_template: Optional SVG template for cover rendering
         
         Returns:
             Tuple of (card_renderer, page_renderer, cover_renderer)
@@ -179,7 +180,7 @@ class RendererInitializer:
         
         # Initialize common renderers
         page_renderer = PageRenderer()
-        cover_renderer = CoverRenderer(language=language, image_cache=image_cache)
+        cover_renderer = CoverRenderer(language=language, image_cache=image_cache, cover_template=cover_template)
         
         if card_template:
             logger.info(f"Renderers initialized for language: {language} with template: {card_template}")

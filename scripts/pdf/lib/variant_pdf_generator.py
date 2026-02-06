@@ -78,7 +78,8 @@ class VariantPDFGenerator:
         # Initialize rendering modules using shared utility
         self.card_renderer, self.page_renderer, self.variant_cover_renderer = \
             RendererInitializer.initialize_renderers(
-                language, image_cache, variant_data=variant_data, type_translations=self.type_translations, card_template=self.card_template
+                language, image_cache, variant_data=variant_data, type_translations=self.type_translations, 
+                card_template=self.card_template, cover_template=self.cover_template
             )
     
     def generate(self) -> bool:

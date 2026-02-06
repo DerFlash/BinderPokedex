@@ -222,8 +222,9 @@ class CardTemplateRenderer:
         success = TemplateLoader.render_svg_to_canvas(svg_content, canvas, x, y)
         
         # Render name with inline logos
-        # Template should define anchor point for name (e.g., at 31.5mm, 82mm)
-        # For now, use hardcoded positions (will be extracted from template later)
+        # Template should define anchor point for name (e.g., at 31.5mm, 20mm from top)
+        # SVG bottom info section at y=15-25mm from top
+        # ReportLab: y from bottom = 88mm - 20mm = 68mm
         pokemon_name = pokemon_data.get('name', '???')
         
         # Handle multi-language name format (dict) vs simple string
@@ -234,7 +235,7 @@ class CardTemplateRenderer:
             canvas,
             pokemon_name,
             x + 31.5 * mm,  # Center of card (63mm / 2)
-            y + 82 * mm,    # Name position from bottom
+            y + (88 * mm - 20 * mm),  # Name at 20mm from top = 68mm from bottom
             font_name='Helvetica-Bold',  # Will use FontManager later
             font_size=11,
             text_color='#2D2D2D',
@@ -253,12 +254,13 @@ class CardTemplateRenderer:
                     image_reader = image_cache.get_image(pokemon_id, image_url, size='card')
                     
                     if image_reader:
-                        # Image area: 63mm × 88mm card, ~50mm × 50mm image area
-                        # Centered at x + 31.5mm, positioned at y + 30mm
+                        # Image area: 63mm × 88mm card, 50mm × 50mm image area
+                        # SVG rect at y=30mm from top, height=50mm (30-80mm from top)
+                        # ReportLab: y from bottom = 88mm - (30mm + 50mm) = 8mm
                         image_width = 50 * mm
                         image_height = 50 * mm
                         image_x = x + (63 * mm - image_width) / 2  # Center horizontally
-                        image_y = y + 30 * mm  # Position from bottom
+                        image_y = y + (88 * mm - 80 * mm)  # 8mm from bottom (SVG y=30mm + height=50mm from top)
                         
                         # For better transparency support, extract PIL image and alpha channel
                         try:
