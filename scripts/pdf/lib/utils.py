@@ -138,7 +138,7 @@ class RendererInitializer:
     """
     
     @staticmethod
-    def initialize_renderers(language: str, image_cache=None, variant_data: dict = None, type_translations: dict = None):
+    def initialize_renderers(language: str, image_cache=None, variant_data: dict = None, type_translations: dict = None, card_template: str = None):
         """
         Initialize standard rendering components for PDF generation.
         
@@ -150,6 +150,7 @@ class RendererInitializer:
             image_cache: Optional image cache for loading Pokémon images
             variant_data: Optional variant data dict for variant-specific initialization
             type_translations: Optional type translations dict from API
+            card_template: Optional SVG template for card rendering
         
         Returns:
             Tuple of (card_renderer, page_renderer, cover_renderer)
@@ -165,19 +166,24 @@ class RendererInitializer:
                 image_cache=image_cache,
                 variant=variant_data.get('variant_type'),
                 variant_data=variant_data,
-                type_translations=type_translations
+                type_translations=type_translations,
+                card_template=card_template
             )
         else:
             card_renderer = CardRenderer(
                 language=language,
                 image_cache=image_cache,
-                type_translations=type_translations
+                type_translations=type_translations,
+                card_template=card_template
             )
         
         # Initialize common renderers
         page_renderer = PageRenderer()
         cover_renderer = CoverRenderer(language=language, image_cache=image_cache)
         
-        logger.info(f"Renderers initialized for language: {language}")
+        if card_template:
+            logger.info(f"Renderers initialized for language: {language} with template: {card_template}")
+        else:
+            logger.info(f"Renderers initialized for language: {language}")
         
         return card_renderer, page_renderer, cover_renderer

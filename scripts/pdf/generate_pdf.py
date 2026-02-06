@@ -146,6 +146,68 @@ def prepare_pokemon_data(pokemon_list: list, language: str, skip_images: bool = 
     return prepared
 
 
+def list_available_templates(project_dir: Path):
+    """
+    List all available SVG templates.
+    
+    Args:
+        project_dir: Project root directory
+    
+    Returns:
+        Exit code (0 for success)
+    """
+    templates_dir = project_dir / "config" / "templates"
+    
+    if not templates_dir.exists():
+        logger.error(f"❌ Templates directory not found: {templates_dir}")
+        return 1
+    
+    print("\n📋 Available Templates:\n")
+    
+    # Card templates
+    cards_dir = templates_dir / "cards"
+    if cards_dir.exists():
+        card_templates = sorted([f.stem for f in cards_dir.glob("*.svg")])
+        if card_templates:
+            print("  Card Templates (63×88mm):")
+            for template in card_templates:
+                print(f"    • {template}")
+        else:
+            print("  Card Templates: (none)")
+    else:
+        print("  Card Templates: (directory not found)")
+    
+    # Page templates
+    pages_dir = templates_dir / "pages"
+    if pages_dir.exists():
+        page_templates = sorted([f.stem for f in pages_dir.glob("*.svg")])
+        if page_templates:
+            print("\n  Page Templates (A4):")
+            for template in page_templates:
+                print(f"    • {template}")
+        else:
+            print("\n  Page Templates: (none)")
+    else:
+        print("\n  Page Templates: (directory not found)")
+    
+    # Cover templates
+    covers_dir = templates_dir / "covers"
+    if covers_dir.exists():
+        cover_templates = sorted([f.stem for f in covers_dir.glob("*.svg")])
+        if cover_templates:
+            print("\n  Cover Templates (A4):")
+            for template in cover_templates:
+                print(f"    • {template}")
+        else:
+            print("\n  Cover Templates: (none)")
+    else:
+        print("\n  Cover Templates: (directory not found)")
+    
+    print("\nUsage:")
+    print("  python generate_pdf.py --scope Pokedex --card-template classic")
+    print("  python generate_pdf.py --scope ExGen1 --card-template classic --page-template grid_3x3\n")
+    
+    return 0
 
 
 def main():
@@ -220,6 +282,34 @@ Examples:
         help="Verbose mode: show detailed logs during generation"
     )
     
+    parser.add_argument(
+        "--card-template",
+        type=str,
+        default=None,
+        help="SVG template name for card rendering (e.g., 'classic'). Omit to use legacy rendering. Use --list-templates to see available templates."
+    )
+    
+    parser.add_argument(
+        "--page-template",
+        type=str,
+        default=None,
+        help="SVG template name for page layout (e.g., 'grid_3x3'). Omit to use legacy layout. Use --list-templates to see available templates."
+    )
+    
+    parser.add_argument(
+        "--cover-template",
+        type=str,
+        default=None,
+        help="SVG template name for cover page (e.g., 'simple'). Omit to use legacy cover. Use --list-templates to see available templates."
+    )
+    
+    parser.add_argument(
+        "--list-templates",
+        action="store_true",
+        default=False,
+        help="List all available SVG templates (cards, pages, covers)"
+    )
+    
     args = parser.parse_args()
     
     # Configure logging level based on verbose flag
@@ -237,6 +327,10 @@ Examples:
     if not data_dir.exists():
         logger.error(f"❌ Data directory not found: {data_dir}")
         return 1
+    
+    # Handle --list-templates: show all available templates
+    if args.list_templates:
+        return list_available_templates(project_dir)
     
     # Handle --list: show all available scopes
     if args.list or args.scope is None:
@@ -297,7 +391,10 @@ Examples:
                     output_dir=project_dir / 'output',
                     script_dir=script_dir,
                     skip_images=args.skip_images,
-                    test_mode=args.test
+                    test_mode=args.test,
+                    card_template=args.card_template,
+                    page_template=args.page_template,
+                    cover_template=args.cover_template
                 )
                 
                 if result != 0:
@@ -354,6 +451,12 @@ Examples:
         languages=languages,
         output_dir=project_dir / 'output',
         script_dir=script_dir,
+        skip_images=args.skip_images,
+        test_mode=args.test,
+        card_template=args.card_template,
+        page_template=args.page_template,
+        cover_template=args.cover_template
+    )
         skip_images=args.skip_images,
         test_mode=args.test
     )
@@ -412,7 +515,9 @@ def list_available_scopes(data_dir: Path) -> int:
 
 def generate_scope_pdf(scope_name: str, scope_file: Path, languages: list, 
                        output_dir: Path, script_dir: Path,
-                       skip_images: bool = False, test_mode: bool = False) -> int:
+                       skip_images: bool = False, test_mode: bool = False,
+                       card_template: str = None, page_template: str = None, 
+                       cover_template: str = None) -> int:
     """
     Generate PDF for a specific scope.
     
@@ -424,6 +529,9 @@ def generate_scope_pdf(scope_name: str, scope_file: Path, languages: list,
         script_dir: Script directory for relative paths
         skip_images: Skip image processing
         test_mode: Use only first 9 Pokemon for testing
+        card_template: Optional SVG template for cards
+        page_template: Optional SVG template for pages
+        cover_template: Optional SVG template for covers
     
     Returns:
         0 on success, 1 on failure
@@ -462,7 +570,10 @@ def generate_scope_pdf(scope_name: str, scope_file: Path, languages: list,
                     script_dir=script_dir,
                     skip_images=skip_images,
                     test_mode=test_mode,
-                    scope_name=scope_name
+                    scope_name=scope_name,
+                    card_template=card_template,
+                    page_template=page_template,
+                    cover_template=cover_template
                 )
                 
                 total_generated += 1
@@ -588,7 +699,7 @@ def handle_variant_mode(args, script_dir, project_dir, data_dir, variants_dir):
     return 0 if total_failed == 0 else 1
 
 
-def _generate_variant_pdf(variant_data, language, output_dir, script_dir, skip_images=False, test_mode=False, scope_name=None):
+def _generate_variant_pdf(variant_data, language, output_dir, script_dir, skip_images=False, test_mode=False, scope_name=None, card_template=None, page_template=None, cover_template=None):
     """Generate a PDF for a scope (variant or pokedex)."""
     from lib.pdf_generator import ImageCache
     
@@ -618,7 +729,10 @@ def _generate_variant_pdf(variant_data, language, output_dir, script_dir, skip_i
         language=language,
         output_file=output_file,
         image_cache=image_cache,
-        type_translations=type_translations
+        type_translations=type_translations,
+        card_template=card_template,
+        page_template=page_template,
+        cover_template=cover_template
     )
     
     return pdf_gen.generate()

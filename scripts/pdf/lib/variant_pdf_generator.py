@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 class VariantPDFGenerator:
     """Generate PDFs for Pokémon variant collections using template system."""
     
-    def __init__(self, variant_data: dict, language: str, output_file: Path, image_cache=None, type_translations: dict = None):
+    def __init__(self, variant_data: dict, language: str, output_file: Path, image_cache=None, type_translations: dict = None, card_template: str = None, page_template: str = None, cover_template: str = None):
         """
         Initialize variant PDF generator.
         
@@ -44,12 +44,18 @@ class VariantPDFGenerator:
             output_file: Path to output PDF file
             image_cache: Optional image cache for loading Pokémon images
             type_translations: Optional type translations dict from API (for multilingual types)
+            card_template: Optional SVG template for cards
+            page_template: Optional SVG template for pages
+            cover_template: Optional SVG template for covers
         """
         self.variant_data = variant_data
         self.language = language
         self.output_file = output_file
         self.image_cache = image_cache
         self.type_translations = type_translations
+        self.card_template = card_template
+        self.page_template = page_template
+        self.cover_template = cover_template
         
         # Build complete pokemon list based on structure
         self.pokemon_list = []
@@ -72,7 +78,7 @@ class VariantPDFGenerator:
         # Initialize rendering modules using shared utility
         self.card_renderer, self.page_renderer, self.variant_cover_renderer = \
             RendererInitializer.initialize_renderers(
-                language, image_cache, variant_data=variant_data, type_translations=self.type_translations
+                language, image_cache, variant_data=variant_data, type_translations=self.type_translations, card_template=self.card_template
             )
     
     def generate(self) -> bool:
