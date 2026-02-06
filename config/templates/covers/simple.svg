@@ -4,78 +4,51 @@
      viewBox="0 0 210 297"
      version="1.1">
   
-  <!-- Cover Template: Simple Design (A4) -->
+  <!-- Cover Template: Simple Design (A4) - Matches current CoverRenderer layout -->
   
-  <defs>
-    <linearGradient id="coverGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#667EEA;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#764BA2;stop-opacity:1" />
-    </linearGradient>
-  </defs>
+  <!-- White background -->
+  <rect x="0" y="0" width="210" height="297" fill="#FFFFFF" />
   
-  <!-- Background with gradient -->
-  <rect x="0" y="0" width="210" height="297" fill="url(#coverGradient)" />
+  <!-- Top colored stripe (100mm high) with color variable -->
+  <rect x="0" y="0" width="210" height="100" fill="{{stripe_color}}" />
   
-  <!-- Decorative frame -->
-  <rect x="15" y="20" width="180" height="257" 
-        fill="none" 
+  <!-- Semi-transparent overlay on stripe -->
+  <rect x="0" y="0" width="210" height="100" fill="#000000" opacity="0.05" />
+  
+  <!-- Stripe title: "Binder Pokédex" -->
+  <text x="105" y="70" 
+        font-family="Helvetica-Bold" 
+        font-size="42" 
+        fill="#FFFFFF" 
+        text-anchor="middle">Binder Pokédex</text>
+  
+  <!-- Decorative underline for stripe title -->
+  <line x1="40" y1="62" x2="170" y2="62" 
         stroke="#FFFFFF" 
-        stroke-width="2" 
-        opacity="0.6" 
-        rx="8" ry="8" />
+        stroke-width="1.5" />
   
-  <!-- Title section -->
-  <text x="105" y="80" 
-        font-family="Helvetica-Bold" 
-        font-size="28" 
-        fill="#FFFFFF" 
-        text-anchor="middle">{{title}}</text>
+  <!-- Section title (multilingual) - rendered by Python -->
+  <!-- Position: x=105mm (center), y=242mm from bottom = 55mm from top -->
   
-  <!-- Subtitle -->
-  <text x="105" y="105" 
-        font-family="Helvetica" 
-        font-size="14" 
-        fill="#FFFFFF" 
-        text-anchor="middle" 
-        opacity="0.9">{{subtitle}}</text>
+  <!-- Section subtitle (multilingual) - rendered by Python -->
+  <!-- Position: x=105mm (center), y=232mm from bottom = 65mm from top -->
   
-  <!-- Pokemon range (large centered) -->
-  <text x="105" y="160" 
-        font-family="Helvetica-Bold" 
-        font-size="48" 
-        fill="#FFFFFF" 
-        text-anchor="middle">{{range_start}} – {{range_end}}</text>
+  <!-- Pokémon count text - rendered by Python -->
+  <!-- Position: x=105mm (center), y=147mm from bottom = 150mm from top -->
   
-  <!-- Set/Scope info -->
-  <text x="105" y="190" 
-        font-family="Helvetica" 
-        font-size="16" 
-        fill="#FFFFFF" 
-        text-anchor="middle" 
-        opacity="0.8">{{scope_name}}</text>
+  <!-- Decorative line -->
+  <line x1="40" y1="152" x2="170" y2="152" 
+        stroke="{{stripe_color}}" 
+        stroke-width="1.0" />
   
-  <!-- Language indicator -->
-  <rect x="80" y="220" width="50" height="20" 
-        fill="#FFFFFF" 
-        opacity="0.2" 
-        rx="10" ry="10" />
+  <!-- Description text - rendered by Python with logo support -->
+  <!-- Position: x=105mm (center), y=139mm from bottom = 158mm from top (8mm below line) -->
   
-  <text x="105" y="234" 
-        font-family="Helvetica-Bold" 
-        font-size="12" 
-        fill="#FFFFFF" 
-        text-anchor="middle">{{language}}</text>
+  <!-- Featured elements area (lower section) -->
+  <!-- Featured Pokémon images rendered by Python at y=35mm from bottom -->
+  <!-- Card size: 45mm × 63mm, spaced 8-10mm apart, centered horizontally -->
   
-  <!-- Footer info -->
-  <text x="105" y="270" 
-        font-family="Helvetica" 
-        font-size="10" 
-        fill="#FFFFFF" 
-        text-anchor="middle" 
-        opacity="0.7">Generated with BinderPokedex</text>
-  
-  <!-- Decorative Pokéball (optional) -->
-  <circle cx="105" cy="148" r="65" fill="none" stroke="#FFFFFF" stroke-width="1" opacity="0.15" />
-  <line x1="50" y1="148" x2="160" y2="148" stroke="#FFFFFF" stroke-width="1" opacity="0.15" />
+  <!-- Footer - rendered by Python -->
+  <!-- Position: y=2.5mm from bottom -->
   
 </svg>

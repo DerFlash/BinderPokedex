@@ -147,10 +147,43 @@ class CoverRenderer:
         self._draw_footer(canvas_obj)
     
     def _render_with_template(self, canvas_obj, pokemon_list: List[Dict], cover_data: Dict, color: Optional[str] = None) -> None:
-        """Render cover using SVG template (currently delegates to legacy for identical output)."""
-        # For now, delegate to legacy rendering to maintain identical output
-        # Template rendering will be fully implemented in future iteration
-        self._render_legacy(canvas_obj, pokemon_list, cover_data, color)
+        """Render cover using SVG template."""
+        from .template_loader import TemplateLoader
+        from .logo_renderer import LogoRenderer
+        
+        # Get color from cover_data or use provided override
+        if color is None:
+            color = cover_data.get('color_hex', '#999999')
+        
+        # Load SVG template
+        svg_content = TemplateLoader.load_cover_template(self.cover_template)
+        if not svg_content:
+            logger.warning(f"Cover template '{self.cover_template}' not found, falling back to legacy rendering")
+            self._render_legacy(canvas_obj, pokemon_list, cover_data, color)
+            return
+        
+        # Substitute template variables
+        variables = {
+            'stripe_color': color,
+        }
+        svg_content = TemplateLoader.substitute_variables(svg_content, variables)
+        
+        # Render SVG structure to canvas
+        TemplateLoader.render_svg_to_canvas(svg_content, canvas_obj, 0, 0)
+        
+        # ===== DYNAMIC CONTENT (rendered by Python) =====
+        
+        # Title section
+        self._draw_title_section(canvas_obj, cover_data)
+        
+        # Pokémon count and description
+        self._draw_pokemon_count(canvas_obj, len(pokemon_list), cover_data, color)
+        
+        # Featured elements
+        self._draw_featured_elements(canvas_obj, cover_data)
+        
+        # Footer
+        self._draw_footer(canvas_obj)
     
     def _draw_header_stripe(self, canvas_obj, color: str) -> None:
         """Draw the colored top stripe with title."""
