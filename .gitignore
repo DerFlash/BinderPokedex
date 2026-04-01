@@ -49,6 +49,7 @@ tmp/
 output/**/*.pdf
 !output/.gitkeep
 data/pokemon_images/
+data/pokemon_images_cache/
 
 # OS
 .DS_Store
