@@ -7,14 +7,6 @@
   <!-- Card Template: Classic Design (63mm × 88mm) -->
   <!-- Matches current CardRenderer design -->
   
-  <defs>
-    <!-- Gradient definitions -->
-    <linearGradient id="headerGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:{{type_color}};stop-opacity:1" />
-      <stop offset="100%" style="stop-color:{{type_color_dark}};stop-opacity:1" />
-    </linearGradient>
-  </defs>
-  
   <!-- Background -->
   <rect x="0" y="0" width="63" height="88" fill="#FFFFFF" />
   
@@ -25,9 +17,9 @@
         stroke-width="0.5" 
         rx="3" ry="3" />
   
-  <!-- Header section with gradient -->
+  <!-- Header section -->
   <rect x="3" y="3" width="57" height="10" 
-        fill="url(#headerGradient)" 
+        fill="{{type_color}}" 
         rx="2" ry="2" />
   
   <!-- Type badge (left side) -->
@@ -49,17 +41,17 @@
         fill="#FFFFFF" 
         text-anchor="end">{{id}}</text>
   
-  <!-- Name area anchor point (for Python rendering) -->
-  <!-- Name will be rendered at x=31.5, y=20mm from top (= 68mm from bottom in ReportLab) -->
-  <!-- This comment serves as documentation only -->
+  <!-- Pokemon name (will be replaced by Python via XML manipulation) -->
+  <text id="pokemon_name" x="31.5" y="20" 
+        font-family="Helvetica-Bold" 
+        font-size="11" 
+        fill="#2D2D2D" 
+        text-anchor="middle">[Pokemon Name]</text>
   
-  <!-- Image area (50mm × 50mm) -->
-  <!-- Python will render Pokemon image at y=30mm from top (= 8mm from bottom in ReportLab) -->
-  <rect x="6.5" y="30" width="50" height="50" 
-        fill="#F5F5F5" 
-        stroke="#E0E0E0" 
-        stroke-width="0.3" 
-        rx="2" ry="2" />
+  <!-- Image area (will be replaced with actual Pokemon image via XML manipulation) -->
+  <image id="pokemon_image" x="6.5" y="30" width="50" height="50" 
+         href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==" 
+         preserveAspectRatio="xMidYMid meet"/>
   
   <!-- Bottom info section -->
   <rect x="3" y="15" width="57" height="10" 

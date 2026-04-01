@@ -51,8 +51,12 @@ class DataStorage:
         if self._consolidated_data is not None:
             return self._consolidated_data
         
-        consolidated_file = self.data_dir / "Pokedex.json"
-        if not consolidated_file.exists():
+        consolidated_candidates = [
+            self.data_dir / "Pokedex.json",
+            self.data_dir / "pokemon.json",
+        ]
+        consolidated_file = next((path for path in consolidated_candidates if path.exists()), None)
+        if consolidated_file is None:
             return None
         
         try:
@@ -79,7 +83,7 @@ class DataStorage:
         section_key = f'gen{generation}'
         if section_key in consolidated.get('sections', {}):
             section = consolidated['sections'][section_key]
-            return section.get('cards', [])
+            return section.get('cards') or section.get('pokemon', [])
         
         return []
     
@@ -101,7 +105,7 @@ class DataStorage:
         if section_key in consolidated.get('sections', {}):
             section = consolidated['sections'][section_key]
             # Build generation_info from section metadata
-            cards = section.get('cards', [])
+            cards = section.get('cards') or section.get('pokemon', [])
             pokemon_count = len(cards)
             return {
                 'name': section.get('name', f'Generation {generation}'),

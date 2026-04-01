@@ -20,6 +20,7 @@ from typing import Optional, List, Dict
 
 from reportlab.lib.units import mm
 from reportlab.lib.colors import HexColor
+from reportlab.lib.utils import ImageReader
 
 try:
     from ..fonts import FontManager
@@ -30,12 +31,12 @@ try:
     from .footer_renderer import FooterRenderer
 except ImportError:
     # Fallback for direct imports
-    from scripts.lib.fonts import FontManager
-    from scripts.lib.constants import PAGE_WIDTH, PAGE_HEIGHT, GENERATION_COLORS
-    from scripts.lib.utils import TranslationHelper
-    from scripts.lib.rendering.translation_loader import TranslationLoader
-    from scripts.lib.rendering.title_renderer import TitleRenderer
-    from scripts.lib.rendering.footer_renderer import FooterRenderer
+    from fonts import FontManager
+    from constants import PAGE_WIDTH, PAGE_HEIGHT, GENERATION_COLORS
+    from utils import TranslationHelper
+    from rendering.translation_loader import TranslationLoader
+    from rendering.title_renderer import TitleRenderer
+    from rendering.footer_renderer import FooterRenderer
 
 logger = logging.getLogger(__name__)
 
@@ -122,6 +123,29 @@ class CoverRenderer:
         else:
             # Use legacy hardcoded rendering
             self._render_legacy(canvas_obj, pokemon_list, cover_data, color)
+
+    def render_variant_cover(self, canvas_obj, variant_data: Dict, pokemon_list: List[Dict],
+                            color: Optional[str] = None, section_title: Optional[str] = None) -> None:
+        """Backward-compatible wrapper for older variant cover call sites."""
+        cover_data = dict(variant_data)
+
+        display_title = section_title if section_title else (
+            cover_data.get('variant_name')
+            or cover_data.get('variant_display_name')
+            or cover_data.get('title')
+            or ''
+        )
+        subtitle = cover_data.get('variant_display_name') or cover_data.get('region') or ''
+
+        cover_data['title'] = display_title
+        cover_data['variant_name'] = display_title
+        if subtitle:
+            cover_data['subtitle'] = subtitle
+            cover_data.setdefault('title_mode', 'with_subtitle')
+        else:
+            cover_data.setdefault('title_mode', 'no_subtitle')
+
+        self.render_cover(canvas_obj, pokemon_list, cover_data, color)
     
     def _render_legacy(self, canvas_obj, pokemon_list: List[Dict], cover_data: Dict, color: Optional[str] = None) -> None:
         """Legacy hardcoded cover rendering."""
@@ -147,7 +171,7 @@ class CoverRenderer:
         self._draw_footer(canvas_obj)
     
     def _render_with_template(self, canvas_obj, pokemon_list: List[Dict], cover_data: Dict, color: Optional[str] = None) -> None:
-        """Render cover using SVG template."""
+        """Render cover using SVG template with XML manipulation (WYSIWYG approach)."""
         from .template_loader import TemplateLoader
         from .logo_renderer import LogoRenderer
         
@@ -162,28 +186,59 @@ class CoverRenderer:
             self._render_legacy(canvas_obj, pokemon_list, cover_data, color)
             return
         
-        # Substitute template variables
-        variables = {
-            'stripe_color': color,
-        }
-        svg_content = TemplateLoader.substitute_variables(svg_content, variables)
+        # Prepare dynamic content
+        section_title = cover_data.get('title', {})  # Changed from 'section_title' to 'title'
+        if isinstance(section_title, dict):
+            section_title_text = section_title.get(self.language, section_title.get('en', ''))
+        else:
+            section_title_text = str(section_title) if section_title else ''
         
-        # Render SVG structure to canvas
+        section_subtitle = cover_data.get('subtitle', {})  # Changed from 'section_subtitle' to 'subtitle'
+        if isinstance(section_subtitle, dict):
+            section_subtitle_text = section_subtitle.get(self.language, section_subtitle.get('en', ''))
+        else:
+            section_subtitle_text = str(section_subtitle) if section_subtitle else ''
+        
+        pokemon_text = self._get_translation('pokemon_count_text', count=len(pokemon_list))
+        if not pokemon_text or pokemon_text == 'pokemon_count_text':
+            pokemon_text = f"{len(pokemon_list)} Pokémon in this collection"
+        
+        description = cover_data.get('description', {})
+        if isinstance(description, dict):
+            description_text = description.get(self.language, description.get('en', ''))
+        else:
+            description_text = str(description) if description else ''
+        
+        footer_text = "Binder Pokédex Project | github.com/BinderPokedex"
+        
+        # Manipulate SVG content via XML
+        replacements = {
+            'section_title': section_title_text,
+            'section_subtitle': section_subtitle_text,
+            'pokemon_count': pokemon_text,
+            'description': description_text,
+            'footer': footer_text,
+        }
+        
+        # Substitute color variable first (for decorative_line stroke color)
+        svg_content = TemplateLoader.substitute_variables(svg_content, {'stripe_color': color})
+        
+        # Now manipulate XML to replace text content
+        svg_content = TemplateLoader.manipulate_svg_xml(svg_content, replacements)
+        
+        # Render complete SVG with all content
         TemplateLoader.render_svg_to_canvas(svg_content, canvas_obj, 0, 0)
         
-        # ===== DYNAMIC CONTENT (rendered by Python) =====
+        # ===== DYNAMIC CONTENT that can't be in SVG =====
         
-        # Title section
-        self._draw_title_section(canvas_obj, cover_data)
-        
-        # Pokémon count and description
-        self._draw_pokemon_count(canvas_obj, len(pokemon_list), cover_data, color)
-        
-        # Featured elements
-        self._draw_featured_elements(canvas_obj, cover_data)
-        
-        # Footer
-        self._draw_footer(canvas_obj)
+        # Featured elements (images need to be dynamically loaded)
+        # Note: featured_area in SVG is just placeholder rects, we overlay the actual images
+        featured_elements = cover_data.get('featured_elements') or cover_data.get('featured_cards', [])
+        if featured_elements and self.image_cache:
+            # SVG: y=199mm (top), height=63mm → bottom at y=262mm
+            # ReportLab needs bottom-left: 297mm - 262mm = 35mm from bottom
+            featured_y = 35 * mm  # Bottom-left corner of featured area
+            self._draw_featured_elements_at(canvas_obj, cover_data, featured_y)
     
     def _draw_header_stripe(self, canvas_obj, color: str) -> None:
         """Draw the colored top stripe with title."""
@@ -348,6 +403,51 @@ class CoverRenderer:
             color=self.style.TEXT_LIGHT_GRAY,
             font_name=font_name
         )
+    
+    def _draw_featured_elements_at(self, canvas_obj, cover_data: Dict, featured_y: float) -> None:
+        """Draw featured element images using fixed SVG position."""
+        # Support both old and new field names for backward compatibility
+        featured_elements = cover_data.get('featured_elements') or cover_data.get('featured_cards', [])
+        
+        if not featured_elements:
+            return
+        
+        # Use fixed Y position
+        card_y_base = featured_y
+        card_width = 45 * mm
+        card_height = 63 * mm
+        
+        # Fixed X positions from SVG template (match the placeholder rects)
+        # SVG: x=27.5, x=82.5, x=137.5 (centered with 10mm spacing)
+        x_positions = [27.5 * mm, 82.5 * mm, 137.5 * mm]
+        
+        # Draw each featured element
+        for i, element in enumerate(featured_elements[:3]):  # Max 3 elements
+            if i >= len(x_positions):
+                break
+                
+            element_x = x_positions[i]
+            
+            # Get local image path
+            image_path = element.get('local_image_path')
+            if not image_path or not Path(image_path).exists():
+                logger.warning(f"Featured element image not found: {image_path}")
+                continue
+            
+            try:
+                # Load and draw image
+                img = ImageReader(image_path)
+                canvas_obj.drawImage(
+                    img,
+                    element_x,
+                    card_y_base,
+                    width=card_width,
+                    height=card_height,
+                    preserveAspectRatio=True,
+                    mask='auto'
+                )
+            except Exception as e:
+                logger.error(f"Error drawing featured element: {e}")
     
     def _get_translation(self, key: str, fallback: str = None, **kwargs) -> str:
         """Get translated text from UI translations."""

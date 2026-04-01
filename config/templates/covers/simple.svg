@@ -6,49 +6,64 @@
   
   <!-- Cover Template: Simple Design (A4) - Matches current CoverRenderer layout -->
   
-  <!-- White background -->
-  <rect x="0" y="0" width="210" height="297" fill="#FFFFFF" />
-  
   <!-- Top colored stripe (100mm high) with color variable -->
   <rect x="0" y="0" width="210" height="100" fill="{{stripe_color}}" />
   
-  <!-- Semi-transparent overlay on stripe -->
-  <rect x="0" y="0" width="210" height="100" fill="#000000" opacity="0.05" />
-  
-  <!-- Stripe title: "Binder Pokédex" -->
-  <text x="105" y="70" 
+  <!-- Stripe title "Binder Pokédex" (static, always English) -->
+  <text x="105" y="35" 
         font-family="Helvetica-Bold" 
-        font-size="42" 
+        font-size="15" 
         fill="#FFFFFF" 
         text-anchor="middle">Binder Pokédex</text>
   
-  <!-- Decorative underline for stripe title -->
-  <line x1="40" y1="62" x2="170" y2="62" 
+  <!-- Decorative underline -->
+  <line x1="40" y1="37" x2="170" y2="37" 
         stroke="#FFFFFF" 
-        stroke-width="1.5" />
+        stroke-width="0.5" />
   
-  <!-- Section title (multilingual) - rendered by Python -->
-  <!-- Position: x=105mm (center), y=242mm from bottom = 55mm from top -->
+  <!-- Dynamic content (will be replaced by Python via XML manipulation) -->
+  <text id="section_title" x="105" y="55" 
+        font-family="Helvetica-Bold" 
+        font-size="14" 
+        fill="#333333" 
+        text-anchor="middle">[Section Title]</text>
   
-  <!-- Section subtitle (multilingual) - rendered by Python -->
-  <!-- Position: x=105mm (center), y=232mm from bottom = 65mm from top -->
+  <text id="section_subtitle" x="105" y="65" 
+        font-family="Helvetica" 
+        font-size="18" 
+        fill="#666666" 
+        text-anchor="middle">[Section Subtitle]</text>
   
-  <!-- Pokémon count text - rendered by Python -->
-  <!-- Position: x=105mm (center), y=147mm from bottom = 150mm from top -->
+  <text id="pokemon_count" x="105" y="147" 
+        font-family="Helvetica" 
+        font-size="14" 
+        fill="#666666" 
+        text-anchor="middle">[Pokemon Count]</text>
   
   <!-- Decorative line -->
-  <line x1="40" y1="152" x2="170" y2="152" 
+  <line id="decorative_line" x1="40" y1="152" x2="170" y2="152" 
         stroke="{{stripe_color}}" 
         stroke-width="1.0" />
   
-  <!-- Description text - rendered by Python with logo support -->
-  <!-- Position: x=105mm (center), y=139mm from bottom = 158mm from top (8mm below line) -->
+  <text id="description" x="105" y="160"
+        font-family="Helvetica" 
+        font-size="11" 
+        fill="#666666" 
+        text-anchor="middle">[Description]</text>
   
-  <!-- Featured elements area (lower section) -->
-  <!-- Featured Pokémon images rendered by Python at y=35mm from bottom -->
-  <!-- Card size: 45mm × 63mm, spaced 8-10mm apart, centered horizontally -->
+  <!-- Featured Pokemon area (images will be injected by Python) -->
+  <g id="featured_area">
+    <!-- Placeholder for featured Pokemon images (centered with 10mm spacing) -->
+    <rect x="27.5" y="199" width="45" height="63" fill="#F0F0F0" stroke="#E0E0E0" stroke-width="0.5"/>
+    <rect x="82.5" y="199" width="45" height="63" fill="#F0F0F0" stroke="#E0E0E0" stroke-width="0.5"/>
+    <rect x="137.5" y="199" width="45" height="63" fill="#F0F0F0" stroke="#E0E0E0" stroke-width="0.5"/>
+  </g>
   
-  <!-- Footer - rendered by Python -->
-  <!-- Position: y=2.5mm from bottom -->
+  <!-- Footer -->
+  <text id="footer" x="105" y="294.5" 
+        font-family="Helvetica" 
+        font-size="6" 
+        fill="#CCCCCC" 
+        text-anchor="middle">[Footer Text]</text>
   
 </svg>

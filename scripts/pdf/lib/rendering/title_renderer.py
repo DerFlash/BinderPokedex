@@ -20,8 +20,8 @@ try:
     from ..fonts import FontManager
     from .logo_renderer import LogoRenderer
 except ImportError:
-    from scripts.lib.fonts import FontManager
-    from scripts.lib.rendering.logo_renderer import LogoRenderer
+    from fonts import FontManager
+    from rendering.logo_renderer import LogoRenderer
 
 logger = logging.getLogger(__name__)
 

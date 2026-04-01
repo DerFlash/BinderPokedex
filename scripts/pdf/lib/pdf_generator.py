@@ -33,7 +33,8 @@ try:
     from .constants import (
         LANGUAGES, PAGE_WIDTH, PAGE_HEIGHT, PAGE_MARGIN,
         CARD_WIDTH, CARD_HEIGHT, CARDS_PER_ROW, CARDS_PER_COLUMN, GAP_X, GAP_Y,
-        OUTPUT_DIR, PDF_PREFIX, PDF_EXTENSION, COLORS, TYPE_COLORS, GENERATION_COLORS
+        OUTPUT_DIR, PDF_PREFIX, PDF_EXTENSION, COLORS, TYPE_COLORS, GENERATION_COLORS,
+        GENERATION_INFO
     )
     from .rendering import CardRenderer, CoverRenderer, PageRenderer
 except ImportError:
@@ -43,7 +44,8 @@ except ImportError:
     from constants import (
         LANGUAGES, PAGE_WIDTH, PAGE_HEIGHT, PAGE_MARGIN,
         CARD_WIDTH, CARD_HEIGHT, CARDS_PER_ROW, CARDS_PER_COLUMN, GAP_X, GAP_Y,
-        OUTPUT_DIR, PDF_PREFIX, PDF_EXTENSION, COLORS, TYPE_COLORS, GENERATION_COLORS
+        OUTPUT_DIR, PDF_PREFIX, PDF_EXTENSION, COLORS, TYPE_COLORS, GENERATION_COLORS,
+        GENERATION_INFO
     )
     from rendering import CardRenderer, CoverRenderer, PageRenderer
 
@@ -334,7 +336,10 @@ class PDFGenerator:
         self.page_renderer = PageRenderer()
         
         # Load translations via TranslationLoader
-        from .rendering.translation_loader import TranslationLoader
+        try:
+            from .rendering.translation_loader import TranslationLoader
+        except ImportError:
+            from rendering.translation_loader import TranslationLoader
         self.translation_loader = TranslationLoader()
         self.translations = self.translation_loader.load_ui(self.language)
         
@@ -454,7 +459,7 @@ class PDFGenerator:
         
         # Build footer text with translations
         footer_parts = [
-            self._format_translation('cover_follow_cutting'),
+            self.translations.get('cover_follow_cutting', ''),
             "Binder Pokédex Project",  # Keep project name in English
             datetime.now().strftime('%Y-%m-%d')
         ]
@@ -516,8 +521,8 @@ class PDFGenerator:
             # Create canvas
             c = canvas.Canvas(str(pdf_file_path), pagesize=A4)
             
-            # Draw cover page using unified CoverRenderer
-            self.cover_renderer.render_cover(c, self.pokemon_list)
+            # Draw cover page using legacy Pokedex cover renderer
+            self._draw_cover_page(c)
             c.showPage()
             logger.info(f"  Cover page created")
             

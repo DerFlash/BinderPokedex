@@ -32,12 +32,12 @@ try:
     from .template_loader import TemplateLoader, CardTemplateRenderer
 except ImportError:
     # Fallback for direct imports
-    from scripts.lib.fonts import FontManager
-    from scripts.lib.constants import CARD_WIDTH, CARD_HEIGHT, TYPE_COLORS
-    from scripts.lib.utils import TextRenderer
-    from scripts.lib.rendering.translation_loader import TranslationLoader
-    from scripts.lib.rendering.logo_renderer import LogoRenderer
-    from scripts.lib.rendering.template_loader import TemplateLoader, CardTemplateRenderer
+    from fonts import FontManager
+    from constants import CARD_WIDTH, CARD_HEIGHT, TYPE_COLORS
+    from utils import TextRenderer
+    from rendering.translation_loader import TranslationLoader
+    from rendering.logo_renderer import LogoRenderer
+    from rendering.template_loader import TemplateLoader, CardTemplateRenderer
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -305,8 +305,8 @@ class CardRenderer:
         canvas_obj.rect(x, y, card_width, image_height, fill=True, stroke=False)
         
         # Draw index number at bottom
-        # Use section_index if available (for variants), otherwise use Pokemon ID
-        poke_num = pokemon_data.get('section_index') or pokemon_data.get('id') or pokemon_data.get('num', '???')
+        # Use real Pokédex num if available (e.g. '#152'), otherwise fall back to section_index (for variants)
+        poke_num = pokemon_data.get('num') or pokemon_data.get('id') or pokemon_data.get('section_index', '???')
         poke_num_str: str = f"#{poke_num:03d}" if isinstance(poke_num, int) else (f"#{poke_num}" if not str(poke_num).startswith('#') else str(poke_num))
         darkened_color: str = self._darken_color(header_color, factor=0.6)
         canvas_obj.setFont("Helvetica-Bold", self.style.FONT_SIZE_ID)

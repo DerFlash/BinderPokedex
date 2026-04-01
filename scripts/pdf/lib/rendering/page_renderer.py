@@ -25,7 +25,7 @@ try:
     )
 except ImportError:
     # Fallback for direct imports
-    from scripts.lib.constants import (
+    from constants import (
         PAGE_WIDTH, PAGE_HEIGHT, PAGE_MARGIN, CARD_WIDTH, CARD_HEIGHT,
         CARDS_PER_ROW, CARDS_PER_COLUMN, GAP_X, GAP_Y
     )

@@ -84,6 +84,19 @@ GENERATION_COLORS = {
     9: '#666666',  # Gray
 }
 
+# Generation metadata (region name and Pokémon ID range)
+GENERATION_INFO = {
+    1: {'region': 'Kanto',  'range': [1,   151]},
+    2: {'region': 'Johto',  'range': [152, 251]},
+    3: {'region': 'Hoenn',  'range': [252, 386]},
+    4: {'region': 'Sinnoh', 'range': [387, 493]},
+    5: {'region': 'Unova',  'range': [494, 649]},
+    6: {'region': 'Kalos',  'range': [650, 721]},
+    7: {'region': 'Alola',  'range': [722, 809]},
+    8: {'region': 'Galar',  'range': [810, 905]},
+    9: {'region': 'Paldea', 'range': [906, 1025]},
+}
+
 # ============================================================================
 # CARD LAYOUT & DIMENSIONS (Pokémon Card Standards)
 # ============================================================================
