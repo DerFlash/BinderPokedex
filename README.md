@@ -121,6 +121,7 @@ Print 1,025+ Pokémon across 9 generations in 9 languages. All variants, all for
 | **Data Fetcher** | [docs/DATA_FETCHER.md](docs/DATA_FETCHER.md) |
 | **Image Cache** | [docs/IMAGE_CACHE.md](docs/IMAGE_CACHE.md) |
 | **Contribution** | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) |
+| **Copilot Customization** | [docs/COPILOT_CUSTOMIZATION.md](docs/COPILOT_CUSTOMIZATION.md) |
 | **Pokémon Variants** | [docs/VARIANTS_FEATURE_SUMMARY.md](docs/VARIANTS_FEATURE_SUMMARY.md) |
 | **Variants Architecture** | [docs/VARIANTS_ARCHITECTURE.md](docs/VARIANTS_ARCHITECTURE.md) |
 | **Variants Quickstart** | [docs/VARIANTS_QUICKSTART.md](docs/VARIANTS_QUICKSTART.md) |
