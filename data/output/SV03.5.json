@@ -46,7 +46,15 @@
         {
           "localId": "001",
           "name": {
-            "en": "Bulbasaur"
+            "de": "Bisasam",
+            "en": "Bulbasaur",
+            "fr": "Bulbizarre",
+            "es": "Bulbasaur",
+            "it": "Bulbasaur",
+            "ja": "フシギダネ",
+            "ko": "이상해씨",
+            "zh_hans": "妙蛙种子",
+            "zh_hant": "妙蛙種子"
           },
           "type": "pokemon",
           "pokemon_id": 1,
@@ -58,7 +66,15 @@
         {
           "localId": "002",
           "name": {
-            "en": "Ivysaur"
+            "de": "Bisaknosp",
+            "en": "Ivysaur",
+            "fr": "Herbizarre",
+            "es": "Ivysaur",
+            "it": "Ivysaur",
+            "ja": "フシギソウ",
+            "ko": "이상해풀",
+            "zh_hans": "妙蛙草",
+            "zh_hant": "妙蛙草"
           },
           "type": "pokemon",
           "pokemon_id": 2,
@@ -70,7 +86,15 @@
         {
           "localId": "003",
           "name": {
-            "en": "Venusaur"
+            "de": "Bisaflor",
+            "en": "Venusaur",
+            "fr": "Florizarre",
+            "es": "Venusaur",
+            "it": "Venusaur",
+            "ja": "フシギバナ",
+            "ko": "이상해꽃",
+            "zh_hans": "妙蛙花",
+            "zh_hant": "妙蛙花"
           },
           "type": "pokemon",
           "pokemon_id": 3,
@@ -83,7 +107,15 @@
         {
           "localId": "004",
           "name": {
-            "en": "Charmander"
+            "de": "Glumanda",
+            "en": "Charmander",
+            "fr": "Salamèche",
+            "es": "Charmander",
+            "it": "Charmander",
+            "ja": "ヒトカゲ",
+            "ko": "파이리",
+            "zh_hans": "小火龙",
+            "zh_hant": "小火龍"
           },
           "type": "pokemon",
           "pokemon_id": 4,
@@ -95,7 +127,15 @@
         {
           "localId": "005",
           "name": {
-            "en": "Charmeleon"
+            "de": "Glutexo",
+            "en": "Charmeleon",
+            "fr": "Reptincel",
+            "es": "Charmeleon",
+            "it": "Charmeleon",
+            "ja": "リザード",
+            "ko": "리자드",
+            "zh_hans": "火恐龙",
+            "zh_hant": "火恐龍"
           },
           "type": "pokemon",
           "pokemon_id": 5,
@@ -107,7 +147,15 @@
         {
           "localId": "006",
           "name": {
-            "en": "Charizard"
+            "de": "Glurak",
+            "en": "Charizard",
+            "fr": "Dracaufeu",
+            "es": "Charizard",
+            "it": "Charizard",
+            "ja": "リザードン",
+            "ko": "리자몽",
+            "zh_hans": "喷火龙",
+            "zh_hant": "噴火龍"
           },
           "type": "pokemon",
           "pokemon_id": 6,
@@ -120,7 +168,15 @@
         {
           "localId": "007",
           "name": {
-            "en": "Squirtle"
+            "de": "Schiggy",
+            "en": "Squirtle",
+            "fr": "Carapuce",
+            "es": "Squirtle",
+            "it": "Squirtle",
+            "ja": "ゼニガメ",
+            "ko": "꼬부기",
+            "zh_hans": "杰尼龟",
+            "zh_hant": "傑尼龜"
           },
           "type": "pokemon",
           "pokemon_id": 7,
@@ -132,7 +188,15 @@
         {
           "localId": "008",
           "name": {
-            "en": "Wartortle"
+            "de": "Schillok",
+            "en": "Wartortle",
+            "fr": "Carabaffe",
+            "es": "Wartortle",
+            "it": "Wartortle",
+            "ja": "カメール",
+            "ko": "어니부기",
+            "zh_hans": "卡咪龟",
+            "zh_hant": "卡咪龜"
           },
           "type": "pokemon",
           "pokemon_id": 8,
@@ -144,7 +208,15 @@
         {
           "localId": "009",
           "name": {
-            "en": "Blastoise"
+            "de": "Turtok",
+            "en": "Blastoise",
+            "fr": "Tortank",
+            "es": "Blastoise",
+            "it": "Blastoise",
+            "ja": "カメックス",
+            "ko": "거북왕",
+            "zh_hans": "水箭龟",
+            "zh_hant": "水箭龜"
           },
           "type": "pokemon",
           "pokemon_id": 9,
@@ -157,7 +229,15 @@
         {
           "localId": "010",
           "name": {
-            "en": "Caterpie"
+            "de": "Raupy",
+            "en": "Caterpie",
+            "fr": "Chenipan",
+            "es": "Caterpie",
+            "it": "Caterpie",
+            "ja": "キャタピー",
+            "ko": "캐터피",
+            "zh_hans": "绿毛虫",
+            "zh_hant": "綠毛蟲"
           },
           "type": "pokemon",
           "pokemon_id": 10,
@@ -169,7 +249,15 @@
         {
           "localId": "011",
           "name": {
-            "en": "Metapod"
+            "de": "Safcon",
+            "en": "Metapod",
+            "fr": "Chrysacier",
+            "es": "Metapod",
+            "it": "Metapod",
+            "ja": "トランセル",
+            "ko": "단데기",
+            "zh_hans": "铁甲蛹",
+            "zh_hant": "鐵甲蛹"
           },
           "type": "pokemon",
           "pokemon_id": 11,
@@ -181,7 +269,15 @@
         {
           "localId": "012",
           "name": {
-            "en": "Butterfree"
+            "de": "Smettbo",
+            "en": "Butterfree",
+            "fr": "Papilusion",
+            "es": "Butterfree",
+            "it": "Butterfree",
+            "ja": "バタフリー",
+            "ko": "버터플",
+            "zh_hans": "巴大蝶",
+            "zh_hant": "巴大蝶"
           },
           "type": "pokemon",
           "pokemon_id": 12,
@@ -193,7 +289,15 @@
         {
           "localId": "013",
           "name": {
-            "en": "Weedle"
+            "de": "Hornliu",
+            "en": "Weedle",
+            "fr": "Aspicot",
+            "es": "Weedle",
+            "it": "Weedle",
+            "ja": "ビードル",
+            "ko": "뿔충이",
+            "zh_hans": "独角虫",
+            "zh_hant": "獨角蟲"
           },
           "type": "pokemon",
           "pokemon_id": 13,
@@ -205,7 +309,15 @@
         {
           "localId": "014",
           "name": {
-            "en": "Kakuna"
+            "de": "Kokuna",
+            "en": "Kakuna",
+            "fr": "Coconfort",
+            "es": "Kakuna",
+            "it": "Kakuna",
+            "ja": "コクーン",
+            "ko": "딱충이",
+            "zh_hans": "铁壳蛹",
+            "zh_hant": "鐵殼蛹"
           },
           "type": "pokemon",
           "pokemon_id": 14,
@@ -217,7 +329,15 @@
         {
           "localId": "015",
           "name": {
-            "en": "Beedrill"
+            "de": "Bibor",
+            "en": "Beedrill",
+            "fr": "Dardargnan",
+            "es": "Beedrill",
+            "it": "Beedrill",
+            "ja": "スピアー",
+            "ko": "독침붕",
+            "zh_hans": "大针蜂",
+            "zh_hant": "大針蜂"
           },
           "type": "pokemon",
           "pokemon_id": 15,
@@ -229,7 +349,15 @@
         {
           "localId": "016",
           "name": {
-            "en": "Pidgey"
+            "de": "Taubsi",
+            "en": "Pidgey",
+            "fr": "Roucool",
+            "es": "Pidgey",
+            "it": "Pidgey",
+            "ja": "ポッポ",
+            "ko": "구구",
+            "zh_hans": "波波",
+            "zh_hant": "波波"
           },
           "type": "pokemon",
           "pokemon_id": 16,
@@ -241,7 +369,15 @@
         {
           "localId": "017",
           "name": {
-            "en": "Pidgeotto"
+            "de": "Tauboga",
+            "en": "Pidgeotto",
+            "fr": "Roucoups",
+            "es": "Pidgeotto",
+            "it": "Pidgeotto",
+            "ja": "ピジョン",
+            "ko": "피죤",
+            "zh_hans": "比比鸟",
+            "zh_hant": "比比鳥"
           },
           "type": "pokemon",
           "pokemon_id": 17,
@@ -253,7 +389,15 @@
         {
           "localId": "018",
           "name": {
-            "en": "Pidgeot"
+            "de": "Tauboss",
+            "en": "Pidgeot",
+            "fr": "Roucarnage",
+            "es": "Pidgeot",
+            "it": "Pidgeot",
+            "ja": "ピジョット",
+            "ko": "피죤투",
+            "zh_hans": "大比鸟",
+            "zh_hant": "大比鳥"
           },
           "type": "pokemon",
           "pokemon_id": 18,
@@ -265,7 +409,15 @@
         {
           "localId": "019",
           "name": {
-            "en": "Rattata"
+            "de": "Rattfratz",
+            "en": "Rattata",
+            "fr": "Rattata",
+            "es": "Rattata",
+            "it": "Rattata",
+            "ja": "コラッタ",
+            "ko": "꼬렛",
+            "zh_hans": "小拉达",
+            "zh_hant": "小拉達"
           },
           "type": "pokemon",
           "pokemon_id": 19,
@@ -277,7 +429,15 @@
         {
           "localId": "020",
           "name": {
-            "en": "Raticate"
+            "de": "Rattikarl",
+            "en": "Raticate",
+            "fr": "Rattatac",
+            "es": "Raticate",
+            "it": "Raticate",
+            "ja": "ラッタ",
+            "ko": "레트라",
+            "zh_hans": "拉达",
+            "zh_hant": "拉達"
           },
           "type": "pokemon",
           "pokemon_id": 20,
@@ -289,7 +449,15 @@
         {
           "localId": "021",
           "name": {
-            "en": "Spearow"
+            "de": "Habitak",
+            "en": "Spearow",
+            "fr": "Piafabec",
+            "es": "Spearow",
+            "it": "Spearow",
+            "ja": "オニスズメ",
+            "ko": "깨비참",
+            "zh_hans": "烈雀",
+            "zh_hant": "烈雀"
           },
           "type": "pokemon",
           "pokemon_id": 21,
@@ -301,7 +469,15 @@
         {
           "localId": "022",
           "name": {
-            "en": "Fearow"
+            "de": "Ibitak",
+            "en": "Fearow",
+            "fr": "Rapasdepic",
+            "es": "Fearow",
+            "it": "Fearow",
+            "ja": "オニドリル",
+            "ko": "깨비드릴조",
+            "zh_hans": "大嘴雀",
+            "zh_hant": "大嘴雀"
           },
           "type": "pokemon",
           "pokemon_id": 22,
@@ -313,7 +489,15 @@
         {
           "localId": "023",
           "name": {
-            "en": "Ekans"
+            "de": "Rettan",
+            "en": "Ekans",
+            "fr": "Abo",
+            "es": "Ekans",
+            "it": "Ekans",
+            "ja": "アーボ",
+            "ko": "아보",
+            "zh_hans": "阿柏蛇",
+            "zh_hant": "阿柏蛇"
           },
           "type": "pokemon",
           "pokemon_id": 23,
@@ -325,7 +509,15 @@
         {
           "localId": "024",
           "name": {
-            "en": "Arbok"
+            "de": "Arbok",
+            "en": "Arbok",
+            "fr": "Arbok",
+            "es": "Arbok",
+            "it": "Arbok",
+            "ja": "アーボック",
+            "ko": "아보크",
+            "zh_hans": "阿柏怪",
+            "zh_hant": "阿柏怪"
           },
           "type": "pokemon",
           "pokemon_id": 24,
@@ -338,7 +530,15 @@
         {
           "localId": "025",
           "name": {
-            "en": "Pikachu"
+            "de": "Pikachu",
+            "en": "Pikachu",
+            "fr": "Pikachu",
+            "es": "Pikachu",
+            "it": "Pikachu",
+            "ja": "ピカチュウ",
+            "ko": "피카츄",
+            "zh_hans": "皮卡丘",
+            "zh_hant": "皮卡丘"
           },
           "type": "pokemon",
           "pokemon_id": 25,
@@ -350,7 +550,15 @@
         {
           "localId": "026",
           "name": {
-            "en": "Raichu"
+            "de": "Raichu",
+            "en": "Raichu",
+            "fr": "Raichu",
+            "es": "Raichu",
+            "it": "Raichu",
+            "ja": "ライチュウ",
+            "ko": "라이츄",
+            "zh_hans": "雷丘",
+            "zh_hant": "雷丘"
           },
           "type": "pokemon",
           "pokemon_id": 26,
@@ -362,7 +570,15 @@
         {
           "localId": "027",
           "name": {
-            "en": "Sandshrew"
+            "de": "Sandan",
+            "en": "Sandshrew",
+            "fr": "Sabelette",
+            "es": "Sandshrew",
+            "it": "Sandshrew",
+            "ja": "サンド",
+            "ko": "모래두지",
+            "zh_hans": "穿山鼠",
+            "zh_hant": "穿山鼠"
           },
           "type": "pokemon",
           "pokemon_id": 27,
@@ -374,7 +590,15 @@
         {
           "localId": "028",
           "name": {
-            "en": "Sandslash"
+            "de": "Sandamer",
+            "en": "Sandslash",
+            "fr": "Sablaireau",
+            "es": "Sandslash",
+            "it": "Sandslash",
+            "ja": "サンドパン",
+            "ko": "고지",
+            "zh_hans": "穿山王",
+            "zh_hant": "穿山王"
           },
           "type": "pokemon",
           "pokemon_id": 28,
@@ -386,7 +610,15 @@
         {
           "localId": "029",
           "name": {
-            "en": "Nidoran♀"
+            "de": "Nidoran♀",
+            "en": "Nidoran♀",
+            "fr": "Nidoran♀",
+            "es": "Nidoran♀",
+            "it": "Nidoran♀",
+            "ja": "ニドラン♀",
+            "ko": "니드런♀",
+            "zh_hans": "尼多兰",
+            "zh_hant": "尼多蘭"
           },
           "type": "pokemon",
           "pokemon_id": 29,
@@ -398,7 +630,15 @@
         {
           "localId": "030",
           "name": {
-            "en": "Nidorina"
+            "de": "Nidorina",
+            "en": "Nidorina",
+            "fr": "Nidorina",
+            "es": "Nidorina",
+            "it": "Nidorina",
+            "ja": "ニドリーナ",
+            "ko": "니드리나",
+            "zh_hans": "尼多娜",
+            "zh_hant": "尼多娜"
           },
           "type": "pokemon",
           "pokemon_id": 30,
@@ -410,7 +650,15 @@
         {
           "localId": "031",
           "name": {
-            "en": "Nidoqueen"
+            "de": "Nidoqueen",
+            "en": "Nidoqueen",
+            "fr": "Nidoqueen",
+            "es": "Nidoqueen",
+            "it": "Nidoqueen",
+            "ja": "ニドクイン",
+            "ko": "니드퀸",
+            "zh_hans": "尼多后",
+            "zh_hant": "尼多后"
           },
           "type": "pokemon",
           "pokemon_id": 31,
@@ -422,7 +670,15 @@
         {
           "localId": "032",
           "name": {
-            "en": "Nidoran♂"
+            "de": "Nidoran♂",
+            "en": "Nidoran♂",
+            "fr": "Nidoran♂",
+            "es": "Nidoran♂",
+            "it": "Nidoran♂",
+            "ja": "ニドラン♂",
+            "ko": "니드런♂",
+            "zh_hans": "尼多朗",
+            "zh_hant": "尼多朗"
           },
           "type": "pokemon",
           "pokemon_id": 32,
@@ -434,7 +690,15 @@
         {
           "localId": "033",
           "name": {
-            "en": "Nidorino"
+            "de": "Nidorino",
+            "en": "Nidorino",
+            "fr": "Nidorino",
+            "es": "Nidorino",
+            "it": "Nidorino",
+            "ja": "ニドリーノ",
+            "ko": "니드리노",
+            "zh_hans": "尼多力诺",
+            "zh_hant": "尼多力諾"
           },
           "type": "pokemon",
           "pokemon_id": 33,
@@ -446,7 +710,15 @@
         {
           "localId": "034",
           "name": {
-            "en": "Nidoking"
+            "de": "Nidoking",
+            "en": "Nidoking",
+            "fr": "Nidoking",
+            "es": "Nidoking",
+            "it": "Nidoking",
+            "ja": "ニドキング",
+            "ko": "니드킹",
+            "zh_hans": "尼多王",
+            "zh_hant": "尼多王"
           },
           "type": "pokemon",
           "pokemon_id": 34,
@@ -458,7 +730,15 @@
         {
           "localId": "035",
           "name": {
-            "en": "Clefairy"
+            "de": "Piepi",
+            "en": "Clefairy",
+            "fr": "Mélofée",
+            "es": "Clefairy",
+            "it": "Clefairy",
+            "ja": "ピッピ",
+            "ko": "삐삐",
+            "zh_hans": "皮皮",
+            "zh_hant": "皮皮"
           },
           "type": "pokemon",
           "pokemon_id": 35,
@@ -470,7 +750,15 @@
         {
           "localId": "036",
           "name": {
-            "en": "Clefable"
+            "de": "Pixi",
+            "en": "Clefable",
+            "fr": "Mélodelfe",
+            "es": "Clefable",
+            "it": "Clefable",
+            "ja": "ピクシー",
+            "ko": "픽시",
+            "zh_hans": "皮可西",
+            "zh_hant": "皮可西"
           },
           "type": "pokemon",
           "pokemon_id": 36,
@@ -482,7 +770,15 @@
         {
           "localId": "037",
           "name": {
-            "en": "Vulpix"
+            "de": "Vulpix",
+            "en": "Vulpix",
+            "fr": "Goupix",
+            "es": "Vulpix",
+            "it": "Vulpix",
+            "ja": "ロコン",
+            "ko": "식스테일",
+            "zh_hans": "六尾",
+            "zh_hant": "六尾"
           },
           "type": "pokemon",
           "pokemon_id": 37,
@@ -494,7 +790,15 @@
         {
           "localId": "038",
           "name": {
-            "en": "Ninetales"
+            "de": "Vulnona",
+            "en": "Ninetales",
+            "fr": "Feunard",
+            "es": "Ninetales",
+            "it": "Ninetales",
+            "ja": "キュウコン",
+            "ko": "나인테일",
+            "zh_hans": "九尾",
+            "zh_hant": "九尾"
           },
           "type": "pokemon",
           "pokemon_id": 38,
@@ -507,7 +811,15 @@
         {
           "localId": "039",
           "name": {
-            "en": "Jigglypuff"
+            "de": "Pummeluff",
+            "en": "Jigglypuff",
+            "fr": "Rondoudou",
+            "es": "Jigglypuff",
+            "it": "Jigglypuff",
+            "ja": "プリン",
+            "ko": "푸린",
+            "zh_hans": "胖丁",
+            "zh_hant": "胖丁"
           },
           "type": "pokemon",
           "pokemon_id": 39,
@@ -519,7 +831,15 @@
         {
           "localId": "040",
           "name": {
-            "en": "Wigglytuff"
+            "de": "Knuddeluff",
+            "en": "Wigglytuff",
+            "fr": "Grodoudou",
+            "es": "Wigglytuff",
+            "it": "Wigglytuff",
+            "ja": "プクリン",
+            "ko": "푸크린",
+            "zh_hans": "胖可丁",
+            "zh_hant": "胖可丁"
           },
           "type": "pokemon",
           "pokemon_id": 40,
@@ -532,7 +852,15 @@
         {
           "localId": "041",
           "name": {
-            "en": "Zubat"
+            "de": "Zubat",
+            "en": "Zubat",
+            "fr": "Nosferapti",
+            "es": "Zubat",
+            "it": "Zubat",
+            "ja": "ズバット",
+            "ko": "주뱃",
+            "zh_hans": "超音蝠",
+            "zh_hant": "超音蝠"
           },
           "type": "pokemon",
           "pokemon_id": 41,
@@ -544,7 +872,15 @@
         {
           "localId": "042",
           "name": {
-            "en": "Golbat"
+            "de": "Golbat",
+            "en": "Golbat",
+            "fr": "Nosferalto",
+            "es": "Golbat",
+            "it": "Golbat",
+            "ja": "ゴルバット",
+            "ko": "골뱃",
+            "zh_hans": "大嘴蝠",
+            "zh_hant": "大嘴蝠"
           },
           "type": "pokemon",
           "pokemon_id": 42,
@@ -556,7 +892,15 @@
         {
           "localId": "043",
           "name": {
-            "en": "Oddish"
+            "de": "Myrapla",
+            "en": "Oddish",
+            "fr": "Mystherbe",
+            "es": "Oddish",
+            "it": "Oddish",
+            "ja": "ナゾノクサ",
+            "ko": "뚜벅쵸",
+            "zh_hans": "走路草",
+            "zh_hant": "走路草"
           },
           "type": "pokemon",
           "pokemon_id": 43,
@@ -568,7 +912,15 @@
         {
           "localId": "044",
           "name": {
-            "en": "Gloom"
+            "de": "Duflor",
+            "en": "Gloom",
+            "fr": "Ortide",
+            "es": "Gloom",
+            "it": "Gloom",
+            "ja": "クサイハナ",
+            "ko": "냄새꼬",
+            "zh_hans": "臭臭花",
+            "zh_hant": "臭臭花"
           },
           "type": "pokemon",
           "pokemon_id": 44,
@@ -580,7 +932,15 @@
         {
           "localId": "045",
           "name": {
-            "en": "Vileplume"
+            "de": "Giflor",
+            "en": "Vileplume",
+            "fr": "Rafflesia",
+            "es": "Vileplume",
+            "it": "Vileplume",
+            "ja": "ラフレシア",
+            "ko": "라플레시아",
+            "zh_hans": "霸王花",
+            "zh_hant": "霸王花"
           },
           "type": "pokemon",
           "pokemon_id": 45,
@@ -592,7 +952,15 @@
         {
           "localId": "046",
           "name": {
-            "en": "Paras"
+            "de": "Paras",
+            "en": "Paras",
+            "fr": "Paras",
+            "es": "Paras",
+            "it": "Paras",
+            "ja": "パラス",
+            "ko": "파라스",
+            "zh_hans": "派拉斯",
+            "zh_hant": "派拉斯"
           },
           "type": "pokemon",
           "pokemon_id": 46,
@@ -604,7 +972,15 @@
         {
           "localId": "047",
           "name": {
-            "en": "Parasect"
+            "de": "Parasek",
+            "en": "Parasect",
+            "fr": "Parasect",
+            "es": "Parasect",
+            "it": "Parasect",
+            "ja": "パラセクト",
+            "ko": "파라섹트",
+            "zh_hans": "派拉斯特",
+            "zh_hant": "派拉斯特"
           },
           "type": "pokemon",
           "pokemon_id": 47,
@@ -616,7 +992,15 @@
         {
           "localId": "048",
           "name": {
-            "en": "Venonat"
+            "de": "Bluzuk",
+            "en": "Venonat",
+            "fr": "Mimitoss",
+            "es": "Venonat",
+            "it": "Venonat",
+            "ja": "コンパン",
+            "ko": "콘팡",
+            "zh_hans": "毛球",
+            "zh_hant": "毛球"
           },
           "type": "pokemon",
           "pokemon_id": 48,
@@ -628,7 +1012,15 @@
         {
           "localId": "049",
           "name": {
-            "en": "Venomoth"
+            "de": "Omot",
+            "en": "Venomoth",
+            "fr": "Aéromite",
+            "es": "Venomoth",
+            "it": "Venomoth",
+            "ja": "モルフォン",
+            "ko": "도나리",
+            "zh_hans": "摩鲁蛾",
+            "zh_hant": "摩魯蛾"
           },
           "type": "pokemon",
           "pokemon_id": 49,
@@ -640,7 +1032,15 @@
         {
           "localId": "050",
           "name": {
-            "en": "Diglett"
+            "de": "Digda",
+            "en": "Diglett",
+            "fr": "Taupiqueur",
+            "es": "Diglett",
+            "it": "Diglett",
+            "ja": "ディグダ",
+            "ko": "디그다",
+            "zh_hans": "地鼠",
+            "zh_hant": "地鼠"
           },
           "type": "pokemon",
           "pokemon_id": 50,
@@ -652,7 +1052,15 @@
         {
           "localId": "051",
           "name": {
-            "en": "Dugtrio"
+            "de": "Digdri",
+            "en": "Dugtrio",
+            "fr": "Triopikeur",
+            "es": "Dugtrio",
+            "it": "Dugtrio",
+            "ja": "ダグトリオ",
+            "ko": "닥트리오",
+            "zh_hans": "三地鼠",
+            "zh_hant": "三地鼠"
           },
           "type": "pokemon",
           "pokemon_id": 51,
@@ -664,7 +1072,15 @@
         {
           "localId": "052",
           "name": {
-            "en": "Meowth"
+            "de": "Mauzi",
+            "en": "Meowth",
+            "fr": "Miaouss",
+            "es": "Meowth",
+            "it": "Meowth",
+            "ja": "ニャース",
+            "ko": "나옹",
+            "zh_hans": "喵喵",
+            "zh_hant": "喵喵"
           },
           "type": "pokemon",
           "pokemon_id": 52,
@@ -676,7 +1092,15 @@
         {
           "localId": "053",
           "name": {
-            "en": "Persian"
+            "de": "Snobilikat",
+            "en": "Persian",
+            "fr": "Persian",
+            "es": "Persian",
+            "it": "Persian",
+            "ja": "ペルシアン",
+            "ko": "페르시온",
+            "zh_hans": "猫老大",
+            "zh_hant": "貓老大"
           },
           "type": "pokemon",
           "pokemon_id": 53,
@@ -688,7 +1112,15 @@
         {
           "localId": "054",
           "name": {
-            "en": "Psyduck"
+            "de": "Enton",
+            "en": "Psyduck",
+            "fr": "Psykokwak",
+            "es": "Psyduck",
+            "it": "Psyduck",
+            "ja": "コダック",
+            "ko": "고라파덕",
+            "zh_hans": "可达鸭",
+            "zh_hant": "可達鴨"
           },
           "type": "pokemon",
           "pokemon_id": 54,
@@ -700,7 +1132,15 @@
         {
           "localId": "055",
           "name": {
-            "en": "Golduck"
+            "de": "Entoron",
+            "en": "Golduck",
+            "fr": "Akwakwak",
+            "es": "Golduck",
+            "it": "Golduck",
+            "ja": "ゴルダック",
+            "ko": "골덕",
+            "zh_hans": "哥达鸭",
+            "zh_hant": "哥達鴨"
           },
           "type": "pokemon",
           "pokemon_id": 55,
@@ -712,7 +1152,15 @@
         {
           "localId": "056",
           "name": {
-            "en": "Mankey"
+            "de": "Menki",
+            "en": "Mankey",
+            "fr": "Férosinge",
+            "es": "Mankey",
+            "it": "Mankey",
+            "ja": "マンキー",
+            "ko": "망키",
+            "zh_hans": "猴怪",
+            "zh_hant": "猴怪"
           },
           "type": "pokemon",
           "pokemon_id": 56,
@@ -724,7 +1172,15 @@
         {
           "localId": "057",
           "name": {
-            "en": "Primeape"
+            "de": "Rasaff",
+            "en": "Primeape",
+            "fr": "Colossinge",
+            "es": "Primeape",
+            "it": "Primeape",
+            "ja": "オコリザル",
+            "ko": "성원숭",
+            "zh_hans": "火暴猴",
+            "zh_hant": "火爆猴"
           },
           "type": "pokemon",
           "pokemon_id": 57,
@@ -736,7 +1192,15 @@
         {
           "localId": "058",
           "name": {
-            "en": "Growlithe"
+            "de": "Fukano",
+            "en": "Growlithe",
+            "fr": "Caninos",
+            "es": "Growlithe",
+            "it": "Growlithe",
+            "ja": "ガーディ",
+            "ko": "가디",
+            "zh_hans": "卡蒂狗",
+            "zh_hant": "卡蒂狗"
           },
           "type": "pokemon",
           "pokemon_id": 58,
@@ -748,7 +1212,15 @@
         {
           "localId": "059",
           "name": {
-            "en": "Arcanine"
+            "de": "Arkani",
+            "en": "Arcanine",
+            "fr": "Arcanin",
+            "es": "Arcanine",
+            "it": "Arcanine",
+            "ja": "ウインディ",
+            "ko": "윈디",
+            "zh_hans": "风速狗",
+            "zh_hant": "風速狗"
           },
           "type": "pokemon",
           "pokemon_id": 59,
@@ -760,7 +1232,15 @@
         {
           "localId": "060",
           "name": {
-            "en": "Poliwag"
+            "de": "Quapsel",
+            "en": "Poliwag",
+            "fr": "Ptitard",
+            "es": "Poliwag",
+            "it": "Poliwag",
+            "ja": "ニョロモ",
+            "ko": "발챙이",
+            "zh_hans": "蚊香蝌蚪",
+            "zh_hant": "蚊香蝌蚪"
           },
           "type": "pokemon",
           "pokemon_id": 60,
@@ -772,7 +1252,15 @@
         {
           "localId": "061",
           "name": {
-            "en": "Poliwhirl"
+            "de": "Quaputzi",
+            "en": "Poliwhirl",
+            "fr": "Têtarte",
+            "es": "Poliwhirl",
+            "it": "Poliwhirl",
+            "ja": "ニョロゾ",
+            "ko": "슈륙챙이",
+            "zh_hans": "蚊香君",
+            "zh_hant": "蚊香君"
           },
           "type": "pokemon",
           "pokemon_id": 61,
@@ -784,7 +1272,15 @@
         {
           "localId": "062",
           "name": {
-            "en": "Poliwrath"
+            "de": "Quappo",
+            "en": "Poliwrath",
+            "fr": "Tartard",
+            "es": "Poliwrath",
+            "it": "Poliwrath",
+            "ja": "ニョロボン",
+            "ko": "강챙이",
+            "zh_hans": "蚊香泳士",
+            "zh_hant": "蚊香泳士"
           },
           "type": "pokemon",
           "pokemon_id": 62,
@@ -796,7 +1292,15 @@
         {
           "localId": "063",
           "name": {
-            "en": "Abra"
+            "de": "Abra",
+            "en": "Abra",
+            "fr": "Abra",
+            "es": "Abra",
+            "it": "Abra",
+            "ja": "ケーシィ",
+            "ko": "캐이시",
+            "zh_hans": "凯西",
+            "zh_hant": "凱西"
           },
           "type": "pokemon",
           "pokemon_id": 63,
@@ -808,7 +1312,15 @@
         {
           "localId": "064",
           "name": {
-            "en": "Kadabra"
+            "de": "Kadabra",
+            "en": "Kadabra",
+            "fr": "Kadabra",
+            "es": "Kadabra",
+            "it": "Kadabra",
+            "ja": "ユンゲラー",
+            "ko": "윤겔라",
+            "zh_hans": "勇基拉",
+            "zh_hant": "勇基拉"
           },
           "type": "pokemon",
           "pokemon_id": 64,
@@ -820,7 +1332,15 @@
         {
           "localId": "065",
           "name": {
-            "en": "Alakazam"
+            "de": "Simsala",
+            "en": "Alakazam",
+            "fr": "Alakazam",
+            "es": "Alakazam",
+            "it": "Alakazam",
+            "ja": "フーディン",
+            "ko": "후딘",
+            "zh_hans": "胡地",
+            "zh_hant": "胡地"
           },
           "type": "pokemon",
           "pokemon_id": 65,
@@ -833,7 +1353,15 @@
         {
           "localId": "066",
           "name": {
-            "en": "Machop"
+            "de": "Machollo",
+            "en": "Machop",
+            "fr": "Machoc",
+            "es": "Machop",
+            "it": "Machop",
+            "ja": "ワンリキー",
+            "ko": "알통몬",
+            "zh_hans": "腕力",
+            "zh_hant": "腕力"
           },
           "type": "pokemon",
           "pokemon_id": 66,
@@ -845,7 +1373,15 @@
         {
           "localId": "067",
           "name": {
-            "en": "Machoke"
+            "de": "Maschock",
+            "en": "Machoke",
+            "fr": "Machopeur",
+            "es": "Machoke",
+            "it": "Machoke",
+            "ja": "ゴーリキー",
+            "ko": "근육몬",
+            "zh_hans": "豪力",
+            "zh_hant": "豪力"
           },
           "type": "pokemon",
           "pokemon_id": 67,
@@ -857,7 +1393,15 @@
         {
           "localId": "068",
           "name": {
-            "en": "Machamp"
+            "de": "Machomei",
+            "en": "Machamp",
+            "fr": "Mackogneur",
+            "es": "Machamp",
+            "it": "Machamp",
+            "ja": "カイリキー",
+            "ko": "괴력몬",
+            "zh_hans": "怪力",
+            "zh_hant": "怪力"
           },
           "type": "pokemon",
           "pokemon_id": 68,
@@ -869,7 +1413,15 @@
         {
           "localId": "069",
           "name": {
-            "en": "Bellsprout"
+            "de": "Knofensa",
+            "en": "Bellsprout",
+            "fr": "Chétiflor",
+            "es": "Bellsprout",
+            "it": "Bellsprout",
+            "ja": "マダツボミ",
+            "ko": "모다피",
+            "zh_hans": "喇叭芽",
+            "zh_hant": "喇叭芽"
           },
           "type": "pokemon",
           "pokemon_id": 69,
@@ -881,7 +1433,15 @@
         {
           "localId": "070",
           "name": {
-            "en": "Weepinbell"
+            "de": "Ultrigaria",
+            "en": "Weepinbell",
+            "fr": "Boustiflor",
+            "es": "Weepinbell",
+            "it": "Weepinbell",
+            "ja": "ウツドン",
+            "ko": "우츠동",
+            "zh_hans": "口呆花",
+            "zh_hant": "口呆花"
           },
           "type": "pokemon",
           "pokemon_id": 70,
@@ -893,7 +1453,15 @@
         {
           "localId": "071",
           "name": {
-            "en": "Victreebel"
+            "de": "Sarzenia",
+            "en": "Victreebel",
+            "fr": "Empiflor",
+            "es": "Victreebel",
+            "it": "Victreebel",
+            "ja": "ウツボット",
+            "ko": "우츠보트",
+            "zh_hans": "大食花",
+            "zh_hant": "大食花"
           },
           "type": "pokemon",
           "pokemon_id": 71,
@@ -905,7 +1473,15 @@
         {
           "localId": "072",
           "name": {
-            "en": "Tentacool"
+            "de": "Tentacha",
+            "en": "Tentacool",
+            "fr": "Tentacool",
+            "es": "Tentacool",
+            "it": "Tentacool",
+            "ja": "メノクラゲ",
+            "ko": "왕눈해",
+            "zh_hans": "玛瑙水母",
+            "zh_hant": "瑪瑙水母"
           },
           "type": "pokemon",
           "pokemon_id": 72,
@@ -917,7 +1493,15 @@
         {
           "localId": "073",
           "name": {
-            "en": "Tentacruel"
+            "de": "Tentoxa",
+            "en": "Tentacruel",
+            "fr": "Tentacruel",
+            "es": "Tentacruel",
+            "it": "Tentacruel",
+            "ja": "ドククラゲ",
+            "ko": "독파리",
+            "zh_hans": "毒刺水母",
+            "zh_hant": "毒刺水母"
           },
           "type": "pokemon",
           "pokemon_id": 73,
@@ -929,7 +1513,15 @@
         {
           "localId": "074",
           "name": {
-            "en": "Geodude"
+            "de": "Kleinstein",
+            "en": "Geodude",
+            "fr": "Racaillou",
+            "es": "Geodude",
+            "it": "Geodude",
+            "ja": "イシツブテ",
+            "ko": "꼬마돌",
+            "zh_hans": "小拳石",
+            "zh_hant": "小拳石"
           },
           "type": "pokemon",
           "pokemon_id": 74,
@@ -941,7 +1533,15 @@
         {
           "localId": "075",
           "name": {
-            "en": "Graveler"
+            "de": "Georok",
+            "en": "Graveler",
+            "fr": "Gravalanch",
+            "es": "Graveler",
+            "it": "Graveler",
+            "ja": "ゴローン",
+            "ko": "데구리",
+            "zh_hans": "隆隆石",
+            "zh_hant": "隆隆石"
           },
           "type": "pokemon",
           "pokemon_id": 75,
@@ -953,7 +1553,15 @@
         {
           "localId": "076",
           "name": {
-            "en": "Golem"
+            "de": "Geowaz",
+            "en": "Golem",
+            "fr": "Grolem",
+            "es": "Golem",
+            "it": "Golem",
+            "ja": "ゴローニャ",
+            "ko": "딱구리",
+            "zh_hans": "隆隆岩",
+            "zh_hant": "隆隆岩"
           },
           "type": "pokemon",
           "pokemon_id": 76,
@@ -966,7 +1574,15 @@
         {
           "localId": "077",
           "name": {
-            "en": "Ponyta"
+            "de": "Ponita",
+            "en": "Ponyta",
+            "fr": "Ponyta",
+            "es": "Ponyta",
+            "it": "Ponyta",
+            "ja": "ポニータ",
+            "ko": "포니타",
+            "zh_hans": "小火马",
+            "zh_hant": "小火馬"
           },
           "type": "pokemon",
           "pokemon_id": 77,
@@ -978,7 +1594,15 @@
         {
           "localId": "078",
           "name": {
-            "en": "Rapidash"
+            "de": "Gallopa",
+            "en": "Rapidash",
+            "fr": "Galopa",
+            "es": "Rapidash",
+            "it": "Rapidash",
+            "ja": "ギャロップ",
+            "ko": "날쌩마",
+            "zh_hans": "烈焰马",
+            "zh_hant": "烈焰馬"
           },
           "type": "pokemon",
           "pokemon_id": 78,
@@ -990,7 +1614,15 @@
         {
           "localId": "079",
           "name": {
-            "en": "Slowpoke"
+            "de": "Flegmon",
+            "en": "Slowpoke",
+            "fr": "Ramoloss",
+            "es": "Slowpoke",
+            "it": "Slowpoke",
+            "ja": "ヤドン",
+            "ko": "야돈",
+            "zh_hans": "呆呆兽",
+            "zh_hant": "呆呆獸"
           },
           "type": "pokemon",
           "pokemon_id": 79,
@@ -1002,7 +1634,15 @@
         {
           "localId": "080",
           "name": {
-            "en": "Slowbro"
+            "de": "Lahmus",
+            "en": "Slowbro",
+            "fr": "Flagadoss",
+            "es": "Slowbro",
+            "it": "Slowbro",
+            "ja": "ヤドラン",
+            "ko": "야도란",
+            "zh_hans": "呆壳兽",
+            "zh_hant": "呆殼獸"
           },
           "type": "pokemon",
           "pokemon_id": 80,
@@ -1014,7 +1654,15 @@
         {
           "localId": "081",
           "name": {
-            "en": "Magnemite"
+            "de": "Magnetilo",
+            "en": "Magnemite",
+            "fr": "Magnéti",
+            "es": "Magnemite",
+            "it": "Magnemite",
+            "ja": "コイル",
+            "ko": "코일",
+            "zh_hans": "小磁怪",
+            "zh_hant": "小磁怪"
           },
           "type": "pokemon",
           "pokemon_id": 81,
@@ -1026,7 +1674,15 @@
         {
           "localId": "082",
           "name": {
-            "en": "Magneton"
+            "de": "Magneton",
+            "en": "Magneton",
+            "fr": "Magnéton",
+            "es": "Magneton",
+            "it": "Magneton",
+            "ja": "レアコイル",
+            "ko": "레어코일",
+            "zh_hans": "三合一磁怪",
+            "zh_hant": "三合一磁怪"
           },
           "type": "pokemon",
           "pokemon_id": 82,
@@ -1038,7 +1694,15 @@
         {
           "localId": "083",
           "name": {
-            "en": "Farfetch'd"
+            "de": "Porenta",
+            "en": "Farfetch’d",
+            "fr": "Canarticho",
+            "es": "Farfetch’d",
+            "it": "Farfetch’d",
+            "ja": "カモネギ",
+            "ko": "파오리",
+            "zh_hans": "大葱鸭",
+            "zh_hant": "大蔥鴨"
           },
           "type": "pokemon",
           "pokemon_id": 83,
@@ -1050,7 +1714,15 @@
         {
           "localId": "084",
           "name": {
-            "en": "Doduo"
+            "de": "Dodu",
+            "en": "Doduo",
+            "fr": "Doduo",
+            "es": "Doduo",
+            "it": "Doduo",
+            "ja": "ドードー",
+            "ko": "두두",
+            "zh_hans": "嘟嘟",
+            "zh_hant": "嘟嘟"
           },
           "type": "pokemon",
           "pokemon_id": 84,
@@ -1062,7 +1734,15 @@
         {
           "localId": "085",
           "name": {
-            "en": "Dodrio"
+            "de": "Dodri",
+            "en": "Dodrio",
+            "fr": "Dodrio",
+            "es": "Dodrio",
+            "it": "Dodrio",
+            "ja": "ドードリオ",
+            "ko": "두트리오",
+            "zh_hans": "嘟嘟利",
+            "zh_hant": "嘟嘟利"
           },
           "type": "pokemon",
           "pokemon_id": 85,
@@ -1074,7 +1754,15 @@
         {
           "localId": "086",
           "name": {
-            "en": "Seel"
+            "de": "Jurob",
+            "en": "Seel",
+            "fr": "Otaria",
+            "es": "Seel",
+            "it": "Seel",
+            "ja": "パウワウ",
+            "ko": "쥬쥬",
+            "zh_hans": "小海狮",
+            "zh_hant": "小海獅"
           },
           "type": "pokemon",
           "pokemon_id": 86,
@@ -1086,7 +1774,15 @@
         {
           "localId": "087",
           "name": {
-            "en": "Dewgong"
+            "de": "Jugong",
+            "en": "Dewgong",
+            "fr": "Lamantine",
+            "es": "Dewgong",
+            "it": "Dewgong",
+            "ja": "ジュゴン",
+            "ko": "쥬레곤",
+            "zh_hans": "白海狮",
+            "zh_hant": "白海獅"
           },
           "type": "pokemon",
           "pokemon_id": 87,
@@ -1098,7 +1794,15 @@
         {
           "localId": "088",
           "name": {
-            "en": "Grimer"
+            "de": "Sleima",
+            "en": "Grimer",
+            "fr": "Tadmorv",
+            "es": "Grimer",
+            "it": "Grimer",
+            "ja": "ベトベター",
+            "ko": "질퍽이",
+            "zh_hans": "臭泥",
+            "zh_hant": "臭泥"
           },
           "type": "pokemon",
           "pokemon_id": 88,
@@ -1110,7 +1814,15 @@
         {
           "localId": "089",
           "name": {
-            "en": "Muk"
+            "de": "Sleimok",
+            "en": "Muk",
+            "fr": "Grotadmorv",
+            "es": "Muk",
+            "it": "Muk",
+            "ja": "ベトベトン",
+            "ko": "질뻐기",
+            "zh_hans": "臭臭泥",
+            "zh_hant": "臭臭泥"
           },
           "type": "pokemon",
           "pokemon_id": 89,
@@ -1122,7 +1834,15 @@
         {
           "localId": "090",
           "name": {
-            "en": "Shellder"
+            "de": "Muschas",
+            "en": "Shellder",
+            "fr": "Kokiyas",
+            "es": "Shellder",
+            "it": "Shellder",
+            "ja": "シェルダー",
+            "ko": "셀러",
+            "zh_hans": "大舌贝",
+            "zh_hant": "大舌貝"
           },
           "type": "pokemon",
           "pokemon_id": 90,
@@ -1134,7 +1854,15 @@
         {
           "localId": "091",
           "name": {
-            "en": "Cloyster"
+            "de": "Austos",
+            "en": "Cloyster",
+            "fr": "Crustabri",
+            "es": "Cloyster",
+            "it": "Cloyster",
+            "ja": "パルシェン",
+            "ko": "파르셀",
+            "zh_hans": "刺甲贝",
+            "zh_hant": "刺甲貝"
           },
           "type": "pokemon",
           "pokemon_id": 91,
@@ -1146,7 +1874,15 @@
         {
           "localId": "092",
           "name": {
-            "en": "Gastly"
+            "de": "Nebulak",
+            "en": "Gastly",
+            "fr": "Fantominus",
+            "es": "Gastly",
+            "it": "Gastly",
+            "ja": "ゴース",
+            "ko": "고오스",
+            "zh_hans": "鬼斯",
+            "zh_hant": "鬼斯"
           },
           "type": "pokemon",
           "pokemon_id": 92,
@@ -1158,7 +1894,15 @@
         {
           "localId": "093",
           "name": {
-            "en": "Haunter"
+            "de": "Alpollo",
+            "en": "Haunter",
+            "fr": "Spectrum",
+            "es": "Haunter",
+            "it": "Haunter",
+            "ja": "ゴースト",
+            "ko": "고우스트",
+            "zh_hans": "鬼斯通",
+            "zh_hant": "鬼斯通"
           },
           "type": "pokemon",
           "pokemon_id": 93,
@@ -1170,7 +1914,15 @@
         {
           "localId": "094",
           "name": {
-            "en": "Gengar"
+            "de": "Gengar",
+            "en": "Gengar",
+            "fr": "Ectoplasma",
+            "es": "Gengar",
+            "it": "Gengar",
+            "ja": "ゲンガー",
+            "ko": "팬텀",
+            "zh_hans": "耿鬼",
+            "zh_hant": "耿鬼"
           },
           "type": "pokemon",
           "pokemon_id": 94,
@@ -1182,7 +1934,15 @@
         {
           "localId": "095",
           "name": {
-            "en": "Onix"
+            "de": "Onix",
+            "en": "Onix",
+            "fr": "Onix",
+            "es": "Onix",
+            "it": "Onix",
+            "ja": "イワーク",
+            "ko": "롱스톤",
+            "zh_hans": "大岩蛇",
+            "zh_hant": "大岩蛇"
           },
           "type": "pokemon",
           "pokemon_id": 95,
@@ -1194,7 +1954,15 @@
         {
           "localId": "096",
           "name": {
-            "en": "Drowzee"
+            "de": "Traumato",
+            "en": "Drowzee",
+            "fr": "Soporifik",
+            "es": "Drowzee",
+            "it": "Drowzee",
+            "ja": "スリープ",
+            "ko": "슬리프",
+            "zh_hans": "催眠貘",
+            "zh_hant": "催眠貘"
           },
           "type": "pokemon",
           "pokemon_id": 96,
@@ -1206,7 +1974,15 @@
         {
           "localId": "097",
           "name": {
-            "en": "Hypno"
+            "de": "Hypno",
+            "en": "Hypno",
+            "fr": "Hypnomade",
+            "es": "Hypno",
+            "it": "Hypno",
+            "ja": "スリーパー",
+            "ko": "슬리퍼",
+            "zh_hans": "引梦貘人",
+            "zh_hant": "引夢貘人"
           },
           "type": "pokemon",
           "pokemon_id": 97,
@@ -1218,7 +1994,15 @@
         {
           "localId": "098",
           "name": {
-            "en": "Krabby"
+            "de": "Krabby",
+            "en": "Krabby",
+            "fr": "Krabby",
+            "es": "Krabby",
+            "it": "Krabby",
+            "ja": "クラブ",
+            "ko": "크랩",
+            "zh_hans": "大钳蟹",
+            "zh_hant": "大鉗蟹"
           },
           "type": "pokemon",
           "pokemon_id": 98,
@@ -1230,7 +2014,15 @@
         {
           "localId": "099",
           "name": {
-            "en": "Kingler"
+            "de": "Kingler",
+            "en": "Kingler",
+            "fr": "Krabboss",
+            "es": "Kingler",
+            "it": "Kingler",
+            "ja": "キングラー",
+            "ko": "킹크랩",
+            "zh_hans": "巨钳蟹",
+            "zh_hant": "巨鉗蟹"
           },
           "type": "pokemon",
           "pokemon_id": 99,
@@ -1242,7 +2034,15 @@
         {
           "localId": "100",
           "name": {
-            "en": "Voltorb"
+            "de": "Voltobal",
+            "en": "Voltorb",
+            "fr": "Voltorbe",
+            "es": "Voltorb",
+            "it": "Voltorb",
+            "ja": "ビリリダマ",
+            "ko": "찌리리공",
+            "zh_hans": "霹雳电球",
+            "zh_hant": "霹靂電球"
           },
           "type": "pokemon",
           "pokemon_id": 100,
@@ -1254,7 +2054,15 @@
         {
           "localId": "101",
           "name": {
-            "en": "Electrode"
+            "de": "Lektrobal",
+            "en": "Electrode",
+            "fr": "Électrode",
+            "es": "Electrode",
+            "it": "Electrode",
+            "ja": "マルマイン",
+            "ko": "붐볼",
+            "zh_hans": "顽皮雷弹",
+            "zh_hant": "頑皮雷彈"
           },
           "type": "pokemon",
           "pokemon_id": 101,
@@ -1266,7 +2074,15 @@
         {
           "localId": "102",
           "name": {
-            "en": "Exeggcute"
+            "de": "Owei",
+            "en": "Exeggcute",
+            "fr": "Noeunoeuf",
+            "es": "Exeggcute",
+            "it": "Exeggcute",
+            "ja": "タマタマ",
+            "ko": "아라리",
+            "zh_hans": "蛋蛋",
+            "zh_hant": "蛋蛋"
           },
           "type": "pokemon",
           "pokemon_id": 102,
@@ -1278,7 +2094,15 @@
         {
           "localId": "103",
           "name": {
-            "en": "Exeggutor"
+            "de": "Kokowei",
+            "en": "Exeggutor",
+            "fr": "Noadkoko",
+            "es": "Exeggutor",
+            "it": "Exeggutor",
+            "ja": "ナッシー",
+            "ko": "나시",
+            "zh_hans": "椰蛋树",
+            "zh_hant": "椰蛋樹"
           },
           "type": "pokemon",
           "pokemon_id": 103,
@@ -1290,7 +2114,15 @@
         {
           "localId": "104",
           "name": {
-            "en": "Cubone"
+            "de": "Tragosso",
+            "en": "Cubone",
+            "fr": "Osselait",
+            "es": "Cubone",
+            "it": "Cubone",
+            "ja": "カラカラ",
+            "ko": "탕구리",
+            "zh_hans": "卡拉卡拉",
+            "zh_hant": "卡拉卡拉"
           },
           "type": "pokemon",
           "pokemon_id": 104,
@@ -1302,7 +2134,15 @@
         {
           "localId": "105",
           "name": {
-            "en": "Marowak"
+            "de": "Knogga",
+            "en": "Marowak",
+            "fr": "Ossatueur",
+            "es": "Marowak",
+            "it": "Marowak",
+            "ja": "ガラガラ",
+            "ko": "텅구리",
+            "zh_hans": "嘎啦嘎啦",
+            "zh_hant": "嘎啦嘎啦"
           },
           "type": "pokemon",
           "pokemon_id": 105,
@@ -1314,7 +2154,15 @@
         {
           "localId": "106",
           "name": {
-            "en": "Hitmonlee"
+            "de": "Kicklee",
+            "en": "Hitmonlee",
+            "fr": "Kicklee",
+            "es": "Hitmonlee",
+            "it": "Hitmonlee",
+            "ja": "サワムラー",
+            "ko": "시라소몬",
+            "zh_hans": "飞腿郎",
+            "zh_hant": "飛腿郎"
           },
           "type": "pokemon",
           "pokemon_id": 106,
@@ -1326,7 +2174,15 @@
         {
           "localId": "107",
           "name": {
-            "en": "Hitmonchan"
+            "de": "Nockchan",
+            "en": "Hitmonchan",
+            "fr": "Tygnon",
+            "es": "Hitmonchan",
+            "it": "Hitmonchan",
+            "ja": "エビワラー",
+            "ko": "홍수몬",
+            "zh_hans": "快拳郎",
+            "zh_hant": "快拳郎"
           },
           "type": "pokemon",
           "pokemon_id": 107,
@@ -1338,7 +2194,15 @@
         {
           "localId": "108",
           "name": {
-            "en": "Lickitung"
+            "de": "Schlurp",
+            "en": "Lickitung",
+            "fr": "Excelangue",
+            "es": "Lickitung",
+            "it": "Lickitung",
+            "ja": "ベロリンガ",
+            "ko": "내루미",
+            "zh_hans": "大舌头",
+            "zh_hant": "大舌頭"
           },
           "type": "pokemon",
           "pokemon_id": 108,
@@ -1350,7 +2214,15 @@
         {
           "localId": "109",
           "name": {
-            "en": "Koffing"
+            "de": "Smogon",
+            "en": "Koffing",
+            "fr": "Smogo",
+            "es": "Koffing",
+            "it": "Koffing",
+            "ja": "ドガース",
+            "ko": "또가스",
+            "zh_hans": "瓦斯弹",
+            "zh_hant": "瓦斯彈"
           },
           "type": "pokemon",
           "pokemon_id": 109,
@@ -1362,7 +2234,15 @@
         {
           "localId": "110",
           "name": {
-            "en": "Weezing"
+            "de": "Smogmog",
+            "en": "Weezing",
+            "fr": "Smogogo",
+            "es": "Weezing",
+            "it": "Weezing",
+            "ja": "マタドガス",
+            "ko": "또도가스",
+            "zh_hans": "双弹瓦斯",
+            "zh_hant": "雙彈瓦斯"
           },
           "type": "pokemon",
           "pokemon_id": 110,
@@ -1374,7 +2254,15 @@
         {
           "localId": "111",
           "name": {
-            "en": "Rhyhorn"
+            "de": "Rihorn",
+            "en": "Rhyhorn",
+            "fr": "Rhinocorne",
+            "es": "Rhyhorn",
+            "it": "Rhyhorn",
+            "ja": "サイホーン",
+            "ko": "뿔카노",
+            "zh_hans": "独角犀牛",
+            "zh_hant": "獨角犀牛"
           },
           "type": "pokemon",
           "pokemon_id": 111,
@@ -1386,7 +2274,15 @@
         {
           "localId": "112",
           "name": {
-            "en": "Rhydon"
+            "de": "Rizeros",
+            "en": "Rhydon",
+            "fr": "Rhinoféros",
+            "es": "Rhydon",
+            "it": "Rhydon",
+            "ja": "サイドン",
+            "ko": "코뿌리",
+            "zh_hans": "钻角犀兽",
+            "zh_hant": "鑽角犀獸"
           },
           "type": "pokemon",
           "pokemon_id": 112,
@@ -1398,7 +2294,15 @@
         {
           "localId": "113",
           "name": {
-            "en": "Chansey"
+            "de": "Chaneira",
+            "en": "Chansey",
+            "fr": "Leveinard",
+            "es": "Chansey",
+            "it": "Chansey",
+            "ja": "ラッキー",
+            "ko": "럭키",
+            "zh_hans": "吉利蛋",
+            "zh_hant": "吉利蛋"
           },
           "type": "pokemon",
           "pokemon_id": 113,
@@ -1410,7 +2314,15 @@
         {
           "localId": "114",
           "name": {
-            "en": "Tangela"
+            "de": "Tangela",
+            "en": "Tangela",
+            "fr": "Saquedeneu",
+            "es": "Tangela",
+            "it": "Tangela",
+            "ja": "モンジャラ",
+            "ko": "덩쿠리",
+            "zh_hans": "蔓藤怪",
+            "zh_hant": "蔓藤怪"
           },
           "type": "pokemon",
           "pokemon_id": 114,
@@ -1422,7 +2334,15 @@
         {
           "localId": "115",
           "name": {
-            "en": "Kangaskhan"
+            "de": "Kangama",
+            "en": "Kangaskhan",
+            "fr": "Kangourex",
+            "es": "Kangaskhan",
+            "it": "Kangaskhan",
+            "ja": "ガルーラ",
+            "ko": "캥카",
+            "zh_hans": "袋兽",
+            "zh_hant": "袋獸"
           },
           "type": "pokemon",
           "pokemon_id": 115,
@@ -1435,7 +2355,15 @@
         {
           "localId": "116",
           "name": {
-            "en": "Horsea"
+            "de": "Seeper",
+            "en": "Horsea",
+            "fr": "Hypotrempe",
+            "es": "Horsea",
+            "it": "Horsea",
+            "ja": "タッツー",
+            "ko": "쏘드라",
+            "zh_hans": "墨海马",
+            "zh_hant": "墨海馬"
           },
           "type": "pokemon",
           "pokemon_id": 116,
@@ -1447,7 +2375,15 @@
         {
           "localId": "117",
           "name": {
-            "en": "Seadra"
+            "de": "Seemon",
+            "en": "Seadra",
+            "fr": "Hypocéan",
+            "es": "Seadra",
+            "it": "Seadra",
+            "ja": "シードラ",
+            "ko": "시드라",
+            "zh_hans": "海刺龙",
+            "zh_hant": "海刺龍"
           },
           "type": "pokemon",
           "pokemon_id": 117,
@@ -1459,7 +2395,15 @@
         {
           "localId": "118",
           "name": {
-            "en": "Goldeen"
+            "de": "Goldini",
+            "en": "Goldeen",
+            "fr": "Poissirène",
+            "es": "Goldeen",
+            "it": "Goldeen",
+            "ja": "トサキント",
+            "ko": "콘치",
+            "zh_hans": "角金鱼",
+            "zh_hant": "角金魚"
           },
           "type": "pokemon",
           "pokemon_id": 118,
@@ -1471,7 +2415,15 @@
         {
           "localId": "119",
           "name": {
-            "en": "Seaking"
+            "de": "Golking",
+            "en": "Seaking",
+            "fr": "Poissoroy",
+            "es": "Seaking",
+            "it": "Seaking",
+            "ja": "アズマオウ",
+            "ko": "왕콘치",
+            "zh_hans": "金鱼王",
+            "zh_hant": "金魚王"
           },
           "type": "pokemon",
           "pokemon_id": 119,
@@ -1483,7 +2435,15 @@
         {
           "localId": "120",
           "name": {
-            "en": "Staryu"
+            "de": "Sterndu",
+            "en": "Staryu",
+            "fr": "Stari",
+            "es": "Staryu",
+            "it": "Staryu",
+            "ja": "ヒトデマン",
+            "ko": "별가사리",
+            "zh_hans": "海星星",
+            "zh_hant": "海星星"
           },
           "type": "pokemon",
           "pokemon_id": 120,
@@ -1495,7 +2455,15 @@
         {
           "localId": "121",
           "name": {
-            "en": "Starmie"
+            "de": "Starmie",
+            "en": "Starmie",
+            "fr": "Staross",
+            "es": "Starmie",
+            "it": "Starmie",
+            "ja": "スターミー",
+            "ko": "아쿠스타",
+            "zh_hans": "宝石海星",
+            "zh_hant": "寶石海星"
           },
           "type": "pokemon",
           "pokemon_id": 121,
@@ -1507,7 +2475,15 @@
         {
           "localId": "122",
           "name": {
-            "en": "Mr. Mime"
+            "de": "Pantimos",
+            "en": "Mr. Mime",
+            "fr": "M. Mime",
+            "es": "Mr. Mime",
+            "it": "Mr. Mime",
+            "ja": "バリヤード",
+            "ko": "마임맨",
+            "zh_hans": "魔墙人偶",
+            "zh_hant": "魔牆人偶"
           },
           "type": "pokemon",
           "pokemon_id": 122,
@@ -1519,7 +2495,15 @@
         {
           "localId": "123",
           "name": {
-            "en": "Scyther"
+            "de": "Sichlor",
+            "en": "Scyther",
+            "fr": "Insécateur",
+            "es": "Scyther",
+            "it": "Scyther",
+            "ja": "ストライク",
+            "ko": "스라크",
+            "zh_hans": "飞天螳螂",
+            "zh_hant": "飛天螳螂"
           },
           "type": "pokemon",
           "pokemon_id": 123,
@@ -1531,7 +2515,15 @@
         {
           "localId": "124",
           "name": {
-            "en": "Jynx"
+            "de": "Rossana",
+            "en": "Jynx",
+            "fr": "Lippoutou",
+            "es": "Jynx",
+            "it": "Jynx",
+            "ja": "ルージュラ",
+            "ko": "루주라",
+            "zh_hans": "迷唇姐",
+            "zh_hant": "迷唇姐"
           },
           "type": "pokemon",
           "pokemon_id": 124,
@@ -1544,7 +2536,15 @@
         {
           "localId": "125",
           "name": {
-            "en": "Electabuzz"
+            "de": "Elektek",
+            "en": "Electabuzz",
+            "fr": "Élektek",
+            "es": "Electabuzz",
+            "it": "Electabuzz",
+            "ja": "エレブー",
+            "ko": "에레브",
+            "zh_hans": "电击兽",
+            "zh_hant": "電擊獸"
           },
           "type": "pokemon",
           "pokemon_id": 125,
@@ -1556,7 +2556,15 @@
         {
           "localId": "126",
           "name": {
-            "en": "Magmar"
+            "de": "Magmar",
+            "en": "Magmar",
+            "fr": "Magmar",
+            "es": "Magmar",
+            "it": "Magmar",
+            "ja": "ブーバー",
+            "ko": "마그마",
+            "zh_hans": "鸭嘴火兽",
+            "zh_hant": "鴨嘴火獸"
           },
           "type": "pokemon",
           "pokemon_id": 126,
@@ -1568,7 +2576,15 @@
         {
           "localId": "127",
           "name": {
-            "en": "Pinsir"
+            "de": "Pinsir",
+            "en": "Pinsir",
+            "fr": "Scarabrute",
+            "es": "Pinsir",
+            "it": "Pinsir",
+            "ja": "カイロス",
+            "ko": "쁘사이저",
+            "zh_hans": "凯罗斯",
+            "zh_hant": "凱羅斯"
           },
           "type": "pokemon",
           "pokemon_id": 127,
@@ -1580,7 +2596,15 @@
         {
           "localId": "128",
           "name": {
-            "en": "Tauros"
+            "de": "Tauros",
+            "en": "Tauros",
+            "fr": "Tauros",
+            "es": "Tauros",
+            "it": "Tauros",
+            "ja": "ケンタロス",
+            "ko": "켄타로스",
+            "zh_hans": "肯泰罗",
+            "zh_hant": "肯泰羅"
           },
           "type": "pokemon",
           "pokemon_id": 128,
@@ -1592,7 +2616,15 @@
         {
           "localId": "129",
           "name": {
-            "en": "Magikarp"
+            "de": "Karpador",
+            "en": "Magikarp",
+            "fr": "Magicarpe",
+            "es": "Magikarp",
+            "it": "Magikarp",
+            "ja": "コイキング",
+            "ko": "잉어킹",
+            "zh_hans": "鲤鱼王",
+            "zh_hant": "鯉魚王"
           },
           "type": "pokemon",
           "pokemon_id": 129,
@@ -1604,7 +2636,15 @@
         {
           "localId": "130",
           "name": {
-            "en": "Gyarados"
+            "de": "Garados",
+            "en": "Gyarados",
+            "fr": "Léviator",
+            "es": "Gyarados",
+            "it": "Gyarados",
+            "ja": "ギャラドス",
+            "ko": "갸라도스",
+            "zh_hans": "暴鲤龙",
+            "zh_hant": "暴鯉龍"
           },
           "type": "pokemon",
           "pokemon_id": 130,
@@ -1616,7 +2656,15 @@
         {
           "localId": "131",
           "name": {
-            "en": "Lapras"
+            "de": "Lapras",
+            "en": "Lapras",
+            "fr": "Lokhlass",
+            "es": "Lapras",
+            "it": "Lapras",
+            "ja": "ラプラス",
+            "ko": "라프라스",
+            "zh_hans": "拉普拉斯",
+            "zh_hant": "拉普拉斯"
           },
           "type": "pokemon",
           "pokemon_id": 131,
@@ -1628,7 +2676,15 @@
         {
           "localId": "132",
           "name": {
-            "en": "Ditto"
+            "de": "Ditto",
+            "en": "Ditto",
+            "fr": "Métamorph",
+            "es": "Ditto",
+            "it": "Ditto",
+            "ja": "メタモン",
+            "ko": "메타몽",
+            "zh_hans": "百变怪",
+            "zh_hant": "百變怪"
           },
           "type": "pokemon",
           "pokemon_id": 132,
@@ -1640,7 +2696,15 @@
         {
           "localId": "133",
           "name": {
-            "en": "Eevee"
+            "de": "Evoli",
+            "en": "Eevee",
+            "fr": "Évoli",
+            "es": "Eevee",
+            "it": "Eevee",
+            "ja": "イーブイ",
+            "ko": "이브이",
+            "zh_hans": "伊布",
+            "zh_hant": "伊布"
           },
           "type": "pokemon",
           "pokemon_id": 133,
@@ -1652,7 +2716,15 @@
         {
           "localId": "134",
           "name": {
-            "en": "Vaporeon"
+            "de": "Aquana",
+            "en": "Vaporeon",
+            "fr": "Aquali",
+            "es": "Vaporeon",
+            "it": "Vaporeon",
+            "ja": "シャワーズ",
+            "ko": "샤미드",
+            "zh_hans": "水伊布",
+            "zh_hant": "水伊布"
           },
           "type": "pokemon",
           "pokemon_id": 134,
@@ -1664,7 +2736,15 @@
         {
           "localId": "135",
           "name": {
-            "en": "Jolteon"
+            "de": "Blitza",
+            "en": "Jolteon",
+            "fr": "Voltali",
+            "es": "Jolteon",
+            "it": "Jolteon",
+            "ja": "サンダース",
+            "ko": "쥬피썬더",
+            "zh_hans": "雷伊布",
+            "zh_hant": "雷伊布"
           },
           "type": "pokemon",
           "pokemon_id": 135,
@@ -1676,7 +2756,15 @@
         {
           "localId": "136",
           "name": {
-            "en": "Flareon"
+            "de": "Flamara",
+            "en": "Flareon",
+            "fr": "Pyroli",
+            "es": "Flareon",
+            "it": "Flareon",
+            "ja": "ブースター",
+            "ko": "부스터",
+            "zh_hans": "火伊布",
+            "zh_hant": "火伊布"
           },
           "type": "pokemon",
           "pokemon_id": 136,
@@ -1688,7 +2776,15 @@
         {
           "localId": "137",
           "name": {
-            "en": "Porygon"
+            "de": "Porygon",
+            "en": "Porygon",
+            "fr": "Porygon",
+            "es": "Porygon",
+            "it": "Porygon",
+            "ja": "ポリゴン",
+            "ko": "폴리곤",
+            "zh_hans": "多边兽",
+            "zh_hant": "多邊獸"
           },
           "type": "pokemon",
           "pokemon_id": 137,
@@ -1700,7 +2796,15 @@
         {
           "localId": "138",
           "name": {
-            "en": "Omanyte"
+            "de": "Amonitas",
+            "en": "Omanyte",
+            "fr": "Amonita",
+            "es": "Omanyte",
+            "it": "Omanyte",
+            "ja": "オムナイト",
+            "ko": "암나이트",
+            "zh_hans": "菊石兽",
+            "zh_hant": "菊石獸"
           },
           "type": "pokemon",
           "pokemon_id": 138,
@@ -1712,7 +2816,15 @@
         {
           "localId": "139",
           "name": {
-            "en": "Omastar"
+            "de": "Amoroso",
+            "en": "Omastar",
+            "fr": "Amonistar",
+            "es": "Omastar",
+            "it": "Omastar",
+            "ja": "オムスター",
+            "ko": "암스타",
+            "zh_hans": "多刺菊石兽",
+            "zh_hant": "多刺菊石獸"
           },
           "type": "pokemon",
           "pokemon_id": 139,
@@ -1724,7 +2836,15 @@
         {
           "localId": "140",
           "name": {
-            "en": "Kabuto"
+            "de": "Kabuto",
+            "en": "Kabuto",
+            "fr": "Kabuto",
+            "es": "Kabuto",
+            "it": "Kabuto",
+            "ja": "カブト",
+            "ko": "투구",
+            "zh_hans": "化石盔",
+            "zh_hant": "化石盔"
           },
           "type": "pokemon",
           "pokemon_id": 140,
@@ -1736,7 +2856,15 @@
         {
           "localId": "141",
           "name": {
-            "en": "Kabutops"
+            "de": "Kabutops",
+            "en": "Kabutops",
+            "fr": "Kabutops",
+            "es": "Kabutops",
+            "it": "Kabutops",
+            "ja": "カブトプス",
+            "ko": "투구푸스",
+            "zh_hans": "镰刀盔",
+            "zh_hant": "鐮刀盔"
           },
           "type": "pokemon",
           "pokemon_id": 141,
@@ -1748,7 +2876,15 @@
         {
           "localId": "142",
           "name": {
-            "en": "Aerodactyl"
+            "de": "Aerodactyl",
+            "en": "Aerodactyl",
+            "fr": "Ptéra",
+            "es": "Aerodactyl",
+            "it": "Aerodactyl",
+            "ja": "プテラ",
+            "ko": "프테라",
+            "zh_hans": "化石翼龙",
+            "zh_hant": "化石翼龍"
           },
           "type": "pokemon",
           "pokemon_id": 142,
@@ -1760,7 +2896,15 @@
         {
           "localId": "143",
           "name": {
-            "en": "Snorlax"
+            "de": "Relaxo",
+            "en": "Snorlax",
+            "fr": "Ronflex",
+            "es": "Snorlax",
+            "it": "Snorlax",
+            "ja": "カビゴン",
+            "ko": "잠만보",
+            "zh_hans": "卡比兽",
+            "zh_hant": "卡比獸"
           },
           "type": "pokemon",
           "pokemon_id": 143,
@@ -1772,7 +2916,15 @@
         {
           "localId": "144",
           "name": {
-            "en": "Articuno"
+            "de": "Arktos",
+            "en": "Articuno",
+            "fr": "Artikodin",
+            "es": "Articuno",
+            "it": "Articuno",
+            "ja": "フリーザー",
+            "ko": "프리져",
+            "zh_hans": "急冻鸟",
+            "zh_hant": "急凍鳥"
           },
           "type": "pokemon",
           "pokemon_id": 144,
@@ -1784,7 +2936,15 @@
         {
           "localId": "145",
           "name": {
-            "en": "Zapdos"
+            "de": "Zapdos",
+            "en": "Zapdos",
+            "fr": "Électhor",
+            "es": "Zapdos",
+            "it": "Zapdos",
+            "ja": "サンダー",
+            "ko": "썬더",
+            "zh_hans": "闪电鸟",
+            "zh_hant": "閃電鳥"
           },
           "type": "pokemon",
           "pokemon_id": 145,
@@ -1797,7 +2957,15 @@
         {
           "localId": "146",
           "name": {
-            "en": "Moltres"
+            "de": "Lavados",
+            "en": "Moltres",
+            "fr": "Sulfura",
+            "es": "Moltres",
+            "it": "Moltres",
+            "ja": "ファイヤー",
+            "ko": "파이어",
+            "zh_hans": "火焰鸟",
+            "zh_hant": "火焰鳥"
           },
           "type": "pokemon",
           "pokemon_id": 146,
@@ -1809,7 +2977,15 @@
         {
           "localId": "147",
           "name": {
-            "en": "Dratini"
+            "de": "Dratini",
+            "en": "Dratini",
+            "fr": "Minidraco",
+            "es": "Dratini",
+            "it": "Dratini",
+            "ja": "ミニリュウ",
+            "ko": "미뇽",
+            "zh_hans": "迷你龙",
+            "zh_hant": "迷你龍"
           },
           "type": "pokemon",
           "pokemon_id": 147,
@@ -1821,7 +2997,15 @@
         {
           "localId": "148",
           "name": {
-            "en": "Dragonair"
+            "de": "Dragonir",
+            "en": "Dragonair",
+            "fr": "Draco",
+            "es": "Dragonair",
+            "it": "Dragonair",
+            "ja": "ハクリュー",
+            "ko": "신뇽",
+            "zh_hans": "哈克龙",
+            "zh_hant": "哈克龍"
           },
           "type": "pokemon",
           "pokemon_id": 148,
@@ -1833,7 +3017,15 @@
         {
           "localId": "149",
           "name": {
-            "en": "Dragonite"
+            "de": "Dragoran",
+            "en": "Dragonite",
+            "fr": "Dracolosse",
+            "es": "Dragonite",
+            "it": "Dragonite",
+            "ja": "カイリュー",
+            "ko": "망나뇽",
+            "zh_hans": "快龙",
+            "zh_hant": "快龍"
           },
           "type": "pokemon",
           "pokemon_id": 149,
@@ -1845,7 +3037,15 @@
         {
           "localId": "150",
           "name": {
-            "en": "Mewtwo"
+            "de": "Mewtu",
+            "en": "Mewtwo",
+            "fr": "Mewtwo",
+            "es": "Mewtwo",
+            "it": "Mewtwo",
+            "ja": "ミュウツー",
+            "ko": "뮤츠",
+            "zh_hans": "超梦",
+            "zh_hant": "超夢"
           },
           "type": "pokemon",
           "pokemon_id": 150,
@@ -1857,7 +3057,15 @@
         {
           "localId": "151",
           "name": {
-            "en": "Mew"
+            "de": "Mew",
+            "en": "Mew",
+            "fr": "Mew",
+            "es": "Mew",
+            "it": "Mew",
+            "ja": "ミュウ",
+            "ko": "뮤",
+            "zh_hans": "梦幻",
+            "zh_hant": "夢幻"
           },
           "type": "pokemon",
           "pokemon_id": 151,
@@ -2080,7 +3288,15 @@
         {
           "localId": "166",
           "name": {
-            "en": "Bulbasaur"
+            "de": "Bisasam",
+            "en": "Bulbasaur",
+            "fr": "Bulbizarre",
+            "es": "Bulbasaur",
+            "it": "Bulbasaur",
+            "ja": "フシギダネ",
+            "ko": "이상해씨",
+            "zh_hans": "妙蛙种子",
+            "zh_hant": "妙蛙種子"
           },
           "type": "pokemon",
           "pokemon_id": 1,
@@ -2092,7 +3308,15 @@
         {
           "localId": "167",
           "name": {
-            "en": "Ivysaur"
+            "de": "Bisaknosp",
+            "en": "Ivysaur",
+            "fr": "Herbizarre",
+            "es": "Ivysaur",
+            "it": "Ivysaur",
+            "ja": "フシギソウ",
+            "ko": "이상해풀",
+            "zh_hans": "妙蛙草",
+            "zh_hant": "妙蛙草"
           },
           "type": "pokemon",
           "pokemon_id": 2,
@@ -2104,7 +3328,15 @@
         {
           "localId": "168",
           "name": {
-            "en": "Charmander"
+            "de": "Glumanda",
+            "en": "Charmander",
+            "fr": "Salamèche",
+            "es": "Charmander",
+            "it": "Charmander",
+            "ja": "ヒトカゲ",
+            "ko": "파이리",
+            "zh_hans": "小火龙",
+            "zh_hant": "小火龍"
           },
           "type": "pokemon",
           "pokemon_id": 4,
@@ -2116,7 +3348,15 @@
         {
           "localId": "169",
           "name": {
-            "en": "Charmeleon"
+            "de": "Glutexo",
+            "en": "Charmeleon",
+            "fr": "Reptincel",
+            "es": "Charmeleon",
+            "it": "Charmeleon",
+            "ja": "リザード",
+            "ko": "리자드",
+            "zh_hans": "火恐龙",
+            "zh_hant": "火恐龍"
           },
           "type": "pokemon",
           "pokemon_id": 5,
@@ -2128,7 +3368,15 @@
         {
           "localId": "170",
           "name": {
-            "en": "Squirtle"
+            "de": "Schiggy",
+            "en": "Squirtle",
+            "fr": "Carapuce",
+            "es": "Squirtle",
+            "it": "Squirtle",
+            "ja": "ゼニガメ",
+            "ko": "꼬부기",
+            "zh_hans": "杰尼龟",
+            "zh_hant": "傑尼龜"
           },
           "type": "pokemon",
           "pokemon_id": 7,
@@ -2140,7 +3388,15 @@
         {
           "localId": "171",
           "name": {
-            "en": "Wartortle"
+            "de": "Schillok",
+            "en": "Wartortle",
+            "fr": "Carabaffe",
+            "es": "Wartortle",
+            "it": "Wartortle",
+            "ja": "カメール",
+            "ko": "어니부기",
+            "zh_hans": "卡咪龟",
+            "zh_hant": "卡咪龜"
           },
           "type": "pokemon",
           "pokemon_id": 8,
@@ -2152,7 +3408,15 @@
         {
           "localId": "172",
           "name": {
-            "en": "Caterpie"
+            "de": "Raupy",
+            "en": "Caterpie",
+            "fr": "Chenipan",
+            "es": "Caterpie",
+            "it": "Caterpie",
+            "ja": "キャタピー",
+            "ko": "캐터피",
+            "zh_hans": "绿毛虫",
+            "zh_hant": "綠毛蟲"
           },
           "type": "pokemon",
           "pokemon_id": 10,
@@ -2164,7 +3428,15 @@
         {
           "localId": "173",
           "name": {
-            "en": "Pikachu"
+            "de": "Pikachu",
+            "en": "Pikachu",
+            "fr": "Pikachu",
+            "es": "Pikachu",
+            "it": "Pikachu",
+            "ja": "ピカチュウ",
+            "ko": "피카츄",
+            "zh_hans": "皮卡丘",
+            "zh_hant": "皮卡丘"
           },
           "type": "pokemon",
           "pokemon_id": 25,
@@ -2176,7 +3448,15 @@
         {
           "localId": "174",
           "name": {
-            "en": "Nidoking"
+            "de": "Nidoking",
+            "en": "Nidoking",
+            "fr": "Nidoking",
+            "es": "Nidoking",
+            "it": "Nidoking",
+            "ja": "ニドキング",
+            "ko": "니드킹",
+            "zh_hans": "尼多王",
+            "zh_hant": "尼多王"
           },
           "type": "pokemon",
           "pokemon_id": 34,
@@ -2188,7 +3468,15 @@
         {
           "localId": "175",
           "name": {
-            "en": "Psyduck"
+            "de": "Enton",
+            "en": "Psyduck",
+            "fr": "Psykokwak",
+            "es": "Psyduck",
+            "it": "Psyduck",
+            "ja": "コダック",
+            "ko": "고라파덕",
+            "zh_hans": "可达鸭",
+            "zh_hant": "可達鴨"
           },
           "type": "pokemon",
           "pokemon_id": 54,
@@ -2200,7 +3488,15 @@
         {
           "localId": "176",
           "name": {
-            "en": "Poliwhirl"
+            "de": "Quaputzi",
+            "en": "Poliwhirl",
+            "fr": "Têtarte",
+            "es": "Poliwhirl",
+            "it": "Poliwhirl",
+            "ja": "ニョロゾ",
+            "ko": "슈륙챙이",
+            "zh_hans": "蚊香君",
+            "zh_hant": "蚊香君"
           },
           "type": "pokemon",
           "pokemon_id": 61,
@@ -2212,7 +3508,15 @@
         {
           "localId": "177",
           "name": {
-            "en": "Machoke"
+            "de": "Maschock",
+            "en": "Machoke",
+            "fr": "Machopeur",
+            "es": "Machoke",
+            "it": "Machoke",
+            "ja": "ゴーリキー",
+            "ko": "근육몬",
+            "zh_hans": "豪力",
+            "zh_hant": "豪力"
           },
           "type": "pokemon",
           "pokemon_id": 67,
@@ -2224,7 +3528,15 @@
         {
           "localId": "178",
           "name": {
-            "en": "Tangela"
+            "de": "Tangela",
+            "en": "Tangela",
+            "fr": "Saquedeneu",
+            "es": "Tangela",
+            "it": "Tangela",
+            "ja": "モンジャラ",
+            "ko": "덩쿠리",
+            "zh_hans": "蔓藤怪",
+            "zh_hant": "蔓藤怪"
           },
           "type": "pokemon",
           "pokemon_id": 114,
@@ -2236,7 +3548,15 @@
         {
           "localId": "179",
           "name": {
-            "en": "Mr. Mime"
+            "de": "Pantimos",
+            "en": "Mr. Mime",
+            "fr": "M. Mime",
+            "es": "Mr. Mime",
+            "it": "Mr. Mime",
+            "ja": "バリヤード",
+            "ko": "마임맨",
+            "zh_hans": "魔墙人偶",
+            "zh_hant": "魔牆人偶"
           },
           "type": "pokemon",
           "pokemon_id": 122,
@@ -2248,7 +3568,15 @@
         {
           "localId": "180",
           "name": {
-            "en": "Omanyte"
+            "de": "Amonitas",
+            "en": "Omanyte",
+            "fr": "Amonita",
+            "es": "Omanyte",
+            "it": "Omanyte",
+            "ja": "オムナイト",
+            "ko": "암나이트",
+            "zh_hans": "菊石兽",
+            "zh_hant": "菊石獸"
           },
           "type": "pokemon",
           "pokemon_id": 138,
@@ -2260,7 +3588,15 @@
         {
           "localId": "181",
           "name": {
-            "en": "Dragonair"
+            "de": "Dragonir",
+            "en": "Dragonair",
+            "fr": "Draco",
+            "es": "Dragonair",
+            "it": "Dragonair",
+            "ja": "ハクリュー",
+            "ko": "신뇽",
+            "zh_hans": "哈克龙",
+            "zh_hant": "哈克龍"
           },
           "type": "pokemon",
           "pokemon_id": 148,
@@ -2272,7 +3608,15 @@
         {
           "localId": "182",
           "name": {
-            "en": "Venusaur"
+            "de": "Bisaflor",
+            "en": "Venusaur",
+            "fr": "Florizarre",
+            "es": "Venusaur",
+            "it": "Venusaur",
+            "ja": "フシギバナ",
+            "ko": "이상해꽃",
+            "zh_hans": "妙蛙花",
+            "zh_hant": "妙蛙花"
           },
           "type": "pokemon",
           "pokemon_id": 3,
@@ -2285,7 +3629,15 @@
         {
           "localId": "183",
           "name": {
-            "en": "Charizard"
+            "de": "Glurak",
+            "en": "Charizard",
+            "fr": "Dracaufeu",
+            "es": "Charizard",
+            "it": "Charizard",
+            "ja": "リザードン",
+            "ko": "리자몽",
+            "zh_hans": "喷火龙",
+            "zh_hant": "噴火龍"
           },
           "type": "pokemon",
           "pokemon_id": 6,
@@ -2298,7 +3650,15 @@
         {
           "localId": "184",
           "name": {
-            "en": "Blastoise"
+            "de": "Turtok",
+            "en": "Blastoise",
+            "fr": "Tortank",
+            "es": "Blastoise",
+            "it": "Blastoise",
+            "ja": "カメックス",
+            "ko": "거북왕",
+            "zh_hans": "水箭龟",
+            "zh_hant": "水箭龜"
           },
           "type": "pokemon",
           "pokemon_id": 9,
@@ -2311,7 +3671,15 @@
         {
           "localId": "185",
           "name": {
-            "en": "Arbok"
+            "de": "Arbok",
+            "en": "Arbok",
+            "fr": "Arbok",
+            "es": "Arbok",
+            "it": "Arbok",
+            "ja": "アーボック",
+            "ko": "아보크",
+            "zh_hans": "阿柏怪",
+            "zh_hant": "阿柏怪"
           },
           "type": "pokemon",
           "pokemon_id": 24,
@@ -2324,7 +3692,15 @@
         {
           "localId": "186",
           "name": {
-            "en": "Ninetales"
+            "de": "Vulnona",
+            "en": "Ninetales",
+            "fr": "Feunard",
+            "es": "Ninetales",
+            "it": "Ninetales",
+            "ja": "キュウコン",
+            "ko": "나인테일",
+            "zh_hans": "九尾",
+            "zh_hant": "九尾"
           },
           "type": "pokemon",
           "pokemon_id": 38,
@@ -2337,7 +3713,15 @@
         {
           "localId": "187",
           "name": {
-            "en": "Wigglytuff"
+            "de": "Knuddeluff",
+            "en": "Wigglytuff",
+            "fr": "Grodoudou",
+            "es": "Wigglytuff",
+            "it": "Wigglytuff",
+            "ja": "プクリン",
+            "ko": "푸크린",
+            "zh_hans": "胖可丁",
+            "zh_hant": "胖可丁"
           },
           "type": "pokemon",
           "pokemon_id": 40,
@@ -2350,7 +3734,15 @@
         {
           "localId": "188",
           "name": {
-            "en": "Alakazam"
+            "de": "Simsala",
+            "en": "Alakazam",
+            "fr": "Alakazam",
+            "es": "Alakazam",
+            "it": "Alakazam",
+            "ja": "フーディン",
+            "ko": "후딘",
+            "zh_hans": "胡地",
+            "zh_hant": "胡地"
           },
           "type": "pokemon",
           "pokemon_id": 65,
@@ -2363,7 +3755,15 @@
         {
           "localId": "189",
           "name": {
-            "en": "Golem"
+            "de": "Geowaz",
+            "en": "Golem",
+            "fr": "Grolem",
+            "es": "Golem",
+            "it": "Golem",
+            "ja": "ゴローニャ",
+            "ko": "딱구리",
+            "zh_hans": "隆隆岩",
+            "zh_hant": "隆隆岩"
           },
           "type": "pokemon",
           "pokemon_id": 76,
@@ -2376,7 +3776,15 @@
         {
           "localId": "190",
           "name": {
-            "en": "Kangaskhan"
+            "de": "Kangama",
+            "en": "Kangaskhan",
+            "fr": "Kangourex",
+            "es": "Kangaskhan",
+            "it": "Kangaskhan",
+            "ja": "ガルーラ",
+            "ko": "캥카",
+            "zh_hans": "袋兽",
+            "zh_hant": "袋獸"
           },
           "type": "pokemon",
           "pokemon_id": 115,
@@ -2389,7 +3797,15 @@
         {
           "localId": "191",
           "name": {
-            "en": "Jynx"
+            "de": "Rossana",
+            "en": "Jynx",
+            "fr": "Lippoutou",
+            "es": "Jynx",
+            "it": "Jynx",
+            "ja": "ルージュラ",
+            "ko": "루주라",
+            "zh_hans": "迷唇姐",
+            "zh_hant": "迷唇姐"
           },
           "type": "pokemon",
           "pokemon_id": 124,
@@ -2402,7 +3818,15 @@
         {
           "localId": "192",
           "name": {
-            "en": "Zapdos"
+            "de": "Zapdos",
+            "en": "Zapdos",
+            "fr": "Électhor",
+            "es": "Zapdos",
+            "it": "Zapdos",
+            "ja": "サンダー",
+            "ko": "썬더",
+            "zh_hans": "闪电鸟",
+            "zh_hant": "閃電鳥"
           },
           "type": "pokemon",
           "pokemon_id": 145,
@@ -2415,7 +3839,15 @@
         {
           "localId": "193",
           "name": {
-            "en": "Mew"
+            "de": "Mew",
+            "en": "Mew",
+            "fr": "Mew",
+            "es": "Mew",
+            "it": "Mew",
+            "ja": "ミュウ",
+            "ko": "뮤",
+            "zh_hans": "梦幻",
+            "zh_hant": "夢幻"
           },
           "type": "pokemon",
           "pokemon_id": 151,
@@ -2488,7 +3920,15 @@
         {
           "localId": "198",
           "name": {
-            "en": "Venusaur"
+            "de": "Bisaflor",
+            "en": "Venusaur",
+            "fr": "Florizarre",
+            "es": "Venusaur",
+            "it": "Venusaur",
+            "ja": "フシギバナ",
+            "ko": "이상해꽃",
+            "zh_hans": "妙蛙花",
+            "zh_hant": "妙蛙花"
           },
           "type": "pokemon",
           "pokemon_id": 3,
@@ -2501,7 +3941,15 @@
         {
           "localId": "199",
           "name": {
-            "en": "Charizard"
+            "de": "Glurak",
+            "en": "Charizard",
+            "fr": "Dracaufeu",
+            "es": "Charizard",
+            "it": "Charizard",
+            "ja": "リザードン",
+            "ko": "리자몽",
+            "zh_hans": "喷火龙",
+            "zh_hant": "噴火龍"
           },
           "type": "pokemon",
           "pokemon_id": 6,
@@ -2514,7 +3962,15 @@
         {
           "localId": "200",
           "name": {
-            "en": "Blastoise"
+            "de": "Turtok",
+            "en": "Blastoise",
+            "fr": "Tortank",
+            "es": "Blastoise",
+            "it": "Blastoise",
+            "ja": "カメックス",
+            "ko": "거북왕",
+            "zh_hans": "水箭龟",
+            "zh_hant": "水箭龜"
           },
           "type": "pokemon",
           "pokemon_id": 9,
@@ -2527,7 +3983,15 @@
         {
           "localId": "201",
           "name": {
-            "en": "Alakazam"
+            "de": "Simsala",
+            "en": "Alakazam",
+            "fr": "Alakazam",
+            "es": "Alakazam",
+            "it": "Alakazam",
+            "ja": "フーディン",
+            "ko": "후딘",
+            "zh_hans": "胡地",
+            "zh_hant": "胡地"
           },
           "type": "pokemon",
           "pokemon_id": 65,
@@ -2540,7 +4004,15 @@
         {
           "localId": "202",
           "name": {
-            "en": "Zapdos"
+            "de": "Zapdos",
+            "en": "Zapdos",
+            "fr": "Électhor",
+            "es": "Zapdos",
+            "it": "Zapdos",
+            "ja": "サンダー",
+            "ko": "썬더",
+            "zh_hans": "闪电鸟",
+            "zh_hant": "閃電鳥"
           },
           "type": "pokemon",
           "pokemon_id": 145,
@@ -2583,7 +4055,15 @@
         {
           "localId": "205",
           "name": {
-            "en": "Mew"
+            "de": "Mew",
+            "en": "Mew",
+            "fr": "Mew",
+            "es": "Mew",
+            "it": "Mew",
+            "ja": "ミュウ",
+            "ko": "뮤",
+            "zh_hans": "梦幻",
+            "zh_hant": "夢幻"
           },
           "type": "pokemon",
           "pokemon_id": 151,

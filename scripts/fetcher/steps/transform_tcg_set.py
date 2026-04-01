@@ -126,7 +126,7 @@ class TransformTCGSetStep(BaseStep):
                     'trainer_type': card.get('trainer_type', 'Trainer'),
                     'types': card.get('types', ['Trainer']),
                     'pokemon_id': None,
-                    'image_url': card.get('special_card_image', card.get('image', ''))
+                    'image_url': card.get('special_card_image') or None
                 })
             elif card_type == 'pokemon':
                 # Pokemon card - already enriched
@@ -136,7 +136,10 @@ class TransformTCGSetStep(BaseStep):
                 # Get multilingual name
                 name_dict = card.get('name', {})
                 if not isinstance(name_dict, dict):
-                    name_dict = {'en': str(card.get('name', 'Unknown'))}
+                    # Build from name_XX fields (set by enrich_tcg_names_multilingual step)
+                    name_dict = self._build_multilingual_name(card)
+                    if not name_dict:
+                        name_dict = {'en': str(card.get('name', 'Unknown'))}
                 
                 # Get sprite URL - only if pokemon_id exists
                 if pokemon_id:

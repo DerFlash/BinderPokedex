@@ -46,7 +46,15 @@
         {
           "localId": "001",
           "name": {
-            "en": "Meganium"
+            "de": "Meganie",
+            "en": "Meganium",
+            "fr": "Méganium",
+            "es": "Meganium",
+            "it": "Meganium",
+            "ja": "メガニウム",
+            "ko": "메가니움",
+            "zh_hans": "大竺葵",
+            "zh_hant": "大竺葵"
           },
           "type": "pokemon",
           "pokemon_id": 154,
@@ -58,7 +66,15 @@
         {
           "localId": "002",
           "name": {
-            "en": "Inteleon"
+            "de": "Intelleon",
+            "en": "Inteleon",
+            "fr": "Lézargus",
+            "es": "Inteleon",
+            "it": "Inteleon",
+            "ja": "インテレオン",
+            "ko": "인텔리레온",
+            "zh_hans": "千面避役",
+            "zh_hant": "千面避役"
           },
           "type": "pokemon",
           "pokemon_id": 818,
@@ -70,7 +86,15 @@
         {
           "localId": "003",
           "name": {
-            "en": "Alakazam"
+            "de": "Simsala",
+            "en": "Alakazam",
+            "fr": "Alakazam",
+            "es": "Alakazam",
+            "it": "Alakazam",
+            "ja": "フーディン",
+            "ko": "후딘",
+            "zh_hans": "胡地",
+            "zh_hant": "胡地"
           },
           "type": "pokemon",
           "pokemon_id": 65,
@@ -82,7 +106,15 @@
         {
           "localId": "004",
           "name": {
-            "en": "Lunatone"
+            "de": "Lunastein",
+            "en": "Lunatone",
+            "fr": "Séléroc",
+            "es": "Lunatone",
+            "it": "Lunatone",
+            "ja": "ルナトーン",
+            "ko": "루나톤",
+            "zh_hans": "月石",
+            "zh_hant": "月石"
           },
           "type": "pokemon",
           "pokemon_id": 337,
@@ -94,7 +126,15 @@
         {
           "localId": "005",
           "name": {
-            "en": "Drifloon"
+            "de": "Driftlon",
+            "en": "Drifloon",
+            "fr": "Baudrive",
+            "es": "Drifloon",
+            "it": "Drifloon",
+            "ja": "フワンテ",
+            "ko": "흔들풍손",
+            "zh_hans": "飘飘球",
+            "zh_hant": "飄飄球"
           },
           "type": "pokemon",
           "pokemon_id": 425,
@@ -106,7 +146,15 @@
         {
           "localId": "006",
           "name": {
-            "en": "Drifblim"
+            "de": "Drifzepeli",
+            "en": "Drifblim",
+            "fr": "Grodrive",
+            "es": "Drifblim",
+            "it": "Drifblim",
+            "ja": "フワライド",
+            "ko": "둥실라이드",
+            "zh_hans": "随风球",
+            "zh_hant": "隨風球"
           },
           "type": "pokemon",
           "pokemon_id": 426,
@@ -118,7 +166,15 @@
         {
           "localId": "007",
           "name": {
-            "en": "Psyduck"
+            "de": "Enton",
+            "en": "Psyduck",
+            "fr": "Psykokwak",
+            "es": "Psyduck",
+            "it": "Psyduck",
+            "ja": "コダック",
+            "ko": "고라파덕",
+            "zh_hans": "可达鸭",
+            "zh_hant": "可達鴨"
           },
           "type": "pokemon",
           "pokemon_id": 54,
@@ -130,7 +186,15 @@
         {
           "localId": "008",
           "name": {
-            "en": "Golduck"
+            "de": "Entoron",
+            "en": "Golduck",
+            "fr": "Akwakwak",
+            "es": "Golduck",
+            "it": "Golduck",
+            "ja": "ゴルダック",
+            "ko": "골덕",
+            "zh_hans": "哥达鸭",
+            "zh_hant": "哥達鴨"
           },
           "type": "pokemon",
           "pokemon_id": 55,
@@ -142,7 +206,15 @@
         {
           "localId": "009",
           "name": {
-            "en": "Alakazam"
+            "de": "Simsala",
+            "en": "Alakazam",
+            "fr": "Alakazam",
+            "es": "Alakazam",
+            "it": "Alakazam",
+            "ja": "フーディン",
+            "ko": "후딘",
+            "zh_hans": "胡地",
+            "zh_hant": "胡地"
           },
           "type": "pokemon",
           "pokemon_id": 65,
@@ -154,7 +226,15 @@
         {
           "localId": "010",
           "name": {
-            "en": "Riolu"
+            "de": "Riolu",
+            "en": "Riolu",
+            "fr": "Riolu",
+            "es": "Riolu",
+            "it": "Riolu",
+            "ja": "リオル",
+            "ko": "리오르",
+            "zh_hans": "利欧路",
+            "zh_hant": "利歐路"
           },
           "type": "pokemon",
           "pokemon_id": 447,
