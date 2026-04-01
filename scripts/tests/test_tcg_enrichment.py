@@ -178,7 +178,7 @@ class TestCardEnrichment:
         # Mock pokemon_by_id index
         self.pokemon_by_id = {
             1: {
-                'id': 1,
+                'pokemon_id': 1,
                 'names': {
                     'de': 'Bisasam',
                     'en': 'Bulbasaur',
@@ -193,7 +193,7 @@ class TestCardEnrichment:
                 'types': ['Grass']
             },
             3: {
-                'id': 3,
+                'pokemon_id': 3,
                 'names': {
                     'de': 'Bisaflor',
                     'en': 'Venusaur',
@@ -291,14 +291,14 @@ class TestPokemonIndexBuilding:
         pokedex_data = {
             'sections': {
                 'all': {
-                    'pokemon': [
+                    'cards': [
                         {
-                            'id': 1,
+                            'pokemon_id': 1,
                             'name': {'de': 'Bisasam', 'en': 'Bulbasaur'},
                             'types': ['Grass']
                         },
                         {
-                            'id': 25,
+                            'pokemon_id': 25,
                             'name': {'de': 'Pikachu', 'en': 'Pikachu'},
                             'types': ['Electric']
                         }

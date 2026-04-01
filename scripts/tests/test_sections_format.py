@@ -58,7 +58,7 @@ class TestSectionsFormatTransform:
                         'de': 'Mega Evolution - Pokemon-Karten',
                         'en': 'Mega Evolution - Pokemon Cards'
                     },
-                    'pokemon': pokemon_cards
+                    'cards': pokemon_cards
                 }
             }
         }

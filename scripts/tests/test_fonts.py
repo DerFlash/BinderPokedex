@@ -40,9 +40,9 @@ def test_get_font_names():
         ('de', True, 'Helvetica-Bold'),
         ('en', False, 'Helvetica'),
         ('ja', False, 'SongtiBold'),
-        ('ko', False, 'AppleGothicRegular'),  # TrueType font for Korean (not PostScript)
+        ('ko', False, 'AppleGothic'),  # TrueType font for Korean
         ('zh_hans', False, 'SongtiBold'),
-        ('zh_hant', False, 'SongtiBold'),
+        ('zh_hant', False, 'STHeitiMedium'),
     ]
     
     for language, bold, expected_font in test_cases:
