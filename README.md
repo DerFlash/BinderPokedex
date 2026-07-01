@@ -40,18 +40,18 @@ Print 1,025+ Pokémon across 9 generations in 9 languages. All variants, all for
 ### For End Users - Just Download & Print!
 
 
-**Latest (v8.1):** [All 225 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v8.1.1) ✨ *New: SVG templates, full CJK fix, localized TCG energy types!*
+**Latest (v8.1):** [All 225 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v8.1) ✨ *New: SVG templates, full CJK fix, localized TCG energy types!*
 
 **By Language (v8.1):**
-🇩🇪 [Deutsch](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1.1/binder-pokedex-de.zip) |
-🇬🇧 [English](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1.1/binder-pokedex-en.zip) |
-🇫🇷 [Français](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1.1/binder-pokedex-fr.zip) |
-🇪🇸 [Español](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1.1/binder-pokedex-es.zip) |
-🇮🇹 [Italiano](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1.1/binder-pokedex-it.zip) |
-🇯🇵 [日本語](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1.1/binder-pokedex-ja.zip) |
-🇰🇷 [한국어](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1.1/binder-pokedex-ko.zip) |
-🇨🇳 [简体中文](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1.1/binder-pokedex-zh_hans.zip) |
-🇹🇼 [繁體中文](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1.1/binder-pokedex-zh_hant.zip)
+🇩🇪 [Deutsch](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1/binder-pokedex-de.zip) |
+🇬🇧 [English](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1/binder-pokedex-en.zip) |
+🇫🇷 [Français](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1/binder-pokedex-fr.zip) |
+🇪🇸 [Español](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1/binder-pokedex-es.zip) |
+🇮🇹 [Italiano](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1/binder-pokedex-it.zip) |
+🇯🇵 [日本語](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1/binder-pokedex-ja.zip) |
+🇰🇷 [한국어](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1/binder-pokedex-ko.zip) |
+🇨🇳 [简体中文](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1/binder-pokedex-zh_hans.zip) |
+🇹🇼 [繁體中文](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1/binder-pokedex-zh_hant.zip)
 ---
 
 ## 📝 What's New
