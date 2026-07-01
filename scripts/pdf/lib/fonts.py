@@ -203,7 +203,28 @@ class FontManager:
         logger.debug("✓ Built-in Latin fonts available (Helvetica)")
         cls._font_cache['Helvetica'] = True
         cls._font_cache['Helvetica-Bold'] = True
-        
+
+        # Remap any unregistered CJK fonts to the best available fallback.
+        # This handles Linux/CI environments where macOS-specific fonts
+        # (AppleGothic, STHeitiMedium) are absent but a Noto/WQY font was
+        # registered as SongtiBold.
+        fallback_cjk = next(
+            (name for name in ('SongtiBold', 'STHeitiMedium', 'AppleGothic')
+             if cls._font_cache.get(name)),
+            None
+        )
+        if fallback_cjk:
+            for lang in cls.CJK_LANGUAGES:
+                info = cls.LANGUAGE_FONTS[lang]
+                for key in ('font', 'font_bold'):
+                    requested = info[key]
+                    if not cls._font_cache.get(requested):
+                        cls.LANGUAGE_FONTS[lang][key] = fallback_cjk
+                        logger.warning(
+                            f"⚠️  '{requested}' not registered for language '{lang}', "
+                            f"falling back to '{fallback_cjk}'"
+                        )
+
         cls._fonts_registered = True
         logger.info(f"Font registration complete")
     

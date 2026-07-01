@@ -35,20 +35,28 @@ def test_get_font_names():
     """Test retrieving font names for each language."""
     logger.info("Testing font name retrieval...")
     
-    test_cases = [
+    # Latin fonts always use Helvetica (built-in, no path dependency)
+    latin_cases = [
         ('de', False, 'Helvetica'),
         ('de', True, 'Helvetica-Bold'),
         ('en', False, 'Helvetica'),
-        ('ja', False, 'SongtiBold'),
-        ('ko', False, 'AppleGothic'),  # TrueType font for Korean
-        ('zh_hans', False, 'SongtiBold'),
-        ('zh_hant', False, 'STHeitiMedium'),
     ]
-    
-    for language, bold, expected_font in test_cases:
+    for language, bold, expected_font in latin_cases:
         font = FontManager.get_font_name(language, bold)
         assert font == expected_font, f"For {language} (bold={bold}): expected {expected_font}, got {font}"
         logger.info(f"✓ {language}: {font}")
+
+    # CJK fonts may be remapped to a fallback on non-macOS systems.
+    # Assert that the returned font name is actually registered (i.e. usable).
+    cjk_languages = ['ja', 'ko', 'zh_hans', 'zh_hant']
+    for language in cjk_languages:
+        font = FontManager.get_font_name(language, False)
+        registered = FontManager._font_cache.get(font, False)
+        assert registered, (
+            f"Font '{font}' returned for language '{language}' is not registered. "
+            f"Font cache: {FontManager._font_cache}"
+        )
+        logger.info(f"✓ {language}: {font} (registered)")
 
 
 
