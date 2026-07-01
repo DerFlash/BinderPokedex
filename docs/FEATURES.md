@@ -7,23 +7,24 @@
 - All 9 languages fully supported
 - 81 PDFs generated (9 × 9 languages)
 
-### Phase 2: Pokémon Variants - MVP 🚀 IN PROGRESS
+### Phase 2: Pokémon Variants ✅ COMPLETE
 - **Mega Evolution** ✅ Complete
   - 87 Pokémon species with 92 Mega forms
   - PokeAPI form variety IDs correctly mapped (official artwork where available)
-  - Pokemon.com fallback for form-specific images (f2, f3, etc.)
-  - Form suffix extraction working for X/Y, Attack/Defense/Speed, and special forms (Curly/Droopy/Stretchy)
   - 9 language PDFs generated
   - Iconic Pokémon on covers (Charizard X, Mewtwo X, Gengar)
-  - Translation callbacks integrated
-  - Font rendering fixed for JP/ZH
 
-### Phase 3-9: Additional Variants 📋 PLANNED
-- Gigantamax forms
-- Regional variants (Alola, Galar, Hisui, Paldea)
-- Primal Reversion & Terastal forms
-- Unique patterns & forms
-- Special fusions & forms
+### Full TCG Support ✅ COMPLETE (v7.0+)
+- 24 TCG sets across 3 EX generations + full Scarlet & Violet era
+- 25 total scopes (1 Pokédex + 24 TCG sets)
+
+### SVG Template System ✅ COMPLETE (v8.0)
+- Full SVG-based card, page, and cover templates
+- Live-editable in Inkscape, Illustrator, or any SVG editor
+
+### CJK Fix & TCG Type Translations ✅ COMPLETE (v8.1)
+- All 9 languages generate correct PDFs on Linux/CI
+- TCG-exclusive energy types (Colorless, Darkness, Lightning, Metal) fully translated
 
 ## Language Support
 
@@ -36,10 +37,13 @@
 | Español | `es` | Helvetica | Latin |
 | Français | `fr` | Helvetica | Latin |
 | Italiano | `it` | Helvetica | Latin |
-| 日本語 | `ja` | Songti | CJK |
-| 한국어 | `ko` | AppleGothic | CJK |
-| 简体中文 | `zh_hans` | Songti | CJK |
-| 繁體中文 | `zh_hant` | Songti | CJK |
+| 日本語 | `ja` | Songti / WenQuanYi¹ | CJK |
+| 한국어 | `ko` | Songti / WenQuanYi¹ | CJK |
+| 简体中文 | `zh_hans` | Songti / WenQuanYi¹ | CJK |
+| 繁體中文 | `zh_hant` | Songti / WenQuanYi¹ | CJK |
+
+*¹ macOS: Songti.ttc (JA/ZH) and AppleGothic.ttf (KO) / STHeiti Medium.ttc (ZH-Hant).
+Linux/CI: WenQuanYi Zen Hei (wqy-zenhei.ttc) registered as fallback for all CJK languages.*
 
 ### CJK Rendering
 
