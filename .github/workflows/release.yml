@@ -41,7 +41,15 @@ jobs:
         run: |
           # Fetch all data first
           echo "Fetching data for all scopes..."
-          for scope in Pokedex ExGen1 ExGen2 ExGen3 ME01 ME02 ME02.5 MEP SV01 SV02 SV03.5 SV03 SV04.5 SV04 SV05 SV06.5 SV06 SV07 SV08.5 SV08 SV09 SV10.5B SV10.5W SV10 SVP; do
+          scopes="Pokedex"
+          for scope_file in config/scopes/*.yaml; do
+            scope=$(basename "$scope_file" .yaml)
+            if [ "$scope" != "Pokedex" ]; then
+              scopes="$scopes $scope"
+            fi
+          done
+
+          for scope in $scopes; do
             echo "  → Fetching $scope"
             python scripts/fetcher/fetch.py --scope $scope
           done
@@ -101,34 +109,35 @@ jobs:
             
             **What's New in ${{ steps.tag.outputs.tag_name }}:**
             
-            🐛 **Bug Fixes:**
-            - Fixed Korean (`ko`) and Traditional Chinese (`zh_hant`) PDFs being empty on Linux/CI due to missing macOS-exclusive fonts (`AppleGothic`, `STHeitiMedium`) — now falls back to WenQuanYi/Noto
-            - Fixed TCG-exclusive energy type labels (`Colorless`, `Darkness`, `Lightning`, `Metal`) always showing in English — now translated in all 9 languages
+            🎴 **Mega Evolution Set Expansion:**
+            - Added ME03 **Perfect Order**
+            - Added ME04 **Chaos Rising**
+            - Release builds now discover scopes from `config/scopes/*.yaml`
             
             ---
             
             ### 📥 Downloads (by Language)
-            Each ZIP contains all 25 scopes (Pokédex + 24 TCG sets) in that language:
+            Each ZIP contains all available PDFs for that language:
             
-            - 🇩🇪 **binder-pokedex-de.zip** - Deutsch (25 PDFs)
-            - 🇬🇧 **binder-pokedex-en.zip** - English (25 PDFs)
-            - 🇫🇷 **binder-pokedex-fr.zip** - Français (25 PDFs)
-            - 🇪🇸 **binder-pokedex-es.zip** - Español (25 PDFs)
-            - 🇮🇹 **binder-pokedex-it.zip** - Italiano (25 PDFs)
-            - 🇯🇵 **binder-pokedex-ja.zip** - 日本語 (25 PDFs)
-            - 🇰🇷 **binder-pokedex-ko.zip** - 한국어 (25 PDFs)
-            - 🇨🇳 **binder-pokedex-zh_hans.zip** - 简体中文 (25 PDFs)
-            - 🇹🇼 **binder-pokedex-zh_hant.zip** - 繁體中文 (25 PDFs)
+            - 🇩🇪 **binder-pokedex-de.zip** - Deutsch
+            - 🇬🇧 **binder-pokedex-en.zip** - English
+            - 🇫🇷 **binder-pokedex-fr.zip** - Français
+            - 🇪🇸 **binder-pokedex-es.zip** - Español
+            - 🇮🇹 **binder-pokedex-it.zip** - Italiano
+            - 🇯🇵 **binder-pokedex-ja.zip** - 日本語
+            - 🇰🇷 **binder-pokedex-ko.zip** - 한국어
+            - 🇨🇳 **binder-pokedex-zh_hans.zip** - 简体中文
+            - 🇹🇼 **binder-pokedex-zh_hant.zip** - 繁體中文
             
             ### 📋 Content Overview
-            **25 Total Scopes:**
+            **27 Total Scopes:**
             - **Pokédex:** Complete National Pokédex (1,025 Pokémon across 9 generations)
             - **ExGen1-3:** TCG EX collections (94/324/366 cards)
-            - **ME01-MEP:** Pokémon TCG Mew era (4 sets)
+            - **ME01-MEP:** Pokémon TCG Mega Evolution era (6 sets)
             - **SV01-SV10 + SVP:** Scarlet & Violet era (17 sets)
             
             ### 📊 Stats
-            - **Total Scopes:** 25 (1 Pokédex + 3 ExGen + 21 TCG sets)
+            - **Total Scopes:** 27 (1 Pokédex + 3 ExGen + 23 TCG sets)
             - **Languages:** 9 (DE, EN, FR, ES, IT, JA, KO, ZH-Hans, ZH-Hant)
             - **Cards/Pokémon:** 1,025+ Pokémon + 4,000+ TCG cards
             - **Featured Elements:** 75+ iconic Pokémon showcased across all covers
