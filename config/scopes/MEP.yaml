@@ -12,6 +12,9 @@ pipeline:
   params:
     set_id: mep
     output_file: data/source/mep.json
+- step: merge_tcg_supplement
+  params:
+    supplement_file: data/source/mep_supplement.json
 - step: enrich_tcg_names_multilingual
   params:
     set_id: mep

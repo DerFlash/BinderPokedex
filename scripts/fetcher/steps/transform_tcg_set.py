@@ -218,6 +218,8 @@ class TransformTCGSetStep(BaseStep):
         """
         # Get name from card (works with both raw and enriched cards)
         original_name = card.get('name', '')
+        if isinstance(original_name, dict):
+            original_name = original_name.get('en', '')
         if not original_name:
             return (None, None)
         

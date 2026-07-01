@@ -54,6 +54,7 @@ from steps.save_output import SaveOutputStep
 from steps.load_local_source import LoadLocalSourceStep
 from steps.load_tcg_set import LoadTCGSetStep
 from steps.load_ex_cards import LoadExCardsStep
+from steps.merge_tcg_supplement import MergeTCGSupplementStep
 
 
 def get_all_scopes() -> list:
@@ -111,6 +112,7 @@ def create_registry() -> StepRegistry:
     registry.register('load_local_source', LoadLocalSourceStep)
     registry.register('load_tcg_set', LoadTCGSetStep)
     registry.register('load_ex_cards', LoadExCardsStep)
+    registry.register('merge_tcg_supplement', MergeTCGSupplementStep)
     
     # Register PokeAPI steps
     registry.register('fetch_pokeapi_national_dex', FetchPokeAPIStep)
