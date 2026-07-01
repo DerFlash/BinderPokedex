@@ -6,7 +6,7 @@ Print 1,025+ Pokémon across 9 generations in 9 languages. All variants, all for
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-![v7.2](https://img.shields.io/badge/version-v7.2-green.svg)
+![v8.1](https://img.shields.io/badge/version-v8.1-green.svg)
 
 ---
 

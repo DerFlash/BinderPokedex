@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [8.1.0] - 2026-07-01
+
+### 🐛 Bug Fixes
+
+**CJK font fallback on Linux/CI**
+- Korean (`ko`) and Traditional Chinese (`zh_hant`) PDFs were empty on Linux/CI because `AppleGothic` and `STHeitiMedium` are macOS-exclusive fonts
+- `FontManager` now remaps any unregistered CJK font to the best available fallback (WenQuanYi/Noto) after all registration attempts, preventing a `KeyError` crash before `c.save()` is reached
+- Updated font tests to assert that the returned font name is actually registered, rather than checking for a specific macOS font name
+
+**TCG-exclusive type translations**
+- `Colorless`, `Darkness`, `Lightning`, and `Metal` are TCG-specific energy type names that were absent from all translation files — the renderer fell back to English for every language
+- Added full translations in all 9 languages to both `i18n/translations.json` and `enrichments/type_translations.json`
+- Mapping: `Darkness` → Dark, `Lightning` → Electric, `Metal` → Steel equivalents per language
+
+---
+
 ## [8.0.0] - 2026-07-01
 
 ### ✨ New Features

@@ -99,18 +99,9 @@ jobs:
             
             **What's New in ${{ steps.tag.outputs.tag_name }}:**
             
-            🎨 **SVG WYSIWYG Template System:**
-            - Full SVG-based card, page, and cover templates — editable live in any SVG editor
-            - New CLI flags: `--card-template`, `--page-template`, `--cover-template`, `--list-templates`
-            - Backwards-compatible: existing renders unchanged without template flags
-            
-            📦 **MEP Bulbapedia Supplement:**
-            - MEP set expanded from 10 → 55 cards via Bulbapedia data supplement
-            
-            🔧 **Bug Fixes & Improvements:**
-            - Preserved PNG transparency in image cache and renders
-            - Fixed TCG multilingual card name handling
-            - CI: upgraded to Python 3.12 + pip caching for faster builds
+            🐛 **Bug Fixes:**
+            - Fixed Korean (`ko`) and Traditional Chinese (`zh_hant`) PDFs being empty on Linux/CI due to missing macOS-exclusive fonts (`AppleGothic`, `STHeitiMedium`) — now falls back to WenQuanYi/Noto
+            - Fixed TCG-exclusive energy type labels (`Colorless`, `Darkness`, `Lightning`, `Metal`) always showing in English — now translated in all 9 languages
             
             ---
             
