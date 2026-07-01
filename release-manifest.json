@@ -1,0 +1,231 @@
+{
+  "assets": [
+    {
+      "exists": true,
+      "language": "de",
+      "name": "binder-pokedex-de.zip",
+      "size_bytes": 139591178
+    },
+    {
+      "exists": true,
+      "language": "en",
+      "name": "binder-pokedex-en.zip",
+      "size_bytes": 136453778
+    },
+    {
+      "exists": true,
+      "language": "fr",
+      "name": "binder-pokedex-fr.zip",
+      "size_bytes": 135364342
+    },
+    {
+      "exists": true,
+      "language": "es",
+      "name": "binder-pokedex-es.zip",
+      "size_bytes": 135376463
+    },
+    {
+      "exists": true,
+      "language": "it",
+      "name": "binder-pokedex-it.zip",
+      "size_bytes": 140539960
+    },
+    {
+      "exists": true,
+      "language": "ja",
+      "name": "binder-pokedex-ja.zip",
+      "size_bytes": 32669168
+    },
+    {
+      "exists": true,
+      "language": "ko",
+      "name": "binder-pokedex-ko.zip",
+      "size_bytes": 27599983
+    },
+    {
+      "exists": true,
+      "language": "zh_hans",
+      "name": "binder-pokedex-zh_hans.zip",
+      "size_bytes": 27840596
+    },
+    {
+      "exists": true,
+      "language": "zh_hant",
+      "name": "binder-pokedex-zh_hant.zip",
+      "size_bytes": 27871107
+    }
+  ],
+  "card_counts": {
+    "ExGen1": 94,
+    "ExGen2": 125,
+    "ExGen3": 216,
+    "ME01": 188,
+    "ME02": 130,
+    "ME02.5": 295,
+    "ME03": 124,
+    "ME04": 122,
+    "MEP": 55,
+    "Pokedex": 1025,
+    "SV01": 258,
+    "SV02": 279,
+    "SV03": 230,
+    "SV03.5": 207,
+    "SV04": 266,
+    "SV04.5": 245,
+    "SV05": 218,
+    "SV06": 226,
+    "SV06.5": 99,
+    "SV07": 175,
+    "SV08": 252,
+    "SV08.5": 180,
+    "SV09": 190,
+    "SV10": 244,
+    "SV10.5B": 172,
+    "SV10.5W": 173,
+    "SVP": 226
+  },
+  "generated_at": "2026-07-01T19:34:02.580195+00:00",
+  "languages": {
+    "de": {
+      "name": "Deutsch",
+      "zip": "binder-pokedex-de.zip"
+    },
+    "en": {
+      "name": "English",
+      "zip": "binder-pokedex-en.zip"
+    },
+    "es": {
+      "name": "Espanol",
+      "zip": "binder-pokedex-es.zip"
+    },
+    "fr": {
+      "name": "Francais",
+      "zip": "binder-pokedex-fr.zip"
+    },
+    "it": {
+      "name": "Italiano",
+      "zip": "binder-pokedex-it.zip"
+    },
+    "ja": {
+      "name": "Japanese",
+      "zip": "binder-pokedex-ja.zip"
+    },
+    "ko": {
+      "name": "Korean",
+      "zip": "binder-pokedex-ko.zip"
+    },
+    "zh_hans": {
+      "name": "Simplified Chinese",
+      "zip": "binder-pokedex-zh_hans.zip"
+    },
+    "zh_hant": {
+      "name": "Traditional Chinese",
+      "zip": "binder-pokedex-zh_hant.zip"
+    }
+  },
+  "pdfs": {
+    "by_language": {
+      "de": 27,
+      "en": 27,
+      "es": 27,
+      "fr": 27,
+      "it": 27,
+      "ja": 5,
+      "ko": 4,
+      "zh_hans": 4,
+      "zh_hant": 4
+    },
+    "total": 152
+  },
+  "release_notes": {
+    "summary": {
+      "de": "ME03 Perfect Order und ME04 Chaos Rising",
+      "en": "ME03 Perfect Order and ME04 Chaos Rising"
+    },
+    "whats_new": {
+      "de": {
+        "body": [
+          "ME03 Perfect Order und ME04 Chaos Rising mit Quelldaten, Scope-Konfigurationen, angereicherten Ausgabedaten und Featured-Section-Artwork ergänzt",
+          "Release-Builds erkennen Scopes jetzt automatisch aus config/scopes/*.yaml"
+        ],
+        "title": "Mega-Evolution-Set-Erweiterung"
+      },
+      "en": {
+        "body": [
+          "Added ME03 Perfect Order and ME04 Chaos Rising source data, scope configs, enriched output data, and featured section artwork",
+          "Release builds now discover scopes from config/scopes/*.yaml"
+        ],
+        "title": "Mega Evolution Set Expansion"
+      }
+    }
+  },
+  "schema_version": 1,
+  "scope_count": 27,
+  "scope_groups": {
+    "ex": [
+      "ExGen1",
+      "ExGen2",
+      "ExGen3"
+    ],
+    "mega": [
+      "ME01",
+      "ME02",
+      "ME02.5",
+      "ME03",
+      "ME04",
+      "MEP"
+    ],
+    "pokedex": [
+      "Pokedex"
+    ],
+    "scarlet_violet": [
+      "SV01",
+      "SV02",
+      "SV03",
+      "SV03.5",
+      "SV04",
+      "SV04.5",
+      "SV05",
+      "SV06",
+      "SV06.5",
+      "SV07",
+      "SV08",
+      "SV08.5",
+      "SV09",
+      "SV10",
+      "SV10.5B",
+      "SV10.5W",
+      "SVP"
+    ]
+  },
+  "scopes": [
+    "Pokedex",
+    "ExGen1",
+    "ExGen2",
+    "ExGen3",
+    "ME01",
+    "ME02",
+    "ME02.5",
+    "ME03",
+    "ME04",
+    "MEP",
+    "SV01",
+    "SV02",
+    "SV03",
+    "SV03.5",
+    "SV04",
+    "SV04.5",
+    "SV05",
+    "SV06",
+    "SV06.5",
+    "SV07",
+    "SV08",
+    "SV08.5",
+    "SV09",
+    "SV10",
+    "SV10.5B",
+    "SV10.5W",
+    "SVP"
+  ],
+  "tag": "v8.2"
+}
