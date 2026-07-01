@@ -4,6 +4,17 @@ on:
   release:
     types:
       - published
+  workflow_run:
+    workflows:
+      - Create Release
+    types:
+      - completed
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to announce, for example v8.2
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -13,15 +24,49 @@ jobs:
   announce:
     name: Update README release pointers
     runs-on: ubuntu-latest
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
 
+      - name: Resolve release
+        id: release
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          RELEASE_URL: ${{ github.event.release.html_url }}
+          INPUT_TAG: ${{ inputs.tag }}
+          WORKFLOW_RUN_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          if [ "$EVENT_NAME" = "release" ]; then
+            tag_name="$RELEASE_TAG"
+            release_url="$RELEASE_URL"
+          elif [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            tag_name="$INPUT_TAG"
+            release_url="https://github.com/$GITHUB_REPOSITORY/releases/tag/$tag_name"
+          elif [ "$EVENT_NAME" = "workflow_run" ]; then
+            git fetch --tags --force
+            tag_name="$(git tag --points-at "$WORKFLOW_RUN_SHA" | sort -V | tail -n 1)"
+            if [ -z "$tag_name" ]; then
+              echo "Could not resolve release tag for workflow_run SHA $WORKFLOW_RUN_SHA"
+              exit 1
+            fi
+            release_url="https://github.com/$GITHUB_REPOSITORY/releases/tag/$tag_name"
+          else
+            echo "Unsupported event: $EVENT_NAME"
+            exit 1
+          fi
+
+          echo "tag_name=$tag_name" >> "$GITHUB_OUTPUT"
+          echo "release_url=$release_url" >> "$GITHUB_OUTPUT"
+          echo "Release tag: $tag_name"
+          echo "Release URL: $release_url"
+
       - name: Download release manifest
         env:
           GH_TOKEN: ${{ secrets.RELEASE_AUTOMATION_TOKEN || secrets.GITHUB_TOKEN }}
-          TAG_NAME: ${{ github.event.release.tag_name }}
+          TAG_NAME: ${{ steps.release.outputs.tag_name }}
         run: |
           gh release download "$TAG_NAME" \
             --repo "$GITHUB_REPOSITORY" \
@@ -33,18 +78,19 @@ jobs:
         run: |
           python scripts/release/announce_release.py \
             --manifest release-manifest.json \
-            --release-url "${{ github.event.release.html_url }}"
+            --release-url "${{ steps.release.outputs.release_url }}"
 
       - name: Automated README review
         env:
-          TAG_NAME: ${{ github.event.release.tag_name }}
+          TAG_NAME: ${{ steps.release.outputs.tag_name }}
+          RELEASE_URL: ${{ steps.release.outputs.release_url }}
         run: |
           git diff --name-only
 
           grep -q "$TAG_NAME" README.md
           grep -q "$TAG_NAME" README.de.md
-          grep -q "${{ github.event.release.html_url }}" README.md
-          grep -q "${{ github.event.release.html_url }}" README.de.md
+          grep -q "$RELEASE_URL" README.md
+          grep -q "$RELEASE_URL" README.de.md
 
           python - <<'PY'
           import json
@@ -84,12 +130,12 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.RELEASE_AUTOMATION_TOKEN || secrets.GITHUB_TOKEN }}
-          branch: automation/announce-${{ github.event.release.tag_name }}
+          branch: automation/announce-${{ steps.release.outputs.tag_name }}
           delete-branch: true
-          commit-message: "docs: announce ${{ github.event.release.tag_name }}"
-          title: "docs: announce ${{ github.event.release.tag_name }}"
+          commit-message: "docs: announce ${{ steps.release.outputs.tag_name }}"
+          title: "docs: announce ${{ steps.release.outputs.tag_name }}"
           body: |
-            Automated README announcement for `${{ github.event.release.tag_name }}`.
+            Automated README announcement for `${{ steps.release.outputs.tag_name }}`.
 
             This PR was generated from `release-manifest.json` attached to the published release.
             The workflow already verified that only `README.md` and `README.de.md` changed and that both files reference the published release URL.
