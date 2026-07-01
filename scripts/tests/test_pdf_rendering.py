@@ -190,7 +190,7 @@ def cleanup_generated_pdfs():
     """Clean up generated PDF files."""
     output_dir = Path('output')
     if output_dir.exists():
-        for pdf_file in output_dir.glob('pokemon_gen*_*.pdf'):
+        for pdf_file in output_dir.rglob('pokemon_gen*_*.pdf'):
             try:
                 pdf_file.unlink()
                 logger.debug(f"Deleted: {pdf_file}")
