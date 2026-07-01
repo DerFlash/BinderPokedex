@@ -88,6 +88,13 @@ jobs:
           
           cd ..
           ls -lh binder-pokedex*.zip
+
+      - name: Build release manifest
+        run: |
+          python scripts/release/build_manifest.py \
+            --tag "${{ steps.tag.outputs.tag_name }}" \
+            --output release-manifest.json
+          cat release-manifest.json
       
       - name: Create Release with Assets
         uses: softprops/action-gh-release@v2
@@ -104,6 +111,7 @@ jobs:
             binder-pokedex-ko.zip
             binder-pokedex-zh_hans.zip
             binder-pokedex-zh_hant.zip
+            release-manifest.json
           body: |
             ## Binder Pokédex ${{ steps.tag.outputs.tag_name }}
             
@@ -153,4 +161,4 @@ jobs:
           draft: false
           prerelease: false
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_AUTOMATION_TOKEN || secrets.GITHUB_TOKEN }}

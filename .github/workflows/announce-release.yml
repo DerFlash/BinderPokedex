@@ -1,0 +1,110 @@
+name: Announce Release
+
+on:
+  release:
+    types:
+      - published
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  announce:
+    name: Update README release pointers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Download release manifest
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_AUTOMATION_TOKEN || secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ github.event.release.tag_name }}
+        run: |
+          gh release download "$TAG_NAME" \
+            --repo "$GITHUB_REPOSITORY" \
+            --pattern release-manifest.json \
+            --dir .
+          test -s release-manifest.json
+
+      - name: Update READMEs from manifest
+        run: |
+          python scripts/release/announce_release.py \
+            --manifest release-manifest.json \
+            --release-url "${{ github.event.release.html_url }}"
+
+      - name: Automated README review
+        env:
+          TAG_NAME: ${{ github.event.release.tag_name }}
+        run: |
+          git diff --name-only
+
+          grep -q "$TAG_NAME" README.md
+          grep -q "$TAG_NAME" README.de.md
+          grep -q "${{ github.event.release.html_url }}" README.md
+          grep -q "${{ github.event.release.html_url }}" README.de.md
+
+          python - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          changed_files = set(
+              line.strip()
+              for line in __import__("subprocess").check_output(
+                  ["git", "diff", "--name-only"], text=True
+              ).splitlines()
+              if line.strip()
+          )
+          expected_files = {"README.md", "README.de.md"}
+          if changed_files != expected_files:
+              raise SystemExit(f"Unexpected changed files: {sorted(changed_files)}")
+
+          manifest = json.loads(Path("release-manifest.json").read_text(encoding="utf-8"))
+          tag = manifest["tag"]
+          pdf_count = str(manifest["pdfs"]["total"])
+          scope_count = str(manifest["scope_count"])
+
+          checks = [
+              ("README.md", rf"Latest \({re.escape(tag)}\).*All {pdf_count} PDFs"),
+              ("README.md", rf"Scope-Based System\*\* with {scope_count} total scopes"),
+              ("README.de.md", rf"Aktuelle Version \({re.escape(tag)}\).*Alle {pdf_count} PDFs"),
+              ("README.de.md", rf"Scope-basiertes System\*\* mit {scope_count} Scopes insgesamt"),
+          ]
+          for filename, pattern in checks:
+              text = Path(filename).read_text(encoding="utf-8")
+              if not re.search(pattern, text, re.S):
+                  raise SystemExit(f"README review failed: {filename} does not match {pattern}")
+          PY
+
+      - name: Create README update PR
+        id: cpr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.RELEASE_AUTOMATION_TOKEN || secrets.GITHUB_TOKEN }}
+          branch: automation/announce-${{ github.event.release.tag_name }}
+          delete-branch: true
+          commit-message: "docs: announce ${{ github.event.release.tag_name }}"
+          title: "docs: announce ${{ github.event.release.tag_name }}"
+          body: |
+            Automated README announcement for `${{ github.event.release.tag_name }}`.
+
+            This PR was generated from `release-manifest.json` attached to the published release.
+            The workflow already verified that only `README.md` and `README.de.md` changed and that both files reference the published release URL.
+          labels: |
+            automated
+            documentation
+
+      - name: Enable auto-merge
+        if: steps.cpr.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_AUTOMATION_TOKEN || secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ steps.cpr.outputs.pull-request-number }}
+        run: |
+          gh pr merge "$PR_NUMBER" \
+            --repo "$GITHUB_REPOSITORY" \
+            --squash \
+            --auto \
+            --delete-branch

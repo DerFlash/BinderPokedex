@@ -1,0 +1,14 @@
+summary:
+  en: "ME03 Perfect Order and ME04 Chaos Rising"
+  de: "ME03 Perfect Order und ME04 Chaos Rising"
+whats_new:
+  en:
+    title: "Mega Evolution Set Expansion"
+    body:
+      - "Added ME03 Perfect Order and ME04 Chaos Rising source data, scope configs, enriched output data, and featured section artwork"
+      - "Release builds now discover scopes from config/scopes/*.yaml"
+  de:
+    title: "Mega-Evolution-Set-Erweiterung"
+    body:
+      - "ME03 Perfect Order und ME04 Chaos Rising mit Quelldaten, Scope-Konfigurationen, angereicherten Ausgabedaten und Featured-Section-Artwork ergänzt"
+      - "Release-Builds erkennen Scopes jetzt automatisch aus config/scopes/*.yaml"
