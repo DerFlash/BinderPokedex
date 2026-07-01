@@ -58,20 +58,10 @@ The script prints a summary table. Verify:
 
 Inspect the file: `data/source/<set-id>_supplement.json`
 
-### 4. Create the merge pipeline step
+### 4. Wire into the scope YAML
 
-Create `scripts/fetcher/steps/merge_tcg_supplement.py` following the
-interface in [supplement_schema.md](./references/supplement_schema.md).
-
-The step must:
-1. Accept `supplement_file` param (path relative to project root)
-2. If the file does not exist, log a warning and pass through unchanged
-3. Read `context.data["tcg_set_source"]` and append supplement cards that
-   are not already present (match by `localId`)
-4. Update `metadata.total_cards` to reflect the new total
-5. Register the step in `scripts/fetcher/fetch.py` step registry
-
-### 5. Wire into the scope YAML
+The `merge_tcg_supplement` step is already implemented and registered in
+`scripts/fetcher/fetch.py`. You only need to add it to the scope YAML.
 
 In `config/scopes/<SET>.yaml`, add the step after `fetch_tcgdex_set`:
 
@@ -87,7 +77,13 @@ In `config/scopes/<SET>.yaml`, add the step after `fetch_tcgdex_set`:
   ...
 ```
 
-### 6. Run and validate
+The step implementation lives in
+`scripts/fetcher/steps/merge_tcg_supplement.py`. It accepts a
+`supplement_file` path relative to the project root, skips silently if the
+file does not exist, and only appends cards whose `localId` is not already
+present in the TCGdex source.
+
+### 5. Run and validate
 
 ```bash
 python scripts/fetcher/fetch.py --scope <SCOPE_NAME>
