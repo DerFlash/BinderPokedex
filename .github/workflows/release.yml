@@ -69,10 +69,12 @@ jobs:
           cd output
           
           # Create individual zips per language (each containing all scopes)
-          for lang in de en fr es it ja ko zh-hans zh-hant; do
+          for lang in de en fr es it ja ko zh_hans zh_hant; do
             if [ -d "$lang" ]; then
               echo "Creating ZIP for $lang..."
               zip -r ../binder-pokedex-${lang}.zip $lang -x ".*"
+            else
+              echo "WARNING: directory '$lang' not found, skipping"
             fi
           done
           
@@ -92,8 +94,8 @@ jobs:
             binder-pokedex-it.zip
             binder-pokedex-ja.zip
             binder-pokedex-ko.zip
-            binder-pokedex-zh-hans.zip
-            binder-pokedex-zh-hant.zip
+            binder-pokedex-zh_hans.zip
+            binder-pokedex-zh_hant.zip
           body: |
             ## Binder Pokédex ${{ steps.tag.outputs.tag_name }}
             
@@ -115,8 +117,8 @@ jobs:
             - 🇮🇹 **binder-pokedex-it.zip** - Italiano (25 PDFs)
             - 🇯🇵 **binder-pokedex-ja.zip** - 日本語 (25 PDFs)
             - 🇰🇷 **binder-pokedex-ko.zip** - 한국어 (25 PDFs)
-            - 🇨🇳 **binder-pokedex-zh-hans.zip** - 简体中文 (25 PDFs)
-            - 🇹🇼 **binder-pokedex-zh-hant.zip** - 繁體中文 (25 PDFs)
+            - 🇨🇳 **binder-pokedex-zh_hans.zip** - 简体中文 (25 PDFs)
+            - 🇹🇼 **binder-pokedex-zh_hant.zip** - 繁體中文 (25 PDFs)
             
             ### 📋 Content Overview
             **25 Total Scopes:**
