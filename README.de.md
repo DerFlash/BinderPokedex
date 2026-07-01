@@ -6,7 +6,7 @@ Drucke 1.025+ Pokémon über 9 Generationen in 9 Sprachen. Alle Varianten, alle 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-![v8.1.1](https://img.shields.io/badge/Version-v8.1.1-green.svg)
+![v8.2](https://img.shields.io/badge/Version-v8.2-green.svg)
 
 ---
 
@@ -25,10 +25,10 @@ Drucke 1.025+ Pokémon über 9 Generationen in 9 Sprachen. Alle Varianten, alle 
 - **Generations- und Varianten-Cover** mit wunderschönem mehrsprachigem Design und lokalisierten Logos
 - **Komplette TCG-Unterstützung** 🎴
   - **3 EX-Generationen:** ExGen1 (2003-2007), ExGen2 (2012-2016), ExGen3 (2023+)
-  - **21 Moderne Sets:** Komplette Karmesin & Purpur-Ära (SV01-SV10 + Spezial-Sets)
-  - **Paldea-Ära:** ME01, ME02, ME02.5, MEP
+  - **17 Karmesin-&-Purpur-Sets:** Komplette Karmesin & Purpur-Ära (SV01-SV10 + Spezial-Sets)
+  - **Mega-Evolution-Ära:** ME01, ME02, ME02.5, ME03, ME04, MEP
   - Auto-Discovery und Batch-Generierung
-- **Scope-basiertes System** mit 25 Scopes insgesamt
+- **Scope-basiertes System** mit 27 Scopes insgesamt
 - **Strukturierte PDFs** mit thematischen Trennern und Featured-Pokémon-Headern
 - **Modulare Pipeline** zum Daten-Fetching mit flexibler Konfiguration
 - **Druckfertig A4** - einfach laden, drucken und binden! 📎
@@ -40,12 +40,19 @@ Drucke 1.025+ Pokémon über 9 Generationen in 9 Sprachen. Alle Varianten, alle 
 ### Für normale Nutzer - einfach laden & drucken!
 
 
-**Aktuelle Version (v8.1.1):** [Alle 225 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v8.1.1) ✨ *Neu: SVG-Templates, vollständiger CJK-Fix, lokalisierte TCG-Energietypen!*
+**Aktuelle Version (v8.2):** [Alle 152 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v8.2) ✨ *Neu: ME03 Perfect Order und ME04 Chaos Rising!*
 
-**Nach Sprache (v8.1.1):** 🇩🇪 [DE](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1.1/binder-pokedex-de.zip) | 🇬🇧 [EN](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1.1/binder-pokedex-en.zip) | 🇫🇷 [FR](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1.1/binder-pokedex-fr.zip) | 🇪🇸 [ES](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1.1/binder-pokedex-es.zip) | 🇮🇹 [IT](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1.1/binder-pokedex-it.zip) | 🇯🇵 [JA](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1.1/binder-pokedex-ja.zip) | 🇰🇷 [KO](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1.1/binder-pokedex-ko.zip) | 🇨🇳 [ZH](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1.1/binder-pokedex-zh_hans.zip) | 🇹🇼 [ZH-T](https://github.com/DerFlash/BinderPokedex/releases/download/v8.1.1/binder-pokedex-zh_hant.zip)
+**Nach Sprache (v8.2):** 🇩🇪 [DE](https://github.com/DerFlash/BinderPokedex/releases/download/v8.2/binder-pokedex-de.zip) | 🇬🇧 [EN](https://github.com/DerFlash/BinderPokedex/releases/download/v8.2/binder-pokedex-en.zip) | 🇫🇷 [FR](https://github.com/DerFlash/BinderPokedex/releases/download/v8.2/binder-pokedex-fr.zip) | 🇪🇸 [ES](https://github.com/DerFlash/BinderPokedex/releases/download/v8.2/binder-pokedex-es.zip) | 🇮🇹 [IT](https://github.com/DerFlash/BinderPokedex/releases/download/v8.2/binder-pokedex-it.zip) | 🇯🇵 [JA](https://github.com/DerFlash/BinderPokedex/releases/download/v8.2/binder-pokedex-ja.zip) | 🇰🇷 [KO](https://github.com/DerFlash/BinderPokedex/releases/download/v8.2/binder-pokedex-ko.zip) | 🇨🇳 [ZH](https://github.com/DerFlash/BinderPokedex/releases/download/v8.2/binder-pokedex-zh_hans.zip) | 🇹🇼 [ZH-T](https://github.com/DerFlash/BinderPokedex/releases/download/v8.2/binder-pokedex-zh_hant.zip)
 ---
 
 ## 📝 Was ist neu
+
+### v8.2 (Juli 2026)
+
+**Mega-Evolution-Set-Erweiterung** 🎴
+
+- ME03 Perfect Order und ME04 Chaos Rising mit Quelldaten, Scope-Konfigurationen, angereicherten Ausgabedaten und Featured-Section-Artwork ergänzt
+- Release-Builds erkennen Scopes jetzt automatisch aus config/scopes/*.yaml
 
 ### v8.1 (Juli 2026)
 
@@ -108,7 +115,7 @@ cd BinderPokedex
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
-# Verfügbare Scopes anzeigen (25 gesamt: 1 Pokedex + 3 ExGen + 21 TCG Sets)
+# Verfügbare Scopes anzeigen (27 gesamt: 1 Pokedex + 3 ExGen + 23 TCG Sets)
 ls config/scopes/*.yaml
 
 # Daten für einen Scope holen
