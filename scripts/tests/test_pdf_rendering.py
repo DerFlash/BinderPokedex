@@ -32,19 +32,14 @@ def test_pdf_generation_basic():
         {'name': 'Hydropi', 'types': ['Wasser']},
     ]
     
-    try:
-        generator = PDFGenerator('de', 1)
-        pdf_path = generator.generate(pokemon_list)
-        
-        assert pdf_path.exists(), f"PDF not created at {pdf_path}"
-        assert pdf_path.stat().st_size > 0, "PDF is empty"
-        
-        logger.info(f"✓ Basic PDF generated: {pdf_path}")
-        logger.info(f"  Size: {pdf_path.stat().st_size} bytes")
-        return True
-    except Exception as e:
-        logger.error(f"✗ Failed: {e}")
-        return False
+    generator = PDFGenerator('de', 1)
+    pdf_path = generator.generate(pokemon_list)
+    
+    assert pdf_path.exists(), f"PDF not created at {pdf_path}"
+    assert pdf_path.stat().st_size > 0, "PDF is empty"
+    
+    logger.info(f"✓ Basic PDF generated: {pdf_path}")
+    logger.info(f"  Size: {pdf_path.stat().st_size} bytes")
 
 
 def test_pdf_generation_cjk():
@@ -105,36 +100,31 @@ def test_pdf_generation_cjk():
     if font_errors and success_count == 0:
         logger.warning("⚠️  No CID fonts available - expected in test environment")
         logger.warning("   Production requires CID fonts to be installed")
-        return True  # Don't fail test suite for missing system fonts
+        return  # Don't fail test suite for missing system fonts
     
-    return success_count > 0
+    assert success_count > 0, f"No CJK PDFs generated successfully (font_errors: {font_errors})"
 
 
 def test_pdf_multiple_pages():
     """Test PDF generation with multiple pages."""
     logger.info("Testing multi-page PDF generation...")
     
-    try:
-        # Create 10 Pokémon (more than one page)
-        pokemon_list = [
-            {'name': f'Pokemon {i}', 'types': ['Normal']}
-            for i in range(1, 11)
-        ]
-        
-        generator = PDFGenerator('de', 1)
-        pdf_path = generator.generate(pokemon_list)
-        
-        assert pdf_path.exists(), "PDF not created"
-        assert pdf_path.stat().st_size > 0, "PDF is empty"
-        assert generator.page_count > 1, f"Should have multiple pages, got {generator.page_count}"
-        
-        logger.info(f"✓ Multi-page PDF generated: {pdf_path}")
-        logger.info(f"  Pages: {generator.page_count}")
-        logger.info(f"  Size: {pdf_path.stat().st_size} bytes")
-        return True
-    except Exception as e:
-        logger.error(f"✗ Failed: {e}")
-        return False
+    # Create 10 Pokémon (more than one page)
+    pokemon_list = [
+        {'name': f'Pokemon {i}', 'types': ['Normal']}
+        for i in range(1, 11)
+    ]
+    
+    generator = PDFGenerator('de', 1)
+    pdf_path = generator.generate(pokemon_list)
+    
+    assert pdf_path.exists(), "PDF not created"
+    assert pdf_path.stat().st_size > 0, "PDF is empty"
+    assert generator.page_count > 1, f"Should have multiple pages, got {generator.page_count}"
+    
+    logger.info(f"✓ Multi-page PDF generated: {pdf_path}")
+    logger.info(f"  Pages: {generator.page_count}")
+    logger.info(f"  Size: {pdf_path.stat().st_size} bytes")
 
 
 def test_pdf_all_languages():
@@ -175,7 +165,8 @@ def test_pdf_all_languages():
     if font_error_count > 0:
         logger.info(f"({font_error_count} CJK languages skipped - no CID fonts)")
     
-    return success_count + font_error_count == len(LANGUAGES)
+    assert success_count + font_error_count == len(LANGUAGES), \
+        f"Expected {len(LANGUAGES)} results, got {success_count + font_error_count}"
 
 
 def test_pdf_with_symbols():
@@ -188,16 +179,11 @@ def test_pdf_with_symbols():
         {'name': 'Vulpix', 'types': ['Feuer']},
     ]
     
-    try:
-        generator = PDFGenerator('de', 1)
-        pdf_path = generator.generate(pokemon_list)
-        
-        assert pdf_path.exists(), "PDF not created"
-        logger.info(f"✓ PDF with symbols generated: {pdf_path}")
-        return True
-    except Exception as e:
-        logger.error(f"✗ Failed: {e}")
-        return False
+    generator = PDFGenerator('de', 1)
+    pdf_path = generator.generate(pokemon_list)
+    
+    assert pdf_path.exists(), "PDF not created"
+    logger.info(f"✓ PDF with symbols generated: {pdf_path}")
 
 
 def cleanup_generated_pdfs():
@@ -220,47 +206,40 @@ def run_all_tests():
     
     results = []
     
-    try:
-        # Clean before tests
-        cleanup_generated_pdfs()
-        
-        results.append(("Basic PDF Generation", test_pdf_generation_basic()))
-        logger.info("")
-        
-        results.append(("CJK PDF Generation", test_pdf_generation_cjk()))
-        logger.info("")
-        
-        results.append(("Multi-Page PDF", test_pdf_multiple_pages()))
-        logger.info("")
-        
-        results.append(("All Languages", test_pdf_all_languages()))
-        logger.info("")
-        
-        results.append(("Unicode Symbols", test_pdf_with_symbols()))
-        
-        # Print results summary
-        logger.info("\n" + "="*60)
-        logger.info("TEST SUMMARY")
-        logger.info("="*60)
-        
-        passed = sum(1 for _, result in results if result)
-        total = len(results)
-        
-        for test_name, result in results:
-            status = "✓ PASS" if result else "✗ FAIL"
-            logger.info(f"{status}: {test_name}")
-        
-        logger.info("="*60)
-        logger.info(f"Total: {passed}/{total} tests passed")
-        logger.info("="*60 + "\n")
-        
-        return passed == total
+    cleanup_generated_pdfs()
     
-    except Exception as e:
-        logger.error(f"\n✗ UNEXPECTED ERROR: {e}")
-        import traceback
-        traceback.print_exc()
-        return False
+    for name, func in [
+        ("Basic PDF Generation", test_pdf_generation_basic),
+        ("CJK PDF Generation", test_pdf_generation_cjk),
+        ("Multi-Page PDF", test_pdf_multiple_pages),
+        ("All Languages", test_pdf_all_languages),
+        ("Unicode Symbols", test_pdf_with_symbols),
+    ]:
+        try:
+            func()
+            results.append((name, True))
+        except Exception as e:
+            logger.error(f"✗ {name}: {e}")
+            results.append((name, False))
+        logger.info("")
+    
+    # Print results summary
+    logger.info("\n" + "="*60)
+    logger.info("TEST SUMMARY")
+    logger.info("="*60)
+    
+    passed = sum(1 for _, result in results if result)
+    total = len(results)
+    
+    for test_name, result in results:
+        status = "✓ PASS" if result else "✗ FAIL"
+        logger.info(f"{status}: {test_name}")
+    
+    logger.info("="*60)
+    logger.info(f"Total: {passed}/{total} tests passed")
+    logger.info("="*60 + "\n")
+    
+    return passed == total
 
 
 if __name__ == '__main__':

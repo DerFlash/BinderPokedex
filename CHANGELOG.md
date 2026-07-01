@@ -7,6 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [8.0.0] - 2026-07-01
+
+### ✨ New Features
+
+**SVG WYSIWYG Template System**
+- Full SVG-based card, page, and cover templates — editable live in any SVG editor
+- Templates support inline logo embedding and automatic image placement
+- New CLI parameters: `--card-template`, `--page-template`, `--cover-template`, `--list-templates`
+- Backwards-compatible: existing renders are unchanged when no template flag is passed
+- Base templates provided for cards, pages, and covers
+
+**MEP Bulbapedia Supplement**
+- MEP set expanded from 10 → 55 cards via Bulbapedia data supplement
+- Covers all missing cards not available in TCGdex
+
+### 🐛 Bug Fixes
+
+- Preserved PNG transparency in image cache and all rendered PDFs
+- Fixed TCG multilingual card name handling (incorrect names in non-English languages)
+- Fixed template loading paths and SVG import resolution
+- Added section artwork fallbacks for MEP-015, MEP-037, MEP-038
+
+### 🔧 Technical Improvements
+
+- `data/pokemon_images_cache/` excluded from git tracking via `.gitignore`
+- CI workflow: removed no-op "Clean old PDFs" step (output never tracked in git)
+- CI workflow: upgraded to `setup-python@v5`, Python 3.12, `action-gh-release@v2`, added pip cache
+- Release body now uses dynamic tag name instead of hardcoded version string
+- Test suite: replaced `return True/False` pattern with proper `assert` statements (no more `PytestReturnNotNoneWarning`)
+
+### 📄 Documentation
+
+- Added comprehensive SVG template system specification (`docs/SVG_WYSIWYG_TEMPLATES.md`)
+
+---
+
 ## [7.2.0] - 2026-02-05
 
 ### ✨ New Features

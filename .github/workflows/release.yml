@@ -13,12 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Clean old PDFs from output
-        run: |
-          echo "Removing old PDFs from output folders..."
-          if [ -d output ]; then find output -type f -name '*.pdf' -delete; fi
-          echo "Old PDFs removed."
-      
       - name: Get tag info
         id: tag
         run: |
@@ -27,9 +21,10 @@ jobs:
           echo "Release: $TAG_NAME"
       
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.12'
+          cache: 'pip'
       
       - name: Install dependencies
         run: |
@@ -85,7 +80,7 @@ jobs:
           ls -lh binder-pokedex*.zip
       
       - name: Create Release with Assets
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.tag.outputs.tag_name }}
           name: Binder Pokédex ${{ steps.tag.outputs.tag_name }}
@@ -100,24 +95,22 @@ jobs:
             binder-pokedex-zh-hans.zip
             binder-pokedex-zh-hant.zip
           body: |
-            ## 🎨 Featured Elements - Visual Highlights on Covers
+            ## Binder Pokédex ${{ steps.tag.outputs.tag_name }}
             
-            **What's New in v7.2:**
+            **What's New in ${{ steps.tag.outputs.tag_name }}:**
             
-            ✨ **Featured Elements System:**
-            - Beautiful featured elements (trading cards/artwork) on every section cover
-            - 3 most iconic Pokémon automatically selected per section
-            - Smart content detection:
-              - TCG Sets: Trading card images from TCGdex
-              - Pokédex: Official artwork from PokeAPI
-            - Automatic fallback to PokeAPI when TCG images unavailable
-            - Priority-based selection (starters, legendaries, pseudo-legendaries)
+            🎨 **SVG WYSIWYG Template System:**
+            - Full SVG-based card, page, and cover templates — editable live in any SVG editor
+            - New CLI flags: `--card-template`, `--page-template`, `--cover-template`, `--list-templates`
+            - Backwards-compatible: existing renders unchanged without template flags
             
-            🔧 **Technical Improvements:**
-            - Format-agnostic architecture with 3 auto-detecting handlers
-            - Unified `featured_elements` data structure
-            - Image caching (~800KB-1MB per element)
-            - Works seamlessly across all 25 scopes
+            📦 **MEP Bulbapedia Supplement:**
+            - MEP set expanded from 10 → 55 cards via Bulbapedia data supplement
+            
+            🔧 **Bug Fixes & Improvements:**
+            - Preserved PNG transparency in image cache and renders
+            - Fixed TCG multilingual card name handling
+            - CI: upgraded to Python 3.12 + pip caching for faster builds
             
             ---
             
