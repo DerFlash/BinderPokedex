@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [8.1.1] - 2026-07-01
+
+### 🐛 Bug Fixes
+
+**CI: Chinese ZIPs missing from release**
+- Output directories use underscores (`zh_hans`, `zh_hant`) but the zip loop used hyphens (`zh-hans`, `zh-hant`), causing the `if [ -d ]` check to silently skip both Chinese languages
+- Added a `WARNING` echo for any missing directory to make future omissions visible
+
+---
+
 ## [8.1.0] - 2026-07-01
 
 ### 🐛 Bug Fixes
