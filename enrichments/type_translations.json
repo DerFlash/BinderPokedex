@@ -196,5 +196,49 @@
     "it": "Folletto",
     "en": "Fairy",
     "zh_hans": "妖精"
+  },
+  "Colorless": {
+    "ja": "無色",
+    "ko": "무색",
+    "zh_hant": "無色",
+    "fr": "Incolore",
+    "de": "Farblos",
+    "es": "Incoloro",
+    "it": "Incolore",
+    "en": "Colorless",
+    "zh_hans": "无色"
+  },
+  "Darkness": {
+    "ja": "あく",
+    "ko": "악",
+    "zh_hant": "惡",
+    "fr": "Ténèbres",
+    "de": "Unlicht",
+    "es": "Siniestro",
+    "it": "Buio",
+    "en": "Darkness",
+    "zh_hans": "恶"
+  },
+  "Lightning": {
+    "ja": "でんき",
+    "ko": "전기",
+    "zh_hant": "電",
+    "fr": "Électrique",
+    "de": "Elektro",
+    "es": "Eléctrico",
+    "it": "Elettro",
+    "en": "Lightning",
+    "zh_hans": "电"
+  },
+  "Metal": {
+    "ja": "はがね",
+    "ko": "강철",
+    "zh_hant": "鋼",
+    "fr": "Acier",
+    "de": "Stahl",
+    "es": "Acero",
+    "it": "Acciaio",
+    "en": "Metal",
+    "zh_hans": "钢"
   }
 }

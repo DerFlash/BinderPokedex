@@ -307,7 +307,11 @@
       "Dragon": "Drachen",
       "Dark": "Unlicht",
       "Steel": "Stahl",
-      "Fairy": "Fee"
+      "Fairy": "Fee",
+      "Colorless": "Farblos",
+      "Darkness": "Unlicht",
+      "Lightning": "Elektro",
+      "Metal": "Stahl"
     },
     "en": {
       "Normal": "Normal",
@@ -327,7 +331,11 @@
       "Dragon": "Dragon",
       "Dark": "Dark",
       "Steel": "Steel",
-      "Fairy": "Fairy"
+      "Fairy": "Fairy",
+      "Colorless": "Colorless",
+      "Darkness": "Darkness",
+      "Lightning": "Lightning",
+      "Metal": "Metal"
     },
     "fr": {
       "Normal": "Normal",
@@ -347,7 +355,11 @@
       "Dragon": "Dragon",
       "Dark": "Ténèbres",
       "Steel": "Acier",
-      "Fairy": "Fée"
+      "Fairy": "Fée",
+      "Colorless": "Incolore",
+      "Darkness": "Ténèbres",
+      "Lightning": "Électrique",
+      "Metal": "Acier"
     },
     "es": {
       "Normal": "Normal",
@@ -367,7 +379,11 @@
       "Dragon": "Dragón",
       "Dark": "Siniestro",
       "Steel": "Acero",
-      "Fairy": "Hada"
+      "Fairy": "Hada",
+      "Colorless": "Incoloro",
+      "Darkness": "Siniestro",
+      "Lightning": "Eléctrico",
+      "Metal": "Acero"
     },
     "it": {
       "Normal": "Normale",
@@ -387,7 +403,11 @@
       "Dragon": "Drago",
       "Dark": "Buio",
       "Steel": "Acciaio",
-      "Fairy": "Folletto"
+      "Fairy": "Folletto",
+      "Colorless": "Incolore",
+      "Darkness": "Buio",
+      "Lightning": "Elettro",
+      "Metal": "Acciaio"
     },
     "ja": {
       "Normal": "ノーマル",
@@ -407,7 +427,11 @@
       "Dragon": "ドラゴン",
       "Dark": "あく",
       "Steel": "はがね",
-      "Fairy": "フェアリー"
+      "Fairy": "フェアリー",
+      "Colorless": "無色",
+      "Darkness": "あく",
+      "Lightning": "でんき",
+      "Metal": "はがね"
     },
     "ko": {
       "Normal": "노말",
@@ -427,7 +451,11 @@
       "Dragon": "드래곤",
       "Dark": "악",
       "Steel": "강철",
-      "Fairy": "페어리"
+      "Fairy": "페어리",
+      "Colorless": "무색",
+      "Darkness": "악",
+      "Lightning": "전기",
+      "Metal": "강철"
     },
     "zh_hans": {
       "Normal": "一般",
@@ -447,7 +475,11 @@
       "Dragon": "龙",
       "Dark": "恶",
       "Steel": "钢",
-      "Fairy": "妖精"
+      "Fairy": "妖精",
+      "Colorless": "无色",
+      "Darkness": "恶",
+      "Lightning": "电",
+      "Metal": "钢"
     },
     "zh_hant": {
       "Normal": "一般",
@@ -467,7 +499,11 @@
       "Dragon": "龍",
       "Dark": "惡",
       "Steel": "鋼",
-      "Fairy": "妖精"
+      "Fairy": "妖精",
+      "Colorless": "無色",
+      "Darkness": "惡",
+      "Lightning": "電",
+      "Metal": "鋼"
     }
   },
   "regions": {
