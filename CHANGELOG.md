@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [8.3.0] - 2026-07-12
+
+### ✨ New Features
+
+**Pokemon Base Set (base1)**
+- Added Base Set (base1, 1999) scope with 102 cards: 69 Pokémon, 26 Trainers, 7 Energy
+- Available in de, en, fr, es, it — ja/ko/zh were not released for this set and are correctly skipped
+
+---
+
 ## [8.1.1] - 2026-07-01
 
 ### 🐛 Bug Fixes

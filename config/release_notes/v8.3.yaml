@@ -1,0 +1,14 @@
+summary:
+  en: "Pokemon Base Set (base1)"
+  de: "Pokémon Grundset (base1)"
+whats_new:
+  en:
+    title: "Pokemon Base Set"
+    body:
+      - "Added Base Set (base1, 1999) scope with 102 cards: 69 Pokémon, 26 Trainers, 7 Energy"
+      - "Available in de, en, fr, es, it (ja/ko/zh not released for this set)"
+  de:
+    title: "Pokémon Grundset"
+    body:
+      - "Grundset (base1, 1999) mit 102 Karten ergänzt: 69 Pokémon, 26 Trainer, 7 Energie"
+      - "Verfügbar in de, en, fr, es, it (ja/ko/zh für dieses Set nicht erschienen)"

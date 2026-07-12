@@ -1,0 +1,39 @@
+scope: Base1
+description: 'TCG Set: Base Set (base1) - The original 1999 Pokemon TCG set, 102 cards'
+target_file: data/output/Base1.json
+pipeline:
+- step: validate_pokedex_exists
+  params:
+    pokedex_file: data/output/Pokedex.json
+- step: load_tcg_set
+  params:
+    source_file: data/source/base1.json
+- step: fetch_tcgdex_set
+  params:
+    set_id: base1
+    output_file: data/source/base1.json
+- step: enrich_tcg_names_multilingual
+  params:
+    set_id: base1
+- step: enrich_tcg_cards_from_pokedex
+  params:
+    pokedex_file: data/output/Pokedex.json
+- step: enrich_special_cards
+  params:
+    images_dir: images/special_cards
+- step: transform_tcg_set
+  params:
+    set_id: Base1
+- step: transform_to_sections_format
+- step: enrich_featured_elements
+  params:
+    max_cards: 3
+    force: false
+    cache_dir: data/section_artwork
+- step: save_output
+  params:
+    output_file: data/output/Base1.json
+- step: cache_pokemon_images
+  params:
+    cache_dir: data/pokemon_images_cache
+    skip_existing: true
