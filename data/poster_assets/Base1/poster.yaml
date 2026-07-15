@@ -1,0 +1,28 @@
+scope: Base1
+
+layout:
+  name: standard_3x3
+
+text_cells:
+  title:
+    row: 1
+    column: 2
+  set_info:
+    row: 2
+    column: 2
+
+pokemon:
+  strategy: featured_from_scope
+  count: auto_from_layout_columns
+  row: bottom
+  cutout_source: pokeapi_official_artwork
+  fallback_candidates:
+    - pokemon_id: 25   # Pikachu
+    - pokemon_id: 7    # Squirtle / Schiggy
+    - pokemon_id: 6    # Charizard / Glurak
+
+background:
+  mode: generated
+  file: background/background.png
+  prompt_file: background/prompt.txt
+  manifest_file: background/manifest.json
