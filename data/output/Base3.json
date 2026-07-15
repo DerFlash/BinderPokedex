@@ -1,0 +1,1286 @@
+{
+  "type": "tcg_set",
+  "name": "Fossil",
+  "available_languages": [
+    "de",
+    "en",
+    "fr",
+    "es",
+    "it"
+  ],
+  "serie": "base",
+  "serie_name": "Base",
+  "set_id": "Base3",
+  "release_date": "1999-10-10",
+  "logo_urls": {
+    "en": "https://assets.tcgdex.net/en/base/base3/logo.png",
+    "fr": "https://assets.tcgdex.net/fr/base/base3/logo.png",
+    "de": "https://assets.tcgdex.net/en/base/base3/logo.png",
+    "es": "https://assets.tcgdex.net/en/base/base3/logo.png",
+    "it": "https://assets.tcgdex.net/en/base/base3/logo.png"
+  },
+  "sections": {
+    "all": {
+      "title": {
+        "de": "Fossil",
+        "en": "Fossil",
+        "fr": "Fossile",
+        "es": "Fósil",
+        "it": "Fossil"
+      },
+      "description": {
+        "de": "Fossil - Veröffentlichung: 1999-10-10",
+        "en": "Fossil - Release: 1999-10-10",
+        "fr": "Fossile - Sortie: 1999-10-10",
+        "es": "Fósil - Lanzamiento: 1999-10-10",
+        "it": "Fossil - Uscita: 1999-10-10"
+      },
+      "subtitle": {
+        "de": "[image]https://assets.tcgdex.net/en/base/base3/logo.png[/image]",
+        "en": "[image]https://assets.tcgdex.net/en/base/base3/logo.png[/image]",
+        "fr": "[image]https://assets.tcgdex.net/fr/base/base3/logo.png[/image]",
+        "es": "[image]https://assets.tcgdex.net/en/base/base3/logo.png[/image]",
+        "it": "[image]https://assets.tcgdex.net/en/base/base3/logo.png[/image]"
+      },
+      "cards": [
+        {
+          "localId": "1",
+          "name": {
+            "de": "Aerodactyl",
+            "en": "Aerodactyl",
+            "fr": "Ptéra",
+            "es": "Aerodactyl",
+            "it": "Aerodactyl",
+            "ja": "プテラ",
+            "ko": "프테라",
+            "zh_hans": "化石翼龙",
+            "zh_hant": "化石翼龍"
+          },
+          "type": "pokemon",
+          "pokemon_id": 142,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/142.png"
+        },
+        {
+          "localId": "2",
+          "name": {
+            "de": "Arktos",
+            "en": "Articuno",
+            "fr": "Artikodin",
+            "es": "Articuno",
+            "it": "Articuno",
+            "ja": "フリーザー",
+            "ko": "프리져",
+            "zh_hans": "急冻鸟",
+            "zh_hant": "急凍鳥"
+          },
+          "type": "pokemon",
+          "pokemon_id": 144,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/144.png"
+        },
+        {
+          "localId": "3",
+          "name": {
+            "de": "Ditto",
+            "en": "Ditto",
+            "fr": "Métamorph",
+            "es": "Ditto",
+            "it": "Ditto",
+            "ja": "メタモン",
+            "ko": "메타몽",
+            "zh_hans": "百变怪",
+            "zh_hant": "百變怪"
+          },
+          "type": "pokemon",
+          "pokemon_id": 132,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/132.png"
+        },
+        {
+          "localId": "4",
+          "name": {
+            "de": "Dragoran",
+            "en": "Dragonite",
+            "fr": "Dracolosse",
+            "es": "Dragonite",
+            "it": "Dragonite",
+            "ja": "カイリュー",
+            "ko": "망나뇽",
+            "zh_hans": "快龙",
+            "zh_hant": "快龍"
+          },
+          "type": "pokemon",
+          "pokemon_id": 149,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/149.png"
+        },
+        {
+          "localId": "5",
+          "name": {
+            "de": "Gengar",
+            "en": "Gengar",
+            "fr": "Ectoplasma",
+            "es": "Gengar",
+            "it": "Gengar",
+            "ja": "ゲンガー",
+            "ko": "팬텀",
+            "zh_hans": "耿鬼",
+            "zh_hant": "耿鬼"
+          },
+          "type": "pokemon",
+          "pokemon_id": 94,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/94.png"
+        },
+        {
+          "localId": "6",
+          "name": {
+            "de": "Alpollo",
+            "en": "Haunter",
+            "fr": "Spectrum",
+            "es": "Haunter",
+            "it": "Haunter",
+            "ja": "ゴースト",
+            "ko": "고우스트",
+            "zh_hans": "鬼斯通",
+            "zh_hant": "鬼斯通"
+          },
+          "type": "pokemon",
+          "pokemon_id": 93,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/93.png"
+        },
+        {
+          "localId": "7",
+          "name": {
+            "de": "Kicklee",
+            "en": "Hitmonlee",
+            "fr": "Kicklee",
+            "es": "Hitmonlee",
+            "it": "Hitmonlee",
+            "ja": "サワムラー",
+            "ko": "시라소몬",
+            "zh_hans": "飞腿郎",
+            "zh_hant": "飛腿郎"
+          },
+          "type": "pokemon",
+          "pokemon_id": 106,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/106.png"
+        },
+        {
+          "localId": "8",
+          "name": {
+            "de": "Hypno",
+            "en": "Hypno",
+            "fr": "Hypnomade",
+            "es": "Hypno",
+            "it": "Hypno",
+            "ja": "スリーパー",
+            "ko": "슬리퍼",
+            "zh_hans": "引梦貘人",
+            "zh_hant": "引夢貘人"
+          },
+          "type": "pokemon",
+          "pokemon_id": 97,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/97.png"
+        },
+        {
+          "localId": "9",
+          "name": {
+            "de": "Kabutops",
+            "en": "Kabutops",
+            "fr": "Kabutops",
+            "es": "Kabutops",
+            "it": "Kabutops",
+            "ja": "カブトプス",
+            "ko": "투구푸스",
+            "zh_hans": "镰刀盔",
+            "zh_hant": "鐮刀盔"
+          },
+          "type": "pokemon",
+          "pokemon_id": 141,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/141.png"
+        },
+        {
+          "localId": "10",
+          "name": {
+            "de": "Lapras",
+            "en": "Lapras",
+            "fr": "Lokhlass",
+            "es": "Lapras",
+            "it": "Lapras",
+            "ja": "ラプラス",
+            "ko": "라프라스",
+            "zh_hans": "拉普拉斯",
+            "zh_hant": "拉普拉斯"
+          },
+          "type": "pokemon",
+          "pokemon_id": 131,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/131.png"
+        },
+        {
+          "localId": "11",
+          "name": {
+            "de": "Magneton",
+            "en": "Magneton",
+            "fr": "Magnéton",
+            "es": "Magneton",
+            "it": "Magneton",
+            "ja": "レアコイル",
+            "ko": "레어코일",
+            "zh_hans": "三合一磁怪",
+            "zh_hant": "三合一磁怪"
+          },
+          "type": "pokemon",
+          "pokemon_id": 82,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/82.png"
+        },
+        {
+          "localId": "12",
+          "name": {
+            "de": "Lavados",
+            "en": "Moltres",
+            "fr": "Sulfura",
+            "es": "Moltres",
+            "it": "Moltres",
+            "ja": "ファイヤー",
+            "ko": "파이어",
+            "zh_hans": "火焰鸟",
+            "zh_hant": "火焰鳥"
+          },
+          "type": "pokemon",
+          "pokemon_id": 146,
+          "types": [
+            "Fire"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/146.png"
+        },
+        {
+          "localId": "13",
+          "name": {
+            "de": "Sleimok",
+            "en": "Muk",
+            "fr": "Grotadmorv",
+            "es": "Muk",
+            "it": "Muk",
+            "ja": "ベトベトン",
+            "ko": "질뻐기",
+            "zh_hans": "臭臭泥",
+            "zh_hant": "臭臭泥"
+          },
+          "type": "pokemon",
+          "pokemon_id": 89,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/89.png"
+        },
+        {
+          "localId": "14",
+          "name": {
+            "de": "Raichu",
+            "en": "Raichu",
+            "fr": "Raichu",
+            "es": "Raichu",
+            "it": "Raichu",
+            "ja": "ライチュウ",
+            "ko": "라이츄",
+            "zh_hans": "雷丘",
+            "zh_hant": "雷丘"
+          },
+          "type": "pokemon",
+          "pokemon_id": 26,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/26.png"
+        },
+        {
+          "localId": "15",
+          "name": {
+            "de": "Zapdos",
+            "en": "Zapdos",
+            "fr": "Électhor",
+            "es": "Zapdos",
+            "it": "Zapdos",
+            "ja": "サンダー",
+            "ko": "썬더",
+            "zh_hans": "闪电鸟",
+            "zh_hant": "閃電鳥"
+          },
+          "type": "pokemon",
+          "pokemon_id": 145,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/145.png"
+        },
+        {
+          "localId": "16",
+          "name": {
+            "de": "Aerodactyl",
+            "en": "Aerodactyl",
+            "fr": "Ptéra",
+            "es": "Aerodactyl",
+            "it": "Aerodactyl",
+            "ja": "プテラ",
+            "ko": "프테라",
+            "zh_hans": "化石翼龙",
+            "zh_hant": "化石翼龍"
+          },
+          "type": "pokemon",
+          "pokemon_id": 142,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/142.png"
+        },
+        {
+          "localId": "17",
+          "name": {
+            "de": "Arktos",
+            "en": "Articuno",
+            "fr": "Artikodin",
+            "es": "Articuno",
+            "it": "Articuno",
+            "ja": "フリーザー",
+            "ko": "프리져",
+            "zh_hans": "急冻鸟",
+            "zh_hant": "急凍鳥"
+          },
+          "type": "pokemon",
+          "pokemon_id": 144,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/144.png"
+        },
+        {
+          "localId": "18",
+          "name": {
+            "de": "Ditto",
+            "en": "Ditto",
+            "fr": "Métamorph",
+            "es": "Ditto",
+            "it": "Ditto",
+            "ja": "メタモン",
+            "ko": "메타몽",
+            "zh_hans": "百变怪",
+            "zh_hant": "百變怪"
+          },
+          "type": "pokemon",
+          "pokemon_id": 132,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/132.png"
+        },
+        {
+          "localId": "19",
+          "name": {
+            "de": "Dragoran",
+            "en": "Dragonite",
+            "fr": "Dracolosse",
+            "es": "Dragonite",
+            "it": "Dragonite",
+            "ja": "カイリュー",
+            "ko": "망나뇽",
+            "zh_hans": "快龙",
+            "zh_hant": "快龍"
+          },
+          "type": "pokemon",
+          "pokemon_id": 149,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/149.png"
+        },
+        {
+          "localId": "20",
+          "name": {
+            "de": "Gengar",
+            "en": "Gengar",
+            "fr": "Ectoplasma",
+            "es": "Gengar",
+            "it": "Gengar",
+            "ja": "ゲンガー",
+            "ko": "팬텀",
+            "zh_hans": "耿鬼",
+            "zh_hant": "耿鬼"
+          },
+          "type": "pokemon",
+          "pokemon_id": 94,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/94.png"
+        },
+        {
+          "localId": "21",
+          "name": {
+            "de": "Alpollo",
+            "en": "Haunter",
+            "fr": "Spectrum",
+            "es": "Haunter",
+            "it": "Haunter",
+            "ja": "ゴースト",
+            "ko": "고우스트",
+            "zh_hans": "鬼斯通",
+            "zh_hant": "鬼斯通"
+          },
+          "type": "pokemon",
+          "pokemon_id": 93,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/93.png"
+        },
+        {
+          "localId": "22",
+          "name": {
+            "de": "Kicklee",
+            "en": "Hitmonlee",
+            "fr": "Kicklee",
+            "es": "Hitmonlee",
+            "it": "Hitmonlee",
+            "ja": "サワムラー",
+            "ko": "시라소몬",
+            "zh_hans": "飞腿郎",
+            "zh_hant": "飛腿郎"
+          },
+          "type": "pokemon",
+          "pokemon_id": 106,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/106.png"
+        },
+        {
+          "localId": "23",
+          "name": {
+            "de": "Hypno",
+            "en": "Hypno",
+            "fr": "Hypnomade",
+            "es": "Hypno",
+            "it": "Hypno",
+            "ja": "スリーパー",
+            "ko": "슬리퍼",
+            "zh_hans": "引梦貘人",
+            "zh_hant": "引夢貘人"
+          },
+          "type": "pokemon",
+          "pokemon_id": 97,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/97.png"
+        },
+        {
+          "localId": "24",
+          "name": {
+            "de": "Kabutops",
+            "en": "Kabutops",
+            "fr": "Kabutops",
+            "es": "Kabutops",
+            "it": "Kabutops",
+            "ja": "カブトプス",
+            "ko": "투구푸스",
+            "zh_hans": "镰刀盔",
+            "zh_hant": "鐮刀盔"
+          },
+          "type": "pokemon",
+          "pokemon_id": 141,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/141.png"
+        },
+        {
+          "localId": "25",
+          "name": {
+            "de": "Lapras",
+            "en": "Lapras",
+            "fr": "Lokhlass",
+            "es": "Lapras",
+            "it": "Lapras",
+            "ja": "ラプラス",
+            "ko": "라프라스",
+            "zh_hans": "拉普拉斯",
+            "zh_hant": "拉普拉斯"
+          },
+          "type": "pokemon",
+          "pokemon_id": 131,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/131.png"
+        },
+        {
+          "localId": "26",
+          "name": {
+            "de": "Magneton",
+            "en": "Magneton",
+            "fr": "Magnéton",
+            "es": "Magneton",
+            "it": "Magneton",
+            "ja": "レアコイル",
+            "ko": "레어코일",
+            "zh_hans": "三合一磁怪",
+            "zh_hant": "三合一磁怪"
+          },
+          "type": "pokemon",
+          "pokemon_id": 82,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/82.png"
+        },
+        {
+          "localId": "27",
+          "name": {
+            "de": "Lavados",
+            "en": "Moltres",
+            "fr": "Sulfura",
+            "es": "Moltres",
+            "it": "Moltres",
+            "ja": "ファイヤー",
+            "ko": "파이어",
+            "zh_hans": "火焰鸟",
+            "zh_hant": "火焰鳥"
+          },
+          "type": "pokemon",
+          "pokemon_id": 146,
+          "types": [
+            "Fire"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/146.png"
+        },
+        {
+          "localId": "28",
+          "name": {
+            "de": "Sleimok",
+            "en": "Muk",
+            "fr": "Grotadmorv",
+            "es": "Muk",
+            "it": "Muk",
+            "ja": "ベトベトン",
+            "ko": "질뻐기",
+            "zh_hans": "臭臭泥",
+            "zh_hant": "臭臭泥"
+          },
+          "type": "pokemon",
+          "pokemon_id": 89,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/89.png"
+        },
+        {
+          "localId": "29",
+          "name": {
+            "de": "Raichu",
+            "en": "Raichu",
+            "fr": "Raichu",
+            "es": "Raichu",
+            "it": "Raichu",
+            "ja": "ライチュウ",
+            "ko": "라이츄",
+            "zh_hans": "雷丘",
+            "zh_hant": "雷丘"
+          },
+          "type": "pokemon",
+          "pokemon_id": 26,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/26.png"
+        },
+        {
+          "localId": "30",
+          "name": {
+            "de": "Zapdos",
+            "en": "Zapdos",
+            "fr": "Électhor",
+            "es": "Zapdos",
+            "it": "Zapdos",
+            "ja": "サンダー",
+            "ko": "썬더",
+            "zh_hans": "闪电鸟",
+            "zh_hant": "閃電鳥"
+          },
+          "type": "pokemon",
+          "pokemon_id": 145,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/145.png"
+        },
+        {
+          "localId": "31",
+          "name": {
+            "de": "Arbok",
+            "en": "Arbok",
+            "fr": "Arbok",
+            "es": "Arbok",
+            "it": "Arbok",
+            "ja": "アーボック",
+            "ko": "아보크",
+            "zh_hans": "阿柏怪",
+            "zh_hant": "阿柏怪"
+          },
+          "type": "pokemon",
+          "pokemon_id": 24,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/24.png"
+        },
+        {
+          "localId": "32",
+          "name": {
+            "de": "Austos",
+            "en": "Cloyster",
+            "fr": "Crustabri",
+            "es": "Cloyster",
+            "it": "Cloyster",
+            "ja": "パルシェン",
+            "ko": "파르셀",
+            "zh_hans": "刺甲贝",
+            "zh_hant": "刺甲貝"
+          },
+          "type": "pokemon",
+          "pokemon_id": 91,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/91.png"
+        },
+        {
+          "localId": "33",
+          "name": {
+            "de": "Nebulak",
+            "en": "Gastly",
+            "fr": "Fantominus",
+            "es": "Gastly",
+            "it": "Gastly",
+            "ja": "ゴース",
+            "ko": "고오스",
+            "zh_hans": "鬼斯",
+            "zh_hant": "鬼斯"
+          },
+          "type": "pokemon",
+          "pokemon_id": 92,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/92.png"
+        },
+        {
+          "localId": "34",
+          "name": {
+            "de": "Golbat",
+            "en": "Golbat",
+            "fr": "Nosferalto",
+            "es": "Golbat",
+            "it": "Golbat",
+            "ja": "ゴルバット",
+            "ko": "골뱃",
+            "zh_hans": "大嘴蝠",
+            "zh_hant": "大嘴蝠"
+          },
+          "type": "pokemon",
+          "pokemon_id": 42,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/42.png"
+        },
+        {
+          "localId": "35",
+          "name": {
+            "de": "Entoron",
+            "en": "Golduck",
+            "fr": "Akwakwak",
+            "es": "Golduck",
+            "it": "Golduck",
+            "ja": "ゴルダック",
+            "ko": "골덕",
+            "zh_hans": "哥达鸭",
+            "zh_hant": "哥達鴨"
+          },
+          "type": "pokemon",
+          "pokemon_id": 55,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/55.png"
+        },
+        {
+          "localId": "36",
+          "name": {
+            "de": "Geowaz",
+            "en": "Golem",
+            "fr": "Grolem",
+            "es": "Golem",
+            "it": "Golem",
+            "ja": "ゴローニャ",
+            "ko": "딱구리",
+            "zh_hans": "隆隆岩",
+            "zh_hant": "隆隆岩"
+          },
+          "type": "pokemon",
+          "pokemon_id": 76,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/76.png"
+        },
+        {
+          "localId": "37",
+          "name": {
+            "de": "Georok",
+            "en": "Graveler",
+            "fr": "Gravalanch",
+            "es": "Graveler",
+            "it": "Graveler",
+            "ja": "ゴローン",
+            "ko": "데구리",
+            "zh_hans": "隆隆石",
+            "zh_hant": "隆隆石"
+          },
+          "type": "pokemon",
+          "pokemon_id": 75,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/75.png"
+        },
+        {
+          "localId": "38",
+          "name": {
+            "de": "Kingler",
+            "en": "Kingler",
+            "fr": "Krabboss",
+            "es": "Kingler",
+            "it": "Kingler",
+            "ja": "キングラー",
+            "ko": "킹크랩",
+            "zh_hans": "巨钳蟹",
+            "zh_hant": "巨鉗蟹"
+          },
+          "type": "pokemon",
+          "pokemon_id": 99,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/99.png"
+        },
+        {
+          "localId": "39",
+          "name": {
+            "de": "Magmar",
+            "en": "Magmar",
+            "fr": "Magmar",
+            "es": "Magmar",
+            "it": "Magmar",
+            "ja": "ブーバー",
+            "ko": "마그마",
+            "zh_hans": "鸭嘴火兽",
+            "zh_hant": "鴨嘴火獸"
+          },
+          "type": "pokemon",
+          "pokemon_id": 126,
+          "types": [
+            "Fire"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/126.png"
+        },
+        {
+          "localId": "40",
+          "name": {
+            "de": "Amoroso",
+            "en": "Omastar",
+            "fr": "Amonistar",
+            "es": "Omastar",
+            "it": "Omastar",
+            "ja": "オムスター",
+            "ko": "암스타",
+            "zh_hans": "多刺菊石兽",
+            "zh_hant": "多刺菊石獸"
+          },
+          "type": "pokemon",
+          "pokemon_id": 139,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/139.png"
+        },
+        {
+          "localId": "41",
+          "name": {
+            "de": "Sandamer",
+            "en": "Sandslash",
+            "fr": "Sablaireau",
+            "es": "Sandslash",
+            "it": "Sandslash",
+            "ja": "サンドパン",
+            "ko": "고지",
+            "zh_hans": "穿山王",
+            "zh_hant": "穿山王"
+          },
+          "type": "pokemon",
+          "pokemon_id": 28,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/28.png"
+        },
+        {
+          "localId": "42",
+          "name": {
+            "de": "Seemon",
+            "en": "Seadra",
+            "fr": "Hypocéan",
+            "es": "Seadra",
+            "it": "Seadra",
+            "ja": "シードラ",
+            "ko": "시드라",
+            "zh_hans": "海刺龙",
+            "zh_hant": "海刺龍"
+          },
+          "type": "pokemon",
+          "pokemon_id": 117,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/117.png"
+        },
+        {
+          "localId": "43",
+          "name": {
+            "de": "Lahmus",
+            "en": "Slowbro",
+            "fr": "Flagadoss",
+            "es": "Slowbro",
+            "it": "Slowbro",
+            "ja": "ヤドラン",
+            "ko": "야도란",
+            "zh_hans": "呆壳兽",
+            "zh_hant": "呆殼獸"
+          },
+          "type": "pokemon",
+          "pokemon_id": 80,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/80.png"
+        },
+        {
+          "localId": "44",
+          "name": {
+            "de": "Tentoxa",
+            "en": "Tentacruel",
+            "fr": "Tentacruel",
+            "es": "Tentacruel",
+            "it": "Tentacruel",
+            "ja": "ドククラゲ",
+            "ko": "독파리",
+            "zh_hans": "毒刺水母",
+            "zh_hant": "毒刺水母"
+          },
+          "type": "pokemon",
+          "pokemon_id": 73,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/73.png"
+        },
+        {
+          "localId": "45",
+          "name": {
+            "de": "Smogmog",
+            "en": "Weezing",
+            "fr": "Smogogo",
+            "es": "Weezing",
+            "it": "Weezing",
+            "ja": "マタドガス",
+            "ko": "또도가스",
+            "zh_hans": "双弹瓦斯",
+            "zh_hant": "雙彈瓦斯"
+          },
+          "type": "pokemon",
+          "pokemon_id": 110,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/110.png"
+        },
+        {
+          "localId": "46",
+          "name": {
+            "de": "Rettan",
+            "en": "Ekans",
+            "fr": "Abo",
+            "es": "Ekans",
+            "it": "Ekans",
+            "ja": "アーボ",
+            "ko": "아보",
+            "zh_hans": "阿柏蛇",
+            "zh_hant": "阿柏蛇"
+          },
+          "type": "pokemon",
+          "pokemon_id": 23,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/23.png"
+        },
+        {
+          "localId": "47",
+          "name": {
+            "de": "Kleinstein",
+            "en": "Geodude",
+            "fr": "Racaillou",
+            "es": "Geodude",
+            "it": "Geodude",
+            "ja": "イシツブテ",
+            "ko": "꼬마돌",
+            "zh_hans": "小拳石",
+            "zh_hant": "小拳石"
+          },
+          "type": "pokemon",
+          "pokemon_id": 74,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/74.png"
+        },
+        {
+          "localId": "48",
+          "name": {
+            "de": "Sleima",
+            "en": "Grimer",
+            "fr": "Tadmorv",
+            "es": "Grimer",
+            "it": "Grimer",
+            "ja": "ベトベター",
+            "ko": "질퍽이",
+            "zh_hans": "臭泥",
+            "zh_hant": "臭泥"
+          },
+          "type": "pokemon",
+          "pokemon_id": 88,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/88.png"
+        },
+        {
+          "localId": "49",
+          "name": {
+            "de": "Seeper",
+            "en": "Horsea",
+            "fr": "Hypotrempe",
+            "es": "Horsea",
+            "it": "Horsea",
+            "ja": "タッツー",
+            "ko": "쏘드라",
+            "zh_hans": "墨海马",
+            "zh_hant": "墨海馬"
+          },
+          "type": "pokemon",
+          "pokemon_id": 116,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/116.png"
+        },
+        {
+          "localId": "50",
+          "name": {
+            "de": "Kabuto",
+            "en": "Kabuto",
+            "fr": "Kabuto",
+            "es": "Kabuto",
+            "it": "Kabuto",
+            "ja": "カブト",
+            "ko": "투구",
+            "zh_hans": "化石盔",
+            "zh_hant": "化石盔"
+          },
+          "type": "pokemon",
+          "pokemon_id": 140,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/140.png"
+        },
+        {
+          "localId": "51",
+          "name": {
+            "de": "Krabby",
+            "en": "Krabby",
+            "fr": "Krabby",
+            "es": "Krabby",
+            "it": "Krabby",
+            "ja": "クラブ",
+            "ko": "크랩",
+            "zh_hans": "大钳蟹",
+            "zh_hant": "大鉗蟹"
+          },
+          "type": "pokemon",
+          "pokemon_id": 98,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/98.png"
+        },
+        {
+          "localId": "52",
+          "name": {
+            "de": "Amonitas",
+            "en": "Omanyte",
+            "fr": "Amonita",
+            "es": "Omanyte",
+            "it": "Omanyte",
+            "ja": "オムナイト",
+            "ko": "암나이트",
+            "zh_hans": "菊石兽",
+            "zh_hant": "菊石獸"
+          },
+          "type": "pokemon",
+          "pokemon_id": 138,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/138.png"
+        },
+        {
+          "localId": "53",
+          "name": {
+            "de": "Enton",
+            "en": "Psyduck",
+            "fr": "Psykokwak",
+            "es": "Psyduck",
+            "it": "Psyduck",
+            "ja": "コダック",
+            "ko": "고라파덕",
+            "zh_hans": "可达鸭",
+            "zh_hant": "可達鴨"
+          },
+          "type": "pokemon",
+          "pokemon_id": 54,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/54.png"
+        },
+        {
+          "localId": "54",
+          "name": {
+            "de": "Muschas",
+            "en": "Shellder",
+            "fr": "Kokiyas",
+            "es": "Shellder",
+            "it": "Shellder",
+            "ja": "シェルダー",
+            "ko": "셀러",
+            "zh_hans": "大舌贝",
+            "zh_hant": "大舌貝"
+          },
+          "type": "pokemon",
+          "pokemon_id": 90,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/90.png"
+        },
+        {
+          "localId": "55",
+          "name": {
+            "de": "Flegmon",
+            "en": "Slowpoke",
+            "fr": "Ramoloss",
+            "es": "Slowpoke",
+            "it": "Slowpoke",
+            "ja": "ヤドン",
+            "ko": "야돈",
+            "zh_hans": "呆呆兽",
+            "zh_hant": "呆呆獸"
+          },
+          "type": "pokemon",
+          "pokemon_id": 79,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/79.png"
+        },
+        {
+          "localId": "56",
+          "name": {
+            "de": "Tentacha",
+            "en": "Tentacool",
+            "fr": "Tentacool",
+            "es": "Tentacool",
+            "it": "Tentacool",
+            "ja": "メノクラゲ",
+            "ko": "왕눈해",
+            "zh_hans": "玛瑙水母",
+            "zh_hant": "瑪瑙水母"
+          },
+          "type": "pokemon",
+          "pokemon_id": 72,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/72.png"
+        },
+        {
+          "localId": "57",
+          "name": {
+            "de": "Zubat",
+            "en": "Zubat",
+            "fr": "Nosferapti",
+            "es": "Zubat",
+            "it": "Zubat",
+            "ja": "ズバット",
+            "ko": "주뱃",
+            "zh_hans": "超音蝠",
+            "zh_hant": "超音蝠"
+          },
+          "type": "pokemon",
+          "pokemon_id": 41,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/41.png"
+        },
+        {
+          "localId": "58",
+          "name": {
+            "de": "Mr. Fuji",
+            "en": "Mr. Fuji",
+            "fr": "M. Fuji"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "59",
+          "name": {
+            "de": "Energiesuche",
+            "en": "Energy Search",
+            "fr": "Recherche d'Énergie"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "60",
+          "name": {
+            "de": "Spieler",
+            "en": "Gambler",
+            "fr": "Joueur"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "61",
+          "name": {
+            "de": "Wiederverwertung",
+            "en": "Recycle",
+            "fr": "Recyclage"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        },
+        {
+          "localId": "62",
+          "name": {
+            "de": "Geheimnis-Fossil",
+            "en": "Mysterious Fossil",
+            "fr": "Mystérieux Fossile"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        }
+      ],
+      "featured_elements": [
+        {
+          "pokemon_id": 144,
+          "pokemon_name": "Articuno",
+          "card_id": "base3-2",
+          "set_name": "Fossil",
+          "image_url": "https://assets.tcgdex.net/en/base/base3/2/high.png",
+          "local_image_path": "data/section_artwork/pokemon_144_base3-2.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 146,
+          "pokemon_name": "Moltres",
+          "card_id": "base3-12",
+          "set_name": "Fossil",
+          "image_url": "https://assets.tcgdex.net/en/base/base3/12/high.png",
+          "local_image_path": "data/section_artwork/pokemon_146_base3-12.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 145,
+          "pokemon_name": "Zapdos",
+          "card_id": "base3-15",
+          "set_name": "Fossil",
+          "image_url": "https://assets.tcgdex.net/en/base/base3/15/high.png",
+          "local_image_path": "data/section_artwork/pokemon_145_base3-15.png",
+          "rarity": null,
+          "hp": null
+        }
+      ]
+    }
+  }
+}

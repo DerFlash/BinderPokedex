@@ -117,10 +117,10 @@ jobs:
             
             **What's New in ${{ steps.tag.outputs.tag_name }}:**
             
-            🎴 **Mega Evolution Set Expansion:**
-            - Added ME03 **Perfect Order**
-            - Added ME04 **Chaos Rising**
-            - Release builds now discover scopes from `config/scopes/*.yaml`
+            🎴 **Classic Set Expansion:**
+            - Added **Jungle** (base2) with 64 cards
+            - Added **Fossil** (base3) with 62 cards
+            - Fixed missing artwork for classic Trainer cards without a TCGdex subtype
             
             ---
             
@@ -138,14 +138,15 @@ jobs:
             - 🇹🇼 **binder-pokedex-zh_hant.zip** - 繁體中文
             
             ### 📋 Content Overview
-            **27 Total Scopes:**
+            **29 Total Scopes:**
             - **Pokédex:** Complete National Pokédex (1,025 Pokémon across 9 generations)
             - **ExGen1-3:** TCG EX collections (94/324/366 cards)
             - **ME01-MEP:** Pokémon TCG Mega Evolution era (6 sets)
             - **SV01-SV10 + SVP:** Scarlet & Violet era (17 sets)
+            - **Base1-Base3:** Base Set, Jungle, and Fossil
             
             ### 📊 Stats
-            - **Total Scopes:** 27 (1 Pokédex + 3 ExGen + 23 TCG sets)
+            - **Total Scopes:** 29 (1 Pokédex + 3 ExGen + 25 TCG sets)
             - **Languages:** 9 (DE, EN, FR, ES, IT, JA, KO, ZH-Hans, ZH-Hant)
             - **Cards/Pokémon:** 1,025+ Pokémon + 4,000+ TCG cards
             - **Featured Elements:** 75+ iconic Pokémon showcased across all covers

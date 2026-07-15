@@ -1,0 +1,1354 @@
+{
+  "type": "tcg_set",
+  "name": "Jungle",
+  "available_languages": [
+    "de",
+    "en",
+    "fr",
+    "es",
+    "it"
+  ],
+  "serie": "base",
+  "serie_name": "Base",
+  "set_id": "Base2",
+  "release_date": "1999-06-16",
+  "logo_urls": {
+    "en": "https://assets.tcgdex.net/en/base/base2/logo.png",
+    "fr": "https://assets.tcgdex.net/fr/base/base2/logo.png",
+    "de": "https://assets.tcgdex.net/en/base/base2/logo.png",
+    "es": "https://assets.tcgdex.net/en/base/base2/logo.png",
+    "it": "https://assets.tcgdex.net/en/base/base2/logo.png"
+  },
+  "sections": {
+    "all": {
+      "title": {
+        "de": "Dschungel",
+        "en": "Jungle",
+        "fr": "Jungle",
+        "es": "Jungla",
+        "it": "Jungle"
+      },
+      "description": {
+        "de": "Dschungel - Veröffentlichung: 1999-06-16",
+        "en": "Jungle - Release: 1999-06-16",
+        "fr": "Jungle - Sortie: 1999-06-16",
+        "es": "Jungla - Lanzamiento: 1999-06-16",
+        "it": "Jungle - Uscita: 1999-06-16"
+      },
+      "subtitle": {
+        "de": "[image]https://assets.tcgdex.net/en/base/base2/logo.png[/image]",
+        "en": "[image]https://assets.tcgdex.net/en/base/base2/logo.png[/image]",
+        "fr": "[image]https://assets.tcgdex.net/fr/base/base2/logo.png[/image]",
+        "es": "[image]https://assets.tcgdex.net/en/base/base2/logo.png[/image]",
+        "it": "[image]https://assets.tcgdex.net/en/base/base2/logo.png[/image]"
+      },
+      "cards": [
+        {
+          "localId": "1",
+          "name": {
+            "de": "Pixi",
+            "en": "Clefable",
+            "fr": "Mélodelfe",
+            "es": "Clefable",
+            "it": "Clefable",
+            "ja": "ピクシー",
+            "ko": "픽시",
+            "zh_hans": "皮可西",
+            "zh_hant": "皮可西"
+          },
+          "type": "pokemon",
+          "pokemon_id": 36,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/36.png"
+        },
+        {
+          "localId": "2",
+          "name": {
+            "de": "Lektrobal",
+            "en": "Electrode",
+            "fr": "Électrode",
+            "es": "Electrode",
+            "it": "Electrode",
+            "ja": "マルマイン",
+            "ko": "붐볼",
+            "zh_hans": "顽皮雷弹",
+            "zh_hant": "頑皮雷彈"
+          },
+          "type": "pokemon",
+          "pokemon_id": 101,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/101.png"
+        },
+        {
+          "localId": "3",
+          "name": {
+            "de": "Flamara",
+            "en": "Flareon",
+            "fr": "Pyroli",
+            "es": "Flareon",
+            "it": "Flareon",
+            "ja": "ブースター",
+            "ko": "부스터",
+            "zh_hans": "火伊布",
+            "zh_hant": "火伊布"
+          },
+          "type": "pokemon",
+          "pokemon_id": 136,
+          "types": [
+            "Fire"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/136.png"
+        },
+        {
+          "localId": "4",
+          "name": {
+            "de": "Blitza",
+            "en": "Jolteon",
+            "fr": "Voltali",
+            "es": "Jolteon",
+            "it": "Jolteon",
+            "ja": "サンダース",
+            "ko": "쥬피썬더",
+            "zh_hans": "雷伊布",
+            "zh_hant": "雷伊布"
+          },
+          "type": "pokemon",
+          "pokemon_id": 135,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/135.png"
+        },
+        {
+          "localId": "5",
+          "name": {
+            "de": "Kangama",
+            "en": "Kangaskhan",
+            "fr": "Kangourex",
+            "es": "Kangaskhan",
+            "it": "Kangaskhan",
+            "ja": "ガルーラ",
+            "ko": "캥카",
+            "zh_hans": "袋兽",
+            "zh_hant": "袋獸"
+          },
+          "type": "pokemon",
+          "pokemon_id": 115,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/115.png"
+        },
+        {
+          "localId": "6",
+          "name": {
+            "de": "Pantimos",
+            "en": "Mr. Mime",
+            "fr": "M. Mime",
+            "es": "Mr. Mime",
+            "it": "Mr. Mime",
+            "ja": "バリヤード",
+            "ko": "마임맨",
+            "zh_hans": "魔墙人偶",
+            "zh_hant": "魔牆人偶"
+          },
+          "type": "pokemon",
+          "pokemon_id": 122,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/122.png"
+        },
+        {
+          "localId": "7",
+          "name": {
+            "de": "Nidoqueen",
+            "en": "Nidoqueen",
+            "fr": "Nidoqueen",
+            "es": "Nidoqueen",
+            "it": "Nidoqueen",
+            "ja": "ニドクイン",
+            "ko": "니드퀸",
+            "zh_hans": "尼多后",
+            "zh_hant": "尼多后"
+          },
+          "type": "pokemon",
+          "pokemon_id": 31,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/31.png"
+        },
+        {
+          "localId": "8",
+          "name": {
+            "de": "Tauboss",
+            "en": "Pidgeot",
+            "fr": "Roucarnage",
+            "es": "Pidgeot",
+            "it": "Pidgeot",
+            "ja": "ピジョット",
+            "ko": "피죤투",
+            "zh_hans": "大比鸟",
+            "zh_hant": "大比鳥"
+          },
+          "type": "pokemon",
+          "pokemon_id": 18,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/18.png"
+        },
+        {
+          "localId": "9",
+          "name": {
+            "de": "Pinsir",
+            "en": "Pinsir",
+            "fr": "Scarabrute",
+            "es": "Pinsir",
+            "it": "Pinsir",
+            "ja": "カイロス",
+            "ko": "쁘사이저",
+            "zh_hans": "凯罗斯",
+            "zh_hant": "凱羅斯"
+          },
+          "type": "pokemon",
+          "pokemon_id": 127,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/127.png"
+        },
+        {
+          "localId": "10",
+          "name": {
+            "de": "Sichlor",
+            "en": "Scyther",
+            "fr": "Insécateur",
+            "es": "Scyther",
+            "it": "Scyther",
+            "ja": "ストライク",
+            "ko": "스라크",
+            "zh_hans": "飞天螳螂",
+            "zh_hant": "飛天螳螂"
+          },
+          "type": "pokemon",
+          "pokemon_id": 123,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/123.png"
+        },
+        {
+          "localId": "11",
+          "name": {
+            "de": "Relaxo",
+            "en": "Snorlax",
+            "fr": "Ronflex",
+            "es": "Snorlax",
+            "it": "Snorlax",
+            "ja": "カビゴン",
+            "ko": "잠만보",
+            "zh_hans": "卡比兽",
+            "zh_hant": "卡比獸"
+          },
+          "type": "pokemon",
+          "pokemon_id": 143,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/143.png"
+        },
+        {
+          "localId": "12",
+          "name": {
+            "de": "Aquana",
+            "en": "Vaporeon",
+            "fr": "Aquali",
+            "es": "Vaporeon",
+            "it": "Vaporeon",
+            "ja": "シャワーズ",
+            "ko": "샤미드",
+            "zh_hans": "水伊布",
+            "zh_hant": "水伊布"
+          },
+          "type": "pokemon",
+          "pokemon_id": 134,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/134.png"
+        },
+        {
+          "localId": "13",
+          "name": {
+            "de": "Omot",
+            "en": "Venomoth",
+            "fr": "Aéromite",
+            "es": "Venomoth",
+            "it": "Venomoth",
+            "ja": "モルフォン",
+            "ko": "도나리",
+            "zh_hans": "摩鲁蛾",
+            "zh_hant": "摩魯蛾"
+          },
+          "type": "pokemon",
+          "pokemon_id": 49,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/49.png"
+        },
+        {
+          "localId": "14",
+          "name": {
+            "de": "Sarzenia",
+            "en": "Victreebel",
+            "fr": "Empiflor",
+            "es": "Victreebel",
+            "it": "Victreebel",
+            "ja": "ウツボット",
+            "ko": "우츠보트",
+            "zh_hans": "大食花",
+            "zh_hant": "大食花"
+          },
+          "type": "pokemon",
+          "pokemon_id": 71,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/71.png"
+        },
+        {
+          "localId": "15",
+          "name": {
+            "de": "Giflor",
+            "en": "Vileplume",
+            "fr": "Rafflesia",
+            "es": "Vileplume",
+            "it": "Vileplume",
+            "ja": "ラフレシア",
+            "ko": "라플레시아",
+            "zh_hans": "霸王花",
+            "zh_hant": "霸王花"
+          },
+          "type": "pokemon",
+          "pokemon_id": 45,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/45.png"
+        },
+        {
+          "localId": "16",
+          "name": {
+            "de": "Knuddeluff",
+            "en": "Wigglytuff",
+            "fr": "Grodoudou",
+            "es": "Wigglytuff",
+            "it": "Wigglytuff",
+            "ja": "プクリン",
+            "ko": "푸크린",
+            "zh_hans": "胖可丁",
+            "zh_hant": "胖可丁"
+          },
+          "type": "pokemon",
+          "pokemon_id": 40,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/40.png"
+        },
+        {
+          "localId": "17",
+          "name": {
+            "de": "Pixi",
+            "en": "Clefable",
+            "fr": "Mélodelfe",
+            "es": "Clefable",
+            "it": "Clefable",
+            "ja": "ピクシー",
+            "ko": "픽시",
+            "zh_hans": "皮可西",
+            "zh_hant": "皮可西"
+          },
+          "type": "pokemon",
+          "pokemon_id": 36,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/36.png"
+        },
+        {
+          "localId": "18",
+          "name": {
+            "de": "Lektrobal",
+            "en": "Electrode",
+            "fr": "Électrode",
+            "es": "Electrode",
+            "it": "Electrode",
+            "ja": "マルマイン",
+            "ko": "붐볼",
+            "zh_hans": "顽皮雷弹",
+            "zh_hant": "頑皮雷彈"
+          },
+          "type": "pokemon",
+          "pokemon_id": 101,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/101.png"
+        },
+        {
+          "localId": "19",
+          "name": {
+            "de": "Flamara",
+            "en": "Flareon",
+            "fr": "Pyroli",
+            "es": "Flareon",
+            "it": "Flareon",
+            "ja": "ブースター",
+            "ko": "부스터",
+            "zh_hans": "火伊布",
+            "zh_hant": "火伊布"
+          },
+          "type": "pokemon",
+          "pokemon_id": 136,
+          "types": [
+            "Fire"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/136.png"
+        },
+        {
+          "localId": "20",
+          "name": {
+            "de": "Blitza",
+            "en": "Jolteon",
+            "fr": "Voltali",
+            "es": "Jolteon",
+            "it": "Jolteon",
+            "ja": "サンダース",
+            "ko": "쥬피썬더",
+            "zh_hans": "雷伊布",
+            "zh_hant": "雷伊布"
+          },
+          "type": "pokemon",
+          "pokemon_id": 135,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/135.png"
+        },
+        {
+          "localId": "21",
+          "name": {
+            "de": "Kangama",
+            "en": "Kangaskhan",
+            "fr": "Kangourex",
+            "es": "Kangaskhan",
+            "it": "Kangaskhan",
+            "ja": "ガルーラ",
+            "ko": "캥카",
+            "zh_hans": "袋兽",
+            "zh_hant": "袋獸"
+          },
+          "type": "pokemon",
+          "pokemon_id": 115,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/115.png"
+        },
+        {
+          "localId": "22",
+          "name": {
+            "de": "Pantimos",
+            "en": "Mr. Mime",
+            "fr": "M. Mime",
+            "es": "Mr. Mime",
+            "it": "Mr. Mime",
+            "ja": "バリヤード",
+            "ko": "마임맨",
+            "zh_hans": "魔墙人偶",
+            "zh_hant": "魔牆人偶"
+          },
+          "type": "pokemon",
+          "pokemon_id": 122,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/122.png"
+        },
+        {
+          "localId": "23",
+          "name": {
+            "de": "Nidoqueen",
+            "en": "Nidoqueen",
+            "fr": "Nidoqueen",
+            "es": "Nidoqueen",
+            "it": "Nidoqueen",
+            "ja": "ニドクイン",
+            "ko": "니드퀸",
+            "zh_hans": "尼多后",
+            "zh_hant": "尼多后"
+          },
+          "type": "pokemon",
+          "pokemon_id": 31,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/31.png"
+        },
+        {
+          "localId": "24",
+          "name": {
+            "de": "Tauboss",
+            "en": "Pidgeot",
+            "fr": "Roucarnage",
+            "es": "Pidgeot",
+            "it": "Pidgeot",
+            "ja": "ピジョット",
+            "ko": "피죤투",
+            "zh_hans": "大比鸟",
+            "zh_hant": "大比鳥"
+          },
+          "type": "pokemon",
+          "pokemon_id": 18,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/18.png"
+        },
+        {
+          "localId": "25",
+          "name": {
+            "de": "Pinsir",
+            "en": "Pinsir",
+            "fr": "Scarabrute",
+            "es": "Pinsir",
+            "it": "Pinsir",
+            "ja": "カイロス",
+            "ko": "쁘사이저",
+            "zh_hans": "凯罗斯",
+            "zh_hant": "凱羅斯"
+          },
+          "type": "pokemon",
+          "pokemon_id": 127,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/127.png"
+        },
+        {
+          "localId": "26",
+          "name": {
+            "de": "Sichlor",
+            "en": "Scyther",
+            "fr": "Insécateur",
+            "es": "Scyther",
+            "it": "Scyther",
+            "ja": "ストライク",
+            "ko": "스라크",
+            "zh_hans": "飞天螳螂",
+            "zh_hant": "飛天螳螂"
+          },
+          "type": "pokemon",
+          "pokemon_id": 123,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/123.png"
+        },
+        {
+          "localId": "27",
+          "name": {
+            "de": "Relaxo",
+            "en": "Snorlax",
+            "fr": "Ronflex",
+            "es": "Snorlax",
+            "it": "Snorlax",
+            "ja": "カビゴン",
+            "ko": "잠만보",
+            "zh_hans": "卡比兽",
+            "zh_hant": "卡比獸"
+          },
+          "type": "pokemon",
+          "pokemon_id": 143,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/143.png"
+        },
+        {
+          "localId": "28",
+          "name": {
+            "de": "Aquana",
+            "en": "Vaporeon",
+            "fr": "Aquali",
+            "es": "Vaporeon",
+            "it": "Vaporeon",
+            "ja": "シャワーズ",
+            "ko": "샤미드",
+            "zh_hans": "水伊布",
+            "zh_hant": "水伊布"
+          },
+          "type": "pokemon",
+          "pokemon_id": 134,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/134.png"
+        },
+        {
+          "localId": "29",
+          "name": {
+            "de": "Omot",
+            "en": "Venomoth",
+            "fr": "Aéromite",
+            "es": "Venomoth",
+            "it": "Venomoth",
+            "ja": "モルフォン",
+            "ko": "도나리",
+            "zh_hans": "摩鲁蛾",
+            "zh_hant": "摩魯蛾"
+          },
+          "type": "pokemon",
+          "pokemon_id": 49,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/49.png"
+        },
+        {
+          "localId": "30",
+          "name": {
+            "de": "Sarzenia",
+            "en": "Victreebel",
+            "fr": "Empiflor",
+            "es": "Victreebel",
+            "it": "Victreebel",
+            "ja": "ウツボット",
+            "ko": "우츠보트",
+            "zh_hans": "大食花",
+            "zh_hant": "大食花"
+          },
+          "type": "pokemon",
+          "pokemon_id": 71,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/71.png"
+        },
+        {
+          "localId": "31",
+          "name": {
+            "de": "Giflor",
+            "en": "Vileplume",
+            "fr": "Rafflesia",
+            "es": "Vileplume",
+            "it": "Vileplume",
+            "ja": "ラフレシア",
+            "ko": "라플레시아",
+            "zh_hans": "霸王花",
+            "zh_hant": "霸王花"
+          },
+          "type": "pokemon",
+          "pokemon_id": 45,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/45.png"
+        },
+        {
+          "localId": "32",
+          "name": {
+            "de": "Knuddeluff",
+            "en": "Wigglytuff",
+            "fr": "Grodoudou",
+            "es": "Wigglytuff",
+            "it": "Wigglytuff",
+            "ja": "プクリン",
+            "ko": "푸크린",
+            "zh_hans": "胖可丁",
+            "zh_hant": "胖可丁"
+          },
+          "type": "pokemon",
+          "pokemon_id": 40,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/40.png"
+        },
+        {
+          "localId": "33",
+          "name": {
+            "de": "Smettbo",
+            "en": "Butterfree",
+            "fr": "Papilusion",
+            "es": "Butterfree",
+            "it": "Butterfree",
+            "ja": "バタフリー",
+            "ko": "버터플",
+            "zh_hans": "巴大蝶",
+            "zh_hant": "巴大蝶"
+          },
+          "type": "pokemon",
+          "pokemon_id": 12,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/12.png"
+        },
+        {
+          "localId": "34",
+          "name": {
+            "de": "Dodri",
+            "en": "Dodrio",
+            "fr": "Dodrio",
+            "es": "Dodrio",
+            "it": "Dodrio",
+            "ja": "ドードリオ",
+            "ko": "두트리오",
+            "zh_hans": "嘟嘟利",
+            "zh_hant": "嘟嘟利"
+          },
+          "type": "pokemon",
+          "pokemon_id": 85,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/85.png"
+        },
+        {
+          "localId": "35",
+          "name": {
+            "de": "Kokowei",
+            "en": "Exeggutor",
+            "fr": "Noadkoko",
+            "es": "Exeggutor",
+            "it": "Exeggutor",
+            "ja": "ナッシー",
+            "ko": "나시",
+            "zh_hans": "椰蛋树",
+            "zh_hant": "椰蛋樹"
+          },
+          "type": "pokemon",
+          "pokemon_id": 103,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/103.png"
+        },
+        {
+          "localId": "36",
+          "name": {
+            "de": "Ibitak",
+            "en": "Fearow",
+            "fr": "Rapasdepic",
+            "es": "Fearow",
+            "it": "Fearow",
+            "ja": "オニドリル",
+            "ko": "깨비드릴조",
+            "zh_hans": "大嘴雀",
+            "zh_hant": "大嘴雀"
+          },
+          "type": "pokemon",
+          "pokemon_id": 22,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/22.png"
+        },
+        {
+          "localId": "37",
+          "name": {
+            "de": "Duflor",
+            "en": "Gloom",
+            "fr": "Ortide",
+            "es": "Gloom",
+            "it": "Gloom",
+            "ja": "クサイハナ",
+            "ko": "냄새꼬",
+            "zh_hans": "臭臭花",
+            "zh_hant": "臭臭花"
+          },
+          "type": "pokemon",
+          "pokemon_id": 44,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/44.png"
+        },
+        {
+          "localId": "38",
+          "name": {
+            "de": "Schlurp",
+            "en": "Lickitung",
+            "fr": "Excelangue",
+            "es": "Lickitung",
+            "it": "Lickitung",
+            "ja": "ベロリンガ",
+            "ko": "내루미",
+            "zh_hans": "大舌头",
+            "zh_hant": "大舌頭"
+          },
+          "type": "pokemon",
+          "pokemon_id": 108,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/108.png"
+        },
+        {
+          "localId": "39",
+          "name": {
+            "de": "Knogga",
+            "en": "Marowak",
+            "fr": "Ossatueur",
+            "es": "Marowak",
+            "it": "Marowak",
+            "ja": "ガラガラ",
+            "ko": "텅구리",
+            "zh_hans": "嘎啦嘎啦",
+            "zh_hant": "嘎啦嘎啦"
+          },
+          "type": "pokemon",
+          "pokemon_id": 105,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/105.png"
+        },
+        {
+          "localId": "40",
+          "name": {
+            "de": "Nidorina",
+            "en": "Nidorina",
+            "fr": "Nidorina",
+            "es": "Nidorina",
+            "it": "Nidorina",
+            "ja": "ニドリーナ",
+            "ko": "니드리나",
+            "zh_hans": "尼多娜",
+            "zh_hant": "尼多娜"
+          },
+          "type": "pokemon",
+          "pokemon_id": 30,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/30.png"
+        },
+        {
+          "localId": "41",
+          "name": {
+            "de": "Parasek",
+            "en": "Parasect",
+            "fr": "Parasect",
+            "es": "Parasect",
+            "it": "Parasect",
+            "ja": "パラセクト",
+            "ko": "파라섹트",
+            "zh_hans": "派拉斯特",
+            "zh_hant": "派拉斯特"
+          },
+          "type": "pokemon",
+          "pokemon_id": 47,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/47.png"
+        },
+        {
+          "localId": "42",
+          "name": {
+            "de": "Snobilikat",
+            "en": "Persian",
+            "fr": "Persian",
+            "es": "Persian",
+            "it": "Persian",
+            "ja": "ペルシアン",
+            "ko": "페르시온",
+            "zh_hans": "猫老大",
+            "zh_hant": "貓老大"
+          },
+          "type": "pokemon",
+          "pokemon_id": 53,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/53.png"
+        },
+        {
+          "localId": "43",
+          "name": {
+            "de": "Rasaff",
+            "en": "Primeape",
+            "fr": "Colossinge",
+            "es": "Primeape",
+            "it": "Primeape",
+            "ja": "オコリザル",
+            "ko": "성원숭",
+            "zh_hans": "火暴猴",
+            "zh_hant": "火爆猴"
+          },
+          "type": "pokemon",
+          "pokemon_id": 57,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/57.png"
+        },
+        {
+          "localId": "44",
+          "name": {
+            "de": "Gallopa",
+            "en": "Rapidash",
+            "fr": "Galopa",
+            "es": "Rapidash",
+            "it": "Rapidash",
+            "ja": "ギャロップ",
+            "ko": "날쌩마",
+            "zh_hans": "烈焰马",
+            "zh_hant": "烈焰馬"
+          },
+          "type": "pokemon",
+          "pokemon_id": 78,
+          "types": [
+            "Fire"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/78.png"
+        },
+        {
+          "localId": "45",
+          "name": {
+            "de": "Rizeros",
+            "en": "Rhydon",
+            "fr": "Rhinoféros",
+            "es": "Rhydon",
+            "it": "Rhydon",
+            "ja": "サイドン",
+            "ko": "코뿌리",
+            "zh_hans": "钻角犀兽",
+            "zh_hant": "鑽角犀獸"
+          },
+          "type": "pokemon",
+          "pokemon_id": 112,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/112.png"
+        },
+        {
+          "localId": "46",
+          "name": {
+            "de": "Golking",
+            "en": "Seaking",
+            "fr": "Poissoroy",
+            "es": "Seaking",
+            "it": "Seaking",
+            "ja": "アズマオウ",
+            "ko": "왕콘치",
+            "zh_hans": "金鱼王",
+            "zh_hant": "金魚王"
+          },
+          "type": "pokemon",
+          "pokemon_id": 119,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/119.png"
+        },
+        {
+          "localId": "47",
+          "name": {
+            "de": "Tauros",
+            "en": "Tauros",
+            "fr": "Tauros",
+            "es": "Tauros",
+            "it": "Tauros",
+            "ja": "ケンタロス",
+            "ko": "켄타로스",
+            "zh_hans": "肯泰罗",
+            "zh_hant": "肯泰羅"
+          },
+          "type": "pokemon",
+          "pokemon_id": 128,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/128.png"
+        },
+        {
+          "localId": "48",
+          "name": {
+            "de": "Ultrigaria",
+            "en": "Weepinbell",
+            "fr": "Boustiflor",
+            "es": "Weepinbell",
+            "it": "Weepinbell",
+            "ja": "ウツドン",
+            "ko": "우츠동",
+            "zh_hans": "口呆花",
+            "zh_hant": "口呆花"
+          },
+          "type": "pokemon",
+          "pokemon_id": 70,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/70.png"
+        },
+        {
+          "localId": "49",
+          "name": {
+            "de": "Knofensa",
+            "en": "Bellsprout",
+            "fr": "Chétiflor",
+            "es": "Bellsprout",
+            "it": "Bellsprout",
+            "ja": "マダツボミ",
+            "ko": "모다피",
+            "zh_hans": "喇叭芽",
+            "zh_hant": "喇叭芽"
+          },
+          "type": "pokemon",
+          "pokemon_id": 69,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/69.png"
+        },
+        {
+          "localId": "50",
+          "name": {
+            "de": "Tragosso",
+            "en": "Cubone",
+            "fr": "Osselait",
+            "es": "Cubone",
+            "it": "Cubone",
+            "ja": "カラカラ",
+            "ko": "탕구리",
+            "zh_hans": "卡拉卡拉",
+            "zh_hant": "卡拉卡拉"
+          },
+          "type": "pokemon",
+          "pokemon_id": 104,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/104.png"
+        },
+        {
+          "localId": "51",
+          "name": {
+            "de": "Evoli",
+            "en": "Eevee",
+            "fr": "Évoli",
+            "es": "Eevee",
+            "it": "Eevee",
+            "ja": "イーブイ",
+            "ko": "이브이",
+            "zh_hans": "伊布",
+            "zh_hant": "伊布"
+          },
+          "type": "pokemon",
+          "pokemon_id": 133,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png"
+        },
+        {
+          "localId": "52",
+          "name": {
+            "de": "Owei",
+            "en": "Exeggcute",
+            "fr": "Noeunoeuf",
+            "es": "Exeggcute",
+            "it": "Exeggcute",
+            "ja": "タマタマ",
+            "ko": "아라리",
+            "zh_hans": "蛋蛋",
+            "zh_hant": "蛋蛋"
+          },
+          "type": "pokemon",
+          "pokemon_id": 102,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/102.png"
+        },
+        {
+          "localId": "53",
+          "name": {
+            "de": "Goldini",
+            "en": "Goldeen",
+            "fr": "Poissirène",
+            "es": "Goldeen",
+            "it": "Goldeen",
+            "ja": "トサキント",
+            "ko": "콘치",
+            "zh_hans": "角金鱼",
+            "zh_hant": "角金魚"
+          },
+          "type": "pokemon",
+          "pokemon_id": 118,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/118.png"
+        },
+        {
+          "localId": "54",
+          "name": {
+            "de": "Pummeluff",
+            "en": "Jigglypuff",
+            "fr": "Rondoudou",
+            "es": "Jigglypuff",
+            "it": "Jigglypuff",
+            "ja": "プリン",
+            "ko": "푸린",
+            "zh_hans": "胖丁",
+            "zh_hant": "胖丁"
+          },
+          "type": "pokemon",
+          "pokemon_id": 39,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/39.png"
+        },
+        {
+          "localId": "55",
+          "name": {
+            "de": "Menki",
+            "en": "Mankey",
+            "fr": "Férosinge",
+            "es": "Mankey",
+            "it": "Mankey",
+            "ja": "マンキー",
+            "ko": "망키",
+            "zh_hans": "猴怪",
+            "zh_hant": "猴怪"
+          },
+          "type": "pokemon",
+          "pokemon_id": 56,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/56.png"
+        },
+        {
+          "localId": "56",
+          "name": {
+            "de": "Mauzi",
+            "en": "Meowth",
+            "fr": "Miaouss",
+            "es": "Meowth",
+            "it": "Meowth",
+            "ja": "ニャース",
+            "ko": "나옹",
+            "zh_hans": "喵喵",
+            "zh_hant": "喵喵"
+          },
+          "type": "pokemon",
+          "pokemon_id": 52,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/52.png"
+        },
+        {
+          "localId": "57",
+          "name": {
+            "de": "Nidoran♀",
+            "en": "Nidoran♀",
+            "fr": "Nidoran♀",
+            "es": "Nidoran♀",
+            "it": "Nidoran♀",
+            "ja": "ニドラン♀",
+            "ko": "니드런♀",
+            "zh_hans": "尼多兰",
+            "zh_hant": "尼多蘭"
+          },
+          "type": "pokemon",
+          "pokemon_id": 29,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/29.png"
+        },
+        {
+          "localId": "58",
+          "name": {
+            "de": "Myrapla",
+            "en": "Oddish",
+            "fr": "Mystherbe",
+            "es": "Oddish",
+            "it": "Oddish",
+            "ja": "ナゾノクサ",
+            "ko": "뚜벅쵸",
+            "zh_hans": "走路草",
+            "zh_hant": "走路草"
+          },
+          "type": "pokemon",
+          "pokemon_id": 43,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/43.png"
+        },
+        {
+          "localId": "59",
+          "name": {
+            "de": "Paras",
+            "en": "Paras",
+            "fr": "Paras",
+            "es": "Paras",
+            "it": "Paras",
+            "ja": "パラス",
+            "ko": "파라스",
+            "zh_hans": "派拉斯",
+            "zh_hant": "派拉斯"
+          },
+          "type": "pokemon",
+          "pokemon_id": 46,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/46.png"
+        },
+        {
+          "localId": "60",
+          "name": {
+            "de": "Pikachu",
+            "en": "Pikachu",
+            "fr": "Pikachu",
+            "es": "Pikachu",
+            "it": "Pikachu",
+            "ja": "ピカチュウ",
+            "ko": "피카츄",
+            "zh_hans": "皮卡丘",
+            "zh_hant": "皮卡丘"
+          },
+          "type": "pokemon",
+          "pokemon_id": 25,
+          "types": [
+            "Lightning"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png"
+        },
+        {
+          "localId": "61",
+          "name": {
+            "de": "Rihorn",
+            "en": "Rhyhorn",
+            "fr": "Rhinocorne",
+            "es": "Rhyhorn",
+            "it": "Rhyhorn",
+            "ja": "サイホーン",
+            "ko": "뿔카노",
+            "zh_hans": "独角犀牛",
+            "zh_hant": "獨角犀牛"
+          },
+          "type": "pokemon",
+          "pokemon_id": 111,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/111.png"
+        },
+        {
+          "localId": "62",
+          "name": {
+            "de": "Habitak",
+            "en": "Spearow",
+            "fr": "Piafabec",
+            "es": "Spearow",
+            "it": "Spearow",
+            "ja": "オニスズメ",
+            "ko": "깨비참",
+            "zh_hans": "烈雀",
+            "zh_hant": "烈雀"
+          },
+          "type": "pokemon",
+          "pokemon_id": 21,
+          "types": [
+            "Colorless"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/21.png"
+        },
+        {
+          "localId": "63",
+          "name": {
+            "de": "Bluzuk",
+            "en": "Venonat",
+            "fr": "Mimitoss",
+            "es": "Venonat",
+            "it": "Venonat",
+            "ja": "コンパン",
+            "ko": "콘팡",
+            "zh_hans": "毛球",
+            "zh_hant": "毛球"
+          },
+          "type": "pokemon",
+          "pokemon_id": 48,
+          "types": [
+            "Grass"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/48.png"
+        },
+        {
+          "localId": "64",
+          "name": {
+            "de": "Poké Ball",
+            "en": "Poké Ball",
+            "fr": "Poké Balle"
+          },
+          "type": "trainer",
+          "trainer_type": "Item",
+          "types": [],
+          "pokemon_id": null,
+          "image_url": "images/special_cards/item.png"
+        }
+      ],
+      "featured_elements": [
+        {
+          "pokemon_id": 25,
+          "pokemon_name": "Pikachu",
+          "card_id": "base2-60",
+          "set_name": "Jungle",
+          "image_url": "https://assets.tcgdex.net/en/base/base2/60/high.png",
+          "local_image_path": "data/section_artwork/pokemon_25_base2-60.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 143,
+          "pokemon_name": "Snorlax",
+          "card_id": "base2-11",
+          "set_name": "Jungle",
+          "image_url": "https://assets.tcgdex.net/en/base/base2/11/high.png",
+          "local_image_path": "data/section_artwork/pokemon_143_base2-11.png",
+          "rarity": null,
+          "hp": null
+        },
+        {
+          "pokemon_id": 133,
+          "pokemon_name": "Eevee",
+          "card_id": "base2-51",
+          "set_name": "Jungle",
+          "image_url": "https://assets.tcgdex.net/en/base/base2/51/high.png",
+          "local_image_path": "data/section_artwork/pokemon_133_base2-51.png",
+          "rarity": null,
+          "hp": null
+        }
+      ]
+    }
+  }
+}

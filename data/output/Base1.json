@@ -1432,10 +1432,10 @@
             "it": "Clefairy Doll"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "71",
@@ -1446,10 +1446,10 @@
             "it": "Ricerca Computerizzata"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "72",
@@ -1460,10 +1460,10 @@
             "it": "Getto di Involuzione"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "73",
@@ -1474,10 +1474,10 @@
             "it": "Professor Oak, l'impostore"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "74",
@@ -1488,10 +1488,10 @@
             "it": "Oggetti Smarriti"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "75",
@@ -1502,10 +1502,10 @@
             "it": "Pupa"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "76",
@@ -1516,10 +1516,10 @@
             "it": "Allevatore di Pokémon"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "77",
@@ -1530,10 +1530,10 @@
             "it": "Scambio di Pokémon"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "78",
@@ -1544,10 +1544,10 @@
             "it": "Recupero"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "79",
@@ -1558,10 +1558,10 @@
             "it": "Super-Rimozione di Energia"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "80",
@@ -1572,10 +1572,10 @@
             "it": "Difensore"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "81",
@@ -1586,10 +1586,10 @@
             "it": "Recupero di Energia"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "82",
@@ -1600,10 +1600,10 @@
             "it": "Recupero Totale"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "83",
@@ -1614,10 +1614,10 @@
             "it": "Manutenzione"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "84",
@@ -1628,10 +1628,10 @@
             "it": "PlusPotenza"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "85",
@@ -1642,10 +1642,10 @@
             "it": "Centro Pokémon"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "86",
@@ -1656,10 +1656,10 @@
             "it": "Poké Flauto"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "87",
@@ -1670,10 +1670,10 @@
             "it": "Pokédex"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "88",
@@ -1684,10 +1684,10 @@
             "it": "Professore Oak"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "89",
@@ -1698,10 +1698,10 @@
             "it": "Revitalizzazione"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "90",
@@ -1712,10 +1712,10 @@
             "it": "Super Pozione Magica"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "91",
@@ -1726,10 +1726,10 @@
             "it": "Bill"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "92",
@@ -1740,10 +1740,10 @@
             "it": "Distruzione di Energia"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "93",
@@ -1754,10 +1754,10 @@
             "it": "Ventata"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "94",
@@ -1768,10 +1768,10 @@
             "it": "Pozione Magica"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "95",
@@ -1782,10 +1782,10 @@
             "it": "Scambio"
           },
           "type": "trainer",
-          "trainer_type": "",
+          "trainer_type": "Item",
           "types": [],
           "pokemon_id": null,
-          "image_url": null
+          "image_url": "images/special_cards/item.png"
         },
         {
           "localId": "96",
