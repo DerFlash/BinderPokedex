@@ -6,7 +6,7 @@ Print 1,025+ Pokémon across 9 generations in 9 languages. All variants, all for
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-![v8.2](https://img.shields.io/badge/version-v8.2-green.svg)
+![v8.4](https://img.shields.io/badge/version-v8.4-green.svg)
 
 ---
 
@@ -28,7 +28,7 @@ Print 1,025+ Pokémon across 9 generations in 9 languages. All variants, all for
   - **17 Scarlet & Violet Sets:** Full Scarlet & Violet era (SV01-SV10 + specials)
   - **Mega Evolution Era:** ME01, ME02, ME02.5, ME03, ME04, MEP
   - Auto-discovery and batch generation
-- **Scope-Based System** with 27 total scopes
+- **Scope-Based System** with 30 total scopes
 - **Sectioned PDFs** with themed dividers and featured Pokémon headers
 - **Modular pipeline** for data fetching with flexible configuration
 - **Print-ready A4** - just download, print, and bind! 📎
@@ -40,21 +40,30 @@ Print 1,025+ Pokémon across 9 generations in 9 languages. All variants, all for
 ### For End Users - Just Download & Print!
 
 
-**Latest (v8.2):** [All 152 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v8.2) ✨ *New: ME03 Perfect Order and ME04 Chaos Rising!*
+**Latest (v8.4):** [All 167 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v8.4) ✨ *New: Pokemon Jungle and Fossil!*
 
-**By Language (v8.2):**
-🇩🇪 [Deutsch](https://github.com/DerFlash/BinderPokedex/releases/download/v8.2/binder-pokedex-de.zip) |
-🇬🇧 [English](https://github.com/DerFlash/BinderPokedex/releases/download/v8.2/binder-pokedex-en.zip) |
-🇫🇷 [Français](https://github.com/DerFlash/BinderPokedex/releases/download/v8.2/binder-pokedex-fr.zip) |
-🇪🇸 [Español](https://github.com/DerFlash/BinderPokedex/releases/download/v8.2/binder-pokedex-es.zip) |
-🇮🇹 [Italiano](https://github.com/DerFlash/BinderPokedex/releases/download/v8.2/binder-pokedex-it.zip) |
-🇯🇵 [日本語](https://github.com/DerFlash/BinderPokedex/releases/download/v8.2/binder-pokedex-ja.zip) |
-🇰🇷 [한국어](https://github.com/DerFlash/BinderPokedex/releases/download/v8.2/binder-pokedex-ko.zip) |
-🇨🇳 [简体中文](https://github.com/DerFlash/BinderPokedex/releases/download/v8.2/binder-pokedex-zh_hans.zip) |
-🇹🇼 [繁體中文](https://github.com/DerFlash/BinderPokedex/releases/download/v8.2/binder-pokedex-zh_hant.zip)
+**By Language (v8.4):**
+🇩🇪 [Deutsch](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-de.zip) |
+🇬🇧 [English](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-en.zip) |
+🇫🇷 [Français](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-fr.zip) |
+🇪🇸 [Español](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-es.zip) |
+🇮🇹 [Italiano](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-it.zip) |
+🇯🇵 [日本語](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-ja.zip) |
+🇰🇷 [한국어](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-ko.zip) |
+🇨🇳 [简体中文](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-zh_hans.zip) |
+🇹🇼 [繁體中文](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-zh_hant.zip)
 ---
 
 ## 📝 What's New
+
+### v8.4 (July 2026)
+
+**Pokemon Jungle and Fossil** 🎴
+
+- Added Jungle (base2, 1999) scope with 64 cards: 63 Pokémon, 1 Trainer
+- Added Fossil (base3, 1999) scope with 62 cards: 57 Pokémon, 5 Trainers
+- Available in de, en, fr, es, it (ja/ko/zh not released for these sets)
+- Fixed missing artwork for classic Trainer cards without a TCGdex subtype
 
 ### v8.2 (July 2026)
 
@@ -129,7 +138,7 @@ cd BinderPokedex
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
-# List available scopes (27 total: 1 Pokedex + 3 ExGen + 23 TCG sets)
+# List available scopes (30 total: 1 Pokedex + 3 ExGen + 26 TCG sets)
 ls config/scopes/*.yaml
 
 # Fetch data for a scope
