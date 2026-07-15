@@ -60,7 +60,8 @@ class EnrichSpecialCardsStep(BaseStep):
         for card in cards:
             # Only process trainer/energy cards (non-Pokemon)
             if card.get('card_type') == 'trainer':
-                trainer_type = card.get('trainer_type', 'Trainer')
+                trainer_type = card.get('trainer_type') or 'Item'
+                card['trainer_type'] = trainer_type
                 
                 # Map to image
                 image_path = type_to_image.get(trainer_type)

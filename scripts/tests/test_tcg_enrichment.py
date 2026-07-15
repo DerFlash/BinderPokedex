@@ -257,6 +257,7 @@ class TestCardEnrichment:
         enriched = self.step._enrich_card(card, self.pokemon_by_id)
         
         assert enriched['card_type'] == 'trainer'
+        assert enriched['trainer_type'] == 'Item'
         # Trainer cards get the same name in all languages
         assert enriched['name_de'] == "Acerola's Mischief"
         assert enriched['name_en'] == "Acerola's Mischief"

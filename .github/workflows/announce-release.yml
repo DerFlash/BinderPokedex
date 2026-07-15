@@ -71,6 +71,7 @@ jobs:
           gh release download "$TAG_NAME" \
             --repo "$GITHUB_REPOSITORY" \
             --pattern release-manifest.json \
+            --clobber \
             --dir .
           test -s release-manifest.json
 

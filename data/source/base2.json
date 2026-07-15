@@ -1,0 +1,920 @@
+{
+  "set_info": {
+    "id": "base2",
+    "name": "Jungle",
+    "release_date": "1999-06-16",
+    "card_count": {
+      "firstEd": 64,
+      "holo": 50,
+      "normal": 100,
+      "official": 64,
+      "reverse": 0,
+      "total": 64
+    },
+    "logo": "https://assets.tcgdex.net/en/base/base2/logo.png",
+    "symbol": "https://assets.tcgdex.net/univ/base/base2/symbol",
+    "serie": "base",
+    "serie_name": "Base"
+  },
+  "cards": [
+    {
+      "id": "base2-1",
+      "localId": "1",
+      "name": "Clefable",
+      "image": "https://assets.tcgdex.net/en/base/base2/1",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        36
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-2",
+      "localId": "2",
+      "name": "Electrode",
+      "image": "https://assets.tcgdex.net/en/base/base2/2",
+      "category": "Pokemon",
+      "types": [
+        "Lightning"
+      ],
+      "dexId": [
+        101
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-3",
+      "localId": "3",
+      "name": "Flareon",
+      "image": "https://assets.tcgdex.net/en/base/base2/3",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        136
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-4",
+      "localId": "4",
+      "name": "Jolteon",
+      "image": "https://assets.tcgdex.net/en/base/base2/4",
+      "category": "Pokemon",
+      "types": [
+        "Lightning"
+      ],
+      "dexId": [
+        135
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-5",
+      "localId": "5",
+      "name": "Kangaskhan",
+      "image": "https://assets.tcgdex.net/en/base/base2/5",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        115
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-6",
+      "localId": "6",
+      "name": "Mr. Mime",
+      "image": "https://assets.tcgdex.net/en/base/base2/6",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        122
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-7",
+      "localId": "7",
+      "name": "Nidoqueen",
+      "image": "https://assets.tcgdex.net/en/base/base2/7",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        31
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-8",
+      "localId": "8",
+      "name": "Pidgeot",
+      "image": "https://assets.tcgdex.net/en/base/base2/8",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        18
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-9",
+      "localId": "9",
+      "name": "Pinsir",
+      "image": "https://assets.tcgdex.net/en/base/base2/9",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        127
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-10",
+      "localId": "10",
+      "name": "Scyther",
+      "image": "https://assets.tcgdex.net/en/base/base2/10",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        123
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-11",
+      "localId": "11",
+      "name": "Snorlax",
+      "image": "https://assets.tcgdex.net/en/base/base2/11",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        143
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-12",
+      "localId": "12",
+      "name": "Vaporeon",
+      "image": "https://assets.tcgdex.net/en/base/base2/12",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        134
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-13",
+      "localId": "13",
+      "name": "Venomoth",
+      "image": "https://assets.tcgdex.net/en/base/base2/13",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        49
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-14",
+      "localId": "14",
+      "name": "Victreebel",
+      "image": "https://assets.tcgdex.net/en/base/base2/14",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        71
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-15",
+      "localId": "15",
+      "name": "Vileplume",
+      "image": "https://assets.tcgdex.net/en/base/base2/15",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        45
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-16",
+      "localId": "16",
+      "name": "Wigglytuff",
+      "image": "https://assets.tcgdex.net/en/base/base2/16",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        40
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-17",
+      "localId": "17",
+      "name": "Clefable",
+      "image": "https://assets.tcgdex.net/en/base/base2/17",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        36
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-18",
+      "localId": "18",
+      "name": "Electrode",
+      "image": "https://assets.tcgdex.net/en/base/base2/18",
+      "category": "Pokemon",
+      "types": [
+        "Lightning"
+      ],
+      "dexId": [
+        101
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-19",
+      "localId": "19",
+      "name": "Flareon",
+      "image": "https://assets.tcgdex.net/en/base/base2/19",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        136
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-20",
+      "localId": "20",
+      "name": "Jolteon",
+      "image": "https://assets.tcgdex.net/en/base/base2/20",
+      "category": "Pokemon",
+      "types": [
+        "Lightning"
+      ],
+      "dexId": [
+        135
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-21",
+      "localId": "21",
+      "name": "Kangaskhan",
+      "image": "https://assets.tcgdex.net/en/base/base2/21",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        115
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-22",
+      "localId": "22",
+      "name": "Mr. Mime",
+      "image": "https://assets.tcgdex.net/en/base/base2/22",
+      "category": "Pokemon",
+      "types": [
+        "Psychic"
+      ],
+      "dexId": [
+        122
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-23",
+      "localId": "23",
+      "name": "Nidoqueen",
+      "image": "https://assets.tcgdex.net/en/base/base2/23",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        31
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-24",
+      "localId": "24",
+      "name": "Pidgeot",
+      "image": "https://assets.tcgdex.net/en/base/base2/24",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        18
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-25",
+      "localId": "25",
+      "name": "Pinsir",
+      "image": "https://assets.tcgdex.net/en/base/base2/25",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        127
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-26",
+      "localId": "26",
+      "name": "Scyther",
+      "image": "https://assets.tcgdex.net/en/base/base2/26",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        123
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-27",
+      "localId": "27",
+      "name": "Snorlax",
+      "image": "https://assets.tcgdex.net/en/base/base2/27",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        143
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-28",
+      "localId": "28",
+      "name": "Vaporeon",
+      "image": "https://assets.tcgdex.net/en/base/base2/28",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        134
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-29",
+      "localId": "29",
+      "name": "Venomoth",
+      "image": "https://assets.tcgdex.net/en/base/base2/29",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        49
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-30",
+      "localId": "30",
+      "name": "Victreebel",
+      "image": "https://assets.tcgdex.net/en/base/base2/30",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        71
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-31",
+      "localId": "31",
+      "name": "Vileplume",
+      "image": "https://assets.tcgdex.net/en/base/base2/31",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        45
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-32",
+      "localId": "32",
+      "name": "Wigglytuff",
+      "image": "https://assets.tcgdex.net/en/base/base2/32",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        40
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-33",
+      "localId": "33",
+      "name": "Butterfree",
+      "image": "https://assets.tcgdex.net/en/base/base2/33",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        12
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-34",
+      "localId": "34",
+      "name": "Dodrio",
+      "image": "https://assets.tcgdex.net/en/base/base2/34",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        85
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-35",
+      "localId": "35",
+      "name": "Exeggutor",
+      "image": "https://assets.tcgdex.net/en/base/base2/35",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        103
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-36",
+      "localId": "36",
+      "name": "Fearow",
+      "image": "https://assets.tcgdex.net/en/base/base2/36",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        22
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-37",
+      "localId": "37",
+      "name": "Gloom",
+      "image": "https://assets.tcgdex.net/en/base/base2/37",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        44
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-38",
+      "localId": "38",
+      "name": "Lickitung",
+      "image": "https://assets.tcgdex.net/en/base/base2/38",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        108
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-39",
+      "localId": "39",
+      "name": "Marowak",
+      "image": "https://assets.tcgdex.net/en/base/base2/39",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        105
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-40",
+      "localId": "40",
+      "name": "Nidorina",
+      "image": "https://assets.tcgdex.net/en/base/base2/40",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        30
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-41",
+      "localId": "41",
+      "name": "Parasect",
+      "image": "https://assets.tcgdex.net/en/base/base2/41",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        47
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-42",
+      "localId": "42",
+      "name": "Persian",
+      "image": "https://assets.tcgdex.net/en/base/base2/42",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        53
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-43",
+      "localId": "43",
+      "name": "Primeape",
+      "image": "https://assets.tcgdex.net/en/base/base2/43",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        57
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-44",
+      "localId": "44",
+      "name": "Rapidash",
+      "image": "https://assets.tcgdex.net/en/base/base2/44",
+      "category": "Pokemon",
+      "types": [
+        "Fire"
+      ],
+      "dexId": [
+        78
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-45",
+      "localId": "45",
+      "name": "Rhydon",
+      "image": "https://assets.tcgdex.net/en/base/base2/45",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        112
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-46",
+      "localId": "46",
+      "name": "Seaking",
+      "image": "https://assets.tcgdex.net/en/base/base2/46",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        119
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-47",
+      "localId": "47",
+      "name": "Tauros",
+      "image": "https://assets.tcgdex.net/en/base/base2/47",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        128
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-48",
+      "localId": "48",
+      "name": "Weepinbell",
+      "image": "https://assets.tcgdex.net/en/base/base2/48",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        70
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-49",
+      "localId": "49",
+      "name": "Bellsprout",
+      "image": "https://assets.tcgdex.net/en/base/base2/49",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        69
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-50",
+      "localId": "50",
+      "name": "Cubone",
+      "image": "https://assets.tcgdex.net/en/base/base2/50",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        104
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-51",
+      "localId": "51",
+      "name": "Eevee",
+      "image": "https://assets.tcgdex.net/en/base/base2/51",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        133
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-52",
+      "localId": "52",
+      "name": "Exeggcute",
+      "image": "https://assets.tcgdex.net/en/base/base2/52",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        102
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-53",
+      "localId": "53",
+      "name": "Goldeen",
+      "image": "https://assets.tcgdex.net/en/base/base2/53",
+      "category": "Pokemon",
+      "types": [
+        "Water"
+      ],
+      "dexId": [
+        118
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-54",
+      "localId": "54",
+      "name": "Jigglypuff",
+      "image": "https://assets.tcgdex.net/en/base/base2/54",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        39
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-55",
+      "localId": "55",
+      "name": "Mankey",
+      "image": "https://assets.tcgdex.net/en/base/base2/55",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        56
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-56",
+      "localId": "56",
+      "name": "Meowth",
+      "image": "https://assets.tcgdex.net/en/base/base2/56",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        52
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-57",
+      "localId": "57",
+      "name": "Nidoran♀",
+      "image": "https://assets.tcgdex.net/en/base/base2/57",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        29
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-58",
+      "localId": "58",
+      "name": "Oddish",
+      "image": "https://assets.tcgdex.net/en/base/base2/58",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        43
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-59",
+      "localId": "59",
+      "name": "Paras",
+      "image": "https://assets.tcgdex.net/en/base/base2/59",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        46
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-60",
+      "localId": "60",
+      "name": "Pikachu",
+      "image": "https://assets.tcgdex.net/en/base/base2/60",
+      "category": "Pokemon",
+      "types": [
+        "Lightning"
+      ],
+      "dexId": [
+        25
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-61",
+      "localId": "61",
+      "name": "Rhyhorn",
+      "image": "https://assets.tcgdex.net/en/base/base2/61",
+      "category": "Pokemon",
+      "types": [
+        "Fighting"
+      ],
+      "dexId": [
+        111
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-62",
+      "localId": "62",
+      "name": "Spearow",
+      "image": "https://assets.tcgdex.net/en/base/base2/62",
+      "category": "Pokemon",
+      "types": [
+        "Colorless"
+      ],
+      "dexId": [
+        21
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-63",
+      "localId": "63",
+      "name": "Venonat",
+      "image": "https://assets.tcgdex.net/en/base/base2/63",
+      "category": "Pokemon",
+      "types": [
+        "Grass"
+      ],
+      "dexId": [
+        48
+      ],
+      "trainerType": ""
+    },
+    {
+      "id": "base2-64",
+      "localId": "64",
+      "name": "Poké Ball",
+      "image": "https://assets.tcgdex.net/en/base/base2/64",
+      "category": "Trainer",
+      "types": [],
+      "dexId": [],
+      "trainerType": ""
+    }
+  ],
+  "metadata": {
+    "total_cards": 64,
+    "set_id": "base2",
+    "date_fetched": "2026-07-14T12:38:19.754963Z",
+    "source": "TCGdex API v2",
+    "language": "en"
+  }
+}

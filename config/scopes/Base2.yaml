@@ -1,0 +1,39 @@
+scope: Base2
+description: 'TCG Set: Jungle (base2) - The 1999 Pokemon TCG expansion, 64 cards'
+target_file: data/output/Base2.json
+pipeline:
+- step: validate_pokedex_exists
+  params:
+    pokedex_file: data/output/Pokedex.json
+- step: load_tcg_set
+  params:
+    source_file: data/source/base2.json
+- step: fetch_tcgdex_set
+  params:
+    set_id: base2
+    output_file: data/source/base2.json
+- step: enrich_tcg_names_multilingual
+  params:
+    set_id: base2
+- step: enrich_tcg_cards_from_pokedex
+  params:
+    pokedex_file: data/output/Pokedex.json
+- step: enrich_special_cards
+  params:
+    images_dir: images/special_cards
+- step: transform_tcg_set
+  params:
+    set_id: Base2
+- step: transform_to_sections_format
+- step: enrich_featured_elements
+  params:
+    max_cards: 3
+    force: false
+    cache_dir: data/section_artwork
+- step: save_output
+  params:
+    output_file: data/output/Base2.json
+- step: cache_pokemon_images
+  params:
+    cache_dir: data/pokemon_images_cache
+    skip_existing: true
