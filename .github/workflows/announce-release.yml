@@ -25,6 +25,8 @@ jobs:
     name: Update README release pointers
     runs-on: ubuntu-latest
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    env:
+      RELEASE_MANIFEST: ${{ runner.temp }}/release-manifest.json
     steps:
       - uses: actions/checkout@v4
         with:
@@ -72,13 +74,13 @@ jobs:
             --repo "$GITHUB_REPOSITORY" \
             --pattern release-manifest.json \
             --clobber \
-            --dir .
-          test -s release-manifest.json
+            --dir "$(dirname "$RELEASE_MANIFEST")"
+          test -s "$RELEASE_MANIFEST"
 
       - name: Update READMEs from manifest
         run: |
           python scripts/release/announce_release.py \
-            --manifest release-manifest.json \
+            --manifest "$RELEASE_MANIFEST" \
             --release-url "${{ steps.release.outputs.release_url }}"
 
       - name: Automated README review
@@ -109,7 +111,7 @@ jobs:
           if changed_files != expected_files:
               raise SystemExit(f"Unexpected changed files: {sorted(changed_files)}")
 
-          manifest = json.loads(Path("release-manifest.json").read_text(encoding="utf-8"))
+          manifest = json.loads(Path(__import__("os").environ["RELEASE_MANIFEST"]).read_text(encoding="utf-8"))
           tag = manifest["tag"]
           pdf_count = str(manifest["pdfs"]["total"])
           scope_count = str(manifest["scope_count"])
