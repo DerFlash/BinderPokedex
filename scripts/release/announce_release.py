@@ -47,6 +47,22 @@ def replace_one(text: str, pattern: str, replacement: str, path: Path) -> str:
     return new_text
 
 
+def upsert_release_note(
+    text: str, path: Path, markdown_language: str, manifest: dict[str, Any]
+) -> str:
+    """Insert the current release note once, preserving older release notes."""
+    tag = re.escape(manifest["tag"])
+    section_title = "What's New" if markdown_language == "en" else "Was ist neu"
+    if re.search(rf"^### {tag} \(", text, flags=re.MULTILINE):
+        return text
+    return replace_one(
+        text,
+        rf"## 📝 {re.escape(section_title)}\n\n",
+        f"## 📝 {section_title}\n\n" + release_note(markdown_language, manifest) + "\n\n",
+        path,
+    )
+
+
 def release_url(manifest: dict[str, Any], explicit_url: str | None) -> str:
     if explicit_url:
         return explicit_url
@@ -91,8 +107,8 @@ def update_readme_en(path: Path, manifest: dict[str, Any], explicit_url: str | N
     text = path.read_text(encoding="utf-8")
 
     text = replace_one(text, r"!\[v[^\]]+\]\(https://img\.shields\.io/badge/version-v[^)]+-green\.svg\)", f"![{tag}](https://img.shields.io/badge/version-{tag}-green.svg)", path)
-    text = replace_one(text, r"  - \*\*\d+ Modern Sets:\*\* Full Scarlet & Violet era \(SV01-SV10 \+ specials\)", f"  - **{sv_count} Scarlet & Violet Sets:** Full Scarlet & Violet era (SV01-SV10 + specials)", path)
-    text = replace_one(text, r"  - \*\*Paldea Era:\*\* .+", f"  - **Mega Evolution Era:** {mega_scopes}", path)
+    text = replace_one(text, r"  - \*\*\d+ (?:Modern|Scarlet & Violet) Sets:\*\* Full Scarlet & Violet era \(SV01-SV10 \+ specials\)", f"  - **{sv_count} Scarlet & Violet Sets:** Full Scarlet & Violet era (SV01-SV10 + specials)", path)
+    text = replace_one(text, r"  - \*\*(?:Paldea|Mega Evolution) Era:\*\* .+", f"  - **Mega Evolution Era:** {mega_scopes}", path)
     text = replace_one(text, r"- \*\*Scope-Based System\*\* with \d+ total scopes", f"- **Scope-Based System** with {scope_count} total scopes", path)
     text = replace_one(
         text,
@@ -106,12 +122,7 @@ def update_readme_en(path: Path, manifest: dict[str, Any], explicit_url: str | N
         f"**By Language ({tag}):**\n{language_links(tag, LANGUAGE_LINKS_EN, ' |\n')}",
         path,
     )
-    text = replace_one(
-        text,
-        r"## 📝 What's New\n\n",
-        "## 📝 What's New\n\n" + release_note("en", manifest) + "\n\n",
-        path,
-    )
+    text = upsert_release_note(text, path, "en", manifest)
     text = replace_one(
         text,
         r"# List available scopes \(\d+ total: 1 Pokedex \+ 3 ExGen \+ \d+ TCG sets\)",
@@ -131,8 +142,8 @@ def update_readme_de(path: Path, manifest: dict[str, Any], explicit_url: str | N
     text = path.read_text(encoding="utf-8")
 
     text = replace_one(text, r"!\[v[^\]]+\]\(https://img\.shields\.io/badge/Version-v[^)]+-green\.svg\)", f"![{tag}](https://img.shields.io/badge/Version-{tag}-green.svg)", path)
-    text = replace_one(text, r"  - \*\*\d+ Moderne Sets:\*\* Komplette Karmesin & Purpur-Ära \(SV01-SV10 \+ Spezial-Sets\)", f"  - **{sv_count} Karmesin-&-Purpur-Sets:** Komplette Karmesin & Purpur-Ära (SV01-SV10 + Spezial-Sets)", path)
-    text = replace_one(text, r"  - \*\*Paldea-Ära:\*\* .+", f"  - **Mega-Evolution-Ära:** {mega_scopes}", path)
+    text = replace_one(text, r"  - \*\*\d+ (?:Moderne Sets|Karmesin-&-Purpur-Sets):\*\* Komplette Karmesin & Purpur-Ära \(SV01-SV10 \+ Spezial-Sets\)", f"  - **{sv_count} Karmesin-&-Purpur-Sets:** Komplette Karmesin & Purpur-Ära (SV01-SV10 + Spezial-Sets)", path)
+    text = replace_one(text, r"  - \*\*(?:Paldea-Ära|Mega-Evolution-Ära):\*\* .+", f"  - **Mega-Evolution-Ära:** {mega_scopes}", path)
     text = replace_one(text, r"- \*\*Scope-basiertes System\*\* mit \d+ Scopes insgesamt", f"- **Scope-basiertes System** mit {scope_count} Scopes insgesamt", path)
     text = replace_one(
         text,
@@ -146,12 +157,7 @@ def update_readme_de(path: Path, manifest: dict[str, Any], explicit_url: str | N
         f"**Nach Sprache ({tag}):** {language_links(tag, LANGUAGE_LINKS_DE, ' | ')}",
         path,
     )
-    text = replace_one(
-        text,
-        r"## 📝 Was ist neu\n\n",
-        "## 📝 Was ist neu\n\n" + release_note("de", manifest) + "\n\n",
-        path,
-    )
+    text = upsert_release_note(text, path, "de", manifest)
     text = replace_one(
         text,
         r"# Verfügbare Scopes anzeigen \(\d+ gesamt: 1 Pokedex \+ 3 ExGen \+ \d+ TCG Sets\)",
