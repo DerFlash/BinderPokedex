@@ -123,7 +123,8 @@ text compositing with one command:
 
 ```bash
 venv/bin/python scripts/poster_assets/run_comfyui_poster.py \
-  --engine flux --scope Base1 --seed 260715201 --megapixels 1.0 --language en
+  --engine flux --flux-mode edit --scope Base1 \
+  --seed 260715201 --megapixels 1.0 --language en
 ```
 
 The FLUX and Anima branches are independent and can be compared with identical
@@ -136,7 +137,8 @@ venv/bin/python scripts/poster_assets/run_comfyui_poster.py \
 
 | Engine | Prompt | Scene input | Workflow | Final filename marker |
 | --- | --- | --- | --- | --- |
-| FLUX.2 Klein | `prompt.txt` | `scene_reference.png` | `workflow_api.json` | `_flux_poster_` |
+| FLUX.2 Klein edit | `prompt.txt` | `scene_reference.png` | `workflow_api.json` | `_flux_edit_poster_` |
+| FLUX.2 Klein inpaint | `inpaint_prompt.txt` | `scene_reference.png` | `workflow_api.json` | `_flux_inpaint_poster_` |
 | AnimaEdit | `anima_prompt.txt` | `anima_scene_reference.png` | `anima_workflow_api.json` | `_anima_poster_` |
 
 Anima defaults to `AnimaYume_tuned_v05.safetensors`; another compatible
@@ -155,19 +157,39 @@ promoted or rendered at production resolution.
 Preparation creates one clean scene reference from the three reviewed cutouts at
 their exact intended positions, sizes, and shared ground level. It contains no
 layout grid, landing pads, paths, text boxes, or previous generated artwork.
-The exact Pokemon pixels are present in the initial inpainting latent before
-sampling and are also supplied as a `ReferenceLatent` so FLUX.2 can plan the full
-scene around them. A generated identity-core mask protects the recognizable
-interior of each official Pokemon exactly, while a narrow contour permits natural
-occlusion, edge lighting, and contact with the environment. Every
+The two FLUX modes deliberately use mutually exclusive conditioning topologies.
+`inpaint` keeps the Pokemon as the unmasked source of `VAEEncodeForInpaint` and
+does not add a `ReferenceLatent`. `edit` uses an independent empty target latent
+and supplies the composition only through `ReferenceLatent`. Feeding the same
+composition through both paths presents every subject twice and is prohibited by
+tests because it encourages duplicates and anatomy adjacent to silhouettes. The
+FLUX finalizer no longer composites identity pixels after sampling. Every
 landscape element follows one camera-space depth order: elements may occlude a
 Pokemon only when they are genuinely closer to the camera. This is a general
 perspective rule, not a special case for grass, feet, or the lower edge.
 
-FLUX.2 Klein 4B reference editing remains stochastic outside the protected core.
-At higher resolutions it can occasionally invent anatomy adjacent to a silhouette
-or duplicate a referenced subject. Such candidates must be rejected during visual
-review and must never be promoted merely because their protected pixels match.
+FLUX.2 Klein 4B generation remains stochastic. At higher resolutions it can
+occasionally invent anatomy adjacent to a silhouette or duplicate a referenced
+subject. Such candidates must be rejected during visual review; neither FLUX mode
+uses a post-sampling identity composite to conceal these failures.
+
+The default remains the distilled 4-step model. The undistilled Base model can be
+evaluated without changing the workflow architecture:
+
+```bash
+venv/bin/python scripts/poster_assets/run_comfyui_poster.py \
+  --engine flux --flux-mode inpaint \
+  --flux-model flux-2-klein-base-4b-fp8.safetensors --flux-steps 24 \
+  --scope Base1 --seed 260715201 --megapixels 0.25 --language en
+```
+
+The initial controlled 0.25 MP comparison used seed `260716301`. True inpainting
+avoided duplicates but reinterpreted all three Pokemon as generic animals. Base 4B
+with 24 steps produced richer scenery but increased character drift. The correctly
+wired distilled 4-step `edit` mode produced exactly three correctly placed subjects
+and is therefore the default, although Mewtwo's head silhouette still requires a
+better identity-conditioning solution. These experiments show that additional
+steps alone do not solve reference-identity hallucinations.
 
 The finalizer never adds or alters Pokemon. It only draws the set logo, localized
 set name, card count, release date, project signature, and deterministic panel

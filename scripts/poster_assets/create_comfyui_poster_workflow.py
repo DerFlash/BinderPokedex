@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create the reference-guided one-shot ComfyUI poster workflow."""
+"""Create one of the two supported FLUX.2 poster workflows."""
 from __future__ import annotations
 
 import argparse
@@ -43,38 +43,87 @@ def build_workflow(
     unet_name: str = "flux-2-klein-4b-fp8.safetensors",
     clip_name: str = "qwen_3_4b.safetensors",
     vae_name: str = "flux2-vae.safetensors",
+    generation_mode: str = "edit",
+    steps: int = 4,
 ) -> dict[str, object]:
+    if generation_mode not in {"edit", "inpaint"}:
+        raise ValueError(f"Unsupported FLUX generation mode: {generation_mode}")
+    if steps <= 0:
+        raise ValueError("steps must be positive")
     work_dir = POSTER_ASSETS / scope / "comfyui_poster"
-    prompt = (work_dir / "prompt.txt").read_text(encoding="utf-8").strip()
+    prompt_name = "inpaint_prompt.txt" if generation_mode == "inpaint" else "prompt.txt"
+    prompt_path = work_dir / prompt_name
+    prompt = prompt_path.read_text(encoding="utf-8").strip()
     if not prompt:
-        raise ValueError(f"Prompt is empty: {work_dir / 'prompt.txt'}")
+        raise ValueError(f"Prompt is empty: {prompt_path}")
     width, height = output_dimensions(scope, megapixels)
-    return {
+    workflow = {
         "1": node("UNETLoader", unet_name=unet_name, weight_dtype="default"),
         "2": node("CLIPLoader", clip_name=clip_name, type="flux2", device="default"),
         "3": node("VAELoader", vae_name=vae_name),
         "4": node("CLIPTextEncode", text=prompt, clip=["2", 0]),
         "5": node("ConditioningZeroOut", conditioning=["4", 0]),
-        "7": node("Flux2Scheduler", steps=4, width=width, height=height),
+        "7": node("Flux2Scheduler", steps=steps, width=width, height=height),
         "8": node("RandomNoise", noise_seed=seed),
         "9": node("CFGGuider", model=["1", 0], positive=["17", 0], negative=["5", 0], cfg=1.0),
         "10": node("KSamplerSelect", sampler_name="euler"),
         "11": node("SamplerCustomAdvanced", noise=["8", 0], guider=["9", 0], sampler=["10", 0], sigmas=["7", 0], latent_image=["15", 0]),
         "12": node("VAEDecode", samples=["11", 0], vae=["3", 0]),
-        "13": node("SaveImage", images=["20", 0], filename_prefix=f"{scope.lower()}_flux2_scene_seed_{seed}"),
+        "13": node("SaveImage", images=["12", 0], filename_prefix=f"{scope.lower()}_flux2_{generation_mode}_scene_seed_{seed}"),
         "14": node("LoadImage", image="scene_reference.png"),
-        "15": node("VAEEncodeForInpaint", pixels=["14", 0], vae=["3", 0], mask=["14", 1], grow_mask_by=8),
-        "17": node("ReferenceLatent", conditioning=["4", 0], latent=["15", 0]),
-        "18": node("LoadImageMask", image="identity_core.png", channel="red"),
-        "20": node("ImageCompositeMasked", destination=["12", 0], source=["14", 0], x=0, y=0, resize_source=False, mask=["18", 0]),
     }
+    if generation_mode == "edit":
+        # Official edit topology: the reference conditions an independent empty
+        # target. Never also use this latent as the sampler target; doing both
+        # presents every subject twice and encourages duplicates.
+        workflow["15"] = node(
+            "EmptySD3LatentImage", width=width, height=height, batch_size=1
+        )
+        workflow["16"] = node("VAEEncode", pixels=["14", 0], vae=["3", 0])
+        workflow["17"] = node(
+            "ReferenceLatent", conditioning=["4", 0], latent=["16", 0]
+        )
+    else:
+        # True inpainting topology: the figures are the unmasked source pixels.
+        # No ReferenceLatent is added, so the model receives each subject once.
+        workflow["15"] = node(
+            "VAEEncodeForInpaint",
+            pixels=["14", 0],
+            vae=["3", 0],
+            mask=["14", 1],
+            grow_mask_by=4,
+        )
+        workflow["9"]["inputs"]["positive"] = ["4", 0]
+    return workflow
 
 
-def write_workflow(scope: str, seed: int, megapixels: float) -> Path:
+def write_workflow(
+    scope: str,
+    seed: int,
+    megapixels: float,
+    *,
+    generation_mode: str = "edit",
+    unet_name: str = "flux-2-klein-4b-fp8.safetensors",
+    steps: int = 4,
+) -> Path:
     work_dir = POSTER_ASSETS / scope / "comfyui_poster"
     work_dir.mkdir(parents=True, exist_ok=True)
     out_path = work_dir / "workflow_api.json"
-    out_path.write_text(json.dumps(build_workflow(scope, seed, megapixels), indent=2) + "\n", encoding="utf-8")
+    out_path.write_text(
+        json.dumps(
+            build_workflow(
+                scope,
+                seed,
+                megapixels,
+                unet_name=unet_name,
+                generation_mode=generation_mode,
+                steps=steps,
+            ),
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
     return out_path
 
 
@@ -83,8 +132,20 @@ def main() -> int:
     parser.add_argument("--scope", default="Base1")
     parser.add_argument("--seed", type=int, default=260715201)
     parser.add_argument("--megapixels", type=float, default=1.0)
+    parser.add_argument("--mode", choices=("edit", "inpaint"), default="edit")
+    parser.add_argument("--model", default="flux-2-klein-4b-fp8.safetensors")
+    parser.add_argument("--steps", type=int, default=4)
     args = parser.parse_args()
-    print(write_workflow(args.scope, args.seed, args.megapixels))
+    print(
+        write_workflow(
+            args.scope,
+            args.seed,
+            args.megapixels,
+            generation_mode=args.mode,
+            unet_name=args.model,
+            steps=args.steps,
+        )
+    )
     return 0
 
 

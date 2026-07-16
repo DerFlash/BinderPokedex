@@ -79,8 +79,10 @@ def test_cutout_placements_share_one_foot_baseline():
     assert len(set(foot_positions)) == 1
 
 
-def test_comfyui_workflow_uses_one_scene_reference():
-    workflow = build_workflow("Base1", seed=123, megapixels=0.25)
+def test_comfyui_inpaint_uses_source_once_without_reference_conditioning():
+    workflow = build_workflow(
+        "Base1", seed=123, megapixels=0.25, generation_mode="inpaint"
+    )
     loaded_images = {
         node["inputs"]["image"]
         for node in workflow.values()
@@ -88,9 +90,24 @@ def test_comfyui_workflow_uses_one_scene_reference():
     }
 
     assert loaded_images == {"scene_reference.png"}
-    assert any(node["class_type"] == "ReferenceLatent" for node in workflow.values())
+    assert not any(node["class_type"] == "ReferenceLatent" for node in workflow.values())
     assert any(node["class_type"] == "VAEEncodeForInpaint" for node in workflow.values())
-    assert any(node["class_type"] == "ImageCompositeMasked" for node in workflow.values())
+    assert not any(node["class_type"] == "ImageCompositeMasked" for node in workflow.values())
+    assert workflow["9"]["inputs"]["positive"] == ["4", 0]
+
+
+def test_comfyui_edit_uses_reference_with_independent_empty_target():
+    workflow = build_workflow(
+        "Base1", seed=123, megapixels=0.25, generation_mode="edit"
+    )
+
+    assert workflow["15"]["class_type"] == "EmptySD3LatentImage"
+    assert workflow["16"]["class_type"] == "VAEEncode"
+    assert workflow["17"]["class_type"] == "ReferenceLatent"
+    assert workflow["17"]["inputs"]["latent"] == ["16", 0]
+    assert workflow["11"]["inputs"]["latent_image"] == ["15", 0]
+    assert not any(node["class_type"] == "VAEEncodeForInpaint" for node in workflow.values())
+    assert not any(node["class_type"] == "ImageCompositeMasked" for node in workflow.values())
 
 
 def test_anima_workflow_uses_cosmos_reference_without_changing_flux_workflow():
@@ -108,6 +125,20 @@ def test_engine_workflows_have_separate_files():
     anima = write_engine_workflow("anima", "Base1", 123, 0.25)
     assert flux.name == "workflow_api.json"
     assert anima.name == "anima_workflow_api.json"
+
+
+def test_flux_model_and_steps_are_selectable():
+    workflow = build_workflow(
+        "Base1",
+        seed=123,
+        megapixels=0.25,
+        unet_name="flux-2-klein-base-4b-fp8.safetensors",
+        generation_mode="inpaint",
+        steps=24,
+    )
+
+    assert workflow["1"]["inputs"]["unet_name"] == "flux-2-klein-base-4b-fp8.safetensors"
+    assert workflow["7"]["inputs"]["steps"] == 24
 
 
 def test_finalizer_preserves_size_and_adds_deterministic_panels(tmp_path: Path):
