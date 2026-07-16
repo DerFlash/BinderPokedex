@@ -22,12 +22,15 @@ perspective and object position rather than a special rule for grass, feet, or t
 bottom edge. Keep faces, eyes and recognizable anatomy unobstructed. Preserve each
 referenced Pokémon's identity, proportions, anatomy, colors and exact silhouette.
 
-Never invent anatomy immediately outside a reference silhouette: no extra ears,
-horns, tails, limbs, leaves, flames, wings, hair, accessories, or duplicate body
-parts. Mewtwo has exactly two short blunt horn-like head protrusions as shown in
-the reference, never long ears, rabbit ears, pointed animal ears, or large shapes
-extending above or beside its referenced head. Bulbasaur and Charmander likewise
-retain exactly the anatomy visible in their references.
+Copy the left character's cranial contour directly from the supplied reference:
+a smooth rounded head flowing into a narrow neck, with exactly two very short,
+thick, blunt backward-facing cranial nubs. These nubs stay close to the skull and
+do not widen or raise its silhouette. Its head has no external ear structures.
+Treat the supplied silhouette as observed geometry, not as a species cue to
+reinterpret. Never invent anatomy immediately outside any reference silhouette:
+no additional tails, limbs, leaves, flames, wings, hair, accessories, or duplicate
+body parts. The center and right characters likewise retain exactly the anatomy
+visible in the reference.
 
 The upper third must contain only uninterrupted pale blue sky, natural sunlight
 and a few soft clouds. It must be completely free of graphic symbols or title art;

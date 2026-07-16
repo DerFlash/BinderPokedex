@@ -23,6 +23,10 @@ def node(class_type: str, **inputs: object) -> dict[str, object]:
     return {"class_type": class_type, "inputs": inputs}
 
 
+def megapixel_marker(megapixels: float) -> str:
+    return f"{megapixels:g}mp".replace(".", "p")
+
+
 def output_dimensions(scope: str, megapixels: float) -> tuple[int, int]:
     if megapixels <= 0:
         raise ValueError("megapixels must be positive")
@@ -45,17 +49,34 @@ def build_workflow(
     vae_name: str = "flux2-vae.safetensors",
     generation_mode: str = "edit",
     steps: int = 4,
+    reference_mode: str = "identity",
 ) -> dict[str, object]:
     if generation_mode not in {"edit", "inpaint"}:
         raise ValueError(f"Unsupported FLUX generation mode: {generation_mode}")
     if steps <= 0:
         raise ValueError("steps must be positive")
+    if reference_mode not in {"composition", "identity"}:
+        raise ValueError(f"Unsupported FLUX reference mode: {reference_mode}")
     work_dir = POSTER_ASSETS / scope / "comfyui_poster"
     prompt_name = "inpaint_prompt.txt" if generation_mode == "inpaint" else "prompt.txt"
     prompt_path = work_dir / prompt_name
     prompt = prompt_path.read_text(encoding="utf-8").strip()
     if not prompt:
         raise ValueError(f"Prompt is empty: {prompt_path}")
+    if generation_mode == "edit" and reference_mode == "identity":
+        prompt = (
+            "Four reference images are supplied in a fixed sequence. IMAGE 1 is "
+            "the only authority for the final count, placement, scale, pose and "
+            "shared ground level. IMAGE 2 is the authoritative high-resolution "
+            "appearance and anatomy reference for the left Mewtwo. IMAGE 3 is the "
+            "authoritative appearance and anatomy reference for the center "
+            "Bulbasaur. IMAGE 4 is the authoritative appearance and anatomy "
+            "reference for the right Charmander. Render each referenced character "
+            "exactly once, at IMAGE 1's location; the close-ups are not additional "
+            "subjects. Copy their silhouettes and anatomy rather than redesigning "
+            "them.\n\n"
+            + prompt
+        )
     width, height = output_dimensions(scope, megapixels)
     workflow = {
         "1": node("UNETLoader", unet_name=unet_name, weight_dtype="default"),
@@ -69,7 +90,7 @@ def build_workflow(
         "10": node("KSamplerSelect", sampler_name="euler"),
         "11": node("SamplerCustomAdvanced", noise=["8", 0], guider=["9", 0], sampler=["10", 0], sigmas=["7", 0], latent_image=["15", 0]),
         "12": node("VAEDecode", samples=["11", 0], vae=["3", 0]),
-        "13": node("SaveImage", images=["12", 0], filename_prefix=f"{scope.lower()}_flux2_{generation_mode}_scene_seed_{seed}"),
+        "13": node("SaveImage", images=["12", 0], filename_prefix=f"{scope.lower()}_flux2_{generation_mode}_{megapixel_marker(megapixels)}_scene_seed_{seed}"),
         "14": node("LoadImage", image="scene_reference.png"),
     }
     if generation_mode == "edit":
@@ -83,6 +104,25 @@ def build_workflow(
         workflow["17"] = node(
             "ReferenceLatent", conditioning=["4", 0], latent=["16", 0]
         )
+        if reference_mode == "identity":
+            previous_conditioning = ["17", 0]
+            for index in range(1, 4):
+                load_id = str(20 + index * 3)
+                encode_id = str(21 + index * 3)
+                reference_id = str(22 + index * 3)
+                workflow[load_id] = node(
+                    "LoadImage", image=f"identity_reference_{index}.png"
+                )
+                workflow[encode_id] = node(
+                    "VAEEncode", pixels=[load_id, 0], vae=["3", 0]
+                )
+                workflow[reference_id] = node(
+                    "ReferenceLatent",
+                    conditioning=previous_conditioning,
+                    latent=[encode_id, 0],
+                )
+                previous_conditioning = [reference_id, 0]
+            workflow["9"]["inputs"]["positive"] = previous_conditioning
     else:
         # True inpainting topology: the figures are the unmasked source pixels.
         # No ReferenceLatent is added, so the model receives each subject once.
@@ -105,10 +145,12 @@ def write_workflow(
     generation_mode: str = "edit",
     unet_name: str = "flux-2-klein-4b-fp8.safetensors",
     steps: int = 4,
+    reference_mode: str = "identity",
+    clip_name: str = "qwen_3_4b.safetensors",
 ) -> Path:
     work_dir = POSTER_ASSETS / scope / "comfyui_poster"
     work_dir.mkdir(parents=True, exist_ok=True)
-    out_path = work_dir / "workflow_api.json"
+    out_path = work_dir / f"workflow_api_{generation_mode}_{megapixel_marker(megapixels)}_{seed}.json"
     out_path.write_text(
         json.dumps(
             build_workflow(
@@ -118,6 +160,8 @@ def write_workflow(
                 unet_name=unet_name,
                 generation_mode=generation_mode,
                 steps=steps,
+                reference_mode=reference_mode,
+                clip_name=clip_name,
             ),
             indent=2,
         )
@@ -135,6 +179,8 @@ def main() -> int:
     parser.add_argument("--mode", choices=("edit", "inpaint"), default="edit")
     parser.add_argument("--model", default="flux-2-klein-4b-fp8.safetensors")
     parser.add_argument("--steps", type=int, default=4)
+    parser.add_argument("--reference-mode", choices=("composition", "identity"), default="identity")
+    parser.add_argument("--clip", default="qwen_3_4b.safetensors")
     args = parser.parse_args()
     print(
         write_workflow(
@@ -144,6 +190,8 @@ def main() -> int:
             generation_mode=args.mode,
             unet_name=args.model,
             steps=args.steps,
+            reference_mode=args.reference_mode,
+            clip_name=args.clip,
         )
     )
     return 0

@@ -30,7 +30,8 @@ def build_scene_reference(scope: str, megapixels: float) -> Path:
     layout = build_page_layout(manifest.get("layout", {}).get("name", "standard_3x3"), width_px=width)
     reference = Image.new("RGBA", (width, height), (226, 224, 211, 0))
     identity_alpha = Image.new("L", (width, height), 0)
-    for placement in cutout_placements(layout, scope_dir):
+    placements = cutout_placements(layout, scope_dir)
+    for placement in placements:
         reference.alpha_composite(placement["image"], (placement["x"], placement["y"]))
         identity_alpha.paste(
             placement["image"].getchannel("A"),
@@ -46,6 +47,29 @@ def build_scene_reference(scope: str, megapixels: float) -> Path:
             reference = padded
     path = scope_dir / "comfyui_poster" / "scene_reference.png"
     reference.save(path, format="PNG", optimize=True)
+    # Separate opaque identity close-ups can be appended as native FLUX.2
+    # references. They carry appearance only; scene_reference remains the sole
+    # authority for count, scale and position.
+    identity_size = 512
+    cutout_manifest = json.loads(
+        (scope_dir / "cutouts" / "manifest.json").read_text(encoding="utf-8")
+    )
+    for index, item in enumerate(cutout_manifest["items"], start=1):
+        character = Image.open(scope_dir / "cutouts" / item["file"]).convert("RGBA")
+        alpha_box = character.getchannel("A").getbbox()
+        if alpha_box is None:
+            raise ValueError(f"Identity reference has no visible pixels: {item['file']}")
+        character = character.crop(alpha_box)
+        character.thumbnail((round(identity_size * 0.78), round(identity_size * 0.78)), Image.Resampling.LANCZOS)
+        identity_reference = Image.new("RGB", (identity_size, identity_size), (226, 224, 211))
+        x = (identity_size - character.width) // 2
+        y = identity_size - character.height - round(identity_size * 0.08)
+        identity_reference.paste(character.convert("RGB"), (x, y), character.getchannel("A"))
+        identity_reference.save(
+            path.with_name(f"identity_reference_{index}.png"),
+            format="PNG",
+            optimize=True,
+        )
     # AnimaEdit is an image-edit model and strongly retains the source material.
     # Give it only an abstract sky/meadow material scaffold—not prior artwork or
     # layout geometry—so the transparent area is interpreted as landscape.
@@ -73,7 +97,7 @@ def build_scene_reference(scope: str, megapixels: float) -> Path:
     anima_draw.rectangle(
         (0, round(height * 0.67), width, height), fill=(126, 170, 82, 255)
     )
-    for placement in cutout_placements(layout, scope_dir):
+    for placement in placements:
         anima_reference.alpha_composite(
             placement["image"], (placement["x"], placement["y"])
         )

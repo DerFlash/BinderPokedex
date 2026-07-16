@@ -191,6 +191,21 @@ and is therefore the default, although Mewtwo's head silhouette still requires a
 better identity-conditioning solution. These experiments show that additional
 steps alone do not solve reference-identity hallucinations.
 
+The promoted local candidate is `poster-flux2.png`, generated at 1 MP with seed
+`260716303`, distilled FLUX.2 Klein 4B, four steps, `edit` mode, and `identity`
+reference mode. Identity mode supplies IMAGE 1 as the sole layout authority and
+then appends one high-resolution original cutout per character. The prompt labels
+those roles explicitly so the close-ups strengthen anatomy without becoming extra
+subjects. Generated identity references are derived from the original 475 px
+cutouts, never from their already reduced poster placements.
+
+FLUX.2 Klein 9B FP8 with the 8B FP4-mixed encoder was also validated technically
+on MPS after adding CPU-side NVFP4 dequantization. On a 16 GB M4, however, prompt
+encoding plus model loading consumed roughly 12.7 GB of swap and took about ten
+minutes before sampling began. BFL documents the KV variant for approximately
+29 GB VRAM, so neither 9B path is considered a practical local poster engine on
+this machine. The failed 9B weights are not retained locally.
+
 The finalizer never adds or alters Pokemon. It only draws the set logo, localized
 set name, card count, release date, project signature, and deterministic panel
 design. Exact spelling and typography therefore remain independent from the image

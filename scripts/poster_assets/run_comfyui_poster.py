@@ -7,13 +7,13 @@ from pathlib import Path
 
 try:
     from .create_anima_poster_workflow import write_workflow as write_anima_workflow
-    from .create_comfyui_poster_workflow import write_workflow as write_flux_workflow
+    from .create_comfyui_poster_workflow import megapixel_marker, write_workflow as write_flux_workflow
     from .finalize_comfyui_poster import finalize
     from .prepare_comfyui_poster import prepare
     from .queue_comfyui_workflow import queue_workflow
 except ImportError:
     from create_anima_poster_workflow import write_workflow as write_anima_workflow
-    from create_comfyui_poster_workflow import write_workflow as write_flux_workflow
+    from create_comfyui_poster_workflow import megapixel_marker, write_workflow as write_flux_workflow
     from finalize_comfyui_poster import finalize
     from prepare_comfyui_poster import prepare
     from queue_comfyui_workflow import queue_workflow
@@ -33,6 +33,8 @@ def write_engine_workflow(
     flux_mode: str = "edit",
     flux_model: str = "flux-2-klein-4b-fp8.safetensors",
     flux_steps: int = 4,
+    flux_reference_mode: str = "identity",
+    flux_clip: str = "qwen_3_4b.safetensors",
 ) -> Path:
     if engine == "flux":
         return write_flux_workflow(
@@ -42,6 +44,8 @@ def write_engine_workflow(
             generation_mode=flux_mode,
             unet_name=flux_model,
             steps=flux_steps,
+            reference_mode=flux_reference_mode,
+            clip_name=flux_clip,
         )
     if engine == "anima":
         return write_anima_workflow(
@@ -69,6 +73,8 @@ def run(
     flux_mode: str = "edit",
     flux_model: str = "flux-2-klein-4b-fp8.safetensors",
     flux_steps: int = 4,
+    flux_reference_mode: str = "identity",
+    flux_clip: str = "qwen_3_4b.safetensors",
 ) -> tuple[Path, Path]:
     work_dir = prepare(scope, megapixels)
     workflow_path = write_engine_workflow(
@@ -82,6 +88,8 @@ def run(
         flux_mode,
         flux_model,
         flux_steps,
+        flux_reference_mode,
+        flux_clip,
     )
     outputs = queue_workflow(workflow_path, server=server, timeout=timeout)
     images = [item for item in outputs if item.get("type") == "output" and item.get("filename")]
@@ -92,8 +100,13 @@ def run(
     if not raw_path.is_file():
         raise FileNotFoundError(f"ComfyUI reported an output that does not exist: {raw_path}")
     if engine == "flux":
-        model_variant = "base4b" if "base-4b" in flux_model else "distilled4b"
-        run_marker = f"{flux_mode}_{model_variant}_{flux_steps}step"
+        if "9b" in flux_model.lower():
+            model_variant = "distilled9b"
+        elif "base-4b" in flux_model:
+            model_variant = "base4b"
+        else:
+            model_variant = "distilled4b"
+        run_marker = f"{flux_mode}_{flux_reference_mode}_{model_variant}_{flux_steps}step_{megapixel_marker(megapixels)}"
     else:
         run_marker = anima_mode
     final_path = (
@@ -120,6 +133,8 @@ def main() -> int:
     parser.add_argument("--flux-mode", choices=("edit", "inpaint"), default="edit", help="Use an independent reference edit or preserve figures as the inpaint source")
     parser.add_argument("--flux-model", default="flux-2-klein-4b-fp8.safetensors")
     parser.add_argument("--flux-steps", type=int, default=4, help="Use 4 for distilled Klein; typically 20-28 for Klein Base")
+    parser.add_argument("--flux-reference-mode", choices=("composition", "identity"), default="identity", help="Append one identity close-up per character (recommended) or use only the scene composition")
+    parser.add_argument("--flux-clip", default="qwen_3_4b.safetensors", help="FLUX.2 text encoder matching the selected model size")
     args = parser.parse_args()
     engines = ENGINES if args.engine == "both" else (args.engine,)
     for engine in engines:
@@ -137,6 +152,8 @@ def main() -> int:
             args.flux_mode,
             args.flux_model,
             args.flux_steps,
+            args.flux_reference_mode,
+            args.flux_clip,
         )
         print(f"[{engine}] Raw artwork: {raw_path}")
         print(f"[{engine}] Final poster: {final_path}")

@@ -98,7 +98,11 @@ def test_comfyui_inpaint_uses_source_once_without_reference_conditioning():
 
 def test_comfyui_edit_uses_reference_with_independent_empty_target():
     workflow = build_workflow(
-        "Base1", seed=123, megapixels=0.25, generation_mode="edit"
+        "Base1",
+        seed=123,
+        megapixels=0.25,
+        generation_mode="edit",
+        reference_mode="composition",
     )
 
     assert workflow["15"]["class_type"] == "EmptySD3LatentImage"
@@ -108,6 +112,31 @@ def test_comfyui_edit_uses_reference_with_independent_empty_target():
     assert workflow["11"]["inputs"]["latent_image"] == ["15", 0]
     assert not any(node["class_type"] == "VAEEncodeForInpaint" for node in workflow.values())
     assert not any(node["class_type"] == "ImageCompositeMasked" for node in workflow.values())
+
+
+def test_comfyui_identity_mode_appends_three_identity_references():
+    workflow = build_workflow(
+        "Base1",
+        seed=123,
+        megapixels=0.25,
+        generation_mode="edit",
+        reference_mode="identity",
+    )
+
+    loaded_images = [
+        node["inputs"]["image"]
+        for node in workflow.values()
+        if node["class_type"] == "LoadImage"
+    ]
+    assert loaded_images == [
+        "scene_reference.png",
+        "identity_reference_1.png",
+        "identity_reference_2.png",
+        "identity_reference_3.png",
+    ]
+    assert sum(
+        node["class_type"] == "ReferenceLatent" for node in workflow.values()
+    ) == 4
 
 
 def test_anima_workflow_uses_cosmos_reference_without_changing_flux_workflow():
@@ -123,8 +152,17 @@ def test_anima_workflow_uses_cosmos_reference_without_changing_flux_workflow():
 def test_engine_workflows_have_separate_files():
     flux = write_engine_workflow("flux", "Base1", 123, 0.25)
     anima = write_engine_workflow("anima", "Base1", 123, 0.25)
-    assert flux.name == "workflow_api.json"
+    assert flux.name == "workflow_api_edit_0p25mp_123.json"
     assert anima.name == "anima_workflow_api.json"
+
+
+def test_flux_workflow_files_are_unique_per_seed():
+    first = write_engine_workflow("flux", "Base1", 123, 0.25)
+    second = write_engine_workflow("flux", "Base1", 124, 0.25)
+    full_size = write_engine_workflow("flux", "Base1", 123, 1.0)
+
+    assert first != second
+    assert first != full_size
 
 
 def test_flux_model_and_steps_are_selectable():
@@ -135,10 +173,12 @@ def test_flux_model_and_steps_are_selectable():
         unet_name="flux-2-klein-base-4b-fp8.safetensors",
         generation_mode="inpaint",
         steps=24,
+        clip_name="qwen_3_8b_fp4mixed.safetensors",
     )
 
     assert workflow["1"]["inputs"]["unet_name"] == "flux-2-klein-base-4b-fp8.safetensors"
     assert workflow["7"]["inputs"]["steps"] == 24
+    assert workflow["2"]["inputs"]["clip_name"] == "qwen_3_8b_fp4mixed.safetensors"
 
 
 def test_finalizer_preserves_size_and_adds_deterministic_panels(tmp_path: Path):
