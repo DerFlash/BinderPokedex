@@ -1,0 +1,41 @@
+Generate one complete, cohesive portrait illustration in a single image-generation
+pass. The supplied reference image is a strict character and composition reference,
+not a background to retain. It contains exactly three Pokémon at their required
+positions, sizes, poses and shared ground level: Mewtwo on the lower left, Bulbasaur
+in the lower center, and Charmander on the lower right. Repaint these same three
+characters as native parts of the finished scene. Do not add, remove, duplicate,
+swap or relocate any character.
+
+Create a nostalgic creature-collecting card-game environment associated with the
+1999 Base Set in a refined late-1990s Japanese cel-painted animation style. The
+three Pokémon stand together in a peaceful natural meadow near a distant, generic
+Pokémon research building, with layered forest edges, soft mountains and warm
+morning sunlight from the upper left. The landscape, lighting and characters must
+be invented together as one continuous artwork. Match cast light, reflected green
+light, contact shadows, perspective and color grading across the entire scene.
+
+Apply one coherent camera-space depth order to every subject and landscape element.
+If any plausible part of the environment is spatially in front of a character, it
+may naturally occlude the corresponding part of that character. If it is spatially
+behind the character, it must remain behind it. Occlusion must follow actual
+perspective and object position rather than a special rule for grass, feet, or the
+bottom edge. Keep faces, eyes and recognizable anatomy unobstructed. Preserve each
+referenced Pokémon's identity, proportions, anatomy, colors and exact silhouette.
+
+Never invent anatomy immediately outside a reference silhouette: no extra ears,
+horns, tails, limbs, leaves, flames, wings, hair, accessories, or duplicate body
+parts. Mewtwo has exactly two short blunt horn-like head protrusions as shown in
+the reference, never long ears, rabbit ears, pointed animal ears, or large shapes
+extending above or beside its referenced head. Bulbasaur and Charmander likewise
+retain exactly the anatomy visible in their references.
+
+The upper third must contain only uninterrupted pale blue sky, natural sunlight
+and a few soft clouds. It must be completely free of graphic symbols or title art;
+an exact official logo will be overlaid later. Keep the middle center calm for
+later set information while painting continuous natural scenery through it. Do not
+interpret the image as a poster or advertisement. Do not draw boxes, plaques,
+panels, landing pads, circles, platforms, paths, roads, radial walkways, layout
+guides or artificial clearings. Do not render text, letters, numbers, logos,
+wordmarks, title graphics, emblems, cards, borders, UI, watermarks or crop marks.
+Do not draw people, trainers, unrelated animals, extra creatures, statues or
+silhouettes.

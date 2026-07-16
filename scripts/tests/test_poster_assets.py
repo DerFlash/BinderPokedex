@@ -1,10 +1,14 @@
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageChops
 
 from scripts.poster_assets import fetch_cutouts
+from scripts.poster_assets.create_comfyui_poster_workflow import build_workflow
+from scripts.poster_assets.create_anima_poster_workflow import build_workflow as build_anima_workflow
+from scripts.poster_assets.finalize_comfyui_poster import finalize
 from scripts.poster_assets.layout import build_page_layout
 from scripts.poster_assets.render_poster import cutout_placements
+from scripts.poster_assets.run_comfyui_poster import write_engine_workflow
 
 
 def test_auto_count_uses_layout_columns():
@@ -73,3 +77,51 @@ def test_cutout_placements_share_one_foot_baseline():
         foot_positions.append(placement["y"] + alpha_box[3])
 
     assert len(set(foot_positions)) == 1
+
+
+def test_comfyui_workflow_uses_one_scene_reference():
+    workflow = build_workflow("Base1", seed=123, megapixels=0.25)
+    loaded_images = {
+        node["inputs"]["image"]
+        for node in workflow.values()
+        if node["class_type"] == "LoadImage"
+    }
+
+    assert loaded_images == {"scene_reference.png"}
+    assert any(node["class_type"] == "ReferenceLatent" for node in workflow.values())
+    assert any(node["class_type"] == "VAEEncodeForInpaint" for node in workflow.values())
+    assert any(node["class_type"] == "ImageCompositeMasked" for node in workflow.values())
+
+
+def test_anima_workflow_uses_cosmos_reference_without_changing_flux_workflow():
+    workflow = build_anima_workflow("Base1", seed=123, megapixels=0.25)
+    assert any(node["class_type"] == "ApplyCosmosReferenceLatent" for node in workflow.values())
+    assert any(node["class_type"] == "LoraLoaderModelOnly" for node in workflow.values())
+    assert any(node["class_type"] == "ImageCompositeMasked" for node in workflow.values())
+    assert {node["inputs"]["image"] for node in workflow.values() if node["class_type"] == "LoadImage"} == {"scene_reference.png"}
+    sampler = next(node for node in workflow.values() if node["class_type"] == "KSampler")
+    assert sampler["inputs"]["latent_image"] == ["10", 0]
+
+
+def test_engine_workflows_have_separate_files():
+    flux = write_engine_workflow("flux", "Base1", 123, 0.25)
+    anima = write_engine_workflow("anima", "Base1", 123, 0.25)
+    assert flux.name == "workflow_api.json"
+    assert anima.name == "anima_workflow_api.json"
+
+
+def test_finalizer_preserves_size_and_adds_deterministic_panels(tmp_path: Path):
+    raw_path = tmp_path / "raw.png"
+    final_path = tmp_path / "final.png"
+    Image.new("RGB", (432, 608), (80, 140, 90)).save(raw_path)
+
+    finalize("Base1", raw_path, final_path)
+
+    raw = Image.open(raw_path).convert("RGB")
+    final = Image.open(final_path).convert("RGB")
+    assert final.size == raw.size
+    assert ImageChops.difference(raw, final).getbbox() is not None
+    # The lower character area belongs exclusively to the generated artwork.
+    assert final.getpixel((raw.width // 4, raw.height * 5 // 6)) == raw.getpixel(
+        (raw.width // 4, raw.height * 5 // 6)
+    )

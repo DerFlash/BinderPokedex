@@ -1,0 +1,16 @@
+masterpiece, best quality, safe, three pokemon, exactly three characters,
+mewtwo on the lower left, bulbasaur in the lower center, charmander on the lower
+right, exact reference anatomy, exact reference silhouettes, unchanged character
+designs, no duplicate characters, integrated natural occlusion, coherent depth,
+one continuous richly textured meadow environment, replace every part of the
+plain neutral reference background, natural irregular ground detail around all
+characters, no oval shadows, no circles, no individual standing areas, no flat
+beige ground, no pedestals, no platforms, warm morning sunlight,
+late 1990s japanese cel-painted background, richly painted pokemon research
+meadow, small generic research laboratory centered in the middle distance,
+layered forest, soft mountains, pale blue open sky with natural clouds,
+short varied green meadow plants and irregular natural ground texture throughout
+the foreground, no empty sand or beige floor,
+continuous environment, calm upper center, calm middle center, no text, no logo,
+no panels, no paths, no landing pads, environmental elements follow real camera
+depth and may overlap character contours only when genuinely in front

@@ -44,6 +44,13 @@ _archive/
 *.xlsx
 temp/
 tmp/
+data/poster_assets/*/comfyui_poster/output/
+data/poster_assets/*/comfyui_poster/temp/
+data/poster_assets/*/comfyui_poster/workflow_api.json
+data/poster_assets/*/comfyui_poster/anima_workflow_api.json
+data/poster_assets/*/comfyui_poster/scene_reference.png
+data/poster_assets/*/comfyui_poster/identity_core.png
+data/poster_assets/*/comfyui_poster/anima_scene_reference.png
 
 # Generated files (keep data, ignore PDFs)
 output/**/*.pdf

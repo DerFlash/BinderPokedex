@@ -11,6 +11,10 @@ text_cells:
     row: 2
     column: 2
 
+title_logo:
+  file: logo.png
+  source: https://assets.tcgdex.net/en/base/base1/logo.png
+
 pokemon:
   strategy: featured_from_scope
   count: auto_from_layout_columns
