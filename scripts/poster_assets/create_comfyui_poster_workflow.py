@@ -88,7 +88,12 @@ def build_workflow(
             "character, including its complete silhouette, must remain wholly "
             "inside its assigned bottom-row card cell as shown in IMAGE 4; no character "
             "may cross the horizontal boundary above the bottom row or either "
-            "vertical card boundary. The individual images are identity references, not "
+            "vertical card boundary. Leave visible landscape padding between every "
+            "silhouette and every card edge. The left Mewtwo specifically needs "
+            "generous clear space above its head and to the right of its hand; it "
+            "must occupy at most seventy percent of its card's height and width, and "
+            "its rightmost fingertip must end before the final quarter of that cell. The "
+            "individual images are identity references, not "
             "additional subjects and not scale references.\n\n"
             + prompt
         )

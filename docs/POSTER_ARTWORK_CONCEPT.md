@@ -124,7 +124,7 @@ text compositing with one command:
 ```bash
 venv/bin/python scripts/poster_assets/run_comfyui_poster.py \
   --engine flux --flux-mode edit --scope Base1 \
-  --seed 260716309 --language en
+  --seed 260716311 --language en
 ```
 
 The default generates the cohesive scene at 0.25 MP and resizes that complete
@@ -166,9 +166,11 @@ their exact intended positions, sizes, and shared ground level. It also creates
 one high-resolution, poster-shaped identity reference per Pokemon. Each identity
 reference uses the final poster coordinate system and places its subject wholly
 inside the assigned bottom-row card. This avoids the portrait-scale bias caused
-by square close-ups while retaining enough anatomy detail for Mewtwo. None of
-these references contains a layout grid, landing pads, paths, text boxes, or
-previous generated artwork.
+by square close-ups while retaining enough anatomy detail for Mewtwo. Tall,
+wide-reaching subjects keep their high-detail identity pixel size on a larger 2.25 MP
+reference canvas, creating visible print-safe space without shrinking away anatomy
+detail. None of these references contains a layout grid, landing pads, paths, text
+boxes, or previous generated artwork.
 The two FLUX modes deliberately use mutually exclusive conditioning topologies.
 `inpaint` keeps the Pokemon as the unmasked source of `VAEEncodeForInpaint` and
 does not add a `ReferenceLatent`. `edit` uses an independent empty target latent
@@ -205,7 +207,7 @@ experiments show that additional steps alone do not solve reference-identity
 hallucinations.
 
 The promoted local candidate is `poster-flux2.png`, generated with seed
-`260716309`, distilled FLUX.2 Klein 4B, four steps, `edit` mode, and `identity`
+`260716311`, distilled FLUX.2 Klein 4B, four steps, `edit` mode, and `identity`
 reference mode. The cohesive scene was sampled at 0.25 MP and resized as a whole
 to 1 MP before the deterministic overlay. Identity mode supplies three
 card-positioned character references followed by the combined scene composition.

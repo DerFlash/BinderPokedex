@@ -69,21 +69,35 @@ def build_identity_references(scope_dir: Path, manifest: dict[str, Any]) -> None
     portrait-scale hero.  A poster-shaped canvas carries the same anatomy detail
     while reinforcing the exact card-safe cell, scale, and baseline.
     """
-    width, height = output_dimensions(scope_dir.name, 1.0)
-    layout = build_page_layout(
-        manifest.get("layout", {}).get("name", "standard_3x3"), width_px=width
+    layout_name = manifest.get("layout", {}).get("name", "standard_3x3")
+    base_width, base_height = output_dimensions(scope_dir.name, 1.0)
+    base_layout = build_page_layout(
+        layout_name, width_px=base_width
     )
-    placements = card_safe_conditioning_placements(
-        cutout_placements(layout, scope_dir), tall_scale=1.0
-    )
+    placements = cutout_placements(base_layout, scope_dir)
     neutral = (226, 224, 211)
     reference_path = scope_dir / "comfyui_poster" / "identity_reference_1.png"
     for index, placement in enumerate(placements, start=1):
-        reference = Image.new("RGB", (width, height), neutral)
         character = placement["image"]
+        alpha_box = character.getchannel("A").getbbox()
+        if alpha_box is None:
+            raise ValueError("Identity reference has no visible pixels")
+        alpha_width = alpha_box[2] - alpha_box[0]
+        alpha_height = alpha_box[3] - alpha_box[1]
+        if alpha_width / alpha_height < 0.85:
+            width, height = output_dimensions(scope_dir.name, 2.25)
+            reference_layout = build_page_layout(layout_name, width_px=width)
+            cell = reference_layout.bottom_row_cells()[index - 1]
+            x = cell.x + round(cell.width * 0.10) - alpha_box[0]
+            baseline = cell.y + round(cell.height * 0.88)
+            y = baseline - alpha_box[3]
+        else:
+            width, height = base_width, base_height
+            x, y = placement["x"], placement["y"]
+        reference = Image.new("RGB", (width, height), neutral)
         reference.paste(
             character.convert("RGB"),
-            (placement["x"], placement["y"]),
+            (x, y),
             character.getchannel("A"),
         )
         reference.save(

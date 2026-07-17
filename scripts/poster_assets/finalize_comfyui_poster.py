@@ -79,7 +79,13 @@ def localized_date(value: str, language: str) -> str:
 
 
 def draw_info_panel(canvas: Image.Image, cell, scope_data: dict, language: str) -> None:
-    box = cell.inset(0.04, 0.18)
+    pad_x = round(cell.width * 0.04)
+    box = (
+        cell.x + pad_x,
+        cell.y + round(cell.height * 0.18),
+        cell.x + cell.width - pad_x,
+        cell.y + cell.height - round(cell.height * 0.04),
+    )
     scale = canvas.width / 1400
     overlay = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
     draw = ImageDraw.Draw(overlay, "RGBA")

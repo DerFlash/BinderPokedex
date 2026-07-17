@@ -121,20 +121,25 @@ def test_identity_references_use_poster_coordinates():
     build_identity_references(scope_dir, manifest)
 
     layout = build_page_layout("standard_3x3", width_px=848)
-    for index, cell in enumerate(layout.bottom_row_cells(), start=1):
+    for index in range(1, layout.pokemon_count + 1):
         image = Image.open(
             scope_dir / "comfyui_poster" / f"identity_reference_{index}.png"
         ).convert("RGB")
-        assert image.size == (848, 1168)
         neutral = Image.new("RGB", image.size, (226, 224, 211))
         bbox = ImageChops.difference(image, neutral).getbbox()
         assert bbox is not None
+        reference_layout = build_page_layout("standard_3x3", width_px=image.width)
+        cell = reference_layout.bottom_row_cells()[index - 1]
         assert bbox[0] >= cell.x
         assert bbox[1] >= cell.y
         assert bbox[2] <= cell.x + cell.width
         assert bbox[3] <= cell.y + cell.height
         if index == 1:
-            assert bbox[2] <= cell.x + round(cell.width * 0.86)
+            assert image.width > 848
+            assert bbox[1] >= cell.y + round(cell.height * 0.35)
+            assert bbox[2] <= cell.x + round(cell.width * 0.60)
+        else:
+            assert image.size == (848, 1168)
 
 
 def test_comfyui_inpaint_uses_source_once_without_reference_conditioning():
