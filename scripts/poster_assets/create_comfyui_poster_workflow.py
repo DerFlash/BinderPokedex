@@ -39,6 +39,17 @@ def output_dimensions(scope: str, megapixels: float) -> tuple[int, int]:
     return max(16, round(width / 16) * 16), max(16, round(height / 16) * 16)
 
 
+def page_dimensions(scope: str, megapixels: float) -> tuple[int, int]:
+    """Return an exact physical card-grid ratio using the latent-aligned width."""
+    width, _latent_height = output_dimensions(scope, megapixels)
+    scope_dir = POSTER_ASSETS / scope
+    manifest = load_yaml(scope_dir / "poster.yaml")
+    layout = build_page_layout(
+        manifest.get("layout", {}).get("name", "standard_3x3"), width_px=width
+    )
+    return layout.width_px, layout.height_px
+
+
 def build_workflow(
     scope: str,
     seed: int,
@@ -66,15 +77,19 @@ def build_workflow(
     if generation_mode == "edit" and reference_mode == "identity":
         prompt = (
             "Four reference images are supplied in a fixed sequence. IMAGE 1 is "
-            "the only authority for the final count, placement, scale, pose and "
-            "shared ground level. IMAGE 2 is the authoritative high-resolution "
-            "appearance and anatomy reference for the left Mewtwo. IMAGE 3 is the "
-            "authoritative appearance and anatomy reference for the center "
-            "Bulbasaur. IMAGE 4 is the authoritative appearance and anatomy "
-            "reference for the right Charmander. Render each referenced character "
-            "exactly once, at IMAGE 1's location; the close-ups are not additional "
-            "subjects. Copy their silhouettes and anatomy rather than redesigning "
-            "them.\n\n"
+            "the authoritative high-resolution appearance, anatomy, scale and "
+            "card-safe location reference for the left Mewtwo. IMAGE 2 provides "
+            "the same information for the center Bulbasaur. IMAGE 3 provides the "
+            "same information for the right Charmander. Their plain neutral "
+            "backgrounds are empty reference space, not scenery. IMAGE 4 is the "
+            "final authority for the combined count, pose, placement, scale, "
+            "shared ground level and card-safe boundaries. "
+            "Render each character exactly once at IMAGE 4's location. Every "
+            "character, including its complete silhouette, must remain wholly "
+            "inside its assigned bottom-row card cell as shown in IMAGE 4; no character "
+            "may cross the horizontal boundary above the bottom row or either "
+            "vertical card boundary. The individual images are identity references, not "
+            "additional subjects and not scale references.\n\n"
             + prompt
         )
     width, height = output_dimensions(scope, megapixels)
@@ -101,11 +116,8 @@ def build_workflow(
             "EmptySD3LatentImage", width=width, height=height, batch_size=1
         )
         workflow["16"] = node("VAEEncode", pixels=["14", 0], vae=["3", 0])
-        workflow["17"] = node(
-            "ReferenceLatent", conditioning=["4", 0], latent=["16", 0]
-        )
         if reference_mode == "identity":
-            previous_conditioning = ["17", 0]
+            previous_conditioning = ["4", 0]
             for index in range(1, 4):
                 load_id = str(20 + index * 3)
                 encode_id = str(21 + index * 3)
@@ -122,7 +134,15 @@ def build_workflow(
                     latent=[encode_id, 0],
                 )
                 previous_conditioning = [reference_id, 0]
-            workflow["9"]["inputs"]["positive"] = previous_conditioning
+            workflow["17"] = node(
+                "ReferenceLatent",
+                conditioning=previous_conditioning,
+                latent=["16", 0],
+            )
+        else:
+            workflow["17"] = node(
+                "ReferenceLatent", conditioning=["4", 0], latent=["16", 0]
+            )
     else:
         # True inpainting topology: the figures are the unmasked source pixels.
         # No ReferenceLatent is added, so the model receives each subject once.

@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+from typing import Any
 
 from PIL import Image, ImageDraw, ImageFilter
 
@@ -22,6 +23,76 @@ ROOT = Path(__file__).resolve().parents[2]
 POSTER_ASSETS = ROOT / "data" / "poster_assets"
 
 
+def card_safe_conditioning_placements(
+    placements: list[dict[str, object]], tall_scale: float = 0.50
+) -> list[dict[str, object]]:
+    """Add model-compensation padding around tall subjects in the layout reference."""
+    result: list[dict[str, object]] = []
+    for placement in placements:
+        image = placement["image"]
+        alpha_box = image.getchannel("A").getbbox()
+        if alpha_box is None:
+            raise ValueError("Conditioning placement has no visible pixels")
+        alpha_width = alpha_box[2] - alpha_box[0]
+        alpha_height = alpha_box[3] - alpha_box[1]
+        if alpha_width / alpha_height >= 0.85:
+            result.append(placement)
+            continue
+
+        resized = image.resize(
+            (round(image.width * tall_scale), round(image.height * tall_scale)),
+            Image.Resampling.LANCZOS,
+        )
+        resized_box = resized.getchannel("A").getbbox()
+        if resized_box is None:
+            raise ValueError("Resized conditioning placement has no visible pixels")
+        cell = placement["cell"]
+        baseline = placement["y"] + alpha_box[3]
+        adjusted = dict(placement)
+        adjusted.update(
+            image=resized,
+            x=(
+                cell.x
+                + (cell.width - resized.width) // 2
+                - round(cell.width * 0.08)
+            ),
+            y=baseline - resized_box[3],
+        )
+        result.append(adjusted)
+    return result
+
+
+def build_identity_references(scope_dir: Path, manifest: dict[str, Any]) -> None:
+    """Write detailed identity references in the final poster coordinate system.
+
+    Square close-ups make image-edit models treat a tall character as the scene's
+    portrait-scale hero.  A poster-shaped canvas carries the same anatomy detail
+    while reinforcing the exact card-safe cell, scale, and baseline.
+    """
+    width, height = output_dimensions(scope_dir.name, 1.0)
+    layout = build_page_layout(
+        manifest.get("layout", {}).get("name", "standard_3x3"), width_px=width
+    )
+    placements = card_safe_conditioning_placements(
+        cutout_placements(layout, scope_dir), tall_scale=1.0
+    )
+    neutral = (226, 224, 211)
+    reference_path = scope_dir / "comfyui_poster" / "identity_reference_1.png"
+    for index, placement in enumerate(placements, start=1):
+        reference = Image.new("RGB", (width, height), neutral)
+        character = placement["image"]
+        reference.paste(
+            character.convert("RGB"),
+            (placement["x"], placement["y"]),
+            character.getchannel("A"),
+        )
+        reference.save(
+            reference_path.with_name(f"identity_reference_{index}.png"),
+            format="PNG",
+            optimize=True,
+        )
+
+
 def build_scene_reference(scope: str, megapixels: float) -> Path:
     """Place exact cutouts and write a protected identity-core mask."""
     scope_dir = POSTER_ASSETS / scope
@@ -31,7 +102,8 @@ def build_scene_reference(scope: str, megapixels: float) -> Path:
     reference = Image.new("RGBA", (width, height), (226, 224, 211, 0))
     identity_alpha = Image.new("L", (width, height), 0)
     placements = cutout_placements(layout, scope_dir)
-    for placement in placements:
+    scene_placements = card_safe_conditioning_placements(placements)
+    for placement in scene_placements:
         reference.alpha_composite(placement["image"], (placement["x"], placement["y"]))
         identity_alpha.paste(
             placement["image"].getchannel("A"),
@@ -47,29 +119,7 @@ def build_scene_reference(scope: str, megapixels: float) -> Path:
             reference = padded
     path = scope_dir / "comfyui_poster" / "scene_reference.png"
     reference.save(path, format="PNG", optimize=True)
-    # Separate opaque identity close-ups can be appended as native FLUX.2
-    # references. They carry appearance only; scene_reference remains the sole
-    # authority for count, scale and position.
-    identity_size = 512
-    cutout_manifest = json.loads(
-        (scope_dir / "cutouts" / "manifest.json").read_text(encoding="utf-8")
-    )
-    for index, item in enumerate(cutout_manifest["items"], start=1):
-        character = Image.open(scope_dir / "cutouts" / item["file"]).convert("RGBA")
-        alpha_box = character.getchannel("A").getbbox()
-        if alpha_box is None:
-            raise ValueError(f"Identity reference has no visible pixels: {item['file']}")
-        character = character.crop(alpha_box)
-        character.thumbnail((round(identity_size * 0.78), round(identity_size * 0.78)), Image.Resampling.LANCZOS)
-        identity_reference = Image.new("RGB", (identity_size, identity_size), (226, 224, 211))
-        x = (identity_size - character.width) // 2
-        y = identity_size - character.height - round(identity_size * 0.08)
-        identity_reference.paste(character.convert("RGB"), (x, y), character.getchannel("A"))
-        identity_reference.save(
-            path.with_name(f"identity_reference_{index}.png"),
-            format="PNG",
-            optimize=True,
-        )
+    build_identity_references(scope_dir, manifest)
     # AnimaEdit is an image-edit model and strongly retains the source material.
     # Give it only an abstract sky/meadow material scaffold—not prior artwork or
     # layout geometry—so the transparent area is interpreted as landscape.

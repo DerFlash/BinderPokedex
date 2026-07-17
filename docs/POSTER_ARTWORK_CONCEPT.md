@@ -124,8 +124,15 @@ text compositing with one command:
 ```bash
 venv/bin/python scripts/poster_assets/run_comfyui_poster.py \
   --engine flux --flux-mode edit --scope Base1 \
-  --seed 260715201 --megapixels 1.0 --language en
+  --seed 260716309 --language en
 ```
+
+The default generates the cohesive scene at 0.25 MP and resizes that complete
+artwork to 1 MP before deterministic typography. This resolution currently gives
+FLUX the most reliable card-safe character scale. It does not composite or move
+Pokemon after sampling. Before slicing, the latent-aligned image is normalized to
+the exact physical card-grid aspect ratio, so no outer card loses pixels to
+ComfyUI's multiple-of-16 rounding.
 
 The FLUX and Anima branches are independent and can be compared with identical
 inputs. `both` runs them sequentially and keeps engine-specific final filenames:
@@ -155,8 +162,13 @@ but tends to retain abstract source geometry too literally. The empty-target
 promoted or rendered at production resolution.
 
 Preparation creates one clean scene reference from the three reviewed cutouts at
-their exact intended positions, sizes, and shared ground level. It contains no
-layout grid, landing pads, paths, text boxes, or previous generated artwork.
+their exact intended positions, sizes, and shared ground level. It also creates
+one high-resolution, poster-shaped identity reference per Pokemon. Each identity
+reference uses the final poster coordinate system and places its subject wholly
+inside the assigned bottom-row card. This avoids the portrait-scale bias caused
+by square close-ups while retaining enough anatomy detail for Mewtwo. None of
+these references contains a layout grid, landing pads, paths, text boxes, or
+previous generated artwork.
 The two FLUX modes deliberately use mutually exclusive conditioning topologies.
 `inpaint` keeps the Pokemon as the unmasked source of `VAEEncodeForInpaint` and
 does not add a `ReferenceLatent`. `edit` uses an independent empty target latent
@@ -187,17 +199,18 @@ The initial controlled 0.25 MP comparison used seed `260716301`. True inpainting
 avoided duplicates but reinterpreted all three Pokemon as generic animals. Base 4B
 with 24 steps produced richer scenery but increased character drift. The correctly
 wired distilled 4-step `edit` mode produced exactly three correctly placed subjects
-and is therefore the default, although Mewtwo's head silhouette still requires a
-better identity-conditioning solution. These experiments show that additional
-steps alone do not solve reference-identity hallucinations.
+and is therefore the default. Poster-coordinate identity references now preserve
+Mewtwo's head anatomy without promoting it beyond its bottom-left card. These
+experiments show that additional steps alone do not solve reference-identity
+hallucinations.
 
-The promoted local candidate is `poster-flux2.png`, generated at 1 MP with seed
-`260716303`, distilled FLUX.2 Klein 4B, four steps, `edit` mode, and `identity`
-reference mode. Identity mode supplies IMAGE 1 as the sole layout authority and
-then appends one high-resolution original cutout per character. The prompt labels
-those roles explicitly so the close-ups strengthen anatomy without becoming extra
-subjects. Generated identity references are derived from the original 475 px
-cutouts, never from their already reduced poster placements.
+The promoted local candidate is `poster-flux2.png`, generated with seed
+`260716309`, distilled FLUX.2 Klein 4B, four steps, `edit` mode, and `identity`
+reference mode. The cohesive scene was sampled at 0.25 MP and resized as a whole
+to 1 MP before the deterministic overlay. Identity mode supplies three
+card-positioned character references followed by the combined scene composition.
+The prompt labels those roles explicitly so anatomy and card-safe geometry
+reinforce each other rather than competing.
 
 FLUX.2 Klein 9B FP8 with the 8B FP4-mixed encoder was also validated technically
 on MPS after adding CPU-side NVFP4 dequantization. On a 16 GB M4, however, prompt
@@ -211,8 +224,14 @@ set name, card count, release date, project signature, and deterministic panel
 design. Exact spelling and typography therefore remain independent from the image
 model without breaking the integrity of the generated scene.
 
+Every finalized poster is then exported into one PNG per physical card cell. The
+card crops use the same `PageLayout` geometry that prepared the references and
+discard the binder gaps between cells. For `standard_3x3`, this produces nine
+files named `card_r1_c1.png` through `card_r3_c3.png`; the three Pokemon must each
+remain completely inside one of the three bottom-row files.
+
 ## Current boundary
 
-The standalone Base1 poster asset is implemented and reviewed. PDF integration
-and a layout model shared with the PDF renderer are follow-up work; the current
+The standalone Base1 poster asset and deterministic card-slice export are
+implemented and reviewed. PDF integration remains follow-up work; the current
 poster layout helper is not yet used by `scripts/pdf/generate_pdf.py`.

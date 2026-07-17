@@ -7,8 +7,13 @@ from scripts.poster_assets.create_comfyui_poster_workflow import build_workflow
 from scripts.poster_assets.create_anima_poster_workflow import build_workflow as build_anima_workflow
 from scripts.poster_assets.finalize_comfyui_poster import finalize
 from scripts.poster_assets.layout import build_page_layout
+from scripts.poster_assets.prepare_comfyui_poster import (
+    build_identity_references,
+    card_safe_conditioning_placements,
+)
 from scripts.poster_assets.render_poster import cutout_placements
-from scripts.poster_assets.run_comfyui_poster import write_engine_workflow
+from scripts.poster_assets.run_comfyui_poster import resize_artwork, validate_raw_artwork, write_engine_workflow
+from scripts.poster_assets.slice_poster import slice_poster
 
 
 def test_auto_count_uses_layout_columns():
@@ -79,6 +84,59 @@ def test_cutout_placements_share_one_foot_baseline():
     assert len(set(foot_positions)) == 1
 
 
+def test_cutout_placements_stay_inside_bottom_card_cells():
+    scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
+    placements = cutout_placements(build_page_layout("standard_3x3"), scope_dir)
+
+    for placement in placements:
+        alpha_box = placement["image"].getchannel("A").getbbox()
+        assert alpha_box is not None
+        left = placement["x"] + alpha_box[0]
+        top = placement["y"] + alpha_box[1]
+        right = placement["x"] + alpha_box[2]
+        bottom = placement["y"] + alpha_box[3]
+        cell = placement["cell"]
+        assert cell.x <= left < right <= cell.x + cell.width
+        assert cell.y <= top < bottom <= cell.y + cell.height
+
+
+def test_tall_conditioning_subjects_gain_card_safe_padding():
+    scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
+    placements = cutout_placements(build_page_layout("standard_3x3"), scope_dir)
+    conditioned = card_safe_conditioning_placements(placements)
+
+    assert conditioned[0]["image"].height < placements[0]["image"].height
+    assert conditioned[1]["image"].size == placements[1]["image"].size
+    assert conditioned[2]["image"].size == placements[2]["image"].size
+    original_box = placements[0]["image"].getchannel("A").getbbox()
+    conditioned_box = conditioned[0]["image"].getchannel("A").getbbox()
+    assert original_box is not None and conditioned_box is not None
+    assert placements[0]["y"] + original_box[3] == conditioned[0]["y"] + conditioned_box[3]
+
+
+def test_identity_references_use_poster_coordinates():
+    scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
+    manifest = {"layout": {"name": "standard_3x3"}}
+
+    build_identity_references(scope_dir, manifest)
+
+    layout = build_page_layout("standard_3x3", width_px=848)
+    for index, cell in enumerate(layout.bottom_row_cells(), start=1):
+        image = Image.open(
+            scope_dir / "comfyui_poster" / f"identity_reference_{index}.png"
+        ).convert("RGB")
+        assert image.size == (848, 1168)
+        neutral = Image.new("RGB", image.size, (226, 224, 211))
+        bbox = ImageChops.difference(image, neutral).getbbox()
+        assert bbox is not None
+        assert bbox[0] >= cell.x
+        assert bbox[1] >= cell.y
+        assert bbox[2] <= cell.x + cell.width
+        assert bbox[3] <= cell.y + cell.height
+        if index == 1:
+            assert bbox[2] <= cell.x + round(cell.width * 0.86)
+
+
 def test_comfyui_inpaint_uses_source_once_without_reference_conditioning():
     workflow = build_workflow(
         "Base1", seed=123, megapixels=0.25, generation_mode="inpaint"
@@ -137,6 +195,11 @@ def test_comfyui_identity_mode_appends_three_identity_references():
     assert sum(
         node["class_type"] == "ReferenceLatent" for node in workflow.values()
     ) == 4
+    assert workflow["25"]["inputs"]["conditioning"] == ["4", 0]
+    assert workflow["28"]["inputs"]["conditioning"] == ["25", 0]
+    assert workflow["31"]["inputs"]["conditioning"] == ["28", 0]
+    assert workflow["17"]["inputs"]["conditioning"] == ["31", 0]
+    assert workflow["9"]["inputs"]["positive"] == ["17", 0]
 
 
 def test_anima_workflow_uses_cosmos_reference_without_changing_flux_workflow():
@@ -195,4 +258,47 @@ def test_finalizer_preserves_size_and_adds_deterministic_panels(tmp_path: Path):
     # The lower character area belongs exclusively to the generated artwork.
     assert final.getpixel((raw.width // 4, raw.height * 5 // 6)) == raw.getpixel(
         (raw.width // 4, raw.height * 5 // 6)
+    )
+
+
+def test_raw_artwork_validation_rejects_blank_output(tmp_path: Path):
+    blank = tmp_path / "blank.png"
+    Image.new("RGB", (64, 64), (0, 0, 0)).save(blank)
+
+    try:
+        validate_raw_artwork(blank)
+    except RuntimeError as error:
+        assert "blank or near-constant" in str(error)
+    else:
+        raise AssertionError("blank artwork was accepted")
+
+
+def test_resize_artwork_uses_requested_poster_dimensions(tmp_path: Path):
+    source = tmp_path / "source.png"
+    destination = tmp_path / "resized.png"
+    artwork = Image.new("RGB", (64, 96), (40, 120, 80))
+    artwork.paste((120, 180, 220), (0, 0, 64, 48))
+    artwork.save(source)
+
+    resize_artwork("Base1", source, destination, 0.25)
+
+    assert Image.open(destination).size == (432, 596)
+
+
+def test_slice_poster_exports_every_card_without_binder_gaps(tmp_path: Path):
+    source = tmp_path / "poster.png"
+    layout = build_page_layout("standard_3x3", width_px=848)
+    Image.new("RGB", (layout.width_px, layout.height_px), (40, 120, 80)).save(source)
+
+    outputs = slice_poster("Base1", source, tmp_path / "cards")
+
+    assert len(outputs) == 9
+    assert [path.name for path in outputs] == [
+        f"card_r{row}_c{column}.png"
+        for row in range(1, 4)
+        for column in range(1, 4)
+    ]
+    assert all(
+        Image.open(path).size == (layout.card_width_px, layout.card_height_px)
+        for path in outputs
     )
