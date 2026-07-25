@@ -21,7 +21,13 @@ from reportlab.lib.units import mm
 from reportlab.lib.colors import HexColor
 
 from .fonts import FontManager
-from .rendering import CardRenderer, PageRenderer, CoverRenderer, CoverStyle
+from .rendering import (
+    CardRenderer,
+    CoverRenderer,
+    CoverStyle,
+    PageRenderer,
+    PosterPageRenderer,
+)
 from .utils import TranslationHelper, RendererInitializer
 from .constants import PAGE_WIDTH, PAGE_HEIGHT, PAGE_MARGIN, CARD_WIDTH, CARD_HEIGHT, CARDS_PER_ROW, CARDS_PER_COLUMN, GAP_X, GAP_Y
 from .log_formatter import PDFStatus, SectionHeader
@@ -81,6 +87,9 @@ class VariantPDFGenerator:
                 language, image_cache, variant_data=variant_data, type_translations=self.type_translations, 
                 card_template=self.card_template, cover_template=self.cover_template
             )
+        self.poster_page_renderer = PosterPageRenderer.from_variant_data(
+            variant_data, language
+        )
     
     def generate(self) -> bool:
         """Generate the PDF with separator pages for each section."""
@@ -150,6 +159,9 @@ class VariantPDFGenerator:
             logger.error(f"❌ Error generating PDF: {e}")
             logger.error(traceback.format_exc())
             return False
+        finally:
+            if self.poster_page_renderer is not None:
+                self.poster_page_renderer.cleanup()
     
     def _generate_with_sections(self, c, sections: list, status: PDFStatus = None):
         """
@@ -163,7 +175,7 @@ class VariantPDFGenerator:
         total_cards = len(self.pokemon_list)
         cards_rendered = 0
         
-        for section in sections:
+        for section_index, section in enumerate(sections):
             section_id = section.get('section_id')
             # Cards are now INSIDE the section
             section_pokemon = section.get('cards', [])
@@ -196,6 +208,10 @@ class VariantPDFGenerator:
                 section_data=section  # Pass full section data including featured_elements
             )
             c.showPage()
+
+            if section_index == 0 and self.poster_page_renderer is not None:
+                self.poster_page_renderer.render_page(c, self.page_renderer)
+                c.showPage()
             
             # Draw cards for this section
             # Get section prefix and suffix

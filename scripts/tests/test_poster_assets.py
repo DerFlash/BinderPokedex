@@ -111,35 +111,40 @@ def test_tall_conditioning_subjects_gain_card_safe_padding():
     original_box = placements[0]["image"].getchannel("A").getbbox()
     conditioned_box = conditioned[0]["image"].getchannel("A").getbbox()
     assert original_box is not None and conditioned_box is not None
-    assert placements[0]["y"] + original_box[3] == conditioned[0]["y"] + conditioned_box[3]
+    cell = placements[0]["cell"]
+    assert (
+        placements[0]["y"] + original_box[3] + round(cell.height * 0.10)
+        == conditioned[0]["y"] + conditioned_box[3]
+    )
 
 
-def test_identity_references_use_poster_coordinates():
+def test_identity_references_use_scale_aware_appearance_canvases():
     scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
     manifest = {"layout": {"name": "standard_3x3"}}
 
     build_identity_references(scope_dir, manifest)
 
     layout = build_page_layout("standard_3x3", width_px=848)
+    extents = []
     for index in range(1, layout.pokemon_count + 1):
         image = Image.open(
             scope_dir / "comfyui_poster" / f"identity_reference_{index}.png"
         ).convert("RGB")
+        expected_size = (768, 768) if index == 1 else (512, 512)
+        assert image.size == expected_size
         neutral = Image.new("RGB", image.size, (226, 224, 211))
         bbox = ImageChops.difference(image, neutral).getbbox()
         assert bbox is not None
-        reference_layout = build_page_layout("standard_3x3", width_px=image.width)
-        cell = reference_layout.bottom_row_cells()[index - 1]
-        assert bbox[0] >= cell.x
-        assert bbox[1] >= cell.y
-        assert bbox[2] <= cell.x + cell.width
-        assert bbox[3] <= cell.y + cell.height
-        if index == 1:
-            assert image.width > 848
-            assert bbox[1] >= cell.y + round(cell.height * 0.35)
-            assert bbox[2] <= cell.x + round(cell.width * 0.60)
-        else:
-            assert image.size == (848, 1168)
+        assert bbox[0] > 0
+        assert bbox[1] > 0
+        assert bbox[2] < image.width
+        assert bbox[3] <= image.height - 24
+        assert bbox[2] - bbox[0] <= 350
+        assert bbox[3] - bbox[1] <= 350
+        extents.append(max(bbox[2] - bbox[0], bbox[3] - bbox[1]))
+    assert extents[0] < extents[1]
+    assert extents[0] < extents[2]
+    assert extents[2] == 350
 
 
 def test_comfyui_inpaint_uses_source_once_without_reference_conditioning():
@@ -177,7 +182,7 @@ def test_comfyui_edit_uses_reference_with_independent_empty_target():
     assert not any(node["class_type"] == "ImageCompositeMasked" for node in workflow.values())
 
 
-def test_comfyui_identity_mode_appends_three_identity_references():
+def test_comfyui_identity_mode_appends_three_scale_aware_identity_references():
     workflow = build_workflow(
         "Base1",
         seed=123,

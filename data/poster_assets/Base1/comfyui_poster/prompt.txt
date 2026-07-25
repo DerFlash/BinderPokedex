@@ -43,5 +43,7 @@ interpret the image as a poster or advertisement. Do not draw boxes, plaques,
 panels, landing pads, circles, platforms, paths, roads, radial walkways, layout
 guides or artificial clearings. Do not render text, letters, numbers, logos,
 wordmarks, title graphics, emblems, cards, borders, UI, watermarks or crop marks.
+Paint the landscape edge to edge and continuing naturally beyond all four image
+edges; never draw an enclosing line, rounded frame, poster edge or card outline.
 Do not draw people, trainers, unrelated animals, extra creatures, statues or
 silhouettes.

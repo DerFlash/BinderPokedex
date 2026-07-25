@@ -15,6 +15,11 @@ title_logo:
   file: logo.png
   source: https://assets.tcgdex.net/en/base/base1/logo.png
 
+pdf:
+  enabled: true
+  artwork_file: poster-flux2-artwork.png
+  insertion: after_first_section_cover
+
 pokemon:
   strategy: featured_from_scope
   count: auto_from_layout_columns

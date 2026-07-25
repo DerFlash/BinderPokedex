@@ -77,24 +77,29 @@ def build_workflow(
     if generation_mode == "edit" and reference_mode == "identity":
         prompt = (
             "Four reference images are supplied in a fixed sequence. IMAGE 1 is "
-            "the authoritative high-resolution appearance, anatomy, scale and "
-            "card-safe location reference for the left Mewtwo. IMAGE 2 provides "
-            "the same information for the center Bulbasaur. IMAGE 3 provides the "
-            "same information for the right Charmander. Their plain neutral "
-            "backgrounds are empty reference space, not scenery. IMAGE 4 is the "
+            "the exact appearance and anatomy reference for the left Mewtwo. "
+            "IMAGE 2 is the exact appearance and anatomy reference for the center "
+            "Bulbasaur. IMAGE 3 is the exact appearance and anatomy reference for "
+            "the right Charmander. Their relative sizes on the neutral canvases "
+            "reinforce, but never override, the scene scale shown in IMAGE 4. "
+            "Their plain backgrounds are empty reference space, not scenery. "
+            "IMAGE 4 is the sole and "
             "final authority for the combined count, pose, placement, scale, "
-            "shared ground level and card-safe boundaries. "
+            "shared ground level and invisible print-safe regions. "
             "Render each character exactly once at IMAGE 4's location. Every "
             "character, including its complete silhouette, must remain wholly "
-            "inside its assigned bottom-row card cell as shown in IMAGE 4; no character "
-            "may cross the horizontal boundary above the bottom row or either "
-            "vertical card boundary. Leave visible landscape padding between every "
-            "silhouette and every card edge. The left Mewtwo specifically needs "
+            "inside its assigned left, center or right region of the bottom third "
+            "as shown in IMAGE 4. No character may cross above the bottom third or "
+            "cross either invisible vertical third division. These divisions are "
+            "coordinates only and must never be drawn. Leave visible landscape "
+            "padding around every silhouette. The left Mewtwo specifically needs "
             "generous clear space above its head and to the right of its hand; it "
-            "must occupy at most seventy percent of its card's height and width, and "
-            "its rightmost fingertip must end before the final quarter of that cell. The "
+            "must occupy at most seventy percent of its region's height and width, and "
+            "its rightmost fingertip must end before the final quarter of its region. The "
             "individual images are identity references, not "
-            "additional subjects and not scale references.\n\n"
+            "additional subjects. Copy IMAGE 1's exact smooth head contour, short "
+            "cranial nubs, exact three-digit hands, feet and continuous tail "
+            "curve without simplifying or redesigning them.\n\n"
             + prompt
         )
     width, height = output_dimensions(scope, megapixels)
@@ -123,12 +128,17 @@ def build_workflow(
         workflow["16"] = node("VAEEncode", pixels=["14", 0], vae=["3", 0])
         if reference_mode == "identity":
             previous_conditioning = ["4", 0]
-            for index in range(1, 4):
+            reference_names = (
+                "identity_reference_1.png",
+                "identity_reference_2.png",
+                "identity_reference_3.png",
+            )
+            for index, reference_name in enumerate(reference_names, start=1):
                 load_id = str(20 + index * 3)
                 encode_id = str(21 + index * 3)
                 reference_id = str(22 + index * 3)
                 workflow[load_id] = node(
-                    "LoadImage", image=f"identity_reference_{index}.png"
+                    "LoadImage", image=reference_name
                 )
                 workflow[encode_id] = node(
                     "VAEEncode", pixels=[load_id, 0], vae=["3", 0]

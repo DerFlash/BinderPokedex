@@ -24,7 +24,7 @@ POSTER_ASSETS = ROOT / "data" / "poster_assets"
 
 
 def card_safe_conditioning_placements(
-    placements: list[dict[str, object]], tall_scale: float = 0.50
+    placements: list[dict[str, object]], tall_scale: float = 0.22
 ) -> list[dict[str, object]]:
     """Add model-compensation padding around tall subjects in the layout reference."""
     result: list[dict[str, object]] = []
@@ -54,51 +54,67 @@ def card_safe_conditioning_placements(
             x=(
                 cell.x
                 + (cell.width - resized.width) // 2
-                - round(cell.width * 0.08)
+                - round(cell.width * 0.28)
             ),
-            y=baseline - resized_box[3],
+            y=baseline - resized_box[3] + round(cell.height * 0.10),
         )
         result.append(adjusted)
     return result
 
 
 def build_identity_references(scope_dir: Path, manifest: dict[str, Any]) -> None:
-    """Write detailed identity references in the final poster coordinate system.
+    """Write compact appearance references without encoding scene placement.
 
-    Square close-ups make image-edit models treat a tall character as the scene's
-    portrait-scale hero.  A poster-shaped canvas carries the same anatomy detail
-    while reinforcing the exact card-safe cell, scale, and baseline.
+    Position belongs exclusively to ``scene_reference.png``. Neutral-canvas
+    padding reinforces the relative scene scale without the large poster-shaped
+    reference latents that exhaust unified memory on Apple Silicon.
     """
     layout_name = manifest.get("layout", {}).get("name", "standard_3x3")
-    base_width, base_height = output_dimensions(scope_dir.name, 1.0)
-    base_layout = build_page_layout(
-        layout_name, width_px=base_width
+    width, _ = output_dimensions(scope_dir.name, 1.0)
+    placements = cutout_placements(
+        build_page_layout(layout_name, width_px=width), scope_dir
     )
-    placements = cutout_placements(base_layout, scope_dir)
+    scene_placements = card_safe_conditioning_placements(placements)
+    scene_extents = []
+    for placement in scene_placements:
+        box = placement["image"].getchannel("A").getbbox()
+        if box is None:
+            raise ValueError("Scene placement has no visible pixels")
+        scene_extents.append(max(box[2] - box[0], box[3] - box[1]))
+    largest_scene_extent = max(scene_extents)
     neutral = (226, 224, 211)
     reference_path = scope_dir / "comfyui_poster" / "identity_reference_1.png"
-    for index, placement in enumerate(placements, start=1):
-        character = placement["image"]
-        alpha_box = character.getchannel("A").getbbox()
-        if alpha_box is None:
+    for index, (placement, scene_extent) in enumerate(
+        zip(placements, scene_extents), start=1
+    ):
+        original = Image.open(
+            scope_dir / "cutouts" / placement["item"]["file"]
+        ).convert("RGBA")
+        original_box = original.getchannel("A").getbbox()
+        if original_box is None:
             raise ValueError("Identity reference has no visible pixels")
-        alpha_width = alpha_box[2] - alpha_box[0]
-        alpha_height = alpha_box[3] - alpha_box[1]
-        if alpha_width / alpha_height < 0.85:
-            width, height = output_dimensions(scope_dir.name, 2.25)
-            reference_layout = build_page_layout(layout_name, width_px=width)
-            cell = reference_layout.bottom_row_cells()[index - 1]
-            x = cell.x + round(cell.width * 0.10) - alpha_box[0]
-            baseline = cell.y + round(cell.height * 0.88)
-            y = baseline - alpha_box[3]
-        else:
-            width, height = base_width, base_height
-            x, y = placement["x"], placement["y"]
-        reference = Image.new("RGB", (width, height), neutral)
+        original = original.crop(original_box)
+        reference_extent = max(
+            150, round(350 * scene_extent / largest_scene_extent)
+        )
+        original.thumbnail(
+            (reference_extent, reference_extent), Image.Resampling.LANCZOS
+        )
+        is_tall = original.width / original.height < 0.85
+        canvas_extent = 768 if is_tall else 512
+        reference = Image.new(
+            "RGB", (canvas_extent, canvas_extent), neutral
+        )
+        x = (
+            24
+            if is_tall
+            else (reference.width - original.width) // 2
+        )
+        y = reference.height - original.height - 24
         reference.paste(
-            character.convert("RGB"),
+            original.convert("RGB"),
             (x, y),
-            character.getchannel("A"),
+            original.getchannel("A"),
         )
         reference.save(
             reference_path.with_name(f"identity_reference_{index}.png"),
