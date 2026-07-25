@@ -9,10 +9,12 @@ from pathlib import Path
 
 try:
     from .layout import build_page_layout
-    from .render_poster import load_yaml
+    from .poster_config import build_identity_reference_prompt
+    from .render_poster import load_cutout_items, load_yaml
 except ImportError:
     from layout import build_page_layout
-    from render_poster import load_yaml
+    from poster_config import build_identity_reference_prompt
+    from render_poster import load_cutout_items, load_yaml
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -69,38 +71,21 @@ def build_workflow(
     if reference_mode not in {"composition", "identity"}:
         raise ValueError(f"Unsupported FLUX reference mode: {reference_mode}")
     work_dir = POSTER_ASSETS / scope / "comfyui_poster"
+    manifest = load_yaml(POSTER_ASSETS / scope / "poster.yaml")
     prompt_name = "inpaint_prompt.txt" if generation_mode == "inpaint" else "prompt.txt"
     prompt_path = work_dir / prompt_name
     prompt = prompt_path.read_text(encoding="utf-8").strip()
     if not prompt:
         raise ValueError(f"Prompt is empty: {prompt_path}")
     if generation_mode == "edit" and reference_mode == "identity":
-        prompt = (
-            "Four reference images are supplied in a fixed sequence. IMAGE 1 is "
-            "the exact appearance and anatomy reference for the left Mewtwo. "
-            "IMAGE 2 is the exact appearance and anatomy reference for the center "
-            "Bulbasaur. IMAGE 3 is the exact appearance and anatomy reference for "
-            "the right Charmander. Their relative sizes on the neutral canvases "
-            "reinforce, but never override, the scene scale shown in IMAGE 4. "
-            "Their plain backgrounds are empty reference space, not scenery. "
-            "IMAGE 4 is the sole and "
-            "final authority for the combined count, pose, placement, scale, "
-            "shared ground level and invisible print-safe regions. "
-            "Render each character exactly once at IMAGE 4's location. Every "
-            "character, including its complete silhouette, must remain wholly "
-            "inside its assigned left, center or right region of the bottom third "
-            "as shown in IMAGE 4. No character may cross above the bottom third or "
-            "cross either invisible vertical third division. These divisions are "
-            "coordinates only and must never be drawn. Leave visible landscape "
-            "padding around every silhouette. The left Mewtwo specifically needs "
-            "generous clear space above its head and to the right of its hand; it "
-            "must occupy at most seventy percent of its region's height and width, and "
-            "its rightmost fingertip must end before the final quarter of its region. The "
-            "individual images are identity references, not "
-            "additional subjects. Copy IMAGE 1's exact smooth head contour, short "
-            "cranial nubs, exact three-digit hands, feet and continuous tail "
-            "curve without simplifying or redesigning them.\n\n"
-            + prompt
+        prompt = "\n\n".join(
+            (
+                build_identity_reference_prompt(
+                    load_cutout_items(POSTER_ASSETS / scope),
+                    manifest,
+                ),
+                prompt,
+            )
         )
     width, height = output_dimensions(scope, megapixels)
     workflow = {
@@ -128,10 +113,12 @@ def build_workflow(
         workflow["16"] = node("VAEEncode", pixels=["14", 0], vae=["3", 0])
         if reference_mode == "identity":
             previous_conditioning = ["4", 0]
-            reference_names = (
-                "identity_reference_1.png",
-                "identity_reference_2.png",
-                "identity_reference_3.png",
+            reference_names = tuple(
+                f"identity_reference_{index}.png"
+                for index in range(
+                    1,
+                    len(load_cutout_items(POSTER_ASSETS / scope)) + 1,
+                )
             )
             for index, reference_name in enumerate(reference_names, start=1):
                 load_id = str(20 + index * 3)

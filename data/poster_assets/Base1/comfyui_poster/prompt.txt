@@ -1,10 +1,9 @@
 Generate one complete, cohesive portrait illustration in a single image-generation
 pass. The supplied reference image is a strict character and composition reference,
-not a background to retain. It contains exactly three Pokémon at their required
-positions, sizes, poses and shared ground level: Mewtwo on the lower left, Bulbasaur
-in the lower center, and Charmander on the lower right. Repaint these same three
-characters as native parts of the finished scene. Do not add, remove, duplicate,
-swap or relocate any character.
+not a background to retain. It contains the complete required cast at their exact
+positions, sizes, poses and shared ground level. Repaint these same characters as
+native parts of the finished scene. Do not add, remove, duplicate, swap or relocate
+any character.
 
 Create a nostalgic creature-collecting card-game environment associated with the
 1999 Base Set in a refined late-1990s Japanese cel-painted animation style. The
@@ -25,15 +24,10 @@ perspective and object position rather than a special rule for grass, feet, or t
 bottom edge. Keep faces, eyes and recognizable anatomy unobstructed. Preserve each
 referenced Pokémon's identity, proportions, anatomy, colors and exact silhouette.
 
-Copy the left character's cranial contour directly from the supplied reference:
-a smooth rounded head flowing into a narrow neck, with exactly two very short,
-thick, blunt backward-facing cranial nubs. These nubs stay close to the skull and
-do not widen or raise its silhouette. Its head has no external ear structures.
-Treat the supplied silhouette as observed geometry, not as a species cue to
+Treat every supplied silhouette as observed geometry, not as a species cue to
 reinterpret. Never invent anatomy immediately outside any reference silhouette:
 no additional tails, limbs, leaves, flames, wings, hair, accessories, or duplicate
-body parts. The center and right characters likewise retain exactly the anatomy
-visible in the reference.
+body parts. Every character retains exactly the anatomy visible in its reference.
 
 The upper third must contain only uninterrupted pale blue sky, natural sunlight
 and a few soft clouds. It must be completely free of graphic symbols or title art;

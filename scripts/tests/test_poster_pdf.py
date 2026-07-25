@@ -41,6 +41,22 @@ def test_base1_poster_source_is_text_free_artwork():
         renderer.cleanup()
 
 
+def test_sv035_poster_source_is_text_free_artwork():
+    renderer = PosterPageRenderer.from_variant_data({"set_id": "SV03.5"}, "de")
+    assert renderer is not None
+    try:
+        assert renderer.artwork_path == (
+            ROOT
+            / "data"
+            / "poster_assets"
+            / "SV03.5"
+            / "poster-flux2-artwork.png"
+        )
+        assert renderer.insertion == "after_first_section_cover"
+    finally:
+        renderer.cleanup()
+
+
 def test_variant_generator_inserts_poster_only_after_first_section_cover():
     generator = VariantPDFGenerator.__new__(VariantPDFGenerator)
     generator.pokemon_list = []

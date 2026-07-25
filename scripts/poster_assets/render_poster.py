@@ -78,15 +78,22 @@ def load_cutout_items(scope_dir: Path) -> list[dict[str, Any]]:
 
 
 def cutout_placements(layout: PageLayout, scope_dir: Path) -> list[dict[str, Any]]:
+    cells = layout.bottom_row_cells()
+    items = load_cutout_items(scope_dir)
+    if len(items) != len(cells):
+        raise ValueError(
+            f"Layout '{layout.name}' needs {len(cells)} character cutouts, "
+            f"but {scope_dir / 'cutouts' / 'manifest.json'} contains {len(items)}"
+        )
     prepared: list[tuple[Any, dict[str, Any], Image.Image]] = []
-    for cell, item in zip(layout.bottom_row_cells(), load_cutout_items(scope_dir)):
+    for cell, item in zip(cells, items):
         cutout_path = scope_dir / "cutouts" / item["file"]
         cutout = Image.open(cutout_path).convert("RGBA")
         target = fit_image(cutout, round(cell.width * 0.84), round(cell.height * 0.68))
         prepared.append((cell, item, target))
 
     placements: list[dict[str, Any]] = []
-    baseline = layout.bottom_row_cells()[0].y + round(layout.bottom_row_cells()[0].height * 0.80)
+    baseline = cells[0].y + round(cells[0].height * 0.80)
     for cell, item, target in prepared:
         x = cell.x + (cell.width - target.width) // 2
         alpha_box = target.getchannel("A").getbbox()

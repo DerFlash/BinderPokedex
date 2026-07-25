@@ -1,0 +1,19 @@
+Complete the transparent parts of the supplied image as one cohesive portrait
+illustration. The existing Pokemon are finished source artwork at their exact
+required positions, sizes, poses, and shared ground level. Preserve them as the
+only three characters. Do not redraw, replace, move, duplicate, or extend their
+anatomy.
+
+Paint a nostalgic coastal Kanto meadow associated with the Pokemon TCG Scarlet &
+Violet - 151 set around them: continuous grassland, layered woodland, weathered
+stones, distant low hills, and a glimpse of a calm blue bay. Use gentle watercolor
+texture, clean cel-painted forms, and warm late-afternoon sunlight from the upper
+left. Make contact shadows, reflected light, nearby plants, and color grading
+connect naturally to the existing characters.
+
+Apply coherent camera-space depth. Environmental elements may cross a character
+contour only where genuinely closer to the camera. Keep faces, eyes, flames,
+shells, bulbs, and recognizable anatomy clear. Do not draw text, letters, numbers,
+logos, title art, boxes, plaques, panels, landing pads, circles, platforms, paths,
+roads, guides, cards, borders, UI, watermarks, people, trainers, or additional
+creatures.

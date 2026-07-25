@@ -3,15 +3,22 @@ from pathlib import Path
 from PIL import Image, ImageChops
 
 from scripts.poster_assets import fetch_cutouts
+from scripts.poster_assets.fetch_title_logos import resolve_logo_downloads
 from scripts.poster_assets.create_comfyui_poster_workflow import build_workflow
 from scripts.poster_assets.create_anima_poster_workflow import build_workflow as build_anima_workflow
-from scripts.poster_assets.finalize_comfyui_poster import finalize
+from scripts.poster_assets.finalize_comfyui_poster import (
+    finalize,
+    fitted_font,
+    info_panel_box,
+    title_logo_file,
+)
 from scripts.poster_assets.layout import build_page_layout
+from scripts.poster_assets.poster_config import build_identity_reference_prompt
 from scripts.poster_assets.prepare_comfyui_poster import (
     build_identity_references,
     card_safe_conditioning_placements,
 )
-from scripts.poster_assets.render_poster import cutout_placements
+from scripts.poster_assets.render_poster import cutout_placements, wrap_text
 from scripts.poster_assets.run_comfyui_poster import resize_artwork, validate_raw_artwork, write_engine_workflow
 from scripts.poster_assets.slice_poster import slice_poster
 
@@ -103,7 +110,8 @@ def test_cutout_placements_stay_inside_bottom_card_cells():
 def test_tall_conditioning_subjects_gain_card_safe_padding():
     scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
     placements = cutout_placements(build_page_layout("standard_3x3"), scope_dir)
-    conditioned = card_safe_conditioning_placements(placements)
+    manifest = fetch_cutouts.load_yaml(scope_dir / "poster.yaml")
+    conditioned = card_safe_conditioning_placements(placements, manifest)
 
     assert conditioned[0]["image"].height < placements[0]["image"].height
     assert conditioned[1]["image"].size == placements[1]["image"].size
@@ -118,9 +126,33 @@ def test_tall_conditioning_subjects_gain_card_safe_padding():
     )
 
 
+def test_sv035_uses_default_conditioning_without_base1_offsets():
+    scope_dir = (
+        Path(__file__).resolve().parents[2]
+        / "data"
+        / "poster_assets"
+        / "SV03.5"
+    )
+    placements = cutout_placements(
+        build_page_layout("standard_3x3"),
+        scope_dir,
+    )
+    manifest = fetch_cutouts.load_yaml(scope_dir / "poster.yaml")
+
+    conditioned = card_safe_conditioning_placements(placements, manifest)
+
+    assert [
+        (item["x"], item["y"], item["image"].size)
+        for item in conditioned
+    ] == [
+        (item["x"], item["y"], item["image"].size)
+        for item in placements
+    ]
+
+
 def test_identity_references_use_scale_aware_appearance_canvases():
     scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
-    manifest = {"layout": {"name": "standard_3x3"}}
+    manifest = fetch_cutouts.load_yaml(scope_dir / "poster.yaml")
 
     build_identity_references(scope_dir, manifest)
 
@@ -145,6 +177,106 @@ def test_identity_references_use_scale_aware_appearance_canvases():
     assert extents[0] < extents[1]
     assert extents[0] < extents[2]
     assert extents[2] == 350
+
+
+def test_identity_prompt_is_manifest_driven():
+    items = [
+        {"pokemon_id": 1, "name_en": "Alpha"},
+        {"pokemon_id": 2, "name_en": "Beta"},
+    ]
+    manifest = {
+        "conditioning": {
+            "subjects": {
+                2: {
+                    "prompt_notes": [
+                        "Keep the crescent marking unchanged.",
+                    ]
+                }
+            }
+        }
+    }
+
+    prompt = build_identity_reference_prompt(items, manifest)
+
+    assert "IMAGE 1" in prompt and "left region" in prompt
+    assert "IMAGE 2" in prompt and "right region" in prompt
+    assert "IMAGE 3 is the sole and final authority" in prompt
+    assert "Beta-specific constraints" in prompt
+    assert "crescent marking" in prompt
+    assert "Mewtwo" not in prompt
+
+
+def test_localized_title_logo_falls_back_to_english():
+    manifest = {
+        "title_logo": {
+            "files": {
+                "en": "logo-en.png",
+                "de": "logo-de.png",
+            }
+        }
+    }
+
+    assert title_logo_file(manifest, "de") == "logo-de.png"
+    assert title_logo_file(manifest, "fr") == "logo-en.png"
+
+
+def test_title_logo_downloads_use_scope_language_urls():
+    manifest = {
+        "title_logo": {
+            "files": {
+                "de": "logos/logo-de.png",
+                "en": "logos/logo-en.png",
+            }
+        }
+    }
+    scope_data = {
+        "logo_urls": {
+            "de": "https://example.test/de.png",
+            "en": "https://example.test/en.png",
+        }
+    }
+
+    assert resolve_logo_downloads(manifest, scope_data) == [
+        ("de", "logos/logo-de.png", "https://example.test/de.png"),
+        ("en", "logos/logo-en.png", "https://example.test/en.png"),
+    ]
+
+
+def test_info_panel_is_centered_and_height_limited():
+    cell = build_page_layout("standard_3x3", width_px=848).cell(2, 2)
+
+    box = info_panel_box(
+        cell,
+        {"max_width_ratio": 0.92, "max_height_ratio": 0.68},
+    )
+
+    assert abs((box[0] + box[2]) / 2 - cell.center[0]) <= 0.5
+    assert abs((box[1] + box[3]) / 2 - cell.center[1]) <= 0.5
+    assert box[3] - box[1] <= round(cell.height * 0.68)
+
+
+def test_info_panel_shrinks_long_set_names_to_their_row():
+    box = (0, 0, 180, 52)
+    text = "A Very Long Localized Trading Card Expansion Name"
+
+    font = fitted_font(
+        text,
+        box,
+        preferred_size=28,
+        minimum_size=10,
+        bold=True,
+    )
+    lines = wrap_text(text, font, box[2] - box[0])
+    line_heights = [
+        bounds[3] - bounds[1]
+        for bounds in (font.getbbox(line) for line in lines)
+    ]
+    total_height = sum(line_heights) + max(0, len(lines) - 1) * round(
+        font.size * 0.28
+    )
+
+    assert font.size < 28
+    assert total_height <= box[3] - box[1]
 
 
 def test_comfyui_inpaint_uses_source_once_without_reference_conditioning():
@@ -210,6 +342,32 @@ def test_comfyui_identity_mode_appends_three_scale_aware_identity_references():
     assert workflow["31"]["inputs"]["conditioning"] == ["28", 0]
     assert workflow["17"]["inputs"]["conditioning"] == ["31", 0]
     assert workflow["9"]["inputs"]["positive"] == ["17", 0]
+
+
+def test_sv035_workflow_uses_its_own_dynamic_cast_contract():
+    workflow = build_workflow(
+        "SV03.5",
+        seed=123,
+        megapixels=0.25,
+        generation_mode="edit",
+        reference_mode="identity",
+    )
+    prompt = workflow["4"]["inputs"]["text"]
+
+    assert "Bulbasaur" in prompt
+    assert "Charmander" in prompt
+    assert "Squirtle" in prompt
+    assert "Mewtwo" not in prompt
+    assert {
+        node["inputs"]["image"]
+        for node in workflow.values()
+        if node["class_type"] == "LoadImage"
+    } == {
+        "scene_reference.png",
+        "identity_reference_1.png",
+        "identity_reference_2.png",
+        "identity_reference_3.png",
+    }
 
 
 def test_anima_workflow_uses_cosmos_reference_without_changing_flux_workflow():

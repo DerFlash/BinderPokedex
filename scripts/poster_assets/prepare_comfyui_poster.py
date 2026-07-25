@@ -12,10 +12,12 @@ from PIL import Image, ImageDraw, ImageFilter
 try:
     from .create_comfyui_poster_workflow import output_dimensions
     from .layout import build_page_layout
+    from .poster_config import subject_conditioning
     from .render_poster import cutout_placements, load_yaml
 except ImportError:
     from create_comfyui_poster_workflow import output_dimensions
     from layout import build_page_layout
+    from poster_config import subject_conditioning
     from render_poster import cutout_placements, load_yaml
 
 
@@ -24,23 +26,33 @@ POSTER_ASSETS = ROOT / "data" / "poster_assets"
 
 
 def card_safe_conditioning_placements(
-    placements: list[dict[str, object]], tall_scale: float = 0.22
+    placements: list[dict[str, object]],
+    manifest: dict[str, Any],
 ) -> list[dict[str, object]]:
-    """Add model-compensation padding around tall subjects in the layout reference."""
+    """Apply explicit, per-subject composition-reference compensation."""
     result: list[dict[str, object]] = []
     for placement in placements:
+        config = subject_conditioning(
+            manifest, placement["item"]
+        ).get("composition", {})
+        if not isinstance(config, dict):
+            raise ValueError("Subject composition conditioning must be a mapping")
+        scale = float(config.get("scale", 1.0))
+        x_offset = float(config.get("x_offset_cell", 0.0))
+        baseline_offset = float(config.get("baseline_offset_cell", 0.0))
+        if scale <= 0:
+            raise ValueError("Subject composition scale must be positive")
+        if scale == 1.0 and x_offset == 0.0 and baseline_offset == 0.0:
+            result.append(placement)
+            continue
+
         image = placement["image"]
         alpha_box = image.getchannel("A").getbbox()
         if alpha_box is None:
             raise ValueError("Conditioning placement has no visible pixels")
-        alpha_width = alpha_box[2] - alpha_box[0]
-        alpha_height = alpha_box[3] - alpha_box[1]
-        if alpha_width / alpha_height >= 0.85:
-            result.append(placement)
-            continue
 
         resized = image.resize(
-            (round(image.width * tall_scale), round(image.height * tall_scale)),
+            (max(1, round(image.width * scale)), max(1, round(image.height * scale))),
             Image.Resampling.LANCZOS,
         )
         resized_box = resized.getchannel("A").getbbox()
@@ -54,10 +66,24 @@ def card_safe_conditioning_placements(
             x=(
                 cell.x
                 + (cell.width - resized.width) // 2
-                - round(cell.width * 0.28)
+                + round(cell.width * x_offset)
             ),
-            y=baseline - resized_box[3] + round(cell.height * 0.10),
+            y=baseline
+            - resized_box[3]
+            + round(cell.height * baseline_offset),
         )
+        adjusted_left = adjusted["x"] + resized_box[0]
+        adjusted_top = adjusted["y"] + resized_box[1]
+        adjusted_right = adjusted["x"] + resized_box[2]
+        adjusted_bottom = adjusted["y"] + resized_box[3]
+        if not (
+            cell.x <= adjusted_left < adjusted_right <= cell.x + cell.width
+            and cell.y <= adjusted_top < adjusted_bottom <= cell.y + cell.height
+        ):
+            raise ValueError(
+                f"Conditioning for Pokemon #{placement['item'].get('pokemon_id')} "
+                "moves its visible silhouette outside the assigned print-safe region"
+            )
         result.append(adjusted)
     return result
 
@@ -74,7 +100,7 @@ def build_identity_references(scope_dir: Path, manifest: dict[str, Any]) -> None
     placements = cutout_placements(
         build_page_layout(layout_name, width_px=width), scope_dir
     )
-    scene_placements = card_safe_conditioning_placements(placements)
+    scene_placements = card_safe_conditioning_placements(placements, manifest)
     scene_extents = []
     for placement in scene_placements:
         box = placement["image"].getchannel("A").getbbox()
@@ -82,7 +108,20 @@ def build_identity_references(scope_dir: Path, manifest: dict[str, Any]) -> None
             raise ValueError("Scene placement has no visible pixels")
         scene_extents.append(max(box[2] - box[0], box[3] - box[1]))
     largest_scene_extent = max(scene_extents)
-    neutral = (226, 224, 211)
+    conditioning = manifest.get("conditioning", {})
+    identity_defaults = conditioning.get("identity_defaults", {})
+    neutral_values = identity_defaults.get("neutral_rgb", [226, 224, 211])
+    if (
+        not isinstance(neutral_values, list)
+        or len(neutral_values) != 3
+        or not all(isinstance(value, int) and 0 <= value <= 255 for value in neutral_values)
+    ):
+        raise ValueError("conditioning.identity_defaults.neutral_rgb must contain 3 RGB integers")
+    neutral = tuple(neutral_values)
+    min_subject_px = int(identity_defaults.get("min_subject_px", 150))
+    max_subject_px = int(identity_defaults.get("max_subject_px", 350))
+    default_canvas_px = int(identity_defaults.get("canvas_px", 512))
+    default_bottom_padding_px = int(identity_defaults.get("bottom_padding_px", 24))
     reference_path = scope_dir / "comfyui_poster" / "identity_reference_1.png"
     for index, (placement, scene_extent) in enumerate(
         zip(placements, scene_extents), start=1
@@ -95,22 +134,44 @@ def build_identity_references(scope_dir: Path, manifest: dict[str, Any]) -> None
             raise ValueError("Identity reference has no visible pixels")
         original = original.crop(original_box)
         reference_extent = max(
-            150, round(350 * scene_extent / largest_scene_extent)
+            min_subject_px,
+            round(max_subject_px * scene_extent / largest_scene_extent),
         )
         original.thumbnail(
             (reference_extent, reference_extent), Image.Resampling.LANCZOS
         )
-        is_tall = original.width / original.height < 0.85
-        canvas_extent = 768 if is_tall else 512
+        identity_config = subject_conditioning(
+            manifest, placement["item"]
+        ).get("identity", {})
+        if not isinstance(identity_config, dict):
+            raise ValueError("Subject identity conditioning must be a mapping")
+        canvas_extent = int(
+            identity_config.get("canvas_px", default_canvas_px)
+        )
+        bottom_padding = int(
+            identity_config.get(
+                "bottom_padding_px", default_bottom_padding_px
+            )
+        )
         reference = Image.new(
             "RGB", (canvas_extent, canvas_extent), neutral
         )
-        x = (
-            24
-            if is_tall
-            else (reference.width - original.width) // 2
-        )
-        y = reference.height - original.height - 24
+        align_x = identity_config.get("align_x", "center")
+        x_padding = int(identity_config.get("x_padding_px", 24))
+        if align_x == "left":
+            x = x_padding
+        elif align_x == "right":
+            x = reference.width - original.width - x_padding
+        elif align_x == "center":
+            x = (reference.width - original.width) // 2
+        else:
+            raise ValueError("identity.align_x must be left, center, or right")
+        y = reference.height - original.height - bottom_padding
+        if x < 0 or y < 0 or x + original.width > canvas_extent:
+            raise ValueError(
+                f"Identity canvas is too small for Pokemon "
+                f"#{placement['item'].get('pokemon_id')}"
+            )
         reference.paste(
             original.convert("RGB"),
             (x, y),
@@ -130,16 +191,10 @@ def build_scene_reference(scope: str, megapixels: float) -> Path:
     width, height = output_dimensions(scope, megapixels)
     layout = build_page_layout(manifest.get("layout", {}).get("name", "standard_3x3"), width_px=width)
     reference = Image.new("RGBA", (width, height), (226, 224, 211, 0))
-    identity_alpha = Image.new("L", (width, height), 0)
     placements = cutout_placements(layout, scope_dir)
-    scene_placements = card_safe_conditioning_placements(placements)
+    scene_placements = card_safe_conditioning_placements(placements, manifest)
     for placement in scene_placements:
         reference.alpha_composite(placement["image"], (placement["x"], placement["y"]))
-        identity_alpha.paste(
-            placement["image"].getchannel("A"),
-            (placement["x"], placement["y"]),
-            placement["image"].getchannel("A"),
-        )
     # Latent dimensions are rounded to multiples of 16; match them exactly.
     if reference.height != height:
         reference = reference.crop((0, 0, width, min(reference.height, height)))
@@ -154,6 +209,7 @@ def build_scene_reference(scope: str, megapixels: float) -> Path:
     # Give it only an abstract sky/meadow material scaffold—not prior artwork or
     # layout geometry—so the transparent area is interpreted as landscape.
     anima_reference = Image.new("RGBA", (width, height), (184, 220, 235, 255))
+    anima_identity_alpha = Image.new("L", (width, height), 0)
     anima_draw = ImageDraw.Draw(anima_reference)
     # Abstract depth/material bands only. These are deliberately not finished
     # scenery and contain no semantic objects for the edit model to copy.
@@ -181,13 +237,18 @@ def build_scene_reference(scope: str, megapixels: float) -> Path:
         anima_reference.alpha_composite(
             placement["image"], (placement["x"], placement["y"])
         )
+        anima_identity_alpha.paste(
+            placement["image"].getchannel("A"),
+            (placement["x"], placement["y"]),
+            placement["image"].getchannel("A"),
+        )
     anima_reference.save(
         path.with_name("anima_scene_reference.png"), format="PNG", optimize=True
     )
     # Preserve the recognizable interior exactly while leaving a narrow contour
     # available to the model for coherent occlusion, lighting, and ground contact.
     erosion = max(3, round(width / 220) | 1)
-    identity_core = identity_alpha.filter(ImageFilter.MinFilter(erosion))
+    identity_core = anima_identity_alpha.filter(ImageFilter.MinFilter(erosion))
     identity_core.convert("RGB").save(
         path.with_name("identity_core.png"), format="PNG", optimize=True
     )

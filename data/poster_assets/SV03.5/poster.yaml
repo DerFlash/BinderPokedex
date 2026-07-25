@@ -1,0 +1,57 @@
+scope: SV03.5
+
+layout:
+  name: standard_3x3
+
+text_cells:
+  title:
+    row: 1
+    column: 2
+  set_info:
+    row: 2
+    column: 2
+    max_width_ratio: 0.92
+    max_height_ratio: 0.68
+
+title_logo:
+  files:
+    de: logos/logo-de.png
+    en: logos/logo-en.png
+    fr: logos/logo-fr.png
+    es: logos/logo-es.png
+    it: logos/logo-it.png
+
+pdf:
+  enabled: true
+  artwork_file: poster-flux2-artwork.png
+  insertion: after_first_section_cover
+
+artwork:
+  promoted_file: poster-flux2-artwork.png
+  preview_file: poster-flux2.png
+  engine: flux
+  model: flux-2-klein-4b-fp8.safetensors
+  mode: edit
+  reference_mode: identity
+  seed: 260726101
+  generation_megapixels: 0.5
+  output_megapixels: 1.0
+  steps: 4
+
+pokemon:
+  strategy: featured_from_scope
+  count: auto_from_layout_columns
+  row: bottom
+  cutout_source: pokeapi_official_artwork
+  fallback_candidates:
+    - pokemon_id: 1
+    - pokemon_id: 4
+    - pokemon_id: 7
+
+conditioning:
+  identity_defaults:
+    neutral_rgb: [226, 224, 211]
+    canvas_px: 512
+    min_subject_px: 150
+    max_subject_px: 350
+    bottom_padding_px: 24

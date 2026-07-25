@@ -4,8 +4,14 @@ Poster artwork is a reviewed, scope-specific asset. It is generated separately
 from the normal data pipeline so PDF generation can eventually consume a stable
 PNG without downloading or generating images during a build.
 
-The current pilot is `Base1` with a `3x3` layout and three featured Pokemon:
-Mewtwo, Bulbasaur, and Charmander.
+The promoted scopes currently are:
+
+- `Base1`: Mewtwo, Bulbasaur, and Charmander in a late-1990s research meadow.
+- `SV03.5`: Bulbasaur, Charmander, and Squirtle in a Kanto coastal meadow for
+  Scarlet & Violet - 151.
+
+Both use the same `3x3` physical-card layout and the same generator code. Any
+subject-specific compensation lives in the scope manifest.
 
 ## Files
 
@@ -14,7 +20,15 @@ Each scope stores its poster inputs and output below
 
 ```text
 poster.yaml
-poster.png
+poster-flux2-artwork.png
+poster-flux2.png
+poster-flux2-cards/
+logos/
+  logo-<language>.png
+comfyui_poster/
+  prompt.txt
+  inpaint_prompt.txt
+  anima_prompt.txt
 background/
   background.png
   composition_guide.png
@@ -29,9 +43,10 @@ Only reviewed source assets and the final render belong in this directory.
 Generator previews, masks, model workflows, and other iteration artifacts are
 local scratch data and must not be committed.
 
-The optional local ComfyUI flow keeps its prompt in
-`comfyui_poster/prompt.txt`. Its generated scene reference, API workflow,
-temporary files, raw artwork, and final previews are ignored.
+The local ComfyUI flow keeps its reviewed prompts in `comfyui_poster/`. Generated
+scene references, identity references, API workflows, temporary files, raw
+artwork, and iteration previews are ignored. A candidate enters source control
+only through the explicit promotion step.
 
 ## Layout rules
 
@@ -40,6 +55,9 @@ temporary files, raw artwork, and final previews are ignored.
 - The Pokemon count follows the number of layout columns.
 - Pokemon occupy the bottom row, one per column.
 - Title and set information stay inside the cells configured in `poster.yaml`.
+- The information panel is centered in its cell and capped by
+  `max_height_ratio`; longer localized names wrap and shrink inside their
+  assigned row instead of growing the panel toward another card.
 - Pokemon silhouettes stay inside their card cells; the continuous background
   may cross cut lines.
 - Missing layout-required Pokemon or source assets are hard errors.
@@ -64,6 +82,15 @@ The fetcher selects `featured_elements` from `data/output/<scope>.json`, then
 uses the explicit fallback list in `poster.yaml` if the layout needs more
 Pokemon. Existing reviewed cutouts are not overwritten unless `--force` is
 passed.
+
+Fetch every localized title logo configured in `poster.yaml`:
+
+```bash
+venv/bin/python scripts/poster_assets/fetch_title_logos.py --scope SV03.5
+```
+
+The fetcher resolves the language URLs from `data/output/<scope>.json`, writes
+stable local RGBA PNGs, and never leaves PDF generation dependent on the network.
 
 Prepare the configured background prompt and target paths:
 
@@ -118,6 +145,13 @@ Start the local Metal-enabled ComfyUI server:
 scripts/poster_assets/start_comfyui_poster.sh
 ```
 
+The server is scope-specific because ComfyUI resolves `LoadImage` nodes relative
+to its configured input directory. Pass the same scope that will be generated:
+
+```bash
+scripts/poster_assets/start_comfyui_poster.sh --scope SV03.5
+```
+
 In another terminal, run preparation, workflow creation, generation, and final
 text compositing with one command:
 
@@ -161,15 +195,41 @@ but tends to retain abstract source geometry too literally. The empty-target
 `generate` path is implemented for the next experiment but has not yet been
 promoted or rendered at production resolution.
 
-Preparation creates one clean scene reference from the three reviewed cutouts at
-their exact intended positions, sizes, and shared ground level. It also creates
-three compact neutral-canvas appearance references. Position comes only from the
-combined scene image; the individual images preserve anatomy while their padding
-reinforces the intended relative scale. Mewtwo uses a 150 px source on a 768 px
-canvas with a left-biased inset, while the two compact subjects use 512 px
-canvases. This leaves enough anatomy detail to prevent head drift without turning
-the tall subject into a portrait-scale hero. None of these references contains a
-layout grid, landing pads, paths, text boxes, or previous generated artwork.
+Preparation creates one clean scene reference from every reviewed cutout at its
+exact intended position, size, and shared ground level. It also creates one compact
+neutral-canvas identity reference per subject. The workflow derives their count,
+order, English names, and invisible left-to-right print regions from the cutout
+manifest; no Pokemon name or fixed three-image chain remains in Python code.
+Position comes only from the combined scene image. Individual references preserve
+anatomy while their padding reinforces relative scale. None of these references
+contains a layout grid, landing pads, paths, text boxes, or previous generated
+artwork.
+
+Rare model-specific compensation is explicit and reviewable in `poster.yaml`.
+For example, Base1 makes Mewtwo smaller and left-biased in the conditioning image,
+while all SV03.5 subjects use the defaults:
+
+```yaml
+conditioning:
+  identity_defaults:
+    canvas_px: 512
+    min_subject_px: 150
+    max_subject_px: 350
+  subjects:
+    150:
+      composition:
+        scale: 0.22
+        x_offset_cell: -0.28
+        baseline_offset_cell: 0.10
+      identity:
+        canvas_px: 768
+        align_x: left
+      prompt_notes:
+        - Preserve the reviewed head contour and complete silhouette.
+```
+
+This replaces the former aspect-ratio heuristic that treated every tall subject
+like Mewtwo.
 The two FLUX modes deliberately use mutually exclusive conditioning topologies.
 `inpaint` keeps the Pokemon as the unmasked source of `VAEEncodeForInpaint` and
 does not add a `ReferenceLatent`. `edit` uses an independent empty target latent
@@ -206,13 +266,18 @@ Generating at 0.5 MP also gives the model enough spatial precision to keep the
 wide pose inside that region. These experiments show that additional diffusion
 steps alone do not solve reference-identity hallucinations.
 
-The promoted local candidate is `poster-flux2.png`, generated with seed
+The promoted Base1 candidate is `poster-flux2.png`, generated with seed
 `260716311`, distilled FLUX.2 Klein 4B, four steps, `edit` mode, and `identity`
 reference mode. The cohesive scene was sampled at 0.5 MP and resized as a whole
 to 1 MP before the deterministic overlay. Identity mode supplies three
 compact appearance references followed by the combined scene composition. The
 prompt labels those roles explicitly so anatomy and invisible print-safe geometry
 reinforce each other rather than competing.
+
+The promoted SV03.5 candidate uses the same model and topology with seed
+`260726101`. It was sampled at 0.5 MP, resized as one complete text-free scene to
+1 MP, and visually checked both as a whole and as the three separate bottom-card
+crops. No Base1 conditioning override is applied.
 
 FLUX.2 Klein 9B FP8 with the 8B FP4-mixed encoder was also validated technically
 on MPS after adding CPU-side NVFP4 dequantization. On a 16 GB M4, however, prompt
@@ -225,6 +290,17 @@ The finalizer never adds or alters Pokemon. It only draws the set logo, localize
 set name, card count, release date, project signature, and deterministic panel
 design. Exact spelling and typography therefore remain independent from the image
 model without breaking the integrity of the generated scene.
+
+After review, promote the exact text-free 1 MP candidate. This copies the stable
+artwork, rebuilds one deterministic localized preview, and exports all physical
+card crops:
+
+```bash
+venv/bin/python scripts/poster_assets/promote_comfyui_poster.py \
+  --scope SV03.5 \
+  --artwork data/poster_assets/SV03.5/comfyui_poster/temp/<candidate>_to_1mp.png \
+  --language de
+```
 
 Every finalized poster is then exported into one PNG per physical card cell. The
 card crops use the same `PageLayout` geometry that prepared the references and
@@ -254,6 +330,7 @@ first section cover.
 
 ## Current boundary
 
-The standalone Base1 poster asset, deterministic card-slice export, and localized
-PDF page integration are implemented. Additional scopes opt in through their own
-`poster.yaml` after a text-free artwork has passed the same visual review.
+Base1 and SV03.5 now both have promoted text-free artwork, deterministic localized
+overlays, card-slice exports, and complete PDF integration. Additional scopes opt
+in through their own `poster.yaml` only after a text-free artwork passes the same
+whole-poster, per-card, and rendered-PDF review.

@@ -10,10 +10,28 @@ from PIL import Image, ImageDraw, ImageFilter
 
 try:
     from .layout import build_page_layout
-    from .render_poster import OUTPUT_DIR, composite_panel, draw_text_centered, load_font, load_json, load_yaml, scope_title
+    from .render_poster import (
+        OUTPUT_DIR,
+        composite_panel,
+        draw_text_centered,
+        load_font,
+        load_json,
+        load_yaml,
+        scope_title,
+        wrap_text,
+    )
 except ImportError:
     from layout import build_page_layout
-    from render_poster import OUTPUT_DIR, composite_panel, draw_text_centered, load_font, load_json, load_yaml, scope_title
+    from render_poster import (
+        OUTPUT_DIR,
+        composite_panel,
+        draw_text_centered,
+        load_font,
+        load_json,
+        load_yaml,
+        scope_title,
+        wrap_text,
+    )
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -54,6 +72,18 @@ def draw_title_logo(canvas: Image.Image, cell, logo_path: Path) -> None:
     canvas.alpha_composite(logo, (x, y))
 
 
+def title_logo_file(manifest: dict, language: str) -> str | None:
+    """Resolve a localized title logo with an English/default fallback."""
+    config = manifest.get("title_logo", {})
+    files = config.get("files")
+    if isinstance(files, dict):
+        return files.get(language) or files.get("en") or next(
+            (value for value in files.values() if value),
+            None,
+        )
+    return config.get("file")
+
+
 def localized_set_name(scope_data: dict, language: str) -> str:
     for section in scope_data.get("sections", {}).values():
         title = section.get("title")
@@ -78,14 +108,63 @@ def localized_date(value: str, language: str) -> str:
     return f"{parsed.day}. {month} {parsed.year}" if language == "de" else f"{parsed.day} {month} {parsed.year}"
 
 
-def draw_info_panel(canvas: Image.Image, cell, scope_data: dict, language: str) -> None:
-    pad_x = round(cell.width * 0.04)
-    box = (
-        cell.x + pad_x,
-        cell.y + round(cell.height * 0.18),
-        cell.x + cell.width - pad_x,
-        cell.y + cell.height - round(cell.height * 0.04),
-    )
+def info_panel_box(cell, config: dict | None = None) -> tuple[int, int, int, int]:
+    """Return a centered panel constrained to configurable maximum dimensions."""
+    config = config or {}
+    max_width_ratio = float(config.get("max_width_ratio", 0.92))
+    max_height_ratio = float(config.get("max_height_ratio", 0.68))
+    if not 0.4 <= max_width_ratio <= 1.0:
+        raise ValueError("set_info.max_width_ratio must be between 0.4 and 1.0")
+    if not 0.4 <= max_height_ratio <= 0.9:
+        raise ValueError("set_info.max_height_ratio must be between 0.4 and 0.9")
+
+    width = round(cell.width * max_width_ratio)
+    height = round(cell.height * max_height_ratio)
+    center_x, center_y = cell.center
+    left = center_x - width // 2
+    top = center_y - height // 2
+    return left, top, left + width, top + height
+
+
+def fitted_font(
+    text: str,
+    box: tuple[int, int, int, int],
+    *,
+    preferred_size: int,
+    minimum_size: int,
+    bold: bool,
+):
+    """Choose the largest font whose wrapped text stays inside ``box``."""
+    max_width = box[2] - box[0]
+    max_height = box[3] - box[1]
+    for size in range(preferred_size, minimum_size - 1, -1):
+        font = load_font(size, bold=bold)
+        lines = wrap_text(text, font, max_width)
+        line_heights = [
+            bounds[3] - bounds[1]
+            for bounds in (font.getbbox(line) for line in lines)
+        ]
+        line_widths = [
+            bounds[2] - bounds[0]
+            for bounds in (font.getbbox(line) for line in lines)
+        ]
+        spacing = max(0, len(lines) - 1) * round(size * 0.28)
+        if (
+            max(line_widths, default=0) <= max_width
+            and sum(line_heights) + spacing <= max_height
+        ):
+            return font
+    raise ValueError(f"Text does not fit its bounded info-panel row: {text!r}")
+
+
+def draw_info_panel(
+    canvas: Image.Image,
+    cell,
+    scope_data: dict,
+    language: str,
+    config: dict | None = None,
+) -> None:
+    box = info_panel_box(cell, config)
     scale = canvas.width / 1400
     overlay = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
     draw = ImageDraw.Draw(overlay, "RGBA")
@@ -106,13 +185,27 @@ def draw_info_panel(canvas: Image.Image, cell, scope_data: dict, language: str) 
     text_draw = ImageDraw.Draw(canvas, "RGBA")
     height = box[3] - box[1]
     rows = (
-        (name, (box[0] + 5, box[1] + round(height * 0.06), box[2] - 5, box[1] + round(height * 0.34)), max(11, cell.height // 13), True, (255, 244, 190, 255)),
-        (count, (box[0] + 5, box[1] + round(height * 0.34), box[2] - 5, box[1] + round(height * 0.57)), max(9, cell.height // 18), True, (232, 213, 151, 255)),
-        (release_label, (box[0] + 5, box[1] + round(height * 0.57), box[2] - 5, box[1] + round(height * 0.76)), max(8, cell.height // 24), False, (185, 210, 190, 255)),
-        (release_date, (box[0] + 5, box[1] + round(height * 0.75), box[2] - 5, box[3] - 4), max(8, cell.height // 21), False, (244, 238, 207, 255)),
+        (name, (box[0] + 5, box[1] + round(height * 0.05), box[2] - 5, box[1] + round(height * 0.34)), max(11, cell.height // 13), max(9, cell.height // 20), True, (255, 244, 190, 255)),
+        (count, (box[0] + 5, box[1] + round(height * 0.34), box[2] - 5, box[1] + round(height * 0.57)), max(9, cell.height // 18), max(8, cell.height // 24), True, (232, 213, 151, 255)),
+        (release_label, (box[0] + 5, box[1] + round(height * 0.57), box[2] - 5, box[1] + round(height * 0.76)), max(8, cell.height // 24), max(7, cell.height // 28), False, (185, 210, 190, 255)),
+        (release_date, (box[0] + 5, box[1] + round(height * 0.75), box[2] - 5, box[3] - 4), max(8, cell.height // 21), max(7, cell.height // 27), False, (244, 238, 207, 255)),
     )
-    for text, text_box, size, bold, color in rows:
-        draw_text_centered(text_draw, text, text_box, load_font(size, bold=bold), color, shadow_fill=None)
+    for text, text_box, preferred_size, minimum_size, bold, color in rows:
+        font = fitted_font(
+            text,
+            text_box,
+            preferred_size=preferred_size,
+            minimum_size=minimum_size,
+            bold=bold,
+        )
+        draw_text_centered(
+            text_draw,
+            text,
+            text_box,
+            font,
+            color,
+            shadow_fill=None,
+        )
 
 
 def draw_project_signature(canvas: Image.Image) -> None:
@@ -134,7 +227,7 @@ def draw_final_text_cells(canvas, layout, manifest, scope_data, scope_dir: Path,
     info_cfg = text_cells.get("set_info", {"row": 2, "column": 2})
     title_cell = layout.cell(int(title_cfg["row"]), int(title_cfg["column"]))
     info_cell = layout.cell(int(info_cfg["row"]), int(info_cfg["column"]))
-    logo_file = manifest.get("title_logo", {}).get("file")
+    logo_file = title_logo_file(manifest, language)
     if logo_file:
         logo_path = scope_dir / logo_file
         if not logo_path.is_file():
@@ -145,7 +238,7 @@ def draw_final_text_cells(canvas, layout, manifest, scope_data, scope_dir: Path,
         composite_panel(canvas, title_box, fill=(253, 244, 202, 238), outline=(44, 84, 52, 245), radius=max(8, round(24 * canvas.width / 1400)))
         draw = ImageDraw.Draw(canvas, "RGBA")
         draw_text_centered(draw, scope_title(scope_data), title_box, load_font(max(14, title_cell.height // 8), bold=True), (35, 65, 42, 255), shadow_fill=None)
-    draw_info_panel(canvas, info_cell, scope_data, language)
+    draw_info_panel(canvas, info_cell, scope_data, language, info_cfg)
     draw_project_signature(canvas)
 
 
