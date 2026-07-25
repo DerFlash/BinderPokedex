@@ -63,6 +63,7 @@ from lib.variant_pdf_generator import VariantPDFGenerator
 from lib.cli_formatter import CLIFormatter
 from lib.cli_validator import GenerationValidator, LanguageValidator, VariantValidator, DirectoryValidator
 from lib.constants import LANGUAGES
+from lib.generation_options import prepare_variant_data
 
 # Configure logging - suppress INFO during generation for clean output
 logging.basicConfig(
@@ -89,61 +90,6 @@ def get_all_scopes(data_dir: Path) -> list:
     scopes = [f.stem for f in json_files]
     
     return scopes
-
-
-def get_pokemon_name_for_language(pokemon: dict, language: str) -> str:
-    """
-    Get the Pokémon name for the specified language.
-    
-    Args:
-        pokemon: Pokémon data dictionary (must have 'name' as multilingual object)
-        language: Language code (de, en, ja, etc.)
-    
-    Returns:
-        Pokémon name in the specified language
-    """
-    return pokemon['name'].get(language, pokemon['name'].get('en', 'Unknown'))
-
-
-def prepare_pokemon_data(pokemon_list: list, language: str, skip_images: bool = False) -> list:
-    """
-    Prepare Pokémon data for PDF generation.
-    
-    Args:
-        pokemon_list: Raw Pokémon data from JSON (must have unified name object structure)
-        language: Target language code
-        skip_images: If True, don't include image_url in prepared data
-    
-    Returns:
-        List of prepared Pokémon dictionaries for rendering
-    """
-    prepared = []
-    
-    for pokemon in pokemon_list:
-        # Get types from unified types[] array or fall back to type1/type2
-        pokemon_types = pokemon.get('types', [])
-        if not pokemon_types:
-            # Fallback for old format
-            pokemon_types = [pokemon.get('type1', 'Normal')]
-            if pokemon.get('type2'):
-                pokemon_types.append(pokemon['type2'])
-        
-        prepared_pokemon = {
-            'id': pokemon.get('pokemon_id', pokemon.get('id')),  # Numeric ID for image cache lookup
-            'num': pokemon.get('num', '#???'),
-            'name': get_pokemon_name_for_language(pokemon, language),
-            'name_en': pokemon['name']['en'],  # English name for subtitle
-            'types': pokemon_types,
-            'generation': pokemon.get('generation', 1),
-        }
-        
-        # Only include image_url if images are enabled
-        if not skip_images:
-            prepared_pokemon['image_url'] = pokemon.get('image_url')
-        
-        prepared.append(prepared_pokemon)
-    
-    return prepared
 
 
 def list_available_templates(project_dir: Path):
@@ -264,14 +210,14 @@ Examples:
         "--skip-images",
         action="store_true",
         default=False,
-        help="Skip image processing (faster for testing)"
+        help="Skip remote card images while retaining local logos and poster artwork"
     )
     
     parser.add_argument(
         "--test",
         action="store_true",
         default=False,
-        help="Test mode: only use 9 Pokémon for faster generation"
+        help="Test mode: render only the first 9 cards across all sections"
     )
     
     parser.add_argument(
@@ -577,7 +523,7 @@ def generate_scope_pdf(scope_name: str, scope_file: Path, languages: list,
                 
             except Exception as e:
                 logger.error(f"❌ Failed to generate {scope_name} for {language}: {e}")
-                if args.verbose:
+                if logger.isEnabledFor(logging.INFO):
                     import traceback
                     traceback.print_exc()
                 total_failed += 1
@@ -714,15 +660,21 @@ def _generate_variant_pdf(variant_data, language, output_dir, script_dir, skip_i
     # Generate output filename
     output_file = output_dir / f"{filename_base}_{language.upper()}.pdf"
     
+    prepared_variant_data = prepare_variant_data(
+        variant_data,
+        skip_images=skip_images,
+        test_mode=test_mode,
+    )
+
     # Initialize image cache for loading Pokémon images
     image_cache = ImageCache()
     
     # Extract type_translations if present in data
-    type_translations = variant_data.get('type_translations')
+    type_translations = prepared_variant_data.get('type_translations')
     
     # Create and generate PDF
     pdf_gen = VariantPDFGenerator(
-        variant_data=variant_data,
+        variant_data=prepared_variant_data,
         language=language,
         output_file=output_file,
         image_cache=image_cache,

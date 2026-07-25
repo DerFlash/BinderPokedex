@@ -72,6 +72,12 @@ class VariantPDFGenerator:
             for section_id in sorted(sections_dict.keys(), key=lambda k: sections_dict[k].get('section_order', 999)):
                 section = sections_dict[section_id]
                 self.pokemon_list.extend(section.get('cards', []))
+        elif isinstance(sections_dict, list) and sections_dict:
+            for section in sorted(
+                sections_dict,
+                key=lambda item: item.get('section_order', 999),
+            ):
+                self.pokemon_list.extend(section.get('cards', []))
         else:
             # Old/flat structure: pokemon at top level (e.g., variants_mega.json)
             self.pokemon_list = variant_data.get('pokemon', [])
@@ -100,50 +106,8 @@ class VariantPDFGenerator:
             
             c = canvas.Canvas(str(self.output_file), pagesize=(PAGE_WIDTH, PAGE_HEIGHT))
             
-            # Get sections - new hierarchical structure
-            sections_dict = self.variant_data.get('sections', {})
-            
-            if not sections_dict:
-                # Fallback: create default section with all pokemon
-                # Use variant_name as section name (for flat structures like mega_evolution)
-                default_name = self.variant_data.get('variant_name', 'Collection')
-                sections_dict = {
-                    'default': {
-                        'section_id': 'default',
-                        'section_order': 1,
-                        'name': {
-                            'en': default_name,
-                            'de': default_name,
-                            'fr': default_name,
-                            'es': default_name,
-                            'it': default_name,
-                            'ja': default_name,
-                            'ko': default_name,
-                            'zh_hans': default_name,
-                            'zh_hant': default_name
-                        },
-                        'subtitle': {
-                            'en': '',
-                            'de': '',
-                            'fr': '',
-                            'es': '',
-                            'it': '',
-                            'ja': '',
-                            'ko': '',
-                            'zh_hans': '',
-                            'zh_hant': ''
-                        },
-                        'color_hex': self.variant_data.get('color_hex', '#999999'),
-                        'pokemon': self.pokemon_list
-                    }
-                }
-            
-            # Convert dict to list and sort by order
-            sections_list = list(sections_dict.values()) if isinstance(sections_dict, dict) else sections_dict
-            sections_list = sorted(sections_list, key=lambda s: s.get('section_order', 999))
-            
             # Render all sections
-            self._generate_with_sections(c, sections_list, status)
+            self._generate_with_sections(c, self._sections_for_rendering(), status)
             
             c.save()
             
@@ -162,6 +126,43 @@ class VariantPDFGenerator:
         finally:
             if self.poster_page_renderer is not None:
                 self.poster_page_renderer.cleanup()
+
+    def _sections_for_rendering(self) -> list[dict]:
+        """Normalize hierarchical and legacy flat data to renderable sections."""
+        sections = self.variant_data.get('sections', {})
+        if sections:
+            sections_list = (
+                list(sections.values())
+                if isinstance(sections, dict)
+                else list(sections)
+            )
+            return sorted(
+                sections_list,
+                key=lambda section: section.get('section_order', 999),
+            )
+
+        default_title = (
+            self.variant_data.get('title')
+            or self.variant_data.get('variant_display_name')
+            or self.variant_data.get('variant_name')
+            or self.variant_data.get('name')
+            or 'Collection'
+        )
+        return [
+            {
+                'section_id': 'default',
+                'section_order': 1,
+                'title': default_title,
+                'subtitle': self.variant_data.get('subtitle', ''),
+                'description': self.variant_data.get('description', {}),
+                'color_hex': self.variant_data.get('color_hex', '#999999'),
+                'featured_elements': self.variant_data.get(
+                    'featured_elements',
+                    self.variant_data.get('featured_cards', []),
+                ),
+                'cards': self.pokemon_list,
+            }
+        ]
     
     def _generate_with_sections(self, c, sections: list, status: PDFStatus = None):
         """
