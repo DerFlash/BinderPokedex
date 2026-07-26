@@ -16,17 +16,28 @@ try:
     from .fetch_title_logos import fetch_title_logos
     from .layout import DEFAULT_LAYOUT_NAME, LAYOUTS, resolve_layout_name
     from .poster_io import POSTER_ASSETS, SCOPE_DATA, load_json, load_yaml
-    from .scene_catalog import scene_for_scope
+    from .scene_catalog import scene_for_scope, section_scenes_for_scope
 except ImportError:
     from fetch_cutouts import fetch_cutouts
     from fetch_title_logos import fetch_title_logos
     from layout import DEFAULT_LAYOUT_NAME, LAYOUTS, resolve_layout_name
     from poster_io import POSTER_ASSETS, SCOPE_DATA, load_json, load_yaml
-    from scene_catalog import scene_for_scope
+    from scene_catalog import scene_for_scope, section_scenes_for_scope
 
 
 SUPPORTED_LANGUAGES = ("de", "en", "fr", "es", "it")
 FALLBACK_POKEMON = (25, 1, 4, 7, 133, 6)
+SAFE_IDENTIFIER = re.compile(r"[A-Za-z0-9._-]+")
+
+
+def _validate_identifier(value: object, label: str) -> str:
+    if (
+        not isinstance(value, str)
+        or value in {".", ".."}
+        or not SAFE_IDENTIFIER.fullmatch(value)
+    ):
+        raise ValueError(f"Unsafe {label}: {value!r}")
+    return value
 
 
 def stable_scope_seed(scope: str) -> int:
@@ -146,6 +157,257 @@ def build_default_manifest(
     return manifest
 
 
+def build_section_manifest(
+    asset_key: str,
+    scope: str,
+    section_id: str,
+    section_data: dict[str, Any],
+    layout_name: str,
+    generation_template: dict[str, Any],
+    scene: dict[str, Any],
+) -> dict[str, Any]:
+    """Build one isolated aggregate-section bundle using the shared contract."""
+    layout = resolve_layout_name(layout_name)
+    if not isinstance(generation_template, dict) or not generation_template:
+        raise ValueError("A reviewed artwork.generation template is required")
+    for field in ("title", "subtitle", "description"):
+        localized = section_data.get(field)
+        missing = [
+            language
+            for language in (
+                "de",
+                "en",
+                "fr",
+                "es",
+                "it",
+                "ja",
+                "ko",
+                "zh_hans",
+                "zh_hant",
+            )
+            if not isinstance(localized, dict) or not localized.get(language)
+        ]
+        if missing:
+            raise ValueError(
+                f"{scope}/{section_id} lacks {field} translations for "
+                f"{', '.join(missing)}"
+            )
+    featured = section_data.get("featured_elements")
+    expected_subjects = int(layout["columns"])
+    if not isinstance(featured, list) or len(featured) != expected_subjects:
+        raise ValueError(
+            f"{scope}/{section_id} needs exactly {expected_subjects} "
+            "featured_elements"
+        )
+    featured_ids = [item.get("pokemon_id") for item in featured]
+    if (
+        any(not isinstance(pokemon_id, int) for pokemon_id in featured_ids)
+        or len(set(featured_ids)) != expected_subjects
+    ):
+        raise ValueError(
+            f"{scope}/{section_id} featured_elements need unique Pokemon IDs"
+        )
+
+    generation = copy.deepcopy(generation_template)
+    generation.update(
+        {
+            "mode": "identity_lock",
+            "reference_mode": "two_pass_source_pixels",
+            "seed": stable_scope_seed(asset_key),
+            "steps": 4,
+            "generation_megapixels": 1.0,
+            "output_dpi": 300,
+            "output_method": "model_upscale",
+        }
+    )
+    center_column = max(1, (int(layout["columns"]) + 1) // 2)
+    return {
+        "schema_version": 2,
+        "asset_key": asset_key,
+        "scope": scope,
+        "poster_id": section_id,
+        "source": {
+            "scope": scope,
+            "section_id": section_id,
+        },
+        "layout": {"name": layout_name},
+        "text_cells": {
+            "title": {"row": 1, "column": center_column},
+            "set_info": {
+                "row": min(2, int(layout["rows"])),
+                "column": center_column,
+                "max_width_ratio": 0.92,
+                "max_height_ratio": 0.68,
+            },
+        },
+        "title_text": "Pokédex" if scope == "Pokedex" else scope,
+        "text_content": {"mode": "section_summary"},
+        "artwork": {
+            "promoted_file": "poster-flux2-artwork.png",
+            "preview_file": "poster-flux2.png",
+            "provenance_file": "poster-flux2-provenance.json",
+            "identity_lock": {
+                "overscan_ratio": 0.04,
+                "max_protected_start_ratio": 0.70,
+                "transition_ratio": 0.10,
+                "subject_clearance_ratio": 0.02,
+            },
+            "scene": copy.deepcopy(scene),
+            "generation": generation,
+        },
+        "pokemon": {
+            "strategy": "featured_from_scope",
+            "count": "auto_from_layout_columns",
+            "row": "bottom",
+            "cutout_source": "pokeapi_official_artwork",
+            "fallback_candidates": [],
+        },
+        "conditioning": {
+            "identity_defaults": {
+                "neutral_rgb": [226, 224, 211],
+                "canvas_px": 512,
+                "min_subject_px": 150,
+                "max_subject_px": 350,
+                "bottom_padding_px": 24,
+            }
+        },
+    }
+
+
+def init_section_scope(
+    scope: str,
+    *,
+    layout_name: str = DEFAULT_LAYOUT_NAME,
+    force: bool = False,
+    fetch: bool = False,
+) -> tuple[Path, list[Path], list[Path]]:
+    """Initialize isolated, disabled poster bundles for all aggregate sections."""
+    scope = _validate_identifier(scope, "scope name")
+    scope_data_path = SCOPE_DATA / f"{scope}.json"
+    if not scope_data_path.is_file():
+        raise FileNotFoundError(scope_data_path)
+    scope_data = load_json(scope_data_path)
+    sections = scope_data.get("sections")
+    if not isinstance(sections, dict) or not sections:
+        raise ValueError(f"{scope} has no aggregate sections")
+
+    scenes = section_scenes_for_scope(scope)
+    if set(scenes) != set(sections):
+        missing = sorted(set(sections) - set(scenes))
+        stale = sorted(set(scenes) - set(sections))
+        raise ValueError(
+            f"Section scene coverage mismatch for {scope}: "
+            f"missing={missing}, stale={stale}"
+        )
+    template_path = POSTER_ASSETS / "Base1" / "poster.yaml"
+    if not template_path.is_file():
+        raise FileNotFoundError(
+            f"Reviewed generation template not found: {template_path}"
+        )
+    generation_template = load_yaml(template_path).get(
+        "artwork",
+        {},
+    ).get("generation", {})
+
+    scope_dir = POSTER_ASSETS / scope
+    scope_dir.mkdir(parents=True, exist_ok=True)
+    bindings = []
+    created: list[Path] = []
+    kept: list[Path] = []
+    target_keys: list[str] = []
+    for section_id, section_data in sections.items():
+        section_id = _validate_identifier(section_id, "section ID")
+        relative_manifest = Path("sections") / section_id / "poster.yaml"
+        asset_key = f"{scope}/sections/{section_id}"
+        target_keys.append(asset_key)
+        bindings.append(
+            {
+                "id": section_id,
+                "section_id": section_id,
+                "manifest": relative_manifest.as_posix(),
+                "pdf": {
+                    "enabled": False,
+                    "artwork_file": "poster-flux2-artwork.png",
+                    "insertion": "after_section_cover",
+                },
+            }
+        )
+        manifest_path = scope_dir / relative_manifest
+        if manifest_path.exists() and not force:
+            kept.append(manifest_path)
+            continue
+        manifest = build_section_manifest(
+            asset_key,
+            scope,
+            section_id,
+            section_data,
+            layout_name,
+            generation_template,
+            scenes[section_id],
+        )
+        manifest_path.parent.mkdir(parents=True, exist_ok=True)
+        manifest_path.write_text(
+            yaml.safe_dump(
+                manifest,
+                allow_unicode=True,
+                sort_keys=False,
+                width=88,
+            ),
+            encoding="utf-8",
+        )
+        created.append(manifest_path)
+
+    index_path = scope_dir / "posters.yaml"
+    if index_path.exists() and not force:
+        existing = load_yaml(index_path)
+        expected_routes = [
+            (
+                item["id"],
+                item["section_id"],
+                item["manifest"],
+                item["pdf"]["insertion"],
+            )
+            for item in bindings
+        ]
+        existing_routes = [
+            (
+                item.get("id"),
+                item.get("section_id"),
+                item.get("manifest"),
+                item.get("pdf", {}).get("insertion"),
+            )
+            for item in existing.get("posters", [])
+            if isinstance(item, dict)
+        ]
+        if (
+            existing.get("schema_version") != 1
+            or existing.get("scope") != scope
+            or existing_routes != expected_routes
+        ):
+            raise ValueError(
+                f"Existing aggregate poster index is stale: {index_path}. "
+                "Review it manually or use --force."
+            )
+    else:
+        index_path.write_text(
+            yaml.safe_dump(
+                {
+                    "schema_version": 1,
+                    "scope": scope,
+                    "posters": bindings,
+                },
+                allow_unicode=True,
+                sort_keys=False,
+                width=88,
+            ),
+            encoding="utf-8",
+        )
+    if fetch:
+        for asset_key in target_keys:
+            fetch_cutouts(asset_key, force=force)
+    return index_path, created, kept
+
+
 def init_scope(
     scope: str,
     *,
@@ -154,8 +416,7 @@ def init_scope(
     fetch: bool = False,
 ) -> Path:
     """Write one manifest and optionally fetch its deterministic source assets."""
-    if not re.fullmatch(r"[A-Za-z0-9._-]+", scope):
-        raise ValueError(f"Unsafe scope name: {scope!r}")
+    scope = _validate_identifier(scope, "scope name")
     scope_data_path = SCOPE_DATA / f"{scope}.json"
     if not scope_data_path.is_file():
         raise FileNotFoundError(scope_data_path)
@@ -248,6 +509,11 @@ def main() -> int:
         help="Initialize every missing individual TCG set after data fetching",
     )
     parser.add_argument(
+        "--all-sections",
+        action="store_true",
+        help="Initialize one isolated disabled bundle per aggregate section",
+    )
+    parser.add_argument(
         "--layout",
         choices=tuple(sorted(LAYOUTS)),
         default=DEFAULT_LAYOUT_NAME,
@@ -260,6 +526,8 @@ def main() -> int:
     parser.add_argument("--force", action="store_true")
     args = parser.parse_args()
     if args.all_tcg_sets:
+        if args.all_sections:
+            parser.error("--all-sections requires --scope")
         if args.force:
             parser.error(
                 "--force cannot be combined with --all-tcg-sets; reviewed "
@@ -274,6 +542,20 @@ def main() -> int:
         for path in skipped:
             print(f"Kept existing: {path}")
         print(f"Created {len(created)}, kept {len(skipped)} existing manifests")
+        return 0
+    if args.all_sections:
+        index_path, created, kept = init_section_scope(
+            args.scope,
+            layout_name=args.layout,
+            force=args.force,
+            fetch=args.fetch,
+        )
+        print(f"Index: {index_path}")
+        for path in created:
+            print(f"Created: {path}")
+        for path in kept:
+            print(f"Kept existing: {path}")
+        print(f"Created {len(created)}, kept {len(kept)} section manifests")
         return 0
     print(
         init_scope(

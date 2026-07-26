@@ -18,7 +18,7 @@ try:
         queue_workflow,
         validate_server_input_directory,
     )
-    from .poster_io import load_yaml
+    from .poster_io import poster_asset_slug, poster_bundle
 except ImportError:
     from create_comfyui_upscale_workflow import (
         DEFAULT_UPSCALE_MODEL,
@@ -29,7 +29,7 @@ except ImportError:
         queue_workflow,
         validate_server_input_directory,
     )
-    from poster_io import load_yaml
+    from poster_io import poster_asset_slug, poster_bundle
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -46,8 +46,10 @@ def normalize_upscale_input(
     destination: Path,
 ) -> Path:
     """Normalize latent rounding to the exact physical aspect ratio."""
-    scope_dir = POSTER_ASSETS / scope
-    manifest = load_yaml(scope_dir / "poster.yaml")
+    manifest = poster_bundle(
+        scope,
+        poster_assets=POSTER_ASSETS,
+    ).manifest
     image = Image.open(source).convert("RGB")
     layout = build_page_layout(
         manifest.get("layout", {}).get("name", "standard_3x3"),
@@ -68,8 +70,10 @@ def validate_upscaled_artwork(
     path: Path,
     dpi: int,
 ) -> None:
-    scope_dir = POSTER_ASSETS / scope
-    manifest = load_yaml(scope_dir / "poster.yaml")
+    manifest = poster_bundle(
+        scope,
+        poster_assets=POSTER_ASSETS,
+    ).manifest
     expected = build_print_layout(
         manifest.get("layout", {}).get("name", "standard_3x3"),
         dpi,
@@ -108,10 +112,11 @@ def upscale(
 ) -> tuple[Path, Path]:
     if not source.is_file():
         raise FileNotFoundError(source)
-    scope_dir = POSTER_ASSETS / scope
+    scope_dir = poster_bundle(
+        scope,
+        poster_assets=POSTER_ASSETS,
+    ).asset_dir
     work_dir = scope_dir / "comfyui_poster"
-    if not (scope_dir / "poster.yaml").is_file():
-        raise FileNotFoundError(scope_dir / "poster.yaml")
     work_dir.mkdir(parents=True, exist_ok=True)
     validate_server_input_directory(server, work_dir)
 
@@ -124,7 +129,7 @@ def upscale(
         work_dir / input_name,
     )
     prefix = (
-        f"{scope.lower()}_print_{dpi}dpi_"
+        f"{poster_asset_slug(scope)}_print_{dpi}dpi_"
         f"{safe_marker(Path(model_name).stem)}"
     )
     workflow_path = write_workflow(

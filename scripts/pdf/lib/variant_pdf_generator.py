@@ -26,7 +26,7 @@ from .rendering import (
     CoverRenderer,
     CoverStyle,
     PageRenderer,
-    PosterPageRenderer,
+    PosterPageCollection,
 )
 from .utils import TranslationHelper, RendererInitializer
 from .constants import PAGE_WIDTH, PAGE_HEIGHT, PAGE_MARGIN, CARD_WIDTH, CARD_HEIGHT, CARDS_PER_ROW, CARDS_PER_COLUMN, GAP_X, GAP_Y
@@ -49,6 +49,8 @@ class VariantPDFGenerator:
         page_template: str = None,
         cover_template: str = None,
         include_poster: bool = True,
+        scope_name: str = None,
+        poster_source_data: dict = None,
     ):
         """
         Initialize variant PDF generator.
@@ -65,6 +67,8 @@ class VariantPDFGenerator:
             page_template: Optional SVG template for pages
             cover_template: Optional SVG template for covers
             include_poster: Include a manifest-enabled poster page
+            scope_name: Explicit source filename scope for aggregate data
+            poster_source_data: Complete unfiltered data used to validate routing
         """
         self.variant_data = variant_data
         self.language = language
@@ -105,25 +109,43 @@ class VariantPDFGenerator:
                 language, image_cache, variant_data=variant_data, type_translations=self.type_translations, 
                 card_template=self.card_template, cover_template=self.cover_template
             )
-        self.poster_page_renderer = PosterPageRenderer.from_variant_data(
-            variant_data,
+        poster_scope = (
+            scope_name
+            or variant_data.get("set_id")
+            or variant_data.get("scope")
+        )
+        self.poster_pages = PosterPageCollection.from_scope(
+            poster_scope,
+            (
+                poster_source_data
+                if poster_source_data is not None
+                else variant_data
+            ),
             language,
             include_poster=include_poster,
         )
     
     def generate(self) -> bool:
         """Generate the PDF with separator pages for each section."""
+        temporary_output = self.output_file.with_name(
+            f".{self.output_file.name}.tmp"
+        )
         try:
             self.output_file.parent.mkdir(parents=True, exist_ok=True)
+            temporary_output.unlink(missing_ok=True)
             
             status = PDFStatus(self.output_file.stem, len(self.pokemon_list))
             
-            c = canvas.Canvas(str(self.output_file), pagesize=(PAGE_WIDTH, PAGE_HEIGHT))
+            c = canvas.Canvas(
+                str(temporary_output),
+                pagesize=(PAGE_WIDTH, PAGE_HEIGHT),
+            )
             
             # Render all sections
             self._generate_with_sections(c, self._sections_for_rendering(), status)
             
             c.save()
+            temporary_output.replace(self.output_file)
             
             # Update summary info
             file_size = self.output_file.stat().st_size / (1024 * 1024)
@@ -134,22 +156,27 @@ class VariantPDFGenerator:
             
         except Exception as e:
             import traceback
+            temporary_output.unlink(missing_ok=True)
             logger.error(f"❌ Error generating PDF: {e}")
             logger.error(traceback.format_exc())
             return False
         finally:
-            if self.poster_page_renderer is not None:
-                self.poster_page_renderer.cleanup()
+            self.poster_pages.cleanup()
 
     def _sections_for_rendering(self) -> list[dict]:
         """Normalize hierarchical and legacy flat data to renderable sections."""
         sections = self.variant_data.get('sections', {})
         if sections:
-            sections_list = (
-                list(sections.values())
-                if isinstance(sections, dict)
-                else list(sections)
-            )
+            if isinstance(sections, dict):
+                sections_list = [
+                    {
+                        **section,
+                        'section_id': section.get('section_id') or section_id,
+                    }
+                    for section_id, section in sections.items()
+                ]
+            else:
+                sections_list = list(sections)
             return sorted(
                 sections_list,
                 key=lambda section: section.get('section_order', 999),
@@ -224,8 +251,11 @@ class VariantPDFGenerator:
             )
             c.showPage()
 
-            if section_index == 0 and self.poster_page_renderer is not None:
-                self.poster_page_renderer.render_page(c, self.page_renderer)
+            for poster_page in self.poster_pages.for_section(
+                section_id,
+                section_index,
+            ):
+                poster_page.render_page(c, self.page_renderer)
                 c.showPage()
             
             # Draw cards for this section

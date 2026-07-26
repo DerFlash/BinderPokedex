@@ -1,8 +1,10 @@
 import json
 import shutil
 import sys
+from dataclasses import replace
 from pathlib import Path
 
+import pytest
 from PIL import Image, ImageChops
 
 from scripts.poster_assets import fetch_cutouts
@@ -37,8 +39,10 @@ from scripts.poster_assets.layout import (
 from scripts.poster_assets.init_poster_scope import (
     available_tcg_scopes,
     build_default_manifest,
+    init_scope,
     stable_scope_seed,
 )
+from scripts.poster_assets.poster_io import poster_bundle
 from scripts.poster_assets.poster_config import (
     IDENTITY_LOCK_PROMPT_FILE,
     build_identity_lock_prompt,
@@ -87,6 +91,12 @@ from scripts.poster_assets.validate_promoted_poster import (
 def test_auto_count_uses_layout_columns():
     manifest = {"pokemon": {"count": "auto_from_layout_columns"}}
     assert fetch_cutouts.resolve_requested_count(manifest, build_page_layout("wide_4x3")) == 4
+
+
+@pytest.mark.parametrize("scope", [".", ".."])
+def test_poster_initializer_rejects_path_traversal_scope(scope):
+    with pytest.raises(ValueError, match="Unsafe scope name"):
+        init_scope(scope)
 
 
 def test_standard_print_layout_is_300_dpi_at_physical_card_size():
@@ -361,6 +371,33 @@ def test_identity_references_use_scale_aware_appearance_canvases(tmp_path: Path)
     assert extents[0] < extents[1]
     assert extents[0] < extents[2]
     assert extents[2] == 350
+
+
+def test_identity_references_use_explicit_nested_asset_key(
+    tmp_path: Path,
+    monkeypatch,
+):
+    scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
+    manifest = fetch_cutouts.load_yaml(scope_dir / "poster.yaml")
+    requested_assets = []
+
+    def fake_output_dimensions(asset_key, _megapixels):
+        requested_assets.append(asset_key)
+        return 848, 1168
+
+    monkeypatch.setattr(
+        "scripts.poster_assets.prepare_comfyui_poster.output_dimensions",
+        fake_output_dimensions,
+    )
+
+    build_identity_references(
+        scope_dir,
+        manifest,
+        tmp_path,
+        asset_key="Pokedex/sections/gen1",
+    )
+
+    assert requested_assets == ["Pokedex/sections/gen1"]
 
 
 def test_identity_prompt_is_manifest_driven():
@@ -1384,6 +1421,20 @@ def test_promoted_production_posters_match_provenance_and_print_geometry():
         assert result["dimensions"] == (2368, 3268)
         assert result["card_dimensions"] == (750, 1050)
         assert result["cards"] == 9
+
+
+def test_validation_rejects_pdf_artwork_not_named_by_provenance():
+    bundle = poster_bundle("Base1")
+    mismatched_bundle = replace(
+        bundle,
+        artwork_file="unreviewed.png",
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="routes PDF artwork.*promoted provenance validates",
+    ):
+        validate_promoted_poster(mismatched_bundle)
 
 
 def test_enabled_poster_scopes_only_returns_pdf_enabled_manifests(

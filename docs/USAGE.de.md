@@ -54,10 +54,12 @@ python scripts/pdf/generate_pdf.py --scope all
 
 ### Optionale Posterseiten
 
-Der normale PDF-Befehl fügt automatisch eine Posterseite ein, wenn für den
-Scope ein freigegebenes lokales Artwork vorliegt und in
-`data/poster_assets/<scope>/poster.yaml` der Eintrag `pdf.enabled: true` gesetzt
-ist. Scopes ohne diese Freigabe werden unverändert erzeugt. Die
+Der normale PDF-Befehl fügt freigegebene lokale Poster-Artworks automatisch ein.
+Einzelne Scopes aktivieren sie mit `pdf.enabled: true` in
+`data/poster_assets/<scope>/poster.yaml`. Sammel-Scopes ordnen in
+`data/poster_assets/<scope>/posters.yaml` isolierte Leaf-Manifeste stabil ihren
+Sections zu; jede aktivierte Seite folgt direkt auf das passende Section-Cover.
+Scopes und Bindings ohne Freigabe werden unverändert erzeugt. Die
 Artwork-Generierung bleibt ein separater Review-Workflow; der PDF-Befehl
 verwendet nur das promotete lokale Artwork und startet ComfyUI nicht selbst.
 
@@ -73,8 +75,9 @@ python scripts/pdf/generate_pdf.py \
 
 Der Build erhält einen eigenen Dateinamen wie
 `output/de/Base1_DE_NO_POSTER.pdf` und überschreibt daher nicht
-`output/de/Base1_DE.pdf`. `--skip-poster` verhindert bereits das Laden der
-Poster-Assets und lässt sich mit `--test` sowie `--skip-images` kombinieren.
+`output/de/Base1_DE.pdf`. `--skip-poster` verhindert bereits das Laden aller
+Poster-Indizes, Manifeste und Artworks – bei Sammel-Scopes also sämtlicher
+Section-Poster – und lässt sich mit `--test` sowie `--skip-images` kombinieren.
 
 Die Artwork-Erzeugung ist ein expliziter optionaler Schritt nach dem
 Daten-Fetch. Die Anleitung

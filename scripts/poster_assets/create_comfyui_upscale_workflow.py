@@ -9,11 +9,11 @@ from pathlib import Path
 try:
     from .create_comfyui_poster_workflow import node
     from .layout import build_print_layout
-    from .poster_io import load_yaml
+    from .poster_io import poster_asset_slug, poster_bundle
 except ImportError:
     from create_comfyui_poster_workflow import node
     from layout import build_print_layout
-    from poster_io import load_yaml
+    from poster_io import poster_asset_slug, poster_bundle
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -29,11 +29,13 @@ def build_workflow(
     model_name: str = DEFAULT_UPSCALE_MODEL,
     filename_prefix: str | None = None,
 ) -> dict[str, object]:
-    scope_dir = POSTER_ASSETS / scope
-    manifest = load_yaml(scope_dir / "poster.yaml")
+    manifest = poster_bundle(
+        scope,
+        poster_assets=POSTER_ASSETS,
+    ).manifest
     layout_name = manifest.get("layout", {}).get("name", "standard_3x3")
     layout = build_print_layout(layout_name, dpi)
-    prefix = filename_prefix or f"{scope.lower()}_poster_{dpi}dpi"
+    prefix = filename_prefix or f"{poster_asset_slug(scope)}_poster_{dpi}dpi"
     return {
         "1": node("LoadImage", image=input_name),
         "2": node("UpscaleModelLoader", model_name=model_name),

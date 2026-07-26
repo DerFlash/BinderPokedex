@@ -80,15 +80,31 @@ python scripts/poster_assets/init_poster_scope.py \
   --fetch
 ```
 
-The batch command never overwrites an existing reviewed manifest. Aggregate
-variant scopes such as `ExGen2` are intentionally excluded until multiple
-section posters are supported. The same extension is required for the nine
-Pokédex generation posters tracked in
-[#2](https://github.com/DerFlash/BinderPokedex/issues/2).
+The batch command never overwrites an existing reviewed manifest.
+
+Aggregate scopes use an ordered routing index plus one isolated leaf manifest
+per section. Initialize all configured Pokédex generation bundles after its
+data fetch with:
+
+```bash
+python scripts/poster_assets/init_poster_scope.py \
+  --scope Pokedex \
+  --all-sections \
+  --fetch
+```
+
+This keeps `data/poster_assets/Pokedex/posters.yaml` separate from the nine
+generation manifests below `Pokedex/sections/`. Each binding remains disabled,
+has its own seed and provenance boundary, and selects only that generation's
+three starter `featured_elements`. Adding or promoting one generation therefore
+does not invalidate another generation's manifest hash. Other aggregate scopes
+can use the same structure once their section scene briefs are reviewed.
 
 ## 3. Review the creative brief
 
-Review `data/poster_assets/<scope>/poster.yaml`, especially:
+Review `data/poster_assets/<scope>/poster.yaml` for an individual set, or the
+selected aggregate leaf such as
+`data/poster_assets/Pokedex/sections/gen1/poster.yaml`, especially:
 
 - `artwork.scene`;
 - the selected cutouts;
@@ -118,12 +134,26 @@ The project launcher applies the required Apple Metal/MPS compatibility patch
 and binds the selected scope's isolated input, output, and temporary
 directories.
 
+For one aggregate section, pass its stable asset key:
+
+```bash
+scripts/poster_assets/start_comfyui_poster.sh \
+  --scope Pokedex/sections/gen1
+```
+
 ## 5. Generate a candidate
 
 In another terminal:
 
 ```bash
 python scripts/poster_assets/run_comfyui_poster.py --scope SV04
+```
+
+The corresponding aggregate command is:
+
+```bash
+python scripts/poster_assets/run_comfyui_poster.py \
+  --scope Pokedex/sections/gen1
 ```
 
 The production runner reads engine, model, seed, step count, generation size,
@@ -162,6 +192,9 @@ python scripts/poster_assets/promote_comfyui_poster.py \
 python scripts/poster_assets/validate_promoted_poster.py --scope SV04
 ```
 
+For an aggregate target, use the same asset key for promotion and validation,
+for example `Pokedex/sections/gen1`.
+
 Promotion is transactional and records hashes for models, prompts, source
 figures, references, workflows, and outputs.
 
@@ -176,15 +209,30 @@ pdf:
   insertion: after_first_section_cover
 ```
 
+For an aggregate scope, enable the matching binding in the root
+`posters.yaml` instead. Its leaf manifest remains the immutable generation and
+provenance boundary:
+
+```yaml
+- id: gen1
+  section_id: gen1
+  manifest: sections/gen1/poster.yaml
+  pdf:
+    enabled: true
+    artwork_file: poster-flux2-artwork.png
+    insertion: after_section_cover
+```
+
 The ordinary PDF command then consumes the promoted local artwork:
 
 ```bash
 python scripts/pdf/generate_pdf.py --scope SV04 --language de
 ```
 
-The PDF step adds the exact localized logo and information, slices the result,
-and embeds it at physical card size. It does not contact ComfyUI or regenerate
-the background.
+The PDF step adds the exact localized logo/information, slices the result, and
+embeds it at physical card size. A legacy poster follows the first section
+cover; aggregate posters follow their respective configured section covers.
+The step does not contact ComfyUI or regenerate the background.
 
 To bypass the poster for one isolated build:
 

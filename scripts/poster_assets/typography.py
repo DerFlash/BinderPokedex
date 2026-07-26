@@ -12,22 +12,64 @@ FONT_CANDIDATES = [
     "/System/Library/Fonts/Supplemental/Arial.ttf",
     "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
 ]
+CJK_FONT_CANDIDATES = {
+    "ja": [
+        "/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc",
+        "/System/Library/Fonts/Hiragino Sans GB.ttc",
+    ],
+    "ko": [
+        "/System/Library/Fonts/AppleSDGothicNeo.ttc",
+        "/System/Library/Fonts/Supplemental/AppleGothic.ttf",
+    ],
+    "zh_hans": [
+        "/System/Library/Fonts/PingFang.ttc",
+        "/System/Library/Fonts/Hiragino Sans GB.ttc",
+    ],
+    "zh_hant": [
+        "/System/Library/Fonts/PingFang.ttc",
+        "/System/Library/Fonts/STHeiti Medium.ttc",
+    ],
+}
+CJK_FALLBACK_CANDIDATES = [
+    "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
+    "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+    "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc",
+    "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
+    "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttf",
+    "/usr/share/fonts/truetype/wqy/wqy-microhei.ttc",
+    "/usr/share/fonts/truetype/wqy/wqy-microhei.ttf",
+]
 
 
-def load_font(size: int, bold: bool = False) -> ImageFont.ImageFont:
+def load_font(
+    size: int,
+    bold: bool = False,
+    language: str | None = None,
+) -> ImageFont.ImageFont:
     candidates = list(FONT_CANDIDATES)
+    if language in CJK_FONT_CANDIDATES:
+        candidates = (
+            CJK_FONT_CANDIDATES[language]
+            + CJK_FALLBACK_CANDIDATES
+            + candidates
+        )
     if bold:
-        candidates = [
-            "/System/Library/Fonts/HelveticaNeue.ttc",
-            "/System/Library/Fonts/Helvetica.ttc",
-            "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
-            "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
-        ] + candidates
+        if language not in CJK_FONT_CANDIDATES:
+            candidates = [
+                "/System/Library/Fonts/HelveticaNeue.ttc",
+                "/System/Library/Fonts/Helvetica.ttc",
+                "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
+                "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+            ] + candidates
     for path in candidates:
         try:
             return ImageFont.truetype(path, size=size)
         except OSError:
             continue
+    if language in CJK_FONT_CANDIDATES:
+        raise OSError(
+            f"No CJK-capable poster font is available for language {language!r}"
+        )
     return ImageFont.load_default()
 
 

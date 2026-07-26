@@ -16,10 +16,10 @@ try:
         identity_lock_overscan,
     )
     from .poster_io import (
-        SCOPE_DATA,
         load_cutout_items,
-        load_json,
-        load_yaml,
+        load_poster_scope_data,
+        poster_asset_slug,
+        poster_bundle,
     )
 except ImportError:
     from layout import build_page_layout
@@ -29,7 +29,12 @@ except ImportError:
         build_identity_reference_prompt,
         identity_lock_overscan,
     )
-    from poster_io import SCOPE_DATA, load_cutout_items, load_json, load_yaml
+    from poster_io import (
+        load_cutout_items,
+        load_poster_scope_data,
+        poster_asset_slug,
+        poster_bundle,
+    )
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -47,8 +52,10 @@ def megapixel_marker(megapixels: float) -> str:
 def output_dimensions(scope: str, megapixels: float) -> tuple[int, int]:
     if megapixels <= 0:
         raise ValueError("megapixels must be positive")
-    scope_dir = POSTER_ASSETS / scope
-    manifest = load_yaml(scope_dir / "poster.yaml")
+    manifest = poster_bundle(
+        scope,
+        poster_assets=POSTER_ASSETS,
+    ).manifest
     layout = build_page_layout(manifest.get("layout", {}).get("name", "standard_3x3"))
     ratio = layout.width_px / layout.height_px
     height = math.sqrt(megapixels * 1_000_000 / ratio)
@@ -59,8 +66,10 @@ def output_dimensions(scope: str, megapixels: float) -> tuple[int, int]:
 def page_dimensions(scope: str, megapixels: float) -> tuple[int, int]:
     """Return an exact physical card-grid ratio using the latent-aligned width."""
     width, _latent_height = output_dimensions(scope, megapixels)
-    scope_dir = POSTER_ASSETS / scope
-    manifest = load_yaml(scope_dir / "poster.yaml")
+    manifest = poster_bundle(
+        scope,
+        poster_assets=POSTER_ASSETS,
+    ).manifest
     layout = build_page_layout(
         manifest.get("layout", {}).get("name", "standard_3x3"), width_px=width
     )
@@ -86,7 +95,8 @@ def build_workflow(
     if reference_mode not in {"composition", "identity"}:
         raise ValueError(f"Unsupported FLUX reference mode: {reference_mode}")
     work_dir = POSTER_ASSETS / scope / "comfyui_poster"
-    manifest = load_yaml(POSTER_ASSETS / scope / "poster.yaml")
+    bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
+    manifest = bundle.manifest
     if generation_mode == "inpaint":
         prompt_name = "inpaint_prompt.txt"
     elif generation_mode == "identity_lock":
@@ -96,7 +106,7 @@ def build_workflow(
     if prompt_name is None:
         prompt = build_identity_lock_prompt(
             manifest,
-            load_json(SCOPE_DATA / f"{scope}.json"),
+            load_poster_scope_data(bundle),
         )
     else:
         prompt_path = work_dir / prompt_name
@@ -137,7 +147,7 @@ def build_workflow(
             "SaveImage",
             images=["12", 0],
             filename_prefix=(
-                f"{scope.lower()}_flux2_{generation_mode}_"
+                f"{poster_asset_slug(scope)}_flux2_{generation_mode}_"
                 f"{megapixel_marker(megapixels)}_scene_seed_{seed}"
             ),
         ),

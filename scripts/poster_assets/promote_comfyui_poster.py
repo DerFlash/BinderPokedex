@@ -14,13 +14,13 @@ from PIL import Image
 try:
     from .finalize_comfyui_poster import finalize
     from .layout import build_page_layout
-    from .poster_io import load_yaml
+    from .poster_io import poster_bundle
     from .provenance import load_run_metadata, promoted_provenance
     from .slice_poster import slice_poster
 except ImportError:
     from finalize_comfyui_poster import finalize
     from layout import build_page_layout
-    from poster_io import load_yaml
+    from poster_io import poster_bundle
     from provenance import load_run_metadata, promoted_provenance
     from slice_poster import slice_poster
 
@@ -78,16 +78,24 @@ def promote(
     if not artwork.is_file():
         raise FileNotFoundError(artwork)
 
-    scope_dir = POSTER_ASSETS / scope
-    manifest_path = scope_dir / "poster.yaml"
-    if not manifest_path.is_file():
-        raise FileNotFoundError(manifest_path)
-    manifest = load_yaml(manifest_path)
+    bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
+    scope_dir = bundle.asset_dir
+    manifest_path = bundle.manifest_path
+    manifest = bundle.manifest
 
     run_metadata = load_run_metadata(run_metadata_path, artwork)
     if run_metadata.get("scope") != scope:
         raise ValueError(
             f"Run metadata is for scope {run_metadata.get('scope')!r}, not {scope!r}"
+        )
+    if bundle.section_id is not None and (
+        run_metadata.get("source_scope") != bundle.scope
+        or run_metadata.get("poster_id") != bundle.poster_id
+        or run_metadata.get("section_id") != bundle.section_id
+    ):
+        raise ValueError(
+            "Run metadata does not match the aggregate poster target "
+            f"{bundle.scope}/{bundle.section_id}"
         )
     configured_generation = manifest.get("artwork", {}).get("generation")
     recorded_generation = run_metadata.get("generation")

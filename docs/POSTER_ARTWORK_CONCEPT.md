@@ -452,9 +452,10 @@ remain completely inside one of the three bottom-row files.
 
 ## PDF and binder integration
 
-An optional `pdf` block in `poster.yaml` enables a poster page for a scope. The
-configured file is the text-free generated artwork, not a language-specific final
-poster:
+An individual scope keeps its optional `pdf` block in `poster.yaml`. An
+aggregate scope instead uses `posters.yaml` as a routing-only index and points
+to one isolated leaf `poster.yaml` per section. In both cases the configured
+file is the text-free generated artwork, not a language-specific final poster:
 
 ```yaml
 pdf:
@@ -467,9 +468,11 @@ During 3x3 PDF generation, `PosterPageRenderer` applies the deterministic logo
 and localized text for the requested language, slices the result with the shared
 `PageLayout`, and draws all nine images at the existing physical card positions.
 The page therefore uses the same 63.5 x 88.9 mm cards, 5 mm binder gaps, and
-cutting guides as normal collection pages. It is inserted exactly once after
-the first section cover. This is the default behavior of the regular
-`scripts/pdf/generate_pdf.py` command; no poster-specific PDF command is needed.
+cutting guides as normal collection pages. Legacy single posters are inserted
+once after the first section cover. Aggregate bindings use
+`after_section_cover`, so each enabled artwork follows its matching cover before
+that section's cards. This is normal `scripts/pdf/generate_pdf.py` behavior; no
+poster-specific PDF command is needed.
 
 The renderer now matches poster rows and columns against the supplied PDF page
 renderer rather than treating nine cards as a universal poster invariant. The
@@ -481,7 +484,8 @@ The PDF build consumes only reviewed, promoted local artwork and never starts an
 expensive ComfyUI generation implicitly. A one-off build can bypass poster
 discovery and asset loading with `--skip-poster`. Its `_NO_POSTER.pdf` suffix
 keeps the result separate from the normal PDF. For a persistent per-scope
-opt-out, leave `pdf.enabled` false or omit the `pdf` block entirely.
+opt-out, leave `pdf.enabled` false or omit the `pdf` block entirely. For an
+aggregate target, leave its routing-index binding disabled.
 
 ## Current boundary
 
@@ -490,5 +494,8 @@ validation, deterministic localized overlays, card-slice exports, and complete
 PDF integration. Every current individual TCG set has cataloged scene direction
 and can be initialized from existing scope data, but opts into PDF generation
 only after its text-free artwork passes the same whole-poster, per-card, and
-rendered-PDF review. Aggregate multi-section posters and matching wide PDF pages
-remain explicit roadmap items.
+rendered-PDF review. The Pokédex now provides nine disabled generation bundles,
+regional briefs, section-local starter selection, nine-language overlays, and
+section-aware PDF routing. Their artworks still require generation and
+promotion under [#2](https://github.com/DerFlash/BinderPokedex/issues/2).
+Further aggregate variants and matching wide PDF pages remain roadmap items.

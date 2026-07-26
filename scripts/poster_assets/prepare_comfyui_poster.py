@@ -19,7 +19,10 @@ try:
         identity_lock_config,
         subject_conditioning,
     )
-    from .poster_io import SCOPE_DATA, load_json, load_yaml
+    from .poster_io import (
+        load_poster_scope_data,
+        poster_bundle,
+    )
 except ImportError:
     from composition import cutout_placements
     from create_comfyui_poster_workflow import output_dimensions
@@ -30,7 +33,7 @@ except ImportError:
         identity_lock_config,
         subject_conditioning,
     )
-    from poster_io import SCOPE_DATA, load_json, load_yaml
+    from poster_io import load_poster_scope_data, poster_bundle
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -104,6 +107,8 @@ def build_identity_references(
     scope_dir: Path,
     manifest: dict[str, Any],
     output_dir: Path | None = None,
+    *,
+    asset_key: str | None = None,
 ) -> None:
     """Write compact appearance references without encoding scene placement.
 
@@ -112,7 +117,7 @@ def build_identity_references(
     reference latents that exhaust unified memory on Apple Silicon.
     """
     layout_name = manifest.get("layout", {}).get("name", "standard_3x3")
-    width, _ = output_dimensions(scope_dir.name, 1.0)
+    width, _ = output_dimensions(asset_key or scope_dir.name, 1.0)
     placements = cutout_placements(
         build_page_layout(layout_name, width_px=width), scope_dir
     )
@@ -309,8 +314,9 @@ def build_scene_reference(
     output_dir: Path | None = None,
 ) -> Path:
     """Write model-compensated edit and exact identity-lock references."""
-    scope_dir = POSTER_ASSETS / scope
-    manifest = load_yaml(scope_dir / "poster.yaml")
+    bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
+    scope_dir = bundle.asset_dir
+    manifest = bundle.manifest
     reference_dir = output_dir or scope_dir / "comfyui_poster"
     reference_dir.mkdir(parents=True, exist_ok=True)
     width, height = output_dimensions(scope, megapixels)
@@ -355,7 +361,7 @@ def build_scene_reference(
         manifest,
         reference_dir,
     )
-    scope_data = load_json(SCOPE_DATA / f"{scope}.json")
+    scope_data = load_poster_scope_data(bundle)
     (reference_dir / IDENTITY_LOCK_PROMPT_FILE).write_text(
         build_identity_lock_prompt(manifest, scope_data) + "\n",
         encoding="utf-8",
@@ -378,7 +384,12 @@ def build_scene_reference(
         reference_dir,
     )
 
-    build_identity_references(scope_dir, manifest, reference_dir)
+    build_identity_references(
+        scope_dir,
+        manifest,
+        reference_dir,
+        asset_key=bundle.asset_key,
+    )
     # AnimaEdit is an image-edit model and strongly retains the source material.
     # Give it only an abstract sky/meadow material scaffold—not prior artwork or
     # layout geometry—so the transparent area is interpreted as landscape.
@@ -430,7 +441,8 @@ def build_scene_reference(
 
 
 def prepare(scope: str, megapixels: float = 1.0) -> Path:
-    scope_dir = POSTER_ASSETS / scope
+    bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
+    scope_dir = bundle.asset_dir
     work_dir = scope_dir / "comfyui_poster"
     required = (
         scope_dir / "poster.yaml",

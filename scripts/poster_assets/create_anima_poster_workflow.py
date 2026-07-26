@@ -8,8 +8,10 @@ from pathlib import Path
 
 try:
     from .create_comfyui_poster_workflow import node, output_dimensions
+    from .poster_io import poster_asset_slug
 except ImportError:
     from create_comfyui_poster_workflow import node, output_dimensions
+    from poster_io import poster_asset_slug
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -67,7 +69,7 @@ def build_workflow(
             denoise=1.0,
         ),
         "12": node("VAEDecode", samples=["11", 0], vae=["4", 0]),
-        "13": node("SaveImage", images=["15", 0], filename_prefix=f"{scope.lower()}_anima_{generation_mode}_{reference_strength:.2f}_seed_{seed}"),
+        "13": node("SaveImage", images=["15", 0], filename_prefix=f"{poster_asset_slug(scope)}_anima_{generation_mode}_{reference_strength:.2f}_seed_{seed}"),
         "14": node("LoadImageMask", image="identity_core.png", channel="red"),
         "15": node("ImageCompositeMasked", destination=["12", 0], source=["7", 0], x=0, y=0, resize_source=False, mask=["14", 0]),
     }

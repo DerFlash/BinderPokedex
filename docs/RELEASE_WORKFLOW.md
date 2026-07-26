@@ -45,9 +45,10 @@ when an enabled bundle has missing files, provenance or manifest drift, changed
 prompt inputs, invalid source-pixel evidence, incorrect dimensions, or wrong
 print metadata.
 
-The normal PDF command then discovers each enabled `poster.yaml`, adds localized
-logo and text, slices the text-free master, and embeds the cards. It never
-starts ComfyUI.
+The normal PDF command then discovers every enabled legacy manifest and every
+enabled aggregate binding from `posters.yaml`, adds localized logo/text, slices
+the text-free masters, and embeds the cards at their configured section
+positions. It never starts ComfyUI.
 
 ## Pull-request release rehearsal
 

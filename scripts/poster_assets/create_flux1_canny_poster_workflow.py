@@ -12,12 +12,14 @@ try:
         node,
         output_dimensions,
     )
+    from .poster_io import poster_asset_slug
 except ImportError:
     from create_comfyui_poster_workflow import (
         megapixel_marker,
         node,
         output_dimensions,
     )
+    from poster_io import poster_asset_slug
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -122,7 +124,7 @@ def build_workflow(
             "SaveImage",
             images=["13", 0],
             filename_prefix=(
-                f"{scope.lower()}_flux1_canny_"
+                f"{poster_asset_slug(scope)}_flux1_canny_"
                 f"{megapixel_marker(megapixels)}_scene_seed_{seed}"
             ),
         ),

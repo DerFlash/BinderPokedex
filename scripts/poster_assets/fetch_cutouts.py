@@ -23,8 +23,10 @@ from PIL import Image
 
 try:
     from .layout import build_page_layout
+    from .poster_io import load_poster_scope_data, poster_bundle
 except ImportError:  # Direct script execution
     from layout import build_page_layout
+    from poster_io import load_poster_scope_data, poster_bundle
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -215,16 +217,13 @@ def build_manifest_item(
 
 
 def fetch_cutouts(scope: str, force: bool = False) -> int:
-    scope_dir = POSTER_ASSETS_DIR / scope
-    poster_yaml = scope_dir / "poster.yaml"
-    scope_json = OUTPUT_DIR / f"{scope}.json"
-    if not poster_yaml.exists():
-        raise FileNotFoundError(f"Poster manifest not found: {poster_yaml}")
-    if not scope_json.exists():
-        raise FileNotFoundError(f"Scope output not found: {scope_json}")
-
-    manifest = load_yaml(poster_yaml)
-    scope_data = load_json(scope_json)
+    bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS_DIR)
+    scope_dir = bundle.asset_dir
+    manifest = bundle.manifest
+    scope_data = load_poster_scope_data(
+        bundle,
+        scope_data_dir=OUTPUT_DIR,
+    )
     names_by_id = collect_pokedex_names()
     layout = resolve_layout(manifest)
     count = resolve_requested_count(manifest, layout)
@@ -262,6 +261,9 @@ def fetch_cutouts(scope: str, force: bool = False) -> int:
 
     manifest_out = {
         "scope": scope,
+        "source_scope": bundle.scope,
+        "poster_id": bundle.poster_id,
+        "section_id": bundle.section_id,
         "source": "pokeapi_official_artwork",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "layout": {

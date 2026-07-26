@@ -9,10 +9,10 @@ from PIL import Image
 
 try:
     from .layout import build_page_layout
-    from .poster_io import load_yaml
+    from .poster_io import poster_bundle
 except ImportError:
     from layout import build_page_layout
-    from poster_io import load_yaml
+    from poster_io import poster_bundle
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -21,8 +21,10 @@ POSTER_ASSETS = ROOT / "data" / "poster_assets"
 
 def slice_poster(scope: str, source: Path, output_dir: Path | None = None) -> list[Path]:
     """Crop the card areas and discard the physical binder gaps between them."""
-    scope_dir = POSTER_ASSETS / scope
-    manifest = load_yaml(scope_dir / "poster.yaml")
+    manifest = poster_bundle(
+        scope,
+        poster_assets=POSTER_ASSETS,
+    ).manifest
     loaded = Image.open(source)
     source_dpi = loaded.info.get("dpi")
     image = loaded.convert("RGB")

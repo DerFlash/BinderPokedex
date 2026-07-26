@@ -721,6 +721,8 @@ def _generate_variant_pdf(
         page_template=page_template,
         cover_template=cover_template,
         include_poster=not skip_poster,
+        scope_name=scope_name,
+        poster_source_data=variant_data,
     )
     
     return pdf_gen.generate()

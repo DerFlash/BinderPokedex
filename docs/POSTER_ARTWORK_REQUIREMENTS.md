@@ -5,7 +5,7 @@ It separates accepted behavior from prepared extension points and open work.
 Detailed evidence for promoted candidates is recorded in
 [POSTER_ARTWORK_STATUS.md](POSTER_ARTWORK_STATUS.md).
 
-Last reviewed: 2026-07-26
+Last reviewed: 2026-07-27
 
 ## Decisions
 
@@ -37,7 +37,7 @@ Last reviewed: 2026-07-26
 | `PA-010` | Only promoted artwork enters a normal PDF | Done | `pdf.enabled` plus a local promoted file gates automatic inclusion |
 | `PA-011` | Poster use is optional per build | Done | `--skip-poster` bypasses discovery/loading and writes a separate `_NO_POSTER.pdf` |
 | `PA-012` | Every promoted poster is reproducible and auditable | Done | Promotion records model, prompt, source, workflow, validation, and output hashes |
-| `PA-013` | Multiple posters can be assigned to aggregate sections | Open | Define a poster-list schema and insert one poster after each configured section cover, including the nine Pokédex generation posters tracked in [#2](https://github.com/DerFlash/BinderPokedex/issues/2) |
+| `PA-013` | Multiple posters can be assigned to aggregate sections | Done | A routing index binds isolated poster bundles to stable section IDs; PDFs insert every enabled bundle after its matching cover, while legacy single posters retain their first-cover behavior |
 | `PA-014` | 4×3/4×4 PDFs use matching page renderers | Open | Add A3/custom page styles, templates, cutting guides, and rendered-PDF QA |
 | `PA-015` | Aggregate variant scopes receive section-specific scene briefs | Open | Model `normal`, `mega`, `primal`, and future sections without pretending they are one unambiguous TCG set |
 | `PA-016` | Post-fetch orchestration detects stale poster inputs | Open | Compare scope data, scene catalog, cutouts, logo, model contract, and promoted provenance before deciding whether work is needed |
@@ -51,15 +51,17 @@ Last reviewed: 2026-07-26
   integration.
 - Every current individual TCG set can now be initialized with a set-specific
   scene brief and the same production contract.
-- The Pokédex already exposes nine generation sections with three starter
-  `featured_elements` each. Their section-specific poster integration is
-  tracked in [#2](https://github.com/DerFlash/BinderPokedex/issues/2) and
-  depends on `PA-013`.
+- The Pokédex has nine isolated, section-specific bundles with distinct seeds,
+  regional scene briefs, deterministic nine-language section overlays, and
+  exactly the three starter `featured_elements` from each generation.
+- All nine Pokédex bindings remain disabled until their artwork is generated,
+  reviewed, promoted, and validated. That product rollout remains tracked in
+  [#2](https://github.com/DerFlash/BinderPokedex/issues/2).
 - The default workflow deliberately stops before automatic promotion. Semantic
   scene quality, character boundary quality, and natural grounding still need
   human review.
-- Aggregate scopes and wide PDF pages remain explicit roadmap work rather than
-  hidden assumptions.
+- Further aggregate variant scopes and wide PDF pages remain explicit roadmap
+  work rather than hidden assumptions.
 - Pull requests and tagged releases use the same release-candidate build.
   Publication is a separate write-enabled job available only to `v*` tags.
 

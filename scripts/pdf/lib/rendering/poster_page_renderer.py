@@ -24,7 +24,12 @@ from scripts.poster_assets.layout import (  # noqa: E402
     pdf_page_hint,
     resolve_layout_name,
 )
-from scripts.poster_assets.poster_io import load_yaml  # noqa: E402
+from scripts.poster_assets.poster_io import (  # noqa: E402
+    PosterBundle,
+    poster_asset_slug,
+    poster_bundles_for_scope,
+    select_poster_scope_data,
+)
 from scripts.poster_assets.slice_poster import slice_poster  # noqa: E402
 
 
@@ -33,22 +38,20 @@ class PosterPageRenderer:
 
     def __init__(
         self,
-        scope: str,
+        bundle: PosterBundle,
         language: str,
         artwork_path: Path,
-        insertion: str,
         layout_name: str = DEFAULT_LAYOUT_NAME,
     ):
-        self.scope = scope
+        self.bundle = bundle
+        self.scope = bundle.asset_key
+        self.section_id = bundle.section_id
+        self.poster_id = bundle.poster_id
         self.language = language
         self.artwork_path = artwork_path
-        self.insertion = insertion
+        self.insertion = bundle.insertion
         self.layout_name = layout_name
-        temp_root = PROJECT_ROOT / "tmp" / "pdfs"
-        temp_root.mkdir(parents=True, exist_ok=True)
-        self._temp_dir = tempfile.TemporaryDirectory(
-            prefix=f"poster-{scope.lower()}-{language}-", dir=temp_root
-        )
+        self._temp_dir: tempfile.TemporaryDirectory[str] | None = None
         self._card_paths: list[Path] | None = None
 
     @classmethod
@@ -64,40 +67,54 @@ class PosterPageRenderer:
         scope = variant_data.get("set_id") or variant_data.get("scope")
         if not scope:
             return None
-        scope_dir = POSTER_ASSETS / str(scope)
-        manifest_path = scope_dir / "poster.yaml"
-        if not manifest_path.is_file():
-            return None
-        manifest = load_yaml(manifest_path)
-        pdf_config = manifest.get("pdf", {})
-        if not pdf_config.get("enabled", False):
-            return None
-        insertion = pdf_config.get("insertion", "after_first_section_cover")
-        if insertion != "after_first_section_cover":
-            raise ValueError(f"Unsupported poster PDF insertion: {insertion}")
-        artwork_path = scope_dir / pdf_config.get(
-            "artwork_file", "poster-flux2-artwork.png"
+        collection = PosterPageCollection.from_scope(
+            str(scope),
+            variant_data,
+            language,
+            include_poster=include_poster,
         )
+        if len(collection.renderers) > 1:
+            collection.cleanup()
+            raise ValueError(
+                "from_variant_data() cannot return multiple poster renderers; "
+                "use PosterPageCollection.from_scope()"
+            )
+        return collection.renderers[0] if collection.renderers else None
+
+    @classmethod
+    def from_bundle(
+        cls,
+        bundle: PosterBundle,
+        language: str,
+    ) -> "PosterPageRenderer":
+        artwork_path = bundle.asset_dir / bundle.artwork_file
         if not artwork_path.is_file():
             raise FileNotFoundError(f"Poster PDF artwork not found: {artwork_path}")
-        layout_name = manifest.get("layout", {}).get(
+        layout_name = bundle.manifest.get("layout", {}).get(
             "name",
             DEFAULT_LAYOUT_NAME,
         )
         resolve_layout_name(layout_name)
-        return cls(
-            str(scope),
-            language,
-            artwork_path,
-            insertion,
-            layout_name,
-        )
+        return cls(bundle, language, artwork_path, layout_name)
 
     def _prepare_cards(self) -> list[Path]:
         if self._card_paths is not None:
             return self._card_paths
+        if self._temp_dir is None:
+            temp_root = PROJECT_ROOT / "tmp" / "pdfs"
+            temp_root.mkdir(parents=True, exist_ok=True)
+            self._temp_dir = tempfile.TemporaryDirectory(
+                prefix=(
+                    f"poster-{poster_asset_slug(self.scope)}-"
+                    f"{self.language}-"
+                ),
+                dir=temp_root,
+            )
         temp_dir = Path(self._temp_dir.name)
-        localized_poster = temp_dir / f"{self.scope.lower()}_{self.language}.png"
+        localized_poster = (
+            temp_dir
+            / f"{poster_asset_slug(self.scope)}_{self.language}.png"
+        )
         finalize(self.scope, self.artwork_path, localized_poster, self.language)
         self._card_paths = slice_poster(
             self.scope, localized_poster, temp_dir / "cards"
@@ -140,4 +157,72 @@ class PosterPageRenderer:
         page_renderer.draw_cutting_guides(canvas_obj)
 
     def cleanup(self) -> None:
-        self._temp_dir.cleanup()
+        if self._temp_dir is not None:
+            self._temp_dir.cleanup()
+            self._temp_dir = None
+        self._card_paths = None
+
+
+class PosterPageCollection:
+    """Own and route every enabled poster page for one PDF scope."""
+
+    def __init__(self, renderers: list[PosterPageRenderer] | None = None):
+        self.renderers = renderers or []
+
+    @classmethod
+    def from_scope(
+        cls,
+        scope: str | None,
+        variant_data: dict,
+        language: str,
+        *,
+        include_poster: bool = True,
+    ) -> "PosterPageCollection":
+        if not include_poster or not scope:
+            return cls()
+        bundles = poster_bundles_for_scope(
+            str(scope),
+            poster_assets=POSTER_ASSETS,
+        )
+        renderers: list[PosterPageRenderer] = []
+        try:
+            for bundle in bundles:
+                # Validate every binding against the complete source data even
+                # while disabled; --skip-poster intentionally bypasses this.
+                select_poster_scope_data(
+                    bundle,
+                    variant_data,
+                    source_name=f"PDF scope {scope}",
+                )
+                if bundle.pdf_enabled:
+                    renderers.append(
+                        PosterPageRenderer.from_bundle(bundle, language)
+                    )
+        except Exception:
+            for renderer in renderers:
+                renderer.cleanup()
+            raise
+        return cls(renderers)
+
+    def for_section(
+        self,
+        section_id: str | None,
+        section_index: int,
+    ) -> list[PosterPageRenderer]:
+        """Return configured pages in routing order for the rendered section."""
+        return [
+            renderer
+            for renderer in self.renderers
+            if (
+                renderer.insertion == "after_first_section_cover"
+                and section_index == 0
+            )
+            or (
+                renderer.insertion == "after_section_cover"
+                and renderer.section_id == section_id
+            )
+        ]
+
+    def cleanup(self) -> None:
+        for renderer in self.renderers:
+            renderer.cleanup()

@@ -37,10 +37,14 @@ try:
         DEFAULT_VAE as DEFAULT_QWEN_VAE,
         write_workflow as write_qwen_edit_workflow,
     )
-    from .finalize_comfyui_poster import finalize
+    from .finalize_comfyui_poster import SUPPORTED_LANGUAGES, finalize
     from .prepare_comfyui_poster import prepare
     from .provenance import add_model_artifact_hashes, write_run_metadata
-    from .poster_io import POSTER_ASSETS, load_yaml
+    from .poster_io import (
+        POSTER_ASSETS,
+        poster_asset_slug,
+        poster_bundle,
+    )
     from .queue_comfyui_workflow import (
         queue_workflow,
         server_comfyui_root,
@@ -79,10 +83,10 @@ except ImportError:
         DEFAULT_VAE as DEFAULT_QWEN_VAE,
         write_workflow as write_qwen_edit_workflow,
     )
-    from finalize_comfyui_poster import finalize
+    from finalize_comfyui_poster import SUPPORTED_LANGUAGES, finalize
     from prepare_comfyui_poster import prepare
     from provenance import add_model_artifact_hashes, write_run_metadata
-    from poster_io import POSTER_ASSETS, load_yaml
+    from poster_io import POSTER_ASSETS, poster_asset_slug, poster_bundle
     from queue_comfyui_workflow import (
         queue_workflow,
         server_comfyui_root,
@@ -100,13 +104,9 @@ DEFAULT_OUTPUT_DPI = 300
 
 def configured_generation(scope: str) -> dict[str, object]:
     """Load the reviewed generation contract used as production CLI defaults."""
-    manifest_path = POSTER_ASSETS / scope / "poster.yaml"
-    if not manifest_path.is_file():
-        raise FileNotFoundError(
-            f"Poster scope not initialized: {manifest_path}. Run "
-            "init_poster_scope.py after fetching the scope data."
-        )
-    generation = load_yaml(manifest_path).get("artwork", {}).get("generation")
+    bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
+    manifest_path = bundle.manifest_path
+    generation = bundle.manifest.get("artwork", {}).get("generation")
     if not isinstance(generation, dict) or not generation:
         raise ValueError(
             f"Poster scope has no artwork.generation contract: {manifest_path}"
@@ -422,7 +422,7 @@ def run(
     final_path = (
         work_dir
         / "output"
-        / f"{scope.lower()}_{engine}_{run_marker}_poster_{language}_seed_{seed}_final.png"
+        / f"{poster_asset_slug(scope)}_{engine}_{run_marker}_poster_{language}_seed_{seed}_final.png"
     )
     upscale_workflow_path = None
     if output_dpi is not None:
@@ -570,7 +570,11 @@ def main() -> int:
     )
     parser.add_argument("--server", default="http://127.0.0.1:8188")
     parser.add_argument("--timeout", type=int, default=3600)
-    parser.add_argument("--language", choices=("de", "en", "fr", "es", "it"), default="en")
+    parser.add_argument(
+        "--language",
+        choices=SUPPORTED_LANGUAGES,
+        default="en",
+    )
     parser.add_argument(
         "--engine",
         choices=(*ENGINES, "both", "all"),

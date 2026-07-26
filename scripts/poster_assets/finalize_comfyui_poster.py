@@ -11,9 +11,8 @@ from PIL import Image, ImageDraw, ImageFilter
 try:
     from .layout import build_page_layout
     from .poster_io import (
-        SCOPE_DATA,
-        load_json,
-        load_yaml,
+        load_poster_scope_data,
+        poster_bundle,
     )
     from .typography import (
         composite_panel,
@@ -24,7 +23,7 @@ try:
     )
 except ImportError:
     from layout import build_page_layout
-    from poster_io import SCOPE_DATA, load_json, load_yaml
+    from poster_io import load_poster_scope_data, poster_bundle
     from typography import (
         composite_panel,
         draw_text_centered,
@@ -36,14 +35,38 @@ except ImportError:
 
 ROOT = Path(__file__).resolve().parents[2]
 POSTER_ASSETS = ROOT / "data" / "poster_assets"
-SUPPORTED_LANGUAGES = ("de", "en", "fr", "es", "it")
-CARD_LABELS = {"de": "Karten", "en": "cards", "fr": "cartes", "es": "cartas", "it": "carte"}
+SUPPORTED_LANGUAGES = (
+    "de",
+    "en",
+    "fr",
+    "es",
+    "it",
+    "ja",
+    "ko",
+    "zh_hans",
+    "zh_hant",
+)
+CARD_LABELS = {
+    "de": "Karten",
+    "en": "cards",
+    "fr": "cartes",
+    "es": "cartas",
+    "it": "carte",
+    "ja": "枚",
+    "ko": "장",
+    "zh_hans": "张",
+    "zh_hant": "張",
+}
 RELEASE_LABELS = {
     "de": "Veröffentlicht",
     "en": "Released",
     "fr": "Sortie",
     "es": "Publicado",
     "it": "Pubblicato",
+    "ja": "発売日",
+    "ko": "출시일",
+    "zh_hans": "发行日期",
+    "zh_hant": "發行日期",
 }
 MONTHS = {
     "de": ("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"),
@@ -92,6 +115,31 @@ def localized_set_name(scope_data: dict, language: str) -> str:
     return scope_title(scope_data)
 
 
+def localized_value(value: object, language: str, *, default: str = "") -> str:
+    """Resolve one localized scalar with a stable English/first-value fallback."""
+    if isinstance(value, dict):
+        selected = value.get(language) or value.get("en")
+        if selected is None:
+            selected = next((item for item in value.values() if item), default)
+        return str(selected)
+    if value is None:
+        return default
+    return str(value)
+
+
+def selected_section(scope_data: dict) -> dict:
+    sections = scope_data.get("sections", {})
+    if isinstance(sections, dict):
+        section = next(iter(sections.values()), None)
+    elif isinstance(sections, list):
+        section = next(iter(sections), None)
+    else:
+        section = None
+    if not isinstance(section, dict):
+        raise ValueError("Section-summary poster source has no selected section")
+    return section
+
+
 def card_count(scope_data: dict) -> int:
     return sum(
         len(section.get("cards", []))
@@ -102,10 +150,37 @@ def card_count(scope_data: dict) -> int:
 
 def localized_date(value: str, language: str) -> str:
     parsed = date.fromisoformat(value)
+    if language in ("ja", "zh_hans", "zh_hant"):
+        return f"{parsed.year}年{parsed.month}月{parsed.day}日"
+    if language == "ko":
+        return f"{parsed.year}년 {parsed.month}월 {parsed.day}일"
     month = MONTHS[language][parsed.month - 1]
     if language == "en":
         return f"{month} {parsed.day}, {parsed.year}"
     return f"{parsed.day}. {month} {parsed.year}" if language == "de" else f"{parsed.day} {month} {parsed.year}"
+
+
+def info_panel_values(
+    scope_data: dict,
+    language: str,
+    content_mode: str,
+) -> tuple[str, ...]:
+    """Resolve the deterministic text rows for one poster overlay profile."""
+    if content_mode == "set_summary":
+        return (
+            localized_set_name(scope_data, language),
+            f"{card_count(scope_data)} {CARD_LABELS[language]}",
+            RELEASE_LABELS[language],
+            localized_date(str(scope_data["release_date"]), language),
+        )
+    if content_mode == "section_summary":
+        section = selected_section(scope_data)
+        return (
+            localized_value(section.get("title"), language),
+            localized_value(section.get("subtitle"), language),
+            localized_value(section.get("description"), language),
+        )
+    raise ValueError(f"Unsupported text_content.mode: {content_mode}")
 
 
 def info_panel_box(cell, config: dict | None = None) -> tuple[int, int, int, int]:
@@ -133,12 +208,13 @@ def fitted_font(
     preferred_size: int,
     minimum_size: int,
     bold: bool,
+    language: str | None = None,
 ):
     """Choose the largest font whose wrapped text stays inside ``box``."""
     max_width = box[2] - box[0]
     max_height = box[3] - box[1]
     for size in range(preferred_size, minimum_size - 1, -1):
-        font = load_font(size, bold=bold)
+        font = load_font(size, bold=bold, language=language)
         lines = wrap_text(text, font, max_width)
         line_heights = [
             bounds[3] - bounds[1]
@@ -163,6 +239,8 @@ def draw_info_panel(
     scope_data: dict,
     language: str,
     config: dict | None = None,
+    *,
+    content_mode: str = "set_summary",
 ) -> None:
     box = info_panel_box(cell, config)
     scale = canvas.width / 1400
@@ -178,18 +256,23 @@ def draw_info_panel(
     draw.rounded_rectangle(inner, radius=max(5, radius - 5), outline=(255, 244, 190, 75), width=max(1, round(2 * scale)))
     canvas.alpha_composite(overlay)
 
-    name = localized_set_name(scope_data, language)
-    count = f"{card_count(scope_data)} {CARD_LABELS[language]}"
-    release_label = RELEASE_LABELS[language]
-    release_date = localized_date(str(scope_data["release_date"]), language)
+    values = info_panel_values(scope_data, language, content_mode)
+
     text_draw = ImageDraw.Draw(canvas, "RGBA")
     height = box[3] - box[1]
-    rows = (
-        (name, (box[0] + 5, box[1] + round(height * 0.05), box[2] - 5, box[1] + round(height * 0.34)), max(11, cell.height // 13), max(9, cell.height // 20), True, (255, 244, 190, 255)),
-        (count, (box[0] + 5, box[1] + round(height * 0.34), box[2] - 5, box[1] + round(height * 0.57)), max(9, cell.height // 18), max(8, cell.height // 24), True, (232, 213, 151, 255)),
-        (release_label, (box[0] + 5, box[1] + round(height * 0.57), box[2] - 5, box[1] + round(height * 0.76)), max(8, cell.height // 24), max(7, cell.height // 28), False, (185, 210, 190, 255)),
-        (release_date, (box[0] + 5, box[1] + round(height * 0.75), box[2] - 5, box[3] - 4), max(8, cell.height // 21), max(7, cell.height // 27), False, (244, 238, 207, 255)),
-    )
+    if content_mode == "set_summary":
+        rows = (
+            (values[0], (box[0] + 5, box[1] + round(height * 0.05), box[2] - 5, box[1] + round(height * 0.34)), max(11, cell.height // 13), max(9, cell.height // 20), True, (255, 244, 190, 255)),
+            (values[1], (box[0] + 5, box[1] + round(height * 0.34), box[2] - 5, box[1] + round(height * 0.57)), max(9, cell.height // 18), max(8, cell.height // 24), True, (232, 213, 151, 255)),
+            (values[2], (box[0] + 5, box[1] + round(height * 0.57), box[2] - 5, box[1] + round(height * 0.76)), max(8, cell.height // 24), max(7, cell.height // 28), False, (185, 210, 190, 255)),
+            (values[3], (box[0] + 5, box[1] + round(height * 0.75), box[2] - 5, box[3] - 4), max(8, cell.height // 21), max(7, cell.height // 27), False, (244, 238, 207, 255)),
+        )
+    else:
+        rows = (
+            (values[0], (box[0] + 5, box[1] + round(height * 0.09), box[2] - 5, box[1] + round(height * 0.40)), max(11, cell.height // 13), max(9, cell.height // 20), True, (255, 244, 190, 255)),
+            (values[1], (box[0] + 5, box[1] + round(height * 0.40), box[2] - 5, box[1] + round(height * 0.66)), max(9, cell.height // 18), max(8, cell.height // 24), True, (232, 213, 151, 255)),
+            (values[2], (box[0] + 5, box[1] + round(height * 0.65), box[2] - 5, box[3] - round(height * 0.08)), max(8, cell.height // 22), max(7, cell.height // 28), False, (244, 238, 207, 255)),
+        )
     for text, text_box, preferred_size, minimum_size, bold, color in rows:
         font = fitted_font(
             text,
@@ -197,6 +280,7 @@ def draw_info_panel(
             preferred_size=preferred_size,
             minimum_size=minimum_size,
             bold=bold,
+            language=language,
         )
         draw_text_centered(
             text_draw,
@@ -237,17 +321,45 @@ def draw_final_text_cells(canvas, layout, manifest, scope_data, scope_dir: Path,
         title_box = title_cell.inset(0.09, 0.27)
         composite_panel(canvas, title_box, fill=(253, 244, 202, 238), outline=(44, 84, 52, 245), radius=max(8, round(24 * canvas.width / 1400)))
         draw = ImageDraw.Draw(canvas, "RGBA")
-        draw_text_centered(draw, scope_title(scope_data), title_box, load_font(max(14, title_cell.height // 8), bold=True), (35, 65, 42, 255), shadow_fill=None)
-    draw_info_panel(canvas, info_cell, scope_data, language, info_cfg)
+        configured_title = manifest.get("title_text")
+        title = (
+            localized_value(configured_title, language)
+            if configured_title is not None
+            else scope_title(scope_data)
+        )
+        draw_text_centered(
+            draw,
+            title,
+            title_box,
+            load_font(
+                max(14, title_cell.height // 8),
+                bold=True,
+                language=language,
+            ),
+            (35, 65, 42, 255),
+            shadow_fill=None,
+        )
+    content_config = manifest.get("text_content", {})
+    if not isinstance(content_config, dict):
+        raise ValueError("text_content must be a mapping")
+    draw_info_panel(
+        canvas,
+        info_cell,
+        scope_data,
+        language,
+        info_cfg,
+        content_mode=content_config.get("mode", "set_summary"),
+    )
     draw_project_signature(canvas)
 
 
 def finalize(scope: str, input_path: Path, output_path: Path | None = None, language: str = "en") -> Path:
     if language not in SUPPORTED_LANGUAGES:
         raise ValueError(f"Unsupported language: {language}")
-    scope_dir = POSTER_ASSETS / scope
-    manifest = load_yaml(scope_dir / "poster.yaml")
-    scope_data = load_json(SCOPE_DATA / f"{scope}.json")
+    bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
+    scope_dir = bundle.asset_dir
+    manifest = bundle.manifest
+    scope_data = load_poster_scope_data(bundle)
 
     source = Image.open(input_path)
     source_dpi = source.info.get("dpi")

@@ -11,8 +11,10 @@ from PIL import Image
 
 try:
     from .poster_config import IDENTITY_LOCK_PROMPT_FILE
+    from .poster_io import poster_bundle
 except ImportError:
     from poster_config import IDENTITY_LOCK_PROMPT_FILE
+    from poster_io import poster_bundle
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -222,6 +224,7 @@ def write_run_metadata(
     validation: dict[str, Any] | None = None,
 ) -> Path:
     """Write a sidecar for one generated, text-free candidate."""
+    bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
     output_path = output_path or artwork_path.with_suffix(".run.json")
     inputs = generation_input_records(scope, workflow_path, generation)
     for label, path in (additional_workflows or {}).items():
@@ -231,6 +234,9 @@ def write_run_metadata(
         "kind": "poster_generation_run",
         "created_at": datetime.now(timezone.utc).isoformat(),
         "scope": scope,
+        "source_scope": bundle.scope,
+        "poster_id": bundle.poster_id,
+        "section_id": bundle.section_id,
         "generation": generation,
         "inputs": inputs,
         "source_artwork": file_record(artwork_path, image=True),
@@ -294,6 +300,9 @@ def promoted_provenance(
         "kind": "promoted_poster",
         "promoted_at": datetime.now(timezone.utc).isoformat(),
         "scope": scope,
+        "source_scope": run_metadata.get("source_scope", scope),
+        "poster_id": run_metadata.get("poster_id", scope),
+        "section_id": run_metadata.get("section_id"),
         "asset_name": name,
         "preview_language": language,
         "run": run_metadata,

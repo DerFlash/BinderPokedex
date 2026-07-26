@@ -131,18 +131,35 @@ class GroupByGenerationStep(BaseStep):
             
             # Build multilingual title (Generation + roman numeral)
             title_dict = {}
+            ui_translations = self.translations.get('ui', {})
+            roman_numeral = str(gen_info['name']).rsplit(' ', 1)[-1]
             for lang in ['de', 'en', 'fr', 'es', 'it', 'ja', 'ko', 'zh_hans', 'zh_hant']:
-                gen_key = f'generation_{gen_num}'
-                title_dict[lang] = self.translations.get(lang, {}).get(gen_key, gen_info['name'])
+                template = ui_translations.get(lang, {}).get(
+                    'generation_num',
+                    'Generation {{gen}}',
+                )
+                displayed_number = (
+                    roman_numeral
+                    if lang in {'de', 'en', 'fr', 'es', 'it'}
+                    else str(gen_num)
+                )
+                title_dict[lang] = template.replace(
+                    '{{gen}}',
+                    displayed_number,
+                )
             
             # Build multilingual subtitle (region name)
             subtitle_dict = {}
+            region_translations = self.translations.get('regions', {})
             for lang in ['de', 'en', 'fr', 'es', 'it', 'ja', 'ko', 'zh_hans', 'zh_hant']:
-                region_key = gen_info['region'].lower()
-                subtitle_dict[lang] = self.translations.get(lang, {}).get(region_key, gen_info['region'])
+                subtitle_dict[lang] = region_translations.get(lang, {}).get(
+                    str(gen_num),
+                    gen_info['region'],
+                )
             
             sections[f'gen{gen_num}'] = {
                 'section_id': f'gen{gen_num}',
+                'section_order': gen_num,
                 'id': gen_num,
                 'name': gen_info['name'],
                 'region': gen_info['region'],

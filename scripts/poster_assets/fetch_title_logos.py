@@ -11,9 +11,11 @@ from urllib.error import HTTPError, URLError
 from PIL import Image
 
 try:
-    from .fetch_cutouts import download_bytes, load_json, load_yaml
+    from .fetch_cutouts import download_bytes
+    from .poster_io import load_poster_scope_data, poster_bundle
 except ImportError:
-    from fetch_cutouts import download_bytes, load_json, load_yaml
+    from fetch_cutouts import download_bytes
+    from poster_io import load_poster_scope_data, poster_bundle
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -60,16 +62,14 @@ def resolve_logo_downloads(
 
 def fetch_title_logos(scope: str, force: bool = False) -> list[Path]:
     """Download and normalize every configured title logo to RGBA PNG."""
-    scope_dir = POSTER_ASSETS / scope
-    manifest_path = scope_dir / "poster.yaml"
-    scope_path = OUTPUT_DIR / f"{scope}.json"
-    if not manifest_path.is_file():
-        raise FileNotFoundError(manifest_path)
-    if not scope_path.is_file():
-        raise FileNotFoundError(scope_path)
-
-    manifest = load_yaml(manifest_path)
-    scope_data = load_json(scope_path)
+    bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
+    scope_dir = bundle.asset_dir
+    manifest_path = bundle.manifest_path
+    manifest = bundle.manifest
+    scope_data = load_poster_scope_data(
+        bundle,
+        scope_data_dir=OUTPUT_DIR,
+    )
     downloads = resolve_logo_downloads(manifest, scope_data)
     if not downloads:
         raise ValueError(f"No title logos configured in {manifest_path}")

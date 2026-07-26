@@ -14,12 +14,22 @@ try:
     from .layout import build_print_layout, effective_dpi
     from .poster_config import build_identity_lock_prompt
     from .provenance import ROOT, sha256_file
-    from .poster_io import SCOPE_DATA, load_json, load_yaml
+    from .poster_io import (
+        PosterBundle,
+        load_poster_scope_data,
+        poster_bundle,
+        poster_bundles_for_scope,
+    )
 except ImportError:
     from layout import build_print_layout, effective_dpi
     from poster_config import build_identity_lock_prompt
     from provenance import ROOT, sha256_file
-    from poster_io import SCOPE_DATA, load_json, load_yaml
+    from poster_io import (
+        PosterBundle,
+        load_poster_scope_data,
+        poster_bundle,
+        poster_bundles_for_scope,
+    )
 
 
 POSTER_ASSETS = ROOT / "data" / "poster_assets"
@@ -29,18 +39,45 @@ REQUIRED_GENERATION_HASHES = (
     "vae_sha256",
     "upscale_model_sha256",
 )
+POSTER_LANGUAGES = (
+    "de",
+    "en",
+    "fr",
+    "es",
+    "it",
+    "ja",
+    "ko",
+    "zh_hans",
+    "zh_hant",
+)
+
+
+def enabled_poster_bundles(
+    poster_assets: Path = POSTER_ASSETS,
+) -> list[PosterBundle]:
+    """Return every PDF-enabled bundle with its resolved routing intact."""
+    enabled: list[PosterBundle] = []
+    for scope_dir in sorted(
+        (path for path in poster_assets.iterdir() if path.is_dir()),
+        key=lambda path: path.name,
+    ):
+        for bundle in poster_bundles_for_scope(
+            scope_dir.name,
+            poster_assets=poster_assets,
+        ):
+            if bundle.pdf_enabled:
+                enabled.append(bundle)
+    return enabled
 
 
 def enabled_poster_scopes(
     poster_assets: Path = POSTER_ASSETS,
 ) -> list[str]:
-    """Return scopes whose committed manifest enables PDF poster use."""
-    enabled: list[str] = []
-    for manifest_path in sorted(poster_assets.glob("*/poster.yaml")):
-        manifest = load_yaml(manifest_path)
-        if manifest.get("pdf", {}).get("enabled") is True:
-            enabled.append(manifest_path.parent.name)
-    return enabled
+    """Return stable asset keys for every PDF-enabled poster bundle."""
+    return [
+        bundle.asset_key
+        for bundle in enabled_poster_bundles(poster_assets)
+    ]
 
 
 def _validate_record(record: dict[str, Any]) -> Path:
@@ -72,10 +109,66 @@ def _image_dpi(path: Path) -> tuple[float, float]:
     return float(dpi[0]), float(dpi[1])
 
 
-def validate(scope: str) -> dict[str, Any]:
-    scope_dir = POSTER_ASSETS / scope
-    manifest_path = scope_dir / "poster.yaml"
-    manifest = load_yaml(manifest_path)
+def _validate_section_source(
+    bundle,
+    scope_data: dict[str, Any],
+) -> None:
+    """Keep enabled aggregate overlays and cutouts bound to current source data."""
+    if bundle.section_id is None:
+        return
+    section = next(iter(scope_data.get("sections", {}).values()))
+    featured = section.get("featured_elements")
+    if not isinstance(featured, list) or not featured:
+        raise ValueError(
+            f"{bundle.asset_key} source section has no featured_elements"
+        )
+    expected_ids = [item.get("pokemon_id") for item in featured]
+    if (
+        any(not isinstance(pokemon_id, int) for pokemon_id in expected_ids)
+        or len(set(expected_ids)) != len(expected_ids)
+    ):
+        raise ValueError(
+            f"{bundle.asset_key} source featured_elements are invalid"
+        )
+    cutout_manifest_path = bundle.asset_dir / "cutouts" / "manifest.json"
+    cutout_manifest = json.loads(
+        cutout_manifest_path.read_text(encoding="utf-8")
+    )
+    actual_ids = [
+        item.get("pokemon_id")
+        for item in cutout_manifest.get("items", [])
+    ]
+    if actual_ids != expected_ids:
+        raise ValueError(
+            f"{bundle.asset_key} cutouts {actual_ids} do not match current "
+            f"featured_elements {expected_ids}"
+        )
+    if bundle.scope == "Pokedex":
+        for field in ("title", "subtitle", "description"):
+            localized = section.get(field)
+            missing = [
+                language
+                for language in POSTER_LANGUAGES
+                if not isinstance(localized, dict)
+                or not localized.get(language)
+            ]
+            if missing:
+                raise ValueError(
+                    f"{bundle.asset_key} lacks {field} translations for "
+                    f"{', '.join(missing)}"
+                )
+
+
+def validate(target: str | PosterBundle) -> dict[str, Any]:
+    bundle = (
+        poster_bundle(target, poster_assets=POSTER_ASSETS)
+        if isinstance(target, str)
+        else target
+    )
+    scope = bundle.asset_key
+    scope_dir = bundle.asset_dir
+    manifest_path = bundle.manifest_path
+    manifest = bundle.manifest
     artwork_config = manifest.get("artwork", {})
     provenance_file = artwork_config.get(
         "provenance_file",
@@ -85,6 +178,17 @@ def validate(scope: str) -> dict[str, Any]:
     payload = json.loads(provenance_path.read_text(encoding="utf-8"))
     if payload.get("kind") != "promoted_poster" or payload.get("scope") != scope:
         raise ValueError(f"Invalid promoted provenance: {provenance_path}")
+    if bundle.section_id is not None and (
+        payload.get("source_scope") != bundle.scope
+        or payload.get("poster_id") != bundle.poster_id
+        or payload.get("section_id") != bundle.section_id
+    ):
+        raise ValueError(
+            f"Promoted provenance targets the wrong aggregate section: "
+            f"{provenance_path}"
+        )
+    scope_data = load_poster_scope_data(bundle)
+    _validate_section_source(bundle, scope_data)
 
     configured_generation = artwork_config.get("generation", {})
     recorded_generation = payload.get("run", {}).get("generation", {})
@@ -136,7 +240,6 @@ def validate(scope: str) -> dict[str, Any]:
             .get("inputs", {})
             .get("prompt", {})
         )
-        scope_data = load_json(SCOPE_DATA / f"{scope}.json")
         current_prompt = (
             build_identity_lock_prompt(manifest, scope_data) + "\n"
         ).encode("utf-8")
@@ -154,6 +257,13 @@ def validate(scope: str) -> dict[str, Any]:
     )
     outputs = payload.get("outputs", {})
     artwork_path = _validate_record(outputs["artwork"])
+    routed_artwork_path = bundle.asset_dir / bundle.artwork_file
+    if artwork_path != routed_artwork_path:
+        raise ValueError(
+            f"{bundle.asset_key} routes PDF artwork to "
+            f"{routed_artwork_path}, but promoted provenance validates "
+            f"{artwork_path}"
+        )
     preview_path = _validate_record(outputs["preview"])
     card_records = outputs.get("cards", [])
     if len(card_records) != layout.rows * layout.columns:
@@ -222,11 +332,15 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    scopes = enabled_poster_scopes() if args.all_enabled else [args.scope]
-    for scope in scopes:
-        _print_result(validate(scope))
+    targets: list[str | PosterBundle] = (
+        enabled_poster_bundles()
+        if args.all_enabled
+        else [args.scope]
+    )
+    for target_value in targets:
+        _print_result(validate(target_value))
     if args.all_enabled:
-        print(f"Validated {len(scopes)} enabled poster bundle(s).")
+        print(f"Validated {len(targets)} enabled poster bundle(s).")
     return 0
 
 

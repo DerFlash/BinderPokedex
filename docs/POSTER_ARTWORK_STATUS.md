@@ -82,10 +82,12 @@ ways. They remain diagnostic evidence, not promoted artwork.
   contains localized set name, card count, and release date and has a bounded
   maximum width and height.
 - `Binder Pokedex` is rendered at the lower-right edge of the final poster.
-- All languages available for the promoted scopes (`de`, `en`, `fr`, `es`,
-  `it`) are supported by the deterministic overlay.
-- The poster is sliced with the same geometry used by preparation and PDF
-  rendering and is inserted exactly once after the first section cover.
+- Deterministic overlays support all nine PDF languages. CJK output requires a
+  matching system font and fails explicitly rather than silently substituting
+  an incapable bitmap font.
+- Posters are sliced with the same geometry used by preparation and PDF
+  rendering. Legacy bundles follow the first section cover; aggregate bundles
+  follow the exact configured section cover.
 - The artwork pipeline models 3x3, 4x3, and 4x4 grids. The PDF renderer checks
   for a matching page grid and carries A3 landscape/portrait extension hints
   for the wide layouts instead of assuming nine cells universally.
@@ -119,7 +121,7 @@ ways. They remain diagnostic evidence, not promoted artwork.
 | Anima | Workflow is retained and runnable | Promote only after it produces a candidate that passes the same review gate |
 | New set art direction | Every current individual set has an explicit catalog brief copied into its manifest | Review or refine the brief before spending the production render; catalog coverage does not replace visual art direction |
 | Wide PDF layouts | 4x3 and 4x4 artwork, placement, prompting, upscale, promotion, validation, slicing, and matching-grid rendering are modeled | Add physical A3 page styles/templates and rendered-PDF QA |
-| Aggregate scopes | Individual TCG sets have one unambiguous poster; the Pokédex has nine generation sections and variant scopes may contain normal, mega, and primal sections | Add a poster-list schema with section-specific scene briefs and insertion points; the first concrete consumer is the Pokédex feature in [#2](https://github.com/DerFlash/BinderPokedex/issues/2) |
+| Aggregate scopes | The generic index, isolated leaf manifests, section filtering, PDF routing, cleanup, nested validation, and nine disabled Pokédex generation configs are implemented | Generate, review, promote, and enable all nine Pokédex artworks in [#2](https://github.com/DerFlash/BinderPokedex/issues/2); then model other aggregate variant scenes |
 
 ## Remaining production requirements
 
@@ -133,8 +135,10 @@ ways. They remain diagnostic evidence, not promoted artwork.
   semantic depth or foreground-occlusion validation.
 - Keep Anima, FLUX.1 Canny, and Qwen Edit experimental until a candidate passes
   the same promotion gate.
-- Implement section-aware multiple posters before enabling the nine Pokédex
-  generation posters or aggregate variant scopes.
+- Generate, visually review, promote, and validate every Pokédex generation
+  artwork before enabling its prepared section binding.
+- Add reviewed section briefs and isolated bindings before enabling other
+  aggregate variant scopes.
 - Implement matching A3/custom PDF page renderers before enabling 4x3 or 4x4
   poster manifests for PDF output.
 - Add staleness detection before offering a higher-level post-fetch
@@ -142,9 +146,10 @@ ways. They remain diagnostic evidence, not promoted artwork.
 
 ## Cleanup boundary
 
-The legacy generated-background composition, `poster.png`, layout guide, and
-background import commands have been removed. Shared IO, placement, and
-typography helpers now live in neutral modules used by the production flow.
+The production flow contains one text-free full-scene artwork contract and no
+tracked layout-reference image, visible placement guide, generated-text stage,
+or background-import command. Shared IO, placement, and typography helpers live
+in neutral modules used by the production flow.
 
 Ignored ComfyUI outputs, generated prompt snapshots, workflows, references, PDF
 builds, and temporary renders are local scratch data. They may be deleted after
@@ -152,9 +157,9 @@ reviewed candidates and their provenance have been promoted.
 
 ## Verification record
 
-Completed on 2026-07-26:
+Completed on 2026-07-27:
 
-- The complete suite passes: 186 tests passed and one unrelated, pre-existing
+- The complete suite passes: 218 tests passed and one unrelated, pre-existing
   EX-logo feature test remains explicitly skipped.
 - Python compilation and `git diff --check` pass.
 - Both promoted bundles pass `validate_promoted_poster.py`, including manifest
@@ -174,6 +179,15 @@ Completed on 2026-07-26:
 - The scene catalog has exact coverage for all 24 current individual TCG sets.
   An isolated batch initialization created the 23 missing standard-3x3
   manifests and preserved the existing reviewed Base1 manifest.
+- The Pokédex resolver loads nine isolated, disabled generation bundles with
+  unique seeds and section-local source data. Its checked-in output contains
+  localized section title, region, and range values for all nine PDF languages.
+- A complete German Pokédex PDF build succeeds with the disabled bindings and
+  retains its expected 126-page output. Nested preparation resolves the full
+  asset key instead of falling back to a leaf-directory basename.
+- Release validation carries the resolved routing bundle through provenance
+  checks and rejects any PDF artwork path other than the promoted, hashed
+  output.
 - Both accepted artworks and all six 750 x 1050 bottom character cards were
   visually compared with the reviewed cutouts after model upscaling. Character
   anatomy, card padding, the continuous lower ground, and absence of adjacent

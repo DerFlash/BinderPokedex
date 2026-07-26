@@ -298,3 +298,116 @@ scopes:
       Use premium promotional-card illustration, clean modern linework,
       restrained bright colors, and spacious atmospheric depth.
     ground_noun: meadow
+
+# Aggregate scopes bind one independently reviewable scene to each section.
+# These briefs use the same centrally generated identity, layout, safe-area,
+# no-text, and continuous-ground contract as individual TCG sets.
+section_scopes:
+  Pokedex:
+    gen1:
+      concept: the first Pokédex generation and the Kanto region
+      setting: >-
+        The artwork contains an inviting Kanto-inspired meadow between layered
+        woodland, soft blue mountains, a calm river bend, and one tiny distant
+        research building with a completely blank facade.
+      lighting: Warm clear morning sunlight enters from the upper left.
+      rendering: >-
+        Use nostalgic hand-painted cel animation linework, restrained natural
+        colors, and gentle atmospheric depth.
+      ground_noun: meadow
+
+    gen2:
+      concept: the second Pokédex generation and the Johto region
+      setting: >-
+        The artwork contains a quiet Johto-inspired valley with old cedar
+        woodland, broad golden grass, distant tiled roofs without writing, and
+        a pale mountain lake beneath layered autumn clouds.
+      lighting: Soft amber afternoon light enters from the upper left.
+      rendering: >-
+        Use warm storybook cel-painted linework, muted seasonal colors, and
+        spacious atmospheric depth.
+      ground_noun: valley grass
+
+    gen3:
+      concept: the third Pokédex generation and the Hoenn region
+      setting: >-
+        The artwork contains a lush Hoenn-inspired coastal clearing with
+        tropical woodland, distant volcanic ridges, bright blue water, and
+        humid cloud layers far above the horizon.
+      lighting: Brilliant subtropical daylight enters from the upper left.
+      rendering: >-
+        Use lively watercolor-cel linework, controlled saturated greens and
+        blues, and clear humid depth.
+      ground_noun: coastal grass
+
+    gen4:
+      concept: the fourth Pokédex generation and the Sinnoh region
+      setting: >-
+        The artwork contains a cool Sinnoh-inspired highland meadow with dark
+        conifers, a distant snow-streaked mountain, a quiet lake, and ancient
+        weathered stone confined to the far background.
+      lighting: Crisp silver-gold mountain light enters from the upper left.
+      rendering: >-
+        Use clean cinematic cel-painted linework, restrained cool colors, and
+        long alpine atmospheric depth.
+      ground_noun: highland grass
+
+    gen5:
+      concept: the fifth Pokédex generation and the Unova region
+      setting: >-
+        The artwork contains a broad Unova-inspired riverside park where
+        natural woodland opens toward a distant modern skyline with completely
+        blank facades and a graceful bridge low on the horizon.
+      lighting: Clear early-evening light enters from the upper left.
+      rendering: >-
+        Use polished cel-painted linework, balanced urban and natural colors,
+        and deep readable perspective.
+      ground_noun: park grass
+
+    gen6:
+      concept: the sixth Pokédex generation and the Kalos region
+      setting: >-
+        The artwork contains an elegant Kalos-inspired flower meadow with
+        clipped distant woodland, pale limestone hills, a narrow reflective
+        canal, and a tiny unmarked glass landmark on the far horizon.
+      lighting: Luminous spring daylight enters from the upper left.
+      rendering: >-
+        Use graceful premium-card linework, restrained floral colors, and
+        bright airy atmospheric depth.
+      ground_noun: meadow
+
+    gen7:
+      concept: the seventh Pokédex generation and the Alola region
+      setting: >-
+        The artwork contains an Alola-inspired island clearing with low
+        tropical foliage, black volcanic slopes, a turquoise bay, and distant
+        cloud-wrapped islands beneath an expansive sky.
+      lighting: Warm tropical sunlight enters from the upper left.
+      rendering: >-
+        Use cheerful modern cel-painted linework, controlled tropical colors,
+        and luminous oceanic depth.
+      ground_noun: island grass
+
+    gen8:
+      concept: the eighth Pokédex generation and the Galar region
+      setting: >-
+        The artwork contains a Galar-inspired green upland with stone walls
+        confined to the distance, rolling moorland, a misty lake, and a tiny
+        brick town silhouette with blank facades below dramatic clouds.
+      lighting: Broken gold sunlight enters from the upper left through cool clouds.
+      rendering: >-
+        Use detailed trading-card linework, restrained emerald and slate
+        colors, and broad weather-filled depth.
+      ground_noun: upland grass
+
+    gen9:
+      concept: the ninth Pokédex generation and the Paldea region
+      setting: >-
+        The artwork contains a sunlit Paldea-inspired valley with olive
+        woodland, warm ochre hills, a distant blue coast, and a tiny
+        blank-facade academy silhouette low on the horizon.
+      lighting: Clear Mediterranean morning light enters from the upper left.
+      rendering: >-
+        Use bright contemporary cel-painted linework, restrained warm natural
+        colors, and spacious panoramic depth.
+      ground_noun: valley grass

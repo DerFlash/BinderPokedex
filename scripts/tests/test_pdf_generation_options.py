@@ -154,6 +154,8 @@ def test_variant_pdf_generation_applies_cli_options(monkeypatch, tmp_path):
         tmp_path / "Example_DE_TEST_NO_IMAGES_NO_POSTER.pdf"
     )
     assert generator_factory.call_args.kwargs["include_poster"] is False
+    assert generator_factory.call_args.kwargs["scope_name"] == "Example"
+    assert generator_factory.call_args.kwargs["poster_source_data"] is source
     assert len(prepared["sections"]["all"]["cards"]) == 9
     assert all(
         "image_url" not in card

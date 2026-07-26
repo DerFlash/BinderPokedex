@@ -73,6 +73,33 @@ def scene_for_scope(
         ) from error
 
 
+def section_scenes_for_scope(
+    scope: str,
+    *,
+    catalog_path: Path | None = None,
+) -> dict[str, dict[str, Any]]:
+    """Return reviewed creative briefs for every configured aggregate section."""
+    path = catalog_path or SCENE_CATALOG
+    catalog = load_yaml(path)
+    if catalog.get("version") != 1:
+        raise ValueError(f"Unsupported poster scene catalog version: {path}")
+    aggregate_scopes = catalog.get("section_scopes", {})
+    if not isinstance(aggregate_scopes, dict):
+        raise ValueError(f"section_scopes must be a mapping: {path}")
+    configured = aggregate_scopes.get(scope)
+    if not isinstance(configured, dict) or not configured:
+        raise KeyError(
+            f"No section poster scenes configured for aggregate scope "
+            f"{scope!r} in {path}"
+        )
+    return {
+        str(section_id): deepcopy(
+            _validate_scene(f"{scope}/{section_id}", scene)
+        )
+        for section_id, scene in configured.items()
+    }
+
+
 def current_tcg_scopes(data_dir: Path | None = None) -> set[str]:
     """Return every individual TCG-set scope in generated data."""
     scope_dir = data_dir or SCOPE_DATA

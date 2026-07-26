@@ -8,8 +8,10 @@ from pathlib import Path
 
 try:
     from .create_comfyui_poster_workflow import megapixel_marker, node
+    from .poster_io import poster_asset_slug
 except ImportError:
     from create_comfyui_poster_workflow import megapixel_marker, node
+    from poster_io import poster_asset_slug
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -119,7 +121,7 @@ def build_workflow(
             "SaveImage",
             images=["16", 0],
             filename_prefix=(
-                f"{scope.lower()}_qwen2511_edit_"
+                f"{poster_asset_slug(scope)}_qwen2511_edit_"
                 f"{megapixel_marker(megapixels)}_scene_seed_{seed}"
             ),
         ),

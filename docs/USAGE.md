@@ -54,12 +54,14 @@ python scripts/pdf/generate_pdf.py --scope all
 
 ### Optional poster pages
 
-The normal PDF command automatically includes a poster page when the scope has
-an accepted local artwork and `pdf.enabled: true` in
-`data/poster_assets/<scope>/poster.yaml`. Scopes without that opt-in continue to
-generate normally. Poster generation itself is a separate reviewed workflow;
-the PDF command only consumes the promoted local artwork and does not start
-ComfyUI.
+The normal PDF command automatically includes accepted local poster artwork.
+Individual scopes opt in with `pdf.enabled: true` in
+`data/poster_assets/<scope>/poster.yaml`. Aggregate scopes use
+`data/poster_assets/<scope>/posters.yaml` to bind isolated leaf manifests to
+section IDs; each enabled page is inserted after its matching section cover.
+Scopes and bindings without that opt-in continue to generate normally. Poster
+generation itself is a separate reviewed workflow; the PDF command only
+consumes promoted local artwork and does not start ComfyUI.
 
 Skip the poster for one build without changing the scope manifest:
 
@@ -72,7 +74,8 @@ python scripts/pdf/generate_pdf.py \
 
 The skipped build uses a separate filename such as
 `output/de/Base1_DE_NO_POSTER.pdf`, so it cannot overwrite
-`output/de/Base1_DE.pdf`. `--skip-poster` also bypasses poster asset loading and
+`output/de/Base1_DE.pdf`. `--skip-poster` bypasses all poster-index, manifest,
+and artwork loading—including every section poster of an aggregate scope—and
 can be combined with `--test` and `--skip-images`.
 
 Poster artwork is an explicit optional post-fetch workflow. See
