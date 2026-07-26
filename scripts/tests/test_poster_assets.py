@@ -35,6 +35,7 @@ from scripts.poster_assets.queue_comfyui_workflow import (
 )
 from scripts.poster_assets.prepare_comfyui_poster import (
     build_identity_references,
+    build_scene_reference,
     card_safe_conditioning_placements,
 )
 from scripts.poster_assets.composition import cutout_placements
@@ -188,6 +189,26 @@ def test_sv035_uses_default_conditioning_without_base1_offsets():
     ]
 
 
+def test_inpaint_reference_uses_exact_final_placements(tmp_path: Path):
+    scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
+    build_scene_reference("Base1", 0.25, tmp_path)
+
+    actual = Image.open(tmp_path / "inpaint_reference.png").convert("RGBA")
+    layout = build_page_layout("standard_3x3", width_px=actual.width)
+    expected = Image.new("RGBA", actual.size, (226, 224, 211, 0))
+    for placement in cutout_placements(layout, scope_dir):
+        expected.alpha_composite(
+            placement["image"],
+            (placement["x"], placement["y"]),
+        )
+
+    assert ImageChops.difference(actual, expected).getbbox() is None
+    assert ImageChops.difference(
+        actual,
+        Image.open(tmp_path / "scene_reference.png").convert("RGBA"),
+    ).getbbox() is not None
+
+
 def test_identity_references_use_scale_aware_appearance_canvases(tmp_path: Path):
     scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
     manifest = fetch_cutouts.load_yaml(scope_dir / "poster.yaml")
@@ -327,11 +348,12 @@ def test_comfyui_inpaint_uses_source_once_without_reference_conditioning():
         if node["class_type"] == "LoadImage"
     }
 
-    assert loaded_images == {"scene_reference.png"}
+    assert loaded_images == {"inpaint_reference.png"}
     assert not any(node["class_type"] == "ReferenceLatent" for node in workflow.values())
     assert any(node["class_type"] == "VAEEncodeForInpaint" for node in workflow.values())
     assert not any(node["class_type"] == "ImageCompositeMasked" for node in workflow.values())
     assert workflow["9"]["inputs"]["positive"] == ["4", 0]
+    assert workflow["15"]["inputs"]["grow_mask_by"] == 0
 
 
 def test_comfyui_edit_uses_reference_with_independent_empty_target():

@@ -1,19 +1,21 @@
-Complete the transparent parts of the supplied image as one cohesive portrait
-illustration. The existing Pokemon are finished source artwork at their exact
-required positions, sizes, poses, and shared ground level. Preserve them as the
-only three characters. Do not redraw, replace, move, duplicate, or extend their
-anatomy.
+Use case: identity-preserve background completion.
+Fill only the transparent masked area of the supplied portrait canvas. Treat every
+opaque source pixel as immutable, finished artwork. Generate no replacement,
+continuation, echo, counterpart, or interpretation of any opaque subject.
 
-Paint a nostalgic coastal Kanto meadow associated with the Pokemon TCG Scarlet &
-Violet - 151 set around them: continuous grassland, layered woodland, weathered
-stones, distant low hills, and a glimpse of a calm blue bay. Use gentle watercolor
-texture, clean cel-painted forms, and warm late-afternoon sunlight from the upper
-left. Make contact shadows, reflected light, nearby plants, and color grading
-connect naturally to the existing characters.
+Create a quiet, unoccupied coastal Kanto meadow in a gentle watercolor and clean
+cel-painted style: continuous grassland, layered woodland, weathered stones,
+distant low hills, and a glimpse of a calm blue bay. Warm late-afternoon sunlight
+enters from the upper left. Continue natural ground and soft contact shadows
+directly beside the opaque source pixels, while keeping the generated scenery
+behind or beside their complete contours. Keep a generous quiet buffer around
+every source contour. Render that buffer as uniform, low-contrast ground without
+isolated foreground detail. Outside the buffer the landscape may be richly
+detailed. Match the palette and line quality of the supplied artwork.
 
-Apply coherent camera-space depth. Environmental elements may cross a character
-contour only where genuinely closer to the camera. Keep faces, eyes, flames,
-shells, bulbs, and recognizable anatomy clear. Do not draw text, letters, numbers,
-logos, title art, boxes, plaques, panels, landing pads, circles, platforms, paths,
-roads, guides, cards, borders, UI, watermarks, people, trainers, or additional
-creatures.
+Keep the upper area visually calm for later deterministic poster information.
+The generated masked area contains scenery only. It contains no living subject,
+face, eyes, body, mascot, animal, creature, person, trainer, statue, silhouette,
+character-shaped plant, or duplicate source shape. Do not draw text, letters,
+numbers, logos, title art, boxes, plaques, panels, landing pads, circles,
+platforms, paths, roads, guides, cards, borders, UI, watermarks, or crop marks.

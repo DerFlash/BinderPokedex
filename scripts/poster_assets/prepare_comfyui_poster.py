@@ -192,10 +192,16 @@ def build_identity_references(
         )
 
 
-def build_scene_reference(scope: str, megapixels: float) -> Path:
-    """Place exact cutouts and write a protected identity-core mask."""
+def build_scene_reference(
+    scope: str,
+    megapixels: float,
+    output_dir: Path | None = None,
+) -> Path:
+    """Write model-compensated edit and exact identity-lock references."""
     scope_dir = POSTER_ASSETS / scope
     manifest = load_yaml(scope_dir / "poster.yaml")
+    reference_dir = output_dir or scope_dir / "comfyui_poster"
+    reference_dir.mkdir(parents=True, exist_ok=True)
     width, height = output_dimensions(scope, megapixels)
     layout = build_page_layout(manifest.get("layout", {}).get("name", "standard_3x3"), width_px=width)
     reference = Image.new("RGBA", (width, height), (226, 224, 211, 0))
@@ -210,9 +216,26 @@ def build_scene_reference(scope: str, megapixels: float) -> Path:
             padded = Image.new("RGBA", (width, height), (226, 224, 211, 0))
             padded.alpha_composite(reference)
             reference = padded
-    path = scope_dir / "comfyui_poster" / "scene_reference.png"
+    path = reference_dir / "scene_reference.png"
     reference.save(path, format="PNG", optimize=True)
-    build_identity_references(scope_dir, manifest)
+
+    # Inpainting is not a semantic redraw. It needs the reviewed cutouts at
+    # their final size and position; edit-only compensation would make the
+    # model see missing or undersized subjects and invent replacements.
+    inpaint_reference = Image.new(
+        "RGBA", (width, height), (226, 224, 211, 0)
+    )
+    for placement in placements:
+        inpaint_reference.alpha_composite(
+            placement["image"], (placement["x"], placement["y"])
+        )
+    inpaint_reference.save(
+        path.with_name("inpaint_reference.png"),
+        format="PNG",
+        optimize=True,
+    )
+
+    build_identity_references(scope_dir, manifest, reference_dir)
     # AnimaEdit is an image-edit model and strongly retains the source material.
     # Give it only an abstract sky/meadow material scaffold—not prior artwork or
     # layout geometry—so the transparent area is interpreted as landscape.

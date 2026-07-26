@@ -129,10 +129,19 @@ def generation_input_records(
     if not cutouts:
         raise ValueError(f"No cutouts listed in {cutout_manifest_path}")
 
-    references = [file_record(work_dir / "scene_reference.png", image=True)]
-    if generation.get("engine") == "flux" and generation.get(
-        "reference_mode"
-    ) == "identity":
+    if generation.get("engine") == "flux" and generation.get("mode") == "inpaint":
+        references = [
+            file_record(work_dir / "inpaint_reference.png", image=True),
+        ]
+    else:
+        references = [
+            file_record(work_dir / "scene_reference.png", image=True)
+        ]
+    if (
+        generation.get("engine") == "flux"
+        and generation.get("mode") != "inpaint"
+        and generation.get("reference_mode") == "identity"
+    ):
         references.extend(
             file_record(path, image=True)
             for path in sorted(work_dir.glob("identity_reference_*.png"))

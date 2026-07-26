@@ -1,24 +1,25 @@
-Complete the transparent parts of the supplied image as one cohesive portrait
-illustration. The three existing Pokémon are finished source artwork at their exact
-required positions, sizes, poses and shared ground level. Preserve them as the only
-three characters. Do not redraw, replace, move, duplicate or extend their anatomy.
+Use case: identity-preserve background completion.
+Fill only the transparent masked area of the supplied portrait canvas. Treat every
+opaque source pixel as immutable, finished artwork. Generate no replacement,
+continuation, echo, counterpart, or interpretation of any opaque subject.
 
-Paint a nostalgic creature-collecting card-game environment associated with the
-1999 Base Set around them in a refined late-1990s Japanese cel-painted animation
-style: a peaceful natural meadow, layered forest edges, soft mountains, and a
-distant generic Pokémon research building. Warm morning sunlight enters from the
-upper left. Make contact shadows, reflected green light, surrounding vegetation
-and color grading connect naturally to the existing characters.
+Create a quiet, unoccupied late-1990s Japanese cel-painted meadow environment:
+layered forest edges, soft mountains, and one distant generic research building
+with a completely blank facade. Warm morning sunlight enters from the upper left.
+Continue natural ground and soft contact shadows directly beside the opaque source
+pixels, while keeping the generated scenery behind or beside their complete
+contours. Keep a generous quiet buffer around every source contour. Render that
+buffer as uniform, low-contrast meadow ground without isolated foreground detail.
+Outside the buffer the landscape may be richly detailed. Match the palette and
+line quality of the supplied artwork.
 
-Apply one coherent camera-space depth order. A landscape element may cross a
-character contour only where it is genuinely closer to the camera; otherwise it
-must remain behind the character. Keep faces, eyes and recognizable anatomy clear.
-Never invent anatomy beside a silhouette: no extra ears, horns, tails, limbs,
-leaves, flames, wings, hair, accessories or duplicate body parts. In particular,
-Mewtwo must not gain rabbit ears or any large shape beside or above its head.
+Keep the upper third as uninterrupted pale blue sky, sunlight, and a few soft
+clouds. Keep the middle center visually calm while continuing the scenery. The
+meadow is an unbroken natural surface with no route toward the building.
 
-Keep the upper third as uninterrupted pale blue sky, sunlight and a few soft
-clouds. Keep the middle center visually calm while continuing the natural scenery.
-Do not draw text, letters, numbers, logos, title art, boxes, plaques, panels,
-landing pads, circles, platforms, paths, roads, radial walkways, layout guides,
-cards, borders, UI, watermarks, people, trainers or additional creatures.
+The generated masked area contains scenery and architecture only. It contains no
+living subject, face, eyes, body, mascot, animal, creature, person, trainer,
+statue, silhouette, character-shaped plant, or duplicate source shape. Do not
+draw text, letters, numbers, logos, title art, boxes, plaques, panels, landing
+pads, circles, platforms, paths, roads, radial walkways, layout guides, cards,
+borders, UI, watermarks, or crop marks.

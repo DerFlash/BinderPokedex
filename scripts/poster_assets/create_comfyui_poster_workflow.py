@@ -101,7 +101,14 @@ def build_workflow(
         "11": node("SamplerCustomAdvanced", noise=["8", 0], guider=["9", 0], sampler=["10", 0], sigmas=["7", 0], latent_image=["15", 0]),
         "12": node("VAEDecode", samples=["11", 0], vae=["3", 0]),
         "13": node("SaveImage", images=["12", 0], filename_prefix=f"{scope.lower()}_flux2_{generation_mode}_{megapixel_marker(megapixels)}_scene_seed_{seed}"),
-        "14": node("LoadImage", image="scene_reference.png"),
+        "14": node(
+            "LoadImage",
+            image=(
+                "inpaint_reference.png"
+                if generation_mode == "inpaint"
+                else "scene_reference.png"
+            ),
+        ),
     }
     if generation_mode == "edit":
         # Official edit topology: the reference conditions an independent empty
@@ -153,7 +160,9 @@ def build_workflow(
             pixels=["14", 0],
             vae=["3", 0],
             mask=["14", 1],
-            grow_mask_by=4,
+            # Identity-lock mode: never grow the generated background into the
+            # reviewed character silhouettes.
+            grow_mask_by=0,
         )
         workflow["9"]["inputs"]["positive"] = ["4", 0]
     return workflow

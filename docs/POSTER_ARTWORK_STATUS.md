@@ -6,16 +6,22 @@ It complements the implementation-focused
 
 Last audited: 2026-07-26
 
-## Current production candidates
+## Current committed baselines
 
-| Scope | Engine | Seed | Artwork | PDF integration |
+| Scope | Engine | Seed | Artwork verdict | PDF integration |
 | --- | --- | ---: | --- | --- |
-| `Base1` | FLUX.2 Klein 4B distilled, edit/identity, 4 steps | `260716311` | reviewed | enabled |
-| `SV03.5` | FLUX.2 Klein 4B distilled, edit/identity, 4 steps | `260726101` | reviewed | enabled |
+| `Base1` | FLUX.2 Klein 4B distilled, edit/identity, 4 steps | `260716311` | layout baseline; rejected for final identity fidelity | enabled |
+| `SV03.5` | FLUX.2 Klein 4B distilled, edit/identity, 4 steps | `260726101` | provisional; must pass the stricter identity gate | enabled |
 
 Both candidates were sampled as one cohesive scene at 0.5 MP, model-upscaled to
 the exact 300-dpi physical layout, and then finalized with deterministic
 typography. The finalizer never composites, moves, or redraws Pokemon.
+
+The committed files remain reproducible integration fixtures while replacement
+artwork is evaluated. They are not automatically accepted as final visual assets.
+For Base1, the source comparison found a changed Mewtwo finger count, chest
+geometry, and head/face. Higher-resolution FLUX.2 comparisons improved the
+landscape but did not remove the identity drift.
 
 ## Accepted requirements
 
@@ -28,9 +34,9 @@ typography. The finalizer never composites, moves, or redraws Pokemon.
   clearings, poster frames, text, or logos are part of the generated artwork.
 - Environmental occlusion follows one camera-space depth order. Landscape
   elements may cover a character only when they plausibly lie in front of it.
-- Reference silhouettes are treated as observed geometry. Character count,
-  anatomy, colors, proportions, pose, scale, and placement must not be
-  reinterpreted.
+- Reference silhouettes are supplied as observed geometry. The generator is
+  required to retain character count, anatomy, colors, proportions, pose, scale,
+  and placement; current Base1 artwork does not yet meet this requirement.
 - The physical layout uses 63.5 x 88.9 mm cards and 5 mm binder gaps. Each
   featured Pokemon remains wholly inside one bottom-row card, with visible
   landscape padding around its silhouette.
@@ -60,7 +66,7 @@ typography. The finalizer never composites, moves, or redraws Pokemon.
 
 | Requirement | Current boundary | Acceptance criterion |
 | --- | --- | --- |
-| Character identity | Strong reference conditioning and manual review; diffusion remains stochastic | Keep mandatory visual review or add a reliable silhouette/anatomy validator |
+| Character identity | Base1 FLUX.2 edit and native comparisons fail on Mewtwo's fingers, chest, and face | Preserve the reviewed head/face, chest geometry, digit count, limbs, tail, proportions, pose, colors, and defining silhouette |
 | Card-safe output | Source references are validated; generated silhouettes are reviewed manually | Add generated-artwork boundary validation before promotion |
 | Natural occlusion | Prompted and visually reviewed | Keep as a visual-review item unless a dependable depth check becomes available |
 | Engine extensibility | FLUX and Anima are selectable through a shared runner | Replace hard-coded engine branching before adding a third architecture |
@@ -71,6 +77,10 @@ typography. The finalizer never composites, moves, or redraws Pokemon.
 
 - Keep the mandatory visual review for character identity, anatomy, natural
   occlusion, and generated silhouette boundaries.
+- Treat any changed digit count, head/face, chest geometry, limb, tail, pose,
+  color, or defining contour as a hard rejection even if the background improves.
+- Reject generated scenery beside a subject when it reads as an additional body
+  part.
 - Add an automated generated-artwork silhouette validator only if it can avoid
   false confidence around natural foreground occlusion.
 - Replace hard-coded engine branching before adding a third model architecture.
@@ -105,7 +115,8 @@ Completed on 2026-07-26:
   inspected. Their poster page embeds exactly nine 750 x 1050 images at
   300 x 300 ppi.
 - The complete Base1 and SV03.5 artwork and bottom-row character crops were
-  visually reviewed, including Mewtwo's identity and top/right card padding.
+  visually reviewed for layout and top/right card padding. A stricter source
+  comparison subsequently rejected Base1's Mewtwo identity fidelity.
 
 For every future candidate, the same whole-poster, per-card, localized-overlay,
 and rendered-PDF review remains the promotion gate. The stochastic identity,

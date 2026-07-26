@@ -154,7 +154,7 @@ venv/bin/python scripts/poster_assets/run_comfyui_poster.py \
 | Engine | Prompt | Scene input | Workflow | Final filename marker |
 | --- | --- | --- | --- | --- |
 | FLUX.2 Klein edit | `prompt.txt` | `scene_reference.png` | `workflow_api_edit_<size>_<seed>.json` | `_flux_edit_..._poster_` |
-| FLUX.2 Klein inpaint | `inpaint_prompt.txt` | `scene_reference.png` | `workflow_api_inpaint_<size>_<seed>.json` | `_flux_inpaint_..._poster_` |
+| FLUX.2 Klein inpaint | `inpaint_prompt.txt` | `inpaint_reference.png` | `workflow_api_inpaint_<size>_<seed>.json` | `_flux_inpaint_..._poster_` |
 | AnimaEdit | `anima_prompt.txt` | `anima_scene_reference.png` | `anima_workflow_api.json` | `_anima_poster_` |
 
 Anima defaults to `AnimaYume_tuned_v05.safetensors`; another compatible
@@ -206,20 +206,35 @@ conditioning:
 This replaces the former aspect-ratio heuristic that treated every tall subject
 like Mewtwo.
 The two FLUX modes deliberately use mutually exclusive conditioning topologies.
-`inpaint` keeps the Pokemon as the unmasked source of `VAEEncodeForInpaint` and
-does not add a `ReferenceLatent`. `edit` uses an independent empty target latent
-and supplies the composition only through `ReferenceLatent`. Feeding the same
-composition through both paths presents every subject twice and is prohibited by
-tests because it encourages duplicates and anatomy adjacent to silhouettes. The
-FLUX finalizer no longer composites identity pixels after sampling. Every
-landscape element follows one camera-space depth order: elements may occlude a
-Pokemon only when they are genuinely closer to the camera. This is a general
-perspective rule, not a special case for grass, feet, or the lower edge.
+`inpaint` is the identity-lock path. It keeps the exact final-size Pokemon from
+`inpaint_reference.png` as the unmasked source of `VAEEncodeForInpaint`, never
+grows the background mask into their silhouettes, and does not add a
+`ReferenceLatent`. Edit-only scale and placement compensation is confined to
+`scene_reference.png`; applying it to inpainting makes complete subjects appear
+missing and encourages generated replacements. `edit` uses an independent empty
+target latent and supplies the compensated composition only through
+`ReferenceLatent`. Feeding the same composition through both paths presents every
+subject twice and is prohibited by tests because it encourages duplicates and
+anatomy adjacent to silhouettes. The FLUX finalizer no longer composites identity
+pixels after sampling.
+
+Identity-lock intentionally keeps generated landscape behind or beside the
+protected silhouettes. Edit mode retains the general camera-space depth rule:
+elements may occlude a Pokemon only when they are genuinely closer to the camera.
+This is not a special case for grass, feet, or the lower edge; it is the explicit
+tradeoff between exact source anatomy and freely generated foreground overlap.
 
 FLUX.2 Klein 4B generation remains stochastic. At higher resolutions it can
-occasionally invent anatomy adjacent to a silhouette or duplicate a referenced
-subject. Such candidates must be rejected during visual review; neither FLUX mode
-uses a post-sampling identity composite to conceal these failures.
+invent anatomy adjacent to a silhouette or reinterpret the supplied subject.
+Such candidates must be rejected during visual review; neither FLUX mode uses a
+post-sampling identity composite to conceal these failures.
+
+Character authenticity outranks background detail. A candidate fails review if
+even one protected subject changes its head or face, chest geometry, digit count,
+limbs, tail, body proportions, pose, colors, or defining silhouette. A generated
+shape immediately beside a contour also fails if it can be read as an extra body
+part. Review is performed against the source cutout at the final bottom-card crop
+size, not only against the complete poster.
 
 The default remains the distilled 4-step model. The undistilled Base model can be
 evaluated without changing the workflow architecture:
@@ -231,23 +246,30 @@ venv/bin/python scripts/poster_assets/run_comfyui_poster.py \
   --scope Base1 --seed 260715201 --megapixels 0.25 --language en
 ```
 
-The initial controlled 0.25 MP comparison used seed `260716301`. True inpainting
-avoided duplicates but reinterpreted all three Pokemon as generic animals. Base 4B
-with 24 steps produced richer scenery but increased character drift. The correctly
-wired distilled 4-step `edit` mode produced exactly three correctly placed subjects
-and is therefore the default. Compact scale-aware identity references preserve
-Mewtwo's head anatomy without promoting it beyond its bottom-left print region.
-Generating at 0.5 MP also gives the model enough spatial precision to keep the
-wide pose inside that region. These experiments show that additional diffusion
-steps alone do not solve reference-identity hallucinations.
+The initial controlled 0.25 MP comparison used seed `260716301`. Its inpaint
+workflow accidentally reused the edit-compensated composition, so the model saw
+undersized or apparently missing subjects and generated generic replacements.
+The corrected inpaint topology uses exact final-size cutouts and does not grow
+the background mask into their silhouettes. At 0.5 MP, however, small details
+still degrade during VAE reconstruction and upscaling. A fresh 2 MP run recovered
+more background detail and more of the source linework, but FLUX.2 still generated
+subject-like shapes next to open contours. The native edit comparison also
+changed Mewtwo's face, chest geometry, and finger count. All of those experimental
+candidates are rejected. These experiments show that more pixels and additional
+diffusion steps alone do not solve reference-identity hallucinations.
 
-The promoted Base1 candidate is `poster-flux2.png`, generated with seed
+The committed Base1 baseline is `poster-flux2.png`, generated with seed
 `260716311`, distilled FLUX.2 Klein 4B, four steps, `edit` mode, and `identity`
 reference mode. The cohesive scene was sampled at 0.5 MP and upscaled as a whole
 to the exact 300-dpi layout before the deterministic overlay. Identity mode supplies three
 compact appearance references followed by the combined scene composition. The
 prompt labels those roles explicitly so anatomy and invisible print-safe geometry
 reinforce each other rather than competing.
+
+It remains useful as a reproducible integration and layout baseline, but it no
+longer qualifies as final artwork: Mewtwo's hand, chest, and head diverge from the
+source cutout. It must not be used as evidence that the character-authenticity
+requirement is satisfied.
 
 The promoted SV03.5 candidate uses the same model and topology with seed
 `260726101`. It was sampled at 0.5 MP, upscaled as one complete text-free scene
