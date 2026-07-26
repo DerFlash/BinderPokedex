@@ -13,6 +13,14 @@ buffer as uniform, low-contrast meadow ground without isolated foreground detail
 Outside the buffer the landscape may be richly detailed. Match the palette and
 line quality of the supplied artwork.
 
+Across the complete lower thirty-five percent of the canvas, use one continuous
+low meadow floor with only short, low-contrast texture. This is a single ground
+plane across all three subjects, not three clearings, halos, platforms, or
+landing pads. Put no tall plants, flowers, rocks, bushes, branches, strong color
+patches, hard-edged shadows, vertical strokes, or contour-following shapes in
+this band. Nothing generated may touch or trace a source contour except a soft
+horizontal contact shadow directly beneath its feet.
+
 Keep the upper third as uninterrupted pale blue sky, sunlight, and a few soft
 clouds. Keep the middle center visually calm while continuing the scenery. The
 meadow is an unbroken natural surface with no route toward the building.

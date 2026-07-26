@@ -1,0 +1,27 @@
+Create one cohesive vertical watercolor and clean cel-painted trading-card poster
+illustration. The supplied Canny guide is mandatory source geometry, not loose
+inspiration. Reconstruct exactly the three official Pokémon designs traced by the
+guide, at those exact positions, scales, poses, colors, and silhouettes. Do not
+simplify, redesign, stylize, replace, move, crop, merge, or duplicate any part.
+
+Bottom left is Bulbasaur with its exact face, four legs, spots, bulb, colors, and
+proportions. Bottom center is Charmander with its exact face, arms, three-clawed
+feet, body proportions, orange tail, and one flame. Bottom right is Squirtle with
+its exact face, limbs, tail, shell geometry, colors, and proportions. There are
+exactly three Pokémon and no other living or character-shaped subject. Each
+Pokémon remains fully inside its own bottom-row physical card region with
+comfortable landscape space around every side of its silhouette.
+
+Build a nostalgic coastal Kanto meadow associated with the Scarlet & Violet - 151
+set around the guided figures: continuous grassland, layered woodland, weathered
+stones, distant low hills, and a glimpse of a calm blue bay. Warm late-afternoon
+sunlight enters from the upper left. Use coherent contact shadows, reflected
+light, and one camera-space depth order. Landscape details may naturally pass in
+front of a figure only when perspective genuinely places them closer to the
+viewer; otherwise keep them behind the complete guided contour. Never interpret
+nearby plants, shadows, or stones as additional anatomy.
+
+Keep the upper and middle-center areas visually calm for later deterministic
+poster information. Do not draw text, letters, numbers, logos, title art, boxes,
+plaques, panels, landing pads, circles, platforms, paths, roads, guides, cards,
+borders, UI, watermarks, people, trainers, crop marks, or additional creatures.

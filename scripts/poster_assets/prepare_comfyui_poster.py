@@ -192,6 +192,87 @@ def build_identity_references(
         )
 
 
+def build_qwen_identity_references(
+    scope_dir: Path,
+    placements: list[dict[str, object]],
+    output_dir: Path,
+) -> None:
+    """Write two detail sheets for Qwen's three-image edit interface."""
+    groups = (
+        placements[: max(1, len(placements) // 2)],
+        placements[max(1, len(placements) // 2) :],
+    )
+    neutral = (226, 224, 211)
+    cell_width = 512
+    canvas_height = 640
+    for sheet_index, group in enumerate(groups, start=1):
+        sheet = Image.new(
+            "RGB",
+            (cell_width * max(1, len(group)), canvas_height),
+            neutral,
+        )
+        for column, placement in enumerate(group):
+            item = placement["item"]
+            original = Image.open(
+                scope_dir / "cutouts" / str(item["file"])
+            ).convert("RGBA")
+            alpha_box = original.getchannel("A").getbbox()
+            if alpha_box is None:
+                raise ValueError("Qwen identity reference has no visible pixels")
+            original = original.crop(alpha_box)
+            original.thumbnail(
+                (cell_width - 72, canvas_height - 96),
+                Image.Resampling.LANCZOS,
+            )
+            x = column * cell_width + (cell_width - original.width) // 2
+            y = (canvas_height - original.height) // 2
+            sheet.paste(
+                original.convert("RGB"),
+                (x, y),
+                original.getchannel("A"),
+            )
+        sheet.save(
+            output_dir / f"qwen_identity_reference_{sheet_index}.png",
+            format="PNG",
+            optimize=True,
+        )
+
+
+def build_upper_context_mask(
+    width: int,
+    height: int,
+    placements: list[dict[str, object]],
+    output_dir: Path,
+) -> None:
+    """Protect one continuous lower scene band during identity-lock pass two."""
+    transition_start = round(height * 0.60)
+    protected_start = round(height * 0.70)
+    for placement in placements:
+        visible_box = placement["image"].getchannel("A").getbbox()
+        if visible_box is None:
+            raise ValueError("Identity-lock placement has no visible pixels")
+        subject_top = int(placement["y"]) + visible_box[1]
+        if subject_top < protected_start:
+            raise ValueError(
+                "Identity-lock subject extends into the generated upper scene"
+            )
+
+    alpha = Image.new("L", (width, height), 255)
+    alpha_draw = ImageDraw.Draw(alpha)
+    alpha_draw.rectangle((0, 0, width, transition_start), fill=0)
+    transition_height = protected_start - transition_start
+    for y in range(transition_start, protected_start):
+        value = round(255 * (y - transition_start) / transition_height)
+        alpha_draw.line((0, y, width, y), fill=value)
+    mask_image = Image.new("RGBA", (width, height), (0, 0, 0, 255))
+    mask_image.putalpha(alpha)
+    mask_image.save(
+        output_dir / "upper_context_mask.png",
+        format="PNG",
+        optimize=True,
+    )
+
+
 def build_scene_reference(
     scope: str,
     megapixels: float,
@@ -203,7 +284,10 @@ def build_scene_reference(
     reference_dir = output_dir or scope_dir / "comfyui_poster"
     reference_dir.mkdir(parents=True, exist_ok=True)
     width, height = output_dimensions(scope, megapixels)
-    layout = build_page_layout(manifest.get("layout", {}).get("name", "standard_3x3"), width_px=width)
+    layout = build_page_layout(
+        manifest.get("layout", {}).get("name", "standard_3x3"),
+        width_px=width,
+    )
     reference = Image.new("RGBA", (width, height), (226, 224, 211, 0))
     placements = cutout_placements(layout, scope_dir)
     scene_placements = card_safe_conditioning_placements(placements, manifest)
@@ -233,6 +317,29 @@ def build_scene_reference(
         path.with_name("inpaint_reference.png"),
         format="PNG",
         optimize=True,
+    )
+    build_upper_context_mask(
+        width,
+        height,
+        placements,
+        reference_dir,
+    )
+    # FLUX.1 Canny uses the exact reviewed figures only as line geometry. A
+    # white opaque canvas prevents the LoadImage alpha channel from turning the
+    # entire background into an unintended inpaint mask or black image.
+    structure_reference = Image.new(
+        "RGBA", (width, height), (255, 255, 255, 255)
+    )
+    structure_reference.alpha_composite(inpaint_reference)
+    structure_reference.convert("RGB").save(
+        path.with_name("structure_reference.png"),
+        format="PNG",
+        optimize=True,
+    )
+    build_qwen_identity_references(
+        scope_dir,
+        placements,
+        reference_dir,
     )
 
     build_identity_references(scope_dir, manifest, reference_dir)
@@ -289,13 +396,20 @@ def build_scene_reference(
 def prepare(scope: str, megapixels: float = 1.0) -> Path:
     scope_dir = POSTER_ASSETS / scope
     work_dir = scope_dir / "comfyui_poster"
-    required = (scope_dir / "poster.yaml", work_dir / "prompt.txt", scope_dir / "cutouts" / "manifest.json")
+    required = (
+        scope_dir / "poster.yaml",
+        work_dir / "prompt.txt",
+        scope_dir / "cutouts" / "manifest.json",
+    )
     for path in required:
         if not path.is_file():
             raise FileNotFoundError(path)
 
     cutout_manifest = json.loads(required[-1].read_text(encoding="utf-8"))
-    cutout_files = [scope_dir / "cutouts" / item["file"] for item in cutout_manifest.get("items", [])]
+    cutout_files = [
+        scope_dir / "cutouts" / item["file"]
+        for item in cutout_manifest.get("items", [])
+    ]
     if not cutout_files:
         raise ValueError(f"No cutouts listed in {required[-1]}")
     for path in cutout_files:

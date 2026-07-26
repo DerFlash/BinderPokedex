@@ -9,7 +9,34 @@ from PIL import Image, ImageStat
 
 try:
     from .create_anima_poster_workflow import write_workflow as write_anima_workflow
-    from .create_comfyui_poster_workflow import megapixel_marker, page_dimensions, write_workflow as write_flux_workflow
+    from .create_comfyui_poster_workflow import (
+        megapixel_marker,
+        page_dimensions,
+        write_workflow as write_flux_workflow,
+    )
+    from .create_flux1_canny_poster_workflow import (
+        DEFAULT_CANNY_HIGH as DEFAULT_FLUX1_CANNY_HIGH,
+        DEFAULT_CANNY_LOW as DEFAULT_FLUX1_CANNY_LOW,
+        DEFAULT_CLIP as DEFAULT_FLUX1_CLIP,
+        DEFAULT_CONTROLNET as DEFAULT_FLUX1_CONTROLNET,
+        DEFAULT_CONTROL_STRENGTH as DEFAULT_FLUX1_CONTROL_STRENGTH,
+        DEFAULT_GUIDANCE as DEFAULT_FLUX1_GUIDANCE,
+        DEFAULT_MODEL as DEFAULT_FLUX1_MODEL,
+        DEFAULT_STEPS as DEFAULT_FLUX1_STEPS,
+        DEFAULT_T5 as DEFAULT_FLUX1_T5,
+        DEFAULT_VAE as DEFAULT_FLUX1_VAE,
+        write_workflow as write_flux1_canny_workflow,
+    )
+    from .create_qwen_edit_poster_workflow import (
+        DEFAULT_CFG as DEFAULT_QWEN_CFG,
+        DEFAULT_CLIP as DEFAULT_QWEN_CLIP,
+        DEFAULT_LORA as DEFAULT_QWEN_LORA,
+        DEFAULT_MODEL as DEFAULT_QWEN_MODEL,
+        DEFAULT_SHIFT as DEFAULT_QWEN_SHIFT,
+        DEFAULT_STEPS as DEFAULT_QWEN_STEPS,
+        DEFAULT_VAE as DEFAULT_QWEN_VAE,
+        write_workflow as write_qwen_edit_workflow,
+    )
     from .finalize_comfyui_poster import finalize
     from .prepare_comfyui_poster import prepare
     from .provenance import add_model_artifact_hashes, write_run_metadata
@@ -23,7 +50,34 @@ try:
     from .upscale_comfyui_poster import upscale
 except ImportError:
     from create_anima_poster_workflow import write_workflow as write_anima_workflow
-    from create_comfyui_poster_workflow import megapixel_marker, page_dimensions, write_workflow as write_flux_workflow
+    from create_comfyui_poster_workflow import (
+        megapixel_marker,
+        page_dimensions,
+        write_workflow as write_flux_workflow,
+    )
+    from create_flux1_canny_poster_workflow import (
+        DEFAULT_CANNY_HIGH as DEFAULT_FLUX1_CANNY_HIGH,
+        DEFAULT_CANNY_LOW as DEFAULT_FLUX1_CANNY_LOW,
+        DEFAULT_CLIP as DEFAULT_FLUX1_CLIP,
+        DEFAULT_CONTROLNET as DEFAULT_FLUX1_CONTROLNET,
+        DEFAULT_CONTROL_STRENGTH as DEFAULT_FLUX1_CONTROL_STRENGTH,
+        DEFAULT_GUIDANCE as DEFAULT_FLUX1_GUIDANCE,
+        DEFAULT_MODEL as DEFAULT_FLUX1_MODEL,
+        DEFAULT_STEPS as DEFAULT_FLUX1_STEPS,
+        DEFAULT_T5 as DEFAULT_FLUX1_T5,
+        DEFAULT_VAE as DEFAULT_FLUX1_VAE,
+        write_workflow as write_flux1_canny_workflow,
+    )
+    from create_qwen_edit_poster_workflow import (
+        DEFAULT_CFG as DEFAULT_QWEN_CFG,
+        DEFAULT_CLIP as DEFAULT_QWEN_CLIP,
+        DEFAULT_LORA as DEFAULT_QWEN_LORA,
+        DEFAULT_MODEL as DEFAULT_QWEN_MODEL,
+        DEFAULT_SHIFT as DEFAULT_QWEN_SHIFT,
+        DEFAULT_STEPS as DEFAULT_QWEN_STEPS,
+        DEFAULT_VAE as DEFAULT_QWEN_VAE,
+        write_workflow as write_qwen_edit_workflow,
+    )
     from finalize_comfyui_poster import finalize
     from prepare_comfyui_poster import prepare
     from provenance import add_model_artifact_hashes, write_run_metadata
@@ -37,7 +91,7 @@ except ImportError:
     from upscale_comfyui_poster import upscale
 
 
-ENGINES = ("flux", "anima")
+ENGINES = ("flux", "anima", "flux1_canny", "qwen_edit")
 DEFAULT_GENERATION_MEGAPIXELS = 0.5
 DEFAULT_OUTPUT_DPI = 300
 
@@ -66,14 +120,32 @@ def write_engine_workflow(
     scope: str,
     seed: int,
     megapixels: float,
+    *,
     reference_strength: float = 1.0,
     anima_model: str = "AnimaYume_tuned_v05.safetensors",
     anima_mode: str = "generate",
-    flux_mode: str = "edit",
+    flux_mode: str = "identity_lock",
     flux_model: str = "flux-2-klein-4b-fp8.safetensors",
     flux_steps: int = 4,
     flux_reference_mode: str = "identity",
     flux_clip: str = "qwen_3_4b.safetensors",
+    flux1_model: str = DEFAULT_FLUX1_MODEL,
+    flux1_clip: str = DEFAULT_FLUX1_CLIP,
+    flux1_t5: str = DEFAULT_FLUX1_T5,
+    flux1_vae: str = DEFAULT_FLUX1_VAE,
+    flux1_controlnet: str = DEFAULT_FLUX1_CONTROLNET,
+    flux1_steps: int = DEFAULT_FLUX1_STEPS,
+    flux1_guidance: float = DEFAULT_FLUX1_GUIDANCE,
+    flux1_control_strength: float = DEFAULT_FLUX1_CONTROL_STRENGTH,
+    flux1_canny_low: float = DEFAULT_FLUX1_CANNY_LOW,
+    flux1_canny_high: float = DEFAULT_FLUX1_CANNY_HIGH,
+    qwen_model: str = DEFAULT_QWEN_MODEL,
+    qwen_clip: str = DEFAULT_QWEN_CLIP,
+    qwen_vae: str = DEFAULT_QWEN_VAE,
+    qwen_lora: str = DEFAULT_QWEN_LORA,
+    qwen_steps: int = DEFAULT_QWEN_STEPS,
+    qwen_cfg: float = DEFAULT_QWEN_CFG,
+    qwen_shift: float = DEFAULT_QWEN_SHIFT,
     workflow_output_dir: Path | None = None,
 ) -> Path:
     if engine == "flux":
@@ -98,6 +170,37 @@ def write_engine_workflow(
             generation_mode=anima_mode,
             output_dir=workflow_output_dir,
         )
+    if engine == "flux1_canny":
+        return write_flux1_canny_workflow(
+            scope,
+            seed,
+            megapixels,
+            unet_name=flux1_model,
+            clip_name=flux1_clip,
+            t5_name=flux1_t5,
+            vae_name=flux1_vae,
+            controlnet_name=flux1_controlnet,
+            steps=flux1_steps,
+            guidance=flux1_guidance,
+            control_strength=flux1_control_strength,
+            canny_low=flux1_canny_low,
+            canny_high=flux1_canny_high,
+            output_dir=workflow_output_dir,
+        )
+    if engine == "qwen_edit":
+        return write_qwen_edit_workflow(
+            scope,
+            seed,
+            megapixels,
+            unet_name=qwen_model,
+            clip_name=qwen_clip,
+            vae_name=qwen_vae,
+            lora_name=qwen_lora,
+            steps=qwen_steps,
+            cfg=qwen_cfg,
+            shift=qwen_shift,
+            output_dir=workflow_output_dir,
+        )
     raise ValueError(f"Unsupported engine: {engine}")
 
 
@@ -108,15 +211,33 @@ def run(
     server: str,
     timeout: int,
     language: str,
+    *,
     engine: str = "flux",
     reference_strength: float = 1.0,
     anima_model: str = "AnimaYume_tuned_v05.safetensors",
     anima_mode: str = "generate",
-    flux_mode: str = "edit",
+    flux_mode: str = "identity_lock",
     flux_model: str = "flux-2-klein-4b-fp8.safetensors",
     flux_steps: int = 4,
     flux_reference_mode: str = "identity",
     flux_clip: str = "qwen_3_4b.safetensors",
+    flux1_model: str = DEFAULT_FLUX1_MODEL,
+    flux1_clip: str = DEFAULT_FLUX1_CLIP,
+    flux1_t5: str = DEFAULT_FLUX1_T5,
+    flux1_vae: str = DEFAULT_FLUX1_VAE,
+    flux1_controlnet: str = DEFAULT_FLUX1_CONTROLNET,
+    flux1_steps: int = DEFAULT_FLUX1_STEPS,
+    flux1_guidance: float = DEFAULT_FLUX1_GUIDANCE,
+    flux1_control_strength: float = DEFAULT_FLUX1_CONTROL_STRENGTH,
+    flux1_canny_low: float = DEFAULT_FLUX1_CANNY_LOW,
+    flux1_canny_high: float = DEFAULT_FLUX1_CANNY_HIGH,
+    qwen_model: str = DEFAULT_QWEN_MODEL,
+    qwen_clip: str = DEFAULT_QWEN_CLIP,
+    qwen_vae: str = DEFAULT_QWEN_VAE,
+    qwen_lora: str = DEFAULT_QWEN_LORA,
+    qwen_steps: int = DEFAULT_QWEN_STEPS,
+    qwen_cfg: float = DEFAULT_QWEN_CFG,
+    qwen_shift: float = DEFAULT_QWEN_SHIFT,
     output_megapixels: float | None = None,
     output_dpi: int | None = DEFAULT_OUTPUT_DPI,
     upscale_model: str = DEFAULT_UPSCALE_MODEL,
@@ -138,14 +259,31 @@ def run(
         scope,
         seed,
         megapixels,
-        reference_strength,
-        anima_model,
-        anima_mode,
-        flux_mode,
-        flux_model,
-        flux_steps,
-        flux_reference_mode,
-        flux_clip,
+        reference_strength=reference_strength,
+        anima_model=anima_model,
+        anima_mode=anima_mode,
+        flux_mode=flux_mode,
+        flux_model=flux_model,
+        flux_steps=flux_steps,
+        flux_reference_mode=flux_reference_mode,
+        flux_clip=flux_clip,
+        flux1_model=flux1_model,
+        flux1_clip=flux1_clip,
+        flux1_t5=flux1_t5,
+        flux1_vae=flux1_vae,
+        flux1_controlnet=flux1_controlnet,
+        flux1_steps=flux1_steps,
+        flux1_guidance=flux1_guidance,
+        flux1_control_strength=flux1_control_strength,
+        flux1_canny_low=flux1_canny_low,
+        flux1_canny_high=flux1_canny_high,
+        qwen_model=qwen_model,
+        qwen_clip=qwen_clip,
+        qwen_vae=qwen_vae,
+        qwen_lora=qwen_lora,
+        qwen_steps=qwen_steps,
+        qwen_cfg=qwen_cfg,
+        qwen_shift=qwen_shift,
     )
     outputs = queue_workflow(workflow_path, server=server, timeout=timeout)
     images = [item for item in outputs if item.get("type") == "output" and item.get("filename")]
@@ -163,23 +301,50 @@ def run(
     validate_raw_artwork(raw_path)
     final_megapixels = output_megapixels or megapixels
     if engine == "flux":
+        if flux_mode == "identity_lock":
+            effective_reference_mode = "two_pass_source_pixels"
+        elif flux_mode == "inpaint":
+            effective_reference_mode = "source_pixels"
+        else:
+            effective_reference_mode = flux_reference_mode
         if "9b" in flux_model.lower():
             model_variant = "distilled9b"
         elif "base-4b" in flux_model:
             model_variant = "base4b"
         else:
             model_variant = "distilled4b"
-        run_marker = f"{flux_mode}_{flux_reference_mode}_{model_variant}_{flux_steps}step_{megapixel_marker(megapixels)}"
+        run_marker = (
+            f"{flux_mode}_{effective_reference_mode}_{model_variant}_"
+            f"{flux_steps}step_{megapixel_marker(megapixels)}"
+        )
         if output_dpi is not None:
             run_marker += f"_to_{output_dpi}dpi"
         elif final_megapixels != megapixels:
             run_marker += f"_to_{megapixel_marker(final_megapixels)}"
-    else:
+    elif engine == "anima":
         run_marker = anima_mode
         if output_dpi is not None:
             run_marker += f"_to_{output_dpi}dpi"
         elif final_megapixels != megapixels:
             run_marker += f"_to_{megapixel_marker(final_megapixels)}"
+    elif engine == "flux1_canny":
+        strength_marker = f"{flux1_control_strength:g}".replace(".", "p")
+        run_marker = (
+            f"{flux1_steps}step_canny{strength_marker}_"
+            f"{megapixel_marker(megapixels)}"
+        )
+        if output_dpi is not None:
+            run_marker += f"_to_{output_dpi}dpi"
+        elif final_megapixels != megapixels:
+            run_marker += f"_to_{megapixel_marker(final_megapixels)}"
+    elif engine == "qwen_edit":
+        run_marker = f"{qwen_steps}step_{megapixel_marker(megapixels)}"
+        if output_dpi is not None:
+            run_marker += f"_to_{output_dpi}dpi"
+        elif final_megapixels != megapixels:
+            run_marker += f"_to_{megapixel_marker(final_megapixels)}"
+    else:
+        raise ValueError(f"Unsupported engine: {engine}")
     final_path = (
         work_dir
         / "output"
@@ -216,12 +381,12 @@ def run(
             "encoder": flux_clip,
             "vae": "flux2-vae.safetensors",
             "mode": flux_mode,
-            "reference_mode": flux_reference_mode,
+            "reference_mode": effective_reference_mode,
             "seed": seed,
             "steps": flux_steps,
             "generation_megapixels": megapixels,
         }
-    else:
+    elif engine == "anima":
         generation = {
             "engine": engine,
             "model": anima_model,
@@ -234,6 +399,41 @@ def run(
             "steps": 22,
             "generation_megapixels": megapixels,
         }
+    elif engine == "flux1_canny":
+        generation = {
+            "engine": engine,
+            "model": flux1_model,
+            "encoder": flux1_clip,
+            "encoder_2": flux1_t5,
+            "vae": flux1_vae,
+            "controlnet": flux1_controlnet,
+            "mode": "generate",
+            "reference_mode": "canny",
+            "seed": seed,
+            "steps": flux1_steps,
+            "guidance": flux1_guidance,
+            "control_strength": flux1_control_strength,
+            "canny_low": flux1_canny_low,
+            "canny_high": flux1_canny_high,
+            "generation_megapixels": megapixels,
+        }
+    elif engine == "qwen_edit":
+        generation = {
+            "engine": engine,
+            "model": qwen_model,
+            "encoder": qwen_clip,
+            "vae": qwen_vae,
+            "lora": qwen_lora,
+            "mode": "edit",
+            "reference_mode": "multi_reference",
+            "seed": seed,
+            "steps": qwen_steps,
+            "cfg": qwen_cfg,
+            "shift": qwen_shift,
+            "generation_megapixels": megapixels,
+        }
+    else:
+        raise ValueError(f"Unsupported engine: {engine}")
     if output_dpi is not None:
         generation.update(
             {
@@ -291,20 +491,101 @@ def main() -> int:
     parser.add_argument("--server", default="http://127.0.0.1:8188")
     parser.add_argument("--timeout", type=int, default=3600)
     parser.add_argument("--language", choices=("de", "en", "fr", "es", "it"), default="en")
-    parser.add_argument("--engine", choices=(*ENGINES, "both"), default="flux")
-    parser.add_argument("--reference-strength", type=float, default=1.0, help="AnimaEdit LoRA strength; ignored by FLUX")
-    parser.add_argument("--anima-model", default="AnimaYume_tuned_v05.safetensors", help="Anima-compatible diffusion model; ignored by FLUX")
-    parser.add_argument("--anima-mode", choices=("generate", "edit"), default="generate", help="Generate from an empty target or edit the abstract material scaffold")
-    parser.add_argument("--flux-mode", choices=("edit", "inpaint"), default="edit", help="Use an independent reference edit or preserve figures as the inpaint source")
+    parser.add_argument(
+        "--engine",
+        choices=(*ENGINES, "both", "all"),
+        default="flux",
+    )
+    parser.add_argument(
+        "--reference-strength",
+        type=float,
+        default=1.0,
+        help="AnimaEdit LoRA strength; ignored by FLUX",
+    )
+    parser.add_argument(
+        "--anima-model",
+        default="AnimaYume_tuned_v05.safetensors",
+        help="Anima-compatible diffusion model; ignored by FLUX",
+    )
+    parser.add_argument(
+        "--anima-mode",
+        choices=("generate", "edit"),
+        default="generate",
+        help="Generate from an empty target or edit the material scaffold",
+    )
+    parser.add_argument(
+        "--flux-mode",
+        choices=("edit", "inpaint", "identity_lock"),
+        default="identity_lock",
+        help=(
+            "Use the two-pass exact-source lock (default), direct inpainting, "
+            "or an independent reference edit"
+        ),
+    )
     parser.add_argument("--flux-model", default="flux-2-klein-4b-fp8.safetensors")
-    parser.add_argument("--flux-steps", type=int, default=4, help="Use 4 for distilled Klein; typically 20-28 for Klein Base")
-    parser.add_argument("--flux-reference-mode", choices=("composition", "identity"), default="identity", help="Append one identity close-up per character (recommended) or use only the scene composition")
-    parser.add_argument("--flux-clip", default="qwen_3_4b.safetensors", help="FLUX.2 text encoder matching the selected model size")
+    parser.add_argument(
+        "--flux-steps",
+        type=int,
+        default=4,
+        help="Use 4 for distilled Klein; typically 20-28 for Klein Base",
+    )
+    parser.add_argument(
+        "--flux-reference-mode",
+        choices=("composition", "identity"),
+        default="identity",
+        help=(
+            "Append one identity close-up per character or use only the "
+            "scene composition; applies to edit mode"
+        ),
+    )
+    parser.add_argument(
+        "--flux-clip",
+        default="qwen_3_4b.safetensors",
+        help="FLUX.2 text encoder matching the selected model size",
+    )
+    parser.add_argument("--flux1-model", default=DEFAULT_FLUX1_MODEL)
+    parser.add_argument("--flux1-clip", default=DEFAULT_FLUX1_CLIP)
+    parser.add_argument("--flux1-t5", default=DEFAULT_FLUX1_T5)
+    parser.add_argument("--flux1-vae", default=DEFAULT_FLUX1_VAE)
+    parser.add_argument("--flux1-controlnet", default=DEFAULT_FLUX1_CONTROLNET)
+    parser.add_argument("--flux1-steps", type=int, default=DEFAULT_FLUX1_STEPS)
+    parser.add_argument(
+        "--flux1-guidance",
+        type=float,
+        default=DEFAULT_FLUX1_GUIDANCE,
+    )
+    parser.add_argument(
+        "--flux1-control-strength",
+        type=float,
+        default=DEFAULT_FLUX1_CONTROL_STRENGTH,
+    )
+    parser.add_argument(
+        "--flux1-canny-low",
+        type=float,
+        default=DEFAULT_FLUX1_CANNY_LOW,
+    )
+    parser.add_argument(
+        "--flux1-canny-high",
+        type=float,
+        default=DEFAULT_FLUX1_CANNY_HIGH,
+    )
+    parser.add_argument("--qwen-model", default=DEFAULT_QWEN_MODEL)
+    parser.add_argument("--qwen-clip", default=DEFAULT_QWEN_CLIP)
+    parser.add_argument("--qwen-vae", default=DEFAULT_QWEN_VAE)
+    parser.add_argument("--qwen-lora", default=DEFAULT_QWEN_LORA)
+    parser.add_argument("--qwen-steps", type=int, default=DEFAULT_QWEN_STEPS)
+    parser.add_argument("--qwen-cfg", type=float, default=DEFAULT_QWEN_CFG)
+    parser.add_argument("--qwen-shift", type=float, default=DEFAULT_QWEN_SHIFT)
     args = parser.parse_args()
     output_dpi = args.output_dpi
     if output_dpi is None and args.output_megapixels is None:
         output_dpi = DEFAULT_OUTPUT_DPI
-    engines = ENGINES if args.engine == "both" else (args.engine,)
+    if args.engine == "both":
+        engines = ("flux", "anima")
+    elif args.engine == "all":
+        engines = ENGINES
+    else:
+        engines = (args.engine,)
     for engine in engines:
         raw_path, artwork_path, final_path, run_metadata_path = run(
             args.scope,
@@ -313,18 +594,35 @@ def main() -> int:
             args.server,
             args.timeout,
             args.language,
-            engine,
-            args.reference_strength,
-            args.anima_model,
-            args.anima_mode,
-            args.flux_mode,
-            args.flux_model,
-            args.flux_steps,
-            args.flux_reference_mode,
-            args.flux_clip,
-            args.output_megapixels,
-            output_dpi,
-            args.upscale_model,
+            engine=engine,
+            reference_strength=args.reference_strength,
+            anima_model=args.anima_model,
+            anima_mode=args.anima_mode,
+            flux_mode=args.flux_mode,
+            flux_model=args.flux_model,
+            flux_steps=args.flux_steps,
+            flux_reference_mode=args.flux_reference_mode,
+            flux_clip=args.flux_clip,
+            flux1_model=args.flux1_model,
+            flux1_clip=args.flux1_clip,
+            flux1_t5=args.flux1_t5,
+            flux1_vae=args.flux1_vae,
+            flux1_controlnet=args.flux1_controlnet,
+            flux1_steps=args.flux1_steps,
+            flux1_guidance=args.flux1_guidance,
+            flux1_control_strength=args.flux1_control_strength,
+            flux1_canny_low=args.flux1_canny_low,
+            flux1_canny_high=args.flux1_canny_high,
+            qwen_model=args.qwen_model,
+            qwen_clip=args.qwen_clip,
+            qwen_vae=args.qwen_vae,
+            qwen_lora=args.qwen_lora,
+            qwen_steps=args.qwen_steps,
+            qwen_cfg=args.qwen_cfg,
+            qwen_shift=args.qwen_shift,
+            output_megapixels=args.output_megapixels,
+            output_dpi=output_dpi,
+            upscale_model=args.upscale_model,
         )
         print(f"[{engine}] Raw artwork: {raw_path}")
         print(f"[{engine}] Text-free artwork: {artwork_path}")

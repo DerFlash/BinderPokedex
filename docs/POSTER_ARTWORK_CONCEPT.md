@@ -32,7 +32,10 @@ logos/
 comfyui_poster/
   prompt.txt
   inpaint_prompt.txt
+  identity_lock_prompt.txt
   anima_prompt.txt
+  flux1_canny_prompt.txt
+  qwen_edit_prompt.txt
 cutouts/
   manifest.json
   pokemon_<id>_<name>.png
@@ -94,9 +97,10 @@ stable local RGBA PNGs, and never leaves PDF generation dependent on the network
 
 ## Local ComfyUI workflow
 
-The production flow creates the complete scene and Pokemon artwork with FLUX.2
-Klein, then adds panels and typography deterministically. The retired
-background-compositing flow and its generated layout guide have been removed.
+The production flow creates a complete scene with FLUX.2 Klein while protecting
+the reviewed Pokemon source pixels, then adds panels and typography
+deterministically. The retired generated-background layout guide and its visible
+landing-pad composition have been removed.
 
 Start the local Metal-enabled ComfyUI server:
 
@@ -112,6 +116,30 @@ diffusion_models/flux-2-klein-4b-fp8.safetensors
 text_encoders/qwen_3_4b.safetensors
 vae/flux2-vae.safetensors
 upscale_models/RealESRGAN_x4plus_anime_6B.pth
+```
+
+The experimental structure-controlled FLUX.1 path additionally uses
+[ComfyUI-GGUF](https://github.com/city96/ComfyUI-GGUF) and these external files:
+
+```text
+unet/flux1-dev-Q4_K_S.gguf
+clip/clip_l.safetensors
+clip/t5-v1_1-xxl-encoder-Q4_K_S.gguf
+vae/ae.safetensors
+controlnet/instantx_flux_canny.safetensors
+```
+
+It is intentionally a separate engine. It does not replace or mutate the FLUX.2
+or Anima workflows.
+
+The Qwen multi-reference experiment uses the same GGUF loader and these external
+files:
+
+```text
+unet/qwen-image-edit-2511-Q3_K_M.gguf
+text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors
+vae/qwen_image_vae.safetensors
+loras/Qwen-Image-Edit-2511-Lightning-4steps-V1.0-bf16.safetensors
 ```
 
 The reviewed SHA-256 values live in each scope's `poster.yaml`. Every new run
@@ -132,16 +160,16 @@ text compositing with one command:
 
 ```bash
 venv/bin/python scripts/poster_assets/run_comfyui_poster.py \
-  --engine flux --flux-mode edit --scope Base1 \
-  --seed 260716311 --megapixels 0.5 --language en
+  --engine flux --flux-mode identity_lock --scope Base1 \
+  --seed 260726503 --megapixels 1.0 --language en
 ```
 
-The default generates the cohesive scene at 0.5 MP, applies the configured
-Real-ESRGAN illustration upscaler, and normalizes the complete text-free artwork
-to the exact 300-dpi physical layout before deterministic typography. This keeps
-the reliable card-safe FLUX character scale while producing a 2368 x 3268 px
-poster and nine 750 x 1050 px cards. It does not composite or move Pokemon after
-sampling.
+The default `identity_lock` mode runs two four-step FLUX passes at 1 MP, applies
+the configured Real-ESRGAN illustration upscaler, and normalizes the complete
+text-free artwork to the exact 300-dpi physical layout before deterministic
+typography. This produces a 2368 x 3268 px poster and nine 750 x 1050 px cards.
+The exact figures enter the ComfyUI graph between the two passes; the final pass
+sees their composition but cannot edit their protected lower band.
 
 The FLUX and Anima branches are independent and can be compared with identical
 inputs. `both` runs them sequentially and keeps engine-specific final filenames:
@@ -155,7 +183,20 @@ venv/bin/python scripts/poster_assets/run_comfyui_poster.py \
 | --- | --- | --- | --- | --- |
 | FLUX.2 Klein edit | `prompt.txt` | `scene_reference.png` | `workflow_api_edit_<size>_<seed>.json` | `_flux_edit_..._poster_` |
 | FLUX.2 Klein inpaint | `inpaint_prompt.txt` | `inpaint_reference.png` | `workflow_api_inpaint_<size>_<seed>.json` | `_flux_inpaint_..._poster_` |
+| FLUX.2 source-pixel lock | `identity_lock_prompt.txt` | `inpaint_reference.png`, `upper_context_mask.png` | `workflow_api_identity_lock_<size>_<seed>.json` | `_flux_identity_lock_..._poster_` |
 | AnimaEdit | `anima_prompt.txt` | `anima_scene_reference.png` | `anima_workflow_api.json` | `_anima_poster_` |
+| FLUX.1 Dev Canny | `flux1_canny_prompt.txt` | `structure_reference.png` | `flux1_canny_workflow_api_<size>_<seed>.json` | `_flux1_canny_..._poster_` |
+| Qwen Image Edit 2511 | `qwen_edit_prompt.txt` | composition plus two identity sheets | `qwen_edit_workflow_api_<size>_<seed>.json` | `_qwen_edit_..._poster_` |
+
+Run the FLUX.1 experiment independently:
+
+```bash
+venv/bin/python scripts/poster_assets/run_comfyui_poster.py \
+  --engine flux1_canny --scope Base1 \
+  --seed 260726201 --megapixels 1.0 \
+  --flux1-steps 20 --flux1-control-strength 0.75 \
+  --language en
+```
 
 Anima defaults to `AnimaYume_tuned_v05.safetensors`; another compatible
 backbone can be selected with `--anima-model` without changing the engine API.
@@ -179,6 +220,14 @@ Position comes only from the combined scene image. Individual references preserv
 anatomy while their padding reinforces relative scale. None of these references
 contains a layout grid, landing pads, paths, text boxes, or previous generated
 artwork.
+
+The FLUX.1 Canny adapter uses a fourth prepared representation:
+`structure_reference.png` flattens the exact final-size cutouts on opaque white.
+The workflow derives Canny edges from it and applies those edges for the full
+sampling interval. This constrains both outer silhouettes and visible internal
+lines such as Mewtwo's face, chest, fingers, limbs, and tail while the scene and
+all three subjects are still drawn in one diffusion pass. It is not a
+post-generation character composite.
 
 Rare model-specific compensation is explicit and reviewable in `poster.yaml`.
 For example, Base1 makes Mewtwo smaller and left-biased in the conditioning image,
@@ -205,29 +254,36 @@ conditioning:
 
 This replaces the former aspect-ratio heuristic that treated every tall subject
 like Mewtwo.
-The two FLUX modes deliberately use mutually exclusive conditioning topologies.
-`inpaint` is the identity-lock path. It keeps the exact final-size Pokemon from
-`inpaint_reference.png` as the unmasked source of `VAEEncodeForInpaint`, never
-grows the background mask into their silhouettes, and does not add a
-`ReferenceLatent`. Edit-only scale and placement compensation is confined to
-`scene_reference.png`; applying it to inpainting makes complete subjects appear
-missing and encourages generated replacements. `edit` uses an independent empty
-target latent and supplies the compensated composition only through
-`ReferenceLatent`. Feeding the same composition through both paths presents every
-subject twice and is prohibited by tests because it encourages duplicates and
-anatomy adjacent to silhouettes. The FLUX finalizer no longer composites identity
-pixels after sampling.
+The three FLUX modes deliberately use separate conditioning topologies.
+`edit` uses an independent empty target latent and supplies the compensated
+composition through `ReferenceLatent`. It remains useful for fully generative
+experiments but can reinterpret anatomy. Direct `inpaint` keeps the figures as
+unmasked source pixels and restores them after VAE decoding; testing showed that
+FLUX can still extend a visible contour into the generated background.
 
-Identity-lock intentionally keeps generated landscape behind or beside the
-protected silhouettes. Edit mode retains the general camera-space depth rule:
-elements may occlude a Pokemon only when they are genuinely closer to the camera.
-This is not a special case for grass, feet, or the lower edge; it is the explicit
-tradeoff between exact source anatomy and freely generated foreground overlap.
+The production `identity_lock` path therefore separates scene invention from
+composition context:
 
-FLUX.2 Klein 4B generation remains stochastic. At higher resolutions it can
-invent anatomy adjacent to a silhouette or reinterpret the supplied subject.
-Such candidates must be rejected during visual review; neither FLUX mode uses a
-post-sampling identity composite to conceal these failures.
+1. A first four-step pass generates a full-bleed, character-free landscape with
+   latent overscan; only the landscape is center-cropped.
+2. The exact final-size reviewed cutouts are placed together on that one
+   continuous ground inside the ComfyUI graph.
+3. A second four-step pass sees this complete composition but its soft edit mask
+   ends above the entire bottom subject band.
+4. The protected lower band is restored exactly after decoding, so neither
+   diffusion, the VAE, nor the upstage context pass can change a source pixel.
+
+This is not blind placement into a finished scene: the final generative pass sees
+where every figure stands and completes the upper environment accordingly. It
+does intentionally give up free landscape occlusion across the protected
+silhouettes. The lower band is one shared, low-detail ground plane rather than
+three clearings, so that tradeoff does not reintroduce landing pads.
+
+FLUX.2 Klein 4B generation remains stochastic in `edit` and direct `inpaint`
+modes. It can invent anatomy adjacent to a silhouette or reinterpret a supplied
+subject even at higher resolution. Those candidates remain hard rejects; source
+pixel locking is the production answer when authenticity outranks generative
+reinterpretation.
 
 Character authenticity outranks background detail. A candidate fails review if
 even one protected subject changes its head or face, chest geometry, digit count,
@@ -258,18 +314,30 @@ changed Mewtwo's face, chest geometry, and finger count. All of those experiment
 candidates are rejected. These experiments show that more pixels and additional
 diffusion steps alone do not solve reference-identity hallucinations.
 
-The committed Base1 baseline is `poster-flux2.png`, generated with seed
-`260716311`, distilled FLUX.2 Klein 4B, four steps, `edit` mode, and `identity`
-reference mode. The cohesive scene was sampled at 0.5 MP and upscaled as a whole
-to the exact 300-dpi layout before the deterministic overlay. Identity mode supplies three
-compact appearance references followed by the combined scene composition. The
-prompt labels those roles explicitly so anatomy and invisible print-safe geometry
-reinforce each other rather than competing.
+The FLUX.1 Dev Q4_K_S Canny run used seed `260726201`, 20 steps, 1 MP, and
+ControlNet strength `0.75`. It retained the broad composition but turned Mewtwo
+purple, changed its face and chest, and simplified its hand. The MPS run took
+about 34 minutes. Canny constrains geometry, not source identity, so this
+candidate is rejected.
 
-It remains useful as a reproducible integration and layout baseline, but it no
-longer qualifies as final artwork: Mewtwo's hand, chest, and head diverge from the
-source cutout. It must not be used as evidence that the character-authenticity
-requirement is satisfied.
+The Qwen Image Edit 2511 Q3_K_M run used seed `260726301`, the four-step
+Lightning LoRA, and three explicitly labeled references. It produced a detailed
+landscape but interpreted the large Mewtwo detail sheet as a giant fourth
+character. The 1 MP MPS run took 29:54 and used roughly 18 GB of swap on the
+16 GB machine. The adapter remains selectable, but this candidate is also
+rejected.
+
+The accepted Base1 baseline is `poster-flux2.png`, generated with seed
+`260726503`, distilled FLUX.2 Klein 4B, the two-pass `identity_lock` mode, and
+`two_pass_source_pixels` reference mode. Both passes use four steps at 1 MP.
+The reviewed cutouts retain their exact 1 MP pixels and card-safe composition
+inside the workflow; the whole text-free scene is then model-upscaled to the
+exact 300-dpi layout before the deterministic overlay.
+
+The final review checked the complete poster and all three 750 x 1050 bottom
+cards. Mewtwo keeps the reviewed face, chest ridges, three digits on each hand,
+complete limbs and tail, with additional clear space above and to the right.
+No adjacent generated shape reads as extra anatomy.
 
 The promoted SV03.5 candidate uses the same model and topology with seed
 `260726101`. It was sampled at 0.5 MP, upscaled as one complete text-free scene

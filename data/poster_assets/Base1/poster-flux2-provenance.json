@@ -3,101 +3,145 @@
   "kind": "promoted_poster",
   "outputs": {
     "artwork": {
-      "bytes": 4276751,
+      "bytes": 3341760,
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
       "file": "data/poster_assets/Base1/poster-flux2-artwork.png",
       "height": 3268,
-      "sha256": "fb753e544fc435ab3590c4ced8c7f6d678b9defe5cf7ee593c0184587d198722",
+      "sha256": "403923ffb731f945615fa40c7f21ebeea1271aef6e4647f7dcd9228983142600",
       "width": 2368
     },
     "cards": [
       {
-        "bytes": 106464,
+        "bytes": 52015,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r1_c1.png",
         "height": 1050,
-        "sha256": "c92091533cb4ae56bfcbe5b7f4b080771938e9f6ecd31abbb2069b97ce54e567",
+        "sha256": "52861a6fa6ba518fccad4b91abb7f0ad333afe1617bb849f168d273dec1b3715",
         "width": 750
       },
       {
-        "bytes": 171149,
+        "bytes": 185895,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r1_c2.png",
         "height": 1050,
-        "sha256": "57e7e9b5c2d20d90f33f98734ec0e7276274048d8ed70ba2d8206745c1514f33",
+        "sha256": "bcad11551c322a6bd7f4444e5f978ab788def959694b1cbfd46a14d0df35ae75",
         "width": 750
       },
       {
-        "bytes": 135368,
+        "bytes": 90640,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r1_c3.png",
         "height": 1050,
-        "sha256": "c5a639a966b8db4b777bebf3ff16229e16dc10e9740d43b3a72426ebb6c8c7fb",
+        "sha256": "a2cbc81abb2bf3943d8a0fcf9895aa20f385b29f1dab2e36e4fb2fcdb9fa2a63",
         "width": 750
       },
       {
-        "bytes": 537963,
+        "bytes": 497096,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r2_c1.png",
         "height": 1050,
-        "sha256": "a92c452e32f8023ea74ab0460e430a846fee82d77264382c9f18c9f22faefdd4",
+        "sha256": "866dc2a8556cb03f4e266f4082366146f46e8bb4069c1a24ae32cb739c0d2e6a",
         "width": 750
       },
       {
-        "bytes": 265774,
+        "bytes": 259657,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
-        "sha256": "9f2006ffbcd973b05f67550e53b4d93589dc3ee05643d00e2c7e4a6645bed7fb",
+        "sha256": "b0486a325e356145c388feb2ac191ccb807d3acb436b08288b5f91f3c9ed5db2",
         "width": 750
       },
       {
-        "bytes": 579374,
+        "bytes": 575207,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r2_c3.png",
         "height": 1050,
-        "sha256": "66279223373e9e411ab64b30bfb649e794a994082d45ab548ec5e671d6fbadce",
+        "sha256": "cc820d78db60516797ac26410b2507cf763d9f49437629df9e9255cf2a979361",
         "width": 750
       },
       {
-        "bytes": 771525,
+        "bytes": 502228,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r3_c1.png",
         "height": 1050,
-        "sha256": "3eab8650d73eda5fcba8a55727091681c3d6761bf939c72052f41c995c493513",
+        "sha256": "305438e65f7b43dba2783386b3e49a083e54234338ca4a3d92929ae423b3c60f",
         "width": 750
       },
       {
-        "bytes": 598562,
+        "bytes": 425265,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r3_c2.png",
         "height": 1050,
-        "sha256": "28ef769dd1130b4d25d95fd08ec6e58f4507ca17becb23f67dacc60650bd7e06",
+        "sha256": "54f03ab270b953eb7de7ab43ecfd432d51f5f16a41528d1c5bd16d7adb50908b",
         "width": 750
       },
       {
-        "bytes": 721698,
+        "bytes": 546478,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r3_c3.png",
         "height": 1050,
-        "sha256": "a7758a1020009723b1b77cab7e11ea15e9e71f0c8240d4cbf5caf0ffdf265b5c",
+        "sha256": "52999e67f36a9603e1cef100c1b1a5eba8320acb672986a66beb1dc4380b6a49",
         "width": 750
       }
     ],
     "preview": {
-      "bytes": 4270924,
+      "bytes": 3359326,
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
       "file": "data/poster_assets/Base1/poster-flux2.png",
       "height": 3268,
-      "sha256": "7723105606519370939eab7846387aa62119e9308649bc5d58733be3d587aef4",
+      "sha256": "1a067003811d89f8f4cc1b501fee7de1f516f447ab714f763589b8c56efdfb43",
       "width": 2368
     }
   },
-  "preview_language": "de",
-  "promoted_at": "2026-07-25T23:49:27.222853+00:00",
+  "preview_language": "en",
+  "promoted_at": "2026-07-26T12:20:12.809951+00:00",
   "run": {
-    "created_at": "2026-07-25T23:49:05.769152+00:00",
+    "created_at": "2026-07-26T12:19:18.034626+00:00",
     "generation": {
       "encoder": "qwen_3_4b.safetensors",
       "encoder_sha256": "6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a",
       "engine": "flux",
-      "generation_megapixels": 0.5,
-      "mode": "edit",
+      "generation_megapixels": 1.0,
+      "mode": "identity_lock",
       "model": "flux-2-klein-4b-fp8.safetensors",
       "model_sha256": "97ed34fe0567e436200f2faee3939b88f2b5d99f8af2a4dc16532c4245c0ccb6",
       "output_dpi": 300,
       "output_method": "model_upscale",
-      "reference_mode": "identity",
-      "seed": 260716311,
+      "reference_mode": "two_pass_source_pixels",
+      "seed": 260726503,
       "steps": 4,
       "upscale_model": "RealESRGAN_x4plus_anime_6B.pth",
       "upscale_model_sha256": "f872d837d3c90ed2e05227bed711af5671a6fd1c9f7d7e91c911a61f155e99da",
@@ -134,71 +178,61 @@
         }
       ],
       "prompt": {
-        "bytes": 3007,
-        "file": "data/poster_assets/Base1/comfyui_poster/prompt.txt",
-        "sha256": "3b4adbb87143a13e52c830561d0acd88e967f1f132e3e85b5ce391779d880de2"
+        "bytes": 1656,
+        "file": "data/poster_assets/Base1/comfyui_poster/identity_lock_prompt.txt",
+        "sha256": "f8c1b33302b971bd5fc29aa6cdd1b279b47ffe4d054c9fbc0309b8e033c7f45a"
       },
       "references": [
         {
-          "bytes": 71712,
-          "file": "data/poster_assets/Base1/comfyui_poster/scene_reference.png",
-          "height": 832,
-          "sha256": "a9423c9d5740b6d6daab794f97c46122e2eb2c42eae0bc4804d2322b147a762d",
-          "width": 608
+          "bytes": 156030,
+          "file": "data/poster_assets/Base1/comfyui_poster/inpaint_reference.png",
+          "height": 1168,
+          "sha256": "41ea16dab56659d01ecf1ea0ef4c97a24b94af145a5a6093f3b65600ed896352",
+          "width": 848
         },
         {
-          "bytes": 24663,
-          "file": "data/poster_assets/Base1/comfyui_poster/identity_reference_1.png",
-          "height": 768,
-          "sha256": "a6f850156db4f91850b48844e2aea21c8754ae14b9d3bdbdc24773e40302f53f",
-          "width": 768
-        },
-        {
-          "bytes": 137888,
-          "file": "data/poster_assets/Base1/comfyui_poster/identity_reference_2.png",
-          "height": 512,
-          "sha256": "b0bdd0267a800860556bcd9965506362c16c0eecb2e10ed3742d1c3fc456c955",
-          "width": 512
-        },
-        {
-          "bytes": 94310,
-          "file": "data/poster_assets/Base1/comfyui_poster/identity_reference_3.png",
-          "height": 512,
-          "sha256": "e863ae73d4101c45048145c339fde9bc7ed3080f3fb07f44493d3ec39d104d66",
-          "width": 512
+          "bytes": 4603,
+          "file": "data/poster_assets/Base1/comfyui_poster/upper_context_mask.png",
+          "height": 1168,
+          "sha256": "6ab5789bc87b2686a333665b5c3525017a55aac68916f4419e939b1160d6f62e",
+          "width": 848
         }
       ],
       "scope_manifest": {
-        "bytes": 2412,
+        "bytes": 2291,
         "file": "data/poster_assets/Base1/poster.yaml",
-        "sha256": "6b3c464feed6ad2850167307fe7b5e9f7781826e33d043543f44edb186429af4"
+        "sha256": "e2715b8daafa2dcde839c0945c9808ae4889827f1b0d2be5d5beb9f5e557d041"
       },
       "upscale_workflow": {
-        "bytes": 890,
+        "bytes": 897,
         "file": "data/poster_assets/Base1/comfyui_poster/workflow_api_upscale_300dpi.json",
-        "sha256": "beb634aab022de079dac282ec32df7e28ff053c8dbfb7b60952b413bcc9218e4"
+        "sha256": "ebd2ba589b68dfe266a7ac57faf55ef95e306a2078e6fda294322bec46a343a7"
       },
       "workflow": {
-        "bytes": 8956,
-        "file": "data/poster_assets/Base1/comfyui_poster/workflow_api_edit_0p5mp_260716311.json",
-        "sha256": "ec3be9eed92ddd4320e23029222377e920518f93c2bed07418f264242f049368"
+        "bytes": 5879,
+        "file": "data/poster_assets/Base1/comfyui_poster/workflow_api_identity_lock_1mp_260726503.json",
+        "sha256": "6cb40c479c7610a585aa1c48359584bbc2d2e3307923c788354e42bf7667c841"
       }
     },
     "kind": "poster_generation_run",
     "raw_artwork": {
-      "bytes": 730621,
-      "file": "data/poster_assets/Base1/comfyui_poster/output/base1_flux2_edit_0p5mp_scene_seed_260716311_00002_.png",
-      "height": 832,
-      "sha256": "f462bf517ca8f7edb639b3e757f3ba0fdd891ca23c68c87ef5a53427fee7f644",
-      "width": 608
+      "bytes": 1468811,
+      "file": "data/poster_assets/Base1/comfyui_poster/output/base1_flux2_identity_lock_1mp_scene_seed_260726503_00002_.png",
+      "height": 1168,
+      "sha256": "cd0f0bd56d57cdc57c4dc2878987dd0614896abd323e87e7dcd9ccb8ce30ad8d",
+      "width": 848
     },
     "schema_version": 1,
     "scope": "Base1",
     "source_artwork": {
-      "bytes": 4276751,
-      "file": "data/poster_assets/Base1/comfyui_poster/temp/base1_print_300dpi_RealESRGAN_x4plus_anime_6B_00001__print.png",
+      "bytes": 3341760,
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "file": "data/poster_assets/Base1/comfyui_poster/temp/base1_print_300dpi_RealESRGAN_x4plus_anime_6B_00005__print.png",
       "height": 3268,
-      "sha256": "fb753e544fc435ab3590c4ced8c7f6d678b9defe5cf7ee593c0184587d198722",
+      "sha256": "403923ffb731f945615fa40c7f21ebeea1271aef6e4647f7dcd9228983142600",
       "width": 2368
     }
   },

@@ -11,7 +11,15 @@ from scripts.poster_assets.create_comfyui_poster_workflow import build_workflow
 from scripts.poster_assets.create_comfyui_upscale_workflow import (
     build_workflow as build_upscale_workflow,
 )
-from scripts.poster_assets.create_anima_poster_workflow import build_workflow as build_anima_workflow
+from scripts.poster_assets.create_anima_poster_workflow import (
+    build_workflow as build_anima_workflow,
+)
+from scripts.poster_assets.create_flux1_canny_poster_workflow import (
+    build_workflow as build_flux1_canny_workflow,
+)
+from scripts.poster_assets.create_qwen_edit_poster_workflow import (
+    build_workflow as build_qwen_edit_workflow,
+)
 from scripts.poster_assets.finalize_comfyui_poster import (
     finalize,
     fitted_font,
@@ -26,6 +34,7 @@ from scripts.poster_assets.layout import (
 from scripts.poster_assets.poster_config import build_identity_reference_prompt
 from scripts.poster_assets.provenance import (
     add_model_artifact_hashes,
+    generation_input_records,
     sha256_file,
 )
 from scripts.poster_assets.queue_comfyui_workflow import (
@@ -209,6 +218,68 @@ def test_inpaint_reference_uses_exact_final_placements(tmp_path: Path):
     ).getbbox() is not None
 
 
+def test_identity_lock_mask_generates_only_above_the_bottom_subject_band(
+    tmp_path: Path,
+):
+    build_scene_reference("Base1", 0.25, tmp_path)
+
+    mask = Image.open(tmp_path / "upper_context_mask.png").convert("RGBA")
+    alpha = mask.getchannel("A")
+
+    assert alpha.getpixel((mask.width // 2, 0)) == 0
+    assert 0 < alpha.getpixel((mask.width // 2, round(mask.height * 0.65))) < 255
+    assert alpha.getpixel((mask.width // 2, mask.height - 1)) == 255
+
+
+def test_canny_structure_reference_flattens_exact_placements_on_white(
+    tmp_path: Path,
+):
+    scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
+    build_scene_reference("Base1", 0.25, tmp_path)
+
+    actual = Image.open(tmp_path / "structure_reference.png").convert("RGB")
+    layout = build_page_layout("standard_3x3", width_px=actual.width)
+    expected = Image.new("RGBA", actual.size, (255, 255, 255, 255))
+    for placement in cutout_placements(layout, scope_dir):
+        expected.alpha_composite(
+            placement["image"],
+            (placement["x"], placement["y"]),
+        )
+
+    assert ImageChops.difference(
+        actual,
+        expected.convert("RGB"),
+    ).getbbox() is None
+
+
+def test_qwen_identity_references_prioritize_first_subject_detail(
+    tmp_path: Path,
+):
+    build_scene_reference("Base1", 0.25, tmp_path)
+
+    first = Image.open(
+        tmp_path / "qwen_identity_reference_1.png"
+    ).convert("RGB")
+    remaining = Image.open(
+        tmp_path / "qwen_identity_reference_2.png"
+    ).convert("RGB")
+    assert first.size == (512, 640)
+    assert remaining.size == (1024, 640)
+
+    first_box = ImageChops.difference(
+        first,
+        Image.new("RGB", first.size, (226, 224, 211)),
+    ).getbbox()
+    remaining_box = ImageChops.difference(
+        remaining,
+        Image.new("RGB", remaining.size, (226, 224, 211)),
+    ).getbbox()
+    assert first_box is not None
+    assert remaining_box is not None
+    assert first_box[2] - first_box[0] >= 300
+    assert first_box[3] - first_box[1] >= 400
+
+
 def test_identity_references_use_scale_aware_appearance_canvases(tmp_path: Path):
     scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
     manifest = fetch_cutouts.load_yaml(scope_dir / "poster.yaml")
@@ -351,9 +422,61 @@ def test_comfyui_inpaint_uses_source_once_without_reference_conditioning():
     assert loaded_images == {"inpaint_reference.png"}
     assert not any(node["class_type"] == "ReferenceLatent" for node in workflow.values())
     assert any(node["class_type"] == "VAEEncodeForInpaint" for node in workflow.values())
-    assert not any(node["class_type"] == "ImageCompositeMasked" for node in workflow.values())
+    assert workflow["18"] == {
+        "class_type": "ImageCompositeMasked",
+        "inputs": {
+            "destination": ["14", 0],
+            "source": ["12", 0],
+            "x": 0,
+            "y": 0,
+            "resize_source": False,
+            "mask": ["14", 1],
+        },
+    }
+    assert workflow["13"]["inputs"]["images"] == ["18", 0]
     assert workflow["9"]["inputs"]["positive"] == ["4", 0]
     assert workflow["15"]["inputs"]["grow_mask_by"] == 0
+
+
+def test_comfyui_identity_lock_uses_clean_ground_then_upper_context_pass():
+    workflow = build_workflow(
+        "Base1",
+        seed=123,
+        megapixels=0.25,
+        generation_mode="identity_lock",
+    )
+
+    assert {
+        node["inputs"]["image"]
+        for node in workflow.values()
+        if node["class_type"] == "LoadImage"
+    } == {"inpaint_reference.png", "upper_context_mask.png"}
+    assert workflow["15"]["class_type"] == "EmptySD3LatentImage"
+    assert workflow["15"]["inputs"]["width"] > workflow["27"]["inputs"]["width"]
+    assert workflow["15"]["inputs"]["height"] > workflow["27"]["inputs"]["height"]
+    assert workflow["11"]["inputs"]["latent_image"] == ["15", 0]
+    assert workflow["26"]["class_type"] == "Flux2Scheduler"
+    assert workflow["26"]["inputs"]["width"] == workflow["27"]["inputs"]["width"]
+    assert workflow["26"]["inputs"]["height"] == workflow["27"]["inputs"]["height"]
+    assert workflow["27"]["class_type"] == "ImageCrop"
+    assert workflow["27"]["inputs"]["image"] == ["12", 0]
+    assert workflow["19"]["class_type"] == "ImageCompositeMasked"
+    assert workflow["19"]["inputs"]["destination"] == ["27", 0]
+    assert workflow["19"]["inputs"]["source"] == ["14", 0]
+    assert workflow["21"]["class_type"] == "VAEEncodeForInpaint"
+    assert workflow["21"]["inputs"]["pixels"] == ["19", 0]
+    assert workflow["21"]["inputs"]["mask"] == ["20", 1]
+    assert workflow["22"]["inputs"]["noise_seed"] == 124
+    assert workflow["23"]["inputs"]["latent_image"] == ["21", 0]
+    assert workflow["23"]["inputs"]["sigmas"] == ["26", 0]
+    assert workflow["25"]["inputs"]["destination"] == ["19", 0]
+    assert workflow["25"]["inputs"]["source"] == ["24", 0]
+    assert workflow["25"]["inputs"]["mask"] == ["20", 1]
+    assert workflow["13"]["inputs"]["images"] == ["25", 0]
+    assert not any(
+        node["class_type"] == "ReferenceLatent"
+        for node in workflow.values()
+    )
 
 
 def test_comfyui_edit_uses_reference_with_independent_empty_target():
@@ -435,9 +558,69 @@ def test_anima_workflow_uses_cosmos_reference_without_changing_flux_workflow():
     assert any(node["class_type"] == "ApplyCosmosReferenceLatent" for node in workflow.values())
     assert any(node["class_type"] == "LoraLoaderModelOnly" for node in workflow.values())
     assert any(node["class_type"] == "ImageCompositeMasked" for node in workflow.values())
-    assert {node["inputs"]["image"] for node in workflow.values() if node["class_type"] == "LoadImage"} == {"scene_reference.png"}
+    assert {
+        node["inputs"]["image"]
+        for node in workflow.values()
+        if node["class_type"] == "LoadImage"
+    } == {"scene_reference.png"}
     sampler = next(node for node in workflow.values() if node["class_type"] == "KSampler")
     assert sampler["inputs"]["latent_image"] == ["10", 0]
+
+
+def test_flux1_canny_workflow_binds_original_structure():
+    workflow = build_flux1_canny_workflow(
+        "Base1",
+        seed=123,
+        megapixels=1.0,
+        control_strength=0.8,
+    )
+
+    assert workflow["1"] == {
+        "class_type": "UnetLoaderGGUF",
+        "inputs": {"unet_name": "flux1-dev-Q4_K_S.gguf"},
+    }
+    assert workflow["2"]["class_type"] == "DualCLIPLoaderGGUF"
+    assert workflow["7"]["inputs"]["image"] == "structure_reference.png"
+    assert workflow["8"]["class_type"] == "Canny"
+    assert workflow["9"]["class_type"] == "ControlNetLoader"
+    assert workflow["10"]["class_type"] == "ControlNetApplySD3"
+    assert workflow["10"]["inputs"]["strength"] == 0.8
+    assert workflow["12"]["inputs"]["steps"] == 20
+    assert workflow["12"]["inputs"]["cfg"] == 1.0
+    assert not any(
+        node["class_type"] in {"ReferenceLatent", "ImageCompositeMasked"}
+        for node in workflow.values()
+    )
+
+
+def test_qwen_edit_workflow_separates_composition_and_detail_references():
+    workflow = build_qwen_edit_workflow(
+        "Base1",
+        seed=123,
+        megapixels=1.0,
+    )
+
+    assert workflow["1"]["class_type"] == "UnetLoaderGGUF"
+    assert workflow["5"]["inputs"]["type"] == "qwen_image"
+    assert [
+        workflow[node_id]["inputs"]["image"]
+        for node_id in ("7", "8", "9")
+    ] == [
+        "structure_reference.png",
+        "qwen_identity_reference_1.png",
+        "qwen_identity_reference_2.png",
+    ]
+    assert workflow["10"]["class_type"] == "TextEncodeQwenImageEditPlus"
+    assert workflow["10"]["inputs"]["image1"] == ["7", 0]
+    assert workflow["10"]["inputs"]["image2"] == ["8", 0]
+    assert workflow["10"]["inputs"]["image3"] == ["9", 0]
+    assert "Mewtwo" in workflow["10"]["inputs"]["prompt"]
+    assert workflow["12"]["inputs"]["reference_latents_method"] == (
+        "index_timestep_zero"
+    )
+    assert workflow["15"]["inputs"]["steps"] == 4
+    assert workflow["15"]["inputs"]["cfg"] == 1.0
+    assert workflow["15"]["inputs"]["latent_image"] == ["14", 0]
 
 
 def test_engine_workflows_have_separate_files(tmp_path: Path):
@@ -447,8 +630,24 @@ def test_engine_workflows_have_separate_files(tmp_path: Path):
     anima = write_engine_workflow(
         "anima", "Base1", 123, 0.25, workflow_output_dir=tmp_path
     )
-    assert flux.name == "workflow_api_edit_0p25mp_123.json"
+    flux1 = write_engine_workflow(
+        "flux1_canny",
+        "Base1",
+        123,
+        0.25,
+        workflow_output_dir=tmp_path,
+    )
+    qwen = write_engine_workflow(
+        "qwen_edit",
+        "Base1",
+        123,
+        0.25,
+        workflow_output_dir=tmp_path,
+    )
+    assert flux.name == "workflow_api_identity_lock_0p25mp_123.json"
     assert anima.name == "anima_workflow_api.json"
+    assert flux1.name == "flux1_canny_workflow_api_0p25_123.json"
+    assert qwen.name == "qwen_edit_workflow_api_0p25_123.json"
 
 
 def test_flux_workflow_files_are_unique_per_seed(tmp_path: Path):
@@ -636,21 +835,89 @@ def test_generation_hashes_describe_selected_comfyui_model_files(
 ):
     model = tmp_path / "models" / "diffusion_models" / "matching.safetensors"
     encoder = tmp_path / "models" / "text_encoders" / "encoder.safetensors"
+    encoder_2 = tmp_path / "models" / "clip" / "encoder.gguf"
+    controlnet = tmp_path / "models" / "controlnet" / "canny.safetensors"
+    lora = tmp_path / "models" / "loras" / "identity.safetensors"
     model.parent.mkdir(parents=True)
     encoder.parent.mkdir(parents=True)
+    encoder_2.parent.mkdir(parents=True)
+    controlnet.parent.mkdir(parents=True)
+    lora.parent.mkdir(parents=True)
     model.write_bytes(b"model")
     encoder.write_bytes(b"encoder")
+    encoder_2.write_bytes(b"encoder-2")
+    controlnet.write_bytes(b"controlnet")
+    lora.write_bytes(b"lora")
 
     enriched = add_model_artifact_hashes(
         tmp_path,
         {
             "model": "matching.safetensors",
             "encoder": "encoder.safetensors",
+            "encoder_2": "encoder.gguf",
+            "controlnet": "canny.safetensors",
+            "lora": "identity.safetensors",
         },
     )
 
     assert enriched["model_sha256"] == sha256_file(model)
     assert enriched["encoder_sha256"] == sha256_file(encoder)
+    assert enriched["encoder_2_sha256"] == sha256_file(encoder_2)
+    assert enriched["controlnet_sha256"] == sha256_file(controlnet)
+    assert enriched["lora_sha256"] == sha256_file(lora)
+
+
+def test_identity_lock_provenance_excludes_unused_edit_references(
+    tmp_path: Path,
+    monkeypatch,
+):
+    scope_dir = tmp_path / "Example"
+    work_dir = scope_dir / "comfyui_poster"
+    cutout_dir = scope_dir / "cutouts"
+    work_dir.mkdir(parents=True)
+    cutout_dir.mkdir()
+    (scope_dir / "poster.yaml").write_text("scope: Example\n", encoding="utf-8")
+    (cutout_dir / "manifest.json").write_text(
+        json.dumps({"items": [{"file": "subject.png"}]}),
+        encoding="utf-8",
+    )
+    Image.new("RGBA", (8, 8), (10, 20, 30, 255)).save(
+        cutout_dir / "subject.png"
+    )
+    Image.new("RGBA", (8, 8), (10, 20, 30, 255)).save(
+        work_dir / "inpaint_reference.png"
+    )
+    Image.new("RGBA", (8, 8), (0, 0, 0, 0)).save(
+        work_dir / "upper_context_mask.png"
+    )
+    Image.new("RGB", (8, 8), (10, 20, 30)).save(
+        work_dir / "identity_reference_1.png"
+    )
+    (work_dir / "identity_lock_prompt.txt").write_text(
+        "scene",
+        encoding="utf-8",
+    )
+    workflow = work_dir / "workflow.json"
+    workflow.write_text("{}\n", encoding="utf-8")
+    monkeypatch.setattr(
+        "scripts.poster_assets.provenance.POSTER_ASSETS",
+        tmp_path,
+    )
+
+    records = generation_input_records(
+        "Example",
+        workflow,
+        {
+            "engine": "flux",
+            "mode": "identity_lock",
+            "reference_mode": "two_pass_source_pixels",
+        },
+    )
+
+    assert [record["file"] for record in records["references"]] == [
+        "inpaint_reference.png",
+        "upper_context_mask.png",
+    ]
 
 
 def test_slice_poster_exports_every_card_without_binder_gaps(tmp_path: Path):

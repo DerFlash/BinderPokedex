@@ -1,0 +1,25 @@
+Edit IMAGE 1 into one cohesive vertical poster artwork. Replace only its flat
+white background with a nostalgic coastal Kanto meadow for Scarlet & Violet -
+151. Keep the three existing Pokémon exactly where they are in IMAGE 1, at the
+same scale, pose, silhouette, proportions, colors, and shared ground level.
+IMAGE 1 is the sole authority for composition. IMAGES 2 and 3 are
+high-resolution identity and anatomy references. They are detail references,
+not extra characters.
+
+Preserve every defining source detail. Bulbasaur retains its exact face, four
+legs, spots, bulb, colors, and proportions. Charmander retains its exact face,
+arms, three-clawed feet, proportions, orange tail, and single flame. Squirtle
+retains its exact face, limbs, tail, shell geometry, colors, and proportions.
+Draw exactly these three Pokémon once. Do not merge, duplicate, replace,
+redesign, accessorize, or add anatomy to them.
+
+Create continuous grassland, layered woodland, weathered stones, distant low
+hills, and a glimpse of a calm blue bay. Warm late-afternoon sunlight enters
+from the upper left. Add coherent contact shadows and reflected light.
+Landscape elements may naturally cross a figure only when perspective genuinely
+places them closer to the viewer; otherwise keep the source anatomy clear.
+
+Keep the upper and middle-center areas visually calm for later deterministic
+poster information. Do not draw text, letters, numbers, logos, title art, boxes,
+plaques, panels, landing pads, circles, platforms, paths, roads, guides, cards,
+borders, UI, watermarks, people, trainers, crop marks, or additional creatures.

@@ -1,0 +1,31 @@
+Edit IMAGE 1 into one cohesive vertical poster artwork. Replace only its flat
+white background with a nostalgic 1999 Base Set environment. Keep the three
+existing Pokémon exactly where they are in IMAGE 1, at the same scale, pose,
+silhouette, proportions, colors, and shared ground level. IMAGE 1 is the sole
+authority for composition. IMAGE 2 is the high-resolution identity and anatomy
+authority for Mewtwo. IMAGE 3 is the high-resolution identity and anatomy
+authority for Bulbasaur and Charmander. The extra images are detail references,
+not extra characters.
+
+Preserve every defining source detail. Mewtwo retains its smooth head with short
+cranial nubs, exact narrow face and eyes, small paired central chest ridges, three
+distinct digits on each hand, both complete legs and feet, and one continuous
+purple tail. It must not become a cat, rabbit, woman, or generic purple creature.
+Bulbasaur retains its exact face, four legs, spots, bulb, colors, and proportions.
+Charmander retains its exact face, arms, three-clawed feet, proportions, orange
+tail, and single flame. Draw exactly these three Pokémon once. Do not merge,
+duplicate, replace, redesign, accessorize, or add anatomy to them.
+
+Create a peaceful late-1990s Japanese cel-painted meadow around them, with
+layered forest edges, soft mountains, and one small distant generic Pokémon
+research building with a blank facade. Warm morning sunlight enters from the
+upper left. Add coherent contact shadows and reflected meadow light. Landscape
+elements may naturally cross a figure only when perspective genuinely places
+them closer to the viewer; otherwise keep the complete source anatomy clear.
+
+Keep the upper third as open pale-blue sky with a few soft clouds for a later
+logo. Keep the middle center calm for later set information. The meadow is
+continuous, with no path or route. Do not draw text, letters, numbers, logos,
+boxes, plaques, panels, landing pads, circles, platforms, roads, radial walkways,
+layout guides, cards, borders, UI, watermarks, people, trainers, crop marks, or
+additional creatures.

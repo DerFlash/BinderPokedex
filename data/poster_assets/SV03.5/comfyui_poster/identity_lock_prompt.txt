@@ -1,0 +1,26 @@
+Create one cohesive full-bleed vertical scene for a Kanto collection. The
+artwork contains a quiet coastal meadow in a gentle watercolor and clean
+cel-painted style: layered woodland, distant low hills, weathered coastal forms,
+and a glimpse of a calm blue bay. Warm late-afternoon sunlight enters from the
+upper left. Use clean linework, restrained natural colors, and gentle atmospheric
+depth.
+
+The complete lower thirty-five percent is one continuous low meadow floor with
+only short, low-contrast texture and soft horizontal shadows. It is a single
+natural ground plane, never three clearings, halos, platforms, circles, or
+landing pads. Put no tall plants, flowers, rocks, bushes, branches, strong color
+patches, hard-edged shadows, vertical strokes, or isolated foreground objects in
+this lower band.
+
+If finished opaque source subjects are visible, they are the exact final cast and
+their final composition. Treat every source pixel as immutable. Build one
+consistent environment for them without replacing, continuing, tracing,
+redrawing, echoing, duplicating, or adding anatomy to them. Draw no additional
+living subject, face, eyes, body, mascot, animal, creature, person, trainer,
+statue, silhouette, or character-shaped plant anywhere.
+
+Fill the image naturally to every edge with no margin, page, frame, or border.
+Keep the upper area visually calm for later deterministic poster information.
+The meadow is continuous, with no path or route. Do not draw text, letters,
+numbers, logos, title art, boxes, plaques, panels, cards, borders, UI,
+watermarks, or crop marks.

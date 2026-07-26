@@ -15,7 +15,10 @@ POSTER_ASSETS = ROOT / "data" / "poster_assets"
 MODEL_DIRECTORIES = {
     "model": ("diffusion_models", "unet"),
     "encoder": ("text_encoders", "clip"),
+    "encoder_2": ("text_encoders", "clip"),
     "vae": ("vae",),
+    "controlnet": ("controlnet",),
+    "lora": ("loras",),
     "upscale_model": ("upscale_models",),
 }
 
@@ -105,6 +108,12 @@ def prompt_path_for_generation(
     mode = str(generation.get("mode", ""))
     if engine == "anima":
         return work_dir / "anima_prompt.txt"
+    if engine == "flux1_canny":
+        return work_dir / "flux1_canny_prompt.txt"
+    if engine == "qwen_edit":
+        return work_dir / "qwen_edit_prompt.txt"
+    if engine == "flux" and mode == "identity_lock":
+        return work_dir / "identity_lock_prompt.txt"
     if engine == "flux" and mode == "inpaint":
         return work_dir / "inpaint_prompt.txt"
     if engine == "flux":
@@ -129,7 +138,31 @@ def generation_input_records(
     if not cutouts:
         raise ValueError(f"No cutouts listed in {cutout_manifest_path}")
 
-    if generation.get("engine") == "flux" and generation.get("mode") == "inpaint":
+    if generation.get("engine") == "flux1_canny":
+        references = [
+            file_record(work_dir / "structure_reference.png", image=True),
+        ]
+    elif generation.get("engine") == "qwen_edit":
+        references = [
+            file_record(work_dir / "structure_reference.png", image=True),
+            file_record(
+                work_dir / "qwen_identity_reference_1.png",
+                image=True,
+            ),
+            file_record(
+                work_dir / "qwen_identity_reference_2.png",
+                image=True,
+            ),
+        ]
+    elif (
+        generation.get("engine") == "flux"
+        and generation.get("mode") == "identity_lock"
+    ):
+        references = [
+            file_record(work_dir / "inpaint_reference.png", image=True),
+            file_record(work_dir / "upper_context_mask.png", image=True),
+        ]
+    elif generation.get("engine") == "flux" and generation.get("mode") == "inpaint":
         references = [
             file_record(work_dir / "inpaint_reference.png", image=True),
         ]
@@ -139,7 +172,7 @@ def generation_input_records(
         ]
     if (
         generation.get("engine") == "flux"
-        and generation.get("mode") != "inpaint"
+        and generation.get("mode") == "edit"
         and generation.get("reference_mode") == "identity"
     ):
         references.extend(
