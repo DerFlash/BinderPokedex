@@ -9,10 +9,10 @@ from PIL import Image
 
 try:
     from .layout import build_page_layout
-    from .render_poster import load_yaml
+    from .poster_io import load_yaml
 except ImportError:
     from layout import build_page_layout
-    from render_poster import load_yaml
+    from poster_io import load_yaml
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -23,7 +23,9 @@ def slice_poster(scope: str, source: Path, output_dir: Path | None = None) -> li
     """Crop the card areas and discard the physical binder gaps between them."""
     scope_dir = POSTER_ASSETS / scope
     manifest = load_yaml(scope_dir / "poster.yaml")
-    image = Image.open(source).convert("RGB")
+    loaded = Image.open(source)
+    source_dpi = loaded.info.get("dpi")
+    image = loaded.convert("RGB")
     layout = build_page_layout(
         manifest.get("layout", {}).get("name", "standard_3x3"),
         width_px=image.width,
@@ -51,7 +53,10 @@ def slice_poster(scope: str, source: Path, output_dir: Path | None = None) -> li
                 )
             )
             path = target_dir / f"card_r{row}_c{column}.png"
-            card.save(path, format="PNG", optimize=True)
+            save_options = {"format": "PNG", "optimize": True}
+            if source_dpi:
+                save_options["dpi"] = source_dpi
+            card.save(path, **save_options)
             outputs.append(path)
     return outputs
 

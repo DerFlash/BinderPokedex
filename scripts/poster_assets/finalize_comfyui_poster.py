@@ -10,25 +10,25 @@ from PIL import Image, ImageDraw, ImageFilter
 
 try:
     from .layout import build_page_layout
-    from .render_poster import (
-        OUTPUT_DIR,
+    from .poster_io import (
+        SCOPE_DATA,
+        load_json,
+        load_yaml,
+    )
+    from .typography import (
         composite_panel,
         draw_text_centered,
         load_font,
-        load_json,
-        load_yaml,
         scope_title,
         wrap_text,
     )
 except ImportError:
     from layout import build_page_layout
-    from render_poster import (
-        OUTPUT_DIR,
+    from poster_io import SCOPE_DATA, load_json, load_yaml
+    from typography import (
         composite_panel,
         draw_text_centered,
         load_font,
-        load_json,
-        load_yaml,
         scope_title,
         wrap_text,
     )
@@ -247,9 +247,11 @@ def finalize(scope: str, input_path: Path, output_path: Path | None = None, lang
         raise ValueError(f"Unsupported language: {language}")
     scope_dir = POSTER_ASSETS / scope
     manifest = load_yaml(scope_dir / "poster.yaml")
-    scope_data = load_json(OUTPUT_DIR / f"{scope}.json")
+    scope_data = load_json(SCOPE_DATA / f"{scope}.json")
 
-    canvas = Image.open(input_path).convert("RGBA")
+    source = Image.open(input_path)
+    source_dpi = source.info.get("dpi")
+    canvas = source.convert("RGBA")
     layout = build_page_layout(
         manifest.get("layout", {}).get("name", "standard_3x3"),
         width_px=canvas.width,
@@ -266,7 +268,10 @@ def finalize(scope: str, input_path: Path, output_path: Path | None = None, lang
     if output_path is None:
         output_path = input_path.with_name(f"{input_path.stem}_final.png")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    canvas.convert("RGB").save(output_path, format="PNG", optimize=True)
+    save_options = {"format": "PNG", "optimize": True}
+    if source_dpi:
+        save_options["dpi"] = source_dpi
+    canvas.convert("RGB").save(output_path, **save_options)
     return output_path
 
 

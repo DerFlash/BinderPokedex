@@ -19,7 +19,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.poster_assets.finalize_comfyui_poster import finalize  # noqa: E402
-from scripts.poster_assets.render_poster import load_yaml  # noqa: E402
+from scripts.poster_assets.poster_io import load_yaml  # noqa: E402
 from scripts.poster_assets.slice_poster import slice_poster  # noqa: E402
 
 

@@ -17,6 +17,54 @@ def request_json(url: str, payload: dict[str, object] | None = None) -> dict[str
         return json.loads(response.read().decode("utf-8"))
 
 
+def server_process_arguments(server: str) -> list[str]:
+    """Read the command line reported by the local ComfyUI process."""
+    stats = request_json(f"{server.rstrip('/')}/system_stats")
+    argv = stats.get("system", {}).get("argv", [])
+    if not isinstance(argv, list):
+        return []
+    return [str(argument) for argument in argv]
+
+
+def server_input_directory(server: str) -> Path | None:
+    """Read ComfyUI's configured input directory from its process arguments."""
+    argv = server_process_arguments(server)
+    for index, argument in enumerate(argv):
+        if argument == "--input-directory" and index + 1 < len(argv):
+            return Path(argv[index + 1]).expanduser().resolve()
+        if argument.startswith("--input-directory="):
+            return Path(argument.split("=", 1)[1]).expanduser().resolve()
+    return None
+
+
+def server_comfyui_root(server: str) -> Path | None:
+    """Resolve the ComfyUI root from the absolute main.py process argument."""
+    argv = server_process_arguments(server)
+    if not argv:
+        return None
+    main_path = Path(argv[0]).expanduser()
+    if main_path.name != "main.py" or not main_path.is_absolute():
+        return None
+    return main_path.resolve().parent
+
+
+def validate_server_input_directory(server: str, expected: Path) -> None:
+    """Reject a scope-specific ComfyUI server pointed at another input folder."""
+    actual = server_input_directory(server)
+    expected = expected.expanduser().resolve()
+    if actual is None:
+        raise RuntimeError(
+            "ComfyUI did not report its --input-directory; start it with "
+            "scripts/poster_assets/start_comfyui_poster.sh --scope <scope>"
+        )
+    if actual != expected:
+        raise RuntimeError(
+            f"ComfyUI input directory mismatch: server uses {actual}, "
+            f"but this run requires {expected}. Restart the server with the "
+            "same --scope value."
+        )
+
+
 def queue_workflow(
     workflow_path: Path,
     server: str = "http://127.0.0.1:8188",

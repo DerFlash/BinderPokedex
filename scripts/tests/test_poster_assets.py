@@ -1,10 +1,16 @@
+import json
+import shutil
 from pathlib import Path
 
 from PIL import Image, ImageChops
 
 from scripts.poster_assets import fetch_cutouts
+from scripts.poster_assets import promote_comfyui_poster as poster_promotion
 from scripts.poster_assets.fetch_title_logos import resolve_logo_downloads
 from scripts.poster_assets.create_comfyui_poster_workflow import build_workflow
+from scripts.poster_assets.create_comfyui_upscale_workflow import (
+    build_workflow as build_upscale_workflow,
+)
 from scripts.poster_assets.create_anima_poster_workflow import build_workflow as build_anima_workflow
 from scripts.poster_assets.finalize_comfyui_poster import (
     finalize,
@@ -12,20 +18,52 @@ from scripts.poster_assets.finalize_comfyui_poster import (
     info_panel_box,
     title_logo_file,
 )
-from scripts.poster_assets.layout import build_page_layout
+from scripts.poster_assets.layout import (
+    build_page_layout,
+    build_print_layout,
+    effective_dpi,
+)
 from scripts.poster_assets.poster_config import build_identity_reference_prompt
+from scripts.poster_assets.provenance import (
+    add_model_artifact_hashes,
+    sha256_file,
+)
+from scripts.poster_assets.queue_comfyui_workflow import (
+    server_comfyui_root,
+    server_input_directory,
+    validate_server_input_directory,
+)
 from scripts.poster_assets.prepare_comfyui_poster import (
     build_identity_references,
     card_safe_conditioning_placements,
 )
-from scripts.poster_assets.render_poster import cutout_placements, wrap_text
-from scripts.poster_assets.run_comfyui_poster import resize_artwork, validate_raw_artwork, write_engine_workflow
+from scripts.poster_assets.composition import cutout_placements
+from scripts.poster_assets.typography import wrap_text
+from scripts.poster_assets.run_comfyui_poster import (
+    resize_artwork,
+    validate_raw_artwork,
+    write_engine_workflow,
+)
 from scripts.poster_assets.slice_poster import slice_poster
+from scripts.poster_assets import upscale_comfyui_poster as poster_upscale
+from scripts.poster_assets.validate_promoted_poster import (
+    validate as validate_promoted_poster,
+)
 
 
 def test_auto_count_uses_layout_columns():
     manifest = {"pokemon": {"count": "auto_from_layout_columns"}}
     assert fetch_cutouts.resolve_requested_count(manifest, build_page_layout("wide_4x3")) == 4
+
+
+def test_standard_print_layout_is_300_dpi_at_physical_card_size():
+    layout = build_print_layout("standard_3x3", 300)
+
+    assert (layout.width_px, layout.height_px) == (2368, 3268)
+    assert (layout.card_width_px, layout.card_height_px) == (750, 1050)
+    dpi_x, dpi_y = effective_dpi(layout)
+    assert abs(dpi_x - 300) < 0.1
+    assert abs(dpi_y - 300) < 0.1
 
 
 def test_select_pokemon_uses_fallback_candidates():
@@ -150,17 +188,17 @@ def test_sv035_uses_default_conditioning_without_base1_offsets():
     ]
 
 
-def test_identity_references_use_scale_aware_appearance_canvases():
+def test_identity_references_use_scale_aware_appearance_canvases(tmp_path: Path):
     scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
     manifest = fetch_cutouts.load_yaml(scope_dir / "poster.yaml")
 
-    build_identity_references(scope_dir, manifest)
+    build_identity_references(scope_dir, manifest, tmp_path)
 
     layout = build_page_layout("standard_3x3", width_px=848)
     extents = []
     for index in range(1, layout.pokemon_count + 1):
         image = Image.open(
-            scope_dir / "comfyui_poster" / f"identity_reference_{index}.png"
+            tmp_path / f"identity_reference_{index}.png"
         ).convert("RGB")
         expected_size = (768, 768) if index == 1 else (512, 512)
         assert image.size == expected_size
@@ -380,20 +418,72 @@ def test_anima_workflow_uses_cosmos_reference_without_changing_flux_workflow():
     assert sampler["inputs"]["latent_image"] == ["10", 0]
 
 
-def test_engine_workflows_have_separate_files():
-    flux = write_engine_workflow("flux", "Base1", 123, 0.25)
-    anima = write_engine_workflow("anima", "Base1", 123, 0.25)
+def test_engine_workflows_have_separate_files(tmp_path: Path):
+    flux = write_engine_workflow(
+        "flux", "Base1", 123, 0.25, workflow_output_dir=tmp_path
+    )
+    anima = write_engine_workflow(
+        "anima", "Base1", 123, 0.25, workflow_output_dir=tmp_path
+    )
     assert flux.name == "workflow_api_edit_0p25mp_123.json"
     assert anima.name == "anima_workflow_api.json"
 
 
-def test_flux_workflow_files_are_unique_per_seed():
-    first = write_engine_workflow("flux", "Base1", 123, 0.25)
-    second = write_engine_workflow("flux", "Base1", 124, 0.25)
-    full_size = write_engine_workflow("flux", "Base1", 123, 1.0)
+def test_flux_workflow_files_are_unique_per_seed(tmp_path: Path):
+    first = write_engine_workflow(
+        "flux", "Base1", 123, 0.25, workflow_output_dir=tmp_path
+    )
+    second = write_engine_workflow(
+        "flux", "Base1", 124, 0.25, workflow_output_dir=tmp_path
+    )
+    full_size = write_engine_workflow(
+        "flux", "Base1", 123, 1.0, workflow_output_dir=tmp_path
+    )
 
     assert first != second
     assert first != full_size
+
+
+def test_comfyui_server_scope_is_read_from_input_directory(monkeypatch, tmp_path):
+    expected = tmp_path / "scope" / "comfyui_poster"
+    main_path = tmp_path / "ComfyUI" / "main.py"
+    monkeypatch.setattr(
+        "scripts.poster_assets.queue_comfyui_workflow.request_json",
+        lambda _url: {
+            "system": {
+                "argv": [
+                    str(main_path),
+                    "--input-directory",
+                    str(expected),
+                ]
+            }
+        },
+    )
+
+    assert server_input_directory("http://example.test") == expected.resolve()
+    assert server_comfyui_root("http://example.test") == main_path.parent.resolve()
+    validate_server_input_directory("http://example.test", expected)
+
+
+def test_comfyui_server_rejects_another_scope(monkeypatch, tmp_path):
+    actual = tmp_path / "Base1" / "comfyui_poster"
+    expected = tmp_path / "SV03.5" / "comfyui_poster"
+    monkeypatch.setattr(
+        "scripts.poster_assets.queue_comfyui_workflow.request_json",
+        lambda _url: {
+            "system": {
+                "argv": [f"--input-directory={actual}"],
+            }
+        },
+    )
+
+    try:
+        validate_server_input_directory("http://example.test", expected)
+    except RuntimeError as error:
+        assert "input directory mismatch" in str(error)
+        assert "same --scope" in str(error)
+    else:
+        raise AssertionError("scope mismatch was accepted")
 
 
 def test_flux_model_and_steps_are_selectable():
@@ -410,6 +500,72 @@ def test_flux_model_and_steps_are_selectable():
     assert workflow["1"]["inputs"]["unet_name"] == "flux-2-klein-base-4b-fp8.safetensors"
     assert workflow["7"]["inputs"]["steps"] == 24
     assert workflow["2"]["inputs"]["clip_name"] == "qwen_3_8b_fp4mixed.safetensors"
+
+
+def test_upscale_workflow_uses_model_then_exact_print_dimensions():
+    workflow = build_upscale_workflow(
+        "Base1",
+        "temp/candidate.png",
+        dpi=300,
+        model_name="example-upscaler.pth",
+    )
+
+    assert workflow["1"]["inputs"]["image"] == "temp/candidate.png"
+    assert workflow["2"]["inputs"]["model_name"] == "example-upscaler.pth"
+    assert workflow["3"]["class_type"] == "ImageUpscaleWithModel"
+    assert workflow["4"]["inputs"]["width"] == 2368
+    assert workflow["4"]["inputs"]["height"] == 3268
+    assert workflow["4"]["inputs"]["crop"] == "disabled"
+
+
+def test_upscale_input_normalizes_to_physical_aspect_ratio(
+    tmp_path: Path,
+    monkeypatch,
+):
+    assets_root = tmp_path / "poster_assets"
+    scope_dir = assets_root / "Example"
+    scope_dir.mkdir(parents=True)
+    (scope_dir / "poster.yaml").write_text(
+        "layout:\n  name: standard_3x3\n",
+        encoding="utf-8",
+    )
+    source = tmp_path / "source.png"
+    destination = tmp_path / "normalized.png"
+    Image.new("RGB", (608, 832), (40, 90, 140)).save(source)
+    monkeypatch.setattr(poster_upscale, "POSTER_ASSETS", assets_root)
+
+    poster_upscale.normalize_upscale_input(
+        "Example",
+        source,
+        destination,
+    )
+
+    assert Image.open(destination).size == (
+        608,
+        build_page_layout("standard_3x3", width_px=608).height_px,
+    )
+
+
+def test_print_dpi_survives_finalization_and_card_slicing(tmp_path: Path):
+    raw_path = tmp_path / "raw.png"
+    final_path = tmp_path / "final.png"
+    card_dir = tmp_path / "cards"
+    layout = build_print_layout("standard_3x3", 300)
+    Image.new(
+        "RGB",
+        (layout.width_px, layout.height_px),
+        (80, 140, 90),
+    ).save(raw_path, dpi=(300, 300))
+
+    finalize("Base1", raw_path, final_path)
+    cards = slice_poster("Base1", final_path, card_dir)
+
+    assert abs(Image.open(final_path).info["dpi"][0] - 300) < 0.1
+    assert len(cards) == 9
+    assert all(
+        abs(Image.open(path).info["dpi"][0] - 300) < 0.1
+        for path in cards
+    )
 
 
 def test_finalizer_preserves_size_and_adds_deterministic_panels(tmp_path: Path):
@@ -453,6 +609,28 @@ def test_resize_artwork_uses_requested_poster_dimensions(tmp_path: Path):
     assert Image.open(destination).size == (432, 596)
 
 
+def test_generation_hashes_describe_selected_comfyui_model_files(
+    tmp_path: Path,
+):
+    model = tmp_path / "models" / "diffusion_models" / "matching.safetensors"
+    encoder = tmp_path / "models" / "text_encoders" / "encoder.safetensors"
+    model.parent.mkdir(parents=True)
+    encoder.parent.mkdir(parents=True)
+    model.write_bytes(b"model")
+    encoder.write_bytes(b"encoder")
+
+    enriched = add_model_artifact_hashes(
+        tmp_path,
+        {
+            "model": "matching.safetensors",
+            "encoder": "encoder.safetensors",
+        },
+    )
+
+    assert enriched["model_sha256"] == sha256_file(model)
+    assert enriched["encoder_sha256"] == sha256_file(encoder)
+
+
 def test_slice_poster_exports_every_card_without_binder_gaps(tmp_path: Path):
     source = tmp_path / "poster.png"
     layout = build_page_layout("standard_3x3", width_px=848)
@@ -470,3 +648,157 @@ def test_slice_poster_exports_every_card_without_binder_gaps(tmp_path: Path):
         Image.open(path).size == (layout.card_width_px, layout.card_height_px)
         for path in outputs
     )
+
+
+def _promotion_fixture(tmp_path: Path, monkeypatch):
+    assets_root = tmp_path / "poster_assets"
+    scope_dir = assets_root / "Example"
+    scope_dir.mkdir(parents=True)
+    (scope_dir / "poster.yaml").write_text(
+        (
+            "scope: Example\n"
+            "layout:\n"
+            "  name: standard_3x3\n"
+            "artwork:\n"
+            "  generation:\n"
+            "    engine: test\n"
+        ),
+        encoding="utf-8",
+    )
+    layout = build_page_layout("standard_3x3", width_px=200)
+    artwork = tmp_path / "candidate.png"
+    Image.new(
+        "RGB",
+        (layout.width_px, layout.height_px),
+        (40, 120, 80),
+    ).save(artwork)
+    run_metadata = tmp_path / "candidate.run.json"
+    run_metadata.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "kind": "poster_generation_run",
+                "scope": "Example",
+                "generation": {"engine": "test"},
+                "source_artwork": {"sha256": sha256_file(artwork)},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    def fake_finalize(_scope, source, destination, _language):
+        shutil.copyfile(source, destination)
+        return destination
+
+    def fake_slice(_scope, source, output_dir):
+        output_dir.mkdir(parents=True)
+        image = Image.open(source)
+        outputs = []
+        for row in range(1, 4):
+            for column in range(1, 4):
+                path = output_dir / f"card_r{row}_c{column}.png"
+                image.crop((0, 0, 32, 32)).save(path)
+                outputs.append(path)
+        return outputs
+
+    monkeypatch.setattr(poster_promotion, "POSTER_ASSETS", assets_root)
+    monkeypatch.setattr(poster_promotion, "finalize", fake_finalize)
+    monkeypatch.setattr(poster_promotion, "slice_poster", fake_slice)
+    return scope_dir, artwork, run_metadata
+
+
+def test_promotion_installs_complete_bundle_with_stable_provenance(
+    tmp_path: Path,
+    monkeypatch,
+):
+    scope_dir, artwork, run_metadata = _promotion_fixture(
+        tmp_path,
+        monkeypatch,
+    )
+
+    promoted, preview, cards, provenance = poster_promotion.promote(
+        "Example",
+        artwork,
+        language="de",
+        force=False,
+        run_metadata_path=run_metadata,
+    )
+
+    assert promoted.is_file()
+    assert preview.is_file()
+    assert len(cards) == 9 and all(path.is_file() for path in cards)
+    payload = json.loads(provenance.read_text(encoding="utf-8"))
+    assert payload["scope"] == "Example"
+    assert payload["preview_language"] == "de"
+    assert payload["outputs"]["artwork"]["file"] == (
+        "data/poster_assets/Example/poster-flux2-artwork.png"
+    )
+    assert not list(scope_dir.glob(".poster-promotion-*"))
+
+
+def test_promotion_rejects_generation_metadata_drift(
+    tmp_path: Path,
+    monkeypatch,
+):
+    scope_dir, artwork, run_metadata = _promotion_fixture(
+        tmp_path,
+        monkeypatch,
+    )
+    payload = json.loads(run_metadata.read_text(encoding="utf-8"))
+    payload["generation"] = {"engine": "another-model"}
+    run_metadata.write_text(json.dumps(payload), encoding="utf-8")
+
+    try:
+        poster_promotion.promote(
+            "Example",
+            artwork,
+            run_metadata_path=run_metadata,
+        )
+    except ValueError as error:
+        assert "does not match" in str(error)
+    else:
+        raise AssertionError("generation metadata drift was accepted")
+
+    assert not (scope_dir / "poster-flux2-artwork.png").exists()
+    assert not list(scope_dir.glob(".poster-promotion-*"))
+
+
+def test_failed_promotion_keeps_existing_bundle(
+    tmp_path: Path,
+    monkeypatch,
+):
+    scope_dir, artwork, run_metadata = _promotion_fixture(
+        tmp_path,
+        monkeypatch,
+    )
+    existing = scope_dir / "poster-flux2-artwork.png"
+    Image.new("RGB", (16, 16), (220, 30, 20)).save(existing)
+    existing_hash = sha256_file(existing)
+
+    def fail_slice(_scope, _source, _output_dir):
+        raise RuntimeError("synthetic crop failure")
+
+    monkeypatch.setattr(poster_promotion, "slice_poster", fail_slice)
+
+    try:
+        poster_promotion.promote(
+            "Example",
+            artwork,
+            force=True,
+            run_metadata_path=run_metadata,
+        )
+    except RuntimeError as error:
+        assert "synthetic crop failure" in str(error)
+    else:
+        raise AssertionError("failed promotion unexpectedly succeeded")
+
+    assert sha256_file(existing) == existing_hash
+    assert not list(scope_dir.glob(".poster-promotion-*"))
+
+
+def test_promoted_production_posters_match_provenance_and_print_geometry():
+    for scope in ("Base1", "SV03.5"):
+        result = validate_promoted_poster(scope)
+        assert result["dimensions"] == (2368, 3268)
+        assert result["card_dimensions"] == (750, 1050)
+        assert result["cards"] == 9

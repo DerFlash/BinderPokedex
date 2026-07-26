@@ -84,13 +84,41 @@ def resolve_layout_name(name: str | None) -> dict[str, int]:
     return LAYOUTS[layout_name]
 
 
+def physical_layout_size_mm(name: str | None) -> tuple[float, float]:
+    """Return complete grid size, including binder gaps, in millimetres."""
+    spec = resolve_layout_name(name)
+    columns = int(spec["columns"])
+    rows = int(spec["rows"])
+    return (
+        columns * CARD_WIDTH_MM + (columns - 1) * GAP_X_MM,
+        rows * CARD_HEIGHT_MM + (rows - 1) * GAP_Y_MM,
+    )
+
+
+def build_print_layout(name: str | None, dpi: int = 300) -> PageLayout:
+    """Build a layout whose physical grid is rendered at the requested dpi."""
+    if dpi <= 0:
+        raise ValueError("dpi must be positive")
+    width_mm, _height_mm = physical_layout_size_mm(name)
+    width_px = round(width_mm / 25.4 * dpi)
+    return build_page_layout(name, width_px=width_px)
+
+
+def effective_dpi(layout: PageLayout) -> tuple[float, float]:
+    """Return the horizontal and vertical pixel density of a page layout."""
+    width_mm, height_mm = physical_layout_size_mm(layout.name)
+    return (
+        layout.width_px / (width_mm / 25.4),
+        layout.height_px / (height_mm / 25.4),
+    )
+
+
 def build_page_layout(name: str | None, width_px: int = 1400) -> PageLayout:
     spec = resolve_layout_name(name)
     columns = int(spec["columns"])
     rows = int(spec["rows"])
 
-    grid_width_mm = columns * CARD_WIDTH_MM + (columns - 1) * GAP_X_MM
-    grid_height_mm = rows * CARD_HEIGHT_MM + (rows - 1) * GAP_Y_MM
+    grid_width_mm, grid_height_mm = physical_layout_size_mm(name)
     height_px = round(width_px * grid_height_mm / grid_width_mm)
     px_per_mm = width_px / grid_width_mm
 

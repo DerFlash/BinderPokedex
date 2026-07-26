@@ -26,6 +26,8 @@ def build_workflow(
     model_name: str = "AnimaYume_tuned_v05.safetensors",
     generation_mode: str = "generate",
 ) -> dict[str, object]:
+    if control_method != "edit_lora":
+        raise ValueError(f"Unsupported Anima control method: {control_method}")
     work_dir = POSTER_ASSETS / scope / "comfyui_poster"
     prompt = (work_dir / "anima_prompt.txt").read_text(encoding="utf-8").strip()
     width, height = output_dimensions(scope, megapixels)
@@ -79,9 +81,12 @@ def write_workflow(
     control_method: str = "edit_lora",
     model_name: str = "AnimaYume_tuned_v05.safetensors",
     generation_mode: str = "generate",
+    output_dir: Path | None = None,
 ) -> Path:
     work_dir = POSTER_ASSETS / scope / "comfyui_poster"
-    out = work_dir / "anima_workflow_api.json"
+    target_dir = output_dir or work_dir
+    target_dir.mkdir(parents=True, exist_ok=True)
+    out = target_dir / "anima_workflow_api.json"
     out.write_text(
         json.dumps(
             build_workflow(

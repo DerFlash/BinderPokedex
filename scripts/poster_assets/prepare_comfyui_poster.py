@@ -10,15 +10,17 @@ from typing import Any
 from PIL import Image, ImageDraw, ImageFilter
 
 try:
+    from .composition import cutout_placements
     from .create_comfyui_poster_workflow import output_dimensions
     from .layout import build_page_layout
     from .poster_config import subject_conditioning
-    from .render_poster import cutout_placements, load_yaml
+    from .poster_io import load_yaml
 except ImportError:
+    from composition import cutout_placements
     from create_comfyui_poster_workflow import output_dimensions
     from layout import build_page_layout
     from poster_config import subject_conditioning
-    from render_poster import cutout_placements, load_yaml
+    from poster_io import load_yaml
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -88,7 +90,11 @@ def card_safe_conditioning_placements(
     return result
 
 
-def build_identity_references(scope_dir: Path, manifest: dict[str, Any]) -> None:
+def build_identity_references(
+    scope_dir: Path,
+    manifest: dict[str, Any],
+    output_dir: Path | None = None,
+) -> None:
     """Write compact appearance references without encoding scene placement.
 
     Position belongs exclusively to ``scene_reference.png``. Neutral-canvas
@@ -122,7 +128,9 @@ def build_identity_references(scope_dir: Path, manifest: dict[str, Any]) -> None
     max_subject_px = int(identity_defaults.get("max_subject_px", 350))
     default_canvas_px = int(identity_defaults.get("canvas_px", 512))
     default_bottom_padding_px = int(identity_defaults.get("bottom_padding_px", 24))
-    reference_path = scope_dir / "comfyui_poster" / "identity_reference_1.png"
+    reference_dir = output_dir or scope_dir / "comfyui_poster"
+    reference_dir.mkdir(parents=True, exist_ok=True)
+    reference_path = reference_dir / "identity_reference_1.png"
     for index, (placement, scene_extent) in enumerate(
         zip(placements, scene_extents), start=1
     ):

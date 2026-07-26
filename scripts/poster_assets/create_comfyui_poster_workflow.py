@@ -10,11 +10,11 @@ from pathlib import Path
 try:
     from .layout import build_page_layout
     from .poster_config import build_identity_reference_prompt
-    from .render_poster import load_cutout_items, load_yaml
+    from .poster_io import load_cutout_items, load_yaml
 except ImportError:
     from layout import build_page_layout
     from poster_config import build_identity_reference_prompt
-    from render_poster import load_cutout_items, load_yaml
+    from poster_io import load_cutout_items, load_yaml
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -169,10 +169,12 @@ def write_workflow(
     steps: int = 4,
     reference_mode: str = "identity",
     clip_name: str = "qwen_3_4b.safetensors",
+    output_dir: Path | None = None,
 ) -> Path:
     work_dir = POSTER_ASSETS / scope / "comfyui_poster"
-    work_dir.mkdir(parents=True, exist_ok=True)
-    out_path = work_dir / f"workflow_api_{generation_mode}_{megapixel_marker(megapixels)}_{seed}.json"
+    target_dir = output_dir or work_dir
+    target_dir.mkdir(parents=True, exist_ok=True)
+    out_path = target_dir / f"workflow_api_{generation_mode}_{megapixel_marker(megapixels)}_{seed}.json"
     out_path.write_text(
         json.dumps(
             build_workflow(
