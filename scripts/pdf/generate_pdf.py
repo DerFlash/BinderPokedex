@@ -212,6 +212,13 @@ Examples:
         default=False,
         help="Skip remote card images while retaining local logos and poster artwork"
     )
+
+    parser.add_argument(
+        "--skip-poster",
+        action="store_true",
+        default=False,
+        help="Skip optional poster pages enabled by a scope's poster.yaml"
+    )
     
     parser.add_argument(
         "--test",
@@ -337,6 +344,7 @@ Examples:
                     output_dir=project_dir / 'output',
                     script_dir=script_dir,
                     skip_images=args.skip_images,
+                    skip_poster=args.skip_poster,
                     test_mode=args.test,
                     card_template=args.card_template,
                     page_template=args.page_template,
@@ -398,6 +406,7 @@ Examples:
         output_dir=project_dir / 'output',
         script_dir=script_dir,
         skip_images=args.skip_images,
+        skip_poster=args.skip_poster,
         test_mode=args.test,
         card_template=args.card_template,
         page_template=args.page_template,
@@ -460,7 +469,8 @@ def generate_scope_pdf(scope_name: str, scope_file: Path, languages: list,
                        output_dir: Path, script_dir: Path,
                        skip_images: bool = False, test_mode: bool = False,
                        card_template: str = None, page_template: str = None, 
-                       cover_template: str = None) -> int:
+                       cover_template: str = None,
+                       skip_poster: bool = False) -> int:
     """
     Generate PDF for a specific scope.
     
@@ -471,6 +481,7 @@ def generate_scope_pdf(scope_name: str, scope_file: Path, languages: list,
         output_dir: Base output directory
         script_dir: Script directory for relative paths
         skip_images: Skip image processing
+        skip_poster: Skip an otherwise enabled poster page
         test_mode: Use only first 9 Pokemon for testing
         card_template: Optional SVG template for cards
         page_template: Optional SVG template for pages
@@ -512,6 +523,7 @@ def generate_scope_pdf(scope_name: str, scope_file: Path, languages: list,
                     output_dir=output_dir / language,
                     script_dir=script_dir,
                     skip_images=skip_images,
+                    skip_poster=skip_poster,
                     test_mode=test_mode,
                     scope_name=scope_name,
                     card_template=card_template,
@@ -650,7 +662,19 @@ def handle_variant_mode(args, script_dir, project_dir, data_dir, variants_dir):
     return 0 if total_failed == 0 else 1
 
 
-def _generate_variant_pdf(variant_data, language, output_dir, script_dir, skip_images=False, test_mode=False, scope_name=None, card_template=None, page_template=None, cover_template=None):
+def _generate_variant_pdf(
+    variant_data,
+    language,
+    output_dir,
+    script_dir,
+    skip_images=False,
+    test_mode=False,
+    scope_name=None,
+    card_template=None,
+    page_template=None,
+    cover_template=None,
+    skip_poster=False,
+):
     """Generate a PDF for a scope (variant or pokedex)."""
     from lib.pdf_generator import ImageCache
     
@@ -670,6 +694,7 @@ def _generate_variant_pdf(variant_data, language, output_dir, script_dir, skip_i
         filename_base,
         language,
         skip_images=skip_images,
+        skip_poster=skip_poster,
         test_mode=test_mode,
     )
     
@@ -694,7 +719,8 @@ def _generate_variant_pdf(variant_data, language, output_dir, script_dir, skip_i
         type_translations=type_translations,
         card_template=card_template,
         page_template=page_template,
-        cover_template=cover_template
+        cover_template=cover_template,
+        include_poster=not skip_poster,
     )
     
     return pdf_gen.generate()

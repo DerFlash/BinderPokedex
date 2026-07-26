@@ -38,7 +38,18 @@ logger = logging.getLogger(__name__)
 class VariantPDFGenerator:
     """Generate PDFs for Pokémon variant collections using template system."""
     
-    def __init__(self, variant_data: dict, language: str, output_file: Path, image_cache=None, type_translations: dict = None, card_template: str = None, page_template: str = None, cover_template: str = None):
+    def __init__(
+        self,
+        variant_data: dict,
+        language: str,
+        output_file: Path,
+        image_cache=None,
+        type_translations: dict = None,
+        card_template: str = None,
+        page_template: str = None,
+        cover_template: str = None,
+        include_poster: bool = True,
+    ):
         """
         Initialize variant PDF generator.
         
@@ -53,6 +64,7 @@ class VariantPDFGenerator:
             card_template: Optional SVG template for cards
             page_template: Optional SVG template for pages
             cover_template: Optional SVG template for covers
+            include_poster: Include a manifest-enabled poster page
         """
         self.variant_data = variant_data
         self.language = language
@@ -94,7 +106,9 @@ class VariantPDFGenerator:
                 card_template=self.card_template, cover_template=self.cover_template
             )
         self.poster_page_renderer = PosterPageRenderer.from_variant_data(
-            variant_data, language
+            variant_data,
+            language,
+            include_poster=include_poster,
         )
     
     def generate(self) -> bool:

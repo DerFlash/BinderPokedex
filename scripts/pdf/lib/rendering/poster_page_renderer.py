@@ -42,8 +42,14 @@ class PosterPageRenderer:
 
     @classmethod
     def from_variant_data(
-        cls, variant_data: dict, language: str
+        cls,
+        variant_data: dict,
+        language: str,
+        *,
+        include_poster: bool = True,
     ) -> "PosterPageRenderer | None":
+        if not include_poster:
+            return None
         scope = variant_data.get("set_id") or variant_data.get("scope")
         if not scope:
             return None

@@ -52,6 +52,29 @@ python scripts/pdf/generate_pdf.py --scope all
 **Duration:** 10-20 minutes (with cached data)
 **Size:** ~377 MB total
 
+### Optional poster pages
+
+The normal PDF command automatically includes a poster page when the scope has
+an accepted local artwork and `pdf.enabled: true` in
+`data/poster_assets/<scope>/poster.yaml`. Scopes without that opt-in continue to
+generate normally. Poster generation itself is a separate reviewed workflow;
+the PDF command only consumes the promoted local artwork and does not start
+ComfyUI.
+
+Skip the poster for one build without changing the scope manifest:
+
+```bash
+python scripts/pdf/generate_pdf.py \
+  --scope Base1 \
+  --language de \
+  --skip-poster
+```
+
+The skipped build uses a separate filename such as
+`output/de/Base1_DE_NO_POSTER.pdf`, so it cannot overwrite
+`output/de/Base1_DE.pdf`. `--skip-poster` also bypasses poster asset loading and
+can be combined with `--test` and `--skip-images`.
+
 ## Supported Languages
 
 ```bash
@@ -250,4 +273,3 @@ python --version
 ---
 
 **[← Back to README](../README.md)** | **[Scripts Documentation](../scripts/README.md)**
-

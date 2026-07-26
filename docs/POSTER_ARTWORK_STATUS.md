@@ -75,12 +75,15 @@ ways. They remain diagnostic evidence, not promoted artwork.
   `it`) are supported by the deterministic overlay.
 - The poster is sliced with the same geometry used by preparation and PDF
   rendering and is inserted exactly once after the first section cover.
+- The regular scope PDF command includes manifest-enabled posters automatically;
+  `--skip-poster` bypasses poster discovery and asset loading for an isolated
+  `_NO_POSTER.pdf` build.
 - Promoted artwork is 2368 x 3268 px, every card crop is 750 x 1050 px, and the
   PDF embeds every poster card at 300 ppi.
 - Promotion is transactional and stores hashes for model, encoder, VAE,
   upscaler, prompts, cutouts, references, workflows, and all promoted outputs.
-- Diagnostic PDF modes use distinct filenames, and renderer failures propagate
-  to a failing scope command.
+- Diagnostic and poster-skipped PDF modes use distinct filenames, and renderer
+  failures propagate to a failing scope command.
 - Local ComfyUI sampling runs on Apple Metal/MPS. CPU is used only for the
   narrowly scoped dequantization and offload operations required by unsupported
   MPS tensor conversions.
@@ -125,7 +128,7 @@ reviewed candidates and their provenance have been promoted.
 
 Completed on 2026-07-26:
 
-- The complete suite passes: 173 tests passed and one unrelated, pre-existing
+- The complete suite passes: 174 tests passed and one unrelated, pre-existing
   EX-logo feature test remains explicitly skipped.
 - Python compilation and `git diff --check` pass.
 - Both promoted bundles pass `validate_promoted_poster.py`, including manifest
@@ -138,6 +141,10 @@ Completed on 2026-07-26:
 - The complete German Base1 and SV03.5 PDFs were generated and visually
   inspected. Their poster page embeds exactly nine 750 x 1050 images at
   300 x 300 ppi.
+- A German Base1 test PDF was generated through the regular command both with
+  and without `--skip-poster`. The default build has three pages and nine
+  750 x 1050 poster images at 300 x 300 ppi on page two; the isolated
+  `_NO_POSTER.pdf` build has two pages and proceeds directly to the card grid.
 - Both accepted artworks and all six 750 x 1050 bottom character cards were
   visually compared with the reviewed cutouts after model upscaling. Character
   anatomy, card padding, the continuous lower ground, and absence of adjacent

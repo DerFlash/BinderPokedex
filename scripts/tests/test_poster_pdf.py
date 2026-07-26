@@ -29,6 +29,17 @@ def test_scope_without_enabled_poster_has_no_poster_page():
     assert PosterPageRenderer.from_variant_data({"set_id": "missing"}, "de") is None
 
 
+def test_enabled_poster_can_be_skipped_before_loading_its_assets():
+    assert (
+        PosterPageRenderer.from_variant_data(
+            {"set_id": "Base1"},
+            "de",
+            include_poster=False,
+        )
+        is None
+    )
+
+
 def test_base1_poster_source_is_text_free_artwork():
     renderer = PosterPageRenderer.from_variant_data({"set_id": "Base1"}, "en")
     assert renderer is not None

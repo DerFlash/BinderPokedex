@@ -52,6 +52,30 @@ python scripts/pdf/generate_pdf.py --scope all
 **Dauer:** 10-20 Minuten (mit gecachten Daten)
 **Größe:** ~377 MB gesamt
 
+### Optionale Posterseiten
+
+Der normale PDF-Befehl fügt automatisch eine Posterseite ein, wenn für den
+Scope ein freigegebenes lokales Artwork vorliegt und in
+`data/poster_assets/<scope>/poster.yaml` der Eintrag `pdf.enabled: true` gesetzt
+ist. Scopes ohne diese Freigabe werden unverändert erzeugt. Die
+Artwork-Generierung bleibt ein separater Review-Workflow; der PDF-Befehl
+verwendet nur das promotete lokale Artwork und startet ComfyUI nicht selbst.
+
+Für einen einzelnen Build kann das Poster ohne Manifeständerung übersprungen
+werden:
+
+```bash
+python scripts/pdf/generate_pdf.py \
+  --scope Base1 \
+  --language de \
+  --skip-poster
+```
+
+Der Build erhält einen eigenen Dateinamen wie
+`output/de/Base1_DE_NO_POSTER.pdf` und überschreibt daher nicht
+`output/de/Base1_DE.pdf`. `--skip-poster` verhindert bereits das Laden der
+Poster-Assets und lässt sich mit `--test` sowie `--skip-images` kombinieren.
+
 ## Unterstützte Sprachen
 
 ```bash
@@ -258,4 +282,3 @@ python --version
 ---
 
 **[← Zurück zu README](../README.md)** | **[Script-Dokumentation](../scripts/README.md)**
-

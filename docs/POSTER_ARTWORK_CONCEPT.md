@@ -453,7 +453,14 @@ localized text for the requested language, slices the result with the shared
 `PageLayout`, and draws all nine images at the existing physical card positions.
 The page therefore uses the same 63.5 x 88.9 mm cards, 5 mm binder gaps, and
 cutting guides as normal collection pages. It is inserted exactly once after the
-first section cover.
+first section cover. This is the default behavior of the regular
+`scripts/pdf/generate_pdf.py` command; no poster-specific PDF command is needed.
+
+The PDF build consumes only reviewed, promoted local artwork and never starts an
+expensive ComfyUI generation implicitly. A one-off build can bypass poster
+discovery and asset loading with `--skip-poster`. Its `_NO_POSTER.pdf` suffix
+keeps the result separate from the normal PDF. For a persistent per-scope
+opt-out, leave `pdf.enabled` false or omit the `pdf` block entirely.
 
 ## Current boundary
 

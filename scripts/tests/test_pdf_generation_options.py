@@ -33,13 +33,18 @@ def test_pdf_output_filename_keeps_diagnostic_runs_separate():
         == "Base1_DE_NO_IMAGES.pdf"
     )
     assert (
+        pdf_output_filename("Base1", "de", skip_poster=True)
+        == "Base1_DE_NO_POSTER.pdf"
+    )
+    assert (
         pdf_output_filename(
             "Base1",
             "de",
             skip_images=True,
+            skip_poster=True,
             test_mode=True,
         )
-        == "Base1_DE_TEST_NO_IMAGES.pdf"
+        == "Base1_DE_TEST_NO_IMAGES_NO_POSTER.pdf"
     )
 
 
@@ -138,6 +143,7 @@ def test_variant_pdf_generation_applies_cli_options(monkeypatch, tmp_path):
         output_dir=tmp_path,
         script_dir=tmp_path,
         skip_images=True,
+        skip_poster=True,
         test_mode=True,
         scope_name="Example",
     )
@@ -145,8 +151,9 @@ def test_variant_pdf_generation_applies_cli_options(monkeypatch, tmp_path):
     prepared = generator_factory.call_args.kwargs["variant_data"]
     assert result is True
     assert generator_factory.call_args.kwargs["output_file"] == (
-        tmp_path / "Example_DE_TEST_NO_IMAGES.pdf"
+        tmp_path / "Example_DE_TEST_NO_IMAGES_NO_POSTER.pdf"
     )
+    assert generator_factory.call_args.kwargs["include_poster"] is False
     assert len(prepared["sections"]["all"]["cards"]) == 9
     assert all(
         "image_url" not in card

@@ -12,6 +12,7 @@ def pdf_output_filename(
     language: str,
     *,
     skip_images: bool = False,
+    skip_poster: bool = False,
     test_mode: bool = False,
 ) -> str:
     """Return a mode-specific filename that cannot replace a normal PDF."""
@@ -20,6 +21,8 @@ def pdf_output_filename(
         parts.append("TEST")
     if skip_images:
         parts.append("NO_IMAGES")
+    if skip_poster:
+        parts.append("NO_POSTER")
     return "_".join(parts) + ".pdf"
 
 
