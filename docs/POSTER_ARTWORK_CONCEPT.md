@@ -6,6 +6,9 @@ PNG without downloading or generating images during a build.
 
 The branch acceptance matrix, remaining production requirements, and cleanup
 boundary are tracked in [Poster Artwork Feature Status](POSTER_ARTWORK_STATUS.md).
+For commands, use the concise [Poster Workflow](POSTER_WORKFLOW.md). Stable
+product decisions and roadmap IDs live in
+[Poster Requirements](POSTER_ARTWORK_REQUIREMENTS.md).
 
 The promoted scopes currently are:
 
@@ -16,7 +19,8 @@ The promoted scopes currently are:
 Both use the same `3x3` physical-card layout and the same generator code. Scene
 briefs, technical identity-lock bounds, and any rare subject-specific
 compensation live in the scope manifest. New `3x3`, `4x3`, and `4x4` scopes use
-the same code path.
+the same artwork code path. Production PDF output remains `3x3`/A4 until
+matching A3 page renderers are implemented for the wide layouts.
 
 ## Files
 
@@ -69,6 +73,9 @@ record.
 - Pokemon silhouettes stay inside their card cells; the continuous background
   may cross cut lines.
 - Missing layout-required Pokemon or source assets are hard errors.
+- `standard_3x3` is the A4 production default. `wide_4x3` and `wide_4x4`
+  retain full physical card size and advertise A3 landscape and A3 portrait as
+  their future matching PDF page families.
 
 The `Base1` layout is:
 
@@ -84,21 +91,29 @@ Initialize another individual TCG set directly from
 `data/output/<scope>.json`:
 
 ```bash
-venv/bin/python scripts/poster_assets/init_poster_scope.py \
+python scripts/poster_assets/init_poster_scope.py \
   --scope SV04 --layout standard_3x3 --fetch
 ```
 
 The initializer creates an identity-lock manifest from the reviewed Base1 model
-contract, derives a stable scope seed, configures every available localized
-logo, selects the layout column count, and optionally fetches the transparent
-featured Pokemon and logos. It rejects aggregate scopes that cannot provide one
-unambiguous set name and publication date. PDF integration starts disabled and
-is enabled in the reviewed manifest immediately before promotion.
+contract, copies the scope's explicit creative brief from
+`config/poster_scenes.yaml`, derives a stable scope seed, configures every
+available localized logo, selects the layout column count, and optionally
+fetches the transparent featured Pokemon and logos. It rejects aggregate scopes
+that cannot provide one unambiguous set name and publication date. PDF
+integration starts disabled and is enabled only after promotion.
 
-Without an explicit `artwork.scene` block, the generated scene prompt uses the
-set name, series, and release year plus a neutral landscape brief. A scope can
-replace only the creative fields while the source-pixel, continuous-ground,
-safe-area, no-text, no-path, and no-landing-pad rules remain central:
+After fetching all data, missing individual-set manifests can be prepared
+without overwriting reviewed manifests:
+
+```bash
+python scripts/poster_assets/init_poster_scope.py --all-tcg-sets --fetch
+```
+
+Every current individual TCG set must have a catalog entry; exact coverage is
+enforced by tests. A scope owns only the creative fields while the source-pixel,
+continuous-ground, safe-area, no-text, no-path, and no-landing-pad rules remain
+central:
 
 ```yaml
 artwork:
@@ -448,13 +463,19 @@ pdf:
   insertion: after_first_section_cover
 ```
 
-During PDF generation, `PosterPageRenderer` applies the deterministic logo and
-localized text for the requested language, slices the result with the shared
+During 3x3 PDF generation, `PosterPageRenderer` applies the deterministic logo
+and localized text for the requested language, slices the result with the shared
 `PageLayout`, and draws all nine images at the existing physical card positions.
 The page therefore uses the same 63.5 x 88.9 mm cards, 5 mm binder gaps, and
-cutting guides as normal collection pages. It is inserted exactly once after the
-first section cover. This is the default behavior of the regular
+cutting guides as normal collection pages. It is inserted exactly once after
+the first section cover. This is the default behavior of the regular
 `scripts/pdf/generate_pdf.py` command; no poster-specific PDF command is needed.
+
+The renderer now matches poster rows and columns against the supplied PDF page
+renderer rather than treating nine cards as a universal poster invariant. The
+current page renderer is 3x3/A4. A future matching 4x3 or 4x4 page renderer can
+reuse the poster renderer; until then, a wide manifest produces an actionable
+A3 page-family error instead of being silently scaled or misrendered.
 
 The PDF build consumes only reviewed, promoted local artwork and never starts an
 expensive ComfyUI generation implicitly. A one-off build can bypass poster
@@ -466,6 +487,8 @@ opt-out, leave `pdf.enabled` false or omit the `pdf` block entirely.
 
 Base1 and SV03.5 now both have promoted identity-lock artwork, exact-source-pixel
 validation, deterministic localized overlays, card-slice exports, and complete
-PDF integration. Additional individual TCG sets can be initialized from their
-existing scope data, but opt into PDF generation only after their text-free
-artwork passes the same whole-poster, per-card, and rendered-PDF review.
+PDF integration. Every current individual TCG set has cataloged scene direction
+and can be initialized from existing scope data, but opts into PDF generation
+only after its text-free artwork passes the same whole-poster, per-card, and
+rendered-PDF review. Aggregate multi-section posters and matching wide PDF pages
+remain explicit roadmap items.

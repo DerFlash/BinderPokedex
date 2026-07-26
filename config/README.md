@@ -6,10 +6,11 @@ This directory contains centralized configuration for all BinderPokedex operatio
 
 ```
 config/
-└── scopes/          # Scope configurations (YAML)
-    ├── Pokedex.yaml
-    ├── ExGen1_All.yaml
-    └── ExGen1_Single.yaml
+├── scopes/                 # Scope fetch configurations (YAML)
+│   ├── Pokedex.yaml
+│   ├── ExGen1.yaml
+│   └── SV01.yaml
+└── poster_scenes.yaml      # Creative poster brief for every TCG set
 
 enrichments/         # Static enrichment data
 ├── translations_es.json
@@ -74,4 +75,8 @@ See [../enrichments/README.md](../enrichments/README.md) for enrichment data doc
 
 1. Create a new YAML file in `config/scopes/`
 2. Define the scope name, description, and pipeline
-3. Test with fetch script: `python scripts/fetcher/fetch.py --scope YourScope`
+3. For an individual TCG set, add its creative poster brief to
+   `config/poster_scenes.yaml`
+4. Test with fetch script: `python scripts/fetcher/fetch.py --scope YourScope`
+5. Follow [the poster workflow](../docs/POSTER_WORKFLOW.md) when the scope should
+   receive an optional poster

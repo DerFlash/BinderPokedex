@@ -104,6 +104,17 @@ data/
 
 **Key Principle**: Target structure is fixed (PDF Generator requirement). Fetcher transforms Source → Target, never reverse.
 
+### Optional post-fetch poster phase
+
+The fetcher deliberately stops after producing scope data. For an individual
+TCG set, poster configuration, source assets, and local ComfyUI generation are
+an explicit optional phase before PDF generation. This keeps normal data fetches
+deterministic and avoids starting a GPU workflow implicitly.
+
+See [Poster Artwork Workflow](POSTER_WORKFLOW.md) for the one-scope and
+all-missing-scope initialization commands, the scene catalog, generation review,
+promotion, and optional PDF inclusion.
+
 ### Fetcher Steps
 
 **✅ Implemented Steps:**

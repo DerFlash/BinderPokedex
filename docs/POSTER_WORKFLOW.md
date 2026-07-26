@@ -1,0 +1,218 @@
+# Poster Artwork Workflow
+
+This is the operator guide for creating, reviewing, promoting, and consuming a
+scope poster. The detailed implementation rationale lives in
+[POSTER_ARTWORK_CONCEPT.md](POSTER_ARTWORK_CONCEPT.md); tracked requirements and
+future work live in
+[POSTER_ARTWORK_REQUIREMENTS.md](POSTER_ARTWORK_REQUIREMENTS.md).
+
+## Lifecycle at a glance
+
+```text
+fetch scope data
+  -> initialize poster manifest and source assets (optional)
+  -> review the set scene brief
+  -> generate a local ComfyUI candidate (optional)
+  -> visually review and promote the candidate
+  -> enable the promoted poster for PDF use
+  -> generate the normal PDF (poster may be skipped)
+```
+
+Data fetching and PDF rendering never start ComfyUI implicitly. Poster
+generation is an explicit post-fetch step because it is GPU-intensive,
+probabilistic, and subject to a visual promotion gate. A promoted poster is
+generated once and then reused deterministically for every supported language.
+
+## Required and optional phases
+
+| Phase | Required for a normal PDF | Required for a poster PDF | May be repeated |
+| --- | --- | --- | --- |
+| Fetch scope data | yes | yes | whenever source data changes |
+| Initialize poster scope | no | yes | only when configuration changes |
+| Generate ComfyUI candidate | no | yes | until a candidate passes review |
+| Promote candidate | no | yes | once per accepted revision |
+| Enable `pdf.enabled` | no | yes | configuration choice |
+| Build PDF | yes | yes | as needed |
+| `--skip-poster` | optional | bypasses poster use | as needed |
+
+## 1. Fetch the scope
+
+```bash
+python scripts/fetcher/fetch.py --scope SV04
+```
+
+The fetcher writes `data/output/SV04.json`. It does not create or regenerate a
+poster.
+
+## 2. Initialize poster configuration and source assets
+
+Initialize one individual TCG set after its data has been fetched:
+
+```bash
+python scripts/poster_assets/init_poster_scope.py \
+  --scope SV04 \
+  --layout standard_3x3 \
+  --fetch
+```
+
+`standard_3x3` is the default and should normally be omitted. The initializer:
+
+- copies the reviewed model and identity-lock contract;
+- embeds the set-specific creative brief from `config/poster_scenes.yaml`;
+- derives a stable per-scope seed;
+- selects three featured Pokemon for the bottom row;
+- configures available localized logos;
+- fetches exact transparent source cutouts and logos with `--fetch`;
+- leaves `pdf.enabled` false until an artwork is reviewed.
+
+After fetching all scopes, every still-missing individual TCG poster manifest
+can be prepared in one explicit batch:
+
+```bash
+python scripts/poster_assets/init_poster_scope.py \
+  --all-tcg-sets \
+  --fetch
+```
+
+The batch command never overwrites an existing reviewed manifest. Aggregate
+variant scopes such as `ExGen2` are intentionally excluded until multiple
+section posters are supported.
+
+## 3. Review the creative brief
+
+Review `data/poster_assets/<scope>/poster.yaml`, especially:
+
+- `artwork.scene`;
+- the selected cutouts;
+- text-cell locations;
+- the generation model, seed, and output settings.
+
+Every current individual TCG set has an explicit seed brief in
+`config/poster_scenes.yaml`. The initializer copies that brief into the
+manifest. The final production prompt is then generated from four inputs:
+
+1. the set-specific creative scene;
+2. scope name, series, and release metadata;
+3. the configured card layout and text-safe cells;
+4. one central immutable-subject and continuous-ground contract.
+
+This avoids tracked, duplicated full prompts drifting apart. The generated
+prompt snapshot is written to the scope's ignored `comfyui_poster/` workspace
+when the candidate is prepared.
+
+## 4. Start local ComfyUI
+
+```bash
+scripts/poster_assets/start_comfyui_poster.sh --scope SV04
+```
+
+The project launcher applies the required Apple Metal/MPS compatibility patch
+and binds the selected scope's isolated input, output, and temporary
+directories.
+
+## 5. Generate a candidate
+
+In another terminal:
+
+```bash
+python scripts/poster_assets/run_comfyui_poster.py --scope SV04
+```
+
+The production runner reads engine, model, seed, step count, generation size,
+300-dpi output, and upscaler defaults from the scope's `poster.yaml`. CLI flags
+remain explicit experiment overrides. The default FLUX identity-lock flow:
+
+- generates one cohesive set-specific environment in ComfyUI;
+- places exact source figures at their final card-safe positions;
+- allows the final context pass to complete only the protected upper scene;
+- verifies that every fully opaque source pixel remains unchanged;
+- model-upscales to the physical print dimensions;
+- writes a localized preview, card crops, workflow, and run metadata.
+
+The command prints the exact candidate and metadata paths needed for promotion.
+
+## 6. Review and promote
+
+Review all of the following before promotion:
+
+- complete text-free artwork;
+- all bottom-row card crops;
+- character identity, anatomy, colors, pose, scale, and padding;
+- grounding and scenery at every silhouette boundary;
+- logo and localized information overlay;
+- absence of landing pads, paths, generated text, boxes, or extra creatures.
+
+Promote only an accepted candidate:
+
+```bash
+python scripts/poster_assets/promote_comfyui_poster.py \
+  --scope SV04 \
+  --artwork <printed-text-free-artwork.png> \
+  --run-metadata <matching.run.json> \
+  --name flux2
+
+python scripts/poster_assets/validate_promoted_poster.py --scope SV04
+```
+
+Promotion is transactional and records hashes for models, prompts, source
+figures, references, workflows, and outputs.
+
+## 7. Enable and consume the poster
+
+After promotion, review and enable the manifest:
+
+```yaml
+pdf:
+  enabled: true
+  artwork_file: poster-flux2-artwork.png
+  insertion: after_first_section_cover
+```
+
+The ordinary PDF command then consumes the promoted local artwork:
+
+```bash
+python scripts/pdf/generate_pdf.py --scope SV04 --language de
+```
+
+The PDF step adds the exact localized logo and information, slices the result,
+and embeds it at physical card size. It does not contact ComfyUI or regenerate
+the background.
+
+To bypass the poster for one isolated build:
+
+```bash
+python scripts/pdf/generate_pdf.py \
+  --scope SV04 \
+  --language de \
+  --skip-poster
+```
+
+The output receives a `_NO_POSTER.pdf` suffix.
+
+## Layout policy
+
+| Layout | Subjects | Physical grid | Intended PDF family | Current PDF status |
+| --- | ---: | --- | --- | --- |
+| `standard_3x3` | 3 | 200.5 × 276.7 mm | A4 portrait | supported and default |
+| `wide_4x3` | 4 | 269 × 276.7 mm | A3 landscape | artwork-ready; matching PDF renderer open |
+| `wide_4x4` | 4 | 269 × 370.6 mm | A3 portrait | artwork-ready; matching PDF renderer open |
+
+The artwork, placement, prompt, upscale, promotion, validation, and slicing
+layers understand all three layouts. The current production PDF renderer remains
+3×3/A4. It reports the required matching page family instead of treating wide
+layouts as invalid. Wide PDF output must preserve physical card size; it must
+not squeeze four binder cards onto A4.
+
+## Adding a new individual TCG set
+
+Before initializing the new scope:
+
+1. add its regular fetch configuration;
+2. fetch its generated `data/output/<scope>.json`;
+3. add one explicit creative brief to `config/poster_scenes.yaml`;
+4. run the tests, which require exact catalog coverage with no missing or stale
+   TCG-set entries;
+5. follow the lifecycle above.
+
+No Pokemon names, layout contract, or identity rules should be added to
+model-specific Python code.

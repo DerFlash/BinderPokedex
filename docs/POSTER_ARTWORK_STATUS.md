@@ -2,7 +2,9 @@
 
 This document records the acceptance state of the poster-artwork feature branch.
 It complements the implementation-focused
-[Poster Artwork](POSTER_ARTWORK_CONCEPT.md) documentation.
+[Poster Artwork](POSTER_ARTWORK_CONCEPT.md) documentation. Operator commands
+live in [Poster Workflow](POSTER_WORKFLOW.md); durable requirement IDs live in
+[Poster Requirements](POSTER_ARTWORK_REQUIREMENTS.md).
 
 Last audited: 2026-07-26
 
@@ -67,6 +69,15 @@ ways. They remain diagnostic evidence, not promoted artwork.
   initialized through `init_poster_scope.py`; layout-driven cast count, stable
   seed, localized logos, model contract, and fallback candidates are generated
   without adding Pokemon or set names to Python.
+- Every current individual TCG set has explicit creative scene direction in one
+  versioned catalog. Exact catalog-to-generated-scope coverage is enforced by
+  tests, while the immutable-subject contract remains central.
+- Missing individual-set manifests can be initialized in one explicit
+  post-fetch batch without overwriting reviewed manifests.
+- The production ComfyUI CLI takes engine, model, seed, steps, generation size,
+  output dpi, and upscaler defaults from each scope manifest, so a newly
+  initialized scope can produce promotion-compatible provenance without
+  repeating configuration flags manually.
 - The title logo occupies the top-center card. The centered middle-card panel
   contains localized set name, card count, and release date and has a bounded
   maximum width and height.
@@ -75,6 +86,9 @@ ways. They remain diagnostic evidence, not promoted artwork.
   `it`) are supported by the deterministic overlay.
 - The poster is sliced with the same geometry used by preparation and PDF
   rendering and is inserted exactly once after the first section cover.
+- The artwork pipeline models 3x3, 4x3, and 4x4 grids. The PDF renderer checks
+  for a matching page grid and carries A3 landscape/portrait extension hints
+  for the wide layouts instead of assuming nine cells universally.
 - The regular scope PDF command includes manifest-enabled posters automatically;
   `--skip-poster` bypasses poster discovery and asset loading for an isolated
   `_NO_POSTER.pdf` build.
@@ -99,7 +113,9 @@ ways. They remain diagnostic evidence, not promoted artwork.
 | Engine extensibility | FLUX.2, Anima, FLUX.1 Canny, and Qwen Edit are selectable through one runner | Keep architecture-specific workflow construction and provenance isolated when adding another engine |
 | Alternative models | FLUX.1 Canny changed Mewtwo's face, chest, colors, and hand; Qwen created a giant fourth Mewtwo | Retain both adapters for controlled comparison, but do not promote either rejected candidate |
 | Anima | Workflow is retained and runnable | Promote only after it produces a candidate that passes the same review gate |
-| New set art direction | Any individual set now runs from metadata and a default scene; semantic set-specific scenery still benefits from a short manifest brief | Review or refine `artwork.scene` before spending the production render |
+| New set art direction | Every current individual set has an explicit catalog brief copied into its manifest | Review or refine the brief before spending the production render; catalog coverage does not replace visual art direction |
+| Wide PDF layouts | 4x3 and 4x4 artwork, placement, prompting, upscale, promotion, validation, slicing, and matching-grid rendering are modeled | Add physical A3 page styles/templates and rendered-PDF QA |
+| Aggregate scopes | Individual TCG sets have one unambiguous poster; variant scopes may contain normal, mega, and primal sections | Add a poster-list schema with section-specific scene briefs and insertion points |
 
 ## Remaining production requirements
 
@@ -113,6 +129,12 @@ ways. They remain diagnostic evidence, not promoted artwork.
   semantic depth or foreground-occlusion validation.
 - Keep Anima, FLUX.1 Canny, and Qwen Edit experimental until a candidate passes
   the same promotion gate.
+- Implement section-aware multiple posters before enabling aggregate variant
+  scopes.
+- Implement matching A3/custom PDF page renderers before enabling 4x3 or 4x4
+  poster manifests for PDF output.
+- Add staleness detection before offering a higher-level post-fetch
+  `ensure-poster` orchestration command.
 
 ## Cleanup boundary
 
@@ -128,7 +150,7 @@ reviewed candidates and their provenance have been promoted.
 
 Completed on 2026-07-26:
 
-- The complete suite passes: 174 tests passed and one unrelated, pre-existing
+- The complete suite passes: 180 tests passed and one unrelated, pre-existing
   EX-logo feature test remains explicitly skipped.
 - Python compilation and `git diff --check` pass.
 - Both promoted bundles pass `validate_promoted_poster.py`, including manifest
@@ -145,6 +167,9 @@ Completed on 2026-07-26:
   and without `--skip-poster`. The default build has three pages and nine
   750 x 1050 poster images at 300 x 300 ppi on page two; the isolated
   `_NO_POSTER.pdf` build has two pages and proceeds directly to the card grid.
+- The scene catalog has exact coverage for all 24 current individual TCG sets.
+  An isolated batch initialization created the 23 missing standard-3x3
+  manifests and preserved the existing reviewed Base1 manifest.
 - Both accepted artworks and all six 750 x 1050 bottom character cards were
   visually compared with the reviewed cutouts after model upscaling. Character
   anatomy, card padding, the continuous lower ground, and absence of adjacent

@@ -76,6 +76,12 @@ Der Build erhält einen eigenen Dateinamen wie
 `output/de/Base1_DE.pdf`. `--skip-poster` verhindert bereits das Laden der
 Poster-Assets und lässt sich mit `--test` sowie `--skip-images` kombinieren.
 
+Die Artwork-Erzeugung ist ein expliziter optionaler Schritt nach dem
+Daten-Fetch. Die Anleitung
+[Poster Artwork Workflow](POSTER_WORKFLOW.md) beschreibt Initialisierung,
+set-spezifische Szenen, lokale ComfyUI-Erzeugung, Review, Promotion und
+PDF-Aktivierung.
+
 ## Unterstützte Sprachen
 
 ```bash

@@ -98,6 +98,8 @@ Drucke 1.025+ Pokémon über 9 Generationen in 9 Sprachen. Alle Varianten, alle 
 | **Installationsanleitung** | [docs/INSTALLATION.md](docs/INSTALLATION.md) |
 | **Druckanleitungen** | [docs/PRINTING_GUIDE.de.md](docs/PRINTING_GUIDE.de.md) |
 | **Architektur** | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
+| **Poster-Workflow** | [docs/POSTER_WORKFLOW.md](docs/POSTER_WORKFLOW.md) |
+| **Poster-Anforderungen** | [docs/POSTER_ARTWORK_REQUIREMENTS.md](docs/POSTER_ARTWORK_REQUIREMENTS.md) |
 | **Data Fetcher** | [docs/DATA_FETCHER.md](docs/DATA_FETCHER.md) |
 | **Image Cache** | [docs/IMAGE_CACHE.md](docs/IMAGE_CACHE.md) |
 | **Mitwirken** | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) |

@@ -75,6 +75,11 @@ The skipped build uses a separate filename such as
 `output/de/Base1_DE.pdf`. `--skip-poster` also bypasses poster asset loading and
 can be combined with `--test` and `--skip-images`.
 
+Poster artwork is an explicit optional post-fetch workflow. See
+[Poster Artwork Workflow](POSTER_WORKFLOW.md) for initialization, the
+set-specific scene catalog, local ComfyUI generation, review, promotion, and
+PDF activation.
+
 ## Supported Languages
 
 ```bash
