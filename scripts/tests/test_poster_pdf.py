@@ -68,7 +68,7 @@ def test_skip_poster_bypasses_aggregate_discovery(monkeypatch):
     assert collection.renderers == []
 
 
-def test_pokedex_enabled_gen1_bundle_needs_no_set_id():
+def test_pokedex_enabled_generation_bundles_need_no_set_id():
     scope_data = json.loads(
         (ROOT / "data" / "output" / "Pokedex.json").read_text(
             encoding="utf-8"
@@ -81,9 +81,12 @@ def test_pokedex_enabled_gen1_bundle_needs_no_set_id():
     )
 
     try:
-        assert len(collection.renderers) == 1
-        assert collection.renderers[0].poster_id == "gen1"
-        assert collection.renderers[0].section_id == "gen1"
+        assert [
+            renderer.poster_id for renderer in collection.renderers
+        ] == ["gen1", "gen2"]
+        assert [
+            renderer.section_id for renderer in collection.renderers
+        ] == ["gen1", "gen2"]
     finally:
         collection.cleanup()
 

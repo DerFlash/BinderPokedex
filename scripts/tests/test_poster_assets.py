@@ -1420,7 +1420,12 @@ def test_failed_promotion_keeps_existing_bundle(
 
 
 def test_promoted_production_posters_match_provenance_and_print_geometry():
-    for scope in ("Base1", "Pokedex/sections/gen1", "SV03.5"):
+    for scope in (
+        "Base1",
+        "Pokedex/sections/gen1",
+        "Pokedex/sections/gen2",
+        "SV03.5",
+    ):
         result = validate_promoted_poster(scope)
         assert result["dimensions"] == (2368, 3268)
         assert result["card_dimensions"] == (750, 1050)
