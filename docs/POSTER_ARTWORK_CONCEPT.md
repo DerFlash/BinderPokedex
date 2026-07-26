@@ -4,6 +4,9 @@ Poster artwork is a reviewed, scope-specific asset. It is generated separately
 from the normal data pipeline so PDF generation can eventually consume a stable
 PNG without downloading or generating images during a build.
 
+The branch acceptance matrix, remaining production requirements, and cleanup
+boundary are tracked in [Poster Artwork Feature Status](POSTER_ARTWORK_STATUS.md).
+
 The promoted scopes currently are:
 
 - `Base1`: Mewtwo, Bulbasaur, and Charmander in a late-1990s research meadow.
@@ -23,17 +26,13 @@ poster.yaml
 poster-flux2-artwork.png
 poster-flux2.png
 poster-flux2-cards/
+poster-flux2-provenance.json
 logos/
   logo-<language>.png
 comfyui_poster/
   prompt.txt
   inpaint_prompt.txt
   anima_prompt.txt
-background/
-  background.png
-  composition_guide.png
-  manifest.json
-  prompt.txt
 cutouts/
   manifest.json
   pokemon_<id>_<name>.png
@@ -46,7 +45,8 @@ local scratch data and must not be committed.
 The local ComfyUI flow keeps its reviewed prompts in `comfyui_poster/`. Generated
 scene references, identity references, API workflows, temporary files, raw
 artwork, and iteration previews are ignored. A candidate enters source control
-only through the explicit promotion step.
+only through the explicit transactional promotion step, together with its
+provenance record.
 
 ## Layout rules
 
@@ -92,58 +92,33 @@ venv/bin/python scripts/poster_assets/fetch_title_logos.py --scope SV03.5
 The fetcher resolves the language URLs from `data/output/<scope>.json`, writes
 stable local RGBA PNGs, and never leaves PDF generation dependent on the network.
 
-Prepare the configured background prompt and target paths:
+## Local ComfyUI workflow
 
-```bash
-venv/bin/python scripts/poster_assets/generate_background.py --scope Base1
-```
-
-This also rebuilds `background/composition_guide.png` from the real cutouts and
-the renderer's exact placement geometry. Background generation must use that
-image as a planning reference. It communicates character identity, silhouette,
-scale, contact baseline, text regions, and foreground-detail exclusion halos;
-none of the guide overlays or characters belong in the generated background.
-
-Import a reviewed generated or curated background:
-
-```bash
-venv/bin/python scripts/poster_assets/import_background.py \
-  --scope Base1 \
-  --mode generated \
-  --tool <tool-or-model> \
-  --file <generated-image>
-```
-
-For curated images, use `--mode curated` and provide source, author, and license
-metadata. The importer validates dimensions, normalizes the image to RGB PNG,
-and records provenance in `background/manifest.json`.
-
-Render the poster:
-
-```bash
-venv/bin/python scripts/poster_assets/render_poster.py --scope Base1 --force
-```
-
-The renderer is deterministic for a given Python/Pillow/font environment. It
-fits the reviewed background, adds title and set information, then applies
-restrained relighting, contact shadows, and foreground grass to the cutouts.
-
-The guide and final render share `cutout_placements()`, so background planning
-and compositing use the same pixel geometry. If cutouts, layout, or placement
-rules change, regenerate the guide and background before rendering the poster.
-
-## Local ComfyUI hybrid workflow
-
-The preferred experimental flow creates the complete scene and Pokemon artwork
-with FLUX.2 Klein, then adds panels and typography deterministically. It does not
-use `poster.png`, the reviewed background, or any previous generated poster as a
-reference.
+The production flow creates the complete scene and Pokemon artwork with FLUX.2
+Klein, then adds panels and typography deterministically. The retired
+background-compositing flow and its generated layout guide have been removed.
 
 Start the local Metal-enabled ComfyUI server:
 
 ```bash
 scripts/poster_assets/start_comfyui_poster.sh
 ```
+
+Model weights remain outside this repository. The promoted FLUX flow expects
+these files below the ComfyUI `models/` directory:
+
+```text
+diffusion_models/flux-2-klein-4b-fp8.safetensors
+text_encoders/qwen_3_4b.safetensors
+vae/flux2-vae.safetensors
+upscale_models/RealESRGAN_x4plus_anime_6B.pth
+```
+
+The reviewed SHA-256 values live in each scope's `poster.yaml`. Every new run
+resolves the actual ComfyUI installation from its reported absolute `main.py`
+path and hashes the selected local model files; it does not trust filenames
+alone. The illustration upscaler is the official
+[RealESRGAN x4plus anime 6B release](https://github.com/xinntao/Real-ESRGAN/releases/tag/v0.2.2.4).
 
 The server is scope-specific because ComfyUI resolves `LoadImage` nodes relative
 to its configured input directory. Pass the same scope that will be generated:
@@ -161,12 +136,12 @@ venv/bin/python scripts/poster_assets/run_comfyui_poster.py \
   --seed 260716311 --megapixels 0.5 --language en
 ```
 
-The default generates the cohesive scene at 0.5 MP and resizes that complete
-artwork to 1 MP before deterministic typography. This resolution currently gives
-FLUX the most reliable card-safe character scale. It does not composite or move
-Pokemon after sampling. Before slicing, the latent-aligned image is normalized to
-the exact physical card-grid aspect ratio, so no outer card loses pixels to
-ComfyUI's multiple-of-16 rounding.
+The default generates the cohesive scene at 0.5 MP, applies the configured
+Real-ESRGAN illustration upscaler, and normalizes the complete text-free artwork
+to the exact 300-dpi physical layout before deterministic typography. This keeps
+the reliable card-safe FLUX character scale while producing a 2368 x 3268 px
+poster and nine 750 x 1050 px cards. It does not composite or move Pokemon after
+sampling.
 
 The FLUX and Anima branches are independent and can be compared with identical
 inputs. `both` runs them sequentially and keeps engine-specific final filenames:
@@ -178,8 +153,8 @@ venv/bin/python scripts/poster_assets/run_comfyui_poster.py \
 
 | Engine | Prompt | Scene input | Workflow | Final filename marker |
 | --- | --- | --- | --- | --- |
-| FLUX.2 Klein edit | `prompt.txt` | `scene_reference.png` | `workflow_api.json` | `_flux_edit_poster_` |
-| FLUX.2 Klein inpaint | `inpaint_prompt.txt` | `scene_reference.png` | `workflow_api.json` | `_flux_inpaint_poster_` |
+| FLUX.2 Klein edit | `prompt.txt` | `scene_reference.png` | `workflow_api_edit_<size>_<seed>.json` | `_flux_edit_..._poster_` |
+| FLUX.2 Klein inpaint | `inpaint_prompt.txt` | `scene_reference.png` | `workflow_api_inpaint_<size>_<seed>.json` | `_flux_inpaint_..._poster_` |
 | AnimaEdit | `anima_prompt.txt` | `anima_scene_reference.png` | `anima_workflow_api.json` | `_anima_poster_` |
 
 Anima defaults to `AnimaYume_tuned_v05.safetensors`; another compatible
@@ -268,15 +243,15 @@ steps alone do not solve reference-identity hallucinations.
 
 The promoted Base1 candidate is `poster-flux2.png`, generated with seed
 `260716311`, distilled FLUX.2 Klein 4B, four steps, `edit` mode, and `identity`
-reference mode. The cohesive scene was sampled at 0.5 MP and resized as a whole
-to 1 MP before the deterministic overlay. Identity mode supplies three
+reference mode. The cohesive scene was sampled at 0.5 MP and upscaled as a whole
+to the exact 300-dpi layout before the deterministic overlay. Identity mode supplies three
 compact appearance references followed by the combined scene composition. The
 prompt labels those roles explicitly so anatomy and invisible print-safe geometry
 reinforce each other rather than competing.
 
 The promoted SV03.5 candidate uses the same model and topology with seed
-`260726101`. It was sampled at 0.5 MP, resized as one complete text-free scene to
-1 MP, and visually checked both as a whole and as the three separate bottom-card
+`260726101`. It was sampled at 0.5 MP, upscaled as one complete text-free scene
+to 300 dpi, and visually checked both as a whole and as the three separate bottom-card
 crops. No Base1 conditioning override is applied.
 
 FLUX.2 Klein 9B FP8 with the 8B FP4-mixed encoder was also validated technically
@@ -291,15 +266,26 @@ set name, card count, release date, project signature, and deterministic panel
 design. Exact spelling and typography therefore remain independent from the image
 model without breaking the integrity of the generated scene.
 
-After review, promote the exact text-free 1 MP candidate. This copies the stable
-artwork, rebuilds one deterministic localized preview, and exports all physical
-card crops:
+After review, promote the exact text-free 300-dpi candidate. This transaction
+installs the stable artwork, deterministic localized preview, all physical card
+crops, and a complete provenance record only after every output succeeds:
 
 ```bash
 venv/bin/python scripts/poster_assets/promote_comfyui_poster.py \
   --scope SV03.5 \
-  --artwork data/poster_assets/SV03.5/comfyui_poster/temp/<candidate>_to_1mp.png \
+  --artwork data/poster_assets/SV03.5/comfyui_poster/temp/<candidate>_print.png \
+  --run-metadata data/poster_assets/SV03.5/comfyui_poster/temp/<candidate>_print.run.json \
   --language de
+```
+
+Promotion also requires the candidate's generation metadata to match the
+reviewed `artwork.generation` block exactly. A changed seed, model, encoder,
+upscaler, or output method therefore fails before any stable file is replaced.
+
+Validate the committed bundle, hashes, dimensions, and embedded dpi metadata:
+
+```bash
+venv/bin/python scripts/poster_assets/validate_promoted_poster.py --scope SV03.5
 ```
 
 Every finalized poster is then exported into one PNG per physical card cell. The
