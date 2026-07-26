@@ -1,11 +1,13 @@
 import json
 import shutil
+import sys
 from pathlib import Path
 
 from PIL import Image, ImageChops
 
 from scripts.poster_assets import fetch_cutouts
 from scripts.poster_assets import promote_comfyui_poster as poster_promotion
+from scripts.poster_assets import run_comfyui_poster as poster_runner
 from scripts.poster_assets.fetch_title_logos import resolve_logo_downloads
 from scripts.poster_assets.create_comfyui_poster_workflow import build_workflow
 from scripts.poster_assets.create_comfyui_upscale_workflow import (
@@ -30,8 +32,10 @@ from scripts.poster_assets.layout import (
     build_page_layout,
     build_print_layout,
     effective_dpi,
+    pdf_page_hint,
 )
 from scripts.poster_assets.init_poster_scope import (
+    available_tcg_scopes,
     build_default_manifest,
     stable_scope_seed,
 )
@@ -61,6 +65,7 @@ from scripts.poster_assets.prepare_comfyui_poster import (
 from scripts.poster_assets.composition import cutout_placements
 from scripts.poster_assets.typography import wrap_text
 from scripts.poster_assets.run_comfyui_poster import (
+    configured_generation,
     resize_artwork,
     validate_identity_lock_pixels,
     validate_raw_artwork,
@@ -68,6 +73,11 @@ from scripts.poster_assets.run_comfyui_poster import (
 )
 from scripts.poster_assets.slice_poster import slice_poster
 from scripts.poster_assets import upscale_comfyui_poster as poster_upscale
+from scripts.poster_assets.scene_catalog import (
+    load_scene_catalog,
+    scene_for_scope,
+    validate_catalog_coverage,
+)
 from scripts.poster_assets.validate_promoted_poster import (
     validate as validate_promoted_poster,
 )
@@ -86,6 +96,16 @@ def test_standard_print_layout_is_300_dpi_at_physical_card_size():
     dpi_x, dpi_y = effective_dpi(layout)
     assert abs(dpi_x - 300) < 0.1
     assert abs(dpi_y - 300) < 0.1
+
+
+def test_wide_layouts_are_modeled_for_future_matching_pdf_renderers():
+    layout_4x3 = build_print_layout("wide_4x3", 300)
+    layout_4x4 = build_print_layout("wide_4x4", 300)
+
+    assert (layout_4x3.columns, layout_4x3.rows) == (4, 3)
+    assert (layout_4x4.columns, layout_4x4.rows) == (4, 4)
+    assert pdf_page_hint("wide_4x3") == ("A3", "landscape")
+    assert pdf_page_hint("wide_4x4") == ("A3", "portrait")
 
 
 def test_select_pokemon_uses_fallback_candidates():
@@ -483,11 +503,13 @@ def test_every_current_tcg_set_bootstraps_without_set_specific_python():
         scope_data = fetch_cutouts.load_json(scope_path)
         if scope_data.get("type") != "tcg_set":
             continue
+        scene = scene_for_scope(scope_path.stem)
         manifest = build_default_manifest(
             scope_path.stem,
             scope_data,
             "standard_3x3",
             generation_template,
+            scene,
         )
         selected = fetch_cutouts.select_pokemon(
             manifest,
@@ -499,13 +521,70 @@ def test_every_current_tcg_set_bootstraps_without_set_specific_python():
 
         assert len(selected) == 3
         assert len({item["pokemon_id"] for item in selected}) == 3
-        assert str(scope_data["name"]) in prompt
+        assert scene["concept"] in prompt
+        assert manifest["artwork"]["scene"]["setting"] in prompt
         assert "source pixel as immutable" in prompt
         checked.append(scope_path.stem)
 
     assert len(checked) >= 24
     assert "Base1" in checked
     assert "SV03.5" in checked
+
+
+def test_scene_catalog_covers_every_current_individual_tcg_set_exactly():
+    missing, stale = validate_catalog_coverage()
+    scenes = load_scene_catalog()
+
+    assert missing == set()
+    assert stale == set()
+    assert set(available_tcg_scopes()) == set(scenes)
+    assert all(scene["setting"] for scene in scenes.values())
+
+
+def test_runner_uses_the_scope_generation_contract_as_its_defaults():
+    root = Path(__file__).resolve().parents[2]
+    manifest = fetch_cutouts.load_yaml(
+        root / "data" / "poster_assets" / "Base1" / "poster.yaml"
+    )
+
+    assert configured_generation("Base1") == manifest["artwork"]["generation"]
+
+
+def test_runner_cli_resolves_production_defaults_from_the_scope(
+    monkeypatch,
+    tmp_path,
+):
+    captured = {}
+
+    def fake_run(*args, **kwargs):
+        captured["args"] = args
+        captured["kwargs"] = kwargs
+        return (
+            tmp_path / "raw.png",
+            tmp_path / "artwork.png",
+            tmp_path / "final.png",
+            tmp_path / "run.json",
+        )
+
+    monkeypatch.setattr(poster_runner, "run", fake_run)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["run_comfyui_poster.py", "--scope", "Base1"],
+    )
+
+    assert poster_runner.main() == 0
+
+    generation = configured_generation("Base1")
+    assert captured["args"][1] == generation["seed"]
+    assert captured["args"][2] == generation["generation_megapixels"]
+    assert captured["kwargs"]["engine"] == generation["engine"]
+    assert captured["kwargs"]["flux_mode"] == generation["mode"]
+    assert captured["kwargs"]["flux_model"] == generation["model"]
+    assert captured["kwargs"]["flux_steps"] == generation["steps"]
+    assert captured["kwargs"]["flux_clip"] == generation["encoder"]
+    assert captured["kwargs"]["output_dpi"] == generation["output_dpi"]
+    assert captured["kwargs"]["upscale_model"] == generation["upscale_model"]
 
 
 def test_localized_title_logo_falls_back_to_english():

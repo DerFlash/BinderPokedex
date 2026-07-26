@@ -1,0 +1,300 @@
+version: 1
+
+# Creative set direction only. The immutable-subject, continuous-ground,
+# layout-safe, no-text, no-path, and no-landing-pad contract is generated
+# centrally by scripts/poster_assets/poster_config.py.
+scopes:
+  Base1:
+    concept: a nostalgic 1999 Base Set collection
+    setting: >-
+      The artwork contains a quiet late-1990s Japanese cel-painted meadow,
+      layered forest edges, soft mountains, and one small distant generic
+      research building with a completely blank facade.
+    lighting: Warm morning sunlight enters from the upper left.
+    rendering: >-
+      Use clean linework, restrained natural colors, and gentle atmospheric
+      depth.
+    ground_noun: meadow
+    safe_areas: >-
+      Keep the upper third as open pale-blue sky with a few soft clouds for a
+      later logo. Keep the middle center visually calm for later set
+      information.
+
+  ME01:
+    concept: the Mega Evolution expansion and its surge of awakened energy
+    setting: >-
+      The artwork contains a broad highland garden with ancient stone terraces,
+      distant crystalline ridges, wind-shaped trees, and subtle arcs of
+      refracted energy in the far atmosphere.
+    lighting: Clear golden daylight breaks through high silver clouds.
+    rendering: >-
+      Use polished trading-card illustration, clean cel-painted linework,
+      restrained jewel tones, and deep atmospheric perspective.
+    ground_noun: meadow
+
+  ME02:
+    concept: the Phantasmal Flames expansion
+    setting: >-
+      The artwork contains a dusky volcanic woodland with dark basalt shelves,
+      distant warm vents, pale spectral mist between the trees, and faint
+      flame-like cloud forms confined to the far background.
+    lighting: Copper sunset light meets cool blue twilight from the upper sky.
+    rendering: >-
+      Use dramatic but readable cel-painted linework, controlled warm-cool
+      contrast, and layered smoky depth.
+    ground_noun: forest floor
+
+  ME02.5:
+    concept: the Ascended Heroes expansion
+    setting: >-
+      The artwork contains a luminous mountain basin above the clouds, broad
+      grassy ledges, weathered heroic stone forms, distant waterfalls, and a
+      calm open summit horizon.
+    lighting: Bright ascending sunbeams enter from the upper left.
+    rendering: >-
+      Use elegant trading-card illustration, clean linework, noble gold and
+      blue accents, and airy atmospheric depth.
+    ground_noun: alpine grass
+
+  ME03:
+    concept: the Perfect Order expansion
+    setting: >-
+      The artwork contains a balanced green valley with layered hexagonal rock
+      strata, precisely spaced distant trees, calm water terraces, and an
+      ordered mountain silhouette inspired by natural cellular geometry.
+    lighting: Even emerald-tinted daylight falls through a clear high sky.
+    rendering: >-
+      Use precise cel-painted linework, harmonious natural greens, restrained
+      geometric rhythm, and crisp atmospheric depth.
+    ground_noun: valley grass
+
+  ME04:
+    concept: the Chaos Rising expansion
+    setting: >-
+      The artwork contains a rugged wilderness beneath a vast rotating storm,
+      fractured distant cliffs, wind-bent woodland, and far-off red-gold light
+      breaking through dark cloud layers.
+    lighting: Turbulent sunset light flashes through the upper-left storm.
+    rendering: >-
+      Use energetic trading-card linework, controlled dramatic contrast, and
+      layered motion in the distant environment without cluttering the ground.
+    ground_noun: rugged grass
+
+  MEP:
+    concept: the Mega Evolution Black Star Promo collection
+    setting: >-
+      The artwork contains an expansive celebratory highland meadow, distant
+      crystal monuments without writing, sweeping cloud ribbons, and several
+      subtly different biomes meeting at the horizon.
+    lighting: Festive clear daylight creates soft gold highlights.
+    rendering: >-
+      Use premium promotional-card illustration, clean linework, restrained
+      saturated accents, and spacious atmospheric depth.
+    ground_noun: meadow
+
+  SV01:
+    concept: the Scarlet and Violet expansion and the beginning of a Paldea journey
+    setting: >-
+      The artwork contains rolling Paldean hills, olive trees, warm tiled
+      rooftops on a distant blank-facade academy silhouette, and broad red and
+      violet mountain layers.
+    lighting: Fresh spring morning light enters from the upper left.
+    rendering: >-
+      Use bright modern trading-card illustration, clean cel-painted linework,
+      Mediterranean natural colors, and gentle atmospheric depth.
+    ground_noun: meadow
+
+  SV02:
+    concept: the Paldea Evolved expansion
+    setting: >-
+      The artwork contains a richly layered Paldean valley where woodland,
+      flowered uplands, pale cliffs, and distant waterfalls meet naturally
+      beneath a wide open sky.
+    lighting: Clear early-summer daylight creates soft moving cloud shadows.
+    rendering: >-
+      Use detailed modern cel-painted linework, lively but controlled natural
+      colors, and strong environmental depth.
+    ground_noun: valley grass
+
+  SV03:
+    concept: the Obsidian Flames expansion
+    setting: >-
+      The artwork contains a black-rock woodland at the edge of an ancient
+      volcanic valley, glassy obsidian outcrops, warm distant vents, and high
+      ember-colored clouds.
+    lighting: Low orange sunlight cuts through cool charcoal cloud layers.
+    rendering: >-
+      Use bold trading-card linework, restrained firelight accents, deep
+      charcoal greens, and clear atmospheric separation.
+    ground_noun: dark grass
+
+  SV03.5:
+    concept: a Kanto collection
+    setting: >-
+      The artwork contains a quiet coastal meadow in a gentle watercolor and
+      clean cel-painted style: layered woodland, distant low hills, weathered
+      coastal forms, and a glimpse of a calm blue bay.
+    lighting: Warm late-afternoon sunlight enters from the upper left.
+    rendering: >-
+      Use clean linework, restrained natural colors, and gentle atmospheric
+      depth.
+    ground_noun: meadow
+    safe_areas: >-
+      Keep the upper area visually calm for later deterministic poster
+      information.
+
+  SV04:
+    concept: the Paradox Rift expansion
+    setting: >-
+      The artwork contains a vast rift valley where ancient fern-covered stone
+      formations face distant sleek crystalline structures, divided only by
+      atmospheric depth and a narrow ribbon of sky.
+    lighting: Cool futuristic light and warm prehistoric sunlight meet high in the scene.
+    rendering: >-
+      Use polished cel-painted linework, restrained teal and amber contrast,
+      and convincing deep perspective.
+    ground_noun: valley floor
+
+  SV04.5:
+    concept: the Paldean Fates expansion
+    setting: >-
+      The artwork contains a moonlit Paldean meadow with iridescent mineral
+      outcrops, soft jewel-toned woodland, distant reflective water, and fine
+      prismatic light suspended in the upper atmosphere.
+    lighting: Silvery moonlight from the upper left creates restrained rainbow highlights.
+    rendering: >-
+      Use luminous trading-card illustration, clean linework, controlled
+      iridescence, and soft nocturnal depth.
+    ground_noun: meadow
+
+  SV05:
+    concept: the Temporal Forces expansion
+    setting: >-
+      The artwork contains a windswept valley with layered rock bands from
+      different eras, ancient trees, distant modern crystalline forms, and
+      slow spiral cloud structures high above the horizon.
+    lighting: Pale dawn and late-afternoon gold appear together across the upper sky.
+    rendering: >-
+      Use crisp cel-painted linework, subtle temporal color contrast, and long
+      atmospheric depth.
+    ground_noun: windswept grass
+
+  SV06:
+    concept: the Twilight Masquerade expansion
+    setting: >-
+      The artwork contains a secluded twilight woodland clearing inspired by a
+      rural festival evening, layered flowering trees, distant weathered stone,
+      and soft lantern-like fireflies only in the upper background.
+    lighting: Violet dusk mixes with the last warm light from the upper left.
+    rendering: >-
+      Use graceful cel-painted linework, restrained festival colors, and
+      mysterious but readable woodland depth.
+    ground_noun: woodland grass
+
+  SV06.5:
+    concept: the Shrouded Fable expansion
+    setting: >-
+      The artwork contains a mist-covered mountain forest, twisted old trees,
+      distant mossy shrine stones without symbols or writing, and layered veils
+      of blue-green folklore atmosphere.
+    lighting: Diffuse cool daylight filters through mist from the upper left.
+    rendering: >-
+      Use storybook trading-card linework, muted jade and indigo colors, and
+      deep atmospheric layering.
+    ground_noun: forest floor
+
+  SV07:
+    concept: the Stellar Crown expansion
+    setting: >-
+      The artwork contains an open crystal highland beneath a star-filled
+      daytime sky, distant faceted cliffs, pale grass, and crown-like rays of
+      refracted light high above the horizon.
+    lighting: Brilliant white-gold stellar light enters from the upper left.
+    rendering: >-
+      Use refined trading-card linework, restrained crystalline highlights,
+      rich blue depth, and a spacious celestial atmosphere.
+    ground_noun: highland grass
+
+  SV08:
+    concept: the Surging Sparks expansion
+    setting: >-
+      The artwork contains a storm-charged tropical highland, distant volcanic
+      ridges, wind-swept trees, and branching golden illumination contained in
+      the upper clouds.
+    lighting: Electric storm light flashes behind warm sunlight from the upper left.
+    rendering: >-
+      Use energetic cel-painted linework, controlled yellow-violet contrast,
+      and strongly layered storm depth.
+    ground_noun: highland grass
+
+  SV08.5:
+    concept: the Prismatic Evolutions expansion
+    setting: >-
+      The artwork contains a tranquil alpine lake basin, pale crystalline
+      cliffs, soft evergreen layers, and broad prismatic refractions crossing
+      the distant water and upper sky.
+    lighting: Clear white daylight separates into subtle spectral colors.
+    rendering: >-
+      Use elegant premium-card linework, restrained rainbow accents, clean
+      reflections, and luminous atmospheric depth.
+    ground_noun: lakeside grass
+
+  SV09:
+    concept: the Journey Together expansion
+    setting: >-
+      The artwork contains a welcoming travel panorama of connected Paldean
+      hills, woodland, distant coast, and a tiny unoccupied camp beneath a
+      broad open route-free landscape.
+    lighting: Warm companionable morning light enters from the upper left.
+    rendering: >-
+      Use friendly modern cel-painted linework, balanced natural colors, and
+      layered postcard-like depth.
+    ground_noun: meadow
+
+  SV10:
+    concept: the Destined Rivals expansion
+    setting: >-
+      The artwork contains a tense valley framed by opposing warm and cool
+      mountain fronts, a distant weathered fortress with blank walls, and
+      converging storm clouds high over the horizon.
+    lighting: Red-gold light and cold blue light oppose one another in the upper sky.
+    rendering: >-
+      Use dramatic trading-card linework, disciplined rival color contrast,
+      and cinematic atmospheric depth.
+    ground_noun: valley grass
+
+  SV10.5B:
+    concept: the Black Bolt expansion
+    setting: >-
+      The artwork contains a dark Unova-inspired highland of black stone,
+      distant angular city silhouettes without signs, silver rain, and a single
+      bold lightning front across the upper sky.
+    lighting: Cold storm light is edged by a narrow gold break from the upper left.
+    rendering: >-
+      Use graphic cel-painted linework, a controlled near-monochrome palette,
+      sharp electric highlights, and deep rain-filled atmosphere.
+    ground_noun: dark grass
+
+  SV10.5W:
+    concept: the White Flare expansion
+    setting: >-
+      The artwork contains a bright Unova-inspired valley of pale stone, white
+      birch woodland, distant clean city silhouettes without signs, and
+      red-gold cloud fire across the high horizon.
+    lighting: Radiant warm daylight blooms through white cloud from the upper left.
+    rendering: >-
+      Use clean cel-painted linework, a pale restrained palette, controlled
+      crimson-gold accents, and luminous atmospheric depth.
+    ground_noun: pale grass
+
+  SVP:
+    concept: the Scarlet and Violet Black Star Promo collection
+    setting: >-
+      The artwork contains a broad celebratory Paldean panorama combining
+      rolling grassland, distant coast, olive woodland, and a blank-facade
+      academy silhouette beneath sweeping red and violet clouds.
+    lighting: Clear optimistic daylight enters from the upper left.
+    rendering: >-
+      Use premium promotional-card illustration, clean modern linework,
+      restrained bright colors, and spacious atmospheric depth.
+    ground_noun: meadow

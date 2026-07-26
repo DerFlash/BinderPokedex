@@ -14,13 +14,15 @@ import yaml
 try:
     from .fetch_cutouts import fetch_cutouts
     from .fetch_title_logos import fetch_title_logos
-    from .layout import LAYOUTS, resolve_layout_name
+    from .layout import DEFAULT_LAYOUT_NAME, LAYOUTS, resolve_layout_name
     from .poster_io import POSTER_ASSETS, SCOPE_DATA, load_json, load_yaml
+    from .scene_catalog import scene_for_scope
 except ImportError:
     from fetch_cutouts import fetch_cutouts
     from fetch_title_logos import fetch_title_logos
-    from layout import LAYOUTS, resolve_layout_name
+    from layout import DEFAULT_LAYOUT_NAME, LAYOUTS, resolve_layout_name
     from poster_io import POSTER_ASSETS, SCOPE_DATA, load_json, load_yaml
+    from scene_catalog import scene_for_scope
 
 
 SUPPORTED_LANGUAGES = ("de", "en", "fr", "es", "it")
@@ -60,9 +62,10 @@ def build_default_manifest(
     scope_data: dict[str, Any],
     layout_name: str,
     generation_template: dict[str, Any],
+    scene: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Build a usable poster manifest without set-specific prompt files."""
-    resolve_layout_name(layout_name)
+    """Build a manifest from the shared generation contract and creative scene."""
+    layout = resolve_layout_name(layout_name)
     if scope_data.get("type") != "tcg_set":
         raise ValueError(
             f"{scope} is not an individual TCG set and cannot supply one "
@@ -85,14 +88,15 @@ def build_default_manifest(
             "output_method": "model_upscale",
         }
     )
+    center_column = max(1, (int(layout["columns"]) + 1) // 2)
     manifest: dict[str, Any] = {
         "scope": scope,
         "layout": {"name": layout_name},
         "text_cells": {
-            "title": {"row": 1, "column": 2},
+            "title": {"row": 1, "column": center_column},
             "set_info": {
-                "row": 2,
-                "column": 2,
+                "row": min(2, int(layout["rows"])),
+                "column": center_column,
                 "max_width_ratio": 0.92,
                 "max_height_ratio": 0.68,
             },
@@ -134,6 +138,8 @@ def build_default_manifest(
             }
         },
     }
+    if scene is not None:
+        manifest["artwork"]["scene"] = copy.deepcopy(scene)
     logo_config = _title_logo_config(scope_data)
     if logo_config is not None:
         manifest["title_logo"] = logo_config
@@ -143,7 +149,7 @@ def build_default_manifest(
 def init_scope(
     scope: str,
     *,
-    layout_name: str = "standard_3x3",
+    layout_name: str = DEFAULT_LAYOUT_NAME,
     force: bool = False,
     fetch: bool = False,
 ) -> Path:
@@ -164,11 +170,17 @@ def init_scope(
         "artwork",
         {},
     ).get("generation", {})
+    scene = (
+        scene_for_scope(scope)
+        if scope_data.get("type") == "tcg_set"
+        else None
+    )
     manifest = build_default_manifest(
         scope,
         scope_data,
         layout_name,
         generation_template,
+        scene,
     )
     scope_dir = POSTER_ASSETS / scope
     manifest_path = scope_dir / "poster.yaml"
@@ -194,13 +206,51 @@ def init_scope(
     return manifest_path
 
 
+def available_tcg_scopes() -> list[str]:
+    """Return generated individual TCG sets in stable CLI order."""
+    scopes = []
+    for path in sorted(SCOPE_DATA.glob("*.json")):
+        if load_json(path).get("type") == "tcg_set":
+            scopes.append(path.stem)
+    return scopes
+
+
+def init_missing_tcg_scopes(
+    *,
+    layout_name: str = DEFAULT_LAYOUT_NAME,
+    fetch: bool = False,
+) -> tuple[list[Path], list[Path]]:
+    """Initialize every missing individual set and preserve reviewed manifests."""
+    created = []
+    skipped = []
+    for scope in available_tcg_scopes():
+        manifest_path = POSTER_ASSETS / scope / "poster.yaml"
+        if manifest_path.exists():
+            skipped.append(manifest_path)
+            continue
+        created.append(
+            init_scope(
+                scope,
+                layout_name=layout_name,
+                fetch=fetch,
+            )
+        )
+    return created, skipped
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--scope", required=True)
+    target = parser.add_mutually_exclusive_group(required=True)
+    target.add_argument("--scope")
+    target.add_argument(
+        "--all-tcg-sets",
+        action="store_true",
+        help="Initialize every missing individual TCG set after data fetching",
+    )
     parser.add_argument(
         "--layout",
         choices=tuple(sorted(LAYOUTS)),
-        default="standard_3x3",
+        default=DEFAULT_LAYOUT_NAME,
     )
     parser.add_argument(
         "--fetch",
@@ -209,6 +259,22 @@ def main() -> int:
     )
     parser.add_argument("--force", action="store_true")
     args = parser.parse_args()
+    if args.all_tcg_sets:
+        if args.force:
+            parser.error(
+                "--force cannot be combined with --all-tcg-sets; reviewed "
+                "manifests are never overwritten by the batch initializer"
+            )
+        created, skipped = init_missing_tcg_scopes(
+            layout_name=args.layout,
+            fetch=args.fetch,
+        )
+        for path in created:
+            print(f"Created: {path}")
+        for path in skipped:
+            print(f"Kept existing: {path}")
+        print(f"Created {len(created)}, kept {len(skipped)} existing manifests")
+        return 0
     print(
         init_scope(
             args.scope,

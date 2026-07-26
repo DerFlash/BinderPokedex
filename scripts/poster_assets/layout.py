@@ -10,10 +10,26 @@ GAP_X_MM = 5.0
 GAP_Y_MM = 5.0
 
 
+DEFAULT_LAYOUT_NAME = "standard_3x3"
 LAYOUTS = {
-    "standard_3x3": {"columns": 3, "rows": 3},
-    "wide_4x3": {"columns": 4, "rows": 3},
-    "wide_4x4": {"columns": 4, "rows": 4},
+    "standard_3x3": {
+        "columns": 3,
+        "rows": 3,
+        "pdf_paper": "A4",
+        "pdf_orientation": "portrait",
+    },
+    "wide_4x3": {
+        "columns": 4,
+        "rows": 3,
+        "pdf_paper": "A3",
+        "pdf_orientation": "landscape",
+    },
+    "wide_4x4": {
+        "columns": 4,
+        "rows": 4,
+        "pdf_paper": "A3",
+        "pdf_orientation": "portrait",
+    },
 }
 
 
@@ -77,11 +93,17 @@ class PageLayout:
         return [self.cell(self.rows, column) for column in range(1, self.columns + 1)]
 
 
-def resolve_layout_name(name: str | None) -> dict[str, int]:
-    layout_name = name or "standard_3x3"
+def resolve_layout_name(name: str | None) -> dict[str, int | str]:
+    layout_name = name or DEFAULT_LAYOUT_NAME
     if layout_name not in LAYOUTS:
         raise ValueError(f"Unknown layout '{layout_name}'. Known layouts: {', '.join(sorted(LAYOUTS))}")
     return LAYOUTS[layout_name]
+
+
+def pdf_page_hint(name: str | None) -> tuple[str, str]:
+    """Return the physical page family intended for a future matching renderer."""
+    spec = resolve_layout_name(name)
+    return str(spec["pdf_paper"]), str(spec["pdf_orientation"])
 
 
 def physical_layout_size_mm(name: str | None) -> tuple[float, float]:
@@ -123,7 +145,7 @@ def build_page_layout(name: str | None, width_px: int = 1400) -> PageLayout:
     px_per_mm = width_px / grid_width_mm
 
     return PageLayout(
-        name=name or "standard_3x3",
+        name=name or DEFAULT_LAYOUT_NAME,
         columns=columns,
         rows=rows,
         width_px=width_px,

@@ -40,6 +40,7 @@ try:
     from .finalize_comfyui_poster import finalize
     from .prepare_comfyui_poster import prepare
     from .provenance import add_model_artifact_hashes, write_run_metadata
+    from .poster_io import POSTER_ASSETS, load_yaml
     from .queue_comfyui_workflow import (
         queue_workflow,
         server_comfyui_root,
@@ -81,6 +82,7 @@ except ImportError:
     from finalize_comfyui_poster import finalize
     from prepare_comfyui_poster import prepare
     from provenance import add_model_artifact_hashes, write_run_metadata
+    from poster_io import POSTER_ASSETS, load_yaml
     from queue_comfyui_workflow import (
         queue_workflow,
         server_comfyui_root,
@@ -94,6 +96,22 @@ except ImportError:
 ENGINES = ("flux", "anima", "flux1_canny", "qwen_edit")
 DEFAULT_GENERATION_MEGAPIXELS = 0.5
 DEFAULT_OUTPUT_DPI = 300
+
+
+def configured_generation(scope: str) -> dict[str, object]:
+    """Load the reviewed generation contract used as production CLI defaults."""
+    manifest_path = POSTER_ASSETS / scope / "poster.yaml"
+    if not manifest_path.is_file():
+        raise FileNotFoundError(
+            f"Poster scope not initialized: {manifest_path}. Run "
+            "init_poster_scope.py after fetching the scope data."
+        )
+    generation = load_yaml(manifest_path).get("artwork", {}).get("generation")
+    if not isinstance(generation, dict) or not generation:
+        raise ValueError(
+            f"Poster scope has no artwork.generation contract: {manifest_path}"
+        )
+    return generation
 
 
 def validate_raw_artwork(path: Path) -> None:
@@ -525,9 +543,15 @@ def run(
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--scope", default="Base1")
-    parser.add_argument("--seed", type=int, default=260715201)
     parser.add_argument(
-        "--megapixels", type=float, default=DEFAULT_GENERATION_MEGAPIXELS
+        "--seed",
+        type=int,
+        help="Override the stable seed configured in poster.yaml",
+    )
+    parser.add_argument(
+        "--megapixels",
+        type=float,
+        help="Override artwork.generation.generation_megapixels",
     )
     output_group = parser.add_mutually_exclusive_group()
     output_group.add_argument(
@@ -542,8 +566,7 @@ def main() -> int:
     )
     parser.add_argument(
         "--upscale-model",
-        default=DEFAULT_UPSCALE_MODEL,
-        help="ComfyUI upscale model used by --output-dpi",
+        help="Override the ComfyUI upscale model configured in poster.yaml",
     )
     parser.add_argument("--server", default="http://127.0.0.1:8188")
     parser.add_argument("--timeout", type=int, default=3600)
@@ -551,7 +574,7 @@ def main() -> int:
     parser.add_argument(
         "--engine",
         choices=(*ENGINES, "both", "all"),
-        default="flux",
+        help="Override artwork.generation.engine",
     )
     parser.add_argument(
         "--reference-strength",
@@ -573,17 +596,15 @@ def main() -> int:
     parser.add_argument(
         "--flux-mode",
         choices=("edit", "inpaint", "identity_lock"),
-        default="identity_lock",
         help=(
             "Use the two-pass exact-source lock (default), direct inpainting, "
             "or an independent reference edit"
         ),
     )
-    parser.add_argument("--flux-model", default="flux-2-klein-4b-fp8.safetensors")
+    parser.add_argument("--flux-model")
     parser.add_argument(
         "--flux-steps",
         type=int,
-        default=4,
         help="Use 4 for distilled Klein; typically 20-28 for Klein Base",
     )
     parser.add_argument(
@@ -597,7 +618,6 @@ def main() -> int:
     )
     parser.add_argument(
         "--flux-clip",
-        default="qwen_3_4b.safetensors",
         help="FLUX.2 text encoder matching the selected model size",
     )
     parser.add_argument("--flux1-model", default=DEFAULT_FLUX1_MODEL)
@@ -634,20 +654,62 @@ def main() -> int:
     parser.add_argument("--qwen-cfg", type=float, default=DEFAULT_QWEN_CFG)
     parser.add_argument("--qwen-shift", type=float, default=DEFAULT_QWEN_SHIFT)
     args = parser.parse_args()
+    configured = configured_generation(args.scope)
+    seed = (
+        args.seed
+        if args.seed is not None
+        else int(configured.get("seed", 260715201))
+    )
+    megapixels = (
+        args.megapixels
+        if args.megapixels is not None
+        else float(
+            configured.get(
+                "generation_megapixels",
+                DEFAULT_GENERATION_MEGAPIXELS,
+            )
+        )
+    )
+    selected_engine = str(args.engine or configured.get("engine", "flux"))
+    flux_mode = str(args.flux_mode or configured.get("mode", "identity_lock"))
+    flux_model = str(
+        args.flux_model
+        or configured.get("model", "flux-2-klein-4b-fp8.safetensors")
+    )
+    flux_steps = (
+        args.flux_steps
+        if args.flux_steps is not None
+        else int(configured.get("steps", 4))
+    )
+    flux_clip = str(
+        args.flux_clip
+        or configured.get("encoder", "qwen_3_4b.safetensors")
+    )
+    upscale_model = str(
+        args.upscale_model
+        or configured.get("upscale_model", DEFAULT_UPSCALE_MODEL)
+    )
     output_dpi = args.output_dpi
     if output_dpi is None and args.output_megapixels is None:
-        output_dpi = DEFAULT_OUTPUT_DPI
-    if args.engine == "both":
+        if configured.get("output_method") == "lanczos":
+            args.output_megapixels = float(
+                configured.get("output_megapixels", megapixels)
+            )
+        else:
+            output_dpi = int(
+                configured.get("output_dpi", DEFAULT_OUTPUT_DPI)
+            )
+    if selected_engine == "both":
         engines = ("flux", "anima")
-    elif args.engine == "all":
+    elif selected_engine == "all":
         engines = ENGINES
     else:
-        engines = (args.engine,)
+        engines = (selected_engine,)
     for engine in engines:
         raw_path, artwork_path, final_path, run_metadata_path = run(
             args.scope,
-            args.seed,
-            args.megapixels,
+            seed,
+            megapixels,
             args.server,
             args.timeout,
             args.language,
@@ -655,11 +717,11 @@ def main() -> int:
             reference_strength=args.reference_strength,
             anima_model=args.anima_model,
             anima_mode=args.anima_mode,
-            flux_mode=args.flux_mode,
-            flux_model=args.flux_model,
-            flux_steps=args.flux_steps,
+            flux_mode=flux_mode,
+            flux_model=flux_model,
+            flux_steps=flux_steps,
             flux_reference_mode=args.flux_reference_mode,
-            flux_clip=args.flux_clip,
+            flux_clip=flux_clip,
             flux1_model=args.flux1_model,
             flux1_clip=args.flux1_clip,
             flux1_t5=args.flux1_t5,
@@ -679,7 +741,7 @@ def main() -> int:
             qwen_shift=args.qwen_shift,
             output_megapixels=args.output_megapixels,
             output_dpi=output_dpi,
-            upscale_model=args.upscale_model,
+            upscale_model=upscale_model,
         )
         print(f"[{engine}] Raw artwork: {raw_path}")
         print(f"[{engine}] Text-free artwork: {artwork_path}")

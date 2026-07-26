@@ -19,6 +19,11 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.poster_assets.finalize_comfyui_poster import finalize  # noqa: E402
+from scripts.poster_assets.layout import (  # noqa: E402
+    DEFAULT_LAYOUT_NAME,
+    pdf_page_hint,
+    resolve_layout_name,
+)
 from scripts.poster_assets.poster_io import load_yaml  # noqa: E402
 from scripts.poster_assets.slice_poster import slice_poster  # noqa: E402
 
@@ -27,12 +32,18 @@ class PosterPageRenderer:
     """Prepare and draw an optional scope poster page."""
 
     def __init__(
-        self, scope: str, language: str, artwork_path: Path, insertion: str
+        self,
+        scope: str,
+        language: str,
+        artwork_path: Path,
+        insertion: str,
+        layout_name: str = DEFAULT_LAYOUT_NAME,
     ):
         self.scope = scope
         self.language = language
         self.artwork_path = artwork_path
         self.insertion = insertion
+        self.layout_name = layout_name
         temp_root = PROJECT_ROOT / "tmp" / "pdfs"
         temp_root.mkdir(parents=True, exist_ok=True)
         self._temp_dir = tempfile.TemporaryDirectory(
@@ -69,7 +80,18 @@ class PosterPageRenderer:
         )
         if not artwork_path.is_file():
             raise FileNotFoundError(f"Poster PDF artwork not found: {artwork_path}")
-        return cls(str(scope), language, artwork_path, insertion)
+        layout_name = manifest.get("layout", {}).get(
+            "name",
+            DEFAULT_LAYOUT_NAME,
+        )
+        resolve_layout_name(layout_name)
+        return cls(
+            str(scope),
+            language,
+            artwork_path,
+            insertion,
+            layout_name,
+        )
 
     def _prepare_cards(self) -> list[Path]:
         if self._card_paths is not None:
@@ -84,7 +106,21 @@ class PosterPageRenderer:
 
     def render_page(self, canvas_obj, page_renderer: PageRenderer) -> None:
         card_paths = self._prepare_cards()
-        expected = page_renderer.style.CARDS_PER_PAGE
+        layout = resolve_layout_name(self.layout_name)
+        poster_grid = (int(layout["columns"]), int(layout["rows"]))
+        page_grid = (
+            int(page_renderer.style.CARDS_PER_ROW),
+            int(page_renderer.style.CARDS_PER_COLUMN),
+        )
+        if poster_grid != page_grid:
+            paper, orientation = pdf_page_hint(self.layout_name)
+            raise ValueError(
+                f"Poster layout {self.layout_name} needs a "
+                f"{poster_grid[0]}x{poster_grid[1]} PDF page renderer; current "
+                f"renderer is {page_grid[0]}x{page_grid[1]}. A matching "
+                f"{paper} {orientation} renderer is the intended extension."
+            )
+        expected = poster_grid[0] * poster_grid[1]
         if len(card_paths) != expected:
             raise ValueError(
                 f"Poster layout produced {len(card_paths)} cards, PDF page expects {expected}"

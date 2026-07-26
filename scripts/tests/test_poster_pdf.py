@@ -1,5 +1,9 @@
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import MagicMock
+
+import pytest
+from PIL import Image
 
 from scripts.pdf.lib.rendering.page_renderer import PageRenderer
 from scripts.pdf.lib.rendering.poster_page_renderer import PosterPageRenderer
@@ -48,6 +52,7 @@ def test_base1_poster_source_is_text_free_artwork():
             ROOT / "data" / "poster_assets" / "Base1" / "poster-flux2-artwork.png"
         )
         assert renderer.insertion == "after_first_section_cover"
+        assert renderer.layout_name == "standard_3x3"
     finally:
         renderer.cleanup()
 
@@ -66,6 +71,46 @@ def test_sv035_poster_source_is_text_free_artwork():
         assert renderer.insertion == "after_first_section_cover"
     finally:
         renderer.cleanup()
+
+
+def test_wide_poster_reports_the_matching_future_pdf_page_requirement():
+    renderer = PosterPageRenderer.__new__(PosterPageRenderer)
+    renderer.layout_name = "wide_4x3"
+    renderer._prepare_cards = MagicMock(
+        return_value=[Path(f"card-{index}.png") for index in range(12)]
+    )
+
+    with pytest.raises(ValueError, match="A3 landscape renderer"):
+        renderer.render_page(MagicMock(), PageRenderer())
+
+
+def test_wide_poster_renderer_accepts_a_matching_page_grid(tmp_path):
+    card_paths = []
+    for index in range(12):
+        card_path = tmp_path / f"card-{index}.png"
+        Image.new("RGB", (2, 2), (index, index, index)).save(card_path)
+        card_paths.append(card_path)
+
+    renderer = PosterPageRenderer.__new__(PosterPageRenderer)
+    renderer.layout_name = "wide_4x3"
+    renderer._prepare_cards = MagicMock(return_value=card_paths)
+    page_renderer = MagicMock()
+    page_renderer.style = SimpleNamespace(
+        CARDS_PER_ROW=4,
+        CARDS_PER_COLUMN=3,
+        CARDS_PER_PAGE=12,
+        CARD_WIDTH=10,
+        CARD_HEIGHT=20,
+    )
+    page_renderer.calculate_card_position.side_effect = [
+        (index * 10, 0) for index in range(12)
+    ]
+    canvas = MagicMock()
+
+    renderer.render_page(canvas, page_renderer)
+
+    assert canvas.drawImage.call_count == 12
+    page_renderer.draw_cutting_guides.assert_called_once_with(canvas)
 
 
 def test_variant_generator_inserts_poster_only_after_first_section_cover():
