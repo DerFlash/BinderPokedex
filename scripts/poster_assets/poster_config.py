@@ -170,13 +170,16 @@ def _safe_area_sentence(
     )
     if title_region == information_region:
         return (
-            f"Keep the {title_region} area visually calm for later exact "
-            "set identification and information."
+            f"Keep the entire {title_region} cell as uninterrupted, "
+            "low-detail atmosphere with no object, emblem, signage, "
+            "lettering, or high-contrast focal detail."
         )
     return (
-        f"Keep the {title_region} area visually calm for a later exact set "
-        f"logo and the {information_region} area calm for later deterministic "
-        "set information."
+        f"Keep the entire {title_region} cell as uninterrupted, low-detail "
+        "atmosphere with no object, emblem, signage, lettering, or "
+        f"high-contrast focal detail. Keep the {information_region} cell "
+        "open and low contrast with no foreground object, structure, or "
+        "focal subject."
     )
 
 

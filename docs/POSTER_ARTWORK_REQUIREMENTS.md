@@ -47,16 +47,17 @@ Last reviewed: 2026-07-27
 
 ## Current production boundary
 
-- `Base1` and `SV03.5` have accepted, promoted 3×3 artwork and enabled PDF
-  integration.
+- `Base1`, `SV03.5`, and Pokédex Generation I have accepted, promoted 3×3
+  artwork and enabled PDF integration.
 - Every current individual TCG set can now be initialized with a set-specific
   scene brief and the same production contract.
 - The Pokédex has nine isolated, section-specific bundles with distinct seeds,
   regional scene briefs, deterministic nine-language section overlays, and
   exactly the three starter `featured_elements` from each generation.
-- All nine Pokédex bindings remain disabled until their artwork is generated,
-  reviewed, promoted, and validated. That product rollout remains tracked in
-  [#2](https://github.com/DerFlash/BinderPokedex/issues/2).
+- The Generation I Pokédex binding is enabled after visual card-cut and
+  rendered-PDF review. Generation II through IX remain disabled until each
+  artwork is generated, reviewed, promoted, and validated. That staged rollout
+  remains tracked in [#2](https://github.com/DerFlash/BinderPokedex/issues/2).
 - The default workflow deliberately stops before automatic promotion. Semantic
   scene quality, character boundary quality, and natural grounding still need
   human review.

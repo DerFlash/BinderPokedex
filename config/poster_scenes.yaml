@@ -15,10 +15,6 @@ scopes:
       Use clean linework, restrained natural colors, and gentle atmospheric
       depth.
     ground_noun: meadow
-    safe_areas: >-
-      Keep the upper third as open pale-blue sky with a few soft clouds for a
-      later logo. Keep the middle center visually calm for later set
-      information.
 
   ME01:
     concept: the Mega Evolution expansion and its surge of awakened energy
@@ -139,9 +135,6 @@ scopes:
       Use clean linework, restrained natural colors, and gentle atmospheric
       depth.
     ground_noun: meadow
-    safe_areas: >-
-      Keep the upper area visually calm for later deterministic poster
-      information.
 
   SV04:
     concept: the Paradox Rift expansion
@@ -305,7 +298,7 @@ scopes:
 section_scopes:
   Pokedex:
     gen1:
-      concept: the first Pokédex generation and the Kanto region
+      concept: a nostalgic hand-painted Kanto landscape with an early-journey mood
       setting: >-
         The artwork contains an inviting Kanto-inspired meadow between layered
         woodland, soft blue mountains, a calm river bend, and one tiny distant
@@ -317,7 +310,7 @@ section_scopes:
       ground_noun: meadow
 
     gen2:
-      concept: the second Pokédex generation and the Johto region
+      concept: a warm storybook Johto landscape with an old-world journey mood
       setting: >-
         The artwork contains a quiet Johto-inspired valley with old cedar
         woodland, broad golden grass, distant tiled roofs without writing, and
@@ -329,7 +322,7 @@ section_scopes:
       ground_noun: valley grass
 
     gen3:
-      concept: the third Pokédex generation and the Hoenn region
+      concept: a lively watercolor Hoenn coastal landscape with a tropical journey mood
       setting: >-
         The artwork contains a lush Hoenn-inspired coastal clearing with
         tropical woodland, distant volcanic ridges, bright blue water, and
@@ -341,7 +334,7 @@ section_scopes:
       ground_noun: coastal grass
 
     gen4:
-      concept: the fourth Pokédex generation and the Sinnoh region
+      concept: a cinematic Sinnoh highland landscape with an alpine expedition mood
       setting: >-
         The artwork contains a cool Sinnoh-inspired highland meadow with dark
         conifers, a distant snow-streaked mountain, a quiet lake, and ancient
@@ -353,7 +346,7 @@ section_scopes:
       ground_noun: highland grass
 
     gen5:
-      concept: the fifth Pokédex generation and the Unova region
+      concept: a polished Unova riverside landscape balancing nature and a distant city
       setting: >-
         The artwork contains a broad Unova-inspired riverside park where
         natural woodland opens toward a distant modern skyline with completely
@@ -365,7 +358,7 @@ section_scopes:
       ground_noun: park grass
 
     gen6:
-      concept: the sixth Pokédex generation and the Kalos region
+      concept: an elegant Kalos flower-country landscape with an airy spring mood
       setting: >-
         The artwork contains an elegant Kalos-inspired flower meadow with
         clipped distant woodland, pale limestone hills, a narrow reflective
@@ -377,7 +370,7 @@ section_scopes:
       ground_noun: meadow
 
     gen7:
-      concept: the seventh Pokédex generation and the Alola region
+      concept: a cheerful Alola island landscape with luminous tropical depth
       setting: >-
         The artwork contains an Alola-inspired island clearing with low
         tropical foliage, black volcanic slopes, a turquoise bay, and distant
@@ -389,7 +382,7 @@ section_scopes:
       ground_noun: island grass
 
     gen8:
-      concept: the eighth Pokédex generation and the Galar region
+      concept: a detailed Galar upland landscape beneath dramatic weather
       setting: >-
         The artwork contains a Galar-inspired green upland with stone walls
         confined to the distance, rolling moorland, a misty lake, and a tiny
@@ -401,7 +394,7 @@ section_scopes:
       ground_noun: upland grass
 
     gen9:
-      concept: the ninth Pokédex generation and the Paldea region
+      concept: a bright Paldea valley landscape with a warm Mediterranean mood
       setting: >-
         The artwork contains a sunlit Paldea-inspired valley with olive
         woodland, warm ochre hills, a distant blue coast, and a tiny

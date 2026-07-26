@@ -14,6 +14,7 @@ from scripts.poster_assets.poster_io import (
     poster_bundle,
     poster_bundles_for_scope,
 )
+from scripts.poster_assets.poster_config import build_identity_lock_prompt
 from scripts.poster_assets.provenance import sha256_file
 from scripts.poster_assets.scene_catalog import section_scenes_for_scope
 from scripts.poster_assets.validate_promoted_poster import enabled_poster_scopes
@@ -38,7 +39,7 @@ def test_legacy_poster_manifests_remain_isolated_single_bundles():
         assert sha256_file(bundles[0].manifest_path) == expected_hash
 
 
-def test_pokedex_index_routes_nine_disabled_isolated_section_bundles():
+def test_pokedex_index_routes_one_enabled_and_eight_disabled_section_bundles():
     expected_starters = {
         "gen1": [1, 4, 7],
         "gen2": [152, 155, 158],
@@ -55,7 +56,12 @@ def test_pokedex_index_routes_nine_disabled_isolated_section_bundles():
 
     assert [bundle.poster_id for bundle in bundles] == list(expected_starters)
     assert len({bundle.manifest_path for bundle in bundles}) == 9
-    assert all(not bundle.pdf_enabled for bundle in bundles)
+    assert [
+        bundle.poster_id for bundle in bundles if bundle.pdf_enabled
+    ] == ["gen1"]
+    assert [
+        bundle.poster_id for bundle in bundles if not bundle.pdf_enabled
+    ] == [f"gen{generation}" for generation in range(2, 10)]
     assert all(bundle.insertion == "after_section_cover" for bundle in bundles)
     assert len(
         {
@@ -78,6 +84,14 @@ def test_pokedex_leaf_scenes_match_the_reviewed_section_catalog():
 
     for bundle in poster_bundles_for_scope("Pokedex"):
         assert bundle.manifest["artwork"]["scene"] == scenes[bundle.section_id]
+        prompt_opening = build_identity_lock_prompt(
+            bundle.manifest,
+            load_poster_scope_data(bundle),
+        ).split("\n\n", 1)[0].lower()
+        assert "pokédex" not in prompt_opening
+        assert "pokedex" not in prompt_opening
+        assert "pokémon" not in prompt_opening
+        assert "pokemon" not in prompt_opening
 
 
 def test_checked_in_pokedex_output_has_localized_section_overlay_values():

@@ -6,16 +6,17 @@ It complements the implementation-focused
 live in [Poster Workflow](POSTER_WORKFLOW.md); durable requirement IDs live in
 [Poster Requirements](POSTER_ARTWORK_REQUIREMENTS.md).
 
-Last audited: 2026-07-26
+Last audited: 2026-07-27
 
 ## Current committed baselines
 
 | Scope | Engine | Seed | Artwork verdict | PDF integration |
 | --- | --- | ---: | --- | --- |
 | `Base1` | FLUX.2 Klein 4B distilled, two-pass source-pixel lock, 2 x 4 steps | `260726503` | accepted | enabled |
+| `Pokedex/sections/gen1` | FLUX.2 Klein 4B distilled, two-pass source-pixel lock, 2 x 4 steps | `260782266` | accepted | enabled after Generation I cover |
 | `SV03.5` | FLUX.2 Klein 4B distilled, two-pass source-pixel lock, 2 x 4 steps | `260726101` | accepted | enabled |
 
-Both accepted candidates use the same local ComfyUI graph. Its first FLUX pass
+All three accepted candidates use the same local ComfyUI graph. Its first FLUX pass
 creates a full-bleed landscape with dynamic, latent-aligned overscan. The exact
 reviewed source figures are placed on its one continuous lower ground before a
 second FLUX pass sees their final composition and completes only the upper
@@ -39,8 +40,9 @@ ways. They remain diagnostic evidence, not promoted artwork.
   reconstructed through the VAE, moved, or rescaled inside the identity-lock
   workflow.
 - The runner compares every fully opaque source pixel immediately after
-  generation. Base1 passes with 52,584 exact pixels and SV03.5 with 62,719;
-  both record zero changed pixels in promoted provenance.
+  generation. Base1 passes with 52,584 exact pixels; SV03.5 and Pokédex
+  Generation I each pass with 62,719. All record zero changed pixels in
+  promoted provenance.
 - Generation starts from freshly prepared source, mask, composition, and
   engine-specific identity references. It does not consume the legacy poster,
   background, or layout-reference result.
@@ -53,10 +55,11 @@ ways. They remain diagnostic evidence, not promoted artwork.
   It has no per-character clearing or landing pad and prevents scenery from
   tracing or extending a silhouette. Freely generated foreground occlusion is
   intentionally disabled in this exact-identity mode.
-- Both scopes retain the reviewed character count, anatomy, colors, proportions,
-  pose, scale, placement, and source pixels. Mewtwo keeps its narrow face,
-  central chest ridges, three digits on each hand, complete limbs, and tail;
-  Bulbasaur, Charmander, and Squirtle retain their complete source silhouettes.
+- All accepted scopes retain the reviewed character count, anatomy, colors,
+  proportions, pose, scale, placement, and source pixels. Mewtwo keeps its
+  narrow face, central chest ridges, three digits on each hand, complete limbs,
+  and tail; Bulbasaur, Charmander, and Squirtle retain their complete source
+  silhouettes.
 - The physical layout uses 63.5 x 88.9 mm cards and 5 mm binder gaps. Each
   featured Pokemon remains wholly inside one bottom-row card, with visible
   landscape padding around its silhouette.
@@ -109,7 +112,7 @@ ways. They remain diagnostic evidence, not promoted artwork.
   MPS tensor conversions.
 - FLUX.2, Anima, FLUX.1 Canny, and Qwen Edit remain separate selectable
   engines. The promoted implementation is scope-driven and has been exercised
-  with two independent sets.
+  with two independent sets plus one aggregate Pokédex section.
 
 ## Partially satisfied requirements
 
@@ -121,7 +124,7 @@ ways. They remain diagnostic evidence, not promoted artwork.
 | Anima | Workflow is retained and runnable | Promote only after it produces a candidate that passes the same review gate |
 | New set art direction | Every current individual set has an explicit catalog brief copied into its manifest | Review or refine the brief before spending the production render; catalog coverage does not replace visual art direction |
 | Wide PDF layouts | 4x3 and 4x4 artwork, placement, prompting, upscale, promotion, validation, slicing, and matching-grid rendering are modeled | Add physical A3 page styles/templates and rendered-PDF QA |
-| Aggregate scopes | The generic index, isolated leaf manifests, section filtering, PDF routing, cleanup, nested validation, and nine disabled Pokédex generation configs are implemented | Generate, review, promote, and enable all nine Pokédex artworks in [#2](https://github.com/DerFlash/BinderPokedex/issues/2); then model other aggregate variant scenes |
+| Aggregate scopes | The generic index, isolated leaf manifests, section filtering, PDF routing, cleanup, nested validation, and nine Pokédex generation configs are implemented; Generation I is promoted and enabled | Generate, review, promote, and enable Generation II through IX in [#2](https://github.com/DerFlash/BinderPokedex/issues/2); then model other aggregate variant scenes |
 
 ## Remaining production requirements
 
@@ -135,8 +138,8 @@ ways. They remain diagnostic evidence, not promoted artwork.
   semantic depth or foreground-occlusion validation.
 - Keep Anima, FLUX.1 Canny, and Qwen Edit experimental until a candidate passes
   the same promotion gate.
-- Generate, visually review, promote, and validate every Pokédex generation
-  artwork before enabling its prepared section binding.
+- Generate, visually review, promote, and validate each remaining Pokédex
+  generation artwork before enabling its prepared section binding.
 - Add reviewed section briefs and isolated bindings before enabling other
   aggregate variant scopes.
 - Implement matching A3/custom PDF page renderers before enabling 4x3 or 4x4
@@ -162,7 +165,7 @@ Completed on 2026-07-27:
 - The complete suite passes: 218 tests passed and one unrelated, pre-existing
   EX-logo feature test remains explicitly skipped.
 - Python compilation and `git diff --check` pass.
-- Both promoted bundles pass `validate_promoted_poster.py`, including manifest
+- All three promoted bundles pass `validate_promoted_poster.py`, including manifest
   equality, provenance hashes, 2368 x 3268 artwork, nine 750 x 1050 card crops,
   300-dpi metadata, and exact opaque-source-pixel records.
 - The configured model, encoder, VAE, and Real-ESRGAN hashes match the actual
@@ -179,16 +182,19 @@ Completed on 2026-07-27:
 - The scene catalog has exact coverage for all 24 current individual TCG sets.
   An isolated batch initialization created the 23 missing standard-3x3
   manifests and preserved the existing reviewed Base1 manifest.
-- The Pokédex resolver loads nine isolated, disabled generation bundles with
-  unique seeds and section-local source data. Its checked-in output contains
-  localized section title, region, and range values for all nine PDF languages.
-- A complete German Pokédex PDF build succeeds with the disabled bindings and
-  retains its expected 126-page output. Nested preparation resolves the full
-  asset key instead of falling back to a leaf-directory basename.
+- The Pokédex resolver loads nine isolated generation bundles with unique seeds
+  and section-local source data. Generation I is enabled; Generation II through
+  IX remain disabled. Its checked-in output contains localized section title,
+  region, and range values for all nine PDF languages.
+- A German Pokédex test build with Generation I enabled produces a three-page
+  A4 PDF: generation cover, nine-card poster page, and card grid. The
+  `_NO_POSTER.pdf` countercheck produces two pages without an empty gap. Nested
+  preparation resolves the full asset key instead of falling back to a
+  leaf-directory basename.
 - Release validation carries the resolved routing bundle through provenance
   checks and rejects any PDF artwork path other than the promoted, hashed
   output.
-- Both accepted artworks and all six 750 x 1050 bottom character cards were
+- All three accepted artworks and all nine 750 x 1050 bottom character cards were
   visually compared with the reviewed cutouts after model upscaling. Character
   anatomy, card padding, the continuous lower ground, and absence of adjacent
   body-like shapes pass.

@@ -457,6 +457,9 @@ def test_identity_lock_scene_prompt_is_scope_and_layout_driven():
     assert "released in 2024" in prompt
     assert "upper-column-3" in prompt
     assert "row-2-column-3" in prompt
+    assert "uninterrupted, low-detail atmosphere" in prompt
+    assert "later exact set logo" not in prompt
+    assert "later deterministic set information" not in prompt
     assert "continuous low shore surface" in prompt
     assert "basalt arches" in prompt
     assert "source pixel as immutable" in prompt
@@ -577,6 +580,7 @@ def test_scene_catalog_covers_every_current_individual_tcg_set_exactly():
     assert stale == set()
     assert set(available_tcg_scopes()) == set(scenes)
     assert all(scene["setting"] for scene in scenes.values())
+    assert all("safe_areas" not in scene for scene in scenes.values())
 
 
 def test_runner_uses_the_scope_generation_contract_as_its_defaults():
@@ -1416,7 +1420,7 @@ def test_failed_promotion_keeps_existing_bundle(
 
 
 def test_promoted_production_posters_match_provenance_and_print_geometry():
-    for scope in ("Base1", "SV03.5"):
+    for scope in ("Base1", "Pokedex/sections/gen1", "SV03.5"):
         result = validate_promoted_poster(scope)
         assert result["dimensions"] == (2368, 3268)
         assert result["card_dimensions"] == (750, 1050)

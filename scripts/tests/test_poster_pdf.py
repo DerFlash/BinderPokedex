@@ -68,7 +68,7 @@ def test_skip_poster_bypasses_aggregate_discovery(monkeypatch):
     assert collection.renderers == []
 
 
-def test_pokedex_disabled_section_bundles_need_no_set_id():
+def test_pokedex_enabled_gen1_bundle_needs_no_set_id():
     scope_data = json.loads(
         (ROOT / "data" / "output" / "Pokedex.json").read_text(
             encoding="utf-8"
@@ -80,7 +80,12 @@ def test_pokedex_disabled_section_bundles_need_no_set_id():
         "de",
     )
 
-    assert collection.renderers == []
+    try:
+        assert len(collection.renderers) == 1
+        assert collection.renderers[0].poster_id == "gen1"
+        assert collection.renderers[0].section_id == "gen1"
+    finally:
+        collection.cleanup()
 
 
 def test_enabled_aggregate_bindings_create_one_renderer_per_section(
