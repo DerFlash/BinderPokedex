@@ -119,7 +119,7 @@ ways. They remain diagnostic evidence, not promoted artwork.
 | Anima | Workflow is retained and runnable | Promote only after it produces a candidate that passes the same review gate |
 | New set art direction | Every current individual set has an explicit catalog brief copied into its manifest | Review or refine the brief before spending the production render; catalog coverage does not replace visual art direction |
 | Wide PDF layouts | 4x3 and 4x4 artwork, placement, prompting, upscale, promotion, validation, slicing, and matching-grid rendering are modeled | Add physical A3 page styles/templates and rendered-PDF QA |
-| Aggregate scopes | Individual TCG sets have one unambiguous poster; variant scopes may contain normal, mega, and primal sections | Add a poster-list schema with section-specific scene briefs and insertion points |
+| Aggregate scopes | Individual TCG sets have one unambiguous poster; the Pokédex has nine generation sections and variant scopes may contain normal, mega, and primal sections | Add a poster-list schema with section-specific scene briefs and insertion points; the first concrete consumer is the Pokédex feature in [#2](https://github.com/DerFlash/BinderPokedex/issues/2) |
 
 ## Remaining production requirements
 
@@ -133,8 +133,8 @@ ways. They remain diagnostic evidence, not promoted artwork.
   semantic depth or foreground-occlusion validation.
 - Keep Anima, FLUX.1 Canny, and Qwen Edit experimental until a candidate passes
   the same promotion gate.
-- Implement section-aware multiple posters before enabling aggregate variant
-  scopes.
+- Implement section-aware multiple posters before enabling the nine Pokédex
+  generation posters or aggregate variant scopes.
 - Implement matching A3/custom PDF page renderers before enabling 4x3 or 4x4
   poster manifests for PDF output.
 - Add staleness detection before offering a higher-level post-fetch

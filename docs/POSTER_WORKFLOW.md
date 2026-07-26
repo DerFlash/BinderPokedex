@@ -82,7 +82,9 @@ python scripts/poster_assets/init_poster_scope.py \
 
 The batch command never overwrites an existing reviewed manifest. Aggregate
 variant scopes such as `ExGen2` are intentionally excluded until multiple
-section posters are supported.
+section posters are supported. The same extension is required for the nine
+Pokédex generation posters tracked in
+[#2](https://github.com/DerFlash/BinderPokedex/issues/2).
 
 ## 3. Review the creative brief
 
