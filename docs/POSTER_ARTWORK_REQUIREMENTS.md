@@ -19,6 +19,7 @@ Last reviewed: 2026-07-26
 | Character identity | Reviewed source pixels are immutable; any changed anatomy is a hard rejection |
 | Promotion | Human visual review plus deterministic validation remains mandatory |
 | Missing poster | Normal PDF remains possible; enabled-but-missing promoted artwork is an error; `--skip-poster` is an explicit bypass |
+| CI boundary | Pull requests build and validate the complete release candidate with read-only permissions; only `v*` tags may publish it |
 
 ## Requirement register
 
@@ -42,6 +43,7 @@ Last reviewed: 2026-07-26
 | `PA-016` | Post-fetch orchestration detects stale poster inputs | Open | Compare scope data, scene catalog, cutouts, logo, model contract, and promoted provenance before deciding whether work is needed |
 | `PA-017` | Natural foreground occlusion may cross subjects safely | Research | Accept only a deterministic depth-aware method that retains exact identity and does not invent anatomy |
 | `PA-018` | Alternative engines remain selectable but gated | Ongoing | Anima, FLUX.1 Canny, and Qwen candidates must pass the same promotion checks as FLUX.2 |
+| `PA-019` | Pull requests prove that a complete release can be built without publishing it | Done | PRs reuse the read-only release-candidate workflow, validate all enabled posters, build every PDF and language archive, verify the manifest, and stop after a temporary Actions artifact |
 
 ## Current production boundary
 
@@ -54,6 +56,8 @@ Last reviewed: 2026-07-26
   human review.
 - Aggregate scopes and wide PDF pages remain explicit roadmap work rather than
   hidden assumptions.
+- Pull requests and tagged releases use the same release-candidate build.
+  Publication is a separate write-enabled job available only to `v*` tags.
 
 ## Change rule
 

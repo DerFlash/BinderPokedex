@@ -5,128 +5,60 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: read
+
 jobs:
-  release:
+  build-release-candidate:
+    uses: ./.github/workflows/build-release.yml
+    with:
+      release_tag: ${{ github.ref_name }}
+      artifact_retention_days: 7
+
+  publish:
+    name: Publish GitHub release
+    needs: build-release-candidate
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Get tag info
-        id: tag
-        run: |
-          TAG_NAME=${GITHUB_REF#refs/tags/}
-          echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
-          echo "Release: $TAG_NAME"
-      
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Download release candidate
+        uses: actions/download-artifact@v4
         with:
-          python-version: '3.12'
-          cache: 'pip'
-      
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          name: release-candidate
+          path: release-candidate
 
-      - name: Install Noto Sans CJK fonts
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y fonts-noto-cjk fonts-wqy-zenhei fonts-wqy-microhei
-          fc-cache -fv
-
-      - name: Generate PDFs
-        run: |
-          # Fetch all data first
-          echo "Fetching data for all scopes..."
-          scopes="Pokedex"
-          for scope_file in config/scopes/*.yaml; do
-            scope=$(basename "$scope_file" .yaml)
-            if [ "$scope" != "Pokedex" ]; then
-              scopes="$scopes $scope"
-            fi
-          done
-
-          for scope in $scopes; do
-            echo "  → Fetching $scope"
-            python scripts/fetcher/fetch.py --scope $scope
-          done
-          
-          # Generate all PDFs (all scopes, all languages)
-          echo "Generating all PDFs..."
-          python scripts/pdf/generate_pdf.py --scope all
-          
-          # Verify output
-          if [ ! -d output ]; then
-            echo "Error: output directory not created"
-            exit 1
-          fi
-          
-          PDF_COUNT=$(find output -type f -name '*.pdf' | wc -l)
-          echo "Generated $PDF_COUNT PDFs"
-          
-          if [ "$PDF_COUNT" -eq 0 ]; then
-            echo "Error: No PDFs were generated"
-            exit 1
-          fi
-      
-      - name: Create language-specific PDF zips
-        run: |
-          cd output
-          
-          # Create individual zips per language (each containing all scopes)
-          for lang in de en fr es it ja ko zh_hans zh_hant; do
-            if [ -d "$lang" ]; then
-              echo "Creating ZIP for $lang..."
-              zip -r ../binder-pokedex-${lang}.zip $lang -x ".*"
-            else
-              echo "WARNING: directory '$lang' not found, skipping"
-            fi
-          done
-          
-          cd ..
-          ls -lh binder-pokedex*.zip
-
-      - name: Build release manifest
-        run: |
-          python scripts/release/build_manifest.py \
-            --tag "${{ steps.tag.outputs.tag_name }}" \
-            --output release-manifest.json
-          cat release-manifest.json
-      
       - name: Create Release with Assets
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.tag.outputs.tag_name }}
-          name: Binder Pokédex ${{ steps.tag.outputs.tag_name }}
+          tag_name: ${{ github.ref_name }}
+          name: Binder Pokédex ${{ github.ref_name }}
           files: |
-            binder-pokedex-de.zip
-            binder-pokedex-en.zip
-            binder-pokedex-fr.zip
-            binder-pokedex-es.zip
-            binder-pokedex-it.zip
-            binder-pokedex-ja.zip
-            binder-pokedex-ko.zip
-            binder-pokedex-zh_hans.zip
-            binder-pokedex-zh_hant.zip
-            release-manifest.json
+            release-candidate/binder-pokedex-de.zip
+            release-candidate/binder-pokedex-en.zip
+            release-candidate/binder-pokedex-fr.zip
+            release-candidate/binder-pokedex-es.zip
+            release-candidate/binder-pokedex-it.zip
+            release-candidate/binder-pokedex-ja.zip
+            release-candidate/binder-pokedex-ko.zip
+            release-candidate/binder-pokedex-zh_hans.zip
+            release-candidate/binder-pokedex-zh_hant.zip
+            release-candidate/release-manifest.json
           body: |
-            ## Binder Pokédex ${{ steps.tag.outputs.tag_name }}
-            
-            **What's New in ${{ steps.tag.outputs.tag_name }}:**
-            
+            ## Binder Pokédex ${{ github.ref_name }}
+
+            **What's New in ${{ github.ref_name }}:**
+
             🎴 **Mega Evolution Set Expansion:**
             - Added ME03 **Perfect Order**
             - Added ME04 **Chaos Rising**
             - Release builds now discover scopes from `config/scopes/*.yaml`
-            
+
             ---
-            
+
             ### 📥 Downloads (by Language)
             Each ZIP contains all available PDFs for that language:
-            
+
             - 🇩🇪 **binder-pokedex-de.zip** - Deutsch
             - 🇬🇧 **binder-pokedex-en.zip** - English
             - 🇫🇷 **binder-pokedex-fr.zip** - Français
@@ -136,27 +68,28 @@ jobs:
             - 🇰🇷 **binder-pokedex-ko.zip** - 한국어
             - 🇨🇳 **binder-pokedex-zh_hans.zip** - 简体中文
             - 🇹🇼 **binder-pokedex-zh_hant.zip** - 繁體中文
-            
+
             ### 📋 Content Overview
-            **27 Total Scopes:**
+            **28 Total Scopes:**
             - **Pokédex:** Complete National Pokédex (1,025 Pokémon across 9 generations)
+            - **Base Set:** Original Pokémon TCG Base Set
             - **ExGen1-3:** TCG EX collections (94/324/366 cards)
             - **ME01-MEP:** Pokémon TCG Mega Evolution era (6 sets)
             - **SV01-SV10 + SVP:** Scarlet & Violet era (17 sets)
-            
+
             ### 📊 Stats
-            - **Total Scopes:** 27 (1 Pokédex + 3 ExGen + 23 TCG sets)
+            - **Total Scopes:** 28 (1 Pokédex + 3 ExGen + 24 TCG sets)
             - **Languages:** 9 (DE, EN, FR, ES, IT, JA, KO, ZH-Hans, ZH-Hant)
             - **Cards/Pokémon:** 1,025+ Pokémon + 4,000+ TCG cards
             - **Featured Elements:** 75+ iconic Pokémon showcased across all covers
-            
+
             ### 🔧 Technical Details
             - Featured elements with automatic format detection
             - Cross-platform font support (macOS Songti + Linux Noto Sans CJK)
             - Scope-based modular architecture
             - PokeAPI fallback for universal coverage
             - Proper CJK character rendering
-            
+
             📚 **[Full Changelog & Documentation](https://github.com/DerFlash/BinderPokedex)**
           draft: false
           prerelease: false

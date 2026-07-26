@@ -117,6 +117,7 @@ Print 1,025+ Pokémon across 9 generations in 9 languages. All variants, all for
 | **Variants Quickstart** | [docs/VARIANTS_QUICKSTART.md](docs/VARIANTS_QUICKSTART.md) |
 | **Poster Workflow** | [docs/POSTER_WORKFLOW.md](docs/POSTER_WORKFLOW.md) |
 | **Poster Requirements** | [docs/POSTER_ARTWORK_REQUIREMENTS.md](docs/POSTER_ARTWORK_REQUIREMENTS.md) |
+| **Release Workflow** | [docs/RELEASE_WORKFLOW.md](docs/RELEASE_WORKFLOW.md) |
 
 ---
 

@@ -92,6 +92,10 @@ ways. They remain diagnostic evidence, not promoted artwork.
 - The regular scope PDF command includes manifest-enabled posters automatically;
   `--skip-poster` bypasses poster discovery and asset loading for an isolated
   `_NO_POSTER.pdf` build.
+- Pull requests use the same read-only release-candidate build as tagged
+  releases. The build validates every enabled promoted poster before producing
+  all PDFs, language archives, and the release manifest; only the separate
+  `v*`-tag publish job has write access.
 - Promoted artwork is 2368 x 3268 px, every card crop is 750 x 1050 px, and the
   PDF embeds every poster card at 300 ppi.
 - Promotion is transactional and stores hashes for model, encoder, VAE,
@@ -150,7 +154,7 @@ reviewed candidates and their provenance have been promoted.
 
 Completed on 2026-07-26:
 
-- The complete suite passes: 180 tests passed and one unrelated, pre-existing
+- The complete suite passes: 186 tests passed and one unrelated, pre-existing
   EX-logo feature test remains explicitly skipped.
 - Python compilation and `git diff --check` pass.
 - Both promoted bundles pass `validate_promoted_poster.py`, including manifest

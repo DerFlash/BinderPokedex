@@ -79,6 +79,7 @@ from scripts.poster_assets.scene_catalog import (
     validate_catalog_coverage,
 )
 from scripts.poster_assets.validate_promoted_poster import (
+    enabled_poster_scopes,
     validate as validate_promoted_poster,
 )
 
@@ -1383,3 +1384,21 @@ def test_promoted_production_posters_match_provenance_and_print_geometry():
         assert result["dimensions"] == (2368, 3268)
         assert result["card_dimensions"] == (750, 1050)
         assert result["cards"] == 9
+
+
+def test_enabled_poster_scopes_only_returns_pdf_enabled_manifests(
+    tmp_path: Path,
+):
+    for scope, enabled in (
+        ("EnabledB", True),
+        ("Disabled", False),
+        ("EnabledA", True),
+    ):
+        scope_dir = tmp_path / scope
+        scope_dir.mkdir()
+        (scope_dir / "poster.yaml").write_text(
+            f"pdf:\n  enabled: {str(enabled).lower()}\n",
+            encoding="utf-8",
+        )
+
+    assert enabled_poster_scopes(tmp_path) == ["EnabledA", "EnabledB"]

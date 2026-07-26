@@ -31,6 +31,18 @@ REQUIRED_GENERATION_HASHES = (
 )
 
 
+def enabled_poster_scopes(
+    poster_assets: Path = POSTER_ASSETS,
+) -> list[str]:
+    """Return scopes whose committed manifest enables PDF poster use."""
+    enabled: list[str] = []
+    for manifest_path in sorted(poster_assets.glob("*/poster.yaml")):
+        manifest = load_yaml(manifest_path)
+        if manifest.get("pdf", {}).get("enabled") is True:
+            enabled.append(manifest_path.parent.name)
+    return enabled
+
+
 def _validate_record(record: dict[str, Any]) -> Path:
     path = ROOT / str(record["file"])
     if not path.is_file():
@@ -190,17 +202,31 @@ def validate(scope: str) -> dict[str, Any]:
     }
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--scope", required=True)
-    args = parser.parse_args()
-    result = validate(args.scope)
+def _print_result(result: dict[str, Any]) -> None:
     print(
         f"{result['scope']}: {result['dimensions'][0]}x"
         f"{result['dimensions'][1]}, {result['cards']} cards at "
         f"{result['effective_dpi'][0]:.2f} dpi"
     )
     print(f"Provenance: {result['provenance']}")
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    target = parser.add_mutually_exclusive_group(required=True)
+    target.add_argument("--scope")
+    target.add_argument(
+        "--all-enabled",
+        action="store_true",
+        help="Validate every poster manifest with pdf.enabled set to true",
+    )
+    args = parser.parse_args()
+
+    scopes = enabled_poster_scopes() if args.all_enabled else [args.scope]
+    for scope in scopes:
+        _print_result(validate(scope))
+    if args.all_enabled:
+        print(f"Validated {len(scopes)} enabled poster bundle(s).")
     return 0
 
 

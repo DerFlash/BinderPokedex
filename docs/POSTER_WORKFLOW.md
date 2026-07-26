@@ -23,6 +23,12 @@ generation is an explicit post-fetch step because it is GPU-intensive,
 probabilistic, and subject to a visual promotion gate. A promoted poster is
 generated once and then reused deterministically for every supported language.
 
+CI uses the same boundary. Pull requests run a complete, read-only release
+rehearsal that validates promoted posters and builds every PDF, ZIP, and the
+release manifest without publishing a GitHub Release. Tagged releases reuse
+that candidate build and publish only after it succeeds. See
+[Release Workflow](RELEASE_WORKFLOW.md).
+
 ## Required and optional phases
 
 | Phase | Required for a normal PDF | Required for a poster PDF | May be repeated |
