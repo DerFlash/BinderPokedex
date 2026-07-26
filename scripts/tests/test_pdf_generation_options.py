@@ -1,7 +1,10 @@
 from unittest.mock import MagicMock
 
 from scripts.pdf import generate_pdf
-from scripts.pdf.lib.generation_options import prepare_variant_data
+from scripts.pdf.lib.generation_options import (
+    pdf_output_filename,
+    prepare_variant_data,
+)
 from scripts.pdf.lib.variant_pdf_generator import VariantPDFGenerator
 
 
@@ -17,6 +20,27 @@ def test_no_options_preserve_original_mapping():
     source = {"sections": {"all": {"cards": [_card(1)]}}}
 
     assert prepare_variant_data(source) is source
+
+
+def test_pdf_output_filename_keeps_diagnostic_runs_separate():
+    assert pdf_output_filename("Base1", "de") == "Base1_DE.pdf"
+    assert (
+        pdf_output_filename("Base1", "de", test_mode=True)
+        == "Base1_DE_TEST.pdf"
+    )
+    assert (
+        pdf_output_filename("Base1", "de", skip_images=True)
+        == "Base1_DE_NO_IMAGES.pdf"
+    )
+    assert (
+        pdf_output_filename(
+            "Base1",
+            "de",
+            skip_images=True,
+            test_mode=True,
+        )
+        == "Base1_DE_TEST_NO_IMAGES.pdf"
+    )
 
 
 def test_test_mode_limits_cards_globally_in_render_order():
@@ -120,6 +144,9 @@ def test_variant_pdf_generation_applies_cli_options(monkeypatch, tmp_path):
 
     prepared = generator_factory.call_args.kwargs["variant_data"]
     assert result is True
+    assert generator_factory.call_args.kwargs["output_file"] == (
+        tmp_path / "Example_DE_TEST_NO_IMAGES.pdf"
+    )
     assert len(prepared["sections"]["all"]["cards"]) == 9
     assert all(
         "image_url" not in card
@@ -141,3 +168,27 @@ def test_legacy_flat_variant_normalizes_pokemon_to_renderable_cards():
     assert len(sections) == 1
     assert sections[0]["title"] == "Legacy Collection"
     assert sections[0]["cards"] == generator.pokemon_list
+
+
+def test_scope_generation_counts_false_renderer_result_as_failure(
+    monkeypatch,
+    tmp_path,
+):
+    scope_data = {
+        "set_id": "Example",
+        "available_languages": ["de"],
+        "sections": {"all": {"cards": [_card(1)]}},
+    }
+    scope_file = tmp_path / "Example.json"
+    scope_file.write_text(__import__("json").dumps(scope_data), encoding="utf-8")
+    monkeypatch.setattr(generate_pdf, "_generate_variant_pdf", lambda **_kwargs: False)
+
+    result = generate_pdf.generate_scope_pdf(
+        scope_name="Example",
+        scope_file=scope_file,
+        languages=["de"],
+        output_dir=tmp_path / "output",
+        script_dir=tmp_path,
+    )
+
+    assert result == 1

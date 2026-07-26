@@ -137,8 +137,8 @@ zh_hant     繁體中文 (Traditional) ← CJK
 --generations           Generations for 'pokedex' type: '1', '1-2', '1-5', or '1-9' (default: 1-9)
 --variant, -v           Variant ID for 'variant' type: 'ex_gen1', 'ex_gen2', 'ex_gen3', 'mega_evolution', 'all'
 --list                  List all available variants and their status
---skip-images           Skip image processing (faster for testing)
---test                  Test mode: only generate with 9 Pokémon
+--skip-images           Skip remote card images; writes *_NO_IMAGES.pdf
+--test                  Render only the first 9 cards; writes *_TEST.pdf
 ```
 
 **Examples:**
@@ -497,4 +497,3 @@ For more details, see:
 **Version:** 2.0.0  
 **Last Updated:** January 18, 2026  
 **Status:** ✅ Production Ready
-

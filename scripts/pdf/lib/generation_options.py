@@ -7,6 +7,22 @@ from typing import Any
 TEST_CARD_LIMIT = 9
 
 
+def pdf_output_filename(
+    filename_base: str,
+    language: str,
+    *,
+    skip_images: bool = False,
+    test_mode: bool = False,
+) -> str:
+    """Return a mode-specific filename that cannot replace a normal PDF."""
+    parts = [filename_base, language.upper()]
+    if test_mode:
+        parts.append("TEST")
+    if skip_images:
+        parts.append("NO_IMAGES")
+    return "_".join(parts) + ".pdf"
+
+
 def prepare_variant_data(
     variant_data: dict[str, Any],
     *,

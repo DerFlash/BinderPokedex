@@ -63,7 +63,7 @@ from lib.variant_pdf_generator import VariantPDFGenerator
 from lib.cli_formatter import CLIFormatter
 from lib.cli_validator import GenerationValidator, LanguageValidator, VariantValidator, DirectoryValidator
 from lib.constants import LANGUAGES
-from lib.generation_options import prepare_variant_data
+from lib.generation_options import pdf_output_filename, prepare_variant_data
 
 # Configure logging - suppress INFO during generation for clean output
 logging.basicConfig(
@@ -506,7 +506,7 @@ def generate_scope_pdf(scope_name: str, scope_file: Path, languages: list,
                 logger.info(f"\n📊 Generating {scope_name} → {LANGUAGES.get(language, {}).get('name', language.upper())}")
                 
                 # Generate PDF using unified VariantPDFGenerator (works for all types)
-                _generate_variant_pdf(
+                generated = _generate_variant_pdf(
                     variant_data=scope_data,
                     language=language,
                     output_dir=output_dir / language,
@@ -518,6 +518,10 @@ def generate_scope_pdf(scope_name: str, scope_file: Path, languages: list,
                     page_template=page_template,
                     cover_template=cover_template
                 )
+                if not generated:
+                    raise RuntimeError(
+                        f"PDF renderer reported failure for {scope_name}/{language}"
+                    )
                 
                 total_generated += 1
                 
@@ -623,12 +627,16 @@ def handle_variant_mode(args, script_dir, project_dir, data_dir, variants_dir):
                     variant_data = json.load(f)
                 
                 # Generate PDF
-                _generate_variant_pdf(
+                generated = _generate_variant_pdf(
                     variant_data=variant_data,
                     language=language,
                     output_dir=project_dir / 'output' / language,
                     script_dir=script_dir
                 )
+                if not generated:
+                    raise RuntimeError(
+                        f"PDF renderer reported failure for {variant_id}/{language}"
+                    )
                 
                 total_generated += 1
                 logger.info(f"   ✅ Generated: {variant_id}_{language}.pdf")
@@ -658,7 +666,12 @@ def _generate_variant_pdf(variant_data, language, output_dir, script_dir, skip_i
         filename_base = variant_name.replace(' ', '_').replace('-', '_')
     
     # Generate output filename
-    output_file = output_dir / f"{filename_base}_{language.upper()}.pdf"
+    output_file = output_dir / pdf_output_filename(
+        filename_base,
+        language,
+        skip_images=skip_images,
+        test_mode=test_mode,
+    )
     
     prepared_variant_data = prepare_variant_data(
         variant_data,
