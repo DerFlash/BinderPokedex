@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -11,12 +12,14 @@ from PIL import Image
 
 try:
     from .layout import build_print_layout, effective_dpi
+    from .poster_config import build_identity_lock_prompt
     from .provenance import ROOT, sha256_file
-    from .poster_io import load_yaml
+    from .poster_io import SCOPE_DATA, load_json, load_yaml
 except ImportError:
     from layout import build_print_layout, effective_dpi
+    from poster_config import build_identity_lock_prompt
     from provenance import ROOT, sha256_file
-    from poster_io import load_yaml
+    from poster_io import SCOPE_DATA, load_json, load_yaml
 
 
 POSTER_ASSETS = ROOT / "data" / "poster_assets"
@@ -78,6 +81,16 @@ def validate(scope: str) -> dict[str, Any]:
             f"Generation metadata drift between {manifest_path} and "
             f"{provenance_path}"
         )
+    recorded_manifest = (
+        payload.get("run", {})
+        .get("inputs", {})
+        .get("scope_manifest", {})
+    )
+    if recorded_manifest.get("sha256") != sha256_file(manifest_path):
+        raise ValueError(
+            f"Scope manifest drift between {manifest_path} and "
+            f"{provenance_path}"
+        )
     missing_hashes = [
         key for key in REQUIRED_GENERATION_HASHES if not recorded_generation.get(key)
     ]
@@ -85,6 +98,42 @@ def validate(scope: str) -> dict[str, Any]:
         raise ValueError(
             f"Missing promoted model hashes: {', '.join(missing_hashes)}"
         )
+    identity_validation = (
+        payload.get("run", {})
+        .get("validation", {})
+        .get("identity_lock")
+    )
+    if recorded_generation.get("mode") == "identity_lock":
+        if not isinstance(identity_validation, dict):
+            raise ValueError(
+                "Promoted identity-lock artwork lacks its source-pixel "
+                "validation record"
+            )
+        if (
+            identity_validation.get("method")
+            != "exact_opaque_source_pixels"
+            or identity_validation.get("passed") is not True
+            or identity_validation.get("changed_pixels") != 0
+            or int(identity_validation.get("opaque_pixels", 0)) <= 0
+        ):
+            raise ValueError(
+                "Promoted identity-lock source-pixel validation did not pass"
+            )
+        prompt_record = (
+            payload.get("run", {})
+            .get("inputs", {})
+            .get("prompt", {})
+        )
+        scope_data = load_json(SCOPE_DATA / f"{scope}.json")
+        current_prompt = (
+            build_identity_lock_prompt(manifest, scope_data) + "\n"
+        ).encode("utf-8")
+        current_prompt_hash = hashlib.sha256(current_prompt).hexdigest()
+        if prompt_record.get("sha256") != current_prompt_hash:
+            raise ValueError(
+                "Generated identity-lock prompt drift between the current "
+                f"manifest/code and {provenance_path}"
+            )
 
     output_dpi = int(recorded_generation.get("output_dpi", 0))
     layout = build_print_layout(
@@ -133,6 +182,11 @@ def validate(scope: str) -> dict[str, Any]:
         "card_dimensions": (layout.card_width_px, layout.card_height_px),
         "effective_dpi": (dpi_x, dpi_y),
         "provenance": provenance_path,
+        "identity_pixels": (
+            int(identity_validation["opaque_pixels"])
+            if identity_validation
+            else None
+        ),
     }
 
 

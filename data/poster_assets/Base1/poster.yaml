@@ -26,6 +26,26 @@ artwork:
   promoted_file: poster-flux2-artwork.png
   preview_file: poster-flux2.png
   provenance_file: poster-flux2-provenance.json
+  identity_lock:
+    overscan_ratio: 0.04
+    max_protected_start_ratio: 0.70
+    transition_ratio: 0.10
+    subject_clearance_ratio: 0.02
+  scene:
+    concept: a nostalgic 1999 Base Set collection
+    setting: >-
+      The artwork contains a quiet late-1990s Japanese cel-painted meadow,
+      layered forest edges, soft mountains, and one small distant generic
+      research building with a completely blank facade.
+    lighting: Warm morning sunlight enters from the upper left.
+    rendering: >-
+      Use clean linework, restrained natural colors, and gentle atmospheric
+      depth.
+    ground_noun: meadow
+    safe_areas: >-
+      Keep the upper third as open pale-blue sky with a few soft clouds for a
+      later logo. Keep the middle center visually calm for later set
+      information.
   generation:
     engine: flux
     model: flux-2-klein-4b-fp8.safetensors

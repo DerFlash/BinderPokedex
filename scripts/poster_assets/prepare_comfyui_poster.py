@@ -13,14 +13,24 @@ try:
     from .composition import cutout_placements
     from .create_comfyui_poster_workflow import output_dimensions
     from .layout import build_page_layout
-    from .poster_config import subject_conditioning
-    from .poster_io import load_yaml
+    from .poster_config import (
+        IDENTITY_LOCK_PROMPT_FILE,
+        build_identity_lock_prompt,
+        identity_lock_config,
+        subject_conditioning,
+    )
+    from .poster_io import SCOPE_DATA, load_json, load_yaml
 except ImportError:
     from composition import cutout_placements
     from create_comfyui_poster_workflow import output_dimensions
     from layout import build_page_layout
-    from poster_config import subject_conditioning
-    from poster_io import load_yaml
+    from poster_config import (
+        IDENTITY_LOCK_PROMPT_FILE,
+        build_identity_lock_prompt,
+        identity_lock_config,
+        subject_conditioning,
+    )
+    from poster_io import SCOPE_DATA, load_json, load_yaml
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -242,25 +252,44 @@ def build_upper_context_mask(
     width: int,
     height: int,
     placements: list[dict[str, object]],
+    manifest: dict[str, Any],
     output_dir: Path,
-) -> None:
-    """Protect one continuous lower scene band during identity-lock pass two."""
-    transition_start = round(height * 0.60)
-    protected_start = round(height * 0.70)
+) -> tuple[int, int]:
+    """Protect a layout-aware lower scene band during identity-lock pass two."""
+    config = identity_lock_config(manifest)
+    subject_tops = []
     for placement in placements:
         visible_box = placement["image"].getchannel("A").getbbox()
         if visible_box is None:
             raise ValueError("Identity-lock placement has no visible pixels")
-        subject_top = int(placement["y"]) + visible_box[1]
-        if subject_top < protected_start:
-            raise ValueError(
-                "Identity-lock subject extends into the generated upper scene"
-            )
+        subject_tops.append(int(placement["y"]) + visible_box[1])
+
+    if not subject_tops:
+        raise ValueError("Identity lock needs at least one subject placement")
+    subject_top = min(subject_tops)
+    clearance = round(height * config["subject_clearance_ratio"])
+    configured_limit = round(
+        height * config["max_protected_start_ratio"]
+    )
+    protected_start = min(configured_limit, subject_top - clearance)
+    transition_height = max(
+        1,
+        round(height * config["transition_ratio"]),
+    )
+    transition_start = protected_start - transition_height
+    if transition_start < 0 or protected_start <= transition_start:
+        raise ValueError(
+            "Identity-lock subjects leave no safe upper context region; "
+            "reduce their size or artwork.identity_lock transition/clearance"
+        )
+    if subject_top < protected_start + clearance:
+        raise ValueError(
+            "Identity-lock subject clearance could not be preserved"
+        )
 
     alpha = Image.new("L", (width, height), 255)
     alpha_draw = ImageDraw.Draw(alpha)
     alpha_draw.rectangle((0, 0, width, transition_start), fill=0)
-    transition_height = protected_start - transition_start
     for y in range(transition_start, protected_start):
         value = round(255 * (y - transition_start) / transition_height)
         alpha_draw.line((0, y, width, y), fill=value)
@@ -271,6 +300,7 @@ def build_upper_context_mask(
         format="PNG",
         optimize=True,
     )
+    return transition_start, protected_start
 
 
 def build_scene_reference(
@@ -322,7 +352,13 @@ def build_scene_reference(
         width,
         height,
         placements,
+        manifest,
         reference_dir,
+    )
+    scope_data = load_json(SCOPE_DATA / f"{scope}.json")
+    (reference_dir / IDENTITY_LOCK_PROMPT_FILE).write_text(
+        build_identity_lock_prompt(manifest, scope_data) + "\n",
+        encoding="utf-8",
     )
     # FLUX.1 Canny uses the exact reviewed figures only as line geometry. A
     # white opaque canvas prevents the LoadImage alpha channel from turning the
@@ -398,7 +434,6 @@ def prepare(scope: str, megapixels: float = 1.0) -> Path:
     work_dir = scope_dir / "comfyui_poster"
     required = (
         scope_dir / "poster.yaml",
-        work_dir / "prompt.txt",
         scope_dir / "cutouts" / "manifest.json",
     )
     for path in required:

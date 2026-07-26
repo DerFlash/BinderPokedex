@@ -13,8 +13,10 @@ The promoted scopes currently are:
 - `SV03.5`: Bulbasaur, Charmander, and Squirtle in a Kanto coastal meadow for
   Scarlet & Violet - 151.
 
-Both use the same `3x3` physical-card layout and the same generator code. Any
-subject-specific compensation lives in the scope manifest.
+Both use the same `3x3` physical-card layout and the same generator code. Scene
+briefs, technical identity-lock bounds, and any rare subject-specific
+compensation live in the scope manifest. New `3x3`, `4x3`, and `4x4` scopes use
+the same code path.
 
 ## Files
 
@@ -32,7 +34,6 @@ logos/
 comfyui_poster/
   prompt.txt
   inpaint_prompt.txt
-  identity_lock_prompt.txt
   anima_prompt.txt
   flux1_canny_prompt.txt
   qwen_edit_prompt.txt
@@ -45,11 +46,15 @@ Only reviewed source assets and the final render belong in this directory.
 Generator previews, masks, model workflows, and other iteration artifacts are
 local scratch data and must not be committed.
 
-The local ComfyUI flow keeps its reviewed prompts in `comfyui_poster/`. Generated
-scene references, identity references, API workflows, temporary files, raw
-artwork, and iteration previews are ignored. A candidate enters source control
-only through the explicit transactional promotion step, together with its
-provenance record.
+The legacy experimental engines keep their reviewed prompts in
+`comfyui_poster/`. The production identity-lock prompt is built from the
+reviewed `artwork.scene` brief in `poster.yaml` plus one central immutable-source
+contract. Its exact `identity_lock_prompt.generated.txt` snapshot is hashed into
+run provenance but ignored as local scratch. Generated scene references,
+identity references, API workflows, masks, temporary files, raw artwork, and
+iteration previews are also ignored. A candidate enters source control only
+through the explicit transactional promotion step, together with its provenance
+record.
 
 ## Layout rules
 
@@ -74,6 +79,40 @@ The `Base1` layout is:
 ```
 
 ## Workflow
+
+Initialize another individual TCG set directly from
+`data/output/<scope>.json`:
+
+```bash
+venv/bin/python scripts/poster_assets/init_poster_scope.py \
+  --scope SV04 --layout standard_3x3 --fetch
+```
+
+The initializer creates an identity-lock manifest from the reviewed Base1 model
+contract, derives a stable scope seed, configures every available localized
+logo, selects the layout column count, and optionally fetches the transparent
+featured Pokemon and logos. It rejects aggregate scopes that cannot provide one
+unambiguous set name and publication date. PDF integration starts disabled and
+is enabled in the reviewed manifest immediately before promotion.
+
+Without an explicit `artwork.scene` block, the generated scene prompt uses the
+set name, series, and release year plus a neutral landscape brief. A scope can
+replace only the creative fields while the source-pixel, continuous-ground,
+safe-area, no-text, no-path, and no-landing-pad rules remain central:
+
+```yaml
+artwork:
+  scene:
+    concept: a Kanto collection
+    setting: >-
+      A quiet coastal meadow with layered woodland, distant hills, weathered
+      coastal forms, and a glimpse of a calm blue bay.
+    lighting: Warm late-afternoon sunlight enters from the upper left.
+    rendering: >-
+      Use clean linework, restrained natural colors, and gentle atmospheric
+      depth.
+    ground_noun: meadow
+```
 
 Fetch transparent official-artwork cutouts:
 
@@ -171,6 +210,11 @@ typography. This produces a 2368 x 3268 px poster and nine 750 x 1050 px cards.
 The exact figures enter the ComfyUI graph between the two passes; the final pass
 sees their composition but cannot edit their protected lower band.
 
+Overscan scales with the target dimensions and remains latent-aligned. The
+second-pass protection band normally reaches 70 percent of the image height; if
+an unusually tall reviewed subject begins above that boundary, the mask moves
+up automatically and retains configurable clearance above its silhouette.
+
 The FLUX and Anima branches are independent and can be compared with identical
 inputs. `both` runs them sequentially and keeps engine-specific final filenames:
 
@@ -183,7 +227,7 @@ venv/bin/python scripts/poster_assets/run_comfyui_poster.py \
 | --- | --- | --- | --- | --- |
 | FLUX.2 Klein edit | `prompt.txt` | `scene_reference.png` | `workflow_api_edit_<size>_<seed>.json` | `_flux_edit_..._poster_` |
 | FLUX.2 Klein inpaint | `inpaint_prompt.txt` | `inpaint_reference.png` | `workflow_api_inpaint_<size>_<seed>.json` | `_flux_inpaint_..._poster_` |
-| FLUX.2 source-pixel lock | `identity_lock_prompt.txt` | `inpaint_reference.png`, `upper_context_mask.png` | `workflow_api_identity_lock_<size>_<seed>.json` | `_flux_identity_lock_..._poster_` |
+| FLUX.2 source-pixel lock | generated from `poster.yaml` | `inpaint_reference.png`, `upper_context_mask.png` | `workflow_api_identity_lock_<size>_<seed>.json` | `_flux_identity_lock_..._poster_` |
 | AnimaEdit | `anima_prompt.txt` | `anima_scene_reference.png` | `anima_workflow_api.json` | `_anima_poster_` |
 | FLUX.1 Dev Canny | `flux1_canny_prompt.txt` | `structure_reference.png` | `flux1_canny_workflow_api_<size>_<seed>.json` | `_flux1_canny_..._poster_` |
 | Qwen Image Edit 2511 | `qwen_edit_prompt.txt` | composition plus two identity sheets | `qwen_edit_workflow_api_<size>_<seed>.json` | `_qwen_edit_..._poster_` |
@@ -279,6 +323,12 @@ does intentionally give up free landscape occlusion across the protected
 silhouettes. The lower band is one shared, low-detail ground plane rather than
 three clearings, so that tradeoff does not reintroduce landing pads.
 
+Immediately after ComfyUI returns the 1 MP artwork, the runner compares every
+fully opaque source pixel with `inpaint_reference.png`. A one-value RGB
+difference is a hard failure before upscaling, typography, or promotion. The
+validation method, compared pixel count, and zero-change result are stored in
+the run provenance and required again by `validate_promoted_poster.py`.
+
 FLUX.2 Klein 4B generation remains stochastic in `edit` and direct `inpaint`
 modes. It can invent anatomy adjacent to a silhouette or reinterpret a supplied
 subject even at higher resolution. Those candidates remain hard rejects; source
@@ -340,9 +390,10 @@ complete limbs and tail, with additional clear space above and to the right.
 No adjacent generated shape reads as extra anatomy.
 
 The promoted SV03.5 candidate uses the same model and topology with seed
-`260726101`. It was sampled at 0.5 MP, upscaled as one complete text-free scene
-to 300 dpi, and visually checked both as a whole and as the three separate bottom-card
-crops. No Base1 conditioning override is applied.
+`260726101`. Both passes run at 1 MP before the complete text-free scene is
+model-upscaled to 300 dpi. Its 62,719 fully opaque source pixels compare exactly,
+and the complete poster plus all three bottom-card crops were visually checked.
+No Base1 subject-conditioning override is applied.
 
 FLUX.2 Klein 9B FP8 with the 8B FP4-mixed encoder was also validated technically
 on MPS after adding CPU-side NVFP4 dequantization. On a 16 GB M4, however, prompt
@@ -406,7 +457,8 @@ first section cover.
 
 ## Current boundary
 
-Base1 and SV03.5 now both have promoted text-free artwork, deterministic localized
-overlays, card-slice exports, and complete PDF integration. Additional scopes opt
-in through their own `poster.yaml` only after a text-free artwork passes the same
-whole-poster, per-card, and rendered-PDF review.
+Base1 and SV03.5 now both have promoted identity-lock artwork, exact-source-pixel
+validation, deterministic localized overlays, card-slice exports, and complete
+PDF integration. Additional individual TCG sets can be initialized from their
+existing scope data, but opt into PDF generation only after their text-free
+artwork passes the same whole-poster, per-card, and rendered-PDF review.

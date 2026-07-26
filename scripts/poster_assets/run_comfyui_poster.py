@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from PIL import Image, ImageStat
+from PIL import Image, ImageChops, ImageStat
 
 try:
     from .create_anima_poster_workflow import write_workflow as write_anima_workflow
@@ -102,6 +102,56 @@ def validate_raw_artwork(path: Path) -> None:
     variation = ImageStat.Stat(image).stddev
     if max(high for _low, high in extrema) < 12 or max(variation) < 2.0:
         raise RuntimeError(f"ComfyUI produced blank or near-constant artwork: {path}")
+
+
+def validate_identity_lock_pixels(
+    scope: str,
+    raw_artwork: Path,
+    reference_path: Path | None = None,
+) -> dict[str, int | str | bool]:
+    """Require every fully opaque source pixel to survive diffusion unchanged."""
+    reference_path = reference_path or (
+        Path(__file__).resolve().parents[2]
+        / "data"
+        / "poster_assets"
+        / scope
+        / "comfyui_poster"
+        / "inpaint_reference.png"
+    )
+    reference = Image.open(reference_path).convert("RGBA")
+    artwork = Image.open(raw_artwork).convert("RGB")
+    if artwork.size != reference.size:
+        raise ValueError(
+            "Identity-lock source and raw artwork dimensions differ: "
+            f"{reference.size} != {artwork.size}"
+        )
+
+    alpha = reference.getchannel("A")
+    opaque_pixels = alpha.histogram()[255]
+    if opaque_pixels <= 0:
+        raise ValueError(
+            f"Identity-lock reference has no fully opaque source pixels: "
+            f"{reference_path}"
+        )
+    opaque_mask = alpha.point(lambda value: 255 if value == 255 else 0)
+    difference = ImageChops.difference(
+        artwork,
+        reference.convert("RGB"),
+    )
+    opaque_difference = Image.new("RGB", artwork.size)
+    opaque_difference.paste(difference, mask=opaque_mask)
+    changed_box = opaque_difference.getbbox()
+    if changed_box is not None:
+        raise RuntimeError(
+            "Identity-lock output changed fully opaque source pixels inside "
+            f"{changed_box}: {raw_artwork}"
+        )
+    return {
+        "method": "exact_opaque_source_pixels",
+        "opaque_pixels": opaque_pixels,
+        "changed_pixels": 0,
+        "passed": True,
+    }
 
 
 def resize_artwork(scope: str, source: Path, destination: Path, megapixels: float) -> Path:
@@ -299,6 +349,12 @@ def run(
     if not raw_path.is_file():
         raise FileNotFoundError(f"ComfyUI reported an output that does not exist: {raw_path}")
     validate_raw_artwork(raw_path)
+    validation: dict[str, object] = {}
+    if engine == "flux" and flux_mode == "identity_lock":
+        validation["identity_lock"] = validate_identity_lock_pixels(
+            scope,
+            raw_path,
+        )
     final_megapixels = output_megapixels or megapixels
     if engine == "flux":
         if flux_mode == "identity_lock":
@@ -461,6 +517,7 @@ def run(
             if upscale_workflow_path is not None
             else None
         ),
+        validation=validation or None,
     )
     return raw_path, artwork_path, final_path, run_metadata_path
 

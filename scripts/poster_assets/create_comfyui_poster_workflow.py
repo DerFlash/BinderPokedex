@@ -9,12 +9,27 @@ from pathlib import Path
 
 try:
     from .layout import build_page_layout
-    from .poster_config import build_identity_reference_prompt
-    from .poster_io import load_cutout_items, load_yaml
+    from .poster_config import (
+        IDENTITY_LOCK_PROMPT_FILE,
+        build_identity_lock_prompt,
+        build_identity_reference_prompt,
+        identity_lock_overscan,
+    )
+    from .poster_io import (
+        SCOPE_DATA,
+        load_cutout_items,
+        load_json,
+        load_yaml,
+    )
 except ImportError:
     from layout import build_page_layout
-    from poster_config import build_identity_reference_prompt
-    from poster_io import load_cutout_items, load_yaml
+    from poster_config import (
+        IDENTITY_LOCK_PROMPT_FILE,
+        build_identity_lock_prompt,
+        build_identity_reference_prompt,
+        identity_lock_overscan,
+    )
+    from poster_io import SCOPE_DATA, load_cutout_items, load_json, load_yaml
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -75,13 +90,19 @@ def build_workflow(
     if generation_mode == "inpaint":
         prompt_name = "inpaint_prompt.txt"
     elif generation_mode == "identity_lock":
-        prompt_name = "identity_lock_prompt.txt"
+        prompt_name = None
     else:
         prompt_name = "prompt.txt"
-    prompt_path = work_dir / prompt_name
-    prompt = prompt_path.read_text(encoding="utf-8").strip()
-    if not prompt:
-        raise ValueError(f"Prompt is empty: {prompt_path}")
+    if prompt_name is None:
+        prompt = build_identity_lock_prompt(
+            manifest,
+            load_json(SCOPE_DATA / f"{scope}.json"),
+        )
+    else:
+        prompt_path = work_dir / prompt_name
+        prompt = prompt_path.read_text(encoding="utf-8").strip()
+        if not prompt:
+            raise ValueError(f"Prompt is empty: {prompt_path}")
     if generation_mode == "edit" and reference_mode == "identity":
         prompt = "\n\n".join(
             (
@@ -204,8 +225,11 @@ def build_workflow(
         # context. The reviewed source figures are then placed on that common
         # ground before pass two. Pass two sees their exact final composition
         # but may edit only the upper scene, safely away from every silhouette.
-        stage_one_width = width + 32
-        stage_one_height = height + 48
+        stage_one_width, stage_one_height = identity_lock_overscan(
+            width,
+            height,
+            manifest,
+        )
         workflow["15"] = node(
             "EmptySD3LatentImage",
             width=stage_one_width,
@@ -293,18 +317,24 @@ def write_workflow(
         f"workflow_api_{generation_mode}_"
         f"{megapixel_marker(megapixels)}_{seed}.json"
     )
+    workflow = build_workflow(
+        scope,
+        seed,
+        megapixels,
+        unet_name=unet_name,
+        generation_mode=generation_mode,
+        steps=steps,
+        reference_mode=reference_mode,
+        clip_name=clip_name,
+    )
+    if generation_mode == "identity_lock":
+        (target_dir / IDENTITY_LOCK_PROMPT_FILE).write_text(
+            str(workflow["4"]["inputs"]["text"]).strip() + "\n",
+            encoding="utf-8",
+        )
     out_path.write_text(
         json.dumps(
-            build_workflow(
-                scope,
-                seed,
-                megapixels,
-                unet_name=unet_name,
-                generation_mode=generation_mode,
-                steps=steps,
-                reference_mode=reference_mode,
-                clip_name=clip_name,
-            ),
+            workflow,
             indent=2,
         )
         + "\n",

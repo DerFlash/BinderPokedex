@@ -3,133 +3,133 @@
   "kind": "promoted_poster",
   "outputs": {
     "artwork": {
-      "bytes": 3341760,
+      "bytes": 3453830,
       "dpi": [
         299.9994,
         299.9994
       ],
       "file": "data/poster_assets/Base1/poster-flux2-artwork.png",
       "height": 3268,
-      "sha256": "403923ffb731f945615fa40c7f21ebeea1271aef6e4647f7dcd9228983142600",
+      "sha256": "4f3f64428c904ec8f401964561cf4efabff36dccd74d9aaa7902babff12ca9ab",
       "width": 2368
     },
     "cards": [
       {
-        "bytes": 52015,
+        "bytes": 53655,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r1_c1.png",
         "height": 1050,
-        "sha256": "52861a6fa6ba518fccad4b91abb7f0ad333afe1617bb849f168d273dec1b3715",
+        "sha256": "8e8838e29fa287e57573c325b1494760addf47ed25d36fa63d3b89b22975a099",
         "width": 750
       },
       {
-        "bytes": 185895,
+        "bytes": 187801,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r1_c2.png",
         "height": 1050,
-        "sha256": "bcad11551c322a6bd7f4444e5f978ab788def959694b1cbfd46a14d0df35ae75",
+        "sha256": "78ef1194de5e669539e6be3e876c3cbdacdd8887723766a3449be5e7a74e35f6",
         "width": 750
       },
       {
-        "bytes": 90640,
+        "bytes": 93493,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r1_c3.png",
         "height": 1050,
-        "sha256": "a2cbc81abb2bf3943d8a0fcf9895aa20f385b29f1dab2e36e4fb2fcdb9fa2a63",
+        "sha256": "3318ccb22a6e8b4d0df0d7a5e31f8eb78adaa51c759a87841811c7050eee701a",
         "width": 750
       },
       {
-        "bytes": 497096,
+        "bytes": 509773,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r2_c1.png",
         "height": 1050,
-        "sha256": "866dc2a8556cb03f4e266f4082366146f46e8bb4069c1a24ae32cb739c0d2e6a",
+        "sha256": "fe8c2ddae41bb1a493c17f1138cdcf6bded6e16495291a2a4e00588897e4af60",
         "width": 750
       },
       {
-        "bytes": 259657,
+        "bytes": 281119,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
-        "sha256": "b0486a325e356145c388feb2ac191ccb807d3acb436b08288b5f91f3c9ed5db2",
+        "sha256": "d902d3c1f0f90c3ac2b0ec97fa018818be68f09cfba01a32840eb8aff626dfc3",
         "width": 750
       },
       {
-        "bytes": 575207,
+        "bytes": 589680,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r2_c3.png",
         "height": 1050,
-        "sha256": "cc820d78db60516797ac26410b2507cf763d9f49437629df9e9255cf2a979361",
+        "sha256": "2690bdcb1bfd5231528c76ea5e92227a18afb966f9bed3f53706d1460579f6eb",
         "width": 750
       },
       {
-        "bytes": 502228,
+        "bytes": 523673,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r3_c1.png",
         "height": 1050,
-        "sha256": "305438e65f7b43dba2783386b3e49a083e54234338ca4a3d92929ae423b3c60f",
+        "sha256": "c5ac2edf249d88f594cfbce12259c34c2d6d16deac684b2efa20586e9c1048e2",
         "width": 750
       },
       {
-        "bytes": 425265,
+        "bytes": 435795,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r3_c2.png",
         "height": 1050,
-        "sha256": "54f03ab270b953eb7de7ab43ecfd432d51f5f16a41528d1c5bd16d7adb50908b",
+        "sha256": "99b6b0bf5ff3b85899587ec8894e8398278d8509a6af42a220f5a04786bd25e8",
         "width": 750
       },
       {
-        "bytes": 546478,
+        "bytes": 537157,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r3_c3.png",
         "height": 1050,
-        "sha256": "52999e67f36a9603e1cef100c1b1a5eba8320acb672986a66beb1dc4380b6a49",
+        "sha256": "db2322b20f67333f6fa7933316ffc3c36437d592c6245b44d90542b5ec8e6586",
         "width": 750
       }
     ],
     "preview": {
-      "bytes": 3359326,
+      "bytes": 3479863,
       "dpi": [
         299.9994,
         299.9994
       ],
       "file": "data/poster_assets/Base1/poster-flux2.png",
       "height": 3268,
-      "sha256": "1a067003811d89f8f4cc1b501fee7de1f516f447ab714f763589b8c56efdfb43",
+      "sha256": "f5eb9411fb0d3415bceb903d71437ab1048a82c56639f3031b9567bf47a3ceed",
       "width": 2368
     }
   },
   "preview_language": "en",
-  "promoted_at": "2026-07-26T12:20:12.809951+00:00",
+  "promoted_at": "2026-07-26T13:31:08.354132+00:00",
   "run": {
-    "created_at": "2026-07-26T12:19:18.034626+00:00",
+    "created_at": "2026-07-26T13:29:59.419814+00:00",
     "generation": {
       "encoder": "qwen_3_4b.safetensors",
       "encoder_sha256": "6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a",
@@ -178,9 +178,9 @@
         }
       ],
       "prompt": {
-        "bytes": 1656,
-        "file": "data/poster_assets/Base1/comfyui_poster/identity_lock_prompt.txt",
-        "sha256": "f8c1b33302b971bd5fc29aa6cdd1b279b47ffe4d054c9fbc0309b8e033c7f45a"
+        "bytes": 1664,
+        "file": "data/poster_assets/Base1/comfyui_poster/identity_lock_prompt.generated.txt",
+        "sha256": "4f5cf44ba6c19d766cfb2009a5fe8d6b04e61c86f08f703b0f6b2d288915f62f"
       },
       "references": [
         {
@@ -199,41 +199,49 @@
         }
       ],
       "scope_manifest": {
-        "bytes": 2291,
+        "bytes": 3090,
         "file": "data/poster_assets/Base1/poster.yaml",
-        "sha256": "e2715b8daafa2dcde839c0945c9808ae4889827f1b0d2be5d5beb9f5e557d041"
+        "sha256": "2499ac743450c51e1496e800d47d14f880ea999dca2aabc4eed68ffee4647e02"
       },
       "upscale_workflow": {
         "bytes": 897,
         "file": "data/poster_assets/Base1/comfyui_poster/workflow_api_upscale_300dpi.json",
-        "sha256": "ebd2ba589b68dfe266a7ac57faf55ef95e306a2078e6fda294322bec46a343a7"
+        "sha256": "a2f8b5a0b02a5bc6b4362e85e72ab3df68ca95d5b31bcc82197dd68713030974"
       },
       "workflow": {
-        "bytes": 5879,
+        "bytes": 5868,
         "file": "data/poster_assets/Base1/comfyui_poster/workflow_api_identity_lock_1mp_260726503.json",
-        "sha256": "6cb40c479c7610a585aa1c48359584bbc2d2e3307923c788354e42bf7667c841"
+        "sha256": "afedbd7dc0ce0669b12de01188c98c331914f2916558953dd16af5a3c322cc68"
       }
     },
     "kind": "poster_generation_run",
     "raw_artwork": {
-      "bytes": 1468811,
-      "file": "data/poster_assets/Base1/comfyui_poster/output/base1_flux2_identity_lock_1mp_scene_seed_260726503_00002_.png",
+      "bytes": 1447757,
+      "file": "data/poster_assets/Base1/comfyui_poster/output/base1_flux2_identity_lock_1mp_scene_seed_260726503_00001_.png",
       "height": 1168,
-      "sha256": "cd0f0bd56d57cdc57c4dc2878987dd0614896abd323e87e7dcd9ccb8ce30ad8d",
+      "sha256": "c31f9245c148ad48d8c53034dfce79f949e271af19bb4a6f1bdb5b8c817c5379",
       "width": 848
     },
     "schema_version": 1,
     "scope": "Base1",
     "source_artwork": {
-      "bytes": 3341760,
+      "bytes": 3453830,
       "dpi": [
         299.9994,
         299.9994
       ],
-      "file": "data/poster_assets/Base1/comfyui_poster/temp/base1_print_300dpi_RealESRGAN_x4plus_anime_6B_00005__print.png",
+      "file": "data/poster_assets/Base1/comfyui_poster/temp/base1_print_300dpi_RealESRGAN_x4plus_anime_6B_00001__print.png",
       "height": 3268,
-      "sha256": "403923ffb731f945615fa40c7f21ebeea1271aef6e4647f7dcd9228983142600",
+      "sha256": "4f3f64428c904ec8f401964561cf4efabff36dccd74d9aaa7902babff12ca9ab",
       "width": 2368
+    },
+    "validation": {
+      "identity_lock": {
+        "changed_pixels": 0,
+        "method": "exact_opaque_source_pixels",
+        "opaque_pixels": 52584,
+        "passed": true
+      }
     }
   },
   "schema_version": 1,

@@ -3,6 +3,308 @@ from __future__ import annotations
 
 from typing import Any
 
+try:
+    from .layout import resolve_layout_name
+except ImportError:
+    from layout import resolve_layout_name
+
+
+IDENTITY_LOCK_PROMPT_FILE = "identity_lock_prompt.generated.txt"
+DEFAULT_IDENTITY_LOCK = {
+    "overscan_ratio": 0.04,
+    "max_protected_start_ratio": 0.70,
+    "transition_ratio": 0.10,
+    "subject_clearance_ratio": 0.02,
+}
+
+
+def _mapping(value: object, path: str) -> dict[str, Any]:
+    if value is None:
+        return {}
+    if not isinstance(value, dict):
+        raise ValueError(f"{path} must be a mapping")
+    return value
+
+
+def _text(value: object, path: str, *, default: str = "") -> str:
+    if value is None:
+        return default
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{path} must be a non-empty string")
+    return value.strip()
+
+
+def identity_lock_config(manifest: dict[str, Any]) -> dict[str, float]:
+    """Return validated, scope-overridable source-pixel-lock geometry."""
+    artwork = _mapping(manifest.get("artwork"), "artwork")
+    configured = _mapping(
+        artwork.get("identity_lock"),
+        "artwork.identity_lock",
+    )
+    result = {
+        key: float(configured.get(key, default))
+        for key, default in DEFAULT_IDENTITY_LOCK.items()
+    }
+    if not 0.0 < result["overscan_ratio"] <= 0.20:
+        raise ValueError(
+            "artwork.identity_lock.overscan_ratio must be between 0 and 0.20"
+        )
+    if not 0.45 <= result["max_protected_start_ratio"] <= 0.85:
+        raise ValueError(
+            "artwork.identity_lock.max_protected_start_ratio must be "
+            "between 0.45 and 0.85"
+        )
+    if not 0.02 <= result["transition_ratio"] <= 0.25:
+        raise ValueError(
+            "artwork.identity_lock.transition_ratio must be between 0.02 and 0.25"
+        )
+    if not 0.0 <= result["subject_clearance_ratio"] <= 0.10:
+        raise ValueError(
+            "artwork.identity_lock.subject_clearance_ratio must be "
+            "between 0 and 0.10"
+        )
+    if (
+        result["transition_ratio"]
+        >= result["max_protected_start_ratio"]
+    ):
+        raise ValueError(
+            "artwork.identity_lock.transition_ratio must be smaller than "
+            "max_protected_start_ratio"
+        )
+    return result
+
+
+def identity_lock_overscan(
+    width: int,
+    height: int,
+    manifest: dict[str, Any],
+) -> tuple[int, int]:
+    """Return latent-aligned stage-one dimensions for any poster layout."""
+    if width <= 0 or height <= 0:
+        raise ValueError("Poster dimensions must be positive")
+    ratio = identity_lock_config(manifest)["overscan_ratio"]
+
+    def expanded(value: int) -> int:
+        result = round((value * (1.0 + ratio)) / 16) * 16
+        if result <= value:
+            result = value + 16
+        return result
+
+    return expanded(width), expanded(height)
+
+
+def _layout_region(
+    row: int,
+    column: int,
+    rows: int,
+    columns: int,
+) -> str:
+    if not 1 <= row <= rows or not 1 <= column <= columns:
+        raise ValueError(
+            f"Text cell ({row}, {column}) lies outside {columns}x{rows} layout"
+        )
+
+    if rows == 1:
+        vertical = ""
+    elif row == 1:
+        vertical = "upper"
+    elif row == rows:
+        vertical = "lower"
+    elif rows == 3 and row == 2:
+        vertical = "middle"
+    else:
+        vertical = f"row-{row}"
+
+    if columns == 1:
+        horizontal = "center"
+    elif columns == 2:
+        horizontal = ("left", "right")[column - 1]
+    elif columns == 3:
+        horizontal = ("left", "center", "right")[column - 1]
+    else:
+        horizontal = f"column-{column}"
+    return "-".join(part for part in (vertical, horizontal) if part)
+
+
+def _safe_area_sentence(
+    manifest: dict[str, Any],
+    scene: dict[str, Any],
+) -> str:
+    explicit = scene.get("safe_areas")
+    if explicit is not None:
+        return _text(
+            explicit,
+            "artwork.scene.safe_areas",
+        )
+
+    layout_name = _mapping(manifest.get("layout"), "layout").get(
+        "name",
+        "standard_3x3",
+    )
+    layout = resolve_layout_name(str(layout_name))
+    rows = int(layout["rows"])
+    columns = int(layout["columns"])
+    text_cells = _mapping(manifest.get("text_cells"), "text_cells")
+    title = _mapping(
+        text_cells.get("title", {"row": 1, "column": max(1, (columns + 1) // 2)}),
+        "text_cells.title",
+    )
+    information = _mapping(
+        text_cells.get(
+            "set_info",
+            {"row": min(2, rows), "column": max(1, (columns + 1) // 2)},
+        ),
+        "text_cells.set_info",
+    )
+    title_region = _layout_region(
+        int(title["row"]),
+        int(title["column"]),
+        rows,
+        columns,
+    )
+    information_region = _layout_region(
+        int(information["row"]),
+        int(information["column"]),
+        rows,
+        columns,
+    )
+    if title_region == information_region:
+        return (
+            f"Keep the {title_region} area visually calm for later exact "
+            "set identification and information."
+        )
+    return (
+        f"Keep the {title_region} area visually calm for a later exact set "
+        f"logo and the {information_region} area calm for later deterministic "
+        "set information."
+    )
+
+
+def _default_scene_concept(
+    manifest: dict[str, Any],
+    scope_data: dict[str, Any],
+) -> str:
+    set_name = str(
+        scope_data.get("name")
+        or manifest.get("scope")
+        or "this card set"
+    ).strip()
+    series = str(
+        scope_data.get("serie_name")
+        or scope_data.get("serie")
+        or ""
+    ).strip()
+    release_date = str(scope_data.get("release_date") or "").strip()
+    year = release_date[:4] if len(release_date) >= 4 else ""
+    details = f"the {set_name} expansion"
+    if series and series.lower() not in set_name.lower():
+        series_label = (
+            series
+            if series.lower().endswith("series")
+            else f"{series} series"
+        )
+        details += f" from the {series_label}"
+    if year.isdigit():
+        details += f", released in {year}"
+    return f"a creature-collecting card-set collection inspired by {details}"
+
+
+def build_identity_lock_prompt(
+    manifest: dict[str, Any],
+    scope_data: dict[str, Any],
+) -> str:
+    """Build the production landscape prompt from one scope's creative brief.
+
+    The manifest controls only the creative scene. The source-pixel contract,
+    layout-safe regions, continuous-ground rule, and graphic exclusions remain
+    centralized so a newly initialized scope cannot silently omit them.
+    """
+    artwork = _mapping(manifest.get("artwork"), "artwork")
+    scene = _mapping(artwork.get("scene"), "artwork.scene")
+    concept = _text(
+        scene.get("concept"),
+        "artwork.scene.concept",
+        default=_default_scene_concept(manifest, scope_data),
+    )
+    setting = _text(
+        scene.get("setting"),
+        "artwork.scene.setting",
+        default=(
+            "The artwork contains a broad natural landscape whose terrain, "
+            "flora, distant landmarks, and atmosphere subtly echo the set's "
+            "theme without copying existing card art."
+        ),
+    )
+    lighting = _text(
+        scene.get("lighting"),
+        "artwork.scene.lighting",
+        default="Soft directional daylight enters from the upper left.",
+    )
+    rendering = _text(
+        scene.get("rendering"),
+        "artwork.scene.rendering",
+        default=(
+            "Use polished trading-card illustration, clean cel-painted "
+            "linework, restrained natural colors, and gentle atmospheric depth."
+        ),
+    )
+    ground_noun = _text(
+        scene.get("ground_noun"),
+        "artwork.scene.ground_noun",
+        default="ground",
+    )
+    safe_areas = _safe_area_sentence(manifest, scene)
+    additional = scene.get("constraints", [])
+    if isinstance(additional, str):
+        additional = [additional]
+    if not isinstance(additional, list) or not all(
+        isinstance(item, str) and item.strip() for item in additional
+    ):
+        raise ValueError(
+            "artwork.scene.constraints must be a string or list of strings"
+        )
+
+    opening = " ".join(
+        part.strip()
+        for part in (setting, lighting, rendering, *additional)
+        if part.strip()
+    )
+    return "\n\n".join(
+        (
+            (
+                "Create one cohesive full-bleed vertical scene for "
+                f"{concept}. {opening}"
+            ),
+            (
+                "The complete protected lower subject band is one continuous "
+                f"low {ground_noun} surface with only short, low-contrast "
+                "texture and soft horizontal shadows. It is a single natural "
+                "ground plane, never separate clearings, halos, platforms, "
+                "circles, or landing pads. Put no tall plants, flowers, rocks, "
+                "bushes, branches, strong color patches, hard-edged shadows, "
+                "vertical strokes, or isolated foreground objects in this "
+                "lower band."
+            ),
+            (
+                "If finished opaque source subjects are visible, they are the "
+                "exact final cast and their final composition. Treat every "
+                "source pixel as immutable. Build one consistent environment "
+                "for them without replacing, continuing, tracing, redrawing, "
+                "echoing, duplicating, or adding anatomy to them. Draw no "
+                "additional living subject, face, eyes, body, mascot, animal, "
+                "creature, person, trainer, statue, silhouette, or "
+                "character-shaped plant anywhere."
+            ),
+            (
+                "Fill the image naturally to every edge with no margin, page, "
+                f"frame, or border. {safe_areas} The {ground_noun} is "
+                "continuous, with no path or route. Do not draw text, letters, "
+                "numbers, logos, title art, boxes, plaques, panels, cards, "
+                "borders, UI, watermarks, or crop marks."
+            ),
+        )
+    )
+
 
 def subject_conditioning(
     manifest: dict[str, Any], item: dict[str, Any]

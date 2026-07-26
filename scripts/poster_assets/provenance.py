@@ -9,6 +9,11 @@ from typing import Any
 
 from PIL import Image
 
+try:
+    from .poster_config import IDENTITY_LOCK_PROMPT_FILE
+except ImportError:
+    from poster_config import IDENTITY_LOCK_PROMPT_FILE
+
 
 ROOT = Path(__file__).resolve().parents[2]
 POSTER_ASSETS = ROOT / "data" / "poster_assets"
@@ -103,6 +108,7 @@ def file_record(path: Path, *, image: bool = False) -> dict[str, Any]:
 def prompt_path_for_generation(
     work_dir: Path,
     generation: dict[str, Any],
+    workflow_path: Path | None = None,
 ) -> Path:
     engine = str(generation.get("engine", ""))
     mode = str(generation.get("mode", ""))
@@ -113,7 +119,8 @@ def prompt_path_for_generation(
     if engine == "qwen_edit":
         return work_dir / "qwen_edit_prompt.txt"
     if engine == "flux" and mode == "identity_lock":
-        return work_dir / "identity_lock_prompt.txt"
+        prompt_dir = workflow_path.parent if workflow_path is not None else work_dir
+        return prompt_dir / IDENTITY_LOCK_PROMPT_FILE
     if engine == "flux" and mode == "inpaint":
         return work_dir / "inpaint_prompt.txt"
     if engine == "flux":
@@ -190,7 +197,11 @@ def generation_input_records(
     return {
         "scope_manifest": file_record(scope_dir / "poster.yaml"),
         "prompt": file_record(
-            prompt_path_for_generation(work_dir, generation),
+            prompt_path_for_generation(
+                work_dir,
+                generation,
+                workflow_path,
+            ),
         ),
         "cutout_manifest": file_record(cutout_manifest_path),
         "cutouts": cutouts,
@@ -208,6 +219,7 @@ def write_run_metadata(
     *,
     raw_artwork_path: Path | None = None,
     additional_workflows: dict[str, Path] | None = None,
+    validation: dict[str, Any] | None = None,
 ) -> Path:
     """Write a sidecar for one generated, text-free candidate."""
     output_path = output_path or artwork_path.with_suffix(".run.json")
@@ -225,6 +237,8 @@ def write_run_metadata(
     }
     if raw_artwork_path is not None:
         payload["raw_artwork"] = file_record(raw_artwork_path, image=True)
+    if validation:
+        payload["validation"] = validation
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
         json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True) + "\n",

@@ -31,7 +31,17 @@ from scripts.poster_assets.layout import (
     build_print_layout,
     effective_dpi,
 )
-from scripts.poster_assets.poster_config import build_identity_reference_prompt
+from scripts.poster_assets.init_poster_scope import (
+    build_default_manifest,
+    stable_scope_seed,
+)
+from scripts.poster_assets.poster_config import (
+    IDENTITY_LOCK_PROMPT_FILE,
+    build_identity_lock_prompt,
+    build_identity_reference_prompt,
+    identity_lock_config,
+    identity_lock_overscan,
+)
 from scripts.poster_assets.provenance import (
     add_model_artifact_hashes,
     generation_input_records,
@@ -45,12 +55,14 @@ from scripts.poster_assets.queue_comfyui_workflow import (
 from scripts.poster_assets.prepare_comfyui_poster import (
     build_identity_references,
     build_scene_reference,
+    build_upper_context_mask,
     card_safe_conditioning_placements,
 )
 from scripts.poster_assets.composition import cutout_placements
 from scripts.poster_assets.typography import wrap_text
 from scripts.poster_assets.run_comfyui_poster import (
     resize_artwork,
+    validate_identity_lock_pixels,
     validate_raw_artwork,
     write_engine_workflow,
 )
@@ -231,6 +243,27 @@ def test_identity_lock_mask_generates_only_above_the_bottom_subject_band(
     assert alpha.getpixel((mask.width // 2, mask.height - 1)) == 255
 
 
+def test_identity_lock_mask_moves_up_for_an_unusually_tall_subject(
+    tmp_path: Path,
+):
+    subject = Image.new("RGBA", (20, 30), (40, 80, 120, 255))
+    transition_start, protected_start = build_upper_context_mask(
+        100,
+        100,
+        [{"image": subject, "x": 40, "y": 55}],
+        {"artwork": {"identity_lock": {"subject_clearance_ratio": 0.02}}},
+        tmp_path,
+    )
+
+    assert protected_start == 53
+    assert transition_start == 43
+    alpha = Image.open(
+        tmp_path / "upper_context_mask.png"
+    ).convert("RGBA").getchannel("A")
+    assert alpha.getpixel((50, transition_start - 1)) == 0
+    assert alpha.getpixel((50, protected_start)) == 255
+
+
 def test_canny_structure_reference_flattens_exact_placements_on_white(
     tmp_path: Path,
 ):
@@ -334,6 +367,145 @@ def test_identity_prompt_is_manifest_driven():
     assert "Beta-specific constraints" in prompt
     assert "crescent marking" in prompt
     assert "Mewtwo" not in prompt
+
+
+def test_identity_lock_scene_prompt_is_scope_and_layout_driven():
+    manifest = {
+        "scope": "Example",
+        "layout": {"name": "wide_4x4"},
+        "text_cells": {
+            "title": {"row": 1, "column": 3},
+            "set_info": {"row": 2, "column": 3},
+        },
+        "artwork": {
+            "scene": {
+                "ground_noun": "shore",
+                "constraints": [
+                    "Distant basalt arches echo the expansion theme.",
+                ],
+            }
+        },
+    }
+    scope_data = {
+        "name": "Aurora Archive",
+        "serie_name": "Example Series",
+        "release_date": "2024-02-03",
+    }
+
+    prompt = build_identity_lock_prompt(manifest, scope_data)
+
+    assert "Aurora Archive expansion" in prompt
+    assert "from the Example Series" in prompt
+    assert "released in 2024" in prompt
+    assert "upper-column-3" in prompt
+    assert "row-2-column-3" in prompt
+    assert "continuous low shore surface" in prompt
+    assert "basalt arches" in prompt
+    assert "source pixel as immutable" in prompt
+    assert "landing pads" in prompt
+    assert "Mewtwo" not in prompt
+
+
+def test_identity_lock_geometry_defaults_scale_with_output_size():
+    manifest: dict = {}
+
+    assert identity_lock_config(manifest) == {
+        "overscan_ratio": 0.04,
+        "max_protected_start_ratio": 0.70,
+        "transition_ratio": 0.10,
+        "subject_clearance_ratio": 0.02,
+    }
+    assert identity_lock_overscan(848, 1168, manifest) == (880, 1216)
+    assert identity_lock_overscan(1696, 2336, manifest) == (1760, 2432)
+
+
+def test_new_tcg_set_manifest_bootstraps_the_dynamic_identity_lock_flow():
+    scope_data = {
+        "type": "tcg_set",
+        "name": "Aurora Archive",
+        "release_date": "2024-02-03",
+        "available_languages": ["de", "en", "fr"],
+        "logo_urls": {
+            "de": "https://example.test/de.png",
+            "en": "https://example.test/en.png",
+            "fr": "https://example.test/fr.png",
+        },
+    }
+    generation_template = {
+        "engine": "flux",
+        "model": "model.safetensors",
+        "model_sha256": "model-hash",
+        "encoder": "encoder.safetensors",
+        "encoder_sha256": "encoder-hash",
+        "vae": "vae.safetensors",
+        "vae_sha256": "vae-hash",
+        "upscale_model": "upscale.pth",
+        "upscale_model_sha256": "upscale-hash",
+    }
+
+    manifest = build_default_manifest(
+        "EX42",
+        scope_data,
+        "wide_4x3",
+        generation_template,
+    )
+
+    assert manifest["scope"] == "EX42"
+    assert manifest["layout"]["name"] == "wide_4x3"
+    assert manifest["pokemon"]["count"] == "auto_from_layout_columns"
+    assert manifest["artwork"]["generation"]["mode"] == "identity_lock"
+    assert (
+        manifest["artwork"]["generation"]["reference_mode"]
+        == "two_pass_source_pixels"
+    )
+    assert manifest["artwork"]["generation"]["seed"] == stable_scope_seed(
+        "EX42"
+    )
+    assert manifest["pdf"]["enabled"] is False
+    assert manifest["title_logo"]["files"] == {
+        "de": "logos/logo-de.png",
+        "en": "logos/logo-en.png",
+        "fr": "logos/logo-fr.png",
+    }
+    prompt = build_identity_lock_prompt(manifest, scope_data)
+    assert "Aurora Archive expansion" in prompt
+    assert "upper-column-2" in prompt
+    assert "middle-column-2" in prompt
+
+
+def test_every_current_tcg_set_bootstraps_without_set_specific_python():
+    root = Path(__file__).resolve().parents[2]
+    generation_template = fetch_cutouts.load_yaml(
+        root / "data" / "poster_assets" / "Base1" / "poster.yaml"
+    )["artwork"]["generation"]
+    checked = []
+    for scope_path in sorted((root / "data" / "output").glob("*.json")):
+        scope_data = fetch_cutouts.load_json(scope_path)
+        if scope_data.get("type") != "tcg_set":
+            continue
+        manifest = build_default_manifest(
+            scope_path.stem,
+            scope_data,
+            "standard_3x3",
+            generation_template,
+        )
+        selected = fetch_cutouts.select_pokemon(
+            manifest,
+            scope_data,
+            3,
+            {},
+        )
+        prompt = build_identity_lock_prompt(manifest, scope_data)
+
+        assert len(selected) == 3
+        assert len({item["pokemon_id"] for item in selected}) == 3
+        assert str(scope_data["name"]) in prompt
+        assert "source pixel as immutable" in prompt
+        checked.append(scope_path.stem)
+
+    assert len(checked) >= 24
+    assert "Base1" in checked
+    assert "SV03.5" in checked
 
 
 def test_localized_title_logo_falls_back_to_english():
@@ -818,6 +990,47 @@ def test_raw_artwork_validation_rejects_blank_output(tmp_path: Path):
         raise AssertionError("blank artwork was accepted")
 
 
+def test_identity_lock_validation_requires_exact_opaque_source_pixels(
+    tmp_path: Path,
+):
+    reference_path = tmp_path / "inpaint_reference.png"
+    raw_path = tmp_path / "raw.png"
+    reference = Image.new("RGBA", (12, 12), (0, 0, 0, 0))
+    for y in range(3, 9):
+        for x in range(2, 10):
+            reference.putpixel((x, y), (40, 120, 210, 255))
+    reference.save(reference_path)
+    raw = Image.new("RGB", reference.size, (230, 220, 180))
+    raw.paste(reference.convert("RGB"), mask=reference.getchannel("A"))
+    raw.save(raw_path)
+
+    validation = validate_identity_lock_pixels(
+        "Example",
+        raw_path,
+        reference_path,
+    )
+
+    assert validation == {
+        "method": "exact_opaque_source_pixels",
+        "opaque_pixels": 48,
+        "changed_pixels": 0,
+        "passed": True,
+    }
+
+    raw.putpixel((4, 5), (41, 120, 210))
+    raw.save(raw_path)
+    try:
+        validate_identity_lock_pixels(
+            "Example",
+            raw_path,
+            reference_path,
+        )
+    except RuntimeError as error:
+        assert "changed fully opaque source pixels" in str(error)
+    else:
+        raise AssertionError("Changed identity-lock source pixel was accepted")
+
+
 def test_resize_artwork_uses_requested_poster_dimensions(tmp_path: Path):
     source = tmp_path / "source.png"
     destination = tmp_path / "resized.png"
@@ -893,7 +1106,7 @@ def test_identity_lock_provenance_excludes_unused_edit_references(
     Image.new("RGB", (8, 8), (10, 20, 30)).save(
         work_dir / "identity_reference_1.png"
     )
-    (work_dir / "identity_lock_prompt.txt").write_text(
+    (work_dir / IDENTITY_LOCK_PROMPT_FILE).write_text(
         "scene",
         encoding="utf-8",
     )
