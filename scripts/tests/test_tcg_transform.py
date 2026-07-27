@@ -213,6 +213,48 @@ class TestCardTransformation:
         # Variants as separate fields
         assert card['suffix'] == '[EX_NEW]'
         assert card['prefix'] == 'Mega'
+
+    def test_transform_corrected_mega_absol_never_requests_castform_mega(
+        self,
+        monkeypatch,
+    ):
+        """Regression for TCGdex's incorrect ME01 #086 Castform dexId."""
+        artwork_calls = []
+
+        def fake_mega_artwork_url(**kwargs):
+            artwork_calls.append(kwargs)
+            return (
+                "https://raw.githubusercontent.com/PokeAPI/sprites/master/"
+                "sprites/pokemon/other/official-artwork/10057.png"
+            )
+
+        monkeypatch.setattr(
+            transform_tcg_set_module,
+            "get_mega_artwork_url",
+            fake_mega_artwork_url,
+        )
+        cards = [{
+            'localId': '086',
+            'name': 'Mega Absol ex',
+            'card_type': 'pokemon',
+            'pokemon_id': 359,
+            'types': ['Darkness'],
+            'name_de': 'Absol',
+            'name_en': 'Absol',
+            'name_fr': 'Absol',
+        }]
+
+        [card] = self.step._transform_cards(cards)
+
+        assert card['pokemon_id'] == 359
+        assert card['name']['en'] == 'Absol'
+        assert card['prefix'] == 'Mega'
+        assert card['suffix'] == '[EX_NEW]'
+        assert artwork_calls == [{
+            'pokemon_name': 'Absol',
+            'base_id': 359,
+            'original_card_name': 'Mega Absol ex',
+        }]
     
     def test_transform_trainer_card(self):
         """Test transformation of trainer card."""

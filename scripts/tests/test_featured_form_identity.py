@@ -12,6 +12,7 @@ from scripts.fetcher.steps.base import PipelineContext
 from scripts.fetcher.steps import pokemon_utils
 from scripts.poster_assets.poster_subject import (
     PosterSubject,
+    poster_display_name_from_card,
     resolve_poster_subject,
 )
 
@@ -76,6 +77,22 @@ def test_featured_enrichment_preserves_cover_and_exact_form_subject(
         resolve_poster_subject(item).official_artwork_id
         for item in elements
     ] == [10062, 10034, 10035]
+
+
+def test_internal_mega_marker_becomes_prompt_friendly_exact_form_name():
+    assert poster_display_name_from_card(
+        {
+            "prefix": "[M]",
+            "variant_form": "x",
+        },
+        "[M] Mewtwo",
+    ) == "Mega Mewtwo X"
+    assert poster_display_name_from_card(
+        {
+            "prefix": "[M]",
+        },
+        "Rayquaza",
+    ) == "Mega Rayquaza"
 
 
 def test_configured_featured_cards_are_authoritative_and_keep_exact_order(
@@ -206,6 +223,23 @@ def test_exgen3_scope_pins_curated_featured_card_ids():
     }
 
 
+def test_exgen2_scope_pins_its_curated_mega_cast():
+    config = yaml.safe_load(
+        (REPO_ROOT / "config" / "scopes" / "ExGen2.yaml").read_text(
+            encoding="utf-8"
+        )
+    )
+    featured_step = next(
+        step
+        for step in config["pipeline"]
+        if step["step"] == "enrich_featured_elements"
+    )
+
+    assert featured_step["params"]["section_featured_card_ids"] == {
+        "mega": ["xy8-63", "xy7-98", "xy6-59"],
+    }
+
+
 def test_featured_enrichment_rejects_artwork_species_mismatch(
     tmp_path: Path,
 ):
@@ -288,3 +322,16 @@ def test_checked_in_variant_scopes_resolve_their_exact_form_artwork():
         (1, 1),
         (4, 4),
     ]
+
+
+def test_checked_in_exgen2_featured_names_are_prompt_friendly():
+    payload = json.loads(
+        (REPO_ROOT / "data" / "output" / "ExGen2.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert [
+        item["pokemon_name"]
+        for item in payload["sections"]["mega"]["featured_elements"]
+    ] == ["Mega Mewtwo X", "Mega Rayquaza", "Mega Latios"]

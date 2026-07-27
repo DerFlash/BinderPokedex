@@ -224,7 +224,7 @@ reviewed candidates and their provenance have been promoted.
 
 Completed on 2026-07-27:
 
-- The complete suite passes with 332 tests; one unrelated EX-logo feature test
+- The complete suite passes with 345 tests; one unrelated EX-logo feature test
   remains explicitly skipped.
 - Python compilation and `git diff --check` pass.
 - All thirteen promoted bundles pass `validate_promoted_poster.py`, including
@@ -233,12 +233,15 @@ Completed on 2026-07-27:
   750 x 1050 card crops, 300-dpi metadata, and exact opaque-source-pixel
   records.
 - Form-identity regressions cover real ExGen3 Mega Latias/Diancie/Lucario,
-  ExGen2 Mega and Primal subjects, ME03 Mega Zygarde, and the unaffected MEP
-  base-form cast. Synthetic checks retain Charizard X/Y as separate subjects,
-  reject species/artwork collisions and untrusted URLs, download only the exact
-  form artwork, detect same-species form drift in both the planner and the
-  runner/promotion fingerprint boundary, and prove that base fingerprints stay
-  unchanged while form IDs affect generation fingerprints.
+  distinct ExGen2 Charizard X/Y and Mewtwo X/Y cards plus its reviewed
+  Mewtwo X/Rayquaza/Latios poster cast, ME03 Mega Zygarde, and the unaffected
+  MEP base-form cast. The TCG enrichment also corrects the inconsistent
+  upstream ME01 Mega Absol ID before artwork resolution. Synthetic checks
+  reject missing or conflicting X/Y evidence, species/artwork collisions, and
+  untrusted URLs; download only the exact form artwork; detect same-species
+  form drift in both the planner and runner/promotion fingerprint boundary;
+  and prove that base fingerprints stay unchanged while form IDs affect
+  generation fingerprints.
 - The configured model, encoder, VAE, and Real-ESRGAN hashes match the actual
   files in the local ComfyUI installation.
 - All ten Base1/SV03.5 overlays for `de`, `en`, `fr`, `es`, and `it` render at

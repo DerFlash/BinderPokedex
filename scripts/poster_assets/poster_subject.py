@@ -228,6 +228,50 @@ def _registered_card_form_artwork_id(card_name: object) -> int | None:
     )
 
 
+def poster_display_name_from_card(
+    card: dict[str, Any],
+    fallback_name: object,
+) -> str:
+    """Return an English, prompt-friendly name for a transformed card form."""
+    name = (
+        fallback_name.strip()
+        if isinstance(fallback_name, str) and fallback_name.strip()
+        else "Unknown"
+    )
+    prefix = card.get("prefix")
+    normalized_prefix = (
+        prefix.strip()
+        if isinstance(prefix, str) and prefix.strip()
+        else ""
+    )
+
+    if normalized_prefix.casefold() == "[m]":
+        for marker in ("[M] ", "Mega "):
+            if name.casefold().startswith(marker.casefold()):
+                name = name[len(marker):].strip()
+                break
+        normalized_prefix = "Mega"
+
+    if (
+        normalized_prefix
+        and not name.casefold().startswith(
+            f"{normalized_prefix} ".casefold()
+        )
+    ):
+        name = f"{normalized_prefix} {name}"
+
+    variant_form = card.get("variant_form")
+    if (
+        isinstance(variant_form, str)
+        and variant_form.casefold() in {"x", "y"}
+    ):
+        form_suffix = variant_form.upper()
+        if not name.casefold().endswith(f" {form_suffix}".casefold()):
+            name = f"{name} {form_suffix}"
+
+    return name
+
+
 def poster_subject_from_card(card: dict[str, Any]) -> dict[str, Any]:
     """Derive an explicit poster subject from a transformed source card.
 

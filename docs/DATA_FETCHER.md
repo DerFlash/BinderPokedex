@@ -198,6 +198,8 @@ promotion, semantic provenance migration, and optional PDF inclusion.
   art direction requires exact cards and forms
 - ExGen3 normal uses Koraidon, Pikachu, and Miraidon; ExGen3 Mega uses Mega
   Latias, Mega Diancie, and Mega Lucario
+- ExGen2 Mega uses Mewtwo X, Rayquaza, and Latios; Mewtwo Y remains a separate
+  card/form without displacing the reviewed cast
 - Missing, duplicate, ambiguous, invalid, or unknown-section card IDs are hard
   errors
 - Persists a separate `poster_subject` with species ID, exact Official Artwork

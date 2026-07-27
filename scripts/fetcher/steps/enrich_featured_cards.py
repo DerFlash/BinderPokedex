@@ -36,6 +36,7 @@ if str(REPO_ROOT) not in sys.path:
 
 from steps.base import BaseStep, PipelineContext
 from scripts.poster_assets.poster_subject import (
+    poster_display_name_from_card,
     poster_subject_from_card,
     resolve_poster_subject,
 )
@@ -582,16 +583,10 @@ class EnrichFeaturedElementsStep(BaseStep):
             return None
 
         element_data['poster_subject'] = poster_subject
-        prefix = card.get('prefix')
-        if (
-            isinstance(prefix, str)
-            and prefix
-            and isinstance(element_data.get('pokemon_name'), str)
-            and not element_data['pokemon_name'].startswith(f"{prefix} ")
-        ):
-            element_data['pokemon_name'] = (
-                f"{prefix} {element_data['pokemon_name']}"
-            )
+        element_data['pokemon_name'] = poster_display_name_from_card(
+            card,
+            element_data.get('pokemon_name'),
+        )
         return element_data
     
     def _download_and_cache_image(self, image_url: str, cache_file: Path) -> bool:

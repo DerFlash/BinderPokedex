@@ -1,6 +1,7 @@
 # Image Cache Architecture
 
-**Last Updated:** January 30, 2026  
+**Last Updated:** July 27, 2026
+
 **Purpose:** Document the URL-based image caching system for proper form variant handling
 
 ---
@@ -95,10 +96,10 @@ data/pokemon_images_cache/
 ├── pokemon_150/
 │   ├── 150_thumb.jpg         # Normal Mewtwo
 │   ├── 150_featured.jpg      # Normal Mewtwo
-│   ├── 10045_thumb.jpg       # Mega Mewtwo X
-│   ├── 10045_featured.jpg    # Mega Mewtwo X
-│   ├── 10046_thumb.jpg       # Mega Mewtwo Y
-│   └── 10046_featured.jpg    # Mega Mewtwo Y
+│   ├── 10043_thumb.jpg       # Mega Mewtwo X
+│   ├── 10043_featured.jpg    # Mega Mewtwo X
+│   ├── 10044_thumb.jpg       # Mega Mewtwo Y
+│   └── 10044_featured.jpg    # Mega Mewtwo Y
 └── ...
 ```
 
@@ -235,8 +236,8 @@ class ImageCache:
 | Form | URL ID | Cache File | PokeAPI ID |
 |------|--------|------------|------------|
 | Normal | 150 | `pokemon_150/150_thumb.jpg` | 150 |
-| Mega X | 10045 | `pokemon_150/10045_thumb.jpg` | 10045 |
-| Mega Y | 10046 | `pokemon_150/10046_thumb.jpg` | 10046 |
+| Mega X | 10043 | `pokemon_150/10043_thumb.jpg` | 10043 |
+| Mega Y | 10044 | `pokemon_150/10044_thumb.jpg` | 10044 |
 
 ### Groudon/Kyogre (Primal Reversion)
 
@@ -251,18 +252,18 @@ class ImageCache:
 
 ## Cache Statistics
 
-From a complete fetch (January 2026):
+From the configured variant outputs (July 2026):
 
 ```
-Total Pokémon Entries: 1,439
+Total Pokémon Entries: 1,441
   - Pokedex: 1,025
   - ExGen1: 94
-  - ExGen2: 125 (including Mega/Primal variants)
+  - ExGen2: 127 (including distinct Mega X/Y and Primal variants)
   - ExGen3: 195 (including Mega variants)
 
-Cache Files: 2,878 (1,439 × 2 sizes)
-  - Thumbnails: 1,439 × 180×180px
-  - Featured: 1,439 × 500×500px
+Cache Files: 2,882 (1,441 × 2 sizes)
+  - Thumbnails: 1,441 × 180×180px
+  - Featured: 1,441 × 500×500px
 
 Total Cache Size: ~45 MB
   - Average thumb: ~6 KB

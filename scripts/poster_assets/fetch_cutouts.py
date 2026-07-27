@@ -26,6 +26,7 @@ try:
     from .poster_io import load_poster_scope_data, poster_bundle
     from .poster_subject import (
         manifest_subject_fields,
+        poster_display_name_from_card,
         poster_subject_from_card,
         resolve_poster_subject,
     )
@@ -34,6 +35,7 @@ except ImportError:  # Direct script execution
     from poster_io import load_poster_scope_data, poster_bundle
     from poster_subject import (
         manifest_subject_fields,
+        poster_display_name_from_card,
         poster_subject_from_card,
         resolve_poster_subject,
     )
@@ -156,17 +158,17 @@ def scope_featured_elements(scope_data: dict[str, Any]) -> list[dict[str, Any]]:
                             )
                     else:
                         resolved["poster_subject"] = poster_subject
-                    prefix = source_card.get("prefix")
                     name = resolved.get("pokemon_name")
                     if (
                         poster_subject["official_artwork_id"]
                         != poster_subject["species_id"]
-                        and isinstance(prefix, str)
-                        and prefix
-                        and isinstance(name, str)
-                        and not name.startswith(f"{prefix} ")
                     ):
-                        resolved["pokemon_name"] = f"{prefix} {name}"
+                        resolved["pokemon_name"] = (
+                            poster_display_name_from_card(
+                                source_card,
+                                name,
+                            )
+                        )
                 result.append(resolved)
     return result
 

@@ -5,8 +5,8 @@ Transforms TCGdex Black & White EX card data from source format to the variant f
 expected by the PDF generator. Selects ONE card per Pokemon (priority: Next Destinies first,
 then alphabetically by set name).
 
-Input: data/source/tcg_bw_ex.json (99 cards)
-Output: data/output/ExGen2.json (~41 unique Pokemon)
+Input: data/source/tcg_bw_ex.json
+Output: data/output/ExGen2.json (normal, Mega, and Primal sections)
 """
 
 import logging
@@ -34,10 +34,22 @@ class TransformBlackWhiteEXStep(BaseStep):
     1. BW - Next Destinies (first BW EX set, bw2)
     2. Alphabetically by set name
     
-    Excludes:
-    - Mega EX variants (M-EX)
-    - Primal variants
+    Mega and Primal variants are emitted in dedicated sections.
     """
+
+    # TCGdex does not include the X/Y form in these English card names.
+    # Their attacks are stable, form-specific source data, so they let us
+    # preserve the identity of the selected card without guessing a sibling.
+    _MEGA_FORM_BY_ATTACK = {
+        6: {
+            'Crimson Dive': 'Y',
+            'Wild Blaze': 'X',
+        },
+        150: {
+            'Vanishing Strike': 'X',
+            'Psychic Infinity': 'Y',
+        },
+    }
     
     def __init__(self, name: str):
         super().__init__(name)
@@ -81,14 +93,9 @@ class TransformBlackWhiteEXStep(BaseStep):
                     primal_cards[dex_id] = []
                 primal_cards[dex_id].append(card)
             elif 'M ' in name or 'Mega' in name or name.startswith('M-'):
-                # Mega Evolution - extract form suffix (X or Y)
-                # Name formats: "M Charizard EX (X)" or similar
-                form_suffix = ""
-                # Check for X or Y in parentheses or at end
-                if '(X)' in name or ' X ' in name or name.endswith(' X'):
-                    form_suffix = "X"
-                elif '(Y)' in name or ' Y ' in name or name.endswith(' Y'):
-                    form_suffix = "Y"
+                # Resolve form identity before grouping so X/Y siblings never
+                # collapse into a single dexId bucket.
+                form_suffix = self._resolve_mega_form_suffix(card) or ""
                 
                 mega_key = (dex_id, form_suffix)
                 if mega_key not in mega_cards:
@@ -148,6 +155,76 @@ class TransformBlackWhiteEXStep(BaseStep):
                 selected_cards.append(cards_sorted[0])
         
         return selected_cards
+
+    @staticmethod
+    def _explicit_mega_form_suffix(name: str) -> str | None:
+        """Return an explicitly named X/Y Mega form, if present."""
+        tokens = (
+            name.upper()
+            .replace('(', ' ')
+            .replace(')', ' ')
+            .replace('-', ' ')
+            .split()
+        )
+        while tokens and tokens[-1] == 'EX':
+            tokens.pop()
+        if tokens and tokens[-1] in {'X', 'Y'}:
+            return tokens[-1]
+        return None
+
+    def _resolve_mega_form_suffix(self, card: Dict[str, Any]) -> str | None:
+        """
+        Resolve an X/Y Mega form from explicit or form-specific card data.
+
+        Charizard and Mewtwo have sibling Mega forms whose TCGdex names are
+        identical. In that case the selected card's attack identifies the
+        depicted form. Unknown or conflicting evidence must fail loudly rather
+        than silently substituting an arbitrary sibling.
+        """
+        name = card.get('name', '')
+        explicit_suffix = self._explicit_mega_form_suffix(name)
+        dex_ids = card.get('dexId', [])
+        dex_id = dex_ids[0] if dex_ids else None
+        attack_signatures = self._MEGA_FORM_BY_ATTACK.get(dex_id)
+
+        if not attack_signatures:
+            return explicit_suffix
+
+        attack_names = {
+            attack.get('name', '').strip()
+            for attack in card.get('attacks', [])
+            if isinstance(attack, dict)
+        }
+        evidenced_suffixes = {
+            suffix
+            for attack_name, suffix in attack_signatures.items()
+            if attack_name in attack_names
+        }
+
+        card_id = card.get('id', '<unknown>')
+        if len(evidenced_suffixes) > 1:
+            raise ValueError(
+                f"Conflicting X/Y Mega evidence for card {card_id!r}"
+            )
+
+        evidenced_suffix = next(iter(evidenced_suffixes), None)
+        if (
+            explicit_suffix
+            and evidenced_suffix
+            and explicit_suffix != evidenced_suffix
+        ):
+            raise ValueError(
+                f"Named Mega form {explicit_suffix} conflicts with card "
+                f"{card_id!r} attack evidence {evidenced_suffix}"
+            )
+
+        resolved_suffix = explicit_suffix or evidenced_suffix
+        if not resolved_suffix:
+            raise ValueError(
+                f"Could not determine the exact X/Y Mega form for card "
+                f"{card_id!r} ({name!r})"
+            )
+        return resolved_suffix
     
     def _transform_to_variant_format(self, normal_cards: List[Dict[str, Any]], 
                                      mega_cards: List[Dict[str, Any]],
@@ -329,6 +406,7 @@ class TransformBlackWhiteEXStep(BaseStep):
             
             dex_id = dex_ids[0]
             name = card.get('name', '')
+            form_variant = None
             
             # Extract Pokemon name and determine prefix/suffix
             if section == 'primal':
@@ -341,13 +419,11 @@ class TransformBlackWhiteEXStep(BaseStep):
                 pokemon_name = name.replace('M ', '').replace('Mega ', '').replace(' EX', '').replace('-EX', '').strip()
                 
                 # Check for X/Y form variants: "M Charizard EX (X)" or "M Charizard EX (Y)"
-                form_variant = None
-                if '(X)' in pokemon_name or ' X' in pokemon_name:
+                form_variant = self._resolve_mega_form_suffix(card)
+                if form_variant == 'X':
                     pokemon_name = pokemon_name.replace('(X)', '').replace(' X', '').strip()
-                    form_variant = 'X'
-                elif '(Y)' in pokemon_name or ' Y' in pokemon_name:
+                elif form_variant == 'Y':
                     pokemon_name = pokemon_name.replace('(Y)', '').replace(' Y', '').strip()
-                    form_variant = 'Y'
                 
                 prefix = '[M]'
                 suffix = '[EX]'
@@ -367,6 +443,8 @@ class TransformBlackWhiteEXStep(BaseStep):
             image_url = self._get_pokeapi_artwork_url(dex_id, pokemon_name, section, form_variant if section == 'mega' else None)
             
             form_suffix = f"_EX2_{section.upper()[:3]}"
+            if section == 'mega' and form_variant:
+                form_suffix += f"_{form_variant}"
             
             pokemon_entry = {
                 'pokemon_id': dex_id,
@@ -394,6 +472,9 @@ class TransformBlackWhiteEXStep(BaseStep):
                     'rarity': card.get('rarity')
                 }
             }
+
+            if section == 'mega' and form_variant:
+                pokemon_entry['variant_form'] = form_variant.lower()
             
             pokemon_list.append(pokemon_entry)
         

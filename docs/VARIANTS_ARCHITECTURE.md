@@ -1,7 +1,8 @@
 # Pokémon Variants - Architecture & Data Structure
 
 **Current Status:** Mega Evolution + EX Generations 1-3 ✅  
-**Last Updated:** January 23, 2026  
+**Last Updated:** July 27, 2026
+
 **Purpose:** Complete architecture and data structure specification for Pokémon variant collections
 
 ---
@@ -25,7 +26,7 @@ The Variants feature enables generation of separate collection binders for Poké
 **Currently Implemented:**
 - **Mega Evolution:** 79 Pokémon with X/Y forms
 - **EX Generation 1:** 94 Pokémon (classic EX cards)
-- **EX Generation 2:** 125 Pokémon with Mega/Primal sections
+- **EX Generation 2:** 127 entries with distinct Mega X/Y and Primal sections
 - **EX Generation 3:** 195 Pokémon with Mega section (Scarlet & Violet ex)
 - Full 9-language support with form suffix preservation
 - Professional PDF generation with cutting guides
@@ -858,4 +859,3 @@ Use this as a template when implementing new variant categories.
 - [/data/variants/README.md](/data/variants/README.md) - Data format details
 - [/data/variants/IMAGES.md](/data/variants/IMAGES.md) - Image sourcing details
 - [ARCHITECTURE.md](ARCHITECTURE.md) - Overall project architecture
-

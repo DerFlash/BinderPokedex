@@ -191,12 +191,14 @@ python scripts/poster_assets/init_poster_scope.py \
 python scripts/poster_assets/poster_work_plan.py --scope ExGen3
 ```
 
-Its ordered casts are declared as `section_featured_card_ids` in
-`config/scopes/ExGen3.yaml`. The normal section selects Koraidon, Pikachu, and
-Miraidon; the Mega section selects Mega Latias, Mega Diancie, and Mega
-Lucario. A configured card ID that is missing, duplicated, ambiguous, or
-assigned to an unknown section is a hard fetch error. This keeps source updates
-deterministic instead of silently changing a reviewed composition.
+Ordered casts are declared as `section_featured_card_ids` in the scope
+configuration. ExGen3 selects Koraidon, Pikachu, and Miraidon for its normal
+section and Mega Latias, Mega Diancie, and Mega Lucario for its Mega section.
+ExGen2 keeps its reviewed Mega cast at Mewtwo X, Rayquaza, and Latios while
+still retaining Mewtwo Y as a separate card and form in the section. A
+configured card ID that is missing, duplicated, ambiguous, or assigned to an
+unknown section is a hard fetch error. This keeps source updates deterministic
+instead of silently changing a reviewed composition.
 
 Form-specific cutout filenames include both species and Official Artwork ID.
 The cutout manifest, read-only planner, promotion validator, and generation

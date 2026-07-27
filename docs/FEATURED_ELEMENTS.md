@@ -144,7 +144,7 @@ pipeline:
 | **Pokédex** | 9 generations × 3 starters | PokeAPI artwork |
 | **Base1-Base3** | Set-specific featured Pokémon | TCGdex |
 | **ExGen1** | Mewtwo, Mew, Lugia | TCGdex (ex series) |
-| **ExGen2** | Dialga, Palkia, Giratina | TCGdex (bw/xy) |
+| **ExGen2** | Normal: Mewtwo, Mew, Lugia; Mega: Mewtwo X, Rayquaza, Latios; Primal: Kyogre, Groudon | TCGdex (bw/xy) |
 | **ExGen3** | Normal: Koraidon, Pikachu, Miraidon; Mega: Mega Latias, Mega Diancie, Mega Lucario | TCGdex (sv/me ex) |
 | **ME01-ME04** | Set-specific featured Pokémon | TCGdex |
 | **MEP** | Riolu, Meganium, Inteleon | PokeAPI fallback |
