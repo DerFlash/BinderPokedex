@@ -29,7 +29,11 @@ def get_mega_artwork_url(
         original_card_name: Optional TCG card name to extract form suffix from
     
     Returns:
-        URL to form-specific artwork, or base artwork if form not found
+        URL to the exact form-specific artwork
+
+    Raises:
+        RuntimeError: If PokeAPI cannot resolve the requested form.  Returning
+            base artwork here would silently change the poster subject.
     """
     # If form_suffix not provided, try to extract from original_card_name
     if form_suffix is None and original_card_name:
@@ -61,9 +65,12 @@ def get_mega_artwork_url(
                 logger.debug(f"Found Mega form ID {form_id} for {form_name}")
                 return f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{form_id}.png"
         
-        logger.warning(f"Could not fetch PokeAPI form data for {form_name}, using base artwork")
+        raise RuntimeError(
+            f"PokeAPI did not resolve the requested form {form_name!r}"
+        )
     except Exception as e:
-        logger.warning(f"Error fetching PokeAPI artwork for {pokemon_name}: {e}")
-    
-    # Fallback to base Pokemon artwork
-    return f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{base_id}.png"
+        if isinstance(e, RuntimeError):
+            raise
+        raise RuntimeError(
+            f"Could not resolve exact PokeAPI artwork for {form_name!r}: {e}"
+        ) from e

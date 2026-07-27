@@ -10,6 +10,10 @@ from typing import Any
 from PIL import Image
 
 try:
+    from .fetch_cutouts import (
+        scope_featured_elements,
+        unique_by_poster_subject,
+    )
     from .layout import build_page_layout
     from .poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
@@ -24,7 +28,15 @@ try:
         load_poster_scope_data,
         poster_bundle,
     )
+    from .poster_subject import (
+        resolve_poster_subject,
+        subject_fingerprint_identity,
+    )
 except ImportError:
+    from fetch_cutouts import (
+        scope_featured_elements,
+        unique_by_poster_subject,
+    )
     from layout import build_page_layout
     from poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
@@ -38,6 +50,10 @@ except ImportError:
         load_json,
         load_poster_scope_data,
         poster_bundle,
+    )
+    from poster_subject import (
+        resolve_poster_subject,
+        subject_fingerprint_identity,
     )
 
 
@@ -376,43 +392,10 @@ def _layout_generation_contract(
     }
 
 
-def _featured_pokemon_ids(scope_data: dict[str, Any]) -> list[int]:
-    selected: list[int] = []
-    seen: set[int] = set()
-    sections = scope_data.get("sections", {})
-    values = (
-        sections.values()
-        if isinstance(sections, dict)
-        else sections
-        if isinstance(sections, list)
-        else ()
-    )
-    for section in values:
-        if not isinstance(section, dict):
-            continue
-        featured = (
-            section.get("featured_elements")
-            or section.get("featured_cards")
-            or []
-        )
-        if not isinstance(featured, list):
-            continue
-        for item in featured:
-            pokemon_id = (
-                item.get("pokemon_id")
-                if isinstance(item, dict)
-                else None
-            )
-            if isinstance(pokemon_id, int) and pokemon_id not in seen:
-                selected.append(pokemon_id)
-                seen.add(pokemon_id)
-    return selected
-
-
 def _expected_subject_ids(
     manifest: dict[str, Any],
     scope_data: dict[str, Any],
-) -> list[int]:
+) -> list[int | dict[str, Any]]:
     pokemon = manifest.get("pokemon", {})
     if not isinstance(pokemon, dict):
         raise ValueError("pokemon must be a mapping")
@@ -432,26 +415,28 @@ def _expected_subject_ids(
             "pokemon.count must be a positive integer or "
             "'auto_from_layout_columns'"
         )
-    selected = _featured_pokemon_ids(scope_data)
-    seen = set(selected)
+    selected = unique_by_poster_subject(
+        scope_featured_elements(scope_data)
+    )
     fallback = pokemon.get("fallback_candidates", [])
     if not isinstance(fallback, list):
         raise ValueError("pokemon.fallback_candidates must be a list")
     for item in fallback:
-        pokemon_id = (
-            item.get("pokemon_id")
-            if isinstance(item, dict)
-            else None
-        )
-        if isinstance(pokemon_id, int) and pokemon_id not in seen:
-            selected.append(pokemon_id)
-            seen.add(pokemon_id)
+        if (
+            isinstance(item, dict)
+            and isinstance(item.get("pokemon_id"), int)
+        ):
+            selected.append(dict(item))
+    selected = unique_by_poster_subject(selected)
     if len(selected) < requested:
         raise ValueError(
             f"Layout needs {requested} Pokemon, but only "
             f"{len(selected)} were resolved"
         )
-    return selected[:requested]
+    return [
+        subject_fingerprint_identity(item)
+        for item in selected[:requested]
+    ]
 
 
 def _cutout_components(
@@ -465,6 +450,8 @@ def _cutout_components(
         raise ValueError(f"No cutouts listed in {manifest_path}")
     normalized_items: list[dict[str, Any]] = []
     raw_items: list[dict[str, Any]] = []
+    seen_subjects: set[tuple[str, int, int]] = set()
+    artwork_species: dict[tuple[str, int], int] = {}
     for item in items:
         if not isinstance(item, dict):
             raise ValueError(f"Invalid cutout item in {manifest_path}")
@@ -472,18 +459,41 @@ def _cutout_components(
         filename = item.get("file")
         if not isinstance(pokemon_id, int) or not isinstance(filename, str):
             raise ValueError(f"Invalid cutout identity in {manifest_path}")
+        subject = resolve_poster_subject(item)
+        subject_key = subject.selection_key()
+        if subject_key in seen_subjects:
+            raise ValueError(
+                f"Duplicate poster subject in {manifest_path}: {subject_key}"
+            )
+        seen_subjects.add(subject_key)
+        artwork_key = subject.artwork_key()
+        mapped_species = artwork_species.get(artwork_key)
+        if mapped_species is not None and mapped_species != subject.species_id:
+            raise ValueError(
+                f"Official artwork {artwork_key} maps to multiple species in "
+                f"{manifest_path}: {mapped_species} and {subject.species_id}"
+            )
+        artwork_species[artwork_key] = subject.species_id
+        if item.get("url") != subject.image_url:
+            raise ValueError(
+                f"Cutout URL does not match poster subject in {manifest_path}"
+            )
         relative = Path(filename)
         if relative.is_absolute() or ".." in relative.parts:
             raise ValueError(f"Unsafe cutout file in {manifest_path}: {filename}")
         image_path = (cutout_dir / relative).resolve()
         if not image_path.is_relative_to(cutout_dir.resolve()):
             raise ValueError(f"Cutout escapes its asset directory: {filename}")
-        normalized_items.append(
-            {
-                "pokemon_id": pokemon_id,
-                **image_pixel_record(image_path),
+        normalized_item = {
+            "pokemon_id": pokemon_id,
+            **image_pixel_record(image_path),
+        }
+        if subject.is_special_form:
+            normalized_item["poster_subject"] = {
+                "source": subject.source,
+                "official_artwork_id": subject.official_artwork_id,
             }
-        )
+        normalized_items.append(normalized_item)
         raw_items.append(item)
     return normalized_items, raw_items
 
@@ -561,6 +571,16 @@ def build_generation_fingerprint(
         contract_version,
     )
     cutouts, raw_cutout_items = _cutout_components(bundle)
+    expected_subjects = _expected_subject_ids(manifest, scope_data)
+    actual_subjects = [
+        subject_fingerprint_identity(item)
+        for item in raw_cutout_items
+    ]
+    if actual_subjects != expected_subjects:
+        raise ValueError(
+            f"Cutout subjects {actual_subjects} do not match current source "
+            f"subjects {expected_subjects} for {bundle.asset_key}"
+        )
     prompt = _effective_generation_prompt(
         bundle,
         scope_data,
@@ -582,7 +602,7 @@ def build_generation_fingerprint(
             "encoding": "utf-8",
             "sha256": hashlib.sha256(prompt.encode("utf-8")).hexdigest(),
         },
-        "source_subject_ids": _expected_subject_ids(manifest, scope_data),
+        "source_subject_ids": expected_subjects,
         "cutouts": cutouts,
     }
     return fingerprint_record(components)

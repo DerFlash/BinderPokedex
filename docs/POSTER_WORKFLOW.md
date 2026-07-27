@@ -50,7 +50,26 @@ python scripts/fetcher/fetch.py --scope SV04
 ```
 
 The fetcher writes `data/output/SV04.json`. It does not create or regenerate a
-poster.
+poster. Featured cover imagery and poster-generation subjects are deliberately
+separate:
+
+- `featured_elements.image_url` remains the TCG card or cover image;
+- `featured_elements.poster_subject` identifies the exact transparent PokeAPI
+  Official Artwork used for the poster;
+- the subject records the National-Dex species, concrete base/form artwork ID,
+  canonical allowlisted URL, and stable key.
+
+This distinction matters for Mega, Primal, Charizard X/Y, and other forms whose
+artwork ID differs from the species ID. Older checked-in ExGen/ME output is
+resolved deterministically through the featured `card_id` and its source card.
+A form-marked card without exact Official Artwork is an error; the workflow
+never substitutes base-species art silently.
+
+Form IDs are checked offline against
+`config/pokeapi_form_species.json`, which is pinned to one PokeAPI source
+commit. When PokeAPI adds a new species or form, update that registry from
+`data/v2/csv/pokemon.csv` and review the mapping before the new subject can
+enter a poster run.
 
 ## 2. Inspect the read-only work plan
 
@@ -109,6 +128,7 @@ python scripts/poster_assets/init_poster_scope.py \
 - embeds the set-specific creative brief from `config/poster_scenes.yaml`;
 - derives a stable per-scope seed;
 - selects three featured Pokemon for the bottom row;
+- keeps different visual forms of one species as distinct poster subjects;
 - configures available localized logos;
 - fetches exact transparent source cutouts and logos with `--fetch`;
 - leaves `pdf.enabled` false until an artwork is reviewed.
@@ -142,6 +162,15 @@ provenance boundary and selects only that generation's three starter
 `featured_elements`. Adding or promoting one generation therefore does not
 invalidate another generation's generation fingerprint. Other aggregate scopes
 can use the same structure once their section scene briefs are reviewed.
+
+Form-specific cutout filenames include both species and Official Artwork ID.
+The cutout manifest, read-only planner, promotion validator, and generation
+fingerprint all verify the same identity. Changing Mega X to Mega Y therefore
+requires new cutouts and artwork even though the National-Dex species is
+unchanged. Ordinary base-form manifests and fingerprints remain compatible
+with already promoted posters. The runner and promotion fingerprint boundary
+also reject stale source/cutout selections, so skipping the planner cannot
+turn a form back into its base species.
 
 ## 4. Review the creative brief
 

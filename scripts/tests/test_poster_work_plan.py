@@ -13,6 +13,7 @@ from scripts.poster_assets.poster_io import (
     poster_bundles_for_scope,
 )
 from scripts.poster_assets.provenance import sha256_file
+from scripts.poster_assets.poster_subject import PosterSubject
 from scripts.poster_assets.validate_promoted_poster import (
     enabled_poster_bundles,
 )
@@ -166,6 +167,11 @@ def write_cutouts(asset_dir, asset_key, source_scope, poster_id, section_id, ids
         items.append(
             {
                 "pokemon_id": pokemon_id,
+                "url": (
+                    "https://raw.githubusercontent.com/PokeAPI/sprites/master/"
+                    "sprites/pokemon/other/official-artwork/"
+                    f"{pokemon_id}.png"
+                ),
                 "file": filename,
                 "validated_alpha": True,
                 "errors": [],
@@ -682,6 +688,28 @@ def test_missing_or_invalid_local_assets_have_needs_assets_state(
     assert target(plan)["state"] == "needs_assets"
     assert reason in target(plan)["reason_codes"]
     assert action in target(plan)["next_actions"]
+
+
+def test_form_change_with_same_species_marks_cutout_selection_stale(tmp_path):
+    assets, output, catalog = setup_individual(tmp_path)
+    source_path = output / "Alpha.json"
+    source = json.loads(source_path.read_text(encoding="utf-8"))
+    source["sections"]["main"]["featured_elements"][0] = {
+        "pokemon_id": 6,
+        "poster_subject": PosterSubject(6, 10034).as_mapping(),
+    }
+    save_json(source_path, source)
+    manifest_path = assets / "Alpha" / "cutouts" / "manifest.json"
+    cutouts = json.loads(manifest_path.read_text(encoding="utf-8"))
+    cutouts["items"][0]["pokemon_id"] = 6
+    cutouts["items"][0]["url"] = PosterSubject(6, 6).image_url
+    save_json(manifest_path, cutouts)
+
+    plan = build("Alpha", assets, output, catalog)
+
+    assert target(plan)["state"] == "needs_assets"
+    assert "cutout_selection_stale" in target(plan)["reason_codes"]
+    assert "fetch_cutouts" in target(plan)["next_actions"]
 
 
 def test_source_or_routing_inconsistency_blocks_a_safe_plan(tmp_path):

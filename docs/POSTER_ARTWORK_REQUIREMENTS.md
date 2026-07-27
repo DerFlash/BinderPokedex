@@ -17,6 +17,7 @@ Last reviewed: 2026-07-27
 | PDF behavior | Consume only promoted local artwork; never launch ComfyUI implicitly |
 | Prompt ownership | Set-specific creative briefs in one catalog plus one centrally generated technical/identity contract |
 | Character identity | Reviewed source pixels are immutable; any changed anatomy is a hard rejection |
+| Form identity | Card/cover imagery and poster subjects are separate; Mega, Primal, X/Y, and other forms keep their exact allowlisted Official Artwork identity |
 | Promotion | Human visual review plus deterministic validation remains mandatory |
 | Missing poster | Normal PDF remains possible; enabled-but-missing promoted artwork is an error; `--skip-poster` is an explicit bypass |
 | CI boundary | Pull requests build and validate the complete release candidate with read-only permissions; only `v*` tags may publish it |
@@ -40,6 +41,7 @@ Last reviewed: 2026-07-27
 | `PA-013` | Multiple posters can be assigned to aggregate sections | Done | A routing index binds isolated poster bundles to stable section IDs; PDFs insert every enabled bundle after its matching cover, while legacy single posters retain their first-cover behavior |
 | `PA-014` | 4×3/4×4 PDFs use matching page renderers | Open | Add A3/custom page styles, templates, cutting guides, and rendered-PDF QA |
 | `PA-015` | Aggregate variant scopes receive section-specific scene briefs | Open | Model `normal`, `mega`, `primal`, and future sections without pretending they are one unambiguous TCG set |
+| `PA-015A` | Variant poster subjects retain their exact form | Done | Featured selection, cutout files/manifests, planner checks, promotion validation, conditioning, and generation fingerprints use a validated Official Artwork subject identity; distinct forms of one species remain distinct and special forms never fall back silently to base artwork |
 | `PA-016` | Post-fetch orchestration detects stale poster inputs | Done | A read-only planner compares routing, scope data, scene catalog, cutout selection/pixels, logos, dynamic model contracts, effective prompts, semantic generation/overlay fingerprints, and promoted outputs; it separates expensive regeneration from cheap overlay or routing work |
 | `PA-017` | Natural foreground occlusion may cross subjects safely | Research | Accept only a deterministic depth-aware method that retains exact identity and does not invent anatomy |
 | `PA-018` | Alternative engines remain selectable but gated | Ongoing | Anima, FLUX.1 Canny, and Qwen candidates must pass the same promotion checks as FLUX.2 |
@@ -67,6 +69,14 @@ Last reviewed: 2026-07-27
 - The default workflow deliberately stops before automatic promotion. Semantic
   scene quality, character boundary quality, and natural grounding still need
   human review.
+- The poster cast no longer assumes that National-Dex identity and visual form
+  are the same. `featured_elements.image_url` remains the cover/card image,
+  while a separate `poster_subject` binds species ID, exact PokeAPI Official
+  Artwork ID, canonical URL, and stable subject key. Legacy checked-in
+  ExGen/ME output is resolved through the featured `card_id`; future fetches
+  persist the explicit contract. A pinned PokeAPI form registry verifies that
+  every form artwork actually belongs to the recorded species. Base-only
+  bundles retain their historical fingerprint representation.
 - The read-only post-fetch planner reports stable states, reasons, actions, and
   optional commands without downloading assets, mutating routing, starting
   ComfyUI, or promoting a candidate. Generation and overlay fingerprints keep

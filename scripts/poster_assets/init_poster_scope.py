@@ -12,13 +12,21 @@ from typing import Any
 import yaml
 
 try:
-    from .fetch_cutouts import fetch_cutouts
+    from .fetch_cutouts import (
+        fetch_cutouts,
+        scope_featured_elements,
+        unique_by_poster_subject,
+    )
     from .fetch_title_logos import fetch_title_logos
     from .layout import DEFAULT_LAYOUT_NAME, LAYOUTS, resolve_layout_name
     from .poster_io import POSTER_ASSETS, SCOPE_DATA, load_json, load_yaml
     from .scene_catalog import scene_for_scope, section_scenes_for_scope
 except ImportError:
-    from fetch_cutouts import fetch_cutouts
+    from fetch_cutouts import (
+        fetch_cutouts,
+        scope_featured_elements,
+        unique_by_poster_subject,
+    )
     from fetch_title_logos import fetch_title_logos
     from layout import DEFAULT_LAYOUT_NAME, LAYOUTS, resolve_layout_name
     from poster_io import POSTER_ASSETS, SCOPE_DATA, load_json, load_yaml
@@ -199,13 +207,23 @@ def build_section_manifest(
             f"{scope}/{section_id} needs exactly {expected_subjects} "
             "featured_elements"
         )
-    featured_ids = [item.get("pokemon_id") for item in featured]
-    if (
-        any(not isinstance(pokemon_id, int) for pokemon_id in featured_ids)
-        or len(set(featured_ids)) != expected_subjects
-    ):
+    try:
+        resolved_featured = scope_featured_elements(
+            {
+                "set_id": scope,
+                "sections": {section_id: section_data},
+            }
+        )
+        unique_featured = unique_by_poster_subject(resolved_featured)
+    except (TypeError, ValueError) as error:
         raise ValueError(
-            f"{scope}/{section_id} featured_elements need unique Pokemon IDs"
+            f"{scope}/{section_id} featured_elements have invalid "
+            "poster subjects"
+        ) from error
+    if len(unique_featured) != expected_subjects:
+        raise ValueError(
+            f"{scope}/{section_id} featured_elements need unique poster "
+            "subjects"
         )
 
     generation = copy.deepcopy(generation_template)

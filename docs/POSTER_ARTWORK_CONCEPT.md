@@ -44,6 +44,7 @@ comfyui_poster/
 cutouts/
   manifest.json
   pokemon_<id>_<name>.png
+  pokemon_<species-id>_artwork_<form-id>_<name>.png
 ```
 
 Only reviewed source assets and the final render belong in this directory.
@@ -138,7 +139,14 @@ venv/bin/python scripts/poster_assets/fetch_cutouts.py --scope Base1
 The fetcher selects `featured_elements` from `data/output/<scope>.json`, then
 uses the explicit fallback list in `poster.yaml` if the layout needs more
 Pokemon. Existing reviewed cutouts are not overwritten unless `--force` is
-passed.
+passed. The cover/card `image_url` is not a cutout source. The fetcher consumes
+the separate validated `poster_subject`, whose canonical PokeAPI Official
+Artwork ID distinguishes base species, Mega/Primal forms, and X/Y variants.
+Legacy ExGen/ME featured records recover that identity through their `card_id`
+and source card. Form cutout filenames include both species and artwork IDs;
+missing or inconsistent form artwork is a hard error with no base fallback.
+The form-to-species relationship is verified offline against the pinned
+`config/pokeapi_form_species.json` registry.
 
 Fetch every localized title logo configured in `poster.yaml`:
 

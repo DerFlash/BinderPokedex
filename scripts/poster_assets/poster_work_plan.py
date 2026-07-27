@@ -20,9 +20,10 @@ from PIL import Image
 
 try:
     from .fetch_cutouts import (
+        cutout_filename,
         resolve_requested_count,
         scope_featured_elements,
-        unique_by_pokemon_id,
+        unique_by_poster_subject,
         validate_png,
     )
     from .fetch_title_logos import resolve_logo_downloads
@@ -38,6 +39,7 @@ try:
         load_poster_scope_data,
         poster_bundles_for_scope,
     )
+    from .poster_subject import resolve_poster_subject
     from .provenance import (
         MODEL_DIRECTORIES,
         build_generation_fingerprint,
@@ -60,9 +62,10 @@ try:
     )
 except ImportError:  # Direct script execution
     from fetch_cutouts import (
+        cutout_filename,
         resolve_requested_count,
         scope_featured_elements,
-        unique_by_pokemon_id,
+        unique_by_poster_subject,
         validate_png,
     )
     from fetch_title_logos import resolve_logo_downloads
@@ -78,6 +81,7 @@ except ImportError:  # Direct script execution
         load_poster_scope_data,
         poster_bundles_for_scope,
     )
+    from poster_subject import resolve_poster_subject
     from provenance import (
         MODEL_DIRECTORIES,
         build_generation_fingerprint,
@@ -513,35 +517,41 @@ def _validate_prompt_prerequisites(bundle: PosterBundle) -> None:
         raise ValueError(f"Configured generation prompt is empty: {path}")
 
 
-def _expected_pokemon_ids(
+def _expected_subject_identities(
     manifest: dict[str, Any],
     scope_data: dict[str, Any],
-) -> tuple[list[int], Any]:
+) -> tuple[list[tuple[str, int, int]], Any]:
     layout = build_page_layout(
         str(manifest.get("layout", {}).get("name", "standard_3x3"))
     )
     count = resolve_requested_count(manifest, layout)
-    selected = unique_by_pokemon_id(scope_featured_elements(scope_data))
+    selected = unique_by_poster_subject(scope_featured_elements(scope_data))
     fallback = manifest.get("pokemon", {}).get("fallback_candidates", [])
     for candidate in fallback:
         if isinstance(candidate, dict) and isinstance(
             candidate.get("pokemon_id"), int
         ):
-            selected.append({"pokemon_id": candidate["pokemon_id"]})
-    selected = unique_by_pokemon_id(selected)
+            selected.append(dict(candidate))
+    selected = unique_by_poster_subject(selected)
     if len(selected) < count:
         raise ValueError(
             f"Layout needs {count} Pokemon, but only {len(selected)} "
             "were resolved"
         )
-    return [item["pokemon_id"] for item in selected[:count]], layout
+    return [
+        resolve_poster_subject(item).selection_key()
+        for item in selected[:count]
+    ], layout
 
 
 def _cutout_asset_issues(
     bundle: PosterBundle,
     scope_data: dict[str, Any],
 ) -> tuple[list[str], list[tuple[Path, dict[str, Any]]], str | None]:
-    expected_ids, layout = _expected_pokemon_ids(bundle.manifest, scope_data)
+    expected_subjects, layout = _expected_subject_identities(
+        bundle.manifest,
+        scope_data,
+    )
     path = bundle.asset_dir / "cutouts" / "manifest.json"
     if not path.is_file():
         return ["cutout_manifest_missing"], [], None
@@ -586,11 +596,48 @@ def _cutout_asset_issues(
     items = payload.get("items")
     if not isinstance(items, list):
         return _unique((*issues, "cutout_manifest_invalid")), [], None
-    actual_ids = [
-        item.get("pokemon_id") if isinstance(item, dict) else None
-        for item in items
-    ]
-    if actual_ids != expected_ids:
+    actual_subjects: list[tuple[str, int, int] | None] = []
+    seen_subjects: set[tuple[str, int, int]] = set()
+    artwork_species: dict[tuple[str, int], int] = {}
+    seen_files: set[str] = set()
+    for item in items:
+        if not isinstance(item, dict):
+            actual_subjects.append(None)
+            continue
+        try:
+            subject = resolve_poster_subject(item)
+        except (TypeError, ValueError):
+            actual_subjects.append(None)
+            issues.append("cutout_manifest_invalid")
+            continue
+        identity = subject.selection_key()
+        actual_subjects.append(identity)
+        if identity in seen_subjects:
+            issues.append("cutout_manifest_invalid")
+        seen_subjects.add(identity)
+        previous_species = artwork_species.get(subject.artwork_key())
+        if (
+            previous_species is not None
+            and previous_species != subject.species_id
+        ):
+            issues.append("cutout_manifest_invalid")
+        artwork_species[subject.artwork_key()] = subject.species_id
+        if item.get("url") != subject.image_url:
+            issues.append("cutout_manifest_invalid")
+        filename = item.get("file")
+        if isinstance(filename, str):
+            if filename in seen_files:
+                issues.append("cutout_manifest_invalid")
+            seen_files.add(filename)
+        if subject.is_special_form:
+            expected_filename = cutout_filename(
+                subject.species_id,
+                str(item.get("name_en") or f"pokemon-{subject.species_id}"),
+                subject.official_artwork_id,
+            )
+            if filename != expected_filename:
+                issues.append("cutout_manifest_invalid")
+    if actual_subjects != expected_subjects:
         issues.append("cutout_selection_stale")
 
     checked: list[tuple[Path, dict[str, Any]]] = []

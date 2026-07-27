@@ -11,7 +11,13 @@ from typing import Any
 from PIL import Image
 
 try:
-    from .layout import build_print_layout, effective_dpi
+    from .fetch_cutouts import (
+        resolve_requested_count,
+        select_pokemon,
+        scope_featured_elements,
+        unique_by_poster_subject,
+    )
+    from .layout import build_page_layout, build_print_layout, effective_dpi
     from .poster_config import build_identity_lock_prompt
     from .provenance import (
         ROOT,
@@ -29,8 +35,15 @@ try:
         poster_bundle,
         poster_bundles_for_scope,
     )
+    from .poster_subject import resolve_poster_subject
 except ImportError:
-    from layout import build_print_layout, effective_dpi
+    from fetch_cutouts import (
+        resolve_requested_count,
+        select_pokemon,
+        scope_featured_elements,
+        unique_by_poster_subject,
+    )
+    from layout import build_page_layout, build_print_layout, effective_dpi
     from poster_config import build_identity_lock_prompt
     from provenance import (
         ROOT,
@@ -48,6 +61,7 @@ except ImportError:
         poster_bundle,
         poster_bundles_for_scope,
     )
+    from poster_subject import resolve_poster_subject
 
 
 POSTER_ASSETS = ROOT / "data" / "poster_assets"
@@ -121,41 +135,78 @@ def _image_dpi(path: Path) -> tuple[float, float]:
     return float(dpi[0]), float(dpi[1])
 
 
-def _validate_section_source(
+def _validate_source_subjects(
     bundle,
     scope_data: dict[str, Any],
 ) -> None:
-    """Keep enabled aggregate overlays and cutouts bound to current source data."""
-    if bundle.section_id is None:
-        return
-    section = next(iter(scope_data.get("sections", {}).values()))
-    featured = section.get("featured_elements")
-    if not isinstance(featured, list) or not featured:
-        raise ValueError(
-            f"{bundle.asset_key} source section has no featured_elements"
+    """Keep every promoted cutout cast bound to the current source data."""
+    sections = scope_data.get("sections", {})
+    if not isinstance(sections, dict) or not sections:
+        raise ValueError(f"{bundle.asset_key} source sections are invalid")
+    section = (
+        next(iter(sections.values()))
+        if bundle.section_id is not None
+        else None
+    )
+    layout = build_page_layout(
+        str(bundle.manifest.get("layout", {}).get("name", "standard_3x3"))
+    )
+    count = resolve_requested_count(bundle.manifest, layout)
+    try:
+        selected = select_pokemon(
+            bundle.manifest,
+            scope_data,
+            count,
+            {},
         )
-    expected_ids = [item.get("pokemon_id") for item in featured]
-    if (
-        any(not isinstance(pokemon_id, int) for pokemon_id in expected_ids)
-        or len(set(expected_ids)) != len(expected_ids)
-    ):
+        expected_subjects = [
+            resolve_poster_subject(item).selection_key()
+            for item in selected
+        ]
+    except (AttributeError, TypeError, ValueError) as error:
         raise ValueError(
             f"{bundle.asset_key} source featured_elements are invalid"
-        )
+        ) from error
+    if section is not None:
+        featured = section.get("featured_elements")
+        if not isinstance(featured, list) or len(featured) != count:
+            raise ValueError(
+                f"{bundle.asset_key} source section needs exactly {count} "
+                "featured_elements"
+            )
+        expected_items = scope_featured_elements(scope_data)
+        if len(unique_by_poster_subject(expected_items)) != count:
+            raise ValueError(
+                f"{bundle.asset_key} source featured_elements are not unique"
+            )
     cutout_manifest_path = bundle.asset_dir / "cutouts" / "manifest.json"
     cutout_manifest = json.loads(
         cutout_manifest_path.read_text(encoding="utf-8")
     )
-    actual_ids = [
-        item.get("pokemon_id")
-        for item in cutout_manifest.get("items", [])
-    ]
-    if actual_ids != expected_ids:
+    actual_items = cutout_manifest.get("items", [])
+    if not isinstance(actual_items, list):
         raise ValueError(
-            f"{bundle.asset_key} cutouts {actual_ids} do not match current "
-            f"featured_elements {expected_ids}"
+            f"{bundle.asset_key} cutout manifest items are invalid"
         )
-    if bundle.scope == "Pokedex":
+    try:
+        actual_subjects = []
+        for item in actual_items:
+            if not isinstance(item, dict):
+                raise ValueError("cutout item must be a mapping")
+            subject = resolve_poster_subject(item)
+            if item.get("url") != subject.image_url:
+                raise ValueError("cutout URL does not match poster subject")
+            actual_subjects.append(subject.selection_key())
+    except (TypeError, ValueError) as error:
+        raise ValueError(
+            f"{bundle.asset_key} cutout poster subjects are invalid"
+        ) from error
+    if actual_subjects != expected_subjects:
+        raise ValueError(
+            f"{bundle.asset_key} cutouts {actual_subjects} do not match "
+            f"current featured_elements {expected_subjects}"
+        )
+    if bundle.scope == "Pokedex" and section is not None:
         for field in ("title", "subtitle", "description"):
             localized = section.get(field)
             missing = [
@@ -200,7 +251,7 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
             f"{provenance_path}"
         )
     scope_data = load_poster_scope_data(bundle)
-    _validate_section_source(bundle, scope_data)
+    _validate_source_subjects(bundle, scope_data)
 
     configured_generation = artwork_config.get("generation", {})
     recorded_generation = payload.get("run", {}).get("generation", {})

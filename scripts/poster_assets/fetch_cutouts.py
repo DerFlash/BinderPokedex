@@ -24,19 +24,25 @@ from PIL import Image
 try:
     from .layout import build_page_layout
     from .poster_io import load_poster_scope_data, poster_bundle
+    from .poster_subject import (
+        manifest_subject_fields,
+        poster_subject_from_card,
+        resolve_poster_subject,
+    )
 except ImportError:  # Direct script execution
     from layout import build_page_layout
     from poster_io import load_poster_scope_data, poster_bundle
+    from poster_subject import (
+        manifest_subject_fields,
+        poster_subject_from_card,
+        resolve_poster_subject,
+    )
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parent.parent
 POSTER_ASSETS_DIR = REPO_ROOT / "data" / "poster_assets"
 OUTPUT_DIR = REPO_ROOT / "data" / "output"
-POKEAPI_OFFICIAL_ARTWORK_URL = (
-    "https://raw.githubusercontent.com/PokeAPI/sprites/master/"
-    "sprites/pokemon/other/official-artwork/{pokemon_id}.png"
-)
 USER_AGENT = "BinderPokedex poster-assets/1.0"
 MIN_SIZE = 350
 
@@ -75,21 +81,118 @@ def collect_pokedex_names() -> dict[int, dict[str, str]]:
 
 def scope_featured_elements(scope_data: dict[str, Any]) -> list[dict[str, Any]]:
     result: list[dict[str, Any]] = []
+    set_id = scope_data.get("set_id")
+    normalized_set_id = (
+        set_id.lower()
+        if isinstance(set_id, str) and set_id
+        else None
+    )
     for section in scope_data.get("sections", {}).values():
         featured = section.get("featured_elements") or section.get("featured_cards") or []
         if isinstance(featured, list):
-            result.extend(item for item in featured if isinstance(item, dict))
+            cards = section.get("cards", [])
+            cards_by_id = {}
+            if isinstance(cards, list):
+                for card in cards:
+                    if not isinstance(card, dict):
+                        continue
+                    tcg_card = card.get("tcg_card")
+                    card_id = (
+                        tcg_card.get("id")
+                        if isinstance(tcg_card, dict)
+                        else card.get("id")
+                    )
+                    if isinstance(card_id, str):
+                        cards_by_id[card_id] = card
+                    local_id = card.get("localId")
+                    if (
+                        normalized_set_id is not None
+                        and isinstance(local_id, str)
+                        and local_id
+                    ):
+                        cards_by_id[
+                            f"{normalized_set_id}-{local_id}"
+                        ] = card
+
+            for item in featured:
+                if not isinstance(item, dict):
+                    continue
+                resolved = dict(item)
+                card_id = resolved.get("card_id")
+                source_card = (
+                    cards_by_id.get(card_id)
+                    if isinstance(card_id, str)
+                    else None
+                )
+                if (
+                    isinstance(card_id, str)
+                    and cards_by_id
+                    and source_card is None
+                ):
+                    raise ValueError(
+                        f"Featured card {card_id!r} does not exist in its "
+                        "source section"
+                    )
+                if isinstance(source_card, dict):
+                    poster_subject = poster_subject_from_card(
+                        source_card
+                    )
+                    if "poster_subject" in resolved:
+                        explicit = resolve_poster_subject(resolved)
+                        derived = resolve_poster_subject(
+                            {
+                                "pokemon_id": source_card.get("pokemon_id"),
+                                "poster_subject": poster_subject,
+                            }
+                        )
+                        if (
+                            explicit.species_id != derived.species_id
+                            or explicit.selection_key()
+                            != derived.selection_key()
+                        ):
+                            raise ValueError(
+                                f"Featured card {card_id!r} poster_subject "
+                                "does not match its source card artwork"
+                            )
+                    else:
+                        resolved["poster_subject"] = poster_subject
+                    prefix = source_card.get("prefix")
+                    name = resolved.get("pokemon_name")
+                    if (
+                        poster_subject["official_artwork_id"]
+                        != poster_subject["species_id"]
+                        and isinstance(prefix, str)
+                        and prefix
+                        and isinstance(name, str)
+                        and not name.startswith(f"{prefix} ")
+                    ):
+                        resolved["pokemon_name"] = f"{prefix} {name}"
+                result.append(resolved)
     return result
 
 
-def unique_by_pokemon_id(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    seen: set[int] = set()
+def unique_by_poster_subject(
+    items: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    seen: set[tuple[str, int, int]] = set()
+    artwork_species: dict[tuple[str, int], int] = {}
     unique: list[dict[str, Any]] = []
     for item in items:
-        pokemon_id = item.get("pokemon_id")
-        if not isinstance(pokemon_id, int) or pokemon_id in seen:
+        subject = resolve_poster_subject(item)
+        key = subject.selection_key()
+        previous_species = artwork_species.get(subject.artwork_key())
+        if (
+            previous_species is not None
+            and previous_species != subject.species_id
+        ):
+            raise ValueError(
+                f"{subject.subject_key} is assigned to both Pokemon "
+                f"#{previous_species} and #{subject.species_id}"
+            )
+        artwork_species[subject.artwork_key()] = subject.species_id
+        if key in seen:
             continue
-        seen.add(pokemon_id)
+        seen.add(key)
         unique.append(item)
     return unique
 
@@ -115,21 +218,25 @@ def select_pokemon(
     if strategy != "featured_from_scope":
         raise ValueError(f"Unsupported pokemon.strategy '{strategy}'")
 
-    selected = unique_by_pokemon_id(scope_featured_elements(scope_data))
+    selected = unique_by_poster_subject(scope_featured_elements(scope_data))
     fallback_candidates = pokemon_cfg.get("fallback_candidates", [])
     for candidate in fallback_candidates:
         pokemon_id = candidate.get("pokemon_id") if isinstance(candidate, dict) else None
         if not isinstance(pokemon_id, int):
             continue
         localized = names_by_id.get(pokemon_id, {})
-        selected.append({
-            "pokemon_id": pokemon_id,
-            "pokemon_name": localized.get("en") or f"pokemon-{pokemon_id}",
-        })
-    selected = unique_by_pokemon_id(selected)
+        resolved_candidate = dict(candidate)
+        resolved_candidate.setdefault(
+            "pokemon_name",
+            localized.get("en") or f"pokemon-{pokemon_id}",
+        )
+        selected.append(resolved_candidate)
+    selected = unique_by_poster_subject(selected)
 
     if len(selected) < count:
-        found = ", ".join(str(item.get("pokemon_id")) for item in selected) or "none"
+        found = ", ".join(
+            resolve_poster_subject(item).subject_key for item in selected
+        ) or "none"
         raise ValueError(
             f"Layout needs {count} Pokemon, but only {len(selected)} were resolved ({found}). "
             "Add pokemon.fallback_candidates to poster.yaml."
@@ -143,7 +250,19 @@ def slugify(value: str) -> str:
     return value.strip("_") or "pokemon"
 
 
-def cutout_filename(pokemon_id: int, name_en: str) -> str:
+def cutout_filename(
+    pokemon_id: int,
+    name_en: str,
+    official_artwork_id: int | None = None,
+) -> str:
+    if (
+        official_artwork_id is not None
+        and official_artwork_id != pokemon_id
+    ):
+        return (
+            f"pokemon_{pokemon_id:03d}_artwork_{official_artwork_id}_"
+            f"{slugify(name_en)}.png"
+        )
     return f"pokemon_{pokemon_id:03d}_{slugify(name_en)}.png"
 
 
@@ -203,8 +322,14 @@ def build_manifest_item(
     validation: dict[str, Any],
 ) -> dict[str, Any]:
     pokemon_id = pokemon["pokemon_id"]
+    subject = resolve_poster_subject(pokemon)
     localized = names_by_id.get(pokemon_id, {})
-    name_en = localized.get("en") or pokemon.get("pokemon_name") or f"pokemon-{pokemon_id}"
+    supplied_name = pokemon.get("pokemon_name")
+    name_en = (
+        supplied_name
+        if subject.is_special_form and isinstance(supplied_name, str)
+        else localized.get("en") or supplied_name or f"pokemon-{pokemon_id}"
+    )
     name_de = localized.get("de") or name_en
     return {
         "pokemon_id": pokemon_id,
@@ -212,6 +337,7 @@ def build_manifest_item(
         "name_de": name_de,
         "url": url,
         "file": file_name,
+        **manifest_subject_fields(pokemon),
         **validation,
     }
 
@@ -239,18 +365,37 @@ def fetch_cutouts(scope: str, force: bool = False) -> int:
 
     for pokemon in selected:
         pokemon_id = pokemon["pokemon_id"]
+        subject = resolve_poster_subject(pokemon)
         localized = names_by_id.get(pokemon_id, {})
-        name_en = localized.get("en") or pokemon.get("pokemon_name") or f"pokemon-{pokemon_id}"
-        url = POKEAPI_OFFICIAL_ARTWORK_URL.format(pokemon_id=pokemon_id)
-        file_name = cutout_filename(pokemon_id, name_en)
+        supplied_name = pokemon.get("pokemon_name")
+        name_en = (
+            supplied_name
+            if subject.is_special_form and isinstance(supplied_name, str)
+            else localized.get("en")
+            or supplied_name
+            or f"pokemon-{pokemon_id}"
+        )
+        url = subject.image_url
+        file_name = cutout_filename(
+            pokemon_id,
+            name_en,
+            subject.official_artwork_id,
+        )
         out_path = cutouts_dir / file_name
 
         if out_path.exists() and not force:
             validation = validate_png(out_path)
             status = "valid" if validation["validated_alpha"] else "invalid"
-            print(f"  - {name_en} #{pokemon_id:03d}: exists ({status})")
+            print(
+                f"  - {name_en} #{pokemon_id:03d} "
+                f"[artwork {subject.official_artwork_id}]: "
+                f"exists ({status})"
+            )
         else:
-            print(f"  - {name_en} #{pokemon_id:03d}: downloading")
+            print(
+                f"  - {name_en} #{pokemon_id:03d} "
+                f"[artwork {subject.official_artwork_id}]: downloading"
+            )
             try:
                 image_bytes = download_bytes(url)
                 validation = save_cutout(image_bytes, out_path)

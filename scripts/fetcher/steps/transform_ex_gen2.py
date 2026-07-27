@@ -278,7 +278,9 @@ class TransformBlackWhiteEXStep(BaseStep):
                             logger.debug(f"✓ Found primal form artwork for {form_name} (ID: {form_id})")
                             return f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{form_id}.png"
                     
-                    logger.warning(f"Could not fetch primal form data for {form_name}, using base artwork")
+                    logger.warning(
+                        f"Could not fetch primal form data for {form_name}"
+                    )
                     break
                     
                 except requests.Timeout:
@@ -286,20 +288,25 @@ class TransformBlackWhiteEXStep(BaseStep):
                         logger.warning(f"Timeout fetching {form_name}, retrying ({attempt + 1}/3)...")
                         time.sleep(2)
                     else:
-                        logger.warning(f"Timeout fetching {form_name} after 3 attempts, using base artwork")
+                        logger.warning(
+                            f"Timeout fetching {form_name} after 3 attempts"
+                        )
                 except Exception as e:
                     logger.warning(f"Error fetching primal artwork for {pokemon_name}: {e}")
                     break
-            
-            # Fallback to base artwork
-            return f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{dex_id}.png"
+
+            raise RuntimeError(
+                f"Could not resolve exact PokeAPI artwork for primal form "
+                f"{form_name!r}"
+            )
             
         elif section == 'mega':
             # Handle special cases: Charizard and Mewtwo MUST have X or Y suffix
             base_name = pokemon_name.lower().replace(' ', '-')
             if base_name in ['charizard', 'mewtwo'] and not form_suffix:
-                logger.warning(f"{pokemon_name} Mega requires X or Y suffix, defaulting to X")
-                form_suffix = "X"
+                raise ValueError(
+                    f"{pokemon_name} Mega requires an explicit X or Y suffix"
+                )
             
             # Use shared utility for Mega evolutions
             return get_mega_artwork_url(

@@ -28,8 +28,15 @@ from typing import Dict, Any, List, Optional
 import sys
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
+REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from steps.base import BaseStep, PipelineContext
+from scripts.poster_assets.poster_subject import (
+    poster_subject_from_card,
+    resolve_poster_subject,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -315,19 +322,38 @@ class EnrichFeaturedElementsStep(BaseStep):
         Returns:
             List of featured element data dicts
         """
-        # Extract unique Pokemon with their cards, sorted by priority
+        # Extract unique visual subjects with their cards, sorted by species
+        # priority.  Base and special forms of the same species may coexist.
         pokemon_cards = {}
+        conflicting_subjects: set[tuple[str, int]] = set()
         for card in cards:
             pokemon_id = card.get('pokemon_id')
             if not pokemon_id:
                 continue
-            
-            # Only keep the first (best) card for each Pokemon
-            if pokemon_id not in pokemon_cards:
+
+            poster_subject = poster_subject_from_card(card)
+            subject = resolve_poster_subject({
+                'pokemon_id': pokemon_id,
+                'poster_subject': poster_subject,
+            })
+            subject_key = subject.artwork_key()
+
+            # Only keep the first (best) card for each exact artwork subject.
+            # Flag inconsistent upstream mappings if such a subject would be
+            # selected instead of silently binding it to the wrong species.
+            existing = pokemon_cards.get(subject_key)
+            if existing is not None:
+                if existing['pokemon_id'] != pokemon_id:
+                    conflicting_subjects.add(subject_key)
+                continue
+
+            if subject_key not in pokemon_cards:
                 priority = FEATURED_POKEMON_PRIORITY.get(pokemon_id, 0)
-                pokemon_cards[pokemon_id] = {
+                pokemon_cards[subject_key] = {
                     'priority': priority,
-                    'card': card
+                    'pokemon_id': pokemon_id,
+                    'card': card,
+                    'poster_subject': poster_subject,
                 }
         
         # Sort by priority (highest first)
@@ -339,55 +365,30 @@ class EnrichFeaturedElementsStep(BaseStep):
         
         # Take top N and fetch their images
         featured_elements = []
-        for pokemon_id, data in sorted_pokemon[:max_cards]:
+        for subject_key, data in sorted_pokemon[:max_cards]:
+            if subject_key in conflicting_subjects:
+                raise ValueError(
+                    f"Poster subject {subject_key!r} is assigned to more than "
+                    "one Pokemon species in the source data"
+                )
+            pokemon_id = data['pokemon_id']
             card = data['card']
             element_data = self._fetch_card_image_from_any_card(pokemon_id, card, cache_dir, set_info)
             if element_data:
+                element_data['poster_subject'] = data['poster_subject']
+                prefix = card.get('prefix')
+                if (
+                    isinstance(prefix, str)
+                    and prefix
+                    and isinstance(element_data.get('pokemon_name'), str)
+                    and not element_data['pokemon_name'].startswith(f"{prefix} ")
+                ):
+                    element_data['pokemon_name'] = (
+                        f"{prefix} {element_data['pokemon_name']}"
+                    )
                 featured_elements.append(element_data)
         
         return featured_elements
-    
-    def _download_and_cache_image(self, image_url: str, cache_file: Path) -> bool:
-        """
-        Download and cache a card image.
-        
-        Args:
-            image_url: URL to download from
-            cache_file: Path to save the image
-        
-        Returns:
-            True if successful, False otherwise
-        """
-        try:
-            if cache_file.exists():
-                return True
-            
-            img_response = requests.get(image_url, timeout=10)
-            img_response.raise_for_status()
-            cache_file.write_bytes(img_response.content)
-            logger.info(f"Cached card image: {cache_file}")
-            return True
-        except Exception as e:
-            logger.error(f"Failed to download image from {image_url}: {e}")
-            return False
-    
-    def _get_series_from_set_id(self, set_id: str) -> str:
-        """
-        Determine series identifier from set_id.
-        
-        Args:
-            set_id: TCG set identifier (e.g., 'sv05', 'me01', 'ex1')
-        
-        Returns:
-            Series identifier for TCGdex URLs
-        """
-        # Check for known prefixes
-        for prefix, series in SERIES_MAPPING.items():
-            if set_id.startswith(prefix):
-                return series
-        
-        # Fallback
-        return 'base'
     
     def _download_and_cache_image(self, image_url: str, cache_file: Path) -> bool:
         """
@@ -580,9 +581,15 @@ class EnrichFeaturedElementsStep(BaseStep):
             cache_file = cache_dir / f"pokemon_{pokemon_id}_{card_id.replace('/', '_')}.png"
             if not self._download_and_cache_image(image_url, cache_file):
                 logger.warning(f"Failed to cache TCG-Set card image for Pokemon {pokemon_id}, trying PokeAPI fallback")
-                # Fallback to PokeAPI artwork if TCG image not available
-                fallback_url = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokemon_id}.png"
-                fallback_cache = cache_dir / f"pokemon_{pokemon_id}_{card_id.replace('/', '_')}_fallback.png"
+                # Cover fallback uses the exact poster subject.  A special form
+                # must never be replaced with base-species artwork.
+                fallback_subject = poster_subject_from_card(card)
+                fallback_url = fallback_subject['image_url']
+                artwork_id = fallback_subject['official_artwork_id']
+                fallback_cache = cache_dir / (
+                    f"pokemon_{pokemon_id}_artwork_{artwork_id}_"
+                    f"{card_id.replace('/', '_')}_fallback.png"
+                )
                 if self._download_and_cache_image(fallback_url, fallback_cache):
                     cache_file = fallback_cache
                     image_url = fallback_url

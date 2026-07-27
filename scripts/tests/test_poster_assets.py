@@ -3,6 +3,7 @@ import shutil
 import sys
 from dataclasses import replace
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 from PIL import Image, ImageChops
@@ -43,6 +44,12 @@ from scripts.poster_assets.init_poster_scope import (
     stable_scope_seed,
 )
 from scripts.poster_assets.poster_io import poster_bundle
+from scripts.poster_assets.poster_subject import (
+    PosterSubject,
+    official_artwork_id_from_url,
+    poster_subject_from_card,
+    resolve_poster_subject,
+)
 from scripts.poster_assets.poster_config import (
     IDENTITY_LOCK_PROMPT_FILE,
     build_identity_lock_prompt,
@@ -86,6 +93,7 @@ from scripts.poster_assets.validate_promoted_poster import (
     enabled_poster_scopes,
     validate as validate_promoted_poster,
 )
+from scripts.poster_assets import validate_promoted_poster as poster_validator
 
 
 def test_auto_count_uses_layout_columns():
@@ -142,6 +150,365 @@ def test_select_pokemon_uses_fallback_candidates():
     selected = fetch_cutouts.select_pokemon(manifest, scope_data, 4, names)
 
     assert [item["pokemon_id"] for item in selected] == [150, 1, 4, 25]
+
+
+def test_select_pokemon_keeps_distinct_forms_of_one_species():
+    scope_data = {
+        "sections": {
+            "mega": {
+                "featured_elements": [
+                    {
+                        "pokemon_id": 6,
+                        "pokemon_name": "Mega Charizard X",
+                        "poster_subject": PosterSubject(6, 10034).as_mapping(),
+                    },
+                    {
+                        "pokemon_id": 6,
+                        "pokemon_name": "Mega Charizard Y",
+                        "poster_subject": PosterSubject(6, 10035).as_mapping(),
+                    },
+                    {
+                        "pokemon_id": 380,
+                        "pokemon_name": "Mega Latias",
+                        "poster_subject": PosterSubject(
+                            380,
+                            10062,
+                        ).as_mapping(),
+                    },
+                ]
+            }
+        }
+    }
+    selected = fetch_cutouts.select_pokemon(
+        {
+            "pokemon": {
+                "strategy": "featured_from_scope",
+                "fallback_candidates": [],
+            }
+        },
+        scope_data,
+        3,
+        {},
+    )
+
+    assert [
+        resolve_poster_subject(item).official_artwork_id
+        for item in selected
+    ] == [10034, 10035, 10062]
+    assert (
+        fetch_cutouts.cutout_filename(6, "Mega Charizard X", 10034)
+        == "pokemon_006_artwork_10034_mega_charizard_x.png"
+    )
+
+
+def test_legacy_featured_element_recovers_form_from_its_source_card():
+    scope_data = {
+        "sections": {
+            "mega": {
+                "cards": [
+                    {
+                        "pokemon_id": 380,
+                        "image_url": PosterSubject(380, 10062).image_url,
+                        "prefix": "Mega",
+                        "tcg_card": {"id": "me01-100"},
+                    }
+                ],
+                "featured_elements": [
+                    {
+                        "pokemon_id": 380,
+                        "pokemon_name": "Latias",
+                        "card_id": "me01-100",
+                        "image_url": (
+                            "https://assets.tcgdex.net/en/me/me01/100/high.png"
+                        ),
+                    }
+                ],
+            }
+        }
+    }
+
+    featured = fetch_cutouts.scope_featured_elements(scope_data)
+
+    assert featured[0]["image_url"].startswith(
+        "https://assets.tcgdex.net/"
+    )
+    assert featured[0]["pokemon_name"] == "Mega Latias"
+    subject = resolve_poster_subject(featured[0])
+    assert (subject.species_id, subject.official_artwork_id) == (380, 10062)
+
+
+def test_explicit_featured_subject_must_match_its_source_card():
+    scope_data = {
+        "sections": {
+            "mega": {
+                "cards": [
+                    {
+                        "pokemon_id": 380,
+                        "image_url": PosterSubject(380, 10062).image_url,
+                        "prefix": "Mega",
+                        "tcg_card": {"id": "me01-100"},
+                    }
+                ],
+                "featured_elements": [
+                    {
+                        "pokemon_id": 380,
+                        "card_id": "me01-100",
+                        "poster_subject": PosterSubject(
+                            380,
+                            380,
+                        ).as_mapping(),
+                    }
+                ],
+            }
+        }
+    }
+
+    with pytest.raises(ValueError, match="does not match its source card"):
+        fetch_cutouts.scope_featured_elements(scope_data)
+
+
+def test_poster_subject_rejects_mismatched_or_untrusted_artwork_urls():
+    subject = PosterSubject(380, 10062).as_mapping()
+    subject["image_url"] = PosterSubject(380, 380).image_url
+
+    with pytest.raises(ValueError, match="does not match"):
+        resolve_poster_subject(
+            {"pokemon_id": 380, "poster_subject": subject}
+        )
+    with pytest.raises(ValueError, match="canonical"):
+        official_artwork_id_from_url(
+            "https://example.test/official-artwork/10062.png"
+        )
+    with pytest.raises(ValueError, match="belongs to Pokemon #719"):
+        PosterSubject(380, 10075)
+    with pytest.raises(ValueError, match="not present in the pinned"):
+        PosterSubject(380, 10999)
+    with pytest.raises(ValueError, match="without an exact"):
+        poster_subject_from_card(
+            {
+                "pokemon_id": 380,
+                "prefix": "Mega",
+                "image_url": "https://assets.tcgdex.net/card.png",
+            }
+        )
+    with pytest.raises(ValueError, match="without an exact"):
+        poster_subject_from_card(
+            {
+                "pokemon_id": 150,
+                "prefix": "[M]",
+                "image_url": "https://assets.tcgdex.net/card.png",
+            }
+        )
+    for pokemon_id, marker in ((380, "Mega"), (150, "[M]")):
+        with pytest.raises(ValueError, match="without an exact"):
+            poster_subject_from_card(
+                {
+                    "pokemon_id": pokemon_id,
+                    "prefix": marker,
+                    "image_url": PosterSubject(
+                        pokemon_id,
+                        pokemon_id,
+                    ).image_url,
+                }
+            )
+
+
+def test_featured_card_link_must_resolve_before_base_fallback():
+    with pytest.raises(ValueError, match="does not exist"):
+        fetch_cutouts.scope_featured_elements(
+            {
+                "sections": {
+                    "mega": {
+                        "cards": [
+                            {
+                                "pokemon_id": 380,
+                                "image_url": PosterSubject(
+                                    380,
+                                    10062,
+                                ).image_url,
+                                "tcg_card": {"id": "me01-100"},
+                            }
+                        ],
+                        "featured_elements": [
+                            {
+                                "pokemon_id": 380,
+                                "card_id": "me01-typo",
+                            }
+                        ],
+                    }
+                }
+            }
+        )
+
+
+def test_fetch_cutouts_downloads_exact_form_artwork_without_base_fallback(
+    tmp_path: Path,
+    monkeypatch,
+):
+    asset_dir = tmp_path / "ExGen3" / "sections" / "mega"
+    bundle = SimpleNamespace(
+        asset_dir=asset_dir,
+        asset_key="ExGen3/sections/mega",
+        scope="ExGen3",
+        poster_id="mega",
+        section_id="mega",
+        manifest={
+            "layout": {"name": "standard_3x3"},
+            "pokemon": {
+                "strategy": "featured_from_scope",
+                "count": "auto_from_layout_columns",
+                "fallback_candidates": [],
+            },
+        },
+    )
+    scope_data = {
+        "sections": {
+            "mega": {
+                "featured_elements": [
+                    {
+                        "pokemon_id": 380,
+                        "pokemon_name": "Mega Latias",
+                        "poster_subject": PosterSubject(
+                            380,
+                            10062,
+                        ).as_mapping(),
+                    },
+                    {
+                        "pokemon_id": 719,
+                        "pokemon_name": "Mega Diancie",
+                        "poster_subject": PosterSubject(
+                            719,
+                            10075,
+                        ).as_mapping(),
+                    },
+                    {
+                        "pokemon_id": 448,
+                        "pokemon_name": "Mega Lucario",
+                        "poster_subject": PosterSubject(
+                            448,
+                            10059,
+                        ).as_mapping(),
+                    },
+                ]
+            }
+        }
+    }
+    requested_urls = []
+
+    monkeypatch.setattr(
+        fetch_cutouts,
+        "poster_bundle",
+        lambda *_args, **_kwargs: bundle,
+    )
+    monkeypatch.setattr(
+        fetch_cutouts,
+        "load_poster_scope_data",
+        lambda *_args, **_kwargs: scope_data,
+    )
+    monkeypatch.setattr(fetch_cutouts, "collect_pokedex_names", lambda: {})
+
+    def fake_download(url):
+        requested_urls.append(url)
+        return b"fixture"
+
+    def fake_save(_payload, path):
+        image = Image.new("RGBA", (400, 400), (0, 0, 0, 0))
+        for x in range(100, 300):
+            for y in range(100, 300):
+                image.putpixel((x, y), (30, 120, 220, 255))
+        image.save(path)
+        return fetch_cutouts.validate_png(path)
+
+    monkeypatch.setattr(fetch_cutouts, "download_bytes", fake_download)
+    monkeypatch.setattr(fetch_cutouts, "save_cutout", fake_save)
+
+    assert fetch_cutouts.fetch_cutouts("ExGen3/sections/mega") == 0
+
+    assert requested_urls == [
+        PosterSubject(380, 10062).image_url,
+        PosterSubject(719, 10075).image_url,
+        PosterSubject(448, 10059).image_url,
+    ]
+    assert PosterSubject(380, 380).image_url not in requested_urls
+    payload = json.loads(
+        (asset_dir / "cutouts" / "manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert payload["items"][0]["poster_subject"] == PosterSubject(
+        380,
+        10062,
+    ).as_mapping()
+    assert (
+        payload["items"][0]["file"]
+        == "pokemon_380_artwork_10062_mega_latias.png"
+    )
+
+
+def test_individual_promotion_rejects_source_form_cutout_mismatch(
+    tmp_path: Path,
+):
+    asset_dir = tmp_path / "ME03"
+    cutout_dir = asset_dir / "cutouts"
+    cutout_dir.mkdir(parents=True)
+    bundle = SimpleNamespace(
+        asset_key="ME03",
+        scope="ME03",
+        section_id=None,
+        asset_dir=asset_dir,
+        manifest={
+            "layout": {"name": "standard_3x3"},
+            "pokemon": {
+                "strategy": "featured_from_scope",
+                "count": "auto_from_layout_columns",
+                "fallback_candidates": [],
+            },
+        },
+    )
+    scope_data = {
+        "sections": {
+            "all": {
+                "featured_elements": [
+                    {
+                        "pokemon_id": 718,
+                        "poster_subject": PosterSubject(
+                            718,
+                            10301,
+                        ).as_mapping(),
+                    },
+                    {"pokemon_id": 495},
+                    {"pokemon_id": 722},
+                ]
+            }
+        }
+    }
+    (cutout_dir / "manifest.json").write_text(
+        json.dumps(
+            {
+                "items": [
+                    {
+                        "pokemon_id": 718,
+                        "url": PosterSubject(718, 718).image_url,
+                        "file": "pokemon_718_zygarde.png",
+                    },
+                    {
+                        "pokemon_id": 495,
+                        "url": PosterSubject(495, 495).image_url,
+                        "file": "pokemon_495_snivy.png",
+                    },
+                    {
+                        "pokemon_id": 722,
+                        "url": PosterSubject(722, 722).image_url,
+                        "file": "pokemon_722_rowlet.png",
+                    },
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="do not match"):
+        poster_validator._validate_source_subjects(bundle, scope_data)
 
 
 def test_validate_png_requires_transparency(tmp_path: Path):

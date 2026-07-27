@@ -17,6 +17,7 @@ from scripts.poster_assets.poster_config import (
     build_identity_lock_prompt,
 )
 from scripts.poster_assets.poster_io import load_json, poster_bundle
+from scripts.poster_assets.poster_subject import PosterSubject
 from scripts.poster_assets.provenance import (
     build_generation_fingerprint,
     build_overlay_fingerprint,
@@ -156,7 +157,13 @@ def _write_fixture(tmp_path: Path):
     ):
         filename = f"pokemon_{pokemon_id:03d}.png"
         Image.new("RGBA", (18, 18), color).save(cutout_dir / filename)
-        items.append({"pokemon_id": pokemon_id, "file": filename})
+        items.append(
+            {
+                "pokemon_id": pokemon_id,
+                "url": PosterSubject(pokemon_id, pokemon_id).image_url,
+                "file": filename,
+            }
+        )
     (cutout_dir / "manifest.json").write_text(
         json.dumps(
             {
@@ -263,6 +270,138 @@ def test_generation_fingerprint_changes_for_generation_inputs(tmp_path):
         scope_data_dir=output,
     )
     assert pixels_changed["sha256"] != original["sha256"]
+
+
+def test_generation_fingerprint_is_base_compatible_and_form_sensitive(
+    tmp_path,
+):
+    _repository, assets, output, scope_dir, bundle = _write_fixture(tmp_path)
+    original = build_generation_fingerprint(
+        bundle,
+        poster_assets=assets,
+        scope_data_dir=output,
+    )
+    source_path = output / "Example.json"
+    cutout_manifest_path = scope_dir / "cutouts" / "manifest.json"
+    source = load_json(source_path)
+    cutouts = load_json(cutout_manifest_path)
+
+    source["sections"]["main"]["featured_elements"][0][
+        "poster_subject"
+    ] = PosterSubject(1, 1).as_mapping()
+    cutouts["items"][0]["poster_subject"] = PosterSubject(
+        1,
+        1,
+    ).as_mapping()
+    source_path.write_text(json.dumps(source), encoding="utf-8")
+    cutout_manifest_path.write_text(json.dumps(cutouts), encoding="utf-8")
+
+    explicit_base = build_generation_fingerprint(
+        bundle,
+        poster_assets=assets,
+        scope_data_dir=output,
+    )
+    assert explicit_base["sha256"] == original["sha256"]
+    assert explicit_base["components"]["source_subject_ids"][0] == 1
+    assert "poster_subject" not in explicit_base["components"]["cutouts"][0]
+
+    source["sections"]["main"]["featured_elements"][0] = {
+        "pokemon_id": 6,
+        "poster_subject": PosterSubject(6, 10034).as_mapping(),
+    }
+    cutouts["items"][0]["pokemon_id"] = 6
+    cutouts["items"][0]["url"] = PosterSubject(6, 10034).image_url
+    cutouts["items"][0]["poster_subject"] = PosterSubject(
+        6,
+        10034,
+    ).as_mapping()
+    source_path.write_text(json.dumps(source), encoding="utf-8")
+    cutout_manifest_path.write_text(json.dumps(cutouts), encoding="utf-8")
+    first_form = build_generation_fingerprint(
+        bundle,
+        poster_assets=assets,
+        scope_data_dir=output,
+    )
+
+    source["sections"]["main"]["featured_elements"][0][
+        "poster_subject"
+    ] = PosterSubject(6, 10035).as_mapping()
+    cutouts["items"][0]["url"] = PosterSubject(6, 10035).image_url
+    cutouts["items"][0]["poster_subject"] = PosterSubject(
+        6,
+        10035,
+    ).as_mapping()
+    source_path.write_text(json.dumps(source), encoding="utf-8")
+    cutout_manifest_path.write_text(json.dumps(cutouts), encoding="utf-8")
+    second_form = build_generation_fingerprint(
+        bundle,
+        poster_assets=assets,
+        scope_data_dir=output,
+    )
+
+    assert first_form["sha256"] != original["sha256"]
+    assert second_form["sha256"] != first_form["sha256"]
+    assert first_form["components"]["source_subject_ids"][0] == {
+        "pokemon_id": 6,
+        "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "official_artwork_id": 10034,
+        },
+    }
+    assert first_form["components"]["cutouts"][0]["poster_subject"] == {
+        "source": "pokeapi_official_artwork",
+        "official_artwork_id": 10034,
+    }
+
+
+def test_generation_fingerprint_rejects_stale_form_cutout_selection(tmp_path):
+    _repository, assets, output, scope_dir, bundle = _write_fixture(tmp_path)
+    source_path = output / "Example.json"
+    manifest_path = scope_dir / "cutouts" / "manifest.json"
+    source = load_json(source_path)
+    cutouts = load_json(manifest_path)
+
+    source["sections"]["main"]["featured_elements"][0] = {
+        "pokemon_id": 6,
+        "poster_subject": PosterSubject(6, 10034).as_mapping(),
+    }
+    cutouts["items"][0]["pokemon_id"] = 6
+    cutouts["items"][0]["url"] = PosterSubject(6, 6).image_url
+    source_path.write_text(json.dumps(source), encoding="utf-8")
+    manifest_path.write_text(json.dumps(cutouts), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="do not match current source"):
+        build_generation_fingerprint(
+            bundle,
+            poster_assets=assets,
+            scope_data_dir=output,
+        )
+
+
+def test_generation_fingerprint_rejects_duplicate_cutout_subjects(tmp_path):
+    _repository, assets, output, scope_dir, bundle = _write_fixture(tmp_path)
+    manifest_path = scope_dir / "cutouts" / "manifest.json"
+    original = load_json(manifest_path)
+
+    duplicate = copy.deepcopy(original)
+    duplicate["items"].append(copy.deepcopy(duplicate["items"][0]))
+    manifest_path.write_text(json.dumps(duplicate), encoding="utf-8")
+    with pytest.raises(ValueError, match="Duplicate poster subject"):
+        build_generation_fingerprint(
+            bundle,
+            poster_assets=assets,
+            scope_data_dir=output,
+        )
+
+    wrong_url = copy.deepcopy(original)
+    wrong_url["items"][0]["url"] = PosterSubject(4, 4).image_url
+    manifest_path.write_text(json.dumps(wrong_url), encoding="utf-8")
+    with pytest.raises(ValueError, match="URL does not match poster subject"):
+        build_generation_fingerprint(
+            bundle,
+            poster_assets=assets,
+            scope_data_dir=output,
+        )
 
 
 def test_required_model_hashes_follow_the_selected_engine_artifacts():

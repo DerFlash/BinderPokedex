@@ -5,8 +5,10 @@ from typing import Any
 
 try:
     from .layout import resolve_layout_name
+    from .poster_subject import resolve_poster_subject
 except ImportError:
     from layout import resolve_layout_name
+    from poster_subject import resolve_poster_subject
 
 
 IDENTITY_LOCK_PROMPT_FILE = "identity_lock_prompt.generated.txt"
@@ -318,9 +320,19 @@ def subject_conditioning(
         raise ValueError("conditioning.subjects must be a mapping")
 
     pokemon_id = item.get("pokemon_id")
-    config = subjects.get(pokemon_id)
-    if config is None:
-        config = subjects.get(str(pokemon_id))
+    subject = resolve_poster_subject(item)
+    keys: tuple[object, ...] = (
+        subject.subject_key,
+        subject.official_artwork_id,
+        str(subject.official_artwork_id),
+        pokemon_id,
+        str(pokemon_id),
+    )
+    config = None
+    for key in keys:
+        if key in subjects:
+            config = subjects[key]
+            break
     if config is None:
         return {}
     if not isinstance(config, dict):

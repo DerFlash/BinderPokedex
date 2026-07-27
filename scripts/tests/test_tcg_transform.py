@@ -15,6 +15,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / 'fetcher'))
 
 from steps.transform_tcg_set import TransformTCGSetStep
+from steps import transform_tcg_set as transform_tcg_set_module
 
 
 class TestVariantSuffixPrefixDetection:
@@ -166,8 +167,16 @@ class TestCardTransformation:
         assert 'suffix' not in card  # No suffix for base card
         assert 'prefix' not in card
     
-    def test_transform_variant_pokemon_card(self):
+    def test_transform_variant_pokemon_card(self, monkeypatch):
         """Test transformation of variant Pokemon card."""
+        monkeypatch.setattr(
+            transform_tcg_set_module,
+            "get_mega_artwork_url",
+            lambda **_kwargs: (
+                "https://raw.githubusercontent.com/PokeAPI/sprites/master/"
+                "sprites/pokemon/other/official-artwork/10033.png"
+            ),
+        )
         cards = [{
             'localId': '003',
             'name': 'Mega Venusaur ex',  # Original TCGdex name
@@ -259,8 +268,16 @@ class TestCardTransformation:
         assert result[1]['suffix'] == '[EX_NEW]'
         assert result[2]['type'] == 'trainer'
     
-    def test_transform_all_variant_types(self):
+    def test_transform_all_variant_types(self, monkeypatch):
         """Test transformation of all variant types."""
+        monkeypatch.setattr(
+            transform_tcg_set_module,
+            "get_mega_artwork_url",
+            lambda **_kwargs: (
+                "https://raw.githubusercontent.com/PokeAPI/sprites/master/"
+                "sprites/pokemon/other/official-artwork/10034.png"
+            ),
+        )
         variant_cards = [
             {'name': 'Pikachu ex', 'expected_suffix': '[EX_NEW]'},
             {'name': 'Charizard GX', 'expected_suffix': 'GX'},

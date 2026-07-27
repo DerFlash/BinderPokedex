@@ -54,6 +54,21 @@ and visual acceptance gate.
 - Reviewed Pokemon pixels are immutable. They are never redrawn by diffusion,
   reconstructed through the VAE, moved, or rescaled inside the identity-lock
   workflow.
+- Card/cover imagery and poster subjects have separate contracts. The poster
+  subject records the National-Dex species plus the exact allowlisted PokeAPI
+  Official Artwork form ID and URL. Featured selection, cutout filenames and
+  manifests, conditioning, planner checks, promotion validation, and
+  generation fingerprints preserve that identity. Mega/Primal forms and
+  Charizard X/Y cannot silently collapse to a base species or to one another.
+- `config/pokeapi_form_species.json` pins all 326 non-default form-to-species
+  mappings from PokeAPI commit
+  `286d7a071bc50ec4a57e3f3f506a13220ce6f903`. Unknown forms and cross-species
+  artwork assignments fail offline before generation.
+- Legacy checked-in ExGen and ME output resolves the source Official Artwork
+  through the featured `card_id`; new enrichment writes `poster_subject`
+  explicitly while retaining the TCG card image in
+  `featured_elements.image_url`. Base-only bundles retain their historical
+  fingerprint representation and all seven accepted promotions remain current.
 - The runner compares every fully opaque source pixel immediately after
   generation. Base1 passes with 52,584 exact pixels; SV03.5 and Pokédex
   Generation I each pass with 62,719; Pokédex Generation II passes with
@@ -157,7 +172,7 @@ and visual acceptance gate.
 | Anima | Workflow is retained; its LoRA metadata contract still needs to be aligned with the generic runner | Fix the explicit LoRA/steps contract, then promote only after a candidate passes the same review gate |
 | New set art direction | Every current individual set has an explicit catalog brief copied into its manifest | Review or refine the brief before spending the production render; catalog coverage does not replace visual art direction |
 | Wide PDF layouts | 4x3 and 4x4 artwork, placement, prompting, upscale, promotion, validation, slicing, and matching-grid rendering are modeled | Add physical A3 page styles/templates and rendered-PDF QA |
-| Aggregate scopes | The generic index, isolated leaf manifests, section filtering, PDF routing, cleanup, nested validation, and nine Pokédex generation configs are implemented; Generations I through V are promoted and enabled | Generate, review, promote, and enable Generation VI through IX in [#2](https://github.com/DerFlash/BinderPokedex/issues/2); then model other aggregate variant scenes |
+| Aggregate scopes | The generic index, isolated leaf manifests, section filtering, PDF routing, cleanup, nested validation, nine Pokédex generation configs, and form-aware poster-subject contract are implemented; Generations I through V are promoted and enabled | Generate, review, promote, and enable Generation VI through IX in [#2](https://github.com/DerFlash/BinderPokedex/issues/2); then add reviewed section scenes and casts for other aggregate variants |
 
 ## Remaining production requirements
 
@@ -195,7 +210,7 @@ reviewed candidates and their provenance have been promoted.
 
 Completed on 2026-07-27:
 
-- The complete suite passes: 268 tests passed and one unrelated, pre-existing
+- The complete suite passes: 283 tests passed and one unrelated, pre-existing
   EX-logo feature test remains explicitly skipped.
 - Python compilation and `git diff --check` pass.
 - All seven promoted bundles pass `validate_promoted_poster.py`, including
@@ -203,6 +218,13 @@ Completed on 2026-07-27:
   graph-contract status, provenance hashes, 2368 x 3268 artwork, nine
   750 x 1050 card crops, 300-dpi metadata, and exact opaque-source-pixel
   records.
+- Form-identity regressions cover real ExGen3 Mega Latias/Diancie/Lucario,
+  ExGen2 Mega and Primal subjects, ME03 Mega Zygarde, and the unaffected MEP
+  base-form cast. Synthetic checks retain Charizard X/Y as separate subjects,
+  reject species/artwork collisions and untrusted URLs, download only the exact
+  form artwork, detect same-species form drift in both the planner and the
+  runner/promotion fingerprint boundary, and prove that base fingerprints stay
+  unchanged while form IDs affect generation fingerprints.
 - The configured model, encoder, VAE, and Real-ESRGAN hashes match the actual
   files in the local ComfyUI installation.
 - All ten Base1/SV03.5 overlays for `de`, `en`, `fr`, `es`, and `it` render at
