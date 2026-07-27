@@ -10,7 +10,7 @@ from typing import Any
 from PIL import Image, ImageDraw, ImageFilter
 
 try:
-    from .composition import cutout_placements
+    from .composition import cutout_placements, validate_visible_placements
     from .create_comfyui_poster_workflow import output_dimensions
     from .layout import build_page_layout
     from .poster_config import (
@@ -24,7 +24,7 @@ try:
         poster_bundle,
     )
 except ImportError:
-    from composition import cutout_placements
+    from composition import cutout_placements, validate_visible_placements
     from create_comfyui_poster_workflow import output_dimensions
     from layout import build_page_layout
     from poster_config import (
@@ -43,6 +43,8 @@ POSTER_ASSETS = ROOT / "data" / "poster_assets"
 def card_safe_conditioning_placements(
     placements: list[dict[str, object]],
     manifest: dict[str, Any],
+    *,
+    canvas_size: tuple[int, int],
 ) -> list[dict[str, object]]:
     """Apply explicit, per-subject composition-reference compensation."""
     result: list[dict[str, object]] = []
@@ -87,19 +89,12 @@ def card_safe_conditioning_placements(
             - resized_box[3]
             + round(cell.height * baseline_offset),
         )
-        adjusted_left = adjusted["x"] + resized_box[0]
-        adjusted_top = adjusted["y"] + resized_box[1]
-        adjusted_right = adjusted["x"] + resized_box[2]
-        adjusted_bottom = adjusted["y"] + resized_box[3]
-        if not (
-            cell.x <= adjusted_left < adjusted_right <= cell.x + cell.width
-            and cell.y <= adjusted_top < adjusted_bottom <= cell.y + cell.height
-        ):
-            raise ValueError(
-                f"Conditioning for Pokemon #{placement['item'].get('pokemon_id')} "
-                "moves its visible silhouette outside the assigned print-safe region"
-            )
         result.append(adjusted)
+    validate_visible_placements(
+        result,
+        canvas_size=canvas_size,
+        description="Conditioning",
+    )
     return result
 
 
@@ -117,11 +112,20 @@ def build_identity_references(
     reference latents that exhaust unified memory on Apple Silicon.
     """
     layout_name = manifest.get("layout", {}).get("name", "standard_3x3")
-    width, _ = output_dimensions(asset_key or scope_dir.name, 1.0)
+    width, height = output_dimensions(asset_key or scope_dir.name, 1.0)
+    layout = build_page_layout(layout_name, width_px=width)
     placements = cutout_placements(
-        build_page_layout(layout_name, width_px=width), scope_dir
+        layout, scope_dir
     )
-    scene_placements = card_safe_conditioning_placements(placements, manifest)
+    validate_visible_placements(
+        placements,
+        canvas_size=(width, height),
+    )
+    scene_placements = card_safe_conditioning_placements(
+        placements,
+        manifest,
+        canvas_size=(width, height),
+    )
     scene_extents = []
     for placement in scene_placements:
         box = placement["image"].getchannel("A").getbbox()
@@ -358,7 +362,15 @@ def build_scene_reference(
     )
     reference = Image.new("RGBA", (width, height), (226, 224, 211, 0))
     placements = cutout_placements(layout, scope_dir)
-    scene_placements = card_safe_conditioning_placements(placements, manifest)
+    validate_visible_placements(
+        placements,
+        canvas_size=(width, height),
+    )
+    scene_placements = card_safe_conditioning_placements(
+        placements,
+        manifest,
+        canvas_size=(width, height),
+    )
     for placement in scene_placements:
         reference.alpha_composite(placement["image"], (placement["x"], placement["y"]))
     # Latent dimensions are rounded to multiples of 16; match them exactly.

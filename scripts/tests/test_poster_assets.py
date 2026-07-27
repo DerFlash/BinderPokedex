@@ -566,11 +566,34 @@ def test_cutout_placements_stay_inside_bottom_card_cells():
         assert cell.y <= top < bottom <= cell.y + cell.height
 
 
+def test_real_canvas_guard_rejects_nominal_last_column_overflow():
+    scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
+    layout = build_page_layout("standard_3x3", width_px=848)
+    placements = cutout_placements(layout, scope_dir)
+    manifest = fetch_cutouts.load_yaml(scope_dir / "poster.yaml")
+    overflowing = dict(placements[-1])
+    alpha_box = overflowing["image"].getchannel("A").getbbox()
+    assert alpha_box is not None
+    overflowing["x"] = layout.width_px - alpha_box[2] + 1
+
+    with pytest.raises(ValueError, match="outside the real generation canvas"):
+        card_safe_conditioning_placements(
+            [overflowing],
+            manifest,
+            canvas_size=(848, 1168),
+        )
+
+
 def test_tall_conditioning_subjects_gain_card_safe_padding():
     scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
-    placements = cutout_placements(build_page_layout("standard_3x3"), scope_dir)
+    layout = build_page_layout("standard_3x3")
+    placements = cutout_placements(layout, scope_dir)
     manifest = fetch_cutouts.load_yaml(scope_dir / "poster.yaml")
-    conditioned = card_safe_conditioning_placements(placements, manifest)
+    conditioned = card_safe_conditioning_placements(
+        placements,
+        manifest,
+        canvas_size=(layout.width_px, layout.height_px),
+    )
 
     assert conditioned[0]["image"].height < placements[0]["image"].height
     assert conditioned[1]["image"].size == placements[1]["image"].size
@@ -592,13 +615,18 @@ def test_sv035_uses_default_conditioning_without_base1_offsets():
         / "poster_assets"
         / "SV03.5"
     )
+    layout = build_page_layout("standard_3x3")
     placements = cutout_placements(
-        build_page_layout("standard_3x3"),
+        layout,
         scope_dir,
     )
     manifest = fetch_cutouts.load_yaml(scope_dir / "poster.yaml")
 
-    conditioned = card_safe_conditioning_placements(placements, manifest)
+    conditioned = card_safe_conditioning_placements(
+        placements,
+        manifest,
+        canvas_size=(layout.width_px, layout.height_px),
+    )
 
     assert [
         (item["x"], item["y"], item["image"].size)
@@ -950,7 +978,7 @@ def test_every_current_tcg_set_bootstraps_without_set_specific_python():
         assert "source pixel as immutable" in prompt
         checked.append(scope_path.stem)
 
-    assert len(checked) >= 24
+    assert set(checked) == set(load_scene_catalog())
     assert "Base1" in checked
     assert "SV03.5" in checked
 

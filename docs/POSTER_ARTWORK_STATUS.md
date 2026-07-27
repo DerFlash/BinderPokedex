@@ -104,6 +104,10 @@ and visual acceptance gate.
 - The physical layout uses 63.5 x 88.9 mm cards and 5 mm binder gaps. Each
   featured Pokemon remains wholly inside one bottom-row card, with visible
   landscape padding around its silhouette.
+- Preparation validates the visible alpha bounds of both exact source
+  placements and model-compensated conditioning placements against the
+  assigned card and the real latent canvas. A nominal rounded cell may never
+  hide clipping at the image edge.
 - Identity-lock placement is derived from the shared physical layout. Optional
   model-specific composition compensation remains declarative in each scope
   manifest for the probabilistic edit engines.
@@ -181,6 +185,7 @@ and visual acceptance gate.
 | New set art direction | Every current individual set has an explicit catalog brief copied into its manifest | Review or refine the brief before spending the production render; catalog coverage does not replace visual art direction |
 | Wide PDF layouts | 4x3 and 4x4 artwork, placement, prompting, upscale, promotion, validation, slicing, and matching-grid rendering are modeled | Add physical A3 page styles/templates and rendered-PDF QA |
 | Aggregate scopes | The generic index, isolated leaf manifests, section filtering, PDF routing, cleanup, nested validation, nine Pokédex generation configs, and form-aware poster-subject contract are implemented; Pokédex Generations I through IX and both ExGen3 sections are promoted and enabled | Prepare reviewed section scenes and casts for the remaining aggregate variants |
+| Raster geometry | Current 1-MP source and conditioning silhouettes are fail-closed against the real canvas and all thirteen enabled bundles pass | Replace independently rounded card/gap segments with cumulative physical endpoint rasterization, share the exact canvas geometry across preparation/finalization/slicing, and version the resulting generation contract before enabling wide layouts |
 
 ## Remaining production requirements
 
@@ -198,6 +203,9 @@ and visual acceptance gate.
   variants only after their section briefs and curated casts are reviewed.
 - Implement matching A3/custom PDF page renderers before enabling 4x3 or 4x4
   poster manifests for PDF output.
+- Complete the cumulative raster-geometry contract before treating arbitrary
+  latent sizes or wide layouts as promotion-stable; keep the real-canvas
+  silhouette guard mandatory during that migration.
 - Keep any future mutating `ensure-poster` command separate from the completed
   read-only planner and preserve the human promotion gate.
 
@@ -216,7 +224,7 @@ reviewed candidates and their provenance have been promoted.
 
 Completed on 2026-07-27:
 
-- The complete suite passes with 330 tests; one unrelated EX-logo feature test
+- The complete suite passes with 332 tests; one unrelated EX-logo feature test
   remains explicitly skipped.
 - Python compilation and `git diff --check` pass.
 - All thirteen promoted bundles pass `validate_promoted_poster.py`, including
@@ -242,9 +250,14 @@ Completed on 2026-07-27:
   and without `--skip-poster`. The default build has three pages and nine
   750 x 1050 poster images at 300 x 300 ppi on page two; the isolated
   `_NO_POSTER.pdf` build has two pages and proceeds directly to the card grid.
-- The scene catalog has exact coverage for all 24 current individual TCG sets.
-  An isolated batch initialization created the 23 missing standard-3x3
-  manifests and preserved the existing reviewed Base1 manifest.
+- The scene catalog has exact coverage for all 26 current individual TCG sets,
+  including explicit Jungle (`Base2`) and Fossil (`Base3`) briefs. The batch
+  initializer regression creates every missing standard-3x3 manifest while
+  preserving the existing reviewed Base1 manifest.
+- The thirteen enabled source and conditioning compositions were checked
+  read-only at their real 848 x 1168 latent canvas. A regression reproduces
+  the nominal last-column one-pixel overrun and proves that visible pixels are
+  rejected before `alpha_composite` can clip them.
 - The Pokédex resolver loads nine isolated generation bundles with unique seeds
   and section-local source data. Generations I through IX are enabled. Its
   checked-in output contains localized section titles, card counts, and range

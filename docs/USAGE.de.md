@@ -4,10 +4,11 @@ Schnellreferenz für die Generierung von BinderPokedex-PDFs mit dem Scope-basier
 
 ## 📦 Verfügbare Scopes
 
-**25 Scopes insgesamt:**
+**30 Scopes insgesamt:**
 - **Pokedex**: Kompletter National Pokédex (1025 Pokémon)
-- **ExGen1-3**: TCG EX Varianten-Kollektionen (94/324/366 Karten)
-- **ME01-MEP**: Pokémon TCG Karmesin & Purpur - Mew-Serie (4 Sets)
+- **Base1-Base3**: Base Set, Dschungel und Fossil (3 Sets)
+- **ExGen1-3**: TCG EX Varianten-Kollektionen aus den aktuellen Quelldaten
+- **ME01-MEP**: Pokémon TCG Mega-Evolution-Ära (6 Sets)
 - **SV01-SVP**: Pokémon TCG Karmesin & Purpur Hauptserie (17 Sets)
 
 Alle verfügbaren Scopes auflisten:
@@ -44,13 +45,14 @@ python scripts/pdf/generate_pdf.py --scope SV01
 `--scope all` verwenden, um alles zu generieren:
 
 ```bash
-# Alle 25 Scopes in allen 9 Sprachen generieren
+# Alle 30 Scopes in jeder verfügbaren Sprache generieren
 python scripts/pdf/generate_pdf.py --scope all
 ```
 
-**Ausgabe:** ~225 PDFs (25 Scopes × 9 Sprachen, wo verfügbar)
-**Dauer:** 10-20 Minuten (mit gecachten Daten)
-**Größe:** ~377 MB gesamt
+Der aktuelle Release-Bestand erzeugt 167 PDFs in neun Spracharchiven. Die
+exakte Anzahl, Dauer und Größe hängen von den je Scope verfügbaren Sprachen und
+den abgerufenen Quelldaten ab. Für einen abgeschlossenen Release-Kandidaten ist
+`release-manifest.json` maßgeblich.
 
 ### Optionale Posterseiten
 

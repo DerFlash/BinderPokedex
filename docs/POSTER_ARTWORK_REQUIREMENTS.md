@@ -34,7 +34,7 @@ Last reviewed: 2026-07-27
 | `PA-006` | Poster preparation is an optional post-fetch phase | Done | One-scope and missing-all-scope initialization commands exist; batch mode preserves reviewed manifests |
 | `PA-007` | Production generation follows the scope contract | Done | ComfyUI runner reads seed, engine, model, steps, resolution, dpi, and upscaler defaults from `poster.yaml` |
 | `PA-008` | Figures remain authentic | Done | Exact source cutouts are placed before final context generation and opaque source pixels are verified unchanged |
-| `PA-009` | Artwork matches later typography and card cuts | Done | Prompt safe areas and figure placement derive from the same physical layout used by finalization and slicing |
+| `PA-009` | Artwork matches later typography and card cuts | Done | Prompt safe areas and figure placement derive from the same physical layout used by finalization and slicing; visible source and conditioning pixels are also checked against the real generation canvas before composition |
 | `PA-010` | Only promoted artwork enters a normal PDF | Done | `pdf.enabled` plus a local promoted file gates automatic inclusion |
 | `PA-011` | Poster use is optional per build | Done | `--skip-poster` bypasses discovery/loading and writes a separate `_NO_POSTER.pdf` |
 | `PA-012` | Every promoted poster is reproducible and auditable | Done | Promotion records model, prompt, source, workflow, validation, and output hashes |
@@ -46,6 +46,7 @@ Last reviewed: 2026-07-27
 | `PA-017` | Natural foreground occlusion may cross subjects safely | Research | Accept only a deterministic depth-aware method that retains exact identity and does not invent anatomy |
 | `PA-018` | Alternative engines remain selectable but gated | Ongoing | Anima, FLUX.1 Canny, and Qwen candidates must pass the same promotion checks as FLUX.2 |
 | `PA-019` | Pull requests prove that a complete release can be built without publishing it | Done | PRs reuse the read-only release-candidate workflow, validate all enabled posters, build every PDF and language archive, verify the manifest, and stop after a temporary Actions artifact |
+| `PA-020` | Rasterized card geometry remains inside the real generation canvas at every supported resolution | Ongoing | Real-canvas guards reject any clipped source silhouette now; replace independently rounded card/gap dimensions with cumulative physical endpoint rasterization and version that geometry contract before wide layouts become production formats |
 
 ## Current production boundary
 
@@ -92,6 +93,11 @@ Last reviewed: 2026-07-27
   optional v2 upgrade is reported explicitly.
 - Aggregate sections beyond the accepted ExGen3 section implementation and
   wide PDF pages remain explicit roadmap work rather than hidden assumptions.
+- All thirteen enabled 1-MP source and conditioning compositions fit within
+  their real 848 × 1168 generation canvases. A fail-closed canvas guard now
+  prevents nominal cell rounding from silently clipping a figure. Cumulative
+  endpoint rasterization for arbitrary resolutions and wide layouts remains
+  tracked as `PA-020` and must version the generation geometry contract.
 - Pull requests and tagged releases use the same release-candidate build.
   Publication is a separate write-enabled job available only to `v*` tags.
 

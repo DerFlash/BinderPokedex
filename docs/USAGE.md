@@ -4,10 +4,11 @@ Quick reference for generating BinderPokedex PDFs using the scope-based system.
 
 ## 📦 Available Scopes
 
-**25 Total Scopes:**
+**30 Total Scopes:**
 - **Pokedex**: Complete National Pokédex (1025 Pokémon)
+- **Base1-Base3**: Base Set, Jungle, and Fossil (3 sets)
 - **ExGen1-3**: TCG EX variant collections generated from their current source snapshots
-- **ME01-MEP**: Pokémon TCG Scarlet & Violet - Mew series (4 sets)
+- **ME01-MEP**: Pokémon TCG Mega Evolution era (6 sets)
 - **SV01-SVP**: Pokémon TCG Scarlet & Violet main series (17 sets)
 
 List all available scopes:
@@ -44,13 +45,14 @@ python scripts/pdf/generate_pdf.py --scope SV01
 Use `--scope all` to generate everything:
 
 ```bash
-# Generate all 25 scopes in all 9 languages
+# Generate all 30 scopes in every available language
 python scripts/pdf/generate_pdf.py --scope all
 ```
 
-**Output:** ~225 PDFs (25 scopes × 9 languages, where available)
-**Duration:** 10-20 minutes (with cached data)
-**Size:** ~377 MB total
+The current release inventory produces 167 PDFs across nine language archives;
+the exact count, duration, and size depend on each scope's available languages
+and the fetched source data. `release-manifest.json` is authoritative for a
+completed release-candidate build.
 
 ### Optional poster pages
 

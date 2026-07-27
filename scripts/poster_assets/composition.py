@@ -22,6 +22,48 @@ def fit_image(image: Image.Image, max_width: int, max_height: int) -> Image.Imag
     )
 
 
+def validate_visible_placements(
+    placements: list[dict[str, Any]],
+    *,
+    canvas_size: tuple[int, int] | None = None,
+    description: str = "Character",
+) -> None:
+    """Reject visible pixels outside their card or the real image canvas."""
+    if canvas_size is not None:
+        canvas_width, canvas_height = canvas_size
+        if canvas_width <= 0 or canvas_height <= 0:
+            raise ValueError("Placement canvas dimensions must be positive")
+
+    for placement in placements:
+        image = placement["image"]
+        alpha_box = image.getchannel("A").getbbox()
+        if alpha_box is None:
+            raise ValueError(f"{description} placement has no visible pixels")
+        left = placement["x"] + alpha_box[0]
+        top = placement["y"] + alpha_box[1]
+        right = placement["x"] + alpha_box[2]
+        bottom = placement["y"] + alpha_box[3]
+        cell = placement["cell"]
+        if not (
+            cell.x <= left < right <= cell.x + cell.width
+            and cell.y <= top < bottom <= cell.y + cell.height
+        ):
+            raise ValueError(
+                f"{description} for Pokemon "
+                f"#{placement['item'].get('pokemon_id')} moves its visible "
+                "silhouette outside the assigned print-safe region"
+            )
+        if canvas_size is not None and not (
+            0 <= left < right <= canvas_width
+            and 0 <= top < bottom <= canvas_height
+        ):
+            raise ValueError(
+                f"{description} for Pokemon "
+                f"#{placement['item'].get('pokemon_id')} moves its visible "
+                "silhouette outside the real generation canvas"
+            )
+
+
 def cutout_placements(
     layout: PageLayout,
     scope_dir: Path,
@@ -62,4 +104,8 @@ def cutout_placements(
                 "y": y,
             }
         )
+    validate_visible_placements(
+        placements,
+        canvas_size=(layout.width_px, layout.height_px),
+    )
     return placements
