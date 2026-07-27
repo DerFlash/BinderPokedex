@@ -45,7 +45,7 @@ def test_legacy_poster_manifests_remain_isolated_single_bundles():
         assert sha256_file(bundles[0].manifest_path) == expected_hash
 
 
-def test_pokedex_index_routes_eight_enabled_and_one_disabled_section_bundle():
+def test_pokedex_index_routes_all_nine_enabled_section_bundles():
     expected_starters = {
         "gen1": [1, 4, 7],
         "gen2": [152, 155, 158],
@@ -73,10 +73,11 @@ def test_pokedex_index_routes_eight_enabled_and_one_disabled_section_bundle():
         "gen6",
         "gen7",
         "gen8",
+        "gen9",
     ]
     assert [
         bundle.poster_id for bundle in bundles if not bundle.pdf_enabled
-    ] == ["gen9"]
+    ] == []
     assert all(bundle.insertion == "after_section_cover" for bundle in bundles)
     assert len(
         {

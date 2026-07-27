@@ -1108,6 +1108,7 @@ def test_every_checked_in_enabled_poster_remains_generation_current():
             "Pokedex/sections/gen6",
             "Pokedex/sections/gen7",
             "Pokedex/sections/gen8",
+            "Pokedex/sections/gen9",
         }
     )
 

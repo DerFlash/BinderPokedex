@@ -1850,6 +1850,7 @@ def test_promoted_production_posters_match_provenance_and_print_geometry():
         "Pokedex/sections/gen6",
         "Pokedex/sections/gen7",
         "Pokedex/sections/gen8",
+        "Pokedex/sections/gen9",
         "SV03.5",
         "ExGen3/sections/normal",
         "ExGen3/sections/mega",
