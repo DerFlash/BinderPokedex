@@ -4,9 +4,17 @@ from __future__ import annotations
 from typing import Any
 
 try:
+    from .generation_contract import (
+        JOINT_SCENE_CAST_MAX_MEGAPIXELS,
+        JOINT_SCENE_IDENTITY_CANVAS_PX,
+    )
     from .layout import resolve_layout_name
     from .poster_subject import resolve_poster_subject
 except ImportError:
+    from generation_contract import (
+        JOINT_SCENE_CAST_MAX_MEGAPIXELS,
+        JOINT_SCENE_IDENTITY_CANVAS_PX,
+    )
     from layout import resolve_layout_name
     from poster_subject import resolve_poster_subject
 
@@ -325,7 +333,7 @@ def build_joint_scene_prompt(
     *,
     placement_contract: list[dict[str, int]],
 ) -> str:
-    """Build a one-shot whole-image prompt from appearance references only."""
+    """Build one final-scene prompt from spatial and identity references."""
     if not items:
         raise ValueError("Joint scene generation needs at least one subject")
     artwork = _mapping(manifest.get("artwork"), "artwork")
@@ -382,7 +390,7 @@ def build_joint_scene_prompt(
 
     return "\n\n".join(
         (
-            build_joint_cast_reference_prompt(
+            build_spatial_identity_reference_prompt(
                 items,
                 manifest,
                 placement_contract=placement_contract,
@@ -400,9 +408,12 @@ def build_joint_scene_prompt(
             ),
             (
                 f"Render exactly these {len(items)} characters once: {cast}. "
-                "The cast-layout reference is the strict authority for "
-                "identity, pose, stature, silhouette, anatomy, facial features, "
-                "colors, markings, and defining design details. Permitted "
+                "IMAGE 1 is the strict authority for count, pose, orientation, "
+                "target scale, baseline, and poster position. The corresponding "
+                "individual identity image is the strict authority for each "
+                "character's exact silhouette shape, stature, anatomy, facial "
+                "features, colors, markings, and defining design details. "
+                "Permitted "
                 "changes are limited to scene lighting, reflected color, cast "
                 "shadow, and small physically plausible edge occlusions. Do "
                 "not redesign, restyle, humanize, merge, duplicate, simplify, "
@@ -416,7 +427,7 @@ def build_joint_scene_prompt(
                 "padding specified above; do not move or enlarge a character "
                 "to fill its region. Copy every "
                 "visible color boundary, marking contour, small anatomical "
-                "detail, and appendage from that character in the cast-layout "
+                "detail, and appendage from that character's individual identity "
                 "reference. Preserve every open negative "
                 "space between limbs, body parts, or appendages: continuous "
                 "landscape may remain visible through that gap, but do not "
@@ -528,11 +539,28 @@ def joint_scene_conditioning_contract(
     identity_defaults = conditioning.get("identity_defaults", {})
     if not isinstance(identity_defaults, dict):
         raise ValueError("conditioning.identity_defaults must be a mapping")
+    neutral = identity_defaults.get(
+        "neutral_rgb",
+        [226, 224, 211],
+    )
+    if (
+        not isinstance(neutral, list)
+        or len(neutral) != 3
+        or not all(
+            isinstance(value, int) and 0 <= value <= 255
+            for value in neutral
+        )
+    ):
+        raise ValueError(
+            "conditioning.identity_defaults.neutral_rgb must contain "
+            "3 RGB integers"
+        )
     return {
-        "cast_reference_neutral_rgb": identity_defaults.get(
-            "neutral_rgb",
-            [226, 224, 211],
-        ),
+        "reference_strategy": "spatial_cast_plus_unscaled_identity",
+        "reference_neutral_rgb": neutral,
+        "cast_max_megapixels": JOINT_SCENE_CAST_MAX_MEGAPIXELS,
+        "identity_canvas_px": JOINT_SCENE_IDENTITY_CANVAS_PX,
+        "identity_source_resampling": "none",
     }
 
 
@@ -629,13 +657,13 @@ def subject_prompt_notes(
     return specific_notes
 
 
-def build_joint_cast_reference_prompt(
+def build_spatial_identity_reference_prompt(
     items: list[dict[str, Any]],
     manifest: dict[str, Any],
     *,
     placement_contract: list[dict[str, int]],
 ) -> str:
-    """Describe the joint workflow's single spatial cast reference."""
+    """Assign distinct spatial and identity roles to the joint references."""
     if not items:
         raise ValueError("Joint scene generation needs at least one cutout")
     if len(placement_contract) != len(items):
@@ -662,12 +690,20 @@ def build_joint_cast_reference_prompt(
         return f"{value / 10:.1f}%"
 
     coordinates = []
-    for item, contract in zip(items, placement_contract, strict=True):
+    identity_descriptions = []
+    for index, (item, contract) in enumerate(
+        zip(items, placement_contract, strict=True),
+        start=2,
+    ):
         if not isinstance(contract, dict):
             raise ValueError(
                 "Joint-scene placement contract entries must be mappings"
             )
         name = item.get("name_en") or f"Pokemon #{item.get('pokemon_id', '?')}"
+        identity_descriptions.append(
+            f"IMAGE {index} is the exact identity and anatomy reference "
+            f"for {name}."
+        )
         coordinates.append(
             (
                 f"{name}: x {percentage(contract['left_per_mille'])} to "
@@ -679,15 +715,26 @@ def build_joint_cast_reference_prompt(
 
     paragraphs = [
         (
-            "IMAGE 1 is the sole cast-layout reference. It contains exactly "
+            "IMAGE 1 is the sole spatial cast-layout reference. It contains exactly "
             f"{len(items)} complete characters on a flat neutral field, "
             f"ordered across the {region_summary} bottom-row regions. The "
-            "reference is the authority for their identity, anatomy, pose, "
-            "relative scale, shared baseline, and poster coordinates. Its "
+            "reference is the authority only for character count, pose, "
+            "orientation, relative scale, shared baseline, poster coordinates, "
+            "and outer placement bounds. Its "
             "neutral field is empty reference space, not sky, terrain, a "
             "background plate, or a style request. Do not paste the "
             "characters as a foreground layer; redraw the complete scene "
             "and all character edges together from the empty target."
+        ),
+        (
+            f"{' '.join(identity_descriptions)} Each identity image is the sole "
+            "authority for that character's exact silhouette shape, stature, "
+            "anatomy, facial features, colors, markings, appendages, and defining "
+            "design details. Its centered position and scale on the neutral "
+            "canvas carry no placement meaning and must not override IMAGE 1. "
+            "These are detail views of the same cast already present in IMAGE 1, "
+            "not additional subjects. Their neutral fields are empty reference "
+            "space, not scenery."
         ),
         (
             "The following normalized target silhouette rectangles are the "

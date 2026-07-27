@@ -15,7 +15,10 @@ from scripts.poster_assets import promote_comfyui_poster as poster_promotion
 from scripts.poster_assets import run_comfyui_poster as poster_runner
 from scripts.poster_assets import slice_poster as poster_slicer
 from scripts.poster_assets.fetch_title_logos import resolve_logo_downloads
-from scripts.poster_assets.create_comfyui_poster_workflow import build_workflow
+from scripts.poster_assets.create_comfyui_poster_workflow import (
+    build_workflow,
+    output_dimensions,
+)
 from scripts.poster_assets.create_comfyui_upscale_workflow import (
     build_workflow as build_upscale_workflow,
 )
@@ -881,14 +884,14 @@ def test_inpaint_reference_uses_exact_final_placements(tmp_path: Path):
     ).getbbox() is not None
 
 
-def test_joint_scene_preparation_writes_one_neutral_cast_layout(
+def test_joint_scene_preparation_writes_spatial_and_unscaled_identity_refs(
     tmp_path: Path,
 ):
     joint_dir = tmp_path / "joint"
     build_joint_scene_references(
         "Base1",
         joint_dir,
-        megapixels=0.25,
+        megapixels=1.0,
     )
 
     assert not (joint_dir / "upper_context_mask.png").exists()
@@ -898,11 +901,15 @@ def test_joint_scene_preparation_writes_one_neutral_cast_layout(
     assert not (joint_dir / "scene_reference.png").exists()
     assert not (joint_dir / "structure_reference.png").exists()
     assert not (joint_dir / "anima_scene_reference.png").exists()
-    assert not list(joint_dir.glob("identity_reference_*.png"))
+    identity_paths = sorted(
+        joint_dir.glob("identity_reference_*.png")
+    )
+    assert len(identity_paths) == 3
 
     actual = Image.open(
         joint_dir / "joint_scene_cast_reference.png"
     ).convert("RGBA")
+    assert actual.size == output_dimensions("Base1", 0.5)
     layout = build_source_layout(
         "standard_3x3",
         width_px=actual.width,
@@ -921,6 +928,39 @@ def test_joint_scene_preparation_writes_one_neutral_cast_layout(
             (placement["x"], placement["y"]),
         )
     assert ImageChops.difference(actual, expected).getbbox() is None
+
+    items = load_cutout_items(
+        Path(__file__).resolve().parents[2]
+        / "data"
+        / "poster_assets"
+        / "Base1"
+    )
+    for item, identity_path in zip(items, identity_paths, strict=True):
+        source = Image.open(
+            Path(__file__).resolve().parents[2]
+            / "data"
+            / "poster_assets"
+            / "Base1"
+            / "cutouts"
+            / item["file"]
+        ).convert("RGBA")
+        detail = Image.open(identity_path).convert("RGB")
+        assert detail.size == (512, 512)
+        x = (detail.width - source.width) // 2
+        y = (detail.height - source.height) // 2
+        difference = ImageChops.difference(
+            detail.crop((x, y, x + source.width, y + source.height)),
+            source.convert("RGB"),
+        )
+        opaque = source.getchannel("A").point(
+            lambda value: 255 if value == 255 else 0
+        )
+        masked_difference = Image.composite(
+            difference,
+            Image.new("RGB", difference.size),
+            opaque,
+        )
+        assert masked_difference.getbbox() is None
 
 
 def test_identity_lock_mask_generates_only_above_the_bottom_subject_band(
@@ -1548,7 +1588,12 @@ def test_joint_scene_synthesizes_landscape_and_subjects_in_one_shot():
         node["inputs"]["image"]
         for node in workflow.values()
         if node["class_type"] == "LoadImage"
-    ] == ["joint_scene_cast_reference.png"]
+    ] == [
+        "joint_scene_cast_reference.png",
+        "identity_reference_1.png",
+        "identity_reference_2.png",
+        "identity_reference_3.png",
+    ]
     assert sum(
         node["class_type"] == "EmptyFlux2LatentImage"
         for node in workflow.values()
@@ -1560,11 +1605,29 @@ def test_joint_scene_synthesizes_landscape_and_subjects_in_one_shot():
     assert sum(
         node["class_type"] == "ReferenceLatent"
         for node in workflow.values()
-    ) == 2
+    ) == 8
     assert sum(
         node["class_type"] == "VAEEncode"
         for node in workflow.values()
-    ) == 1
+    ) == 4
+    previous_positive = ["4", 0]
+    previous_negative = ["5", 0]
+    for index in range(4):
+        encode_id = str(31 + index * 4)
+        positive_id = str(32 + index * 4)
+        negative_id = str(33 + index * 4)
+        assert workflow[positive_id]["inputs"] == {
+            "conditioning": previous_positive,
+            "latent": [encode_id, 0],
+        }
+        assert workflow[negative_id]["inputs"] == {
+            "conditioning": previous_negative,
+            "latent": [encode_id, 0],
+        }
+        previous_positive = [positive_id, 0]
+        previous_negative = [negative_id, 0]
+    assert workflow["70"]["inputs"]["positive"] == previous_positive
+    assert workflow["70"]["inputs"]["negative"] == previous_negative
 
     assert not any(
         node["class_type"] == "ImageCompositeMasked"
@@ -1583,7 +1646,9 @@ def test_joint_scene_synthesizes_landscape_and_subjects_in_one_shot():
     assert "There is no later character overlay" in prompt
     assert "There is no supplied landscape image" in prompt
     assert "no pre-generated background plate" in prompt
-    assert "IMAGE 1 is the sole cast-layout reference" in prompt
+    assert "IMAGE 1 is the sole spatial cast-layout reference" in prompt
+    assert "IMAGE 2 is the exact identity and anatomy reference" in prompt
+    assert "not additional subjects" in prompt
     assert "mandatory placement and scale contract" in prompt
     assert "never paint the character as a flat top layer" in prompt
     assert "must continue naturally in front" in prompt
@@ -1593,7 +1658,7 @@ def test_joint_scene_synthesizes_landscape_and_subjects_in_one_shot():
     assert "Charmander" in prompt
 
 
-def test_joint_scene_prompt_is_dynamic_and_uses_one_cast_reference():
+def test_joint_scene_prompt_separates_spatial_and_identity_roles():
     bundle = poster_bundle("Pokedex/sections/gen7")
     scope_data = load_poster_scope_data(bundle)
     items = load_cutout_items(bundle.asset_dir)
@@ -1626,10 +1691,11 @@ def test_joint_scene_prompt_is_dynamic_and_uses_one_cast_reference():
     assert "Rowlet" in final
     assert "Litten" in final
     assert "Popplio" in final
-    assert "IMAGE 2" not in final
-    assert "IMAGE 1 is the sole cast-layout reference" in final
+    assert "IMAGE 2 is the exact identity and anatomy reference" in final
+    assert "IMAGE 1 is the sole spatial cast-layout reference" in final
     assert "neutral field is empty reference space" in final
-    assert "x 4.2% to 17.2%" in final
+    assert "mandatory placement and scale contract" in final
+    assert "not additional subjects" in final
     assert "small physically plausible edge occlusions" in final
     assert "JOINT SCENE - ONE-SHOT FINAL SYNTHESIS" in snapshot
     assert "SUBJECT-FREE LANDSCAPE DRAFT" not in snapshot
@@ -1692,7 +1758,7 @@ def test_joint_scene_workflow_writes_one_shot_prompt_snapshot(
 def test_joint_scene_rejects_composition_only_conditioning():
     with pytest.raises(
         ValueError,
-        match="requires the identity-preserving cast reference",
+        match="requires the spatial and identity reference set",
     ):
         build_workflow(
             "Base1",

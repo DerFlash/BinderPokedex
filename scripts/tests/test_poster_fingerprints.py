@@ -445,7 +445,7 @@ def test_pipeline_contract_versions_are_family_specific_and_strict():
     assert current_generation_pipeline_contract_version(
         identity_generation
     ) == 3
-    assert current_generation_pipeline_contract_version(joint_generation) == 4
+    assert current_generation_pipeline_contract_version(joint_generation) == 5
     assert current_generation_pipeline_contract_version(edit_generation) == 2
     accepted_legacy = provenance.fingerprint_record(
         {
@@ -489,7 +489,7 @@ def test_joint_scene_fingerprint_enforces_reference_and_ignores_identity_lock(
     generation = manifest["artwork"]["generation"]
     generation.update(
         mode="joint_scene",
-        reference_mode="cast_layout_joint",
+        reference_mode="spatial_identity_joint",
         output_method="lanczos",
         output_megapixels=0.25,
     )
@@ -564,7 +564,7 @@ def test_joint_scene_rejects_a_learned_post_generation_upscaler(tmp_path):
     manifest = copy.deepcopy(bundle.manifest)
     manifest["artwork"]["generation"].update(
         mode="joint_scene",
-        reference_mode="cast_layout_joint",
+        reference_mode="spatial_identity_joint",
     )
 
     with pytest.raises(ValueError, match="deterministic Lanczos"):
@@ -593,6 +593,10 @@ def test_joint_scene_input_records_follow_reference_order(
     Image.new("RGB", (32, 44), (226, 224, 211)).save(
         work_dir / "joint_scene_cast_reference.png"
     )
+    for index in range(1, 4):
+        Image.new("RGB", (32, 32), (226, 224, 211)).save(
+            work_dir / f"identity_reference_{index}.png"
+        )
     monkeypatch.setattr(provenance, "POSTER_ASSETS", assets)
     monkeypatch.setattr(provenance, "ROOT", repository)
 
@@ -602,7 +606,7 @@ def test_joint_scene_input_records_follow_reference_order(
         {
             "engine": "flux",
             "mode": "joint_scene",
-            "reference_mode": "cast_layout_joint",
+            "reference_mode": "spatial_identity_joint",
             "output_method": "lanczos",
             "output_megapixels": 0.25,
         },
@@ -610,7 +614,12 @@ def test_joint_scene_input_records_follow_reference_order(
 
     assert [
         Path(record["file"]).name for record in records["references"]
-    ] == ["joint_scene_cast_reference.png"]
+    ] == [
+        "joint_scene_cast_reference.png",
+        "identity_reference_1.png",
+        "identity_reference_2.png",
+        "identity_reference_3.png",
+    ]
     assert "internal_references" not in records
     assert "source_pixel_audit_reference" not in records
 
@@ -646,7 +655,7 @@ def test_joint_scene_human_review_is_bound_to_artwork_and_source_identities(
         "generation": {
             "engine": "flux",
             "mode": "joint_scene",
-            "reference_mode": "cast_layout_joint",
+            "reference_mode": "spatial_identity_joint",
         },
         "source_artwork": artwork_record,
         "raw_artwork": raw_artwork_record,
@@ -752,7 +761,7 @@ def test_joint_scene_cannot_promote_without_explicit_human_review():
     ("engine", "mode", "current_version"),
     (
         ("flux", "identity_lock", 3),
-        ("flux", "joint_scene", 4),
+        ("flux", "joint_scene", 5),
         ("flux", "edit", 2),
         ("flux", "generate", 2),
         ("flux", "inpaint", 2),
@@ -1257,7 +1266,7 @@ def test_joint_scene_requires_review_then_promotes_and_validates(
     generation = copy.deepcopy(_manifest()["artwork"]["generation"])
     generation.update(
         mode="joint_scene",
-        reference_mode="cast_layout_joint",
+        reference_mode="spatial_identity_joint",
         output_method="lanczos",
         output_megapixels=0.25,
     )

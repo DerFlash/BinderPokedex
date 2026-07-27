@@ -8,8 +8,10 @@ from typing import Any
 CANONICAL_REFERENCE_MODES = {
     ("flux", "identity_lock"): "two_pass_source_pixels",
     ("flux", "inpaint"): "source_pixels",
-    ("flux", "joint_scene"): "cast_layout_joint",
+    ("flux", "joint_scene"): "spatial_identity_joint",
 }
+JOINT_SCENE_CAST_MAX_MEGAPIXELS = 0.5
+JOINT_SCENE_IDENTITY_CANVAS_PX = 512
 
 
 def is_joint_scene_generation(

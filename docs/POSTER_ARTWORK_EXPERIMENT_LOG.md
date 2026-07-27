@@ -37,23 +37,24 @@ promotion.
 
 ## Current checkpoint
 
-Pipeline v4 is deliberately small:
+The v3/v4 attempt budget is closed: `00014` and `00015` fail card containment;
+`00016` passes containment by violating identity. No Generation VII one-shot
+candidate is promoted.
 
-1. Create one empty FLUX.2 target latent.
-2. Condition it with one neutral poster-shaped cast reference and the complete
-   dynamic scene/identity prompt.
-3. Sample and decode exactly once.
-4. Apply only deterministic Lanczos resizing and deterministic text/logo
+An explicit product decision now authorizes one materially different v5
+Spatial+Identity architecture:
+
+1. Create one empty 1-MP FLUX.2 target latent.
+2. Condition it first with one neutral 0.5-MP poster-shaped cast reference as
+   the sole authority for count, pose, scale, baseline, and card position.
+3. Condition it next with one neutral 512 px identity reference per subject.
+   Each contains the original 475 × 475 cutout without resampling and is the
+   sole authority for anatomy, face, silhouette, colors, and markings.
+4. Sample and decode exactly once.
+5. Apply only deterministic Lanczos resizing and deterministic text/logo
    overlays after the text-free artwork review.
 
-There is no pre-generated landscape reference, inpaint reference, final
-character composite, learned post-upscaler, or source-pixel restoration in this
-mode. `00016` proves that a common spatial reference can solve physical card
-containment without reintroducing the landscape-depth problem, but its smaller
-character evidence loses a defining identity detail.
-
-The three-attempt one-shot placement budget is exhausted: `00014` and `00015`
-fail card containment; `00016` passes containment by violating identity. No
-Generation VII one-shot candidate is promoted. Further parameter, canvas,
-prompt, or reference tuning is paused until an explicit architecture/product
-decision selects which tradeoff may change.
+There is no pre-generated landscape reference, inpaint reference, second
+sampler, final character composite, learned post-upscaler, or source-pixel
+restoration in this mode. The implementation is graph contract v5 and remains
+unpromoted until a fresh candidate passes every hard gate.

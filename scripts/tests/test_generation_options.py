@@ -119,7 +119,7 @@ def test_joint_scene_uses_one_canonical_multi_reference_contract():
     assert resolved.workflow_options["flux_mode"] == "joint_scene"
     assert resolved.workflow_options["flux_reference_mode"] == "identity"
     assert resolved.metadata["mode"] == "joint_scene"
-    assert resolved.metadata["reference_mode"] == "cast_layout_joint"
+    assert resolved.metadata["reference_mode"] == "spatial_identity_joint"
 
 
 def test_joint_scene_rejects_composition_only_override():
@@ -214,7 +214,7 @@ def test_joint_scene_contract_rejects_a_learned_upscaler():
             {
                 "engine": "flux",
                 "mode": "joint_scene",
-                "reference_mode": "cast_layout_joint",
+                "reference_mode": "spatial_identity_joint",
                 "output_method": "lanczos",
                 "output_dpi": 300,
                 "upscale_model": "learned.pth",

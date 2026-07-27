@@ -327,27 +327,31 @@ The current `joint_scene` graph:
 1. derives each target silhouette rectangle from the shared physical layout
    and cutout alpha bounds, then writes its normalized canvas coordinates into
    the one-shot prompt;
-2. supplies one neutral poster-shaped cast reference containing the exact
-   source figures at those shared card-safe coordinates;
-3. starts from one `EmptyFlux2LatentImage`, invents the complete landscape and
+2. supplies one neutral 0.5-MP poster-shaped cast as the sole authority for
+   count, pose, scale, baseline, and shared card-safe coordinates;
+3. supplies one neutral 512 px reference per subject with the original cutout
+   at source resolution as the sole identity and anatomy authority;
+4. starts from one `EmptyFlux2LatentImage`, invents the complete landscape and
    all characters together, and samples exactly once;
-4. decodes and saves that result directly, with no character
+5. decodes and saves that result directly, with no character
    composite, mask repair, or source-pixel restoration afterwards.
 
 The scene brief controls camera, terrain, atmosphere, palette, and broad
 composition. The normalized rectangles request position, size, baseline,
-visible padding, and card-safe regions. The cast reference controls identity,
-anatomy, pose, silhouette, colors, markings, and a common spatial frame. The model synthesizes
-landscape and Pokémon together and resolves z-order, shadows, reflected light,
-and physically plausible edge occlusion. A changed body part, face, marking,
-defining contour, scale, or placement remains a hard visual rejection.
-Joint-scene preparation produces only `joint_scene_cast_reference.png`.
-It neither produces nor records `inpaint_reference.png`, scene references,
-identity-lock masks, or references for unrelated experimental engines.
+visible padding, and card-safe regions. The cast controls only the common
+spatial frame; the per-subject references control identity, anatomy,
+silhouette, colors, and markings. The model synthesizes landscape and Pokémon
+together and resolves z-order, shadows, reflected light, and physically
+plausible edge occlusion. A changed body part, face, marking, defining contour,
+scale, or placement remains a hard visual rejection. Joint-scene preparation
+produces `joint_scene_cast_reference.png` followed by
+`identity_reference_1.png` through the current subject count. It neither
+produces nor records `inpaint_reference.png`, scene references, identity-lock
+masks, or references for unrelated experimental engines.
 
-The reviewed v4 cast reference currently supports at most three subjects. The
-four-subject `wide_4x3` and `wide_4x4` layouts need a separately reviewed
-reference strategy before they can use it.
+The graph has no hard three-subject limit. `standard_3x3` remains the default;
+four-subject `wide_4x3` and `wide_4x4` candidates need their own memory and
+visual review before promotion.
 
 Because `joint_scene` deliberately redraws all pixels, an opaque-source-pixel
 equality audit is not applicable. Its hard gates are a complete generation
@@ -355,8 +359,9 @@ fingerprint and explicit human review of both the actual raw file and the
 deterministically scaled text-free print artwork. The CLI
 override above does not make the candidate production artwork: Generation VII
 still points to its promoted `identity_lock` result. Candidates through `00016`
-are rejected. `00016` proves card-safe placement but invents a pale Litten
-flank marking, so the one-shot stop rule is active. Review evidence lives in
+are rejected. The explicitly approved v5 Spatial+Identity architecture is the
+next bounded experiment; it does not become production until a candidate passes
+every review gate. Review evidence lives in
 `POSTER_ARTWORK_EXPERIMENT_LOG.md` and
 `POSTER_ARTWORK_REQUIREMENTS.md`.
 

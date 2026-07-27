@@ -275,7 +275,7 @@ venv/bin/python scripts/poster_assets/run_comfyui_poster.py \
 | FLUX.2 Klein edit | `prompt.txt` | `scene_reference.png` | `workflow_api_edit_<size>_<seed>.json` | `_flux_edit_..._poster_` |
 | FLUX.2 Klein inpaint | `inpaint_prompt.txt` | `inpaint_reference.png` | `workflow_api_inpaint_<size>_<seed>.json` | `_flux_inpaint_..._poster_` |
 | FLUX.2 source-pixel lock | generated from `poster.yaml` | `inpaint_reference.png`, `upper_context_mask.png` | `workflow_api_identity_lock_<size>_<seed>.json` | `_flux_identity_lock_..._poster_` |
-| FLUX.2 unified joint scene | `joint_scene_prompt.generated.txt` | one neutral `joint_scene_cast_reference.png`; no landscape image | `workflow_api_joint_scene_<size>_<seed>.json` | `_flux_joint_scene_cast_layout_joint_..._poster_` |
+| FLUX.2 unified joint scene | `joint_scene_prompt.generated.txt` | one neutral 0.5-MP spatial cast plus one unscaled 512 px identity reference per subject; no landscape image | `workflow_api_joint_scene_<size>_<seed>.json` | `_flux_joint_scene_spatial_identity_joint_..._poster_` |
 | AnimaEdit | `anima_prompt.txt` | `anima_scene_reference.png` | `anima_workflow_api_<mode>_<size>_<seed>.json` | `_anima_poster_` |
 | FLUX.1 Dev Canny | `flux1_canny_prompt.txt` | `structure_reference.png` | `flux1_canny_workflow_api_<size>_<seed>.json` | `_flux1_canny_..._poster_` |
 | Qwen Image Edit 2511 | `qwen_edit_prompt.txt` | composition plus two identity sheets | `qwen_edit_workflow_api_<size>_<seed>.json` | `_qwen_edit_..._poster_` |
@@ -311,14 +311,14 @@ cutout at its exact intended position, size, and shared ground level for the
 modes that consume it. It also creates one compact neutral-canvas identity
 reference per subject. The workflow derives their count, order, English names,
 and invisible left-to-right print regions from the cutout manifest; no Pokemon
-name or fixed three-image chain remains in Python code. In `joint_scene` v4,
-position and size instead come from normalized visible-silhouette rectangles
-calculated from the shared layout and cutout alpha bounds. Neither
-`scene_reference.png`, a landscape image, nor `inpaint_reference.png`
-conditions its one shot.
-One neutral poster-shaped cast reference carries the exact source figures in a
-common coordinate system. It contains no layout grid, landing pads, paths, text
-boxes, landscape, or previous generated artwork.
+name or fixed three-image chain remains in Python code. In `joint_scene` v5,
+position and size come from normalized visible-silhouette rectangles calculated
+from the shared layout and cutout alpha bounds. Neither `scene_reference.png`, a
+landscape image, nor `inpaint_reference.png` conditions its one shot. One
+neutral 0.5-MP poster-shaped cast carries the figures in a common coordinate
+system as spatial authority only. One unscaled 512 px source reference per
+subject carries identity and anatomy detail. None contains a layout grid,
+landing pads, paths, text boxes, landscape, or previous generated artwork.
 
 The FLUX.1 Canny adapter uses a fourth prepared representation:
 `structure_reference.png` flattens the exact final-size cutouts on opaque white.
@@ -388,13 +388,16 @@ The experimental `joint_scene` topology tests the opposite tradeoff:
    cutout produce normalized per-mille silhouette rectangles. Those coordinates
    carry target position, scale, baseline, padding, and card-safe placement in
    the prompt without flattening cutouts onto a landscape.
-2. One neutral poster-shaped cast reference contains the exact source figures
-   at those coordinates and is authoritative for identity, anatomy, silhouette,
-   colors, markings, and their common spatial frame.
-3. One `EmptyFlux2LatentImage` is sampled once. FLUX.2 receives only that cast
-   reference and synthesizes the complete landscape and all subjects in that one
-   denoising pass.
-4. The final decode is saved directly. No cutout, mask repair, source-pixel
+2. One neutral 0.5-MP poster-shaped cast contains the source figures at those
+   coordinates and is authoritative only for count, pose, relative scale,
+   baseline, and the common spatial frame.
+3. One neutral 512 px reference per subject carries the original cutout at its
+   source resolution without resampling. These references are authoritative
+   only for identity, anatomy, silhouette, colors, and markings.
+4. One `EmptyFlux2LatentImage` is sampled once. FLUX.2 receives the ordered
+   spatial-plus-identity reference set and synthesizes the complete landscape
+   and all subjects in that one denoising pass.
+5. The final decode is saved directly. No cutout, mask repair, source-pixel
    restore, or other character composite is applied afterwards.
 
 There is no landscape image, full-scene/cutout draft, or
@@ -405,9 +408,10 @@ foreground occlusions can agree. Identity, anatomy, face, pose, stature,
 silhouette, colors, markings, scale, and complete card-safe placement remain
 mandatory review invariants.
 
-The reviewed v4 cast reference currently contains at most three subjects.
-Four-subject layouts need a separately reviewed reference strategy;
-`wide_4x3` and `wide_4x4` must not be sent through this topology yet.
+The graph derives its reference count from the layout and has no hard
+three-subject limit. `standard_3x3` remains the production default.
+Four-subject `wide_4x3` and `wide_4x4` candidates still require their own
+memory and visual review before promotion.
 
 Immediately after ComfyUI returns the 1 MP artwork, exact-source modes compare
 every fully opaque source pixel with `inpaint_reference.png`. A one-value RGB

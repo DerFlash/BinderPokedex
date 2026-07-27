@@ -16,6 +16,10 @@ try:
         validate_visible_placements,
     )
     from .create_comfyui_poster_workflow import output_dimensions
+    from .generation_contract import (
+        JOINT_SCENE_CAST_MAX_MEGAPIXELS,
+        JOINT_SCENE_IDENTITY_CANVAS_PX,
+    )
     from .layout import build_source_layout
     from .poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
@@ -34,6 +38,10 @@ except ImportError:
         validate_visible_placements,
     )
     from create_comfyui_poster_workflow import output_dimensions
+    from generation_contract import (
+        JOINT_SCENE_CAST_MAX_MEGAPIXELS,
+        JOINT_SCENE_IDENTITY_CANVAS_PX,
+    )
     from layout import build_source_layout
     from poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
@@ -492,13 +500,17 @@ def build_joint_scene_references(
     *,
     megapixels: float = 1.0,
 ) -> None:
-    """Write one neutral, poster-shaped cast reference for ``joint_scene``."""
+    """Write the spatial cast and unscaled per-subject identity references."""
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
     scope_dir = bundle.asset_dir
     manifest = bundle.manifest
     reference_dir = output_dir or scope_dir / "comfyui_poster"
     reference_dir.mkdir(parents=True, exist_ok=True)
-    width, height = output_dimensions(bundle.asset_key, megapixels)
+    cast_megapixels = min(
+        megapixels,
+        JOINT_SCENE_CAST_MAX_MEGAPIXELS,
+    )
+    width, height = output_dimensions(bundle.asset_key, cast_megapixels)
     placements = joint_scene_canvas_placements(
         scope_dir,
         layout_name=manifest.get("layout", {}).get(
@@ -539,6 +551,42 @@ def build_joint_scene_references(
         format="PNG",
         optimize=True,
     )
+    for index, placement in enumerate(placements, start=1):
+        source_path = (
+            scope_dir
+            / "cutouts"
+            / str(placement["item"]["file"])
+        )
+        source = Image.open(source_path).convert("RGBA")
+        if (
+            source.width > JOINT_SCENE_IDENTITY_CANVAS_PX
+            or source.height > JOINT_SCENE_IDENTITY_CANVAS_PX
+        ):
+            raise ValueError(
+                f"Joint-scene identity source {source_path} exceeds the "
+                f"{JOINT_SCENE_IDENTITY_CANVAS_PX}px unscaled canvas"
+            )
+        detail = Image.new(
+            "RGB",
+            (
+                JOINT_SCENE_IDENTITY_CANVAS_PX,
+                JOINT_SCENE_IDENTITY_CANVAS_PX,
+            ),
+            tuple(neutral),
+        )
+        detail.paste(
+            source.convert("RGB"),
+            (
+                (detail.width - source.width) // 2,
+                (detail.height - source.height) // 2,
+            ),
+            source.getchannel("A"),
+        )
+        detail.save(
+            reference_dir / f"identity_reference_{index}.png",
+            format="PNG",
+            optimize=True,
+        )
 
 
 def prepare(
