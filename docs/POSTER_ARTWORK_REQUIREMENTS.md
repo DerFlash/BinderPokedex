@@ -49,7 +49,7 @@ Last reviewed: 2026-07-27
 
 ## Current production boundary
 
-- `Base1`, `SV03.5`, Pokédex Generations I through V, and both ExGen3 sections
+- `Base1`, `SV03.5`, Pokédex Generations I through VI, and both ExGen3 sections
   have accepted, promoted 3×3 artwork and enabled PDF integration.
 - Every current individual TCG set can now be initialized with a set-specific
   scene brief and the same production contract.
@@ -58,11 +58,11 @@ Last reviewed: 2026-07-27
   exactly the three starter `featured_elements` from each generation.
 - Aggregate overlays deterministically show the localized section title,
   dynamic card count, and localized section description.
-- The Generation I through V Pokédex bindings are enabled after visual
-  whole-poster, card-cut, and rendered-PDF review. The German build has 131
-  pages with all five posters versus 126 with `--skip-poster`; Generation V
-  appears as cover page 65, poster page 66, and cards from page 67. Generations
-  VI through IX remain disabled until each artwork is generated, reviewed,
+- The Generation I through VI Pokédex bindings are enabled after visual
+  whole-poster, card-cut, and rendered-PDF review. The German build has 132
+  pages with all six posters versus 126 with `--skip-poster`; Generation VI
+  appears as cover page 85, poster page 86, and cards from page 87. Generations
+  VII through IX remain disabled until each artwork is generated, reviewed,
   promoted, and validated. That staged rollout remains tracked in
   [#2](https://github.com/DerFlash/BinderPokedex/issues/2).
 - ExGen3 routes two independent posters after their matching section covers.

@@ -1847,7 +1847,10 @@ def test_promoted_production_posters_match_provenance_and_print_geometry():
         "Pokedex/sections/gen3",
         "Pokedex/sections/gen4",
         "Pokedex/sections/gen5",
+        "Pokedex/sections/gen6",
         "SV03.5",
+        "ExGen3/sections/normal",
+        "ExGen3/sections/mega",
     ):
         result = validate_promoted_poster(scope)
         assert result["dimensions"] == (2368, 3268)

@@ -15,7 +15,7 @@ The accepted and PDF-enabled scopes currently are:
 - `Base1`: Mewtwo, Bulbasaur, and Charmander in a late-1990s research meadow.
 - `SV03.5`: Bulbasaur, Charmander, and Squirtle in a Kanto coastal meadow for
   Scarlet & Violet - 151.
-- `Pokedex/sections/gen1` through `gen5`: each generation's three starters in
+- `Pokedex/sections/gen1` through `gen6`: each generation's three starters in
   its reviewed regional scene.
 - `ExGen3/sections/normal`: Koraidon, Pikachu, and Miraidon in a
   Paldea-inspired Mediterranean valley.
@@ -505,7 +505,7 @@ aggregate target, leave its routing-index binding disabled.
 
 ## Current boundary
 
-Base1, SV03.5, Pokédex Generations I through V, and both ExGen3 sections have
+Base1, SV03.5, Pokédex Generations I through VI, and both ExGen3 sections have
 promoted identity-lock artwork, exact-source-pixel validation, deterministic
 localized overlays, card-slice exports, and complete PDF integration. Every
 current individual TCG set has cataloged scene direction and can be initialized
@@ -514,7 +514,7 @@ artwork passes the same whole-poster, per-card, and rendered-PDF review.
 
 The Pokédex provides nine generation bundles with regional briefs,
 section-local starter selection, nine-language overlays, and section-aware PDF
-routing. Generations I through V are accepted and enabled; Generations VI
+routing. Generations I through VI are accepted and enabled; Generations VII
 through IX remain the staged rollout in
 [#2](https://github.com/DerFlash/BinderPokedex/issues/2). ExGen3 demonstrates
 the same aggregate contract for two different variant sections, including
