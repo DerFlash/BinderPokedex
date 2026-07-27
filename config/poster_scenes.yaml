@@ -16,6 +16,38 @@ scopes:
       depth.
     ground_noun: meadow
 
+  Base2:
+    concept: the nostalgic 1999 Jungle expansion and its untamed woodland life
+    setting: >-
+      The artwork contains a lush late-1990s cel-painted jungle clearing with
+      layered broadleaf canopy, mossy outer rock shelves, distant hanging
+      vines, and a small sunlit river glimpse deep in the background.
+    lighting: Warm humid daylight filters through the upper-left canopy.
+    rendering: >-
+      Use nostalgic hand-painted cel-animation linework, rich but restrained
+      natural greens, and soft layered woodland depth.
+    ground_noun: jungle grass
+    constraints:
+      - >-
+        Keep dense leaves, vines, rocks, and the river in the distance or at
+        the outer edges so the protected subject silhouettes remain readable.
+
+  Base3:
+    concept: the mysterious 1999 Fossil expansion and its ancient island discoveries
+    setting: >-
+      The artwork contains a windswept late-1990s cel-painted island basin with
+      pale fossil-bearing cliffs, weathered stone strata, sparse coastal
+      woodland, and a distant sea visible beneath layered storm clouds.
+    lighting: Cool silver daylight meets a restrained amber break from the upper left.
+    rendering: >-
+      Use nostalgic hand-painted cel-animation linework, muted stone and ocean
+      colors, and spacious archaeological atmospheric depth.
+    ground_noun: coastal grass
+    constraints:
+      - >-
+        Keep fossils, cliff details, and other prominent geology distant or at
+        the outer edges, away from the protected subject silhouettes.
+
   ME01:
     concept: the Mega Evolution expansion and its surge of awakened energy
     setting: >-
