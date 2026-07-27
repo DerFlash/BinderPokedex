@@ -34,6 +34,7 @@ promotion.
 | `00014` | Reference-neutral identity wording | Coherent depth and faithful character designs | Rejected because all three characters extend above their bottom-row cards |
 | `00015` | Same v3 graph with 768 px neutral identity canvases instead of 512 px | Placement remained too high and too large; render cost increased | Rejected; 512 px default restored |
 | `00016` | Pipeline v4: replace the three global identity references with one neutral, poster-shaped cast layout containing the exact source figures inside their cards | All figures fit their real card crops with padding and the scene has coherent shadows/depth; Litten gains a large pale flank/hindquarter marking absent from the source | Rejected; third one-shot placement attempt fails identity and triggers the stop rule |
+| `00017` | Pipeline v5: 0.5-MP spatial cast followed by three unscaled 512 px source-identity references before the same single sampler | All three subjects fit their cards; depth, Litten/Popplio ground contact, and landscape intersections are coherent. Litten's front-paw digit structure is simplified, Popplio's eye and two muzzle strokes are reduced, and Rowlet lacks a convincing individual contact shadow | Rejected; spatial contract passes, but the non-negotiable identity gate fails |
 
 ## Current checkpoint
 
@@ -56,5 +57,10 @@ Spatial+Identity architecture:
 
 There is no pre-generated landscape reference, inpaint reference, second
 sampler, final character composite, learned post-upscaler, or source-pixel
-restoration in this mode. The implementation is graph contract v5 and remains
-unpromoted until a fresh candidate passes every hard gate.
+restoration in this mode. Candidate `00017` proves that graph contract v5 solves
+the spatial and scene-integration failures, but it still redraws identity-scale
+facial and paw details. Because the identity references already contain the
+unscaled source pixels, no second canvas/prompt parameter retry is justified.
+The implementation remains selectable and unpromoted; production stays on
+`identity_lock` until the product chooses which conflicting invariant may
+change or a materially stronger identity-control mechanism becomes available.

@@ -358,10 +358,12 @@ equality audit is not applicable. Its hard gates are a complete generation
 fingerprint and explicit human review of both the actual raw file and the
 deterministically scaled text-free print artwork. The CLI
 override above does not make the candidate production artwork: Generation VII
-still points to its promoted `identity_lock` result. Candidates through `00016`
-are rejected. The explicitly approved v5 Spatial+Identity architecture is the
-next bounded experiment; it does not become production until a candidate passes
-every review gate. Review evidence lives in
+still points to its promoted `identity_lock` result. Candidates through `00017`
+are rejected. v5 `00017` passes the spatial, card, shadow, and depth checks but
+fails the hard identity gate on Litten's paw and Popplio's facial details. The
+v5 graph remains selectable, but it does not become production until a
+materially different identity-control mechanism passes every review gate.
+Review evidence lives in
 `POSTER_ARTWORK_EXPERIMENT_LOG.md` and
 `POSTER_ARTWORK_REQUIREMENTS.md`.
 
@@ -415,9 +417,9 @@ python scripts/poster_assets/promote_comfyui_poster.py \
 This flag records a timestamped approval bound to those exact pixels and source
 identities; it is not a generic bypass. Promotion still rejects a candidate
 whose recorded generation contract differs from `poster.yaml`. The Generation
-VII A/B currently has no approval or manifest adoption: candidate `00003` is
-rejected and unpromoted, and neither its promoted artwork nor its PDF routing
-has changed.
+VII A/B currently has no approval or manifest adoption: candidates through
+`00017` are rejected and unpromoted, and neither its promoted artwork nor its
+PDF routing has changed.
 
 ## 8. Enable and consume the poster
 

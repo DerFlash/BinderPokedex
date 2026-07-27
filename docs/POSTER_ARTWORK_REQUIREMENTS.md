@@ -68,7 +68,7 @@ joint generation, and true one-shot generation.
 | Two-pass `identity_lock` | No | Exact source pixels | Reliable | Weak: protected lower band can read as a layer | Accepted production fallback |
 | Subject-free landscape reference plus joint final pass | Yes | Usually strong | Tunable but inconsistent | Failed: retained plants can weave behind/in front of subjects | Rejected Generation VII experiment |
 | Identity-only/cast-only true one-shot | Yes | v3 strong; v4 cast layout invents a Litten marking | v3 fails; v4 `00016` passes with padding | Strong: landscape is invented around the cast | Historical attempts closed |
-| Spatial+Identity true one-shot | Yes | Unscaled identity references are explicit anatomy authority | Spatial cast carries reviewed card-safe bounds | Designed for one jointly synthesized depth order | v5 implemented; fresh visual candidate pending |
+| Spatial+Identity true one-shot | Yes | Unscaled identity references are explicit anatomy authority, but `00017` still simplifies Litten's paw and Popplio's face details | `00017` passes all three card crops | Strong in `00017` | Implemented and rejected under the hard identity gate |
 
 ## Requirement register
 
@@ -91,7 +91,7 @@ joint generation, and true one-shot generation.
 | `PA-015` | Aggregate variant scopes receive section-specific scene briefs | Ongoing | ExGen3 `normal` and `mega` are accepted section-local bundles; apply the same explicit scene, cast, and routing contract to `primal` and future sections instead of treating an aggregate as one unambiguous TCG set |
 | `PA-015A` | Variant poster subjects retain their exact form | Done | Featured selection, cutout files/manifests, planner checks, promotion validation, conditioning, and generation fingerprints use a validated Official Artwork subject identity; distinct forms of one species remain distinct and special forms never fall back silently to base artwork |
 | `PA-016` | Post-fetch orchestration detects stale poster inputs | Done | A read-only planner compares routing, scope data, scene catalog, cutout selection/pixels, logos, dynamic model contracts, effective prompts, semantic generation/overlay fingerprints, and promoted outputs; it separates expensive regeneration from cheap overlay or routing work |
-| `PA-017` | Natural grounding may be generated jointly without losing identity or card safety | In progress | FLUX.2 `joint_scene` v5 uses one empty target, one sampler, one 0.5-MP spatial cast, one unscaled 512 px identity reference per subject, and no landscape image. All candidates through `00016` remain rejected; a fresh v5 candidate must pass identity, card containment, and coherent-depth review before production may leave `identity_lock` |
+| `PA-017` | Natural grounding may be generated jointly without losing identity or card safety | Blocked on product tradeoff | FLUX.2 `joint_scene` v5 uses one empty target, one sampler, one 0.5-MP spatial cast, one unscaled 512 px identity reference per subject, and no landscape image. `00017` passes containment and coherent depth but simplifies Litten's paw and Popplio's face details. Production remains on `identity_lock`; continuing requires either relaxing exact visual identity, allowing protected source pixels, or selecting a materially stronger identity-control mechanism |
 | `PA-018` | Alternative engines and generation modes remain selectable but gated | Done | FLUX.2, Anima, FLUX.1 Canny, and Qwen resolve model/sampling options from the matching manifest and record the exact effective contract. Exact-source modes require their passed raw-pixel audit; fully generated `joint_scene` candidates instead require a complete fingerprint and explicit identity/scene review bound to raw and deterministic print pixels |
 | `PA-019` | Pull requests prove that a complete release can be built without publishing it | Done | PRs reuse the read-only release-candidate workflow, validate all enabled posters, build every PDF and language archive, verify the manifest, and stop after a temporary Actions artifact |
 | `PA-020` | Rasterized card geometry remains inside the real generation canvas at every supported resolution | Done | Card cells come from cumulative physical endpoints rasterized against both real canvas axes; preparation, finalization, slicing, promotion, and validation share those exact bounds, and new runs record raster geometry contract v2 |
@@ -174,7 +174,7 @@ joint generation, and true one-shot generation.
   four-subject `wide_4x3` and `wide_4x4` generation still needs a separate
   memory and visual review before promotion.
 - The Generation VII `joint_scene` candidates are local evidence only.
-  Candidates through `00016` are rejected and unpromoted; no poster manifest,
+  Candidates through `00017` are rejected and unpromoted; no poster manifest,
   promoted artwork, aggregate routing, or PDF binding has switched away from
   the accepted `identity_lock` baseline. Every later candidate starts a new
   review record rather than inheriting approval.

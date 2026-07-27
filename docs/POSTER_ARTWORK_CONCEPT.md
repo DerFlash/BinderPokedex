@@ -531,7 +531,7 @@ For `joint_scene`, promotion additionally requires `--approve-joint-scene`.
 That explicit action records review of the exact raw and Lanczos-scaled
 text-free pixels against every source identity and the complete generation
 fingerprint. It does not waive manifest equality, source identity, geometry, or
-output-hash checks. All Generation VII candidates through `00016` are rejected,
+output-hash checks. All Generation VII candidates through `00017` are rejected,
 have not received this approval, and have not changed the
 manifest, promoted artwork, routing, or PDF output. A future candidate requires
 a new review bound to the current fingerprint and every hard acceptance gate;
