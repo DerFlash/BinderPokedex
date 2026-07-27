@@ -20,6 +20,7 @@ try:
         build_generation_fingerprint,
         build_overlay_fingerprint,
         fingerprint_record_is_valid,
+        generation_fingerprint_pipeline_contract_version,
         load_run_metadata,
         promoted_provenance,
     )
@@ -32,6 +33,7 @@ except ImportError:
         build_generation_fingerprint,
         build_overlay_fingerprint,
         fingerprint_record_is_valid,
+        generation_fingerprint_pipeline_contract_version,
         load_run_metadata,
         promoted_provenance,
     )
@@ -99,6 +101,12 @@ def promote(
     run_metadata = copy.deepcopy(
         load_run_metadata(run_metadata_path, artwork)
     )
+    metadata_container = json.loads(
+        run_metadata_path.read_text(encoding="utf-8")
+    )
+    refreshing_existing_promotion = (
+        metadata_container.get("kind") == "promoted_poster"
+    )
     if run_metadata.get("scope") != scope:
         raise ValueError(
             f"Run metadata is for scope {run_metadata.get('scope')!r}, not {scope!r}"
@@ -128,7 +136,18 @@ def promote(
                 raise ValueError(
                     "Candidate generation fingerprint is malformed"
                 )
-            current_fingerprint = build_generation_fingerprint(bundle)
+            recorded_contract_version = None
+            if refreshing_existing_promotion:
+                recorded_contract_version = (
+                    generation_fingerprint_pipeline_contract_version(
+                        recorded_fingerprint,
+                        recorded_generation,
+                    )
+                )
+            current_fingerprint = build_generation_fingerprint(
+                bundle,
+                pipeline_contract_version=recorded_contract_version,
+            )
             if (
                 recorded_fingerprint.get("sha256")
                 != current_fingerprint["sha256"]

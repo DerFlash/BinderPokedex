@@ -96,6 +96,23 @@ and a current enabled promotion. Overlay drift is reported with the cheap
 `refresh_promoted_overlay` action; it never recommends ComfyUI for text, logo,
 translation, panel-design, or `pdf.enabled` changes.
 
+Apply that cheap action directly from the stable promoted artwork and its
+embedded generation run:
+
+```bash
+python scripts/poster_assets/promote_comfyui_poster.py \
+  --scope Pokedex/sections/gen3 \
+  --artwork data/poster_assets/Pokedex/sections/gen3/poster-flux2-artwork.png \
+  --run-metadata data/poster_assets/Pokedex/sections/gen3/poster-flux2-provenance.json \
+  --name flux2 \
+  --force
+```
+
+Using promoted provenance as `--run-metadata` is an overlay-only refresh. It
+revalidates the unchanged generation inputs against their recorded supported
+graph contract, then rebuilds the localized preview, card slices, overlay
+fingerprint, and output hashes without starting ComfyUI.
+
 Legacy promotions can be upgraded while their original full-manifest,
 cutout-hash, output, and regenerated-overlay checks still pass:
 
@@ -163,6 +180,24 @@ provenance boundary and selects only that generation's three starter
 invalidate another generation's generation fingerprint. Other aggregate scopes
 can use the same structure once their section scene briefs are reviewed.
 
+ExGen3 uses the same aggregate lifecycle for its `normal` and `mega` sections:
+
+```bash
+python scripts/fetcher/fetch.py --scope ExGen3
+python scripts/poster_assets/init_poster_scope.py \
+  --scope ExGen3 \
+  --all-sections \
+  --fetch
+python scripts/poster_assets/poster_work_plan.py --scope ExGen3
+```
+
+Its ordered casts are declared as `section_featured_card_ids` in
+`config/scopes/ExGen3.yaml`. The normal section selects Koraidon, Pikachu, and
+Miraidon; the Mega section selects Mega Latias, Mega Diancie, and Mega
+Lucario. A configured card ID that is missing, duplicated, ambiguous, or
+assigned to an unknown section is a hard fetch error. This keeps source updates
+deterministic instead of silently changing a reviewed composition.
+
 Form-specific cutout filenames include both species and Official Artwork ID.
 The cutout manifest, read-only planner, promotion validator, and generation
 fingerprint all verify the same identity. Changing Mega X to Mega Y therefore
@@ -215,8 +250,6 @@ scripts/poster_assets/start_comfyui_poster.sh \
 
 ## 6. Generate a candidate
 
-In another terminal:
-
 ```bash
 python scripts/poster_assets/run_comfyui_poster.py --scope SV04
 ```
@@ -226,6 +259,15 @@ The corresponding aggregate command is:
 ```bash
 python scripts/poster_assets/run_comfyui_poster.py \
   --scope Pokedex/sections/gen1
+```
+
+For ExGen3, generate each isolated section independently:
+
+```bash
+python scripts/poster_assets/run_comfyui_poster.py \
+  --scope ExGen3/sections/normal
+python scripts/poster_assets/run_comfyui_poster.py \
+  --scope ExGen3/sections/mega
 ```
 
 The production runner reads engine, model, seed, step count, generation size,

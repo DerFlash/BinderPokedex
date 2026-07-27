@@ -2,11 +2,11 @@
 Transform Scarlet & Violet ex Cards to Variant Format (Single Card per Pokemon)
 
 Transforms TCGdex Scarlet & Violet ex card data from source format to the variant format
-expected by the PDF generator. Selects ONE card per Pokemon (priority: Base Set first,
-then alphabetically by set name).
+expected by the PDF generator. Selects one card per exact Pokemon form
+(priority: Base Set first, then alphabetically by set name).
 
-Input: data/source/tcg_sv_ex.json (366 cards)
-Output: data/output/ExGen3.json (~130 unique Pokemon)
+Input: data/source/tcg_sv_ex.json
+Output: data/output/ExGen3.json (one representative per exact visual form)
 """
 
 import logging
@@ -14,23 +14,30 @@ from pathlib import Path
 from typing import List, Dict, Any
 import sys
 import json
-import requests
 
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from steps.base import BaseStep, PipelineContext
+from steps.dex_id_utils import (
+    build_pokedex_name_lookup,
+    resolve_card_dex_id,
+)
 from steps.pokemon_utils import get_mega_artwork_url
+from scripts.poster_assets.poster_subject import (
+    OFFICIAL_ARTWORK_URL,
+    official_artwork_id_for_card_name,
+)
 
 logger = logging.getLogger(__name__)
 
 
 class TransformScarletVioletEXStep(BaseStep):
     """
-    Transform Scarlet & Violet ex cards to variant format - ONE card per Pokemon.
+    Transform Scarlet & Violet ex cards to variant format per exact form.
     
     Selection priority when multiple cards exist:
-    1. SV - Base Set (first SV ex set, sv1)
+    1. Scarlet & Violet Base Set (first SV ex set, sv01)
     2. Alphabetically by set name
     
     Excludes:
@@ -39,17 +46,72 @@ class TransformScarletVioletEXStep(BaseStep):
     
     def __init__(self, name: str):
         super().__init__(name)
+        self._pokedex_lookup: Dict[str, int] | None = None
+
+    def _load_pokedex_lookup(self) -> Dict[str, int]:
+        """Load the offline name trust root used to validate TCGdex dexIds."""
+        if self._pokedex_lookup is not None:
+            return self._pokedex_lookup
+        project_root = Path(__file__).resolve().parents[3]
+        pokedex_path = project_root / "data" / "output" / "Pokedex.json"
+        if not pokedex_path.is_file():
+            raise FileNotFoundError(
+                f"Pokedex name lookup is required: {pokedex_path}"
+            )
+        with pokedex_path.open("r", encoding="utf-8") as handle:
+            self._pokedex_lookup = build_pokedex_name_lookup(
+                json.load(handle)
+            )
+        if not self._pokedex_lookup:
+            raise ValueError("Pokedex name lookup is empty")
+        return self._pokedex_lookup
+
+    def _normalize_card_dex_ids(
+        self,
+        cards: List[Dict[str, Any]],
+    ) -> List[Dict[str, Any]]:
+        """Correct inconsistent upstream IDs before grouping visual forms."""
+        lookup = self._load_pokedex_lookup()
+        normalized: List[Dict[str, Any]] = []
+        for card in cards:
+            name = card.get("name", "")
+            dex_ids = card.get("dexId", [])
+            resolved_id = resolve_card_dex_id(name, dex_ids, lookup)
+            if resolved_id is None:
+                normalized.append(card)
+                continue
+            supplied_id = (
+                dex_ids[0]
+                if isinstance(dex_ids, list) and dex_ids
+                else None
+            )
+            if supplied_id == resolved_id:
+                normalized.append(card)
+                continue
+            corrected = dict(card)
+            corrected["dexId"] = [resolved_id]
+            logger.warning(
+                "Corrected inconsistent TCGdex dexId for %r: #%s -> #%s",
+                name,
+                supplied_id if supplied_id is not None else "none",
+                resolved_id,
+            )
+            normalized.append(corrected)
+        return normalized
     
     def execute(self, context: PipelineContext, params: Dict[str, Any]) -> PipelineContext:
         """
         Execute the transformation.
         
         1. Load source data from context
-        2. Group by Pokemon (dexId)
-        3. Select one card per Pokemon (priority rules)
+        2. Group by exact visual Pokemon form
+        3. Select one representative card per form (priority rules)
         4. Transform to variant format
         """
-        logger.info(f"Starting SV ex cards transformation (single card per Pokemon)")
+        logger.info(
+            "Starting modern ex-card transformation "
+            "(one representative per exact visual form)"
+        )
         
         # Load cards from context
         cards = context.data.get('tcg_sv_ex_cards')
@@ -57,10 +119,13 @@ class TransformScarletVioletEXStep(BaseStep):
             raise ValueError("No SV ex cards found in context. Make sure fetch_tcgdex_ex_gen3 ran before this step.")
         
         logger.info(f"Loaded {len(cards)} cards from source")
+        cards = self._normalize_card_dex_ids(cards)
         
-        # Group cards by type (normal, mega) and dexId
+        # Group cards by type and exact visual subject. Regional/special
+        # forms may share a National-Dex species while requiring distinct
+        # Official Artwork IDs.
         # For mega cards, we use a tuple (dexId, form_name) to handle X/Y variants
-        normal_cards: Dict[int, List[Dict[str, Any]]] = {}
+        normal_cards: Dict[tuple[int, int], List[Dict[str, Any]]] = {}
         mega_cards: Dict[tuple, List[Dict[str, Any]]] = {}
         
         for card in cards:
@@ -87,14 +152,15 @@ class TransformScarletVioletEXStep(BaseStep):
                     mega_cards[mega_key] = []
                 mega_cards[mega_key].append(card)
             else:
-                # Normal ex variant (all other ex cards are tera by default in SV era)
-                if dex_id not in normal_cards:
-                    normal_cards[dex_id] = []
-                normal_cards[dex_id].append(card)
+                artwork_id = official_artwork_id_for_card_name(dex_id, name)
+                normal_key = (dex_id, artwork_id)
+                if normal_key not in normal_cards:
+                    normal_cards[normal_key] = []
+                normal_cards[normal_key].append(card)
         
         logger.info(f"Grouped into normal={len(normal_cards)}, mega={len(mega_cards)} Pokemon")
         
-        # Select one card per Pokemon for each type
+        # Select one representative card per exact form for each type
         selected_normal = self._select_best_cards(normal_cards)
         selected_mega = self._select_best_cards(mega_cards)
         
@@ -112,17 +178,30 @@ class TransformScarletVioletEXStep(BaseStep):
     
     def _select_best_cards(self, pokemon_cards: Dict) -> List[Dict[str, Any]]:
         """
-        Select one card per Pokemon (or form) based on priority rules.
+        Select one representative card per exact form based on priority rules.
         
         Accepts either:
-        - Dict[int, List] for normal cards (grouped by dexId)
+        - Dict[tuple, List] for normal cards (species + artwork)
         - Dict[tuple, List] for mega cards (grouped by dexId + form_suffix)
         
         Priority:
-        1. SV - Base Set (sv1)
+        1. Scarlet & Violet Base Set (sv01)
         2. Alphabetically by set name
         """
         selected_cards = []
+
+        def stable_card_key(card: Dict[str, Any]) -> tuple[str, int, str]:
+            """Order equal-priority cards independently of API response order."""
+            local_id = str(card.get("localId") or "")
+            try:
+                numeric_local_id = int(local_id)
+            except ValueError:
+                numeric_local_id = sys.maxsize
+            return (
+                str(card.get("set", {}).get("name") or "").casefold(),
+                numeric_local_id,
+                str(card.get("id") or ""),
+            )
         
         for key in sorted(pokemon_cards.keys()):
             # Extract dex_id from key (either int or tuple)
@@ -133,15 +212,21 @@ class TransformScarletVioletEXStep(BaseStep):
                 selected_cards.append(cards_for_pokemon[0])
             else:
                 # Apply priority rules
-                # 1. SV - Base Set (sv1)
-                sv1_cards = [c for c in cards_for_pokemon if c['set']['id'] == 'sv1']
-                if sv1_cards:
-                    selected_cards.append(sv1_cards[0])
+                # 1. Scarlet & Violet Base Set (sv01)
+                sv01_cards = [
+                    card
+                    for card in cards_for_pokemon
+                    if card['set']['id'] == 'sv01'
+                ]
+                if sv01_cards:
+                    selected_cards.append(
+                        min(sv01_cards, key=stable_card_key)
+                    )
                     logger.debug(f"#{dex_id:03d}: Selected Base Set card")
                     continue
                 
-                # 2. Alphabetically by set name
-                cards_sorted = sorted(cards_for_pokemon, key=lambda c: c['set']['name'])
+                # 2. Alphabetically by set name, then stable local card ID.
+                cards_sorted = sorted(cards_for_pokemon, key=stable_card_key)
                 selected_cards.append(cards_sorted[0])
                 logger.debug(f"#{dex_id:03d}: Selected {cards_sorted[0]['set']['name']} card (alphabetical)")
         
@@ -232,9 +317,14 @@ class TransformScarletVioletEXStep(BaseStep):
         Returns:
             URL to official artwork PNG
         """
-        # For normal Pokemon, use direct artwork URL
+        # Resolve named regional/special forms through the pinned offline
+        # registry. Ordinary base forms retain the National-Dex artwork ID.
         if not is_mega:
-            return f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{dex_id}.png"
+            artwork_id = official_artwork_id_for_card_name(
+                dex_id,
+                pokemon_name,
+            )
+            return OFFICIAL_ARTWORK_URL.format(artwork_id=artwork_id)
         
         # For Mega Evolutions, use shared utility function
         return get_mega_artwork_url(

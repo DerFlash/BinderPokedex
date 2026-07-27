@@ -296,6 +296,51 @@ scopes:
 # These briefs use the same centrally generated identity, layout, safe-area,
 # no-text, and continuous-ground contract as individual TCG sets.
 section_scopes:
+  ExGen3:
+    normal:
+      concept: >-
+        a modern Pokémon ex collection inspired by Scarlet and Violet
+        exploration
+      setting: >-
+        The artwork contains a broad Paldea-inspired valley with a
+        Mediterranean meadow, olive woodland, low pale cliffs, restrained
+        crystalline geology, a distant blue coast, and one tiny academy
+        silhouette with completely blank facades at one outer side of the
+        horizon.
+      lighting: >-
+        Clear late-morning sunlight enters from the upper left, with restrained
+        scarlet and violet reflections confined to the distance.
+      rendering: >-
+        Use polished modern trading-card illustration, clean cel-painted
+        linework, controlled Mediterranean colors, and spacious atmospheric
+        depth.
+      ground_noun: valley grass
+      constraints:
+        - >-
+          Keep the academy, cliffs, crystals, and other landmarks distant and
+          toward the outer edges, away from the protected subject silhouettes.
+
+    mega:
+      concept: >-
+        the Mega Evolution chapter and its controlled transformed energy
+      setting: >-
+        The artwork contains an expansive highland basin with a calm low
+        meadow, distant crystalline ridges, weathered stone terraces, sparse
+        wind-shaped trees at the outer edges, and subtle refracted energy bands
+        confined to the far atmosphere and upper outer sky.
+      lighting: >-
+        Silver-gold daylight enters from the upper left, with restrained
+        magenta, cyan, and violet refractions only in the distance.
+      rendering: >-
+        Use premium modern trading-card illustration, crisp cel-painted
+        linework, controlled jewel tones, and spacious perspective.
+      ground_noun: highland grass
+      constraints:
+        - >-
+          Keep crystals and energy effects distant, leave the central sky calm,
+          and keep prominent scenery away from the protected subject
+          silhouettes.
+
   Pokedex:
     gen1:
       concept: a nostalgic hand-painted Kanto landscape with an early-journey mood

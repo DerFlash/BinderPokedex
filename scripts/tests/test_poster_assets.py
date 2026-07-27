@@ -26,6 +26,7 @@ from scripts.poster_assets.create_qwen_edit_poster_workflow import (
     build_workflow as build_qwen_edit_workflow,
 )
 from scripts.poster_assets.finalize_comfyui_poster import (
+    draw_title_text_panel,
     finalize,
     fitted_font,
     info_panel_box,
@@ -1082,6 +1083,35 @@ def test_info_panel_shrinks_long_set_names_to_their_row():
 
     assert font.size < 28
     assert total_height <= box[3] - box[1]
+
+
+def test_long_localized_title_stays_inside_its_panel():
+    canvas = Image.new("RGBA", (848, 1168), (0, 0, 0, 0))
+    title_cell = build_page_layout(
+        "standard_3x3",
+        width_px=canvas.width,
+    ).cell(1, 2)
+
+    panel_box = draw_title_text_panel(
+        canvas,
+        title_cell,
+        "Mega Pokémon ex",
+        "en",
+    )
+
+    pixels = canvas.load()
+    text_points = [
+        (x, y)
+        for y in range(canvas.height)
+        for x in range(canvas.width)
+        if pixels[x, y][:3] == (35, 65, 42)
+        and pixels[x, y][3] == 255
+    ]
+    assert text_points
+    assert min(x for x, _y in text_points) >= panel_box[0]
+    assert max(x for x, _y in text_points) < panel_box[2]
+    assert min(y for _x, y in text_points) >= panel_box[1]
+    assert max(y for _x, y in text_points) < panel_box[3]
 
 
 def test_comfyui_inpaint_uses_source_once_without_reference_conditioning():

@@ -26,14 +26,14 @@
         "width": 750
       },
       {
-        "bytes": 149196,
+        "bytes": 149361,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Pokedex/sections/gen2/poster-flux2-cards/card_r1_c2.png",
         "height": 1050,
-        "sha256": "22bdd256c63107e92fa9b3ec3fdee769b430806647e271cd9fde480b4b4e04d5",
+        "sha256": "cd389165b566a0a7cd7aae5d8b2b4c43f8391474b5fad88f681502ca835ea2a2",
         "width": 750
       },
       {
@@ -59,14 +59,14 @@
         "width": 750
       },
       {
-        "bytes": 392735,
+        "bytes": 396680,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Pokedex/sections/gen2/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
-        "sha256": "22bbe4efdb5d5465938d98b5aaed9ce4fabb8c868ad079e86e59ae8bc59258d1",
+        "sha256": "5232df75d999c683c27b50c89bc743bd774182df2cf2c73fb163e081b538292c",
         "width": 750
       },
       {
@@ -115,20 +115,20 @@
       }
     ],
     "preview": {
-      "bytes": 5342531,
+      "bytes": 5346718,
       "dpi": [
         299.9994,
         299.9994
       ],
       "file": "data/poster_assets/Pokedex/sections/gen2/poster-flux2.png",
       "height": 3268,
-      "sha256": "7777279ee8cb2b448edc973cf737f7e8ed1ee04588cd1a55fb9aea0f1aff9c7b",
+      "sha256": "8623669025ee9faddff1bebd3a3d33c33a41f502c0f410e9453ce515e3b58d26",
       "width": 2368
     }
   },
   "poster_id": "gen2",
-  "preview_language": "de",
-  "promoted_at": "2026-07-26T23:27:21.818341+00:00",
+  "preview_language": "en",
+  "promoted_at": "2026-07-27T03:25:51.486547+00:00",
   "run": {
     "created_at": "2026-07-26T23:26:07.767892+00:00",
     "generation": {
@@ -292,7 +292,7 @@
             "de": {
               "information": [
                 "Generation II",
-                "Johto",
+                "100 Karten",
                 "Pokédex #152 – #251"
               ],
               "title": {
@@ -303,7 +303,7 @@
             "en": {
               "information": [
                 "Generation II",
-                "Johto",
+                "100 cards",
                 "Pokédex #152 – #251"
               ],
               "title": {
@@ -314,7 +314,7 @@
             "es": {
               "information": [
                 "Generación II",
-                "Johto",
+                "100 cartas",
                 "Pokédex #152 – #251"
               ],
               "title": {
@@ -325,7 +325,7 @@
             "fr": {
               "information": [
                 "Génération II",
-                "Johto",
+                "100 cartes",
                 "Pokédex #152 – #251"
               ],
               "title": {
@@ -336,7 +336,7 @@
             "it": {
               "information": [
                 "Generazione II",
-                "Johto",
+                "100 carte",
                 "Pokédex #152 – #251"
               ],
               "title": {
@@ -347,7 +347,7 @@
             "ja": {
               "information": [
                 "2世代",
-                "ジョウト",
+                "100 枚",
                 "ポケモン図鑑 #152 – #251"
               ],
               "title": {
@@ -358,7 +358,7 @@
             "ko": {
               "information": [
                 "2세대",
-                "조토",
+                "100 장",
                 "포켓몬 도감 #152 – #251"
               ],
               "title": {
@@ -369,7 +369,7 @@
             "zh_hans": {
               "information": [
                 "第2世代",
-                "城都",
+                "100 张",
                 "宝可梦图鉴 #152 – #251"
               ],
               "title": {
@@ -380,7 +380,7 @@
             "zh_hant": {
               "information": [
                 "第2世代",
-                "城都",
+                "100 張",
                 "寶可夢圖鑑 #152 – #251"
               ],
               "title": {
@@ -393,7 +393,7 @@
           "logo_pixels": {},
           "pipeline_contract": {
             "name": "poster_overlay",
-            "version": 1
+            "version": 2
           },
           "text_cells": {
             "set_info": {
@@ -412,7 +412,7 @@
           }
         },
         "schema_version": 1,
-        "sha256": "23844bb891fd72bb5617cc7a823eabdf2d04cdcdadaa32ef9446fc2cc39fb9fb"
+        "sha256": "ae9d6307d49d62c1fd22a84c20afe60fb79d84a694df0a2b5a44e3847b2c16b8"
       },
       "prompt": {
         "bytes": 1836,

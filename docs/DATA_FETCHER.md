@@ -149,22 +149,34 @@ promotion, semantic provenance migration, and optional PDF inclusion.
 **fetch_tcgdex_ex_gen{1,2,3}** - Fetch TCG ex/EX Cards
 - ExGen1: Classic ex series (Ruby/Sapphire era, 2003-2006)
 - ExGen2: Pokemon-EX from BW & XY series (2012-2016) 
-- ExGen3: Scarlet & Violet ex series (2023-present)
+- ExGen3: modern Pokémon ex era (2023-present), including Mega Evolution sets
 - Fetches from TCGdex API with set-specific filtering
 - Handles Mega Evolution and Primal Reversion variants
+- ExGen3 validates the supplied `dexId` against the canonical Pokédex name
+  lookup and corrects inconsistent upstream IDs before saving the source cache
 - Saves to: `data/source/tcg_{classic,bw,sv}_ex.json`
 
 **transform_ex_gen{1,2,3}** - Transform TCG Cards
-- Selects ONE card per Pokemon (priority: first set > alphabetical)
+- Selects one representative card per configured Pokemon/form grouping
+  (priority: first set > alphabetical)
+- ExGen3 normal cards are grouped by exact `(species ID, Official Artwork ID)`,
+  so named forms of one species remain separate
 - Groups Mega variants by (dexId, form_suffix) for X/Y separation
 - Extracts form variants (X/Y for Mega, Primal for primals)
 - **PokeAPI Artwork Integration**:
   - Always uses PokeAPI official artwork (TCG images include card frames)
-  - Normal Pokemon: Direct artwork URL with dex_id
+  - Base-form Pokemon use the species artwork ID
+  - ExGen3 named normal forms use the reviewed mappings in
+    `config/pokeapi_form_species.json`
+  - Alolan Exeggutor, Black Kyurem, Bloodmoon Ursaluna, and the four Ogerpon
+    masks therefore remain separate exact artwork subjects
   - Mega X/Y: Queries PokeAPI for form-specific IDs (10034/10035 for Charizard)
   - Primal forms: Uses `{name}-primal` pattern
-  - Fallback to base Pokemon artwork if form not found
-- Saves to: `data/ExGen{1,2,3}.json`
+  - Poster preparation rejects a named special form without its exact
+    allowlisted Official Artwork instead of substituting base artwork
+- ExGen3 repeats the canonical Pokédex name check when transforming an existing
+  local source cache, so the offline path has the same ID correction
+- Saves to: `data/output/ExGen{1,2,3}.json`
 
 **group_by_generation** - Transform to Target Format
 - Converts flat Pokemon list to generation-grouped structure
@@ -179,14 +191,27 @@ promotion, semantic provenance migration, and optional PDF inclusion.
 - Overwrites Pokemon names where better translations exist
 - Applied before grouping (on source data)
 
+**enrich_featured_elements** - Section Cover and Poster Cast Enrichment
 - Works for both Pokedex (generations) and Variants (sections)
-- Example: ExGen3 mega section has [6, 94, 150] (Charizard, Gengar, Mewtwo)
+- Automatic selection remains available for ordinary scopes
+- `section_featured_card_ids` declares an ordered, deterministic cast where
+  art direction requires exact cards and forms
+- ExGen3 normal uses Koraidon, Pikachu, and Miraidon; ExGen3 Mega uses Mega
+  Latias, Mega Diancie, and Mega Lucario
+- Missing, duplicate, ambiguous, invalid, or unknown-section card IDs are hard
+  errors
+- Persists a separate `poster_subject` with species ID, exact Official Artwork
+  ID, canonical URL, and stable subject key; the TCG card image remains the
+  cover image
 - Applied after grouping (on target data)
 
 **enrich_names_from_pokedex** - Pokemon Name Enrichment
 - Enriches variant Pokemon names from Pokedex data
 - Replaces TCG card names with canonical multilingual names
 - Preserves form-specific names (e.g., "Charizard X")
+- Exact ExGen3 named forms use the reviewed nine-language labels in
+  `enrichments/card_form_names.json`; an unknown named form retains its exact
+  English source label in every locale instead of collapsing to a base name
 - Applied after transformation (on target variant data)
 
 **enrich_section_descriptions** - Section Description Enrichment  

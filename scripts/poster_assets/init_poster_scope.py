@@ -18,6 +18,7 @@ try:
         unique_by_poster_subject,
     )
     from .fetch_title_logos import fetch_title_logos
+    from .finalize_comfyui_poster import readable_overlay_text
     from .layout import DEFAULT_LAYOUT_NAME, LAYOUTS, resolve_layout_name
     from .poster_io import POSTER_ASSETS, SCOPE_DATA, load_json, load_yaml
     from .scene_catalog import scene_for_scope, section_scenes_for_scope
@@ -28,6 +29,7 @@ except ImportError:
         unique_by_poster_subject,
     )
     from fetch_title_logos import fetch_title_logos
+    from finalize_comfyui_poster import readable_overlay_text
     from layout import DEFAULT_LAYOUT_NAME, LAYOUTS, resolve_layout_name
     from poster_io import POSTER_ASSETS, SCOPE_DATA, load_json, load_yaml
     from scene_catalog import scene_for_scope, section_scenes_for_scope
@@ -52,6 +54,19 @@ def stable_scope_seed(scope: str) -> int:
     """Return a stable, scope-specific seed in the project's date namespace."""
     digest = hashlib.sha256(scope.encode("utf-8")).digest()
     return 260700000 + int.from_bytes(digest[:4], "big") % 100000
+
+
+def section_poster_title(
+    scope: str,
+    section_data: dict[str, Any],
+) -> str | dict[str, str]:
+    """Return a localized, overlay-ready title without mutating source data."""
+    if scope == "Pokedex":
+        return "Pokédex"
+    return {
+        str(language): readable_overlay_text(value)
+        for language, value in section_data["title"].items()
+    }
 
 
 def _title_logo_config(scope_data: dict[str, Any]) -> dict[str, Any] | None:
@@ -258,7 +273,7 @@ def build_section_manifest(
                 "max_height_ratio": 0.68,
             },
         },
-        "title_text": "Pokédex" if scope == "Pokedex" else scope,
+        "title_text": section_poster_title(scope, section_data),
         "text_content": {"mode": "section_summary"},
         "artwork": {
             "promoted_file": "poster-flux2-artwork.png",

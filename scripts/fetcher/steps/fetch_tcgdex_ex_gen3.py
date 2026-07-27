@@ -20,7 +20,10 @@ sys.path.insert(0, str(Path(__file__).parent.parent / 'lib'))
 from tcgdex_client import TCGdexClient
 
 from .base import BaseStep, PipelineContext
-from .dex_id_utils import extract_base_pokemon_name
+from .dex_id_utils import (
+    build_pokedex_name_lookup,
+    extract_base_pokemon_name,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -79,22 +82,7 @@ class FetchTCGdexScarletVioletEXStep(BaseStep):
         with open(pokedex_file, 'r', encoding='utf-8') as f:
             pokedex_data = json.load(f)
         
-        lookup = {}
-        
-        # Build lookup from all sections
-        sections = pokedex_data.get('sections', {})
-        for section_data in sections.values():
-            pokemon_list = section_data.get('cards', [])
-            
-            for pokemon in pokemon_list:
-                dex_id = pokemon.get('pokemon_id')
-                names = pokemon.get('name', {})
-                
-                if dex_id and isinstance(names, dict):
-                    # Add English name (primary)
-                    en_name = names.get('en', '')
-                    if en_name:
-                        lookup[en_name.lower()] = dex_id
+        lookup = build_pokedex_name_lookup(pokedex_data)
         
         logger.info(f"Loaded Pokedex lookup with {len(lookup)} Pokemon")
         self._pokedex_lookup = lookup
@@ -115,7 +103,7 @@ class FetchTCGdexScarletVioletEXStep(BaseStep):
             return None
         
         lookup = self._load_pokedex_lookup()
-        dex_id = lookup.get(pokemon_name.lower())
+        dex_id = lookup.get(pokemon_name.casefold())
         
         if dex_id:
             logger.debug(f"Fallback lookup: '{card_name}' -> '{pokemon_name}' -> #{dex_id}")
@@ -178,17 +166,28 @@ class FetchTCGdexScarletVioletEXStep(BaseStep):
                     continue
                 
                 dex_ids = full_card.get('dexId', [])
-                
-                # Fallback: If TCGdex doesn't provide dexId, try lookup via Pokedex
-                if not dex_ids:
-                    fallback_id = self._lookup_dex_id(name)
-                    if fallback_id:
-                        # Add dexId to card data
-                        full_card['dexId'] = [fallback_id]
-                        logger.info(f"✓ Applied dexId fallback for '{name}' -> #{fallback_id}")
-                    else:
-                        logger.warning(f"Card {name} has no dexId and fallback failed, skipping")
-                        continue
+                supplied_id = (
+                    dex_ids[0]
+                    if isinstance(dex_ids, list) and dex_ids
+                    else None
+                )
+                name_id = self._lookup_dex_id(name)
+                if name_id is not None:
+                    if supplied_id != name_id:
+                        logger.warning(
+                            "Corrected inconsistent TCGdex dexId for %r: "
+                            "#%s -> #%s",
+                            name,
+                            supplied_id if supplied_id is not None else "none",
+                            name_id,
+                        )
+                    full_card['dexId'] = [name_id]
+                elif type(supplied_id) is not int or supplied_id <= 0:
+                    logger.warning(
+                        f"Card {name} has no valid dexId and name lookup "
+                        "failed, skipping"
+                    )
+                    continue
                 
                 all_ex_cards.append(full_card)
             

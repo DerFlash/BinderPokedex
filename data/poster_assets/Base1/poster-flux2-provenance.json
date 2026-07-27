@@ -59,14 +59,14 @@
         "width": 750
       },
       {
-        "bytes": 281119,
+        "bytes": 280861,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
-        "sha256": "d902d3c1f0f90c3ac2b0ec97fa018818be68f09cfba01a32840eb8aff626dfc3",
+        "sha256": "5593ce02fec45c03277d04022c40064ebb889292fd5e732fb8602afca729d068",
         "width": 750
       },
       {
@@ -115,19 +115,20 @@
       }
     ],
     "preview": {
-      "bytes": 3479863,
+      "bytes": 3479236,
       "dpi": [
         299.9994,
         299.9994
       ],
       "file": "data/poster_assets/Base1/poster-flux2.png",
       "height": 3268,
-      "sha256": "f5eb9411fb0d3415bceb903d71437ab1048a82c56639f3031b9567bf47a3ceed",
+      "sha256": "ea86b86c7136f8b5aa0768cf9c7a503e501cf1084070177250f1436165a6f55b",
       "width": 2368
     }
   },
+  "poster_id": "Base1",
   "preview_language": "en",
-  "promoted_at": "2026-07-26T13:31:08.354132+00:00",
+  "promoted_at": "2026-07-27T03:22:18.668769+00:00",
   "run": {
     "created_at": "2026-07-26T13:29:59.419814+00:00",
     "generation": {
@@ -485,7 +486,7 @@
           },
           "pipeline_contract": {
             "name": "poster_overlay",
-            "version": 1
+            "version": 2
           },
           "text_cells": {
             "set_info": {
@@ -502,7 +503,7 @@
           "text_content": {}
         },
         "schema_version": 1,
-        "sha256": "3fac7b9999edf82eca93f2b1c4139c82be8eb3e71819d8fa911a96eee42275f0"
+        "sha256": "4c4ca7f57943413c2f40e0066abe5be09cb8b94392ddcf8d214209f824fc0991"
       },
       "prompt": {
         "bytes": 1664,
@@ -578,5 +579,7 @@
     }
   },
   "schema_version": 1,
-  "scope": "Base1"
+  "scope": "Base1",
+  "section_id": null,
+  "source_scope": "Base1"
 }

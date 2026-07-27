@@ -25,6 +25,7 @@ from scripts.poster_assets.provenance import (
     file_record,
     fingerprint_record_is_valid,
     generation_fingerprint_pipeline_contract_version,
+    load_run_metadata,
     required_model_artifact_hashes,
     sha256_file,
     write_run_metadata,
@@ -562,6 +563,62 @@ def test_overlay_fingerprint_tracks_text_and_logo_but_not_pdf_routing(
         scope_data_dir=output,
     )
     assert logo_changed["sha256"] != logo_original["sha256"]
+
+
+def test_overlay_fingerprint_tracks_the_rendering_contract(
+    tmp_path,
+    monkeypatch,
+):
+    _repository, assets, output, _scope_dir, bundle = _write_fixture(
+        tmp_path
+    )
+    current = build_overlay_fingerprint(
+        bundle,
+        poster_assets=assets,
+        scope_data_dir=output,
+    )
+
+    assert current["components"]["pipeline_contract"] == {
+        "name": "poster_overlay",
+        "version": 2,
+    }
+    monkeypatch.setattr(
+        provenance,
+        "OVERLAY_PIPELINE_CONTRACT_VERSION",
+        1,
+    )
+    legacy = build_overlay_fingerprint(
+        bundle,
+        poster_assets=assets,
+        scope_data_dir=output,
+    )
+
+    assert legacy["sha256"] != current["sha256"]
+
+
+def test_load_run_metadata_accepts_promoted_provenance_for_overlay_refresh(
+    tmp_path,
+):
+    artwork = tmp_path / "artwork.png"
+    Image.new("RGB", (10, 10), (20, 30, 40)).save(artwork)
+    run = {
+        "schema_version": 1,
+        "kind": "poster_generation_run",
+        "source_artwork": {"sha256": sha256_file(artwork)},
+    }
+    provenance_path = tmp_path / "poster-provenance.json"
+    provenance_path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "kind": "promoted_poster",
+                "run": run,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    assert load_run_metadata(provenance_path, artwork) == run
 
 
 def _promotion_fixture(tmp_path: Path, monkeypatch):

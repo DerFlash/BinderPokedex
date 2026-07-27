@@ -1,0 +1,86 @@
+schema_version: 2
+asset_key: ExGen3/sections/mega
+scope: ExGen3
+poster_id: mega
+source:
+  scope: ExGen3
+  section_id: mega
+layout:
+  name: standard_3x3
+text_cells:
+  title:
+    row: 1
+    column: 2
+  set_info:
+    row: 2
+    column: 2
+    max_width_ratio: 0.92
+    max_height_ratio: 0.68
+title_text:
+  de: Mega-Pokémon ex
+  en: Mega Pokémon ex
+  fr: Méga-Pokémon ex
+  es: Mega-Pokémon ex
+  it: Mega-Pokémon ex
+  ja: メガポケモン ex
+  ko: 메가 포켓몬 ex
+  zh_hans: 超级宝可梦 ex
+  zh_hant: 超級寶可夢 ex
+text_content:
+  mode: section_summary
+artwork:
+  promoted_file: poster-flux2-artwork.png
+  preview_file: poster-flux2.png
+  provenance_file: poster-flux2-provenance.json
+  identity_lock:
+    overscan_ratio: 0.04
+    max_protected_start_ratio: 0.7
+    transition_ratio: 0.1
+    subject_clearance_ratio: 0.02
+  scene:
+    concept: the Mega Evolution chapter and its controlled transformed energy
+    setting: The artwork contains an expansive highland basin with a calm low meadow, distant
+      crystalline ridges, weathered stone terraces, sparse wind-shaped trees at the outer
+      edges, and subtle refracted energy bands confined to the far atmosphere and upper outer
+      sky.
+    lighting: Silver-gold daylight enters from the upper left, with restrained magenta, cyan,
+      and violet refractions only in the distance.
+    rendering: Use premium modern trading-card illustration, crisp cel-painted linework, controlled
+      jewel tones, and spacious perspective.
+    ground_noun: highland grass
+    constraints:
+    - Keep crystals and energy effects distant, leave the central sky calm, and keep prominent
+      scenery away from the protected subject silhouettes.
+  generation:
+    engine: flux
+    model: flux-2-klein-4b-fp8.safetensors
+    model_sha256: 97ed34fe0567e436200f2faee3939b88f2b5d99f8af2a4dc16532c4245c0ccb6
+    encoder: qwen_3_4b.safetensors
+    encoder_sha256: 6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a
+    vae: flux2-vae.safetensors
+    vae_sha256: d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5
+    mode: identity_lock
+    reference_mode: two_pass_source_pixels
+    seed: 260751034
+    steps: 4
+    generation_megapixels: 1.0
+    output_dpi: 300
+    output_method: model_upscale
+    upscale_model: RealESRGAN_x4plus_anime_6B.pth
+    upscale_model_sha256: f872d837d3c90ed2e05227bed711af5671a6fd1c9f7d7e91c911a61f155e99da
+pokemon:
+  strategy: featured_from_scope
+  count: auto_from_layout_columns
+  row: bottom
+  cutout_source: pokeapi_official_artwork
+  fallback_candidates: []
+conditioning:
+  identity_defaults:
+    neutral_rgb:
+    - 226
+    - 224
+    - 211
+    canvas_px: 512
+    min_subject_px: 150
+    max_subject_px: 350
+    bottom_padding_px: 24

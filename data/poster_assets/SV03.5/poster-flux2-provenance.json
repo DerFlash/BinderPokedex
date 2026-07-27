@@ -26,14 +26,14 @@
         "width": 750
       },
       {
-        "bytes": 339896,
+        "bytes": 324081,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/SV03.5/poster-flux2-cards/card_r1_c2.png",
         "height": 1050,
-        "sha256": "fcb2baec15b4886fa802dbf8be3f9cc37abf7eecf9b9ebb627764f698593bb2a",
+        "sha256": "cae576335f937684484b0b3b73177cee308df55a438c4472f6e81ef09a765037",
         "width": 750
       },
       {
@@ -59,14 +59,14 @@
         "width": 750
       },
       {
-        "bytes": 467139,
+        "bytes": 466654,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/SV03.5/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
-        "sha256": "b5a01b6cf29a5261b0b62022af9b1c12047cf450f6a3fa040c1677917d99838e",
+        "sha256": "a4ff2b25a1c72fbaaeb9f1c4dbc0827d29ff02bf960614277202258339b1839c",
         "width": 750
       },
       {
@@ -115,19 +115,20 @@
       }
     ],
     "preview": {
-      "bytes": 5738121,
+      "bytes": 5724095,
       "dpi": [
         299.9994,
         299.9994
       ],
       "file": "data/poster_assets/SV03.5/poster-flux2.png",
       "height": 3268,
-      "sha256": "1085a32aea294a0df432326e6e4a89e6c1c8ca280492ed29470291a15bb18472",
+      "sha256": "4dc204b47262d0ce0bfd667d338d6653e8a6a413e0f32caf42d817a029d675a8",
       "width": 2368
     }
   },
-  "preview_language": "de",
-  "promoted_at": "2026-07-26T13:26:35.367976+00:00",
+  "poster_id": "SV03.5",
+  "preview_language": "en",
+  "promoted_at": "2026-07-27T03:23:25.872202+00:00",
   "run": {
     "created_at": "2026-07-26T13:25:45.887455+00:00",
     "generation": {
@@ -467,7 +468,7 @@
           },
           "pipeline_contract": {
             "name": "poster_overlay",
-            "version": 1
+            "version": 2
           },
           "text_cells": {
             "set_info": {
@@ -484,7 +485,7 @@
           "text_content": {}
         },
         "schema_version": 1,
-        "sha256": "c9f55a49db4f406e6d9e6791c185f595728100390e0d05e523d89ae35b460ff0"
+        "sha256": "7cba56209672224b31222f5595bf33e28bbeb20b66d380fb844b55dfea311d76"
       },
       "prompt": {
         "bytes": 1588,
@@ -560,5 +561,7 @@
     }
   },
   "schema_version": 1,
-  "scope": "SV03.5"
+  "scope": "SV03.5",
+  "section_id": null,
+  "source_scope": "SV03.5"
 }

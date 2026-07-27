@@ -26,14 +26,14 @@
         "width": 750
       },
       {
-        "bytes": 69402,
+        "bytes": 69664,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Pokedex/sections/gen1/poster-flux2-cards/card_r1_c2.png",
         "height": 1050,
-        "sha256": "53e1c18f1931623a77c8865dce4db87afa16f2932413abf1810b798bef045c32",
+        "sha256": "b2492aef870d1446beb04715f7f5a0f18f460f1bfecc78c75701b22c5d5cb7c2",
         "width": 750
       },
       {
@@ -59,14 +59,14 @@
         "width": 750
       },
       {
-        "bytes": 364139,
+        "bytes": 365576,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Pokedex/sections/gen1/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
-        "sha256": "9c3be60f663439e015f6bd4f6600bb720b164e11f1a369ec0e49cfa8be228cfb",
+        "sha256": "4915c5c207b3741ba22af724d5e6ad1de1124164f3b9cc0729f0121d3dac23e4",
         "width": 750
       },
       {
@@ -115,20 +115,20 @@
       }
     ],
     "preview": {
-      "bytes": 4152119,
+      "bytes": 4154096,
       "dpi": [
         299.9994,
         299.9994
       ],
       "file": "data/poster_assets/Pokedex/sections/gen1/poster-flux2.png",
       "height": 3268,
-      "sha256": "4d841688d6fab14981d2f32cd3ecdec4707fa87e83bb6a2852d565dbf5306b7d",
+      "sha256": "f29bec1ff78ca2f67796d8fddaa79e12900ecee015a07513e6675455acc8582c",
       "width": 2368
     }
   },
   "poster_id": "gen1",
-  "preview_language": "de",
-  "promoted_at": "2026-07-26T23:06:47.173418+00:00",
+  "preview_language": "en",
+  "promoted_at": "2026-07-27T03:25:43.963476+00:00",
   "run": {
     "created_at": "2026-07-26T23:04:21.655172+00:00",
     "generation": {
@@ -292,7 +292,7 @@
             "de": {
               "information": [
                 "Generation I",
-                "Kanto",
+                "151 Karten",
                 "Pokédex #001 – #151"
               ],
               "title": {
@@ -303,7 +303,7 @@
             "en": {
               "information": [
                 "Generation I",
-                "Kanto",
+                "151 cards",
                 "Pokédex #001 – #151"
               ],
               "title": {
@@ -314,7 +314,7 @@
             "es": {
               "information": [
                 "Generación I",
-                "Kanto",
+                "151 cartas",
                 "Pokédex #001 – #151"
               ],
               "title": {
@@ -325,7 +325,7 @@
             "fr": {
               "information": [
                 "Génération I",
-                "Kanto",
+                "151 cartes",
                 "Pokédex #001 – #151"
               ],
               "title": {
@@ -336,7 +336,7 @@
             "it": {
               "information": [
                 "Generazione I",
-                "Kanto",
+                "151 carte",
                 "Pokédex #001 – #151"
               ],
               "title": {
@@ -347,7 +347,7 @@
             "ja": {
               "information": [
                 "1世代",
-                "カントー",
+                "151 枚",
                 "ポケモン図鑑 #001 – #151"
               ],
               "title": {
@@ -358,7 +358,7 @@
             "ko": {
               "information": [
                 "1세대",
-                "칸토",
+                "151 장",
                 "포켓몬 도감 #001 – #151"
               ],
               "title": {
@@ -369,7 +369,7 @@
             "zh_hans": {
               "information": [
                 "第1世代",
-                "关都",
+                "151 张",
                 "宝可梦图鉴 #001 – #151"
               ],
               "title": {
@@ -380,7 +380,7 @@
             "zh_hant": {
               "information": [
                 "第1世代",
-                "關都",
+                "151 張",
                 "寶可夢圖鑑 #001 – #151"
               ],
               "title": {
@@ -393,7 +393,7 @@
           "logo_pixels": {},
           "pipeline_contract": {
             "name": "poster_overlay",
-            "version": 1
+            "version": 2
           },
           "text_cells": {
             "set_info": {
@@ -412,7 +412,7 @@
           }
         },
         "schema_version": 1,
-        "sha256": "2a96cbe5a27cebb518bd182263daa27103a1464fc1dad571b1fff3546c137d7c"
+        "sha256": "19e49e29ec65fd9b9718b54a6caf62ffcecaf7a108e078005a33f34e7a27229c"
       },
       "prompt": {
         "bytes": 1844,

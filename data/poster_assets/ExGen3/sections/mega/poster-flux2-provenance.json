@@ -1,0 +1,531 @@
+{
+  "asset_name": "flux2",
+  "kind": "promoted_poster",
+  "outputs": {
+    "artwork": {
+      "bytes": 4596655,
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "file": "data/poster_assets/ExGen3/sections/mega/poster-flux2-artwork.png",
+      "height": 3268,
+      "sha256": "f124936c5a7223858c76cb4aa47de0d4f79e2009ce291f51d216c9a2c02fe5b1",
+      "width": 2368
+    },
+    "cards": [
+      {
+        "bytes": 212057,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/ExGen3/sections/mega/poster-flux2-cards/card_r1_c1.png",
+        "height": 1050,
+        "sha256": "1fa2205872c7f58b44b77b3dfa9d62e2b3f89ca1db927d29044e12f4ba3a244d",
+        "width": 750
+      },
+      {
+        "bytes": 109190,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/ExGen3/sections/mega/poster-flux2-cards/card_r1_c2.png",
+        "height": 1050,
+        "sha256": "36559a5bb477757ecf918aebb63a3460bff1c3416e3b8eafa114d31159dde225",
+        "width": 750
+      },
+      {
+        "bytes": 164029,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/ExGen3/sections/mega/poster-flux2-cards/card_r1_c3.png",
+        "height": 1050,
+        "sha256": "74e4936430325ac8c93a1e85057fe8953898abe54e73739b15dffa113a69d6f3",
+        "width": 750
+      },
+      {
+        "bytes": 685038,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/ExGen3/sections/mega/poster-flux2-cards/card_r2_c1.png",
+        "height": 1050,
+        "sha256": "7497bba2127a1c09bc5307447f71dcb4ec17df5ada113b4b9426dea4598e7a94",
+        "width": 750
+      },
+      {
+        "bytes": 291244,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/ExGen3/sections/mega/poster-flux2-cards/card_r2_c2.png",
+        "height": 1050,
+        "sha256": "0a967f6ba7e7952f21ffce410dc58660af0e6a6abaf901dedaef0c7f3890047c",
+        "width": 750
+      },
+      {
+        "bytes": 798357,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/ExGen3/sections/mega/poster-flux2-cards/card_r2_c3.png",
+        "height": 1050,
+        "sha256": "9abdfa4acbe75a0953a86afe1f1e5e5fbe3bfe9caa14e1abe725156649ecb662",
+        "width": 750
+      },
+      {
+        "bytes": 675756,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/ExGen3/sections/mega/poster-flux2-cards/card_r3_c1.png",
+        "height": 1050,
+        "sha256": "25c82dbc2fad9c1c56c6a7b768db7a9ef8897009ef07118405f9ceffeeaa7cdb",
+        "width": 750
+      },
+      {
+        "bytes": 449437,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/ExGen3/sections/mega/poster-flux2-cards/card_r3_c2.png",
+        "height": 1050,
+        "sha256": "9e9ffc970cbdd6f7ffa9cf1bae52d557ebaf50ec1fcba21c1e666f0912cf0dea",
+        "width": 750
+      },
+      {
+        "bytes": 717749,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/ExGen3/sections/mega/poster-flux2-cards/card_r3_c3.png",
+        "height": 1050,
+        "sha256": "6f5ad460c80f5de543684012ba2bb6ca579bd485f7cbb8c87f7ff53158b1a8f7",
+        "width": 750
+      }
+    ],
+    "preview": {
+      "bytes": 4543585,
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "file": "data/poster_assets/ExGen3/sections/mega/poster-flux2.png",
+      "height": 3268,
+      "sha256": "371f09e1ab56afa44d610d2be2aa06b31d94abfde4243ebfe05df2d4b542ff37",
+      "width": 2368
+    }
+  },
+  "poster_id": "mega",
+  "preview_language": "en",
+  "promoted_at": "2026-07-27T03:22:34.737145+00:00",
+  "run": {
+    "created_at": "2026-07-27T02:47:10.475450+00:00",
+    "generation": {
+      "encoder": "qwen_3_4b.safetensors",
+      "encoder_sha256": "6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a",
+      "engine": "flux",
+      "generation_megapixels": 1.0,
+      "mode": "identity_lock",
+      "model": "flux-2-klein-4b-fp8.safetensors",
+      "model_sha256": "97ed34fe0567e436200f2faee3939b88f2b5d99f8af2a4dc16532c4245c0ccb6",
+      "output_dpi": 300,
+      "output_method": "model_upscale",
+      "reference_mode": "two_pass_source_pixels",
+      "seed": 260751034,
+      "steps": 4,
+      "upscale_model": "RealESRGAN_x4plus_anime_6B.pth",
+      "upscale_model_sha256": "f872d837d3c90ed2e05227bed711af5671a6fd1c9f7d7e91c911a61f155e99da",
+      "vae": "flux2-vae.safetensors",
+      "vae_sha256": "d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5"
+    },
+    "inputs": {
+      "cutout_manifest": {
+        "bytes": 2814,
+        "file": "data/poster_assets/ExGen3/sections/mega/cutouts/manifest.json",
+        "sha256": "a24e65d361d2042c0c6469180ea941f33e0939911ba7704e306ef4aac037cfc5"
+      },
+      "cutouts": [
+        {
+          "bytes": 120353,
+          "file": "data/poster_assets/ExGen3/sections/mega/cutouts/pokemon_380_artwork_10062_mega_latias.png",
+          "height": 475,
+          "sha256": "73d1e516779d7106f2c39c8cdfbe0d74b83127a296f6f5927b9432673dc83787",
+          "width": 475
+        },
+        {
+          "bytes": 167713,
+          "file": "data/poster_assets/ExGen3/sections/mega/cutouts/pokemon_719_artwork_10075_mega_diancie.png",
+          "height": 475,
+          "sha256": "96abacb8a7430bf4d242c9ee694c937eb86aa3e1f8154ab0755e4e615868d48e",
+          "width": 475
+        },
+        {
+          "bytes": 139825,
+          "file": "data/poster_assets/ExGen3/sections/mega/cutouts/pokemon_448_artwork_10059_mega_lucario.png",
+          "height": 475,
+          "sha256": "d51cd3b0051ffc2fe17b14c423c883831a8723b0da904bbc1f51367d15a6e85c",
+          "width": 475
+        }
+      ],
+      "generation_fingerprint": {
+        "components": {
+          "conditioning": {
+            "identity_defaults": {
+              "bottom_padding_px": 24,
+              "canvas_px": 512,
+              "max_subject_px": 350,
+              "min_subject_px": 150,
+              "neutral_rgb": [
+                226,
+                224,
+                211
+              ]
+            }
+          },
+          "cutouts": [
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "5c9afa2435eb806d76964ed10de2cd51f5ac905fece59d62b04ca52b3b1a7449",
+              "pokemon_id": 380,
+              "poster_subject": {
+                "official_artwork_id": 10062,
+                "source": "pokeapi_official_artwork"
+              },
+              "width": 475
+            },
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "6403c9b3f8171df5d25e4c6d67a76741474b5d2258860e6078386e10d9a95308",
+              "pokemon_id": 719,
+              "poster_subject": {
+                "official_artwork_id": 10075,
+                "source": "pokeapi_official_artwork"
+              },
+              "width": 475
+            },
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "d46aa86b77c45468013a7b60fbe5487bb78b95b7c20468cc900809208175a813",
+              "pokemon_id": 448,
+              "poster_subject": {
+                "official_artwork_id": 10059,
+                "source": "pokeapi_official_artwork"
+              },
+              "width": 475
+            }
+          ],
+          "effective_prompt": {
+            "encoding": "utf-8",
+            "sha256": "13efa0c86e72f764cb76948105011f133eb97635de5c43f3192c2a73fa65d478"
+          },
+          "generation": {
+            "encoder": "qwen_3_4b.safetensors",
+            "encoder_sha256": "6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a",
+            "engine": "flux",
+            "generation_megapixels": 1.0,
+            "mode": "identity_lock",
+            "model": "flux-2-klein-4b-fp8.safetensors",
+            "model_sha256": "97ed34fe0567e436200f2faee3939b88f2b5d99f8af2a4dc16532c4245c0ccb6",
+            "output_dpi": 300,
+            "output_method": "model_upscale",
+            "reference_mode": "two_pass_source_pixels",
+            "seed": 260751034,
+            "steps": 4,
+            "upscale_model": "RealESRGAN_x4plus_anime_6B.pth",
+            "upscale_model_sha256": "f872d837d3c90ed2e05227bed711af5671a6fd1c9f7d7e91c911a61f155e99da",
+            "vae": "flux2-vae.safetensors",
+            "vae_sha256": "d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5"
+          },
+          "identity_lock": {
+            "max_protected_start_ratio": 0.7,
+            "overscan_ratio": 0.04,
+            "subject_clearance_ratio": 0.02,
+            "transition_ratio": 0.1
+          },
+          "layout": {
+            "columns": 3,
+            "name": "standard_3x3",
+            "rows": 3,
+            "safe_cells": {
+              "set_info": {
+                "column": 2,
+                "row": 2
+              },
+              "title": {
+                "column": 2,
+                "row": 1
+              }
+            }
+          },
+          "pipeline_contract": {
+            "name": "poster_generation",
+            "version": 2
+          },
+          "pokemon": {
+            "count": "auto_from_layout_columns",
+            "cutout_source": "pokeapi_official_artwork",
+            "fallback_candidates": [],
+            "row": "bottom",
+            "strategy": "featured_from_scope"
+          },
+          "scene": {
+            "concept": "the Mega Evolution chapter and its controlled transformed energy",
+            "constraints": [
+              "Keep crystals and energy effects distant, leave the central sky calm, and keep prominent scenery away from the protected subject silhouettes."
+            ],
+            "ground_noun": "highland grass",
+            "lighting": "Silver-gold daylight enters from the upper left, with restrained magenta, cyan, and violet refractions only in the distance.",
+            "rendering": "Use premium modern trading-card illustration, crisp cel-painted linework, controlled jewel tones, and spacious perspective.",
+            "setting": "The artwork contains an expansive highland basin with a calm low meadow, distant crystalline ridges, weathered stone terraces, sparse wind-shaped trees at the outer edges, and subtle refracted energy bands confined to the far atmosphere and upper outer sky."
+          },
+          "source_subject_ids": [
+            {
+              "pokemon_id": 380,
+              "poster_subject": {
+                "official_artwork_id": 10062,
+                "source": "pokeapi_official_artwork"
+              }
+            },
+            {
+              "pokemon_id": 719,
+              "poster_subject": {
+                "official_artwork_id": 10075,
+                "source": "pokeapi_official_artwork"
+              }
+            },
+            {
+              "pokemon_id": 448,
+              "poster_subject": {
+                "official_artwork_id": 10059,
+                "source": "pokeapi_official_artwork"
+              }
+            }
+          ]
+        },
+        "schema_version": 1,
+        "sha256": "630fed121cb116eacdcf34000de14df4590b6d690017467dd8b43ce4bdaec583"
+      },
+      "overlay_fingerprint": {
+        "components": {
+          "languages": {
+            "de": {
+              "information": [
+                "Mega-Pokémon ex",
+                "26 Karten",
+                "Mega-Entwicklungs-Serie (2025–heute) • Mega-Entwicklungen als Pokémon ex"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "Mega-Pokémon ex"
+              }
+            },
+            "en": {
+              "information": [
+                "Mega Pokémon ex",
+                "26 cards",
+                "Mega Evolution Series (2025–present) • Mega Evolutions as Pokémon ex"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "Mega Pokémon ex"
+              }
+            },
+            "es": {
+              "information": [
+                "Mega-Pokémon ex",
+                "26 cartas",
+                "Serie Megaevolución (2025–presente) • Megaevoluciones como Pokémon ex"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "Mega-Pokémon ex"
+              }
+            },
+            "fr": {
+              "information": [
+                "Méga-Pokémon ex",
+                "26 cartes",
+                "Série Méga-Évolution (2025–présent) • Méga-Évolutions en Pokémon ex"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "Méga-Pokémon ex"
+              }
+            },
+            "it": {
+              "information": [
+                "Mega-Pokémon ex",
+                "26 carte",
+                "Serie Megaevoluzione (2025–presente) • Megaevoluzioni come Pokémon ex"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "Mega-Pokémon ex"
+              }
+            },
+            "ja": {
+              "information": [
+                "メガポケモン ex",
+                "26 枚",
+                "メガシンカシリーズ (2025–現在) • メガシンカポケモンex"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "メガポケモン ex"
+              }
+            },
+            "ko": {
+              "information": [
+                "메가 포켓몬 ex",
+                "26 장",
+                "메가진화 시리즈 (2025–현재) • 메가진화 포켓몬 ex"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "메가 포켓몬 ex"
+              }
+            },
+            "zh_hans": {
+              "information": [
+                "超级宝可梦 ex",
+                "26 张",
+                "超级进化系列 (2025–至今) • 超级进化宝可梦ex"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "超级宝可梦 ex"
+              }
+            },
+            "zh_hant": {
+              "information": [
+                "超級寶可夢 ex",
+                "26 張",
+                "超級進化系列 (2025–至今) • 超級進化寶可夢ex"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "超級寶可夢 ex"
+              }
+            }
+          },
+          "layout_name": "standard_3x3",
+          "logo_pixels": {},
+          "pipeline_contract": {
+            "name": "poster_overlay",
+            "version": 2
+          },
+          "text_cells": {
+            "set_info": {
+              "column": 2,
+              "max_height_ratio": 0.68,
+              "max_width_ratio": 0.92,
+              "row": 2
+            },
+            "title": {
+              "column": 2,
+              "row": 1
+            }
+          },
+          "text_content": {
+            "mode": "section_summary"
+          }
+        },
+        "schema_version": 1,
+        "sha256": "e9cdd40df99e48e4faeade75b5b163e43c435cefacffdf33bd34357153985f34"
+      },
+      "prompt": {
+        "bytes": 2150,
+        "file": "data/poster_assets/ExGen3/sections/mega/comfyui_poster/identity_lock_prompt.generated.txt",
+        "sha256": "cdbc39b5d898a622d1095fc0c5b351ec4f2d08aad089029337f8208418284717"
+      },
+      "references": [
+        {
+          "bytes": 150457,
+          "file": "data/poster_assets/ExGen3/sections/mega/comfyui_poster/inpaint_reference.png",
+          "height": 1168,
+          "sha256": "78e182cf3936394607e6df21b97a8deae39971e0be1125906ff5b369dabc7422",
+          "width": 848
+        },
+        {
+          "bytes": 4603,
+          "file": "data/poster_assets/ExGen3/sections/mega/comfyui_poster/upper_context_mask.png",
+          "height": 1168,
+          "sha256": "6ab5789bc87b2686a333665b5c3525017a55aac68916f4419e939b1160d6f62e",
+          "width": 848
+        },
+        {
+          "bytes": 4371,
+          "file": "data/poster_assets/ExGen3/sections/mega/comfyui_poster/upper_context_generation_mask.png",
+          "height": 1168,
+          "sha256": "b54863c820b1aef3735f1bd629c5f43102a645fc98ea03906675d26a4c5395c1",
+          "width": 848
+        }
+      ],
+      "scope_manifest": {
+        "bytes": 2752,
+        "file": "data/poster_assets/ExGen3/sections/mega/poster.yaml",
+        "sha256": "8e9ab2cf6faa854566215d65bbc4cba66d1f77406e6991aec0a987686365e5b4"
+      },
+      "upscale_workflow": {
+        "bytes": 931,
+        "file": "data/poster_assets/ExGen3/sections/mega/comfyui_poster/workflow_api_upscale_300dpi.json",
+        "sha256": "1f9d4f06a719b8112f5880d8123745b35d90c0fced9bafc05296ac589e8bd2dd"
+      },
+      "workflow": {
+        "bytes": 6490,
+        "file": "data/poster_assets/ExGen3/sections/mega/comfyui_poster/workflow_api_identity_lock_1mp_260751034.json",
+        "sha256": "0d618fb117af32bba2e8728fdd1d00b940e6e3170e4ac97bbe33bf58b228497e"
+      }
+    },
+    "kind": "poster_generation_run",
+    "poster_id": "mega",
+    "raw_artwork": {
+      "bytes": 1311277,
+      "file": "data/poster_assets/ExGen3/sections/mega/comfyui_poster/output/exgen3__sections__mega_flux2_identity_lock_1mp_scene_seed_260751034_00001_.png",
+      "height": 1168,
+      "sha256": "5b683b7c1ca92c65f0024b7edddeccbef04f82bf07032d7bf81efe1549780e2e",
+      "width": 848
+    },
+    "schema_version": 1,
+    "scope": "ExGen3/sections/mega",
+    "section_id": "mega",
+    "source_artwork": {
+      "bytes": 4596655,
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "file": "data/poster_assets/ExGen3/sections/mega/comfyui_poster/temp/exgen3__sections__mega_print_300dpi_RealESRGAN_x4plus_anime_6B_00001__print.png",
+      "height": 3268,
+      "sha256": "f124936c5a7223858c76cb4aa47de0d4f79e2009ce291f51d216c9a2c02fe5b1",
+      "width": 2368
+    },
+    "source_scope": "ExGen3",
+    "validation": {
+      "identity_lock": {
+        "changed_pixels": 0,
+        "method": "exact_opaque_source_pixels",
+        "opaque_pixels": 40461,
+        "passed": true
+      }
+    }
+  },
+  "schema_version": 1,
+  "scope": "ExGen3/sections/mega",
+  "section_id": "mega",
+  "source_scope": "ExGen3"
+}

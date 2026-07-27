@@ -144,7 +144,7 @@ pipeline:
 | **Pokédex** | 9 generations × 3 starters | PokeAPI artwork |
 | **ExGen1** | Mewtwo, Mew, Lugia | TCGdex (ex series) |
 | **ExGen2** | Dialga, Palkia, Giratina | TCGdex (bw/xy) |
-| **ExGen3** | Rayquaza, Groudon, Kyogre | TCGdex (sv ex) |
+| **ExGen3** | Normal: Koraidon, Pikachu, Miraidon; Mega: Mega Latias, Mega Diancie, Mega Lucario | TCGdex (sv/me ex) |
 | **ME01** | Bulbasaur, Chikorita, Celebi | TCGdex |
 | **ME02** | Charizard, Blastoise, Venusaur | TCGdex |
 | **ME02.5** | Alakazam, Gengar, Machamp | TCGdex |

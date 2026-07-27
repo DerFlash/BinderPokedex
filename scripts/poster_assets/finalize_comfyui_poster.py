@@ -75,6 +75,20 @@ MONTHS = {
     "es": ("enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"),
     "it": ("gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"),
 }
+OVERLAY_TOKEN_TEXT = {
+    "[EX_NEW]": "ex",
+    "[EX_TERA]": "Tera ex",
+    "[EX]": "EX",
+    "[M]": "Mega",
+}
+
+
+def readable_overlay_text(value: object) -> str:
+    """Replace internal card-format tokens only in user-facing poster text."""
+    text = str(value)
+    for token, replacement in OVERLAY_TOKEN_TEXT.items():
+        text = text.replace(token, replacement)
+    return text
 
 
 def draw_title_logo(canvas: Image.Image, cell, logo_path: Path) -> None:
@@ -121,10 +135,10 @@ def localized_value(value: object, language: str, *, default: str = "") -> str:
         selected = value.get(language) or value.get("en")
         if selected is None:
             selected = next((item for item in value.values() if item), default)
-        return str(selected)
+        return readable_overlay_text(selected)
     if value is None:
-        return default
-    return str(value)
+        return readable_overlay_text(default)
+    return readable_overlay_text(value)
 
 
 def selected_section(scope_data: dict) -> dict:
@@ -175,9 +189,11 @@ def info_panel_values(
         )
     if content_mode == "section_summary":
         section = selected_section(scope_data)
+        cards = section.get("cards")
+        section_card_count = len(cards) if isinstance(cards, list) else 0
         return (
             localized_value(section.get("title"), language),
-            localized_value(section.get("subtitle"), language),
+            f"{section_card_count} {CARD_LABELS[language]}",
             localized_value(section.get("description"), language),
         )
     raise ValueError(f"Unsupported text_content.mode: {content_mode}")
@@ -259,19 +275,20 @@ def draw_info_panel(
     values = info_panel_values(scope_data, language, content_mode)
 
     text_draw = ImageDraw.Draw(canvas, "RGBA")
+    pad_x = max(5, round((box[2] - box[0]) * 0.04))
     height = box[3] - box[1]
     if content_mode == "set_summary":
         rows = (
-            (values[0], (box[0] + 5, box[1] + round(height * 0.05), box[2] - 5, box[1] + round(height * 0.34)), max(11, cell.height // 13), max(9, cell.height // 20), True, (255, 244, 190, 255)),
-            (values[1], (box[0] + 5, box[1] + round(height * 0.34), box[2] - 5, box[1] + round(height * 0.57)), max(9, cell.height // 18), max(8, cell.height // 24), True, (232, 213, 151, 255)),
-            (values[2], (box[0] + 5, box[1] + round(height * 0.57), box[2] - 5, box[1] + round(height * 0.76)), max(8, cell.height // 24), max(7, cell.height // 28), False, (185, 210, 190, 255)),
-            (values[3], (box[0] + 5, box[1] + round(height * 0.75), box[2] - 5, box[3] - 4), max(8, cell.height // 21), max(7, cell.height // 27), False, (244, 238, 207, 255)),
+            (values[0], (box[0] + pad_x, box[1] + round(height * 0.05), box[2] - pad_x, box[1] + round(height * 0.34)), max(11, cell.height // 13), max(9, cell.height // 20), True, (255, 244, 190, 255)),
+            (values[1], (box[0] + pad_x, box[1] + round(height * 0.34), box[2] - pad_x, box[1] + round(height * 0.57)), max(9, cell.height // 18), max(8, cell.height // 24), True, (232, 213, 151, 255)),
+            (values[2], (box[0] + pad_x, box[1] + round(height * 0.57), box[2] - pad_x, box[1] + round(height * 0.76)), max(8, cell.height // 24), max(7, cell.height // 28), False, (185, 210, 190, 255)),
+            (values[3], (box[0] + pad_x, box[1] + round(height * 0.75), box[2] - pad_x, box[3] - 4), max(8, cell.height // 21), max(7, cell.height // 27), False, (244, 238, 207, 255)),
         )
     else:
         rows = (
-            (values[0], (box[0] + 5, box[1] + round(height * 0.09), box[2] - 5, box[1] + round(height * 0.40)), max(11, cell.height // 13), max(9, cell.height // 20), True, (255, 244, 190, 255)),
-            (values[1], (box[0] + 5, box[1] + round(height * 0.40), box[2] - 5, box[1] + round(height * 0.66)), max(9, cell.height // 18), max(8, cell.height // 24), True, (232, 213, 151, 255)),
-            (values[2], (box[0] + 5, box[1] + round(height * 0.65), box[2] - 5, box[3] - round(height * 0.08)), max(8, cell.height // 22), max(7, cell.height // 28), False, (244, 238, 207, 255)),
+            (values[0], (box[0] + pad_x, box[1] + round(height * 0.09), box[2] - pad_x, box[1] + round(height * 0.40)), max(11, cell.height // 13), max(9, cell.height // 20), True, (255, 244, 190, 255)),
+            (values[1], (box[0] + pad_x, box[1] + round(height * 0.40), box[2] - pad_x, box[1] + round(height * 0.66)), max(9, cell.height // 18), max(8, cell.height // 24), True, (232, 213, 151, 255)),
+            (values[2], (box[0] + pad_x, box[1] + round(height * 0.65), box[2] - pad_x, box[3] - round(height * 0.08)), max(8, cell.height // 22), max(7, cell.height // 28), False, (244, 238, 207, 255)),
         )
     for text, text_box, preferred_size, minimum_size, bold, color in rows:
         font = fitted_font(
@@ -305,6 +322,50 @@ def draw_project_signature(canvas: Image.Image) -> None:
     draw.text((x, y), text, font=font, fill=(246, 239, 207, 215))
 
 
+def draw_title_text_panel(
+    canvas: Image.Image,
+    title_cell,
+    title: str,
+    language: str,
+) -> tuple[int, int, int, int]:
+    """Draw a localized title fully inside its deterministic panel."""
+    panel_box = title_cell.inset(0.09, 0.27)
+    composite_panel(
+        canvas,
+        panel_box,
+        fill=(253, 244, 202, 238),
+        outline=(44, 84, 52, 245),
+        radius=max(8, round(24 * canvas.width / 1400)),
+    )
+    width = panel_box[2] - panel_box[0]
+    height = panel_box[3] - panel_box[1]
+    pad_x = max(4, round(width * 0.05))
+    pad_y = max(4, round(height * 0.10))
+    text_box = (
+        panel_box[0] + pad_x,
+        panel_box[1] + pad_y,
+        panel_box[2] - pad_x,
+        panel_box[3] - pad_y,
+    )
+    font = fitted_font(
+        title,
+        text_box,
+        preferred_size=max(14, title_cell.height // 8),
+        minimum_size=max(10, title_cell.height // 22),
+        bold=True,
+        language=language,
+    )
+    draw_text_centered(
+        ImageDraw.Draw(canvas, "RGBA"),
+        title,
+        text_box,
+        font,
+        (35, 65, 42, 255),
+        shadow_fill=None,
+    )
+    return panel_box
+
+
 def draw_final_text_cells(canvas, layout, manifest, scope_data, scope_dir: Path, language: str) -> None:
     text_cells = manifest.get("text_cells", {})
     title_cfg = text_cells.get("title", {"row": 1, "column": 2})
@@ -318,26 +379,17 @@ def draw_final_text_cells(canvas, layout, manifest, scope_data, scope_dir: Path,
             raise FileNotFoundError(f"Title logo not found: {logo_path}")
         draw_title_logo(canvas, title_cell, logo_path)
     else:
-        title_box = title_cell.inset(0.09, 0.27)
-        composite_panel(canvas, title_box, fill=(253, 244, 202, 238), outline=(44, 84, 52, 245), radius=max(8, round(24 * canvas.width / 1400)))
-        draw = ImageDraw.Draw(canvas, "RGBA")
         configured_title = manifest.get("title_text")
         title = (
             localized_value(configured_title, language)
             if configured_title is not None
             else scope_title(scope_data)
         )
-        draw_text_centered(
-            draw,
+        draw_title_text_panel(
+            canvas,
+            title_cell,
             title,
-            title_box,
-            load_font(
-                max(14, title_cell.height // 8),
-                bold=True,
-                language=language,
-            ),
-            (35, 65, 42, 255),
-            shadow_fill=None,
+            language,
         )
     content_config = manifest.get("text_content", {})
     if not isinstance(content_config, dict):

@@ -78,12 +78,46 @@ def wrap_text(
     font: ImageFont.ImageFont,
     max_width: int,
 ) -> list[str]:
+    def contains_cjk(value: str) -> bool:
+        return any(
+            "\u3040" <= character <= "\u30ff"
+            or "\u3400" <= character <= "\u9fff"
+            or "\uac00" <= character <= "\ud7af"
+            for character in value
+        )
+
+    def text_width(value: str) -> int:
+        bounds = font.getbbox(value)
+        return bounds[2] - bounds[0]
+
+    def split_oversize_token(token: str) -> list[str]:
+        chunks: list[str] = []
+        current_chunk = ""
+        for character in token:
+            candidate = current_chunk + character
+            if current_chunk and text_width(candidate) > max_width:
+                chunks.append(current_chunk)
+                current_chunk = character
+            else:
+                current_chunk = candidate
+        if current_chunk:
+            chunks.append(current_chunk)
+        return chunks
+
     words = text.split()
     lines: list[str] = []
     current = ""
     for word in words:
+        if text_width(word) > max_width and contains_cjk(word):
+            if current:
+                lines.append(current)
+                current = ""
+            chunks = split_oversize_token(word)
+            lines.extend(chunks[:-1])
+            current = chunks[-1]
+            continue
         candidate = word if not current else f"{current} {word}"
-        if font.getbbox(candidate)[2] <= max_width:
+        if text_width(candidate) <= max_width:
             current = candidate
         else:
             if current:
@@ -112,10 +146,20 @@ def draw_text_centered(
     y = top + ((bottom - top) - total_height) // 2
     for line, bounds, line_height in zip(lines, line_boxes, line_heights):
         line_width = bounds[2] - bounds[0]
-        x = left + ((right - left) - line_width) // 2
+        # Pillow's default text anchor places ``(x, y)`` at the font origin,
+        # while getbbox() commonly reports a positive top bearing. Offset by
+        # both bearings so the measured glyph box, not the invisible origin,
+        # is what gets centered and bounded.
+        x = left + ((right - left) - line_width) // 2 - bounds[0]
+        draw_y = y - bounds[1]
         if shadow_fill:
-            draw.text((x + 2, y + 2), line, font=font, fill=shadow_fill)
-        draw.text((x, y), line, font=font, fill=fill)
+            draw.text(
+                (x + 2, draw_y + 2),
+                line,
+                font=font,
+                fill=shadow_fill,
+            )
+        draw.text((x, draw_y), line, font=font, fill=fill)
         y += line_height + round(font.size * 0.28)
 
 

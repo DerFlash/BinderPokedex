@@ -6,7 +6,7 @@ Quick reference for generating BinderPokedex PDFs using the scope-based system.
 
 **25 Total Scopes:**
 - **Pokedex**: Complete National Pokédex (1025 Pokémon)
-- **ExGen1-3**: TCG EX variant collections (94/324/366 cards)
+- **ExGen1-3**: TCG EX variant collections generated from their current source snapshots
 - **ME01-MEP**: Pokémon TCG Scarlet & Violet - Mew series (4 sets)
 - **SV01-SVP**: Pokémon TCG Scarlet & Violet main series (17 sets)
 
@@ -138,7 +138,7 @@ output/
 | Pokedex | Pokédex | 1025 | ~60 MB |
 | ExGen1 | TCG | 94 | ~2 MB |
 | ExGen2 | TCG | 324 | ~5 MB |
-| ExGen3 | TCG | 366 | ~6 MB |
+| ExGen3 | TCG | Dynamic, exact forms | ~6 MB |
 | ME01 | TCG | 165 | ~2 MB |
 | SV01 | TCG | 198 | ~2.5 MB |
 

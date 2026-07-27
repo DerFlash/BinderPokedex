@@ -1,4 +1,5 @@
 import json
+from copy import deepcopy
 from pathlib import Path
 
 import pytest
@@ -8,6 +9,11 @@ from scripts.poster_assets.finalize_comfyui_poster import (
     SUPPORTED_LANGUAGES,
     finalize,
     info_panel_values,
+)
+from scripts.poster_assets.typography import load_font, wrap_text
+from scripts.poster_assets.init_poster_scope import (
+    build_section_manifest,
+    section_poster_title,
 )
 from scripts.poster_assets.poster_io import (
     load_poster_scope_data,
@@ -94,6 +100,17 @@ def test_pokedex_leaf_scenes_match_the_reviewed_section_catalog():
         assert "pokemon" not in prompt_opening
 
 
+def test_exgen3_leaf_scenes_cover_both_variant_sections_exactly():
+    scenes = section_scenes_for_scope("ExGen3")
+
+    assert set(scenes) == {"normal", "mega"}
+    assert "Paldea-inspired valley" in scenes["normal"]["setting"]
+    assert "distant blue coast" in scenes["normal"]["setting"]
+    assert "expansive highland basin" in scenes["mega"]["setting"]
+    assert "refracted energy" in scenes["mega"]["setting"]
+    assert all("safe_areas" not in scene for scene in scenes.values())
+
+
 def test_checked_in_pokedex_output_has_localized_section_overlay_values():
     bundle = next(
         bundle
@@ -108,7 +125,7 @@ def test_checked_in_pokedex_output_has_localized_section_overlay_values():
         "section_summary",
     ) == (
         "Génération I",
-        "Kanto",
+        "151 cartes",
         "Pokédex #001 – #151",
     )
     assert info_panel_values(
@@ -117,12 +134,12 @@ def test_checked_in_pokedex_output_has_localized_section_overlay_values():
         "section_summary",
     ) == (
         "1世代",
-        "カントー",
+        "151 枚",
         "ポケモン図鑑 #001 – #151",
     )
 
 
-def test_section_overlay_uses_localized_title_region_and_description():
+def test_section_overlay_uses_localized_title_count_and_description():
     values = info_panel_values(
         {
             "sections": {
@@ -133,6 +150,7 @@ def test_section_overlay_uses_localized_title_region_and_description():
                         "en": "Pokédex #001 – #151",
                         "ja": "ポケモン図鑑 #001 – #151",
                     },
+                    "cards": [{}, {}],
                 }
             }
         },
@@ -142,9 +160,77 @@ def test_section_overlay_uses_localized_title_region_and_description():
 
     assert values == (
         "Generation I",
-        "カントー",
+        "2 枚",
         "ポケモン図鑑 #001 – #151",
     )
+
+
+def test_section_manifest_and_overlay_hide_internal_variant_tokens():
+    languages = (
+        "de",
+        "en",
+        "fr",
+        "es",
+        "it",
+        "ja",
+        "ko",
+        "zh_hans",
+        "zh_hant",
+    )
+    section = {
+        "title": {
+            language: "Mega-Pokémon [EX_NEW]"
+            for language in languages
+        },
+        "subtitle": {
+            language: "[EX_NEW] Series"
+            for language in languages
+        },
+        "description": {
+            language: "[M] Evolution with [EX_TERA] and [EX]"
+            for language in languages
+        },
+        "featured_elements": [
+            {"pokemon_id": pokemon_id}
+            for pokemon_id in (25, 150, 151)
+        ],
+        "cards": [{}, {}, {}],
+    }
+    source = deepcopy(section)
+    manifest = build_section_manifest(
+        "ExGen3/sections/mega",
+        "ExGen3",
+        "mega",
+        section,
+        "standard_3x3",
+        {"engine": "flux"},
+        {
+            "concept": "example",
+            "setting": "example",
+            "lighting": "example",
+            "rendering": "example",
+            "ground_noun": "grass",
+        },
+    )
+
+    assert manifest["title_text"]["en"] == "Mega-Pokémon ex"
+    assert info_panel_values(
+        {"sections": {"mega": section}},
+        "en",
+        "section_summary",
+    ) == (
+        "Mega-Pokémon ex",
+        "3 cards",
+        "Mega Evolution with Tera ex and EX",
+    )
+    assert section == source
+
+
+def test_pokedex_section_poster_title_remains_backward_compatible():
+    assert section_poster_title(
+        "Pokedex",
+        {"title": {"en": "Generation I"}},
+    ) == "Pokédex"
 
 
 @pytest.mark.parametrize("language", SUPPORTED_LANGUAGES)
@@ -168,6 +254,46 @@ def test_section_poster_finalizes_in_every_pdf_language(tmp_path, language):
             Image.open(final_path).convert("RGB"),
         ).getbbox()
         is not None
+    )
+
+
+@pytest.mark.parametrize("language", SUPPORTED_LANGUAGES)
+@pytest.mark.parametrize(
+    "scope",
+    (
+        "ExGen3/sections/normal",
+        "ExGen3/sections/mega",
+    ),
+)
+def test_exgen3_posters_finalize_real_copy_in_every_language(
+    tmp_path,
+    language,
+    scope,
+):
+    leaf = scope.rsplit("/", 1)[-1]
+    raw_path = tmp_path / f"raw-{leaf}-{language}.png"
+    final_path = tmp_path / f"final-{leaf}-{language}.png"
+    Image.new("RGB", (432, 608), (70, 130, 90)).save(raw_path)
+
+    finalize(scope, raw_path, final_path, language)
+
+    assert final_path.is_file()
+    assert Image.open(final_path).size == (432, 608)
+
+
+def test_poster_wrapping_only_splits_unspaced_cjk_text_inside_words():
+    font = load_font(48, language="ja")
+    max_width = 100
+
+    assert wrap_text("Pokémon ex", font, max_width) == [
+        "Pokémon",
+        "ex",
+    ]
+    cjk_lines = wrap_text("現代のポケモン時代", font, max_width)
+    assert len(cjk_lines) > 1
+    assert all(
+        font.getbbox(line)[2] - font.getbbox(line)[0] <= max_width
+        for line in cjk_lines
     )
 
 

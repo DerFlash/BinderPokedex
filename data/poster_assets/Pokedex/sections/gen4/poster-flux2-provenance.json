@@ -26,14 +26,14 @@
         "width": 750
       },
       {
-        "bytes": 288983,
+        "bytes": 288738,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Pokedex/sections/gen4/poster-flux2-cards/card_r1_c2.png",
         "height": 1050,
-        "sha256": "27e98bfa6550f87cbed68d53ec92261b6cc38bf3f826f53468eea20797756bbb",
+        "sha256": "abd6a5fae2fe33d3ff44c695a69a5fad99fd7bc861b4ce9292a581736aaff6ea",
         "width": 750
       },
       {
@@ -59,14 +59,14 @@
         "width": 750
       },
       {
-        "bytes": 290611,
+        "bytes": 293105,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Pokedex/sections/gen4/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
-        "sha256": "7da9f3bf8a30c7e2d9945462f62e17e0aff0380eda8d087e92537c4cc93b1b73",
+        "sha256": "297993016aa7e611a837a020e2b32b8d3bdfcc9e2109bdefb68ce8e35feee652",
         "width": 750
       },
       {
@@ -115,20 +115,20 @@
       }
     ],
     "preview": {
-      "bytes": 4205412,
+      "bytes": 4208379,
       "dpi": [
         299.9994,
         299.9994
       ],
       "file": "data/poster_assets/Pokedex/sections/gen4/poster-flux2.png",
       "height": 3268,
-      "sha256": "541f8f8fca66456d4c5cf55f28586eac4930f7f317b0aab14e78db663a59960e",
+      "sha256": "6969045a98a6edd2b2e7a012f2dfd765ff694bec21643c32e8dd228ab70c0eee",
       "width": 2368
     }
   },
   "poster_id": "gen4",
-  "preview_language": "de",
-  "promoted_at": "2026-07-27T00:49:01.310021+00:00",
+  "preview_language": "en",
+  "promoted_at": "2026-07-27T03:23:09.265505+00:00",
   "run": {
     "created_at": "2026-07-27T00:46:16.872212+00:00",
     "generation": {
@@ -292,7 +292,7 @@
             "de": {
               "information": [
                 "Generation IV",
-                "Sinnoh",
+                "107 Karten",
                 "Pokédex #387 – #493"
               ],
               "title": {
@@ -303,7 +303,7 @@
             "en": {
               "information": [
                 "Generation IV",
-                "Sinnoh",
+                "107 cards",
                 "Pokédex #387 – #493"
               ],
               "title": {
@@ -314,7 +314,7 @@
             "es": {
               "information": [
                 "Generación IV",
-                "Sinnoh",
+                "107 cartas",
                 "Pokédex #387 – #493"
               ],
               "title": {
@@ -325,7 +325,7 @@
             "fr": {
               "information": [
                 "Génération IV",
-                "Sinnoh",
+                "107 cartes",
                 "Pokédex #387 – #493"
               ],
               "title": {
@@ -336,7 +336,7 @@
             "it": {
               "information": [
                 "Generazione IV",
-                "Sinnoh",
+                "107 carte",
                 "Pokédex #387 – #493"
               ],
               "title": {
@@ -347,7 +347,7 @@
             "ja": {
               "information": [
                 "4世代",
-                "シンオウ",
+                "107 枚",
                 "ポケモン図鑑 #387 – #493"
               ],
               "title": {
@@ -358,7 +358,7 @@
             "ko": {
               "information": [
                 "4세대",
-                "신오",
+                "107 장",
                 "포켓몬 도감 #387 – #493"
               ],
               "title": {
@@ -369,7 +369,7 @@
             "zh_hans": {
               "information": [
                 "第4世代",
-                "神奥",
+                "107 张",
                 "宝可梦图鉴 #387 – #493"
               ],
               "title": {
@@ -380,7 +380,7 @@
             "zh_hant": {
               "information": [
                 "第4世代",
-                "神奧",
+                "107 張",
                 "寶可夢圖鑑 #387 – #493"
               ],
               "title": {
@@ -393,7 +393,7 @@
           "logo_pixels": {},
           "pipeline_contract": {
             "name": "poster_overlay",
-            "version": 1
+            "version": 2
           },
           "text_cells": {
             "set_info": {
@@ -412,7 +412,7 @@
           }
         },
         "schema_version": 1,
-        "sha256": "f201bc2b6d3b5e44ef68be9a1af5c21626342f620ca85984ff9b38b8a3c00fa8"
+        "sha256": "e07b905388ca57ca6a4d87894ca7b78e22bf0c637f07a4e9260f4bb532f88c8a"
       },
       "prompt": {
         "bytes": 1855,

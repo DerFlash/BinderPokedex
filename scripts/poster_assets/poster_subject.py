@@ -36,7 +36,18 @@ def _positive_int(value: object, field: str) -> int:
     return value
 
 
-def _load_form_species_registry() -> tuple[int, dict[int, int]]:
+def _normalize_card_form_name(value: object) -> str:
+    """Normalize an English card/Pokemon name for the pinned form aliases."""
+    if isinstance(value, dict):
+        value = value.get("en")
+    if not isinstance(value, str):
+        return ""
+    normalized = re.sub(r"\s+(?:ex|-ex)$", "", value.strip(), flags=re.I)
+    return " ".join(normalized.casefold().split())
+
+
+def _load_form_species_registry(
+) -> tuple[int, dict[int, int], dict[str, int]]:
     """Load the pinned PokeAPI form-to-species trust root."""
     try:
         payload = json.loads(
@@ -72,10 +83,38 @@ def _load_form_species_registry() -> tuple[int, dict[int, int]]:
                 "PokeAPI form-species registry contains an invalid mapping"
             )
         mapping[artwork_id] = species_id
-    return max_species_id, mapping
+    raw_card_forms = payload.get("card_form_artwork", {})
+    if not isinstance(raw_card_forms, dict):
+        raise RuntimeError(
+            "PokeAPI form-species card-form registry must be a mapping"
+        )
+    card_forms: dict[str, int] = {}
+    for raw_name, raw_artwork_id in raw_card_forms.items():
+        name = _normalize_card_form_name(raw_name)
+        if not name or name != raw_name:
+            raise RuntimeError(
+                "PokeAPI card-form registry names must be normalized"
+            )
+        artwork_id = _positive_int(
+            raw_artwork_id,
+            "card-form official_artwork_id",
+        )
+        if (
+            artwork_id > max_species_id
+            and artwork_id not in mapping
+        ):
+            raise RuntimeError(
+                "PokeAPI card-form registry contains an unknown artwork ID"
+            )
+        card_forms[name] = artwork_id
+    return max_species_id, mapping, card_forms
 
 
-MAX_SPECIES_ID, FORM_SPECIES_BY_ARTWORK_ID = _load_form_species_registry()
+(
+    MAX_SPECIES_ID,
+    FORM_SPECIES_BY_ARTWORK_ID,
+    CARD_FORM_ARTWORK_BY_NAME,
+) = _load_form_species_registry()
 
 
 @dataclass(frozen=True)
@@ -169,6 +208,26 @@ def official_artwork_id_from_url(url: object) -> int:
     return int(match.group(1))
 
 
+def official_artwork_id_for_card_name(
+    species_id: int,
+    card_name: object,
+) -> int:
+    """Resolve an explicitly named base/special form without network access."""
+    species_id = _positive_int(species_id, "species_id")
+    artwork_id = CARD_FORM_ARTWORK_BY_NAME.get(
+        _normalize_card_form_name(card_name),
+        species_id,
+    )
+    return PosterSubject(species_id, artwork_id).official_artwork_id
+
+
+def _registered_card_form_artwork_id(card_name: object) -> int | None:
+    """Return an exact named-form registry match without the base fallback."""
+    return CARD_FORM_ARTWORK_BY_NAME.get(
+        _normalize_card_form_name(card_name)
+    )
+
+
 def poster_subject_from_card(card: dict[str, Any]) -> dict[str, Any]:
     """Derive an explicit poster subject from a transformed source card.
 
@@ -179,14 +238,41 @@ def poster_subject_from_card(card: dict[str, Any]) -> dict[str, Any]:
     """
     species_id = _positive_int(card.get("pokemon_id"), "pokemon_id")
     image_url = card.get("image_url")
+    registered_artwork_id = _registered_card_form_artwork_id(
+        card.get("name")
+    )
+    expected_artwork_id = (
+        registered_artwork_id
+        if registered_artwork_id is not None
+        else species_id
+    )
+    # Validate the registry's species ownership even when a caller only uses
+    # poster_subject_from_card directly.
+    PosterSubject(species_id, expected_artwork_id)
     form_marker = card.get("prefix")
-    requires_exact_form = (
+    has_special_prefix = (
         isinstance(form_marker, str)
         and form_marker.casefold() in {"mega", "primal", "[m]"}
     )
+    requires_exact_form = (
+        has_special_prefix or registered_artwork_id is not None
+    )
+    requested_form = (
+        str(form_marker)
+        if has_special_prefix
+        else _normalize_card_form_name(card.get("name")) or "named"
+    )
     if isinstance(image_url, str) and "official-artwork" in image_url:
         artwork_id = official_artwork_id_from_url(image_url)
-        if requires_exact_form and artwork_id == species_id:
+        if (
+            registered_artwork_id is not None
+            and artwork_id != expected_artwork_id
+        ):
+            raise ValueError(
+                f"Pokemon #{species_id} card form requires official artwork "
+                f"#{expected_artwork_id}, not #{artwork_id}"
+            )
+        if has_special_prefix and artwork_id == species_id:
             raise ValueError(
                 f"Pokemon #{species_id} requests the {form_marker} form "
                 "without an exact official artwork URL"
@@ -200,7 +286,7 @@ def poster_subject_from_card(card: dict[str, Any]) -> dict[str, Any]:
     else:
         if requires_exact_form:
             raise ValueError(
-                f"Pokemon #{species_id} requests the {form_marker} form "
+                f"Pokemon #{species_id} requests the {requested_form} form "
                 "without an exact official artwork URL"
             )
         artwork_id = species_id

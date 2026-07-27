@@ -3,10 +3,12 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+import yaml
 
 from scripts.fetcher.steps.enrich_featured_cards import (
     EnrichFeaturedElementsStep,
 )
+from scripts.fetcher.steps.base import PipelineContext
 from scripts.fetcher.steps import pokemon_utils
 from scripts.poster_assets.poster_subject import (
     PosterSubject,
@@ -22,11 +24,12 @@ def _card(
     artwork_id: int,
     name: str,
     card_id: str,
+    prefix: str | None = "Mega",
 ) -> dict:
     return {
         "pokemon_id": pokemon_id,
         "name": {"en": name},
-        "prefix": "Mega",
+        "prefix": prefix,
         "image_url": PosterSubject(pokemon_id, artwork_id).image_url,
         "tcg_card": {"id": card_id},
     }
@@ -73,6 +76,134 @@ def test_featured_enrichment_preserves_cover_and_exact_form_subject(
         resolve_poster_subject(item).official_artwork_id
         for item in elements
     ] == [10062, 10034, 10035]
+
+
+def test_configured_featured_cards_are_authoritative_and_keep_exact_order(
+    monkeypatch,
+    tmp_path: Path,
+):
+    step = EnrichFeaturedElementsStep("featured")
+    cards = [
+        _card(1008, 1008, "Miraidon", "set-073", prefix=None),
+        _card(25, 25, "Pikachu", "set-057", prefix=None),
+        _card(1007, 1007, "Koraidon", "set-121", prefix=None),
+    ]
+    context = PipelineContext({})
+    context.set_data(
+        {
+            "sections": {
+                "normal": {
+                    "cards": cards,
+                    "featured_elements": [{"card_id": "stale-card"}],
+                }
+            }
+        }
+    )
+
+    def fake_cover(pokemon_id, card, _cache_dir, _set_info):
+        return {
+            "pokemon_id": pokemon_id,
+            "pokemon_name": card["name"]["en"],
+            "card_id": card["tcg_card"]["id"],
+            "image_url": "https://assets.tcgdex.net/en/test/high.png",
+        }
+
+    monkeypatch.setattr(step, "_fetch_card_image_from_any_card", fake_cover)
+    result = step.execute(
+        context,
+        {
+            "max_cards": 3,
+            "cache_dir": str(tmp_path),
+            "section_featured_card_ids": {
+                "normal": ["set-121", "set-057", "set-073"],
+            },
+        },
+    )
+    featured = result.get_data()["sections"]["normal"]["featured_elements"]
+
+    assert [item["card_id"] for item in featured] == [
+        "set-121",
+        "set-057",
+        "set-073",
+    ]
+    assert [item["pokemon_name"] for item in featured] == [
+        "Koraidon",
+        "Pikachu",
+        "Miraidon",
+    ]
+    assert [
+        resolve_poster_subject(item).official_artwork_id
+        for item in featured
+    ] == [1007, 25, 1008]
+
+
+@pytest.mark.parametrize(
+    ("configured_card_ids", "message"),
+    [
+        (["set-121", "set-121"], "duplicate card IDs"),
+        (["missing-card"], "missing configured featured card IDs"),
+    ],
+)
+def test_configured_featured_cards_reject_invalid_card_ids(
+    monkeypatch,
+    tmp_path: Path,
+    configured_card_ids: list[str],
+    message: str,
+):
+    step = EnrichFeaturedElementsStep("featured")
+    context = PipelineContext({})
+    context.set_data(
+        {
+            "sections": {
+                "normal": {
+                    "cards": [
+                        _card(
+                            1007,
+                            1007,
+                            "Koraidon",
+                            "set-121",
+                            prefix=None,
+                        )
+                    ],
+                }
+            }
+        }
+    )
+    monkeypatch.setattr(
+        step,
+        "_fetch_card_image_from_any_card",
+        lambda *_args: pytest.fail("invalid config must fail before fetching"),
+    )
+
+    with pytest.raises(ValueError, match=message):
+        step.execute(
+            context,
+            {
+                "max_cards": 3,
+                "cache_dir": str(tmp_path),
+                "section_featured_card_ids": {
+                    "normal": configured_card_ids,
+                },
+            },
+        )
+
+
+def test_exgen3_scope_pins_curated_featured_card_ids():
+    config = yaml.safe_load(
+        (REPO_ROOT / "config" / "scopes" / "ExGen3.yaml").read_text(
+            encoding="utf-8"
+        )
+    )
+    featured_step = next(
+        step
+        for step in config["pipeline"]
+        if step["step"] == "enrich_featured_elements"
+    )
+
+    assert featured_step["params"]["section_featured_card_ids"] == {
+        "normal": ["sv01-125", "me02.5-057", "sv01-081"],
+        "mega": ["me01-100", "me02.5-267", "me02.5-113"],
+    }
 
 
 def test_featured_enrichment_rejects_artwork_species_mismatch(

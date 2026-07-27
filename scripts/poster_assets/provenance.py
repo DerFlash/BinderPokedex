@@ -61,7 +61,7 @@ ROOT = Path(__file__).resolve().parents[2]
 POSTER_ASSETS = ROOT / "data" / "poster_assets"
 FINGERPRINT_SCHEMA_VERSION = 1
 GENERATION_PIPELINE_CONTRACT_VERSION = 2
-OVERLAY_PIPELINE_CONTRACT_VERSION = 1
+OVERLAY_PIPELINE_CONTRACT_VERSION = 2
 SUPPORTED_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
     ("flux", "identity_lock"): frozenset({1, 2}),
     ("flux", "edit"): frozenset({1}),
@@ -855,8 +855,19 @@ def write_run_metadata(
 
 
 def load_run_metadata(path: Path, artwork_path: Path) -> dict[str, Any]:
-    """Load a run sidecar and verify that it belongs to the reviewed artwork."""
+    """Load run metadata and verify that it belongs to the reviewed artwork.
+
+    A promoted provenance file may be used directly when refreshing a cheap
+    deterministic overlay; its embedded generation run remains the source of
+    truth for the unchanged text-free artwork.
+    """
     payload = json.loads(path.read_text(encoding="utf-8"))
+    if payload.get("kind") == "promoted_poster":
+        payload = payload.get("run")
+        if not isinstance(payload, dict):
+            raise ValueError(
+                f"Promoted poster has no embedded run metadata: {path}"
+            )
     if payload.get("schema_version") != 1 or payload.get("kind") != (
         "poster_generation_run"
     ):

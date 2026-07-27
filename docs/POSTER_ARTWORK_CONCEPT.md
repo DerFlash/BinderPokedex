@@ -10,17 +10,23 @@ For commands, use the concise [Poster Workflow](POSTER_WORKFLOW.md). Stable
 product decisions and roadmap IDs live in
 [Poster Requirements](POSTER_ARTWORK_REQUIREMENTS.md).
 
-The promoted scopes currently are:
+The accepted and PDF-enabled scopes currently are:
 
 - `Base1`: Mewtwo, Bulbasaur, and Charmander in a late-1990s research meadow.
 - `SV03.5`: Bulbasaur, Charmander, and Squirtle in a Kanto coastal meadow for
   Scarlet & Violet - 151.
+- `Pokedex/sections/gen1` through `gen5`: each generation's three starters in
+  its reviewed regional scene.
+- `ExGen3/sections/normal`: Koraidon, Pikachu, and Miraidon in a
+  Paldea-inspired Mediterranean valley.
+- `ExGen3/sections/mega`: the exact Mega Latias, Mega Diancie, and Mega Lucario
+  forms in a crystalline highland basin.
 
-Both use the same `3x3` physical-card layout and the same generator code. Scene
-briefs, technical identity-lock bounds, and any rare subject-specific
-compensation live in the scope manifest. New `3x3`, `4x3`, and `4x4` scopes use
-the same artwork code path. Production PDF output remains `3x3`/A4 until
-matching A3 page renderers are implemented for the wide layouts.
+All use the same `3x3` physical-card layout and generator code. Scene briefs,
+technical identity-lock bounds, and any rare subject-specific compensation live
+in the scope manifest. New `3x3`, `4x3`, and `4x4` scopes use the same artwork
+code path. Production PDF output remains `3x3`/A4 until matching A3 page
+renderers are implemented for the wide layouts.
 
 ## Files
 
@@ -161,8 +167,8 @@ stable local RGBA PNGs, and never leaves PDF generation dependent on the network
 
 The production flow creates a complete scene with FLUX.2 Klein while protecting
 the reviewed Pokemon source pixels, then adds panels and typography
-deterministically. The retired generated-background layout guide and its visible
-landing-pad composition have been removed.
+deterministically. Its tracked inputs contain no generated-background layout
+guide or visible landing-pad composition.
 
 Start the local Metal-enabled ComfyUI server:
 
@@ -425,10 +431,12 @@ minutes before sampling began. BFL documents the KV variant for approximately
 29 GB VRAM, so neither 9B path is considered a practical local poster engine on
 this machine. The failed 9B weights are not retained locally.
 
-The finalizer never adds or alters Pokemon. It only draws the set logo, localized
-set name, card count, release date, project signature, and deterministic panel
-design. Exact spelling and typography therefore remain independent from the image
-model without breaking the integrity of the generated scene.
+The finalizer never adds or alters Pokemon. For individual sets it draws the
+set logo, localized set name, card count, and release date. For aggregate
+sections it draws the localized section title, dynamic card count, and section
+description. It also adds the project signature and deterministic panel design.
+Exact spelling and typography therefore remain independent from the image model
+without breaking the integrity of the generated scene.
 
 After review, promote the exact text-free 300-dpi candidate. This transaction
 installs the stable artwork, deterministic localized preview, all physical card
@@ -497,13 +505,18 @@ aggregate target, leave its routing-index binding disabled.
 
 ## Current boundary
 
-Base1 and SV03.5 now both have promoted identity-lock artwork, exact-source-pixel
-validation, deterministic localized overlays, card-slice exports, and complete
-PDF integration. Every current individual TCG set has cataloged scene direction
-and can be initialized from existing scope data, but opts into PDF generation
-only after its text-free artwork passes the same whole-poster, per-card, and
-rendered-PDF review. The Pokédex now provides nine disabled generation bundles,
-regional briefs, section-local starter selection, nine-language overlays, and
-section-aware PDF routing. Their artworks still require generation and
-promotion under [#2](https://github.com/DerFlash/BinderPokedex/issues/2).
-Further aggregate variants and matching wide PDF pages remain roadmap items.
+Base1, SV03.5, Pokédex Generations I through V, and both ExGen3 sections have
+promoted identity-lock artwork, exact-source-pixel validation, deterministic
+localized overlays, card-slice exports, and complete PDF integration. Every
+current individual TCG set has cataloged scene direction and can be initialized
+from existing scope data, but opts into PDF generation only after its text-free
+artwork passes the same whole-poster, per-card, and rendered-PDF review.
+
+The Pokédex provides nine generation bundles with regional briefs,
+section-local starter selection, nine-language overlays, and section-aware PDF
+routing. Generations I through V are accepted and enabled; Generations VI
+through IX remain the staged rollout in
+[#2](https://github.com/DerFlash/BinderPokedex/issues/2). ExGen3 demonstrates
+the same aggregate contract for two different variant sections, including
+ordered curated casts and exact named-form artwork. Remaining aggregate
+variants and matching wide PDF pages are roadmap items.

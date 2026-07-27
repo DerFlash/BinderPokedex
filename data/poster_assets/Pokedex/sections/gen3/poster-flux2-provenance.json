@@ -26,14 +26,14 @@
         "width": 750
       },
       {
-        "bytes": 261950,
+        "bytes": 261679,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Pokedex/sections/gen3/poster-flux2-cards/card_r1_c2.png",
         "height": 1050,
-        "sha256": "dc7a7c64ce65b8dd101794b4ec86f5c7421d9c7f4bfc4b3cba36e791ecd41e87",
+        "sha256": "ccfbc5f204f1edf457c39f0c072adf63bed6e02384860f8d49328a41f98fb36d",
         "width": 750
       },
       {
@@ -59,14 +59,14 @@
         "width": 750
       },
       {
-        "bytes": 670208,
+        "bytes": 672451,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Pokedex/sections/gen3/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
-        "sha256": "103259756b2f8a07a9632c5e5a51b8c1d1e9583a44362cdeedc44f24d4dbd11a",
+        "sha256": "6bbf84e6862c92fd6a2f6f9ce6817e8f8c77da6554fc4ba02c665711fd2acc03",
         "width": 750
       },
       {
@@ -115,20 +115,20 @@
       }
     ],
     "preview": {
-      "bytes": 7801540,
+      "bytes": 7804333,
       "dpi": [
         299.9994,
         299.9994
       ],
       "file": "data/poster_assets/Pokedex/sections/gen3/poster-flux2.png",
       "height": 3268,
-      "sha256": "827c5e371ef994c82c4109bf74ca4bfb3579f5d5da850d1ed4b561bfd21408d9",
+      "sha256": "cdd47311474a777f0f6a13ec7ace81c8186461886a0cd0efe652044ef8c06d7d",
       "width": 2368
     }
   },
   "poster_id": "gen3",
-  "preview_language": "de",
-  "promoted_at": "2026-07-27T00:15:02.595558+00:00",
+  "preview_language": "en",
+  "promoted_at": "2026-07-27T03:23:01.169172+00:00",
   "run": {
     "created_at": "2026-07-27T00:13:27.729051+00:00",
     "generation": {
@@ -292,7 +292,7 @@
             "de": {
               "information": [
                 "Generation III",
-                "Hoenn",
+                "135 Karten",
                 "Pokédex #252 – #386"
               ],
               "title": {
@@ -303,7 +303,7 @@
             "en": {
               "information": [
                 "Generation III",
-                "Hoenn",
+                "135 cards",
                 "Pokédex #252 – #386"
               ],
               "title": {
@@ -314,7 +314,7 @@
             "es": {
               "information": [
                 "Generación III",
-                "Hoenn",
+                "135 cartas",
                 "Pokédex #252 – #386"
               ],
               "title": {
@@ -325,7 +325,7 @@
             "fr": {
               "information": [
                 "Génération III",
-                "Hoenn",
+                "135 cartes",
                 "Pokédex #252 – #386"
               ],
               "title": {
@@ -336,7 +336,7 @@
             "it": {
               "information": [
                 "Generazione III",
-                "Hoenn",
+                "135 carte",
                 "Pokédex #252 – #386"
               ],
               "title": {
@@ -347,7 +347,7 @@
             "ja": {
               "information": [
                 "3世代",
-                "ホウエン",
+                "135 枚",
                 "ポケモン図鑑 #252 – #386"
               ],
               "title": {
@@ -358,7 +358,7 @@
             "ko": {
               "information": [
                 "3세대",
-                "호연",
+                "135 장",
                 "포켓몬 도감 #252 – #386"
               ],
               "title": {
@@ -369,7 +369,7 @@
             "zh_hans": {
               "information": [
                 "第3世代",
-                "丰缘",
+                "135 张",
                 "宝可梦图鉴 #252 – #386"
               ],
               "title": {
@@ -380,7 +380,7 @@
             "zh_hant": {
               "information": [
                 "第3世代",
-                "豐緣",
+                "135 張",
                 "寶可夢圖鑑 #252 – #386"
               ],
               "title": {
@@ -393,7 +393,7 @@
           "logo_pixels": {},
           "pipeline_contract": {
             "name": "poster_overlay",
-            "version": 1
+            "version": 2
           },
           "text_cells": {
             "set_info": {
@@ -412,7 +412,7 @@
           }
         },
         "schema_version": 1,
-        "sha256": "79ffbca27c372563af8d923b9db72333a36cbb73bd42c7bfcd1ea0677da35121"
+        "sha256": "5e6259a64533b9e674611e578d1f95d3d0f125222537e0923668a998fae6756a"
       },
       "prompt": {
         "bytes": 1838,

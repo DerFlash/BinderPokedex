@@ -333,5 +333,18 @@
     "10324": 978,
     "10325": 998,
     "10326": 678
+  },
+  "card_form_artwork": {
+    "alolan exeggutor": 10114,
+    "black kyurem": 10022,
+    "bloodmoon ursaluna": 10272,
+    "charizard x": 10034,
+    "charizard y": 10035,
+    "cornerstone mask ogerpon": 10275,
+    "hearthflame mask ogerpon": 10274,
+    "mewtwo x": 10043,
+    "mewtwo y": 10044,
+    "teal mask ogerpon": 1017,
+    "wellspring mask ogerpon": 10273
   }
 }

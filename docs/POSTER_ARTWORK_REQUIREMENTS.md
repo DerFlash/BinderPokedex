@@ -40,7 +40,7 @@ Last reviewed: 2026-07-27
 | `PA-012` | Every promoted poster is reproducible and auditable | Done | Promotion records model, prompt, source, workflow, validation, and output hashes |
 | `PA-013` | Multiple posters can be assigned to aggregate sections | Done | A routing index binds isolated poster bundles to stable section IDs; PDFs insert every enabled bundle after its matching cover, while legacy single posters retain their first-cover behavior |
 | `PA-014` | 4×3/4×4 PDFs use matching page renderers | Open | Add A3/custom page styles, templates, cutting guides, and rendered-PDF QA |
-| `PA-015` | Aggregate variant scopes receive section-specific scene briefs | Open | Model `normal`, `mega`, `primal`, and future sections without pretending they are one unambiguous TCG set |
+| `PA-015` | Aggregate variant scopes receive section-specific scene briefs | Ongoing | ExGen3 `normal` and `mega` are accepted section-local bundles; apply the same explicit scene, cast, and routing contract to `primal` and future sections instead of treating an aggregate as one unambiguous TCG set |
 | `PA-015A` | Variant poster subjects retain their exact form | Done | Featured selection, cutout files/manifests, planner checks, promotion validation, conditioning, and generation fingerprints use a validated Official Artwork subject identity; distinct forms of one species remain distinct and special forms never fall back silently to base artwork |
 | `PA-016` | Post-fetch orchestration detects stale poster inputs | Done | A read-only planner compares routing, scope data, scene catalog, cutout selection/pixels, logos, dynamic model contracts, effective prompts, semantic generation/overlay fingerprints, and promoted outputs; it separates expensive regeneration from cheap overlay or routing work |
 | `PA-017` | Natural foreground occlusion may cross subjects safely | Research | Accept only a deterministic depth-aware method that retains exact identity and does not invent anatomy |
@@ -49,16 +49,15 @@ Last reviewed: 2026-07-27
 
 ## Current production boundary
 
-- `Base1`, `SV03.5`, and Pokédex Generations I through V have accepted, promoted
-  3×3 artwork and enabled PDF integration.
+- `Base1`, `SV03.5`, Pokédex Generations I through V, and both ExGen3 sections
+  have accepted, promoted 3×3 artwork and enabled PDF integration.
 - Every current individual TCG set can now be initialized with a set-specific
   scene brief and the same production contract.
 - The Pokédex has nine isolated, section-specific bundles with distinct seeds,
   regional scene briefs, deterministic nine-language section overlays, and
   exactly the three starter `featured_elements` from each generation.
-- The Generation V overlay deterministically uses `Einall`, `Unova`, `Unys`,
-  `Teselia`, and `Unima` for the `de`, `en`, `fr`, `es`, and `it` region
-  labels, respectively.
+- Aggregate overlays deterministically show the localized section title,
+  dynamic card count, and localized section description.
 - The Generation I through V Pokédex bindings are enabled after visual
   whole-poster, card-cut, and rendered-PDF review. The German build has 131
   pages with all five posters versus 126 with `--skip-poster`; Generation V
@@ -66,17 +65,24 @@ Last reviewed: 2026-07-27
   VI through IX remain disabled until each artwork is generated, reviewed,
   promoted, and validated. That staged rollout remains tracked in
   [#2](https://github.com/DerFlash/BinderPokedex/issues/2).
+- ExGen3 routes two independent posters after their matching section covers.
+  The normal bundle uses Koraidon, Pikachu, and Miraidon in its
+  Paldea-inspired scene. The Mega bundle uses the exact Mega Latias, Mega
+  Diancie, and Mega Lucario forms in its highland scene. Both bindings are
+  enabled and validated for normal PDF generation.
 - The default workflow deliberately stops before automatic promotion. Semantic
   scene quality, character boundary quality, and natural grounding still need
   human review.
-- The poster cast no longer assumes that National-Dex identity and visual form
-  are the same. `featured_elements.image_url` remains the cover/card image,
-  while a separate `poster_subject` binds species ID, exact PokeAPI Official
-  Artwork ID, canonical URL, and stable subject key. Legacy checked-in
-  ExGen/ME output is resolved through the featured `card_id`; future fetches
-  persist the explicit contract. A pinned PokeAPI form registry verifies that
-  every form artwork actually belongs to the recorded species. Base-only
-  bundles retain their historical fingerprint representation.
+- Poster casts model National-Dex identity and exact visual form separately.
+  `featured_elements.image_url` remains the cover/card image, while a separate
+  `poster_subject` binds species ID, exact PokeAPI Official Artwork ID,
+  canonical URL, and stable subject key. ExGen/ME records can resolve this
+  identity through the featured `card_id`, and current enrichment persists the
+  explicit contract. The pinned PokeAPI registry verifies every form-to-species
+  relationship and explicitly maps named normal-card forms such as Alolan
+  Exeggutor, Black Kyurem, Bloodmoon Ursaluna, and the four Ogerpon masks.
+  Base-only bundles retain their compatible integer fingerprint
+  representation.
 - The read-only post-fetch planner reports stable states, reasons, actions, and
   optional commands without downloading assets, mutating routing, starting
   ComfyUI, or promoting a candidate. Generation and overlay fingerprints keep
@@ -84,8 +90,8 @@ Last reviewed: 2026-07-27
   expensive regeneration path. Backfilled records preserve their audited
   historical graph contract; accepted v1 artwork remains usable while an
   optional v2 upgrade is reported explicitly.
-- Further aggregate variant scopes and wide PDF pages remain explicit roadmap
-  work rather than hidden assumptions.
+- Aggregate sections beyond the accepted ExGen3 section implementation and
+  wide PDF pages remain explicit roadmap work rather than hidden assumptions.
 - Pull requests and tagged releases use the same release-candidate build.
   Publication is a separate write-enabled job available only to `v*` tags.
 

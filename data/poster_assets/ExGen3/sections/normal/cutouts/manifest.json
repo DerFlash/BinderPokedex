@@ -1,0 +1,63 @@
+{
+  "scope": "ExGen3/sections/normal",
+  "source_scope": "ExGen3",
+  "poster_id": "normal",
+  "section_id": "normal",
+  "source": "pokeapi_official_artwork",
+  "generated_at": "2026-07-27T02:34:12.910214+00:00",
+  "layout": {
+    "name": "standard_3x3",
+    "columns": 3,
+    "rows": 3
+  },
+  "items": [
+    {
+      "pokemon_id": 1007,
+      "name_en": "Koraidon",
+      "name_de": "Koraidon",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1007.png",
+      "file": "pokemon_1007_koraidon.png",
+      "mode": "RGBA",
+      "width": 475,
+      "height": 475,
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "transparent_pixels": 169985,
+      "opaque_pixels": 59492,
+      "validated_alpha": true,
+      "errors": []
+    },
+    {
+      "pokemon_id": 25,
+      "name_en": "Pikachu",
+      "name_de": "Pikachu",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
+      "file": "pokemon_025_pikachu.png",
+      "mode": "RGBA",
+      "width": 475,
+      "height": 475,
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "transparent_pixels": 149714,
+      "opaque_pixels": 79372,
+      "validated_alpha": true,
+      "errors": []
+    },
+    {
+      "pokemon_id": 1008,
+      "name_en": "Miraidon",
+      "name_de": "Miraidon",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1008.png",
+      "file": "pokemon_1008_miraidon.png",
+      "mode": "RGBA",
+      "width": 475,
+      "height": 475,
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "transparent_pixels": 193259,
+      "opaque_pixels": 35870,
+      "validated_alpha": true,
+      "errors": []
+    }
+  ]
+}
