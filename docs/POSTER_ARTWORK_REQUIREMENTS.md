@@ -46,7 +46,7 @@ Last reviewed: 2026-07-27
 | `PA-017` | Natural foreground occlusion may cross subjects safely | Research | Accept only a deterministic depth-aware method that retains exact identity and does not invent anatomy |
 | `PA-018` | Alternative engines remain selectable but gated | Ongoing | Anima, FLUX.1 Canny, and Qwen candidates must pass the same promotion checks as FLUX.2 |
 | `PA-019` | Pull requests prove that a complete release can be built without publishing it | Done | PRs reuse the read-only release-candidate workflow, validate all enabled posters, build every PDF and language archive, verify the manifest, and stop after a temporary Actions artifact |
-| `PA-020` | Rasterized card geometry remains inside the real generation canvas at every supported resolution | Ongoing | Real-canvas guards reject any clipped source silhouette now; replace independently rounded card/gap dimensions with cumulative physical endpoint rasterization and version that geometry contract before wide layouts become production formats |
+| `PA-020` | Rasterized card geometry remains inside the real generation canvas at every supported resolution | Done | Card cells come from cumulative physical endpoints rasterized against both real canvas axes; preparation, finalization, slicing, promotion, and validation share those exact bounds, and new runs record raster geometry contract v2 |
 
 ## Current production boundary
 
@@ -64,8 +64,8 @@ Last reviewed: 2026-07-27
   pages with all nine posters versus 126 with `--skip-poster`; Generation IX
   appears as cover page 120, poster page 121, and cards from page 122. In the
   skip build it appears as cover page 112 followed directly by cards from page
-  113. The rollout is complete; its final release-candidate gate remains
-  tracked in [#2](https://github.com/DerFlash/BinderPokedex/issues/2).
+  113. The rollout and its final release-candidate gate are complete and
+  recorded in [#2](https://github.com/DerFlash/BinderPokedex/issues/2).
 - ExGen3 routes two independent posters after their matching section covers.
   The normal bundle uses Koraidon, Pikachu, and Miraidon in its
   Paldea-inspired scene. The Mega bundle uses the exact Mega Latias, Mega
@@ -89,15 +89,17 @@ Last reviewed: 2026-07-27
   ComfyUI, or promoting a candidate. Generation and overlay fingerprints keep
   text, logo, translation, panel, and `pdf.enabled` changes out of the
   expensive regeneration path. Backfilled records preserve their audited
-  historical graph contract; accepted v1 artwork remains usable while an
-  optional v2 upgrade is reported explicitly.
+  historical graph contract; accepted v1/v2 artwork remains usable while an
+  optional current-v3 upgrade is reported explicitly.
 - Aggregate sections beyond the accepted ExGen3 section implementation and
   wide PDF pages remain explicit roadmap work rather than hidden assumptions.
 - All thirteen enabled 1-MP source and conditioning compositions fit within
-  their real 848 × 1168 generation canvases. A fail-closed canvas guard now
-  prevents nominal cell rounding from silently clipping a figure. Cumulative
-  endpoint rasterization for arbitrary resolutions and wide layouts remains
-  tracked as `PA-020` and must version the generation geometry contract.
+  their real 848 × 1168 generation canvases. Cumulative physical endpoints
+  close exactly at every real canvas edge, even where latent alignment makes
+  the card widths or heights differ by one pixel. New generation fingerprints
+  record raster geometry v2; new FLUX identity-lock fingerprints use graph
+  contract v3, while the reviewed v1/v2 promotions remain valid as accepted
+  legacy artifacts.
 - Pull requests and tagged releases use the same release-candidate build.
   Publication is a separate write-enabled job available only to `v*` tags.
 

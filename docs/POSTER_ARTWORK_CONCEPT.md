@@ -70,6 +70,9 @@ record.
 ## Layout rules
 
 - Layout geometry is defined in `scripts/poster_assets/layout.py`.
+- Raster cells use cumulative physical endpoints against the real width and
+  height. Per-cell bounds are authoritative; independently rounded segment
+  sizes are never added repeatedly.
 - Manifest rows and columns are 1-based.
 - The Pokemon count follows the number of layout columns.
 - Pokemon occupy the bottom row, one per column.
@@ -466,6 +469,12 @@ discard the binder gaps between cells. For `standard_3x3`, this produces nine
 files named `card_r1_c1.png` through `card_r3_c3.png`; the three Pokemon must each
 remain completely inside one of the three bottom-row files.
 
+Latent-aligned ComfyUI dimensions are allowed to differ slightly from the exact
+physical aspect ratio. Both real canvas axes are nevertheless authoritative:
+cumulative millimetre endpoints are mapped onto them once, so the final row and
+column always end exactly at the image boundary. Print layouts rasterize those
+same absolute millimetre endpoints directly at the requested dpi.
+
 ## PDF and binder integration
 
 An individual scope keeps its optional `pdf` block in `poster.yaml`. An
@@ -515,7 +524,7 @@ artwork passes the same whole-poster, per-card, and rendered-PDF review.
 The Pokédex provides nine generation bundles with regional briefs,
 section-local starter selection, nine-language overlays, and section-aware PDF
 routing. Generations I through IX are accepted and enabled; the final
-release-candidate gate remains tracked in
+release-candidate gate is complete and recorded in
 [#2](https://github.com/DerFlash/BinderPokedex/issues/2). ExGen3 demonstrates
 the same aggregate contract for two different variant sections, including
 ordered curated casts and exact named-form artwork. Remaining aggregate

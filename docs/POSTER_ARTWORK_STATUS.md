@@ -35,15 +35,22 @@ protected lower subject band. The resulting 1 MP artwork must pass an exact
 opaque-source-pixel comparison, is model-upscaled to the exact 300-dpi physical
 layout, and then receives only deterministic typography.
 
-Generations III through IX use graph contract v2. That graph uses two distinct
-upper-context masks. A binary, latent-aligned sampling mask extends below the
-visible transition, while a separate soft RGB feather restores the continuous
-first-pass scene before the protected figure band. This prevents ComfyUI's
-internal inpaint-mask rounding
+Generations III through IX and both ExGen3 sections use historical graph
+contract v2. That graph uses two distinct upper-context masks. A binary,
+latent-aligned sampling mask extends below the visible transition, while a
+separate soft RGB feather restores the continuous first-pass scene before the
+protected figure band. This prevents ComfyUI's internal inpaint-mask rounding
 from exposing a horizontal VAE transition seam. Base1, SV03.5, Generation I,
 and Generation II remain accepted under their historically accurate v1
-contract after visual review; the planner exposes a non-blocking upgrade action
-instead of relabeling those runs as v2.
+contract after visual review.
+
+The current FLUX identity-lock graph contract is v3. It retains the v2 two-mask
+topology and adds raster geometry contract v2: cumulative physical endpoints
+are mapped to both real canvas axes and recorded with the exact
+generation/output dimensions and cell spans. Existing v1/v2 promotions remain
+accepted legacy artifacts because their 300-dpi cells are unchanged; the
+planner exposes a non-blocking upgrade action instead of relabeling or
+regenerating them.
 
 The production baseline is the two-pass source-pixel-lock flow. Direct FLUX
 edits, direct silhouette inpainting, native-resolution comparisons, FLUX.1
@@ -106,8 +113,9 @@ and visual acceptance gate.
   landscape padding around its silhouette.
 - Preparation validates the visible alpha bounds of both exact source
   placements and model-compensated conditioning placements against the
-  assigned card and the real latent canvas. A nominal rounded cell may never
-  hide clipping at the image edge.
+  assigned card and the real latent canvas. Cumulative cell endpoints close
+  exactly at every canvas edge, and the independent real-canvas guard remains
+  fail-closed.
 - Identity-lock placement is derived from the shared physical layout. Optional
   model-specific composition compensation remains declarative in each scope
   manifest for the probabilistic edit engines.
@@ -139,6 +147,10 @@ and visual acceptance gate.
 - Posters are sliced with the same geometry used by preparation and PDF
   rendering. Legacy bundles follow the first section cover; aggregate bundles
   follow the exact configured section cover.
+- Preparation, finalization, slicing, promotion, and validation use the same
+  cumulative physical endpoint rasterization. Per-cell dimensions are
+  authoritative when latent alignment or an odd dpi distributes a one-pixel
+  remainder; no crop can extend beyond or stop short of the real canvas.
 - The artwork pipeline models 3x3, 4x3, and 4x4 grids. The PDF renderer checks
   for a matching page grid and carries A3 landscape/portrait extension hints
   for the wide layouts instead of assuming nine cells universally.
@@ -160,7 +172,7 @@ and visual acceptance gate.
   configuration, so those cheap changes never imply a new ComfyUI render.
 - Backfilled provenance preserves the graph contract recorded by the original
   reference topology. It marks the migration origin explicitly and never
-  claims that a v1 artwork was rendered by the v2 two-mask graph.
+  claims that a v1/v2 artwork was rendered by the current v3 geometry graph.
 - The read-only post-fetch planner resolves individual and aggregate targets,
   checks current inputs and promoted outputs, and reports stable states,
   reasons, actions, and optional commands without mutating files or starting
@@ -185,7 +197,6 @@ and visual acceptance gate.
 | New set art direction | Every current individual set has an explicit catalog brief copied into its manifest | Review or refine the brief before spending the production render; catalog coverage does not replace visual art direction |
 | Wide PDF layouts | 4x3 and 4x4 artwork, placement, prompting, upscale, promotion, validation, slicing, and matching-grid rendering are modeled | Add physical A3 page styles/templates and rendered-PDF QA |
 | Aggregate scopes | The generic index, isolated leaf manifests, section filtering, PDF routing, cleanup, nested validation, nine Pokédex generation configs, and form-aware poster-subject contract are implemented; Pokédex Generations I through IX and both ExGen3 sections are promoted and enabled | Prepare reviewed section scenes and casts for the remaining aggregate variants |
-| Raster geometry | Current 1-MP source and conditioning silhouettes are fail-closed against the real canvas and all thirteen enabled bundles pass | Replace independently rounded card/gap segments with cumulative physical endpoint rasterization, share the exact canvas geometry across preparation/finalization/slicing, and version the resulting generation contract before enabling wide layouts |
 
 ## Remaining production requirements
 
@@ -203,9 +214,6 @@ and visual acceptance gate.
   variants only after their section briefs and curated casts are reviewed.
 - Implement matching A3/custom PDF page renderers before enabling 4x3 or 4x4
   poster manifests for PDF output.
-- Complete the cumulative raster-geometry contract before treating arbitrary
-  latent sizes or wide layouts as promotion-stable; keep the real-canvas
-  silhouette guard mandatory during that migration.
 - Keep any future mutating `ensure-poster` command separate from the completed
   read-only planner and preserve the human promotion gate.
 
@@ -224,7 +232,7 @@ reviewed candidates and their provenance have been promoted.
 
 Completed on 2026-07-27:
 
-- The complete suite passes with 345 tests; one unrelated EX-logo feature test
+- The complete suite passes with 432 tests; one unrelated EX-logo feature test
   remains explicitly skipped.
 - Python compilation and `git diff --check` pass.
 - All thirteen promoted bundles pass `validate_promoted_poster.py`, including
@@ -232,6 +240,18 @@ Completed on 2026-07-27:
   graph-contract status, provenance hashes, 2368 x 3268 artwork, nine
   750 x 1050 card crops, 300-dpi metadata, and exact opaque-source-pixel
   records.
+- PA-020 endpoint regressions cover 3×3, 4×3, and 4×4 layouts at latent
+  canvases and 72/150/299/300/301/600 dpi. The standard 848 × 1168 bounds are
+  exactly x `(0,269)/(290,558)/(579,848)` and
+  y `(0,375)/(396,772)/(793,1168)`; synthetic 12- and 16-cell slices contain
+  no edge padding.
+- Re-finalizing all thirteen enabled posters and slicing their 117 cards
+  produced pixel-identical RGB output. The 300-dpi production geometry remains
+  2368 × 3268 with nine 750 × 1050 cells, so no promoted asset or provenance
+  file required rewriting.
+- The German Pokédex Generation IX poster page was rendered through Poppler
+  after the change. It remains A4, visually unclipped, and contains exactly
+  nine 750 × 1050 images reported at 300 × 300 ppi.
 - Form-identity regressions cover real ExGen3 Mega Latias/Diancie/Lucario,
   distinct ExGen2 Charizard X/Y and Mewtwo X/Y cards plus its reviewed
   Mewtwo X/Rayquaza/Latios poster cast, ME03 Mega Zygarde, and the unaffected
@@ -258,9 +278,10 @@ Completed on 2026-07-27:
   initializer regression creates every missing standard-3x3 manifest while
   preserving the existing reviewed Base1 manifest.
 - The thirteen enabled source and conditioning compositions were checked
-  read-only at their real 848 x 1168 latent canvas. A regression reproduces
-  the nominal last-column one-pixel overrun and proves that visible pixels are
-  rejected before `alpha_composite` can clip them.
+  read-only at their real 848 x 1168 latent canvas. Their cumulative cells now
+  close on x=848 and y=1168 exactly, while a separate regression proves that
+  any explicitly out-of-canvas visible pixels are still rejected before
+  `alpha_composite` can clip them.
 - The Pokédex resolver loads nine isolated generation bundles with unique seeds
   and section-local source data. Generations I through IX are enabled. Its
   checked-in output contains localized section titles, card counts, and range

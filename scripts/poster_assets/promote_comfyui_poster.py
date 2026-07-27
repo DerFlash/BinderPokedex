@@ -14,7 +14,7 @@ from PIL import Image
 
 try:
     from .finalize_comfyui_poster import finalize
-    from .layout import build_page_layout
+    from .layout import build_generation_output_layout
     from .poster_io import poster_bundle
     from .provenance import (
         build_generation_fingerprint,
@@ -27,7 +27,7 @@ try:
     from .slice_poster import slice_poster
 except ImportError:
     from finalize_comfyui_poster import finalize
-    from layout import build_page_layout
+    from layout import build_generation_output_layout
     from poster_io import poster_bundle
     from provenance import (
         build_generation_fingerprint,
@@ -162,15 +162,16 @@ def promote(
         # state instead of rejecting the reviewed text-free artwork.
         run_inputs["overlay_fingerprint"] = build_overlay_fingerprint(bundle)
 
-    source = Image.open(artwork).convert("RGB")
-    layout = build_page_layout(
+    with Image.open(artwork) as loaded_source:
+        source = loaded_source.convert("RGB")
+    layout = build_generation_output_layout(
         manifest.get("layout", {}).get("name", "standard_3x3"),
-        width_px=source.width,
+        recorded_generation,
     )
-    if abs(layout.height_px - source.height) > 16:
+    if source.size != (layout.width_px, layout.height_px):
         raise ValueError(
-            f"Artwork ratio does not match poster layout: {source.size} vs "
-            f"{(layout.width_px, layout.height_px)}"
+            "Candidate output dimensions do not match generation contract: "
+            f"{source.size} vs {(layout.width_px, layout.height_px)}"
         )
 
     artwork_path = scope_dir / f"poster-{name}-artwork.png"

@@ -17,7 +17,11 @@ try:
         scope_featured_elements,
         unique_by_poster_subject,
     )
-    from .layout import build_page_layout, build_print_layout, effective_dpi
+    from .layout import (
+        build_generation_output_layout,
+        build_page_layout,
+        effective_dpi,
+    )
     from .poster_config import build_identity_lock_prompt
     from .provenance import (
         ROOT,
@@ -43,7 +47,11 @@ except ImportError:
         scope_featured_elements,
         unique_by_poster_subject,
     )
-    from layout import build_page_layout, build_print_layout, effective_dpi
+    from layout import (
+        build_generation_output_layout,
+        build_page_layout,
+        effective_dpi,
+    )
     from poster_config import build_identity_lock_prompt
     from provenance import (
         ROOT,
@@ -378,11 +386,11 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
             == current_overlay_fingerprint["sha256"]
         )
 
-    output_dpi = int(recorded_generation.get("output_dpi", 0))
-    layout = build_print_layout(
+    layout = build_generation_output_layout(
         manifest.get("layout", {}).get("name", "standard_3x3"),
-        output_dpi,
+        recorded_generation,
     )
+    output_dpi = recorded_generation.get("output_dpi")
     outputs = payload.get("outputs", {})
     artwork_path = _validate_record(outputs["artwork"])
     routed_artwork_path = bundle.asset_dir / bundle.artwork_file
@@ -393,6 +401,19 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
             f"{artwork_path}"
         )
     preview_path = _validate_record(outputs["preview"])
+    asset_name = payload.get("asset_name")
+    if not isinstance(asset_name, str) or not asset_name:
+        raise ValueError(f"Invalid promoted asset name: {asset_name!r}")
+    configured_preview = artwork_config.get(
+        "preview_file",
+        f"poster-{asset_name}.png",
+    )
+    expected_preview_path = (bundle.asset_dir / configured_preview).resolve()
+    if preview_path.resolve() != expected_preview_path:
+        raise ValueError(
+            f"Promoted preview routes to {preview_path}, expected "
+            f"{expected_preview_path}"
+        )
     card_records = outputs.get("cards", [])
     if len(card_records) != layout.rows * layout.columns:
         raise ValueError(
@@ -400,6 +421,23 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
             f"got {len(card_records)}"
         )
     card_paths = [_validate_record(record) for record in card_records]
+    expected_card_paths = [
+        expected_preview_path.with_name(
+            f"{expected_preview_path.stem}-cards"
+        )
+        / f"card_r{row}_c{column}.png"
+        for row in range(1, layout.rows + 1)
+        for column in range(1, layout.columns + 1)
+    ]
+    for path, expected_path in zip(
+        card_paths,
+        expected_card_paths,
+        strict=True,
+    ):
+        if path.resolve() != expected_path:
+            raise ValueError(
+                f"Promoted card routes to {path}, expected {expected_path}"
+            )
 
     for path in (artwork_path, preview_path):
         with Image.open(path) as image:
@@ -408,28 +446,59 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
                     f"Promoted poster has wrong print dimensions: {path} "
                     f"is {image.size}"
                 )
-        dpi_x, dpi_y = _image_dpi(path)
-        if abs(dpi_x - output_dpi) > 0.1 or abs(dpi_y - output_dpi) > 0.1:
-            raise ValueError(f"Wrong dpi metadata for {path}: {(dpi_x, dpi_y)}")
-
-    for path in card_paths:
-        with Image.open(path) as image:
-            if image.size != (layout.card_width_px, layout.card_height_px):
+        if isinstance(output_dpi, int):
+            dpi_x, dpi_y = _image_dpi(path)
+            if (
+                abs(dpi_x - output_dpi) > 0.1
+                or abs(dpi_y - output_dpi) > 0.1
+            ):
                 raise ValueError(
-                    f"Promoted card has wrong dimensions: {path} is {image.size}"
+                    f"Wrong dpi metadata for {path}: {(dpi_x, dpi_y)}"
                 )
-        dpi_x, dpi_y = _image_dpi(path)
-        if abs(dpi_x - output_dpi) > 0.1 or abs(dpi_y - output_dpi) > 0.1:
-            raise ValueError(f"Wrong dpi metadata for {path}: {(dpi_x, dpi_y)}")
+
+    expected_card_sizes = [
+        (
+            layout.cell(row, column).width,
+            layout.cell(row, column).height,
+        )
+        for row in range(1, layout.rows + 1)
+        for column in range(1, layout.columns + 1)
+    ]
+    for path, expected_size in zip(
+        card_paths,
+        expected_card_sizes,
+        strict=True,
+    ):
+        with Image.open(path) as image:
+            if image.size != expected_size:
+                raise ValueError(
+                    f"Promoted card has wrong dimensions: {path} is "
+                    f"{image.size}, expected {expected_size}"
+                )
+        if isinstance(output_dpi, int):
+            dpi_x, dpi_y = _image_dpi(path)
+            if (
+                abs(dpi_x - output_dpi) > 0.1
+                or abs(dpi_y - output_dpi) > 0.1
+            ):
+                raise ValueError(
+                    f"Wrong dpi metadata for {path}: {(dpi_x, dpi_y)}"
+                )
 
     dpi_x, dpi_y = effective_dpi(layout)
+    distinct_card_sizes = tuple(dict.fromkeys(expected_card_sizes))
     return {
         "scope": scope,
         "artwork": artwork_path,
         "preview": preview_path,
         "cards": len(card_paths),
         "dimensions": (layout.width_px, layout.height_px),
-        "card_dimensions": (layout.card_width_px, layout.card_height_px),
+        "card_dimensions": (
+            distinct_card_sizes[0]
+            if len(distinct_card_sizes) == 1
+            else None
+        ),
+        "card_dimensions_by_cell": tuple(expected_card_sizes),
         "effective_dpi": (dpi_x, dpi_y),
         "provenance": provenance_path,
         "identity_pixels": (

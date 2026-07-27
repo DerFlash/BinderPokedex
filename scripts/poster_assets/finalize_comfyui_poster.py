@@ -9,7 +9,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter
 
 try:
-    from .layout import build_page_layout
+    from .layout import build_image_layout
     from .poster_io import (
         load_poster_scope_data,
         poster_bundle,
@@ -22,7 +22,7 @@ try:
         wrap_text,
     )
 except ImportError:
-    from layout import build_page_layout
+    from layout import build_image_layout
     from poster_io import load_poster_scope_data, poster_bundle
     from typography import (
         composite_panel,
@@ -413,20 +413,15 @@ def finalize(scope: str, input_path: Path, output_path: Path | None = None, lang
     manifest = bundle.manifest
     scope_data = load_poster_scope_data(bundle)
 
-    source = Image.open(input_path)
-    source_dpi = source.info.get("dpi")
-    canvas = source.convert("RGBA")
-    layout = build_page_layout(
+    with Image.open(input_path) as source:
+        source_dpi = source.info.get("dpi")
+        canvas = source.convert("RGBA")
+    layout = build_image_layout(
         manifest.get("layout", {}).get("name", "standard_3x3"),
         width_px=canvas.width,
+        height_px=canvas.height,
+        dpi=source_dpi,
     )
-    # ComfyUI aligns latent dimensions to multiples of 16, so a few pixels of
-    # aspect-ratio rounding are expected at preview sizes.
-    if abs(layout.height_px - canvas.height) > 16:
-        raise ValueError(
-            f"Artwork ratio does not match poster layout: {canvas.size} vs "
-            f"{(layout.width_px, layout.height_px)}"
-        )
 
     draw_final_text_cells(canvas, layout, manifest, scope_data, scope_dir, language)
     if output_path is None:

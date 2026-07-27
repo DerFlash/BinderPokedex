@@ -4,11 +4,10 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 from pathlib import Path
 
 try:
-    from .layout import build_page_layout
+    from .layout import latent_canvas_dimensions, page_canvas_dimensions
     from .poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
         build_identity_lock_prompt,
@@ -22,7 +21,7 @@ try:
         poster_bundle,
     )
 except ImportError:
-    from layout import build_page_layout
+    from layout import latent_canvas_dimensions, page_canvas_dimensions
     from poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
         build_identity_lock_prompt,
@@ -56,24 +55,22 @@ def output_dimensions(scope: str, megapixels: float) -> tuple[int, int]:
         scope,
         poster_assets=POSTER_ASSETS,
     ).manifest
-    layout = build_page_layout(manifest.get("layout", {}).get("name", "standard_3x3"))
-    ratio = layout.width_px / layout.height_px
-    height = math.sqrt(megapixels * 1_000_000 / ratio)
-    width = height * ratio
-    return max(16, round(width / 16) * 16), max(16, round(height / 16) * 16)
+    return latent_canvas_dimensions(
+        manifest.get("layout", {}).get("name", "standard_3x3"),
+        megapixels,
+    )
 
 
 def page_dimensions(scope: str, megapixels: float) -> tuple[int, int]:
     """Return an exact physical card-grid ratio using the latent-aligned width."""
-    width, _latent_height = output_dimensions(scope, megapixels)
     manifest = poster_bundle(
         scope,
         poster_assets=POSTER_ASSETS,
     ).manifest
-    layout = build_page_layout(
-        manifest.get("layout", {}).get("name", "standard_3x3"), width_px=width
+    return page_canvas_dimensions(
+        manifest.get("layout", {}).get("name", "standard_3x3"),
+        megapixels,
     )
-    return layout.width_px, layout.height_px
 
 
 def build_workflow(

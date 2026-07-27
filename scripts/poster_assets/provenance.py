@@ -14,7 +14,12 @@ try:
         scope_featured_elements,
         unique_by_poster_subject,
     )
-    from .layout import build_page_layout
+    from .layout import (
+        RASTER_GEOMETRY_CONTRACT_VERSION,
+        build_generation_output_layout,
+        build_page_layout,
+        latent_canvas_dimensions,
+    )
     from .poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
         build_identity_lock_prompt,
@@ -37,7 +42,12 @@ except ImportError:
         scope_featured_elements,
         unique_by_poster_subject,
     )
-    from layout import build_page_layout
+    from layout import (
+        RASTER_GEOMETRY_CONTRACT_VERSION,
+        build_generation_output_layout,
+        build_page_layout,
+        latent_canvas_dimensions,
+    )
     from poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
         build_identity_lock_prompt,
@@ -60,17 +70,41 @@ except ImportError:
 ROOT = Path(__file__).resolve().parents[2]
 POSTER_ASSETS = ROOT / "data" / "poster_assets"
 FINGERPRINT_SCHEMA_VERSION = 1
-GENERATION_PIPELINE_CONTRACT_VERSION = 2
+GENERATION_PIPELINE_CONTRACT_VERSION = 3
+# Cumulative endpoint rasterization changes generation-reference pixels, but
+# all promoted overlays already use the same absolute 300-dpi endpoints.
+# Therefore it belongs to generation v3 without relabeling pixel-identical
+# deterministic overlay v2 outputs.
 OVERLAY_PIPELINE_CONTRACT_VERSION = 2
+CURRENT_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
+    ("flux", "identity_lock"): GENERATION_PIPELINE_CONTRACT_VERSION,
+    ("flux", "edit"): 2,
+    ("flux", "generate"): 2,
+    ("flux", "inpaint"): 2,
+    ("anima", "edit"): 2,
+    ("anima", "generate"): 2,
+    ("flux1_canny", "generate"): 2,
+    ("qwen_edit", "edit"): 2,
+}
 SUPPORTED_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
-    ("flux", "identity_lock"): frozenset({1, 2}),
-    ("flux", "edit"): frozenset({1}),
-    ("flux", "generate"): frozenset({1}),
-    ("flux", "inpaint"): frozenset({1}),
-    ("anima", "edit"): frozenset({1}),
-    ("anima", "generate"): frozenset({1}),
-    ("flux1_canny", "generate"): frozenset({1}),
-    ("qwen_edit", "edit"): frozenset({1}),
+    ("flux", "identity_lock"): frozenset({1, 2, 3}),
+    ("flux", "edit"): frozenset({1, 2}),
+    ("flux", "generate"): frozenset({1, 2}),
+    ("flux", "inpaint"): frozenset({1, 2}),
+    ("anima", "edit"): frozenset({1, 2}),
+    ("anima", "generate"): frozenset({1, 2}),
+    ("flux1_canny", "generate"): frozenset({1, 2}),
+    ("qwen_edit", "edit"): frozenset({1, 2}),
+}
+RASTER_GEOMETRY_PIPELINE_MINIMUM = {
+    ("flux", "identity_lock"): 3,
+    ("flux", "edit"): 2,
+    ("flux", "generate"): 2,
+    ("flux", "inpaint"): 2,
+    ("anima", "edit"): 2,
+    ("anima", "generate"): 2,
+    ("flux1_canny", "generate"): 2,
+    ("qwen_edit", "edit"): 2,
 }
 MODEL_DIRECTORIES = {
     "model": ("diffusion_models", "unet"),
@@ -249,12 +283,11 @@ def current_generation_pipeline_contract_version(
     generation: dict[str, Any],
 ) -> int:
     """Return the current graph contract for the selected engine and mode."""
-    if (
-        generation.get("engine") == "flux"
-        and generation.get("mode") == "identity_lock"
-    ):
-        return GENERATION_PIPELINE_CONTRACT_VERSION
-    return 1
+    family = (
+        str(generation.get("engine", "")),
+        str(generation.get("mode", "")),
+    )
+    return CURRENT_GENERATION_PIPELINE_CONTRACT_VERSIONS.get(family, 1)
 
 
 def validate_generation_pipeline_contract_version(
@@ -352,6 +385,8 @@ def _bundle_and_scope_data(
 
 def _layout_generation_contract(
     manifest: dict[str, Any],
+    generation: dict[str, Any],
+    pipeline_contract_version: int,
 ) -> dict[str, Any]:
     layout_name = str(
         manifest.get("layout", {}).get("name", "standard_3x3")
@@ -373,7 +408,7 @@ def _layout_generation_contract(
     )
     if not isinstance(title, dict) or not isinstance(information, dict):
         raise ValueError("Poster text-cell configuration must be mappings")
-    return {
+    contract = {
         "name": layout.name,
         "columns": layout.columns,
         "rows": layout.rows,
@@ -390,6 +425,59 @@ def _layout_generation_contract(
             },
         },
     }
+    family = (
+        str(generation.get("engine", "")),
+        str(generation.get("mode", "")),
+    )
+    geometry_minimum = RASTER_GEOMETRY_PIPELINE_MINIMUM.get(family)
+    if (
+        geometry_minimum is None
+        or pipeline_contract_version < geometry_minimum
+    ):
+        return contract
+
+    megapixels = float(generation.get("generation_megapixels", 1.0))
+    generation_width, generation_height = latent_canvas_dimensions(
+        layout_name,
+        megapixels,
+    )
+    generation_layout = build_page_layout(
+        layout_name,
+        width_px=generation_width,
+        height_px=generation_height,
+    )
+    raster_contract: dict[str, Any] = {
+        "name": "cumulative_physical_endpoints",
+        "version": RASTER_GEOMETRY_CONTRACT_VERSION,
+        "generation_canvas_px": [
+            generation_layout.width_px,
+            generation_layout.height_px,
+        ],
+        "generation_column_spans_px": [
+            list(span) for span in generation_layout.column_spans
+        ],
+        "generation_row_spans_px": [
+            list(span) for span in generation_layout.row_spans
+        ],
+    }
+    output_layout = build_generation_output_layout(
+        layout_name,
+        generation,
+    )
+    raster_contract.update(
+        output_canvas_px=[
+            output_layout.width_px,
+            output_layout.height_px,
+        ],
+        output_column_spans_px=[
+            list(span) for span in output_layout.column_spans
+        ],
+        output_row_spans_px=[
+            list(span) for span in output_layout.row_spans
+        ],
+    )
+    contract["raster_geometry"] = raster_contract
+    return contract
 
 
 def _expected_subject_ids(
@@ -592,7 +680,11 @@ def build_generation_fingerprint(
             "name": "poster_generation",
             "version": contract_version,
         },
-        "layout": _layout_generation_contract(manifest),
+        "layout": _layout_generation_contract(
+            manifest,
+            effective_generation,
+            contract_version,
+        ),
         "scene": artwork.get("scene", {}),
         "identity_lock": identity_lock_config(manifest),
         "generation": effective_generation,

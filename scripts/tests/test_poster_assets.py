@@ -11,6 +11,7 @@ from PIL import Image, ImageChops
 from scripts.poster_assets import fetch_cutouts
 from scripts.poster_assets import promote_comfyui_poster as poster_promotion
 from scripts.poster_assets import run_comfyui_poster as poster_runner
+from scripts.poster_assets import slice_poster as poster_slicer
 from scripts.poster_assets.fetch_title_logos import resolve_logo_downloads
 from scripts.poster_assets.create_comfyui_poster_workflow import build_workflow
 from scripts.poster_assets.create_comfyui_upscale_workflow import (
@@ -33,10 +34,15 @@ from scripts.poster_assets.finalize_comfyui_poster import (
     title_logo_file,
 )
 from scripts.poster_assets.layout import (
+    build_generation_output_layout,
+    build_image_layout,
     build_page_layout,
     build_print_layout,
+    build_source_layout,
     effective_dpi,
+    latent_canvas_dimensions,
     pdf_page_hint,
+    proportional_height_px,
 )
 from scripts.poster_assets.init_poster_scope import (
     available_tcg_scopes,
@@ -118,6 +124,57 @@ def test_standard_print_layout_is_300_dpi_at_physical_card_size():
     assert abs(dpi_y - 300) < 0.1
 
 
+def test_print_cells_rasterize_absolute_mm_endpoints_before_page_rounding():
+    layout = build_print_layout("standard_3x3", 150)
+
+    assert (layout.width_px, layout.height_px) == (1184, 1634)
+    assert layout.card_widths_px == (375, 375, 375)
+    assert layout.card_heights_px == (525, 525, 525)
+    assert layout.gap_widths_px == (30, 29)
+    assert layout.gap_heights_px == (30, 29)
+
+
+def test_proportional_height_uses_exact_decimal_physical_dimensions():
+    assert proportional_height_px("wide_4x3", 4035) == 4150
+    assert proportional_height_px("wide_4x3", 9415) == 9684
+
+
+def test_uniform_extent_compatibility_properties_fail_on_uneven_rasters():
+    latent = build_source_layout(
+        "standard_3x3",
+        width_px=848,
+        height_px=1168,
+    )
+    odd_dpi = build_print_layout("standard_3x3", 150)
+
+    with pytest.raises(ValueError, match="Card widths vary"):
+        _ = latent.card_width_px
+    with pytest.raises(ValueError, match="Card heights vary"):
+        _ = latent.card_height_px
+    with pytest.raises(ValueError, match="Horizontal gaps vary"):
+        _ = odd_dpi.gap_x_px
+    with pytest.raises(ValueError, match="Vertical gaps vary"):
+        _ = odd_dpi.gap_y_px
+
+
+@pytest.mark.parametrize("dpi", (72, 150, 299, 300, 301, 600))
+@pytest.mark.parametrize(
+    "name",
+    ("standard_3x3", "wide_4x3", "wide_4x4"),
+)
+def test_dpi_aware_image_layout_reconstructs_print_endpoints(name, dpi):
+    expected = build_print_layout(name, dpi)
+    actual = build_image_layout(
+        name,
+        width_px=expected.width_px,
+        height_px=expected.height_px,
+        dpi=(float(dpi), float(dpi)),
+    )
+
+    assert actual.column_spans == expected.column_spans
+    assert actual.row_spans == expected.row_spans
+
+
 def test_wide_layouts_are_modeled_for_future_matching_pdf_renderers():
     layout_4x3 = build_print_layout("wide_4x3", 300)
     layout_4x4 = build_print_layout("wide_4x4", 300)
@@ -126,6 +183,114 @@ def test_wide_layouts_are_modeled_for_future_matching_pdf_renderers():
     assert (layout_4x4.columns, layout_4x4.rows) == (4, 4)
     assert pdf_page_hint("wide_4x3") == ("A3", "landscape")
     assert pdf_page_hint("wide_4x4") == ("A3", "portrait")
+
+
+@pytest.mark.parametrize(
+    ("name", "expected_canvas"),
+    (
+        ("standard_3x3", (848, 1168)),
+        ("wide_4x3", (992, 1008)),
+        ("wide_4x4", (848, 1168)),
+    ),
+)
+def test_latent_layout_cells_close_exactly_on_real_canvas(
+    name,
+    expected_canvas,
+):
+    assert latent_canvas_dimensions(name, 1.0) == expected_canvas
+    layout = build_source_layout(
+        name,
+        width_px=expected_canvas[0],
+        height_px=expected_canvas[1],
+    )
+
+    assert layout.column_spans[0][0] == 0
+    assert layout.column_spans[-1][1] == layout.width_px
+    assert layout.row_spans[0][0] == 0
+    assert layout.row_spans[-1][1] == layout.height_px
+    for row in range(1, layout.rows + 1):
+        for column in range(1, layout.columns + 1):
+            cell = layout.cell(row, column)
+            assert 0 <= cell.x < cell.x + cell.width <= layout.width_px
+            assert 0 <= cell.y < cell.y + cell.height <= layout.height_px
+
+
+def test_standard_latent_layout_has_cumulative_endpoint_geometry():
+    layout = build_source_layout(
+        "standard_3x3",
+        width_px=848,
+        height_px=1168,
+    )
+
+    assert layout.column_spans == (
+        (0, 269),
+        (290, 558),
+        (579, 848),
+    )
+    assert layout.row_spans == (
+        (0, 375),
+        (396, 772),
+        (793, 1168),
+    )
+
+
+@pytest.mark.parametrize("dpi", (72, 150, 299, 300, 301, 600))
+@pytest.mark.parametrize(
+    "name",
+    ("standard_3x3", "wide_4x3", "wide_4x4"),
+)
+def test_print_layout_rasterization_never_accumulates_past_page(
+    name,
+    dpi,
+):
+    layout = build_print_layout(name, dpi)
+
+    assert layout.column_spans[0][0] == 0
+    assert layout.column_spans[-1][1] == layout.width_px
+    assert layout.row_spans[0][0] == 0
+    assert layout.row_spans[-1][1] == layout.height_px
+    assert all(
+        0 <= cell.x < cell.x + cell.width <= layout.width_px
+        and 0 <= cell.y < cell.y + cell.height <= layout.height_px
+        for row in range(1, layout.rows + 1)
+        for column in range(1, layout.columns + 1)
+        for cell in (layout.cell(row, column),)
+    )
+
+
+def test_source_layout_rejects_a_wrong_physical_aspect_ratio():
+    with pytest.raises(
+        ValueError,
+        match="does not match card-layout aspect ratio",
+    ):
+        build_source_layout(
+            "standard_3x3",
+            width_px=848,
+            height_px=1000,
+        )
+
+
+@pytest.mark.parametrize(
+    "megapixels",
+    (0.02, 0.25, 0.42, 0.7, 1.0, 1.17, 1.91, 2.0, 6.11),
+)
+@pytest.mark.parametrize(
+    "name",
+    ("standard_3x3", "wide_4x3", "wide_4x4"),
+)
+def test_every_latent_aligned_canvas_is_accepted_by_source_layout(
+    name,
+    megapixels,
+):
+    width, height = latent_canvas_dimensions(name, megapixels)
+
+    layout = build_source_layout(
+        name,
+        width_px=width,
+        height_px=height,
+    )
+
+    assert (layout.width_px, layout.height_px) == (width, height)
 
 
 def test_select_pokemon_uses_fallback_candidates():
@@ -566,14 +731,22 @@ def test_cutout_placements_stay_inside_bottom_card_cells():
         assert cell.y <= top < bottom <= cell.y + cell.height
 
 
-def test_real_canvas_guard_rejects_nominal_last_column_overflow():
+def test_real_canvas_guard_rejects_an_explicit_out_of_canvas_placement():
     scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
-    layout = build_page_layout("standard_3x3", width_px=848)
+    layout = build_source_layout(
+        "standard_3x3",
+        width_px=848,
+        height_px=1168,
+    )
     placements = cutout_placements(layout, scope_dir)
     manifest = fetch_cutouts.load_yaml(scope_dir / "poster.yaml")
     overflowing = dict(placements[-1])
     alpha_box = overflowing["image"].getchannel("A").getbbox()
     assert alpha_box is not None
+    overflowing["cell"] = replace(
+        overflowing["cell"],
+        width=overflowing["cell"].width + 1,
+    )
     overflowing["x"] = layout.width_px - alpha_box[2] + 1
 
     with pytest.raises(ValueError, match="outside the real generation canvas"):
@@ -642,7 +815,11 @@ def test_inpaint_reference_uses_exact_final_placements(tmp_path: Path):
     build_scene_reference("Base1", 0.25, tmp_path)
 
     actual = Image.open(tmp_path / "inpaint_reference.png").convert("RGBA")
-    layout = build_page_layout("standard_3x3", width_px=actual.width)
+    layout = build_source_layout(
+        "standard_3x3",
+        width_px=actual.width,
+        height_px=actual.height,
+    )
     expected = Image.new("RGBA", actual.size, (226, 224, 211, 0))
     for placement in cutout_placements(layout, scope_dir):
         expected.alpha_composite(
@@ -713,7 +890,11 @@ def test_canny_structure_reference_flattens_exact_placements_on_white(
     build_scene_reference("Base1", 0.25, tmp_path)
 
     actual = Image.open(tmp_path / "structure_reference.png").convert("RGB")
-    layout = build_page_layout("standard_3x3", width_px=actual.width)
+    layout = build_source_layout(
+        "standard_3x3",
+        width_px=actual.width,
+        height_px=actual.height,
+    )
     expected = Image.new("RGBA", actual.size, (255, 255, 255, 255))
     for placement in cutout_placements(layout, scope_dir):
         expected.alpha_composite(
@@ -1715,10 +1896,155 @@ def test_slice_poster_exports_every_card_without_binder_gaps(tmp_path: Path):
         for row in range(1, 4)
         for column in range(1, 4)
     ]
-    assert all(
-        Image.open(path).size == (layout.card_width_px, layout.card_height_px)
-        for path in outputs
+    expected_sizes = [
+        (
+            layout.cell(row, column).width,
+            layout.cell(row, column).height,
+        )
+        for row in range(1, 4)
+        for column in range(1, 4)
+    ]
+    assert [
+        Image.open(path).size for path in outputs
+    ] == expected_sizes
+
+
+@pytest.mark.parametrize(
+    ("layout_name", "canvas_size"),
+    (
+        ("wide_4x3", (992, 1008)),
+        ("wide_4x4", (848, 1168)),
+    ),
+)
+def test_wide_slicing_uses_every_exact_cell_without_edge_padding(
+    tmp_path,
+    monkeypatch,
+    layout_name,
+    canvas_size,
+):
+    assets = tmp_path / "poster_assets"
+    scope_dir = assets / "Example"
+    scope_dir.mkdir(parents=True)
+    (scope_dir / "poster.yaml").write_text(
+        f"scope: Example\nlayout:\n  name: {layout_name}\n",
+        encoding="utf-8",
     )
+    monkeypatch.setattr(poster_slicer, "POSTER_ASSETS", assets)
+    layout = build_source_layout(
+        layout_name,
+        width_px=canvas_size[0],
+        height_px=canvas_size[1],
+    )
+    image = Image.new("RGB", canvas_size, (0, 0, 0))
+    expected_colors = []
+    for index, (row, column) in enumerate(
+        (
+            (row, column)
+            for row in range(1, layout.rows + 1)
+            for column in range(1, layout.columns + 1)
+        ),
+        start=1,
+    ):
+        color = (
+            (index * 37) % 255 + 1,
+            (index * 71) % 255 + 1,
+            (index * 109) % 255 + 1,
+        )
+        expected_colors.append(color)
+        cell = layout.cell(row, column)
+        tile = Image.new("RGB", (cell.width, cell.height), color)
+        image.paste(tile, (cell.x, cell.y))
+    source = tmp_path / f"{layout_name}.png"
+    image.save(source, format="PNG", dpi=(300, 300))
+
+    outputs = poster_slicer.slice_poster(
+        "Example",
+        source,
+        tmp_path / f"{layout_name}-cards",
+    )
+
+    assert len(outputs) == layout.rows * layout.columns
+    for index, path in enumerate(outputs):
+        row = index // layout.columns + 1
+        column = index % layout.columns + 1
+        cell = layout.cell(row, column)
+        with Image.open(path) as card:
+            assert card.size == (cell.width, cell.height)
+            assert card.getpixel((0, 0)) == expected_colors[index]
+            assert card.getpixel(
+                (card.width - 1, card.height - 1)
+            ) == expected_colors[index]
+            assert card.getbbox() == (0, 0, card.width, card.height)
+            assert abs(card.info["dpi"][0] - 300) < 0.1
+            assert abs(card.info["dpi"][1] - 300) < 0.1
+
+
+@pytest.mark.parametrize(
+    ("layout_name", "dpi"),
+    (
+        ("wide_4x3", 299),
+        ("wide_4x4", 301),
+    ),
+)
+def test_wide_odd_dpi_slicing_uses_absolute_print_endpoints(
+    tmp_path,
+    monkeypatch,
+    layout_name,
+    dpi,
+):
+    assets = tmp_path / "poster_assets"
+    scope_dir = assets / "Example"
+    scope_dir.mkdir(parents=True)
+    (scope_dir / "poster.yaml").write_text(
+        f"scope: Example\nlayout:\n  name: {layout_name}\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(poster_slicer, "POSTER_ASSETS", assets)
+    layout = build_print_layout(layout_name, dpi)
+    image = Image.new(
+        "RGB",
+        (layout.width_px, layout.height_px),
+        (0, 0, 0),
+    )
+    colors = []
+    for index, (row, column) in enumerate(
+        (
+            (row, column)
+            for row in range(1, layout.rows + 1)
+            for column in range(1, layout.columns + 1)
+        ),
+        start=1,
+    ):
+        color = (
+            (index * 31) % 255 + 1,
+            (index * 67) % 255 + 1,
+            (index * 101) % 255 + 1,
+        )
+        colors.append(color)
+        cell = layout.cell(row, column)
+        image.paste(
+            Image.new("RGB", (cell.width, cell.height), color),
+            (cell.x, cell.y),
+        )
+    source = tmp_path / f"{layout_name}-{dpi}dpi.png"
+    image.save(source, format="PNG", dpi=(dpi, dpi))
+
+    outputs = poster_slicer.slice_poster(
+        "Example",
+        source,
+        tmp_path / f"{layout_name}-{dpi}dpi-cards",
+    )
+
+    for index, path in enumerate(outputs):
+        row = index // layout.columns + 1
+        column = index % layout.columns + 1
+        cell = layout.cell(row, column)
+        with Image.open(path) as card:
+            assert card.size == (cell.width, cell.height)
+            assert card.getpixel((0, 0)) == colors[index]
+            assert card.getpixel(
+                (card.width - 1, card.height - 1)
+            ) == colors[index]
 
 
 def _promotion_fixture(tmp_path: Path, monkeypatch):
@@ -1733,10 +2059,11 @@ def _promotion_fixture(tmp_path: Path, monkeypatch):
             "artwork:\n"
             "  generation:\n"
             "    engine: test\n"
+            "    output_dpi: 10\n"
         ),
         encoding="utf-8",
     )
-    layout = build_page_layout("standard_3x3", width_px=200)
+    layout = build_print_layout("standard_3x3", 10)
     artwork = tmp_path / "candidate.png"
     Image.new(
         "RGB",
@@ -1750,7 +2077,10 @@ def _promotion_fixture(tmp_path: Path, monkeypatch):
                 "schema_version": 1,
                 "kind": "poster_generation_run",
                 "scope": "Example",
-                "generation": {"engine": "test"},
+                "generation": {
+                    "engine": "test",
+                    "output_dpi": 10,
+                },
                 "source_artwork": {"sha256": sha256_file(artwork)},
             }
         ),
@@ -1868,25 +2198,29 @@ def test_failed_promotion_keeps_existing_bundle(
 
 
 def test_promoted_production_posters_match_provenance_and_print_geometry():
-    for scope in (
-        "Base1",
-        "Pokedex/sections/gen1",
-        "Pokedex/sections/gen2",
-        "Pokedex/sections/gen3",
-        "Pokedex/sections/gen4",
-        "Pokedex/sections/gen5",
-        "Pokedex/sections/gen6",
-        "Pokedex/sections/gen7",
-        "Pokedex/sections/gen8",
-        "Pokedex/sections/gen9",
-        "SV03.5",
-        "ExGen3/sections/normal",
-        "ExGen3/sections/mega",
-    ):
+    scopes = enabled_poster_scopes()
+    assert scopes
+
+    for scope in scopes:
+        bundle = poster_bundle(scope)
+        manifest = bundle.manifest
+        layout = build_generation_output_layout(
+            manifest["layout"]["name"],
+            manifest["artwork"]["generation"],
+        )
         result = validate_promoted_poster(scope)
-        assert result["dimensions"] == (2368, 3268)
-        assert result["card_dimensions"] == (750, 1050)
-        assert result["cards"] == 9
+
+        expected_card_sizes = tuple(
+            (
+                layout.cell(row, column).width,
+                layout.cell(row, column).height,
+            )
+            for row in range(1, layout.rows + 1)
+            for column in range(1, layout.columns + 1)
+        )
+        assert result["dimensions"] == (layout.width_px, layout.height_px)
+        assert result["card_dimensions_by_cell"] == expected_card_sizes
+        assert result["cards"] == layout.rows * layout.columns
 
 
 def test_validation_rejects_pdf_artwork_not_named_by_provenance():

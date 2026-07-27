@@ -12,7 +12,7 @@ from PIL import Image, ImageDraw, ImageFilter
 try:
     from .composition import cutout_placements, validate_visible_placements
     from .create_comfyui_poster_workflow import output_dimensions
-    from .layout import build_page_layout
+    from .layout import build_source_layout
     from .poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
         build_identity_lock_prompt,
@@ -26,7 +26,7 @@ try:
 except ImportError:
     from composition import cutout_placements, validate_visible_placements
     from create_comfyui_poster_workflow import output_dimensions
-    from layout import build_page_layout
+    from layout import build_source_layout
     from poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
         build_identity_lock_prompt,
@@ -113,7 +113,11 @@ def build_identity_references(
     """
     layout_name = manifest.get("layout", {}).get("name", "standard_3x3")
     width, height = output_dimensions(asset_key or scope_dir.name, 1.0)
-    layout = build_page_layout(layout_name, width_px=width)
+    layout = build_source_layout(
+        layout_name,
+        width_px=width,
+        height_px=height,
+    )
     placements = cutout_placements(
         layout, scope_dir
     )
@@ -356,9 +360,10 @@ def build_scene_reference(
     reference_dir = output_dir or scope_dir / "comfyui_poster"
     reference_dir.mkdir(parents=True, exist_ok=True)
     width, height = output_dimensions(scope, megapixels)
-    layout = build_page_layout(
+    layout = build_source_layout(
         manifest.get("layout", {}).get("name", "standard_3x3"),
         width_px=width,
+        height_px=height,
     )
     reference = Image.new("RGBA", (width, height), (226, 224, 211, 0))
     placements = cutout_placements(layout, scope_dir)
@@ -373,13 +378,6 @@ def build_scene_reference(
     )
     for placement in scene_placements:
         reference.alpha_composite(placement["image"], (placement["x"], placement["y"]))
-    # Latent dimensions are rounded to multiples of 16; match them exactly.
-    if reference.height != height:
-        reference = reference.crop((0, 0, width, min(reference.height, height)))
-        if reference.height < height:
-            padded = Image.new("RGBA", (width, height), (226, 224, 211, 0))
-            padded.alpha_composite(reference)
-            reference = padded
     path = reference_dir / "scene_reference.png"
     reference.save(path, format="PNG", optimize=True)
 

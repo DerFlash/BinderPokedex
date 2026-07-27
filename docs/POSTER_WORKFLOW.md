@@ -125,8 +125,8 @@ Migration adds only semantic provenance metadata. It neither regenerates the
 text-free artwork nor changes promoted preview/card files, and it refuses
 ambiguous legacy drift instead of guessing. The migration infers only audited
 reference topologies and records their historical graph contract; it never
-relabels a v1 run as current v2. Such a reviewed promotion remains usable, while
-the planner reports the optional `upgrade_generation_pipeline` action.
+relabels a v1/v2 run as current v3. Such a reviewed promotion remains usable,
+while the planner reports the optional `upgrade_generation_pipeline` action.
 
 ## 3. Initialize poster configuration and source assets
 
@@ -376,6 +376,15 @@ layers understand all three layouts. The current production PDF renderer remains
 3×3/A4. It reports the required matching page family instead of treating wide
 layouts as invalid. Wide PDF output must preserve physical card size; it must
 not squeeze four binder cards onto A4.
+
+Every raster cell is derived from cumulative physical start and end positions,
+not from repeatedly adding independently rounded card and gap widths. Generation
+references use both dimensions of the real latent-aligned canvas; finalization,
+slicing, promotion, and validation reconstruct the same exact per-cell bounds
+from the image itself. At small resolutions, adjacent cards may intentionally
+differ by one pixel. At 300 dpi, all layouts retain exact 750 × 1050 card
+crops. New runs bind these dimensions and bounds to raster geometry contract v2
+inside their engine-specific generation fingerprint.
 
 ## Adding a new individual TCG set
 

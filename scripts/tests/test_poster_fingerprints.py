@@ -11,7 +11,10 @@ from PIL import Image
 from scripts.poster_assets import promote_comfyui_poster as promotion
 from scripts.poster_assets import provenance
 from scripts.poster_assets import validate_promoted_poster as validator
-from scripts.poster_assets.layout import build_print_layout
+from scripts.poster_assets.layout import (
+    build_generation_output_layout,
+    build_print_layout,
+)
 from scripts.poster_assets.poster_config import (
     IDENTITY_LOCK_PROMPT_FILE,
     build_identity_lock_prompt,
@@ -433,8 +436,8 @@ def test_pipeline_contract_versions_are_family_specific_and_strict():
 
     assert current_generation_pipeline_contract_version(
         identity_generation
-    ) == 2
-    assert current_generation_pipeline_contract_version(edit_generation) == 1
+    ) == 3
+    assert current_generation_pipeline_contract_version(edit_generation) == 2
     accepted_legacy = provenance.fingerprint_record(
         {
             "pipeline_contract": {
@@ -451,7 +454,7 @@ def test_pipeline_contract_versions_are_family_specific_and_strict():
         {
             "pipeline_contract": {
                 "name": "poster_generation",
-                "version": 3,
+                "version": 4,
             }
         }
     )
@@ -460,6 +463,101 @@ def test_pipeline_contract_versions_are_family_specific_and_strict():
             unsupported,
             identity_generation,
         )
+
+
+@pytest.mark.parametrize(
+    ("engine", "mode", "current_version"),
+    (
+        ("flux", "identity_lock", 3),
+        ("flux", "edit", 2),
+        ("flux", "generate", 2),
+        ("flux", "inpaint", 2),
+        ("anima", "edit", 2),
+        ("anima", "generate", 2),
+        ("flux1_canny", "generate", 2),
+        ("qwen_edit", "edit", 2),
+    ),
+)
+def test_every_engine_family_versions_the_shared_raster_contract(
+    engine,
+    mode,
+    current_version,
+):
+    generation = {
+        "engine": engine,
+        "mode": mode,
+        "generation_megapixels": 1.0,
+        "output_dpi": 300,
+    }
+
+    assert (
+        current_generation_pipeline_contract_version(generation)
+        == current_version
+    )
+    current = provenance._layout_generation_contract(
+        _manifest(),
+        generation,
+        current_version,
+    )
+    legacy = provenance._layout_generation_contract(
+        _manifest(),
+        generation,
+        current_version - 1,
+    )
+
+    assert current["raster_geometry"]["version"] == 2
+    assert "raster_geometry" not in legacy
+
+
+def test_current_generation_contract_records_exact_raster_geometry(
+    tmp_path,
+):
+    _repository, assets, output, _scope_dir, bundle = _write_fixture(
+        tmp_path
+    )
+
+    current = build_generation_fingerprint(
+        bundle,
+        poster_assets=assets,
+        scope_data_dir=output,
+    )
+    geometry = current["components"]["layout"]["raster_geometry"]
+
+    assert current["components"]["pipeline_contract"]["version"] == 3
+    assert geometry == {
+        "name": "cumulative_physical_endpoints",
+        "version": 2,
+        "generation_canvas_px": [848, 1168],
+        "generation_column_spans_px": [
+            [0, 269],
+            [290, 558],
+            [579, 848],
+        ],
+        "generation_row_spans_px": [
+            [0, 375],
+            [396, 772],
+            [793, 1168],
+        ],
+        "output_canvas_px": [79, 109],
+        "output_column_spans_px": [
+            [0, 25],
+            [27, 52],
+            [54, 79],
+        ],
+        "output_row_spans_px": [
+            [0, 35],
+            [37, 72],
+            [74, 109],
+        ],
+    }
+
+    legacy = build_generation_fingerprint(
+        bundle,
+        poster_assets=assets,
+        scope_data_dir=output,
+        pipeline_contract_version=2,
+    )
+    assert "raster_geometry" not in legacy["components"]["layout"]
 
 
 def test_run_metadata_records_generation_and_overlay_fingerprints(
@@ -621,9 +719,37 @@ def test_load_run_metadata_accepts_promoted_provenance_for_overlay_refresh(
     assert load_run_metadata(provenance_path, artwork) == run
 
 
-def _promotion_fixture(tmp_path: Path, monkeypatch):
+def _promotion_fixture(
+    tmp_path: Path,
+    monkeypatch,
+    *,
+    output_megapixels: float | None = None,
+):
     repository, assets, output, scope_dir, bundle = _write_fixture(tmp_path)
-    layout = build_print_layout("standard_3x3", 10)
+    if output_megapixels is not None:
+        manifest = yaml.safe_load(
+            bundle.manifest_path.read_text(encoding="utf-8")
+        )
+        generation = manifest["artwork"]["generation"]
+        generation.pop("output_dpi")
+        generation.pop("upscale_model")
+        generation.pop("upscale_model_sha256")
+        generation["output_method"] = "lanczos"
+        generation["output_megapixels"] = output_megapixels
+        bundle.manifest_path.write_text(
+            yaml.safe_dump(
+                manifest,
+                sort_keys=False,
+                allow_unicode=True,
+            ),
+            encoding="utf-8",
+        )
+        bundle = poster_bundle("Example", poster_assets=assets)
+    generation = bundle.manifest["artwork"]["generation"]
+    layout = build_generation_output_layout(
+        "standard_3x3",
+        generation,
+    )
     candidate = tmp_path / "candidate.png"
     Image.new(
         "RGB",
@@ -681,11 +807,13 @@ def _promotion_fixture(tmp_path: Path, monkeypatch):
     )
 
     def fake_finalize(_scope, source, destination, _language):
-        Image.open(source).convert("RGB").save(
-            destination,
-            format="PNG",
-            dpi=(10, 10),
-        )
+        save_options = {"format": "PNG"}
+        if generation.get("output_dpi"):
+            save_options["dpi"] = (
+                generation["output_dpi"],
+                generation["output_dpi"],
+            )
+        Image.open(source).convert("RGB").save(destination, **save_options)
         return destination
 
     def fake_slice(_scope, _source, output_dir):
@@ -693,12 +821,20 @@ def _promotion_fixture(tmp_path: Path, monkeypatch):
         paths = []
         for row in range(1, 4):
             for column in range(1, 4):
+                cell = layout.cell(row, column)
                 path = output_dir / f"card_r{row}_c{column}.png"
-                Image.new(
+                card = Image.new(
                     "RGB",
-                    (layout.card_width_px, layout.card_height_px),
+                    (cell.width, cell.height),
                     (40, 120, 80),
-                ).save(path, format="PNG", dpi=(10, 10))
+                )
+                save_options = {"format": "PNG"}
+                if generation.get("output_dpi"):
+                    save_options["dpi"] = (
+                        generation["output_dpi"],
+                        generation["output_dpi"],
+                    )
+                card.save(path, **save_options)
                 paths.append(path)
         return paths
 
@@ -793,6 +929,85 @@ def test_promotion_rebinds_overlay_and_validator_prefers_fingerprints(
         validator.validate("Example")
 
 
+def test_validator_accepts_lanczos_output_without_dpi_metadata(
+    tmp_path,
+    monkeypatch,
+):
+    (
+        _repository,
+        _assets,
+        _output,
+        _scope_dir,
+        candidate,
+        run_metadata,
+        _old_overlay,
+    ) = _promotion_fixture(
+        tmp_path,
+        monkeypatch,
+        output_megapixels=0.01,
+    )
+
+    artwork, _preview, _cards, _provenance = promotion.promote(
+        "Example",
+        candidate,
+        language="en",
+        run_metadata_path=run_metadata,
+    )
+    with Image.open(artwork) as image:
+        assert "dpi" not in image.info
+
+    result = validator.validate("Example")
+
+    assert result["dimensions"] == (80, 110)
+    assert result["card_dimensions"] is None
+    assert result["card_dimensions_by_cell"] == (
+        (25, 35),
+        (26, 35),
+        (25, 35),
+        (25, 36),
+        (26, 36),
+        (25, 36),
+        (25, 35),
+        (26, 35),
+        (25, 35),
+    )
+    assert result["cards"] == 9
+
+
+def test_promotion_rejects_output_size_outside_generation_contract(
+    tmp_path,
+    monkeypatch,
+):
+    (
+        _repository,
+        _assets,
+        _output,
+        _scope_dir,
+        candidate,
+        run_metadata,
+        _old_overlay,
+    ) = _promotion_fixture(tmp_path, monkeypatch)
+    Image.new("RGB", (79, 108), (40, 120, 80)).save(
+        candidate,
+        format="PNG",
+        dpi=(10, 10),
+    )
+    payload = load_json(run_metadata)
+    payload["source_artwork"]["sha256"] = sha256_file(candidate)
+    run_metadata.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(
+        ValueError,
+        match="Candidate output dimensions do not match",
+    ):
+        promotion.promote(
+            "Example",
+            candidate,
+            language="en",
+            run_metadata_path=run_metadata,
+        )
+
+
 def test_validator_accepts_audited_v1_inputs_without_calling_them_v2(
     tmp_path,
     monkeypatch,
@@ -858,13 +1073,41 @@ def test_validator_rejects_an_unknown_pipeline_contract(
     unsupported_components = copy.deepcopy(
         promoted["run"]["inputs"]["generation_fingerprint"]["components"]
     )
-    unsupported_components["pipeline_contract"]["version"] = 3
+    unsupported_components["pipeline_contract"]["version"] = 4
     promoted["run"]["inputs"]["generation_fingerprint"] = (
         provenance.fingerprint_record(unsupported_components)
     )
     provenance_path.write_text(json.dumps(promoted), encoding="utf-8")
 
     with pytest.raises(ValueError, match="Unsupported generation pipeline"):
+        validator.validate("Example")
+
+
+def test_validator_rejects_reordered_card_provenance(
+    tmp_path,
+    monkeypatch,
+):
+    (
+        _repository,
+        _assets,
+        _output,
+        _scope_dir,
+        candidate,
+        run_metadata,
+        _old_overlay,
+    ) = _promotion_fixture(tmp_path, monkeypatch)
+    _artwork, _preview, _cards, provenance_path = promotion.promote(
+        "Example",
+        candidate,
+        language="en",
+        run_metadata_path=run_metadata,
+    )
+    promoted = load_json(provenance_path)
+    cards = promoted["outputs"]["cards"]
+    cards[0], cards[1] = cards[1], cards[0]
+    provenance_path.write_text(json.dumps(promoted), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Promoted card routes"):
         validator.validate("Example")
 
 

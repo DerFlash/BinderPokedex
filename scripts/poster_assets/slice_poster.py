@@ -8,10 +8,10 @@ from pathlib import Path
 from PIL import Image
 
 try:
-    from .layout import build_page_layout
+    from .layout import build_image_layout
     from .poster_io import poster_bundle
 except ImportError:
-    from layout import build_page_layout
+    from layout import build_image_layout
     from poster_io import poster_bundle
 
 
@@ -25,18 +25,15 @@ def slice_poster(scope: str, source: Path, output_dir: Path | None = None) -> li
         scope,
         poster_assets=POSTER_ASSETS,
     ).manifest
-    loaded = Image.open(source)
-    source_dpi = loaded.info.get("dpi")
-    image = loaded.convert("RGB")
-    layout = build_page_layout(
+    with Image.open(source) as loaded:
+        source_dpi = loaded.info.get("dpi")
+        image = loaded.convert("RGB")
+    layout = build_image_layout(
         manifest.get("layout", {}).get("name", "standard_3x3"),
         width_px=image.width,
+        height_px=image.height,
+        dpi=source_dpi,
     )
-    if abs(layout.height_px - image.height) > 16:
-        raise ValueError(
-            f"Poster ratio does not match card layout: {image.size} vs "
-            f"{(layout.width_px, layout.height_px)}"
-        )
 
     target_dir = output_dir or source.with_name(f"{source.stem}_cards")
     target_dir.mkdir(parents=True, exist_ok=True)

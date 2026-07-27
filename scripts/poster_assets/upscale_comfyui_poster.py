@@ -13,7 +13,11 @@ try:
         DEFAULT_UPSCALE_MODEL,
         write_workflow,
     )
-    from .layout import build_page_layout, build_print_layout
+    from .layout import (
+        build_page_layout,
+        build_print_layout,
+        build_source_layout,
+    )
     from .queue_comfyui_workflow import (
         queue_workflow,
         validate_server_input_directory,
@@ -24,7 +28,7 @@ except ImportError:
         DEFAULT_UPSCALE_MODEL,
         write_workflow,
     )
-    from layout import build_page_layout, build_print_layout
+    from layout import build_page_layout, build_print_layout, build_source_layout
     from queue_comfyui_workflow import (
         queue_workflow,
         validate_server_input_directory,
@@ -51,6 +55,11 @@ def normalize_upscale_input(
         poster_assets=POSTER_ASSETS,
     ).manifest
     image = Image.open(source).convert("RGB")
+    build_source_layout(
+        manifest.get("layout", {}).get("name", "standard_3x3"),
+        width_px=image.width,
+        height_px=image.height,
+    )
     layout = build_page_layout(
         manifest.get("layout", {}).get("name", "standard_3x3"),
         width_px=image.width,
