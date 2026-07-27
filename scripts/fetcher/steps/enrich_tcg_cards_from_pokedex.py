@@ -253,6 +253,11 @@ class EnrichTCGCardsFromPokedexStep(BaseStep):
                     if any(keyword in card_name for keyword in ['stadium', 'resort', 'gym', 'tower', 'temple', 'cave', 'lab']):
                         trainer_type = 'Stadium'
                         logger.info(f"✓ Inferred Stadium type for: {card.get('name')}")
+                    else:
+                        # Older sets predate the modern Trainer subcategories and
+                        # TCGdex therefore leaves trainerType empty. Render these
+                        # cards with the generic Item artwork instead of no image.
+                        trainer_type = 'Item'
                 
                 enriched['trainer_type'] = trainer_type
             

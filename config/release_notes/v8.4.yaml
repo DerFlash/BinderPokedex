@@ -1,0 +1,18 @@
+summary:
+  en: "Pokemon Jungle and Fossil"
+  de: "Pokémon Dschungel und Fossil"
+whats_new:
+  en:
+    title: "Pokemon Jungle and Fossil"
+    body:
+      - "Added Jungle (base2, 1999) scope with 64 cards: 63 Pokémon, 1 Trainer"
+      - "Added Fossil (base3, 1999) scope with 62 cards: 57 Pokémon, 5 Trainers"
+      - "Available in de, en, fr, es, it (ja/ko/zh not released for these sets)"
+      - "Fixed missing artwork for classic Trainer cards without a TCGdex subtype"
+  de:
+    title: "Pokémon Dschungel und Fossil"
+    body:
+      - "Dschungel (base2, 1999) mit 64 Karten ergänzt: 63 Pokémon, 1 Trainer"
+      - "Fossil (base3, 1999) mit 62 Karten ergänzt: 57 Pokémon, 5 Trainer"
+      - "Verfügbar in de, en, fr, es, it (ja/ko/zh für diese Sets nicht erschienen)"
+      - "Fehlende Bilder bei klassischen Trainerkarten ohne TCGdex-Untertyp behoben"

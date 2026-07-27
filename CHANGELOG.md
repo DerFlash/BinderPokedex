@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [8.4.0] - 2026-07-15
+
+### ✨ New Features
+
+**Pokemon Jungle (base2) and Fossil (base3)**
+- Added Jungle (base2, 1999) scope with 64 cards: 63 Pokémon, 1 Trainer
+- Added Fossil (base3, 1999) scope with 62 cards: 57 Pokémon, 5 Trainers
+- Available in de, en, fr, es, it — ja/ko/zh were not released for these sets and are correctly skipped
+
+### 🐛 Bug Fixes
+
+**Classic Trainer card artwork**
+- Older Trainer cards without a TCGdex subtype now use the generic Item artwork instead of rendering without an image
+
+---
+
 ## [8.3.0] - 2026-07-12
 
 ### ✨ New Features
