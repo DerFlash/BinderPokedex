@@ -103,7 +103,7 @@ def build_joint_scene_workflow(
     vae_name: str,
     steps: int,
 ) -> dict[str, object]:
-    """Build one whole-image pass from identity references and an empty target."""
+    """Build one whole-image pass from one cast reference and an empty target."""
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
     manifest = bundle.manifest
     scope_data = load_poster_scope_data(bundle)
@@ -111,7 +111,7 @@ def build_joint_scene_workflow(
     if len(items) > 3:
         raise ValueError(
             "FLUX.2 Klein joint_scene currently supports at most three "
-            "individual subject references"
+            "subjects in one cast reference"
         )
     width, height = output_dimensions(scope, megapixels)
     layout = build_source_layout(
@@ -164,41 +164,31 @@ def build_joint_scene_workflow(
         "10": node("KSamplerSelect", sampler_name="euler"),
     }
 
-    positive: list[object] = ["4", 0]
-    negative: list[object] = ["5", 0]
-    for index in range(1, len(items) + 1):
-        base = 30 + (index - 1) * 5
-        load_id = str(base)
-        encode_id = str(base + 1)
-        positive_id = str(base + 2)
-        negative_id = str(base + 3)
-        workflow[load_id] = node(
-            "LoadImage",
-            image=f"identity_reference_{index}.png",
-        )
-        workflow[encode_id] = node(
-            "VAEEncode",
-            pixels=[load_id, 0],
-            vae=["3", 0],
-        )
-        workflow[positive_id] = node(
-            "ReferenceLatent",
-            conditioning=positive,
-            latent=[encode_id, 0],
-        )
-        workflow[negative_id] = node(
-            "ReferenceLatent",
-            conditioning=negative,
-            latent=[encode_id, 0],
-        )
-        positive = [positive_id, 0]
-        negative = [negative_id, 0]
+    workflow["30"] = node(
+        "LoadImage",
+        image="joint_scene_cast_reference.png",
+    )
+    workflow["31"] = node(
+        "VAEEncode",
+        pixels=["30", 0],
+        vae=["3", 0],
+    )
+    workflow["32"] = node(
+        "ReferenceLatent",
+        conditioning=["4", 0],
+        latent=["31", 0],
+    )
+    workflow["33"] = node(
+        "ReferenceLatent",
+        conditioning=["5", 0],
+        latent=["31", 0],
+    )
 
     workflow["70"] = node(
         "CFGGuider",
         model=["1", 0],
-        positive=positive,
-        negative=negative,
+        positive=["32", 0],
+        negative=["33", 0],
         cfg=1.0,
     )
     workflow["71"] = node(
@@ -251,7 +241,8 @@ def build_workflow(
     if generation_mode == "joint_scene":
         if reference_mode != "identity":
             raise ValueError(
-                "FLUX joint_scene requires individual identity references"
+                "FLUX joint_scene requires the identity-preserving cast "
+                "reference"
             )
         return build_joint_scene_workflow(
             scope,

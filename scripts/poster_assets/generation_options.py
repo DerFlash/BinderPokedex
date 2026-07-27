@@ -499,7 +499,7 @@ def _resolve_flux_reference_mode(
                 "flux.reference_mode must be 'identity' for joint_scene"
             )
         workflow["flux_reference_mode"] = "identity"
-        metadata_reference = "multi_reference_joint"
+        metadata_reference = "cast_layout_joint"
         if configured_mode == mode and "reference_mode" in manifest:
             configured_reference = _string(
                 manifest["reference_mode"],

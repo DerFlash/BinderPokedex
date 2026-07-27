@@ -400,7 +400,7 @@ def build_joint_scene_prompt(
             ),
             (
                 f"Render exactly these {len(items)} characters once: {cast}. "
-                "The individual reference images are the strict authority for "
+                "The cast-layout reference is the strict authority for "
                 "identity, pose, stature, silhouette, anatomy, facial features, "
                 "colors, markings, and defining design details. Permitted "
                 "changes are limited to scene lighting, reflected color, cast "
@@ -416,7 +416,7 @@ def build_joint_scene_prompt(
                 "padding specified above; do not move or enlarge a character "
                 "to fill its region. Copy every "
                 "visible color boundary, marking contour, small anatomical "
-                "detail, and appendage from that character's individual "
+                "detail, and appendage from that character in the cast-layout "
                 "reference. Preserve every open negative "
                 "space between limbs, body parts, or appendages: continuous "
                 "landscape may remain visible through that gap, but do not "
@@ -516,51 +516,19 @@ def joint_scene_conditioning_contract(
     items: list[dict[str, Any]],
 ) -> dict[str, Any]:
     """Return only conditioning fields that affect joint-scene pixels."""
+    if not items:
+        raise ValueError("Joint-scene conditioning needs at least one subject")
     conditioning = manifest.get("conditioning", {})
     if not isinstance(conditioning, dict):
         raise ValueError("conditioning must be a mapping")
     identity_defaults = conditioning.get("identity_defaults", {})
     if not isinstance(identity_defaults, dict):
         raise ValueError("conditioning.identity_defaults must be a mapping")
-    effective_defaults = {
-        "neutral_rgb": identity_defaults.get(
+    return {
+        "cast_reference_neutral_rgb": identity_defaults.get(
             "neutral_rgb",
             [226, 224, 211],
         ),
-        "min_subject_px": int(
-            identity_defaults.get("min_subject_px", 150)
-        ),
-        "max_subject_px": int(
-            identity_defaults.get("max_subject_px", 350)
-        ),
-        "canvas_px": int(identity_defaults.get("canvas_px", 512)),
-    }
-    subjects = []
-    for item in items:
-        subject = resolve_poster_subject(item)
-        config = subject_conditioning(manifest, item)
-        identity = config.get("identity", {})
-        if not isinstance(identity, dict):
-            raise ValueError(
-                f"Identity conditioning for {subject.subject_key} must be a "
-                "mapping"
-            )
-        subjects.append(
-            {
-                "subject_key": subject.subject_key,
-                "identity": {
-                    "canvas_px": int(
-                        identity.get(
-                            "canvas_px",
-                            effective_defaults["canvas_px"],
-                        )
-                    )
-                },
-            }
-        )
-    return {
-        "identity_defaults": effective_defaults,
-        "subjects": subjects,
     }
 
 
@@ -683,14 +651,15 @@ def build_identity_reference_prompt(
             )
         paragraphs = [
             (
-                f"{subject_count} identity reference images are supplied in a "
-                "fixed "
-                f"sequence. {' '.join(descriptions)} Their neutral canvases are "
-                "identity and pose evidence with deliberately generous empty "
-                "padding that reinforces a restrained final scale. The "
-                "normalized rectangles below remain the final authority. No "
-                "scene, background, or combined character composition image is "
-                "supplied."
+                "IMAGE 1 is the sole cast-layout reference. It contains exactly "
+                f"{subject_count} complete characters on a flat neutral field, "
+                f"ordered across the {region_summary} bottom-row regions. The "
+                "reference is the authority for their identity, anatomy, pose, "
+                "relative scale, shared baseline, and poster coordinates. Its "
+                "neutral field is empty reference space, not sky, terrain, a "
+                "background plate, or a style request. Do not paste the "
+                "characters as a foreground layer; redraw the complete scene "
+                "and all character edges together from the empty target."
             ),
             (
                 "The following normalized target silhouette rectangles are the "

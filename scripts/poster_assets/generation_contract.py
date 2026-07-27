@@ -8,7 +8,7 @@ from typing import Any
 CANONICAL_REFERENCE_MODES = {
     ("flux", "identity_lock"): "two_pass_source_pixels",
     ("flux", "inpaint"): "source_pixels",
-    ("flux", "joint_scene"): "multi_reference_joint",
+    ("flux", "joint_scene"): "cast_layout_joint",
 }
 
 

@@ -10,7 +10,11 @@ from typing import Any
 from PIL import Image, ImageDraw, ImageFilter
 
 try:
-    from .composition import cutout_placements, validate_visible_placements
+    from .composition import (
+        cutout_placements,
+        joint_scene_cutout_placements,
+        validate_visible_placements,
+    )
     from .create_comfyui_poster_workflow import output_dimensions
     from .layout import build_source_layout
     from .poster_config import (
@@ -24,7 +28,11 @@ try:
         poster_bundle,
     )
 except ImportError:
-    from composition import cutout_placements, validate_visible_placements
+    from composition import (
+        cutout_placements,
+        joint_scene_cutout_placements,
+        validate_visible_placements,
+    )
     from create_comfyui_poster_workflow import output_dimensions
     from layout import build_source_layout
     from poster_config import (
@@ -533,29 +541,53 @@ def build_scene_reference(
 def build_joint_scene_references(
     scope: str,
     output_dir: Path | None = None,
+    *,
+    megapixels: float = 1.0,
 ) -> None:
-    """Write only the appearance references consumed by ``joint_scene``."""
+    """Write one neutral, poster-shaped cast reference for ``joint_scene``."""
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
     scope_dir = bundle.asset_dir
     manifest = bundle.manifest
     reference_dir = output_dir or scope_dir / "comfyui_poster"
     reference_dir.mkdir(parents=True, exist_ok=True)
-
-    # Joint-scene positions come from the normalized coordinate contract.
-    # In particular, do not read legacy per-subject composition compensation
-    # while constructing the appearance-only references.
-    build_identity_references(
-        scope_dir,
-        manifest,
-        reference_dir,
-        asset_key=bundle.asset_key,
-        use_composition_compensation=False,
-        align_to_regions=True,
-        edge_padding_override=0,
-        # The final model pass tends to place the baseline slightly high. Keep
-        # every source pixel at full identity-reference resolution while using
-        # the neutral canvas edge as a mild, model-facing downward bias.
-        bottom_padding_override=0,
+    width, height = output_dimensions(bundle.asset_key, megapixels)
+    layout = build_source_layout(
+        manifest.get("layout", {}).get("name", "standard_3x3"),
+        width_px=width,
+        height_px=height,
+    )
+    placements = joint_scene_cutout_placements(layout, scope_dir)
+    defaults = manifest.get("conditioning", {}).get(
+        "identity_defaults",
+        {},
+    )
+    neutral = defaults.get("neutral_rgb", [226, 224, 211])
+    if (
+        not isinstance(neutral, list)
+        or len(neutral) != 3
+        or not all(
+            isinstance(value, int) and 0 <= value <= 255
+            for value in neutral
+        )
+    ):
+        raise ValueError(
+            "conditioning.identity_defaults.neutral_rgb must contain "
+            "3 RGB integers"
+        )
+    reference = Image.new(
+        "RGBA",
+        (width, height),
+        (*neutral, 255),
+    )
+    for placement in placements:
+        reference.alpha_composite(
+            placement["image"],
+            (placement["x"], placement["y"]),
+        )
+    reference.convert("RGB").save(
+        reference_dir / "joint_scene_cast_reference.png",
+        format="PNG",
+        optimize=True,
     )
 
 
@@ -605,10 +637,15 @@ def prepare(
             "identity_core.png",
             "upper_context_mask.png",
             "upper_context_generation_mask.png",
+            "joint_scene_cast_reference.png",
             IDENTITY_LOCK_PROMPT_FILE,
         ):
             (work_dir / filename).unlink(missing_ok=True)
-        build_joint_scene_references(scope, work_dir)
+        build_joint_scene_references(
+            scope,
+            work_dir,
+            megapixels=megapixels,
+        )
         return work_dir
 
     # Preserve the established preparation contract for every legacy mode.

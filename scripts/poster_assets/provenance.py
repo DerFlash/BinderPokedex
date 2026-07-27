@@ -96,7 +96,7 @@ GENERATION_PIPELINE_CONTRACT_VERSION = 3
 OVERLAY_PIPELINE_CONTRACT_VERSION = 2
 CURRENT_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
     ("flux", "identity_lock"): GENERATION_PIPELINE_CONTRACT_VERSION,
-    ("flux", "joint_scene"): 3,
+    ("flux", "joint_scene"): 4,
     ("flux", "edit"): 2,
     ("flux", "generate"): 2,
     ("flux", "inpaint"): 2,
@@ -107,7 +107,7 @@ CURRENT_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
 }
 SUPPORTED_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
     ("flux", "identity_lock"): frozenset({1, 2, 3}),
-    ("flux", "joint_scene"): frozenset({3}),
+    ("flux", "joint_scene"): frozenset({4}),
     ("flux", "edit"): frozenset({1, 2}),
     ("flux", "generate"): frozenset({1, 2}),
     ("flux", "inpaint"): frozenset({1, 2}),
@@ -118,7 +118,7 @@ SUPPORTED_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
 }
 RASTER_GEOMETRY_PIPELINE_MINIMUM = {
     ("flux", "identity_lock"): 3,
-    ("flux", "joint_scene"): 3,
+    ("flux", "joint_scene"): 4,
     ("flux", "edit"): 2,
     ("flux", "generate"): 2,
     ("flux", "inpaint"): 2,
@@ -1315,10 +1315,9 @@ def generation_input_records(
     ):
         references = [
             file_record(
-                work_dir / f"identity_reference_{index}.png",
+                work_dir / "joint_scene_cast_reference.png",
                 image=True,
             )
-            for index in range(1, len(cutouts) + 1)
         ]
     elif generation.get("engine") == "flux" and generation.get("mode") == "inpaint":
         references = [

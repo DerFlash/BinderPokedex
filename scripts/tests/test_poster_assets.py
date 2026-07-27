@@ -881,15 +881,14 @@ def test_inpaint_reference_uses_exact_final_placements(tmp_path: Path):
     ).getbbox() is not None
 
 
-def test_joint_scene_preparation_excludes_identity_lock_geometry(
+def test_joint_scene_preparation_writes_one_neutral_cast_layout(
     tmp_path: Path,
 ):
-    identity_lock_dir = tmp_path / "identity-lock"
     joint_dir = tmp_path / "joint"
-    build_scene_reference("Base1", 0.25, identity_lock_dir)
     build_joint_scene_references(
         "Base1",
         joint_dir,
+        megapixels=0.25,
     )
 
     assert not (joint_dir / "upper_context_mask.png").exists()
@@ -899,44 +898,29 @@ def test_joint_scene_preparation_excludes_identity_lock_geometry(
     assert not (joint_dir / "scene_reference.png").exists()
     assert not (joint_dir / "structure_reference.png").exists()
     assert not (joint_dir / "anima_scene_reference.png").exists()
-    assert (joint_dir / "identity_reference_1.png").is_file()
+    assert not list(joint_dir.glob("identity_reference_*.png"))
 
-    neutral = (226, 224, 211)
-    locked = Image.open(
-        identity_lock_dir / "identity_reference_1.png"
-    ).convert("RGB")
-    joint = Image.open(
-        joint_dir / "identity_reference_1.png"
-    ).convert("RGB")
-    assert joint.size == locked.size
-    locked_box = ImageChops.difference(
-        locked,
-        Image.new("RGB", locked.size, neutral),
-    ).getbbox()
-    joint_box = ImageChops.difference(
-        joint,
-        Image.new("RGB", joint.size, neutral),
-    ).getbbox()
-    assert locked_box is not None and joint_box is not None
-    assert joint_box[3] - joint_box[1] > locked_box[3] - locked_box[1]
-    centers = []
-    edge_boxes = []
-    for index in (1, 2, 3):
-        reference = Image.open(
-            joint_dir / f"identity_reference_{index}.png"
-        ).convert("RGB")
-        box = ImageChops.difference(
-            reference,
-            Image.new("RGB", reference.size, neutral),
-        ).getbbox()
-        assert box is not None
-        edge_boxes.append((box, reference.size))
-        centers.append((box[0] + box[2]) / (2 * reference.width))
-    assert centers[0] < 0.5
-    assert centers[1] == pytest.approx(0.5, abs=0.02)
-    assert centers[2] > 0.5
-    assert edge_boxes[0][0][0] == 0
-    assert edge_boxes[2][0][2] == edge_boxes[2][1][0]
+    actual = Image.open(
+        joint_dir / "joint_scene_cast_reference.png"
+    ).convert("RGBA")
+    layout = build_source_layout(
+        "standard_3x3",
+        width_px=actual.width,
+        height_px=actual.height,
+    )
+    expected = Image.new("RGBA", actual.size, (226, 224, 211, 255))
+    for placement in joint_scene_cutout_placements(
+        layout,
+        Path(__file__).resolve().parents[2]
+        / "data"
+        / "poster_assets"
+        / "Base1",
+    ):
+        expected.alpha_composite(
+            placement["image"],
+            (placement["x"], placement["y"]),
+        )
+    assert ImageChops.difference(actual, expected).getbbox() is None
 
 
 def test_identity_lock_mask_generates_only_above_the_bottom_subject_band(
@@ -1564,11 +1548,7 @@ def test_joint_scene_synthesizes_landscape_and_subjects_in_one_shot():
         node["inputs"]["image"]
         for node in workflow.values()
         if node["class_type"] == "LoadImage"
-    ] == [
-        "identity_reference_1.png",
-        "identity_reference_2.png",
-        "identity_reference_3.png",
-    ]
+    ] == ["joint_scene_cast_reference.png"]
     assert sum(
         node["class_type"] == "EmptyFlux2LatentImage"
         for node in workflow.values()
@@ -1577,29 +1557,19 @@ def test_joint_scene_synthesizes_landscape_and_subjects_in_one_shot():
         node["class_type"] == "SamplerCustomAdvanced"
         for node in workflow.values()
     ) == 1
-    assert workflow["71"]["inputs"]["latent_image"] == ["6", 0]
-    assert workflow["8"]["inputs"]["noise_seed"] == 123
-
-    # IMAGE 1..3 are the only references, on both conditioning branches.
-    assert workflow["32"]["inputs"]["conditioning"] == ["4", 0]
-    assert workflow["33"]["inputs"]["conditioning"] == ["5", 0]
-    assert workflow["37"]["inputs"]["conditioning"] == ["32", 0]
-    assert workflow["38"]["inputs"]["conditioning"] == ["33", 0]
-    assert workflow["42"]["inputs"]["conditioning"] == ["37", 0]
-    assert workflow["43"]["inputs"]["conditioning"] == ["38", 0]
-    assert workflow["70"]["inputs"]["positive"] == ["42", 0]
-    assert workflow["70"]["inputs"]["negative"] == ["43", 0]
+    assert sum(
+        node["class_type"] == "ReferenceLatent"
+        for node in workflow.values()
+    ) == 2
+    assert sum(
+        node["class_type"] == "VAEEncode"
+        for node in workflow.values()
+    ) == 1
 
     assert not any(
         node["class_type"] == "ImageCompositeMasked"
         for node in workflow.values()
     )
-    assert [
-        node["inputs"]["pixels"]
-        for node in workflow.values()
-        if node["class_type"] == "VAEEncode"
-    ] == [["30", 0], ["35", 0], ["40", 0]]
-    assert workflow["73"]["inputs"]["images"] == ["72", 0]
     assert not any(
         node["class_type"] in {
             "ImageCompositeMasked",
@@ -1613,6 +1583,7 @@ def test_joint_scene_synthesizes_landscape_and_subjects_in_one_shot():
     assert "There is no later character overlay" in prompt
     assert "There is no supplied landscape image" in prompt
     assert "no pre-generated background plate" in prompt
+    assert "IMAGE 1 is the sole cast-layout reference" in prompt
     assert "mandatory placement and scale contract" in prompt
     assert "never paint the character as a flat top layer" in prompt
     assert "must continue naturally in front" in prompt
@@ -1622,7 +1593,7 @@ def test_joint_scene_synthesizes_landscape_and_subjects_in_one_shot():
     assert "Charmander" in prompt
 
 
-def test_joint_scene_prompt_is_dynamic_and_uses_only_identity_references():
+def test_joint_scene_prompt_is_dynamic_and_uses_one_cast_reference():
     bundle = poster_bundle("Pokedex/sections/gen7")
     scope_data = load_poster_scope_data(bundle)
     items = load_cutout_items(bundle.asset_dir)
@@ -1655,9 +1626,9 @@ def test_joint_scene_prompt_is_dynamic_and_uses_only_identity_references():
     assert "Rowlet" in final
     assert "Litten" in final
     assert "Popplio" in final
-    assert "IMAGE 4" not in final
-    assert "3 identity reference images" in final
-    assert "No scene, background, or combined character composition" in final
+    assert "IMAGE 2" not in final
+    assert "IMAGE 1 is the sole cast-layout reference" in final
+    assert "neutral field is empty reference space" in final
     assert "x 4.2% to 17.2%" in final
     assert "small physically plausible edge occlusions" in final
     assert "JOINT SCENE - ONE-SHOT FINAL SYNTHESIS" in snapshot
@@ -1721,7 +1692,7 @@ def test_joint_scene_workflow_writes_one_shot_prompt_snapshot(
 def test_joint_scene_rejects_composition_only_conditioning():
     with pytest.raises(
         ValueError,
-        match="requires individual identity references",
+        match="requires the identity-preserving cast reference",
     ):
         build_workflow(
             "Base1",
