@@ -1,0 +1,63 @@
+{
+  "scope": "Pokedex/sections/gen7",
+  "source_scope": "Pokedex",
+  "poster_id": "gen7",
+  "section_id": "gen7",
+  "source": "pokeapi_official_artwork",
+  "generated_at": "2026-07-27T04:09:42.320115+00:00",
+  "layout": {
+    "name": "standard_3x3",
+    "columns": 3,
+    "rows": 3
+  },
+  "items": [
+    {
+      "pokemon_id": 722,
+      "name_en": "Rowlet",
+      "name_de": "Bauz",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/722.png",
+      "file": "pokemon_722_rowlet.png",
+      "mode": "RGBA",
+      "width": 475,
+      "height": 475,
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "transparent_pixels": 136165,
+      "opaque_pixels": 91578,
+      "validated_alpha": true,
+      "errors": []
+    },
+    {
+      "pokemon_id": 725,
+      "name_en": "Litten",
+      "name_de": "Flamiau",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/725.png",
+      "file": "pokemon_725_litten.png",
+      "mode": "RGBA",
+      "width": 475,
+      "height": 475,
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "transparent_pixels": 188031,
+      "opaque_pixels": 40598,
+      "validated_alpha": true,
+      "errors": []
+    },
+    {
+      "pokemon_id": 728,
+      "name_en": "Popplio",
+      "name_de": "Robball",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/728.png",
+      "file": "pokemon_728_popplio.png",
+      "mode": "RGBA",
+      "width": 475,
+      "height": 475,
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "transparent_pixels": 163455,
+      "opaque_pixels": 65892,
+      "validated_alpha": true,
+      "errors": []
+    }
+  ]
+}
