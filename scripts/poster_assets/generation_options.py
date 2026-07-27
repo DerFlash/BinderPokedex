@@ -50,6 +50,7 @@ try:
         DEFAULT_VAE as DEFAULT_QWEN_VAE,
     )
     from .generation_contract import (
+        CANONICAL_REFERENCE_MODES,
         validate_generation_reference_contract,
     )
 except ImportError:  # Direct script execution
@@ -85,7 +86,10 @@ except ImportError:  # Direct script execution
         DEFAULT_STEPS as DEFAULT_QWEN_STEPS,
         DEFAULT_VAE as DEFAULT_QWEN_VAE,
     )
-    from generation_contract import validate_generation_reference_contract
+    from generation_contract import (
+        CANONICAL_REFERENCE_MODES,
+        validate_generation_reference_contract,
+    )
 
 
 SUPPORTED_ENGINES = ("flux", "anima", "flux1_canny", "qwen_edit")
@@ -499,7 +503,9 @@ def _resolve_flux_reference_mode(
                 "flux.reference_mode must be 'identity' for joint_scene"
             )
         workflow["flux_reference_mode"] = "identity"
-        metadata_reference = "cast_layout_joint"
+        metadata_reference = CANONICAL_REFERENCE_MODES[
+            ("flux", "joint_scene")
+        ]
         if configured_mode == mode and "reference_mode" in manifest:
             configured_reference = _string(
                 manifest["reference_mode"],

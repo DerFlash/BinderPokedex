@@ -8,11 +8,10 @@ from pathlib import Path
 
 try:
     from .composition import (
-        joint_scene_cutout_placements,
+        joint_scene_canvas_placements,
         normalized_visible_placement_contract,
     )
     from .layout import (
-        build_source_layout,
         latent_canvas_dimensions,
         page_canvas_dimensions,
     )
@@ -22,6 +21,7 @@ try:
         build_joint_scene_prompt,
         build_identity_lock_prompt,
         build_identity_reference_prompt,
+        format_joint_prompt_snapshot,
         identity_lock_overscan,
     )
     from .poster_io import (
@@ -32,11 +32,10 @@ try:
     )
 except ImportError:
     from composition import (
-        joint_scene_cutout_placements,
+        joint_scene_canvas_placements,
         normalized_visible_placement_contract,
     )
     from layout import (
-        build_source_layout,
         latent_canvas_dimensions,
         page_canvas_dimensions,
     )
@@ -46,6 +45,7 @@ except ImportError:
         build_joint_scene_prompt,
         build_identity_lock_prompt,
         build_identity_reference_prompt,
+        format_joint_prompt_snapshot,
         identity_lock_overscan,
     )
     from poster_io import (
@@ -114,18 +114,17 @@ def build_joint_scene_workflow(
             "subjects in one cast reference"
         )
     width, height = output_dimensions(scope, megapixels)
-    layout = build_source_layout(
-        str(
-            manifest.get("layout", {}).get(
-                "name",
-                "standard_3x3",
-            )
-        ),
-        width_px=width,
-        height_px=height,
-    )
     placement_contract = normalized_visible_placement_contract(
-        joint_scene_cutout_placements(layout, bundle.asset_dir),
+        joint_scene_canvas_placements(
+            bundle.asset_dir,
+            layout_name=str(
+                manifest.get("layout", {}).get(
+                    "name",
+                    "standard_3x3",
+                )
+            ),
+            canvas_size=(width, height),
+        ),
         canvas_size=(width, height),
     )
     final_prompt = build_joint_scene_prompt(
@@ -512,11 +511,8 @@ def write_workflow(
             encoding="utf-8",
         )
     elif generation_mode == "joint_scene":
-        snapshot = "\n\n".join(
-            (
-                "JOINT SCENE - ONE-SHOT FINAL SYNTHESIS",
-                str(workflow["4"]["inputs"]["text"]).strip(),
-            )
+        snapshot = format_joint_prompt_snapshot(
+            str(workflow["4"]["inputs"]["text"])
         )
         (target_dir / JOINT_SCENE_PROMPT_FILE).write_text(
             snapshot.strip() + "\n",

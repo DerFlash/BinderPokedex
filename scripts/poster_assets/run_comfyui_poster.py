@@ -489,7 +489,9 @@ def run(
         if flux_mode == "identity_lock":
             effective_reference_mode = "two_pass_source_pixels"
         elif flux_mode == "joint_scene":
-            effective_reference_mode = "cast_layout_joint"
+            effective_reference_mode = str(
+                engine_generation["reference_mode"]
+            )
         elif flux_mode == "inpaint":
             effective_reference_mode = "source_pixels"
         else:

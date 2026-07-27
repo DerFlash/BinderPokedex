@@ -12,7 +12,7 @@ from PIL import Image, ImageDraw, ImageFilter
 try:
     from .composition import (
         cutout_placements,
-        joint_scene_cutout_placements,
+        joint_scene_canvas_placements,
         validate_visible_placements,
     )
     from .create_comfyui_poster_workflow import output_dimensions
@@ -30,7 +30,7 @@ try:
 except ImportError:
     from composition import (
         cutout_placements,
-        joint_scene_cutout_placements,
+        joint_scene_canvas_placements,
         validate_visible_placements,
     )
     from create_comfyui_poster_workflow import output_dimensions
@@ -112,18 +112,8 @@ def build_identity_references(
     output_dir: Path | None = None,
     *,
     asset_key: str | None = None,
-    use_composition_compensation: bool = True,
-    align_to_regions: bool = False,
-    edge_padding_override: int | None = None,
-    bottom_padding_override: int | None = None,
 ) -> None:
-    """Write compact appearance references without encoding scene placement.
-
-    Legacy modes take position from ``scene_reference.png``; ``joint_scene``
-    takes it from its normalized coordinate contract. Neutral-canvas padding
-    reinforces relative scale without poster-shaped reference latents that
-    exhaust unified memory on Apple Silicon.
-    """
+    """Write compact appearance references for the legacy edit workflow."""
     layout_name = manifest.get("layout", {}).get("name", "standard_3x3")
     width, height = output_dimensions(asset_key or scope_dir.name, 1.0)
     layout = build_source_layout(
@@ -138,14 +128,10 @@ def build_identity_references(
         placements,
         canvas_size=(width, height),
     )
-    scene_placements = (
-        card_safe_conditioning_placements(
-            placements,
-            manifest,
-            canvas_size=(width, height),
-        )
-        if use_composition_compensation
-        else placements
+    scene_placements = card_safe_conditioning_placements(
+        placements,
+        manifest,
+        canvas_size=(width, height),
     )
     scene_extents = []
     for placement in scene_placements:
@@ -154,16 +140,6 @@ def build_identity_references(
             raise ValueError("Scene placement has no visible pixels")
         scene_extents.append(max(box[2] - box[0], box[3] - box[1]))
     largest_scene_extent = max(scene_extents)
-    if (
-        edge_padding_override is not None
-        and edge_padding_override < 0
-    ):
-        raise ValueError("edge_padding_override must not be negative")
-    if (
-        bottom_padding_override is not None
-        and bottom_padding_override < 0
-    ):
-        raise ValueError("bottom_padding_override must not be negative")
     conditioning = manifest.get("conditioning", {})
     identity_defaults = conditioning.get("identity_defaults", {})
     neutral_values = identity_defaults.get("neutral_rgb", [226, 224, 211])
@@ -207,40 +183,16 @@ def build_identity_references(
             identity_config.get("canvas_px", default_canvas_px)
         )
         bottom_padding = int(
-            (
-                bottom_padding_override
-                if bottom_padding_override is not None
-                else identity_config.get(
-                    "bottom_padding_px",
-                    default_bottom_padding_px,
-                )
+            identity_config.get(
+                "bottom_padding_px",
+                default_bottom_padding_px,
             )
         )
         reference = Image.new(
             "RGB", (canvas_extent, canvas_extent), neutral
         )
-        if align_to_regions:
-            if len(placements) == 1:
-                align_x = "center"
-            elif len(placements) == 2:
-                align_x = ("left", "right")[index - 1]
-            elif len(placements) == 3:
-                align_x = ("left", "center", "right")[index - 1]
-            else:
-                raise ValueError(
-                    "Region-aligned identity references support one to three "
-                    "subjects"
-                )
-        else:
-            align_x = identity_config.get("align_x", "center")
-        x_padding = int(
-            (
-                edge_padding_override
-                if edge_padding_override is not None
-                and align_x in {"left", "right"}
-                else identity_config.get("x_padding_px", 24)
-            )
-        )
+        align_x = identity_config.get("align_x", "center")
+        x_padding = int(identity_config.get("x_padding_px", 24))
         if align_x == "left":
             x = x_padding
         elif align_x == "right":
@@ -404,8 +356,6 @@ def build_scene_reference(
     scope: str,
     megapixels: float,
     output_dir: Path | None = None,
-    *,
-    include_identity_lock_assets: bool = True,
 ) -> Path:
     """Write model-compensated edit and exact identity-lock references."""
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
@@ -450,19 +400,18 @@ def build_scene_reference(
         format="PNG",
         optimize=True,
     )
-    if include_identity_lock_assets:
-        build_upper_context_mask(
-            width,
-            height,
-            placements,
-            manifest,
-            reference_dir,
-        )
-        scope_data = load_poster_scope_data(bundle)
-        (reference_dir / IDENTITY_LOCK_PROMPT_FILE).write_text(
-            build_identity_lock_prompt(manifest, scope_data) + "\n",
-            encoding="utf-8",
-        )
+    build_upper_context_mask(
+        width,
+        height,
+        placements,
+        manifest,
+        reference_dir,
+    )
+    scope_data = load_poster_scope_data(bundle)
+    (reference_dir / IDENTITY_LOCK_PROMPT_FILE).write_text(
+        build_identity_lock_prompt(manifest, scope_data) + "\n",
+        encoding="utf-8",
+    )
     # FLUX.1 Canny uses the exact reviewed figures only as line geometry. A
     # white opaque canvas prevents the LoadImage alpha channel from turning the
     # entire background into an unintended inpaint mask or black image.
@@ -486,7 +435,6 @@ def build_scene_reference(
         manifest,
         reference_dir,
         asset_key=bundle.asset_key,
-        use_composition_compensation=include_identity_lock_assets,
     )
     # AnimaEdit is an image-edit model and strongly retains the source material.
     # Give it only an abstract sky/meadow material scaffold—not prior artwork or
@@ -551,12 +499,14 @@ def build_joint_scene_references(
     reference_dir = output_dir or scope_dir / "comfyui_poster"
     reference_dir.mkdir(parents=True, exist_ok=True)
     width, height = output_dimensions(bundle.asset_key, megapixels)
-    layout = build_source_layout(
-        manifest.get("layout", {}).get("name", "standard_3x3"),
-        width_px=width,
-        height_px=height,
+    placements = joint_scene_canvas_placements(
+        scope_dir,
+        layout_name=manifest.get("layout", {}).get(
+            "name",
+            "standard_3x3",
+        ),
+        canvas_size=(width, height),
     )
-    placements = joint_scene_cutout_placements(layout, scope_dir)
     defaults = manifest.get("conditioning", {}).get(
         "identity_defaults",
         {},

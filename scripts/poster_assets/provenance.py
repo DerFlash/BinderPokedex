@@ -11,7 +11,7 @@ from PIL import Image
 
 try:
     from .composition import (
-        joint_scene_cutout_placements,
+        joint_scene_canvas_placements,
         normalized_visible_placement_contract,
     )
     from .fetch_cutouts import (
@@ -22,7 +22,6 @@ try:
         RASTER_GEOMETRY_CONTRACT_VERSION,
         build_generation_output_layout,
         build_page_layout,
-        build_source_layout,
         latent_canvas_dimensions,
     )
     from .generation_contract import validate_generation_contract
@@ -48,7 +47,7 @@ try:
     )
 except ImportError:
     from composition import (
-        joint_scene_cutout_placements,
+        joint_scene_canvas_placements,
         normalized_visible_placement_contract,
     )
     from fetch_cutouts import (
@@ -59,7 +58,6 @@ except ImportError:
         RASTER_GEOMETRY_CONTRACT_VERSION,
         build_generation_output_layout,
         build_page_layout,
-        build_source_layout,
         latent_canvas_dimensions,
     )
     from generation_contract import validate_generation_contract
@@ -1014,13 +1012,12 @@ def _effective_generation_prompt(
             layout_name,
             float(generation_megapixels),
         )
-        layout = build_source_layout(
-            layout_name,
-            width_px=width,
-            height_px=height,
-        )
         placement_contract = normalized_visible_placement_contract(
-            joint_scene_cutout_placements(layout, bundle.asset_dir),
+            joint_scene_canvas_placements(
+                bundle.asset_dir,
+                layout_name=layout_name,
+                canvas_size=(width, height),
+            ),
             canvas_size=(width, height),
         )
         return build_joint_prompt_snapshot(

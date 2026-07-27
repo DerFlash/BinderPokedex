@@ -382,7 +382,7 @@ def build_joint_scene_prompt(
 
     return "\n\n".join(
         (
-            build_identity_reference_prompt(
+            build_joint_cast_reference_prompt(
                 items,
                 manifest,
                 placement_contract=placement_contract,
@@ -467,16 +467,20 @@ def build_joint_prompt_snapshot(
     placement_contract: list[dict[str, int]],
 ) -> str:
     """Return the one-shot prompt as a stable provenance snapshot."""
-    return "\n\n".join(
-        (
-            "JOINT SCENE - ONE-SHOT FINAL SYNTHESIS",
-            build_joint_scene_prompt(
-                manifest,
-                scope_data,
-                items,
-                placement_contract=placement_contract,
-            ),
+    return format_joint_prompt_snapshot(
+        build_joint_scene_prompt(
+            manifest,
+            scope_data,
+            items,
+            placement_contract=placement_contract,
         )
+    )
+
+
+def format_joint_prompt_snapshot(prompt: str) -> str:
+    """Add the stable heading shared by saved and fingerprinted prompts."""
+    return "\n\n".join(
+        ("JOINT SCENE - ONE-SHOT FINAL SYNTHESIS", prompt.strip())
     )
 
 
@@ -546,10 +550,8 @@ def reference_region_label(index: int, count: int) -> str:
 def build_identity_reference_prompt(
     items: list[dict[str, Any]],
     manifest: dict[str, Any],
-    *,
-    placement_contract: list[dict[str, int]] | None = None,
 ) -> str:
-    """Build a model-facing reference contract without set-specific Python."""
+    """Describe the legacy edit workflow's identity and scene references."""
     if not items:
         raise ValueError("Identity reference mode needs at least one cutout")
 
@@ -557,7 +559,6 @@ def build_identity_reference_prompt(
     scene_image_number = subject_count + 1
     descriptions = []
     regions = []
-    specific_notes = []
 
     for index, item in enumerate(items):
         image_number = index + 1
@@ -569,6 +570,48 @@ def build_identity_reference_prompt(
             f"for {name} in the {region} region."
         )
 
+    if subject_count == 1:
+        region_summary = regions[0]
+    else:
+        region_summary = ", ".join(regions[:-1]) + f", or {regions[-1]}"
+
+    paragraphs = [
+        (
+            f"{scene_image_number} reference images are supplied in a fixed "
+            f"sequence. {' '.join(descriptions)} Their relative sizes on "
+            "the neutral canvases reinforce, but never override, the scene "
+            f"scale shown in IMAGE {scene_image_number}. Their plain "
+            "backgrounds are empty reference space, not scenery."
+        ),
+        (
+            f"IMAGE {scene_image_number} is the sole and final authority for "
+            "the combined character count, poses, placement, scale, shared "
+            "ground level, and invisible print-safe regions. Render each "
+            f"character exactly once at IMAGE {scene_image_number}'s "
+            "location. Every character, including its complete silhouette, "
+            f"must remain wholly inside its assigned {region_summary} region "
+            "of the bottom row. No character may cross above the bottom row "
+            "or cross an invisible vertical region division. These "
+            "divisions are coordinates only and must never be drawn. Leave "
+            "visible landscape padding around every silhouette. The "
+            "individual images are identity references, not additional "
+            "subjects."
+        ),
+    ]
+    specific_notes = subject_prompt_notes(items, manifest)
+    if specific_notes:
+        paragraphs.append(" ".join(specific_notes))
+    return "\n\n".join(paragraphs)
+
+
+def subject_prompt_notes(
+    items: list[dict[str, Any]],
+    manifest: dict[str, Any],
+) -> list[str]:
+    """Return validated per-subject constraints in cast order."""
+    specific_notes = []
+    for item in items:
+        name = item.get("name_en") or f"Pokemon #{item.get('pokemon_id', '?')}"
         notes = subject_conditioning(manifest, item).get("prompt_notes", [])
         if isinstance(notes, str):
             notes = [notes]
@@ -583,99 +626,85 @@ def build_identity_reference_prompt(
             specific_notes.append(
                 f"{name}-specific constraints: {' '.join(notes)}"
             )
+    return specific_notes
 
-    if subject_count == 1:
-        region_summary = regions[0]
-    else:
-        region_summary = ", ".join(regions[:-1]) + f", or {regions[-1]}"
 
-    if placement_contract is None:
-        paragraphs = [
-            (
-                f"{scene_image_number} reference images are supplied in a fixed "
-                f"sequence. {' '.join(descriptions)} Their relative sizes on "
-                "the neutral canvases reinforce, but never override, the scene "
-                f"scale shown in IMAGE {scene_image_number}. Their plain "
-                "backgrounds are empty reference space, not scenery."
-            ),
-            (
-                f"IMAGE {scene_image_number} is the sole and final authority for "
-                "the combined character count, poses, placement, scale, shared "
-                "ground level, and invisible print-safe regions. Render each "
-                f"character exactly once at IMAGE {scene_image_number}'s "
-                "location. Every character, including its complete silhouette, "
-                f"must remain wholly inside its assigned {region_summary} region "
-                "of the bottom row. No character may cross above the bottom row "
-                "or cross an invisible vertical region division. These "
-                "divisions are coordinates only and must never be drawn. Leave "
-                "visible landscape padding around every silhouette. The "
-                "individual images are identity references, not additional "
-                "subjects."
-            ),
-        ]
-    else:
-        if len(placement_contract) != subject_count:
+def build_joint_cast_reference_prompt(
+    items: list[dict[str, Any]],
+    manifest: dict[str, Any],
+    *,
+    placement_contract: list[dict[str, int]],
+) -> str:
+    """Describe the joint workflow's single spatial cast reference."""
+    if not items:
+        raise ValueError("Joint scene generation needs at least one cutout")
+    if len(placement_contract) != len(items):
+        raise ValueError(
+            "Joint-scene placement contract must describe every subject"
+        )
+
+    regions = [
+        reference_region_label(index, len(items))
+        for index in range(len(items))
+    ]
+    region_summary = (
+        regions[0]
+        if len(regions) == 1
+        else ", ".join(regions[:-1]) + f", or {regions[-1]}"
+    )
+
+    def percentage(value: int) -> str:
+        if not isinstance(value, int) or not 0 <= value <= 1000:
             raise ValueError(
-                "Joint-scene placement contract must describe every subject"
+                "Joint-scene placement coordinates must be per-mille "
+                "integers between 0 and 1000"
             )
+        return f"{value / 10:.1f}%"
 
-        def percentage(value: int) -> str:
-            if not isinstance(value, int) or not 0 <= value <= 1000:
-                raise ValueError(
-                    "Joint-scene placement coordinates must be per-mille "
-                    "integers between 0 and 1000"
-                )
-            return f"{value / 10:.1f}%"
+    coordinates = []
+    for item, contract in zip(items, placement_contract, strict=True):
+        if not isinstance(contract, dict):
+            raise ValueError(
+                "Joint-scene placement contract entries must be mappings"
+            )
+        name = item.get("name_en") or f"Pokemon #{item.get('pokemon_id', '?')}"
+        coordinates.append(
+            (
+                f"{name}: x {percentage(contract['left_per_mille'])} to "
+                f"{percentage(contract['right_per_mille'])}, y "
+                f"{percentage(contract['top_per_mille'])} to "
+                f"{percentage(contract['bottom_per_mille'])}"
+            )
+        )
 
-        coordinates = []
-        for item, contract in zip(
-            items,
-            placement_contract,
-            strict=True,
-        ):
-            if not isinstance(contract, dict):
-                raise ValueError(
-                    "Joint-scene placement contract entries must be mappings"
-                )
-            name = (
-                item.get("name_en")
-                or f"Pokemon #{item.get('pokemon_id', '?')}"
-            )
-            coordinates.append(
-                (
-                    f"{name}: x {percentage(contract['left_per_mille'])} to "
-                    f"{percentage(contract['right_per_mille'])}, y "
-                    f"{percentage(contract['top_per_mille'])} to "
-                    f"{percentage(contract['bottom_per_mille'])}"
-                )
-            )
-        paragraphs = [
-            (
-                "IMAGE 1 is the sole cast-layout reference. It contains exactly "
-                f"{subject_count} complete characters on a flat neutral field, "
-                f"ordered across the {region_summary} bottom-row regions. The "
-                "reference is the authority for their identity, anatomy, pose, "
-                "relative scale, shared baseline, and poster coordinates. Its "
-                "neutral field is empty reference space, not sky, terrain, a "
-                "background plate, or a style request. Do not paste the "
-                "characters as a foreground layer; redraw the complete scene "
-                "and all character edges together from the empty target."
-            ),
-            (
-                "The following normalized target silhouette rectangles are the "
-                "mandatory placement and scale contract: "
-                f"{'; '.join(coordinates)}. Match every complete silhouette, "
-                "baseline, and surrounding landscape clearance to these bounds "
-                "within two percent of the full canvas. Each rectangle is a "
-                "hard outer limit for every visible pixel of that character, "
-                "including every outermost referenced detail and appendage; do "
-                "not crop or extend any part beyond it. Render each character "
-                f"exactly once in its assigned {region_summary} bottom-row "
-                "region. No character may cross above the bottom row or an "
-                "invisible vertical region division. The coordinates and "
-                "divisions must never be drawn."
-            ),
-        ]
+    paragraphs = [
+        (
+            "IMAGE 1 is the sole cast-layout reference. It contains exactly "
+            f"{len(items)} complete characters on a flat neutral field, "
+            f"ordered across the {region_summary} bottom-row regions. The "
+            "reference is the authority for their identity, anatomy, pose, "
+            "relative scale, shared baseline, and poster coordinates. Its "
+            "neutral field is empty reference space, not sky, terrain, a "
+            "background plate, or a style request. Do not paste the "
+            "characters as a foreground layer; redraw the complete scene "
+            "and all character edges together from the empty target."
+        ),
+        (
+            "The following normalized target silhouette rectangles are the "
+            "mandatory placement and scale contract: "
+            f"{'; '.join(coordinates)}. Match every complete silhouette, "
+            "baseline, and surrounding landscape clearance to these bounds "
+            "within two percent of the full canvas. Each rectangle is a "
+            "hard outer limit for every visible pixel of that character, "
+            "including every outermost referenced detail and appendage; do "
+            "not crop or extend any part beyond it. Render each character "
+            f"exactly once in its assigned {region_summary} bottom-row "
+            "region. No character may cross above the bottom row or an "
+            "invisible vertical region division. The coordinates and "
+            "divisions must never be drawn."
+        ),
+    ]
+    specific_notes = subject_prompt_notes(items, manifest)
     if specific_notes:
         paragraphs.append(" ".join(specific_notes))
     return "\n\n".join(paragraphs)

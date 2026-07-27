@@ -7,11 +7,17 @@ from typing import Any
 from PIL import Image
 
 try:
-    from .layout import PageLayout
+    from .layout import PageLayout, build_source_layout
     from .poster_io import load_cutout_items
 except ImportError:
-    from layout import PageLayout
+    from layout import PageLayout, build_source_layout
     from poster_io import load_cutout_items
+
+
+JOINT_SCENE_MAX_WIDTH_RATIO = 0.58
+JOINT_SCENE_MAX_HEIGHT_RATIO = 0.52
+JOINT_SCENE_BASELINE_RATIO = 0.88
+JOINT_SCENE_OUTER_SHIFT_RATIO = 0.16
 
 
 def fit_image(image: Image.Image, max_width: int, max_height: int) -> Image.Image:
@@ -161,20 +167,18 @@ def joint_scene_cutout_placements(
     placements = cutout_placements(
         layout,
         scope_dir,
-        max_width_ratio=0.58,
-        max_height_ratio=0.52,
-        baseline_ratio=0.88,
+        max_width_ratio=JOINT_SCENE_MAX_WIDTH_RATIO,
+        max_height_ratio=JOINT_SCENE_MAX_HEIGHT_RATIO,
+        baseline_ratio=JOINT_SCENE_BASELINE_RATIO,
     )
     count = len(placements)
     if count == 1:
-        directions = (0,)
-    elif count == 2:
-        directions = (-1, 1)
-    elif count == 3:
-        directions = (-1, 0, 1)
+        directions = (0.0,)
     else:
-        raise ValueError(
-            "Joint-scene placement supports one to three subjects"
+        midpoint = (count - 1) / 2
+        directions = tuple(
+            (index - midpoint) / midpoint
+            for index in range(count)
         )
     adjusted = []
     for placement, direction in zip(
@@ -184,7 +188,9 @@ def joint_scene_cutout_placements(
     ):
         item = dict(placement)
         item["x"] = int(item["x"]) + round(
-            item["cell"].width * 0.16 * direction
+            item["cell"].width
+            * JOINT_SCENE_OUTER_SHIFT_RATIO
+            * direction
         )
         adjusted.append(item)
     validate_visible_placements(
@@ -193,3 +199,19 @@ def joint_scene_cutout_placements(
         description="Joint-scene",
     )
     return adjusted
+
+
+def joint_scene_canvas_placements(
+    scope_dir: Path,
+    *,
+    layout_name: str,
+    canvas_size: tuple[int, int],
+) -> list[dict[str, Any]]:
+    """Build the canonical joint-scene placements for one raster canvas."""
+    width, height = canvas_size
+    layout = build_source_layout(
+        layout_name,
+        width_px=width,
+        height_px=height,
+    )
+    return joint_scene_cutout_placements(layout, scope_dir)
