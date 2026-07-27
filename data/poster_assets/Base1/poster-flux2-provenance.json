@@ -177,6 +177,333 @@
           "width": 475
         }
       ],
+      "generation_fingerprint": {
+        "components": {
+          "conditioning": {
+            "identity_defaults": {
+              "bottom_padding_px": 24,
+              "canvas_px": 512,
+              "max_subject_px": 350,
+              "min_subject_px": 150,
+              "neutral_rgb": [
+                226,
+                224,
+                211
+              ]
+            },
+            "subjects": {
+              "150": {
+                "composition": {
+                  "baseline_offset_cell": 0.1,
+                  "scale": 0.22,
+                  "x_offset_cell": -0.28
+                },
+                "identity": {
+                  "align_x": "left",
+                  "canvas_px": 768,
+                  "x_padding_px": 24
+                },
+                "prompt_notes": [
+                  "Leave generous clear landscape space above Mewtwo's head and to the right of its hand; it must occupy at most seventy percent of its region's height and width, and its rightmost fingertip must end before the final quarter of its region.",
+                  "Copy the exact smooth head contour, short cranial nubs, three-digit hands, feet, and continuous tail curve without simplifying or redesigning them."
+                ]
+              }
+            }
+          },
+          "cutouts": [
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "ba8ef7c35c88cb509fa1617beab0041a3f8e8317041b1c97cc598fe1f936eefa",
+              "pokemon_id": 150,
+              "width": 475
+            },
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "f96cfeddc294c4efbbdf1b35cd816341d950e3051dec2128c03f652448b04d10",
+              "pokemon_id": 1,
+              "width": 475
+            },
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "84b721fa96a4480ee20afd28765c279e15d45b0f73c13f74c7988cf06a3b68df",
+              "pokemon_id": 4,
+              "width": 475
+            }
+          ],
+          "effective_prompt": {
+            "encoding": "utf-8",
+            "sha256": "484c76739fc0b87654b8380b75625eb6e64d78155f5b453c3b29dafafbd6368a"
+          },
+          "generation": {
+            "encoder": "qwen_3_4b.safetensors",
+            "encoder_sha256": "6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a",
+            "engine": "flux",
+            "generation_megapixels": 1.0,
+            "mode": "identity_lock",
+            "model": "flux-2-klein-4b-fp8.safetensors",
+            "model_sha256": "97ed34fe0567e436200f2faee3939b88f2b5d99f8af2a4dc16532c4245c0ccb6",
+            "output_dpi": 300,
+            "output_method": "model_upscale",
+            "reference_mode": "two_pass_source_pixels",
+            "seed": 260726503,
+            "steps": 4,
+            "upscale_model": "RealESRGAN_x4plus_anime_6B.pth",
+            "upscale_model_sha256": "f872d837d3c90ed2e05227bed711af5671a6fd1c9f7d7e91c911a61f155e99da",
+            "vae": "flux2-vae.safetensors",
+            "vae_sha256": "d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5"
+          },
+          "identity_lock": {
+            "max_protected_start_ratio": 0.7,
+            "overscan_ratio": 0.04,
+            "subject_clearance_ratio": 0.02,
+            "transition_ratio": 0.1
+          },
+          "layout": {
+            "columns": 3,
+            "name": "standard_3x3",
+            "rows": 3,
+            "safe_cells": {
+              "set_info": {
+                "column": 2,
+                "row": 2
+              },
+              "title": {
+                "column": 2,
+                "row": 1
+              }
+            }
+          },
+          "pipeline_contract": {
+            "name": "poster_generation",
+            "version": 1
+          },
+          "pokemon": {
+            "count": "auto_from_layout_columns",
+            "cutout_source": "pokeapi_official_artwork",
+            "fallback_candidates": [
+              {
+                "pokemon_id": 25
+              },
+              {
+                "pokemon_id": 7
+              },
+              {
+                "pokemon_id": 6
+              }
+            ],
+            "row": "bottom",
+            "strategy": "featured_from_scope"
+          },
+          "scene": {
+            "concept": "a nostalgic 1999 Base Set collection",
+            "ground_noun": "meadow",
+            "lighting": "Warm morning sunlight enters from the upper left.",
+            "rendering": "Use clean linework, restrained natural colors, and gentle atmospheric depth.",
+            "safe_areas": "Keep the upper third as open pale-blue sky with a few soft clouds for a later logo. Keep the middle center visually calm for later set information.",
+            "setting": "The artwork contains a quiet late-1990s Japanese cel-painted meadow, layered forest edges, soft mountains, and one small distant generic research building with a completely blank facade."
+          },
+          "source_subject_ids": [
+            150,
+            1,
+            4
+          ]
+        },
+        "schema_version": 1,
+        "sha256": "51fa9878d86dd2e967f8970ec9811a0820c15a55bc18684c94c38e69f0b94d46"
+      },
+      "overlay_fingerprint": {
+        "components": {
+          "languages": {
+            "de": {
+              "information": [
+                "Grundset",
+                "102 Karten",
+                "Veröffentlicht",
+                "9. Januar 1999"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "a596c4a104f2375970bd68e40f9398be5733c329076f968be305f74d31a40f80"
+              }
+            },
+            "en": {
+              "information": [
+                "Base Set",
+                "102 cards",
+                "Released",
+                "January 9, 1999"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "a596c4a104f2375970bd68e40f9398be5733c329076f968be305f74d31a40f80"
+              }
+            },
+            "es": {
+              "information": [
+                "Edición Básica",
+                "102 cartas",
+                "Publicado",
+                "9 enero 1999"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "a596c4a104f2375970bd68e40f9398be5733c329076f968be305f74d31a40f80"
+              }
+            },
+            "fr": {
+              "information": [
+                "Set de Base",
+                "102 cartes",
+                "Sortie",
+                "9 janvier 1999"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "a596c4a104f2375970bd68e40f9398be5733c329076f968be305f74d31a40f80"
+              }
+            },
+            "it": {
+              "information": [
+                "Set Base",
+                "102 carte",
+                "Pubblicato",
+                "9 gennaio 1999"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "a596c4a104f2375970bd68e40f9398be5733c329076f968be305f74d31a40f80"
+              }
+            },
+            "ja": {
+              "information": [
+                "Base Set",
+                "102 枚",
+                "発売日",
+                "1999年1月9日"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "a596c4a104f2375970bd68e40f9398be5733c329076f968be305f74d31a40f80"
+              }
+            },
+            "ko": {
+              "information": [
+                "Base Set",
+                "102 장",
+                "출시일",
+                "1999년 1월 9일"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "a596c4a104f2375970bd68e40f9398be5733c329076f968be305f74d31a40f80"
+              }
+            },
+            "zh_hans": {
+              "information": [
+                "Base Set",
+                "102 张",
+                "发行日期",
+                "1999年1月9日"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "a596c4a104f2375970bd68e40f9398be5733c329076f968be305f74d31a40f80"
+              }
+            },
+            "zh_hant": {
+              "information": [
+                "Base Set",
+                "102 張",
+                "發行日期",
+                "1999年1月9日"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "a596c4a104f2375970bd68e40f9398be5733c329076f968be305f74d31a40f80"
+              }
+            }
+          },
+          "layout_name": "standard_3x3",
+          "logo_pixels": {
+            "de": {
+              "height": 1281,
+              "mode": "RGBA",
+              "pixel_sha256": "a596c4a104f2375970bd68e40f9398be5733c329076f968be305f74d31a40f80",
+              "width": 2500
+            },
+            "en": {
+              "height": 1281,
+              "mode": "RGBA",
+              "pixel_sha256": "a596c4a104f2375970bd68e40f9398be5733c329076f968be305f74d31a40f80",
+              "width": 2500
+            },
+            "es": {
+              "height": 1281,
+              "mode": "RGBA",
+              "pixel_sha256": "a596c4a104f2375970bd68e40f9398be5733c329076f968be305f74d31a40f80",
+              "width": 2500
+            },
+            "fr": {
+              "height": 1281,
+              "mode": "RGBA",
+              "pixel_sha256": "a596c4a104f2375970bd68e40f9398be5733c329076f968be305f74d31a40f80",
+              "width": 2500
+            },
+            "it": {
+              "height": 1281,
+              "mode": "RGBA",
+              "pixel_sha256": "a596c4a104f2375970bd68e40f9398be5733c329076f968be305f74d31a40f80",
+              "width": 2500
+            },
+            "ja": {
+              "height": 1281,
+              "mode": "RGBA",
+              "pixel_sha256": "a596c4a104f2375970bd68e40f9398be5733c329076f968be305f74d31a40f80",
+              "width": 2500
+            },
+            "ko": {
+              "height": 1281,
+              "mode": "RGBA",
+              "pixel_sha256": "a596c4a104f2375970bd68e40f9398be5733c329076f968be305f74d31a40f80",
+              "width": 2500
+            },
+            "zh_hans": {
+              "height": 1281,
+              "mode": "RGBA",
+              "pixel_sha256": "a596c4a104f2375970bd68e40f9398be5733c329076f968be305f74d31a40f80",
+              "width": 2500
+            },
+            "zh_hant": {
+              "height": 1281,
+              "mode": "RGBA",
+              "pixel_sha256": "a596c4a104f2375970bd68e40f9398be5733c329076f968be305f74d31a40f80",
+              "width": 2500
+            }
+          },
+          "pipeline_contract": {
+            "name": "poster_overlay",
+            "version": 1
+          },
+          "text_cells": {
+            "set_info": {
+              "column": 2,
+              "max_height_ratio": 0.68,
+              "max_width_ratio": 0.92,
+              "row": 2
+            },
+            "title": {
+              "column": 2,
+              "row": 1
+            }
+          },
+          "text_content": {}
+        },
+        "schema_version": 1,
+        "sha256": "3fac7b9999edf82eca93f2b1c4139c82be8eb3e71819d8fa911a96eee42275f0"
+      },
       "prompt": {
         "bytes": 1664,
         "file": "data/poster_assets/Base1/comfyui_poster/identity_lock_prompt.generated.txt",
@@ -202,6 +529,12 @@
         "bytes": 3090,
         "file": "data/poster_assets/Base1/poster.yaml",
         "sha256": "2499ac743450c51e1496e800d47d14f880ea999dca2aabc4eed68ffee4647e02"
+      },
+      "semantic_fingerprint_migration": {
+        "generation_pipeline_contract_version": 1,
+        "inferred_from": "recorded_reference_topology",
+        "origin": "backfilled_legacy",
+        "schema_version": 1
       },
       "upscale_workflow": {
         "bytes": 897,

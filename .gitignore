@@ -55,6 +55,7 @@ data/poster_assets/**/comfyui_poster/scene_reference.png
 data/poster_assets/**/comfyui_poster/inpaint_reference.png
 data/poster_assets/**/comfyui_poster/structure_reference.png
 data/poster_assets/**/comfyui_poster/upper_context_mask.png
+data/poster_assets/**/comfyui_poster/upper_context_generation_mask.png
 data/poster_assets/**/comfyui_poster/qwen_identity_reference_*.png
 data/poster_assets/**/comfyui_poster/identity_core.png
 data/poster_assets/**/comfyui_poster/identity_reference_*.png

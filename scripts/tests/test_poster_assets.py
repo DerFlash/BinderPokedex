@@ -268,10 +268,20 @@ def test_identity_lock_mask_generates_only_above_the_bottom_subject_band(
 
     mask = Image.open(tmp_path / "upper_context_mask.png").convert("RGBA")
     alpha = mask.getchannel("A")
+    generation_alpha = Image.open(
+        tmp_path / "upper_context_generation_mask.png"
+    ).convert("RGBA").getchannel("A")
 
     assert alpha.getpixel((mask.width // 2, 0)) == 0
     assert 0 < alpha.getpixel((mask.width // 2, round(mask.height * 0.65))) < 255
     assert alpha.getpixel((mask.width // 2, mask.height - 1)) == 255
+    assert generation_alpha.getpixel((mask.width // 2, 0)) == 0
+    assert generation_alpha.getpixel(
+        (mask.width // 2, round(mask.height * 0.70))
+    ) == 0
+    assert generation_alpha.getpixel(
+        (mask.width // 2, mask.height - 1)
+    ) == 255
 
 
 def test_identity_lock_mask_moves_up_for_an_unusually_tall_subject(
@@ -293,6 +303,11 @@ def test_identity_lock_mask_moves_up_for_an_unusually_tall_subject(
     ).convert("RGBA").getchannel("A")
     assert alpha.getpixel((50, transition_start - 1)) == 0
     assert alpha.getpixel((50, protected_start)) == 255
+    generation_alpha = Image.open(
+        tmp_path / "upper_context_generation_mask.png"
+    ).convert("RGBA").getchannel("A")
+    assert generation_alpha.getpixel((50, protected_start)) == 0
+    assert generation_alpha.getpixel((50, 55)) == 255
 
 
 def test_canny_structure_reference_flattens_exact_placements_on_white(
@@ -743,7 +758,11 @@ def test_comfyui_identity_lock_uses_clean_ground_then_upper_context_pass():
         node["inputs"]["image"]
         for node in workflow.values()
         if node["class_type"] == "LoadImage"
-    } == {"inpaint_reference.png", "upper_context_mask.png"}
+    } == {
+        "inpaint_reference.png",
+        "upper_context_generation_mask.png",
+        "upper_context_mask.png",
+    }
     assert workflow["15"]["class_type"] == "EmptySD3LatentImage"
     assert workflow["15"]["inputs"]["width"] > workflow["27"]["inputs"]["width"]
     assert workflow["15"]["inputs"]["height"] > workflow["27"]["inputs"]["height"]
@@ -758,7 +777,7 @@ def test_comfyui_identity_lock_uses_clean_ground_then_upper_context_pass():
     assert workflow["19"]["inputs"]["source"] == ["14", 0]
     assert workflow["21"]["class_type"] == "VAEEncodeForInpaint"
     assert workflow["21"]["inputs"]["pixels"] == ["19", 0]
-    assert workflow["21"]["inputs"]["mask"] == ["20", 1]
+    assert workflow["21"]["inputs"]["mask"] == ["28", 1]
     assert workflow["22"]["inputs"]["noise_seed"] == 124
     assert workflow["23"]["inputs"]["latent_image"] == ["21", 0]
     assert workflow["23"]["inputs"]["sigmas"] == ["26", 0]
@@ -1224,6 +1243,9 @@ def test_identity_lock_provenance_excludes_unused_edit_references(
     Image.new("RGBA", (8, 8), (0, 0, 0, 0)).save(
         work_dir / "upper_context_mask.png"
     )
+    Image.new("RGBA", (8, 8), (0, 0, 0, 0)).save(
+        work_dir / "upper_context_generation_mask.png"
+    )
     Image.new("RGB", (8, 8), (10, 20, 30)).save(
         work_dir / "identity_reference_1.png"
     )
@@ -1251,6 +1273,7 @@ def test_identity_lock_provenance_excludes_unused_edit_references(
     assert [record["file"] for record in records["references"]] == [
         "inpaint_reference.png",
         "upper_context_mask.png",
+        "upper_context_generation_mask.png",
     ]
 
 
@@ -1424,6 +1447,7 @@ def test_promoted_production_posters_match_provenance_and_print_geometry():
         "Base1",
         "Pokedex/sections/gen1",
         "Pokedex/sections/gen2",
+        "Pokedex/sections/gen3",
         "SV03.5",
     ):
         result = validate_promoted_poster(scope)

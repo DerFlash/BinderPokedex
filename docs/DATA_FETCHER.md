@@ -111,9 +111,21 @@ TCG set, poster configuration, source assets, and local ComfyUI generation are
 an explicit optional phase before PDF generation. This keeps normal data fetches
 deterministic and avoids starting a GPU workflow implicitly.
 
+Run the read-only planner immediately after a relevant fetch to see whether the
+poster is still current and which explicit step, if any, comes next:
+
+```bash
+python scripts/poster_assets/poster_work_plan.py --scope SV04
+python scripts/poster_assets/poster_work_plan.py --scope Pokedex
+```
+
+The planner does not mutate data or start ComfyUI. In particular, localized
+text, logo, panel-design, and PDF-routing changes are separated from expensive
+scene/figure/model drift.
+
 See [Poster Artwork Workflow](POSTER_WORKFLOW.md) for the one-scope and
 all-missing-scope initialization commands, the scene catalog, generation review,
-promotion, and optional PDF inclusion.
+promotion, semantic provenance migration, and optional PDF inclusion.
 
 ### Fetcher Steps
 

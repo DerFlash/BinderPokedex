@@ -276,11 +276,19 @@ def build_workflow(
         workflow["20"] = node(
             "LoadImage", image="upper_context_mask.png"
         )
+        workflow["28"] = node(
+            "LoadImage",
+            image="upper_context_generation_mask.png",
+        )
         workflow["21"] = node(
             "VAEEncodeForInpaint",
             pixels=["19", 0],
             vae=["3", 0],
-            mask=["20", 1],
+            # Sampling uses a separate binary mask whose latent edge lies
+            # below the visible RGB feather. Reusing the feather here lets the
+            # VAE switch source images around its midpoint and exposes a
+            # horizontal brightness seam.
+            mask=["28", 1],
             grow_mask_by=0,
         )
         workflow["22"] = node("RandomNoise", noise_seed=seed + 1)

@@ -13,7 +13,16 @@ from PIL import Image
 try:
     from .layout import build_print_layout, effective_dpi
     from .poster_config import build_identity_lock_prompt
-    from .provenance import ROOT, sha256_file
+    from .provenance import (
+        ROOT,
+        build_generation_fingerprint,
+        build_overlay_fingerprint,
+        current_generation_pipeline_contract_version,
+        fingerprint_record_is_valid,
+        generation_fingerprint_pipeline_contract_version,
+        required_model_artifact_hashes,
+        sha256_file,
+    )
     from .poster_io import (
         PosterBundle,
         load_poster_scope_data,
@@ -23,7 +32,16 @@ try:
 except ImportError:
     from layout import build_print_layout, effective_dpi
     from poster_config import build_identity_lock_prompt
-    from provenance import ROOT, sha256_file
+    from provenance import (
+        ROOT,
+        build_generation_fingerprint,
+        build_overlay_fingerprint,
+        current_generation_pipeline_contract_version,
+        fingerprint_record_is_valid,
+        generation_fingerprint_pipeline_contract_version,
+        required_model_artifact_hashes,
+        sha256_file,
+    )
     from poster_io import (
         PosterBundle,
         load_poster_scope_data,
@@ -33,12 +51,6 @@ except ImportError:
 
 
 POSTER_ASSETS = ROOT / "data" / "poster_assets"
-REQUIRED_GENERATION_HASHES = (
-    "model_sha256",
-    "encoder_sha256",
-    "vae_sha256",
-    "upscale_model_sha256",
-)
 POSTER_LANGUAGES = (
     "de",
     "en",
@@ -197,18 +209,68 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
             f"Generation metadata drift between {manifest_path} and "
             f"{provenance_path}"
         )
+    run_inputs = payload.get("run", {}).get("inputs", {})
+    if not isinstance(run_inputs, dict):
+        raise ValueError(
+            f"Promoted provenance lacks generation inputs: {provenance_path}"
+        )
+    recorded_fingerprint = run_inputs.get("generation_fingerprint")
+    generation_fingerprint_current: bool | None
+    generation_pipeline_contract_version: int | None
+    generation_pipeline_contract_status: str
+    if recorded_fingerprint is not None:
+        if not fingerprint_record_is_valid(recorded_fingerprint):
+            raise ValueError(
+                f"Malformed generation fingerprint in {provenance_path}"
+            )
+        generation_pipeline_contract_version = (
+            generation_fingerprint_pipeline_contract_version(
+                recorded_fingerprint,
+                recorded_generation,
+            )
+        )
+        current_fingerprint = build_generation_fingerprint(
+            bundle,
+            pipeline_contract_version=(
+                generation_pipeline_contract_version
+            ),
+        )
+        if (
+            recorded_fingerprint.get("sha256")
+            != current_fingerprint["sha256"]
+        ):
+            raise ValueError(
+                "Generation input fingerprint drift between the current "
+                f"scope and {provenance_path}"
+            )
+        generation_fingerprint_current = True
+        current_contract = current_generation_pipeline_contract_version(
+            recorded_generation
+        )
+        generation_pipeline_contract_status = (
+            "current"
+            if generation_pipeline_contract_version == current_contract
+            else "accepted_legacy"
+        )
+    else:
+        generation_fingerprint_current = None
+        generation_pipeline_contract_version = None
+        generation_pipeline_contract_status = "legacy_unfingerprinted"
     recorded_manifest = (
-        payload.get("run", {})
-        .get("inputs", {})
-        .get("scope_manifest", {})
+        run_inputs.get("scope_manifest", {})
     )
-    if recorded_manifest.get("sha256") != sha256_file(manifest_path):
+    if (
+        recorded_fingerprint is None
+        and recorded_manifest.get("sha256") != sha256_file(manifest_path)
+    ):
         raise ValueError(
             f"Scope manifest drift between {manifest_path} and "
             f"{provenance_path}"
         )
     missing_hashes = [
-        key for key in REQUIRED_GENERATION_HASHES if not recorded_generation.get(key)
+        key
+        for key in required_model_artifact_hashes(recorded_generation)
+        if not recorded_generation.get(key)
     ]
     if missing_hashes:
         raise ValueError(
@@ -249,6 +311,21 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
                 "Generated identity-lock prompt drift between the current "
                 f"manifest/code and {provenance_path}"
             )
+
+    recorded_overlay_fingerprint = run_inputs.get("overlay_fingerprint")
+    overlay_fingerprint_current: bool | None
+    if recorded_overlay_fingerprint is None:
+        overlay_fingerprint_current = None
+    else:
+        if not fingerprint_record_is_valid(recorded_overlay_fingerprint):
+            raise ValueError(
+                f"Malformed overlay fingerprint in {provenance_path}"
+            )
+        current_overlay_fingerprint = build_overlay_fingerprint(bundle)
+        overlay_fingerprint_current = (
+            recorded_overlay_fingerprint.get("sha256")
+            == current_overlay_fingerprint["sha256"]
+        )
 
     output_dpi = int(recorded_generation.get("output_dpi", 0))
     layout = build_print_layout(
@@ -309,6 +386,15 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
             if identity_validation
             else None
         ),
+        "generation_fingerprint_current": generation_fingerprint_current,
+        "generation_inputs_current": generation_fingerprint_current,
+        "generation_pipeline_contract_version": (
+            generation_pipeline_contract_version
+        ),
+        "generation_pipeline_contract_status": (
+            generation_pipeline_contract_status
+        ),
+        "overlay_fingerprint_current": overlay_fingerprint_current,
     }
 
 
@@ -319,6 +405,16 @@ def _print_result(result: dict[str, Any]) -> None:
         f"{result['effective_dpi'][0]:.2f} dpi"
     )
     print(f"Provenance: {result['provenance']}")
+    if result.get("generation_pipeline_contract_status") == "accepted_legacy":
+        print(
+            "Generation inputs match an accepted legacy pipeline contract; "
+            "a reviewed rerender can upgrade the graph independently."
+        )
+    if result.get("overlay_fingerprint_current") is False:
+        print(
+            "Overlay inputs changed; the text-free artwork remains current "
+            "and deterministic overlay derivatives can be refreshed."
+        )
 
 
 def main() -> int:

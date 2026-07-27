@@ -178,6 +178,242 @@
           "width": 475
         }
       ],
+      "generation_fingerprint": {
+        "components": {
+          "conditioning": {
+            "identity_defaults": {
+              "bottom_padding_px": 24,
+              "canvas_px": 512,
+              "max_subject_px": 350,
+              "min_subject_px": 150,
+              "neutral_rgb": [
+                226,
+                224,
+                211
+              ]
+            }
+          },
+          "cutouts": [
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "30acf73b389c25cf7460b45a71f064af19b82302ba1affb0ac10002a6513d8c0",
+              "pokemon_id": 152,
+              "width": 475
+            },
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "b54e467594c5b93a7d563140f2cbf9b0af9bc33bbef72d9fc0c976bc39c095e7",
+              "pokemon_id": 155,
+              "width": 475
+            },
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "b873fb5dfe88086f59ab95bc6612f1c86239f00c896cb442be4ce79da5c5ca5d",
+              "pokemon_id": 158,
+              "width": 475
+            }
+          ],
+          "effective_prompt": {
+            "encoding": "utf-8",
+            "sha256": "1d3fb2bf2705559deac76abf5b243f4286d6431431c12454e4faa8f21cd7a26b"
+          },
+          "generation": {
+            "encoder": "qwen_3_4b.safetensors",
+            "encoder_sha256": "6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a",
+            "engine": "flux",
+            "generation_megapixels": 1.0,
+            "mode": "identity_lock",
+            "model": "flux-2-klein-4b-fp8.safetensors",
+            "model_sha256": "97ed34fe0567e436200f2faee3939b88f2b5d99f8af2a4dc16532c4245c0ccb6",
+            "output_dpi": 300,
+            "output_method": "model_upscale",
+            "reference_mode": "two_pass_source_pixels",
+            "seed": 260753030,
+            "steps": 4,
+            "upscale_model": "RealESRGAN_x4plus_anime_6B.pth",
+            "upscale_model_sha256": "f872d837d3c90ed2e05227bed711af5671a6fd1c9f7d7e91c911a61f155e99da",
+            "vae": "flux2-vae.safetensors",
+            "vae_sha256": "d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5"
+          },
+          "identity_lock": {
+            "max_protected_start_ratio": 0.7,
+            "overscan_ratio": 0.04,
+            "subject_clearance_ratio": 0.02,
+            "transition_ratio": 0.1
+          },
+          "layout": {
+            "columns": 3,
+            "name": "standard_3x3",
+            "rows": 3,
+            "safe_cells": {
+              "set_info": {
+                "column": 2,
+                "row": 2
+              },
+              "title": {
+                "column": 2,
+                "row": 1
+              }
+            }
+          },
+          "pipeline_contract": {
+            "name": "poster_generation",
+            "version": 1
+          },
+          "pokemon": {
+            "count": "auto_from_layout_columns",
+            "cutout_source": "pokeapi_official_artwork",
+            "fallback_candidates": [],
+            "row": "bottom",
+            "strategy": "featured_from_scope"
+          },
+          "scene": {
+            "concept": "a warm storybook Johto landscape with an old-world journey mood",
+            "ground_noun": "valley grass",
+            "lighting": "Soft amber afternoon light enters from the upper left.",
+            "rendering": "Use warm storybook cel-painted linework, muted seasonal colors, and spacious atmospheric depth.",
+            "setting": "The artwork contains a quiet Johto-inspired valley with old cedar woodland, broad golden grass, distant tiled roofs without writing, and a pale mountain lake beneath layered autumn clouds."
+          },
+          "source_subject_ids": [
+            152,
+            155,
+            158
+          ]
+        },
+        "schema_version": 1,
+        "sha256": "326f2f9f6490670a9a073680d5d2456aa997eacc04254e60b167cf970dec8a70"
+      },
+      "overlay_fingerprint": {
+        "components": {
+          "languages": {
+            "de": {
+              "information": [
+                "Generation II",
+                "Johto",
+                "Pokédex #152 – #251"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "Pokédex"
+              }
+            },
+            "en": {
+              "information": [
+                "Generation II",
+                "Johto",
+                "Pokédex #152 – #251"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "Pokédex"
+              }
+            },
+            "es": {
+              "information": [
+                "Generación II",
+                "Johto",
+                "Pokédex #152 – #251"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "Pokédex"
+              }
+            },
+            "fr": {
+              "information": [
+                "Génération II",
+                "Johto",
+                "Pokédex #152 – #251"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "Pokédex"
+              }
+            },
+            "it": {
+              "information": [
+                "Generazione II",
+                "Johto",
+                "Pokédex #152 – #251"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "Pokédex"
+              }
+            },
+            "ja": {
+              "information": [
+                "2世代",
+                "ジョウト",
+                "ポケモン図鑑 #152 – #251"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "Pokédex"
+              }
+            },
+            "ko": {
+              "information": [
+                "2세대",
+                "조토",
+                "포켓몬 도감 #152 – #251"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "Pokédex"
+              }
+            },
+            "zh_hans": {
+              "information": [
+                "第2世代",
+                "城都",
+                "宝可梦图鉴 #152 – #251"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "Pokédex"
+              }
+            },
+            "zh_hant": {
+              "information": [
+                "第2世代",
+                "城都",
+                "寶可夢圖鑑 #152 – #251"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "Pokédex"
+              }
+            }
+          },
+          "layout_name": "standard_3x3",
+          "logo_pixels": {},
+          "pipeline_contract": {
+            "name": "poster_overlay",
+            "version": 1
+          },
+          "text_cells": {
+            "set_info": {
+              "column": 2,
+              "max_height_ratio": 0.68,
+              "max_width_ratio": 0.92,
+              "row": 2
+            },
+            "title": {
+              "column": 2,
+              "row": 1
+            }
+          },
+          "text_content": {
+            "mode": "section_summary"
+          }
+        },
+        "schema_version": 1,
+        "sha256": "23844bb891fd72bb5617cc7a823eabdf2d04cdcdadaa32ef9446fc2cc39fb9fb"
+      },
       "prompt": {
         "bytes": 1836,
         "file": "data/poster_assets/Pokedex/sections/gen2/comfyui_poster/identity_lock_prompt.generated.txt",
@@ -203,6 +439,12 @@
         "bytes": 2193,
         "file": "data/poster_assets/Pokedex/sections/gen2/poster.yaml",
         "sha256": "1b5c1551d9395dce876c44fc59a6e07a3c536c5ac9bc104283d20e0013cda36b"
+      },
+      "semantic_fingerprint_migration": {
+        "generation_pipeline_contract_version": 1,
+        "inferred_from": "recorded_reference_topology",
+        "origin": "backfilled_legacy",
+        "schema_version": 1
       },
       "upscale_workflow": {
         "bytes": 933,

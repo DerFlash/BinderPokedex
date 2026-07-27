@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import os
 import shutil
@@ -15,13 +16,25 @@ try:
     from .finalize_comfyui_poster import finalize
     from .layout import build_page_layout
     from .poster_io import poster_bundle
-    from .provenance import load_run_metadata, promoted_provenance
+    from .provenance import (
+        build_generation_fingerprint,
+        build_overlay_fingerprint,
+        fingerprint_record_is_valid,
+        load_run_metadata,
+        promoted_provenance,
+    )
     from .slice_poster import slice_poster
 except ImportError:
     from finalize_comfyui_poster import finalize
     from layout import build_page_layout
     from poster_io import poster_bundle
-    from provenance import load_run_metadata, promoted_provenance
+    from provenance import (
+        build_generation_fingerprint,
+        build_overlay_fingerprint,
+        fingerprint_record_is_valid,
+        load_run_metadata,
+        promoted_provenance,
+    )
     from slice_poster import slice_poster
 
 
@@ -83,7 +96,9 @@ def promote(
     manifest_path = bundle.manifest_path
     manifest = bundle.manifest
 
-    run_metadata = load_run_metadata(run_metadata_path, artwork)
+    run_metadata = copy.deepcopy(
+        load_run_metadata(run_metadata_path, artwork)
+    )
     if run_metadata.get("scope") != scope:
         raise ValueError(
             f"Run metadata is for scope {run_metadata.get('scope')!r}, not {scope!r}"
@@ -105,6 +120,28 @@ def promote(
             f"{manifest_path}. Review and update artwork.generation before "
             "promoting this candidate."
         )
+    run_inputs = run_metadata.get("inputs")
+    if isinstance(run_inputs, dict):
+        recorded_fingerprint = run_inputs.get("generation_fingerprint")
+        if recorded_fingerprint is not None:
+            if not fingerprint_record_is_valid(recorded_fingerprint):
+                raise ValueError(
+                    "Candidate generation fingerprint is malformed"
+                )
+            current_fingerprint = build_generation_fingerprint(bundle)
+            if (
+                recorded_fingerprint.get("sha256")
+                != current_fingerprint["sha256"]
+            ):
+                raise ValueError(
+                    "Candidate generation inputs have drifted since the "
+                    "reviewed artwork was created"
+                )
+            run_inputs["generation_fingerprint"] = current_fingerprint
+        # Overlay inputs are cheap and intentionally may change after the
+        # expensive generation. Bind the promotion preview to their current
+        # state instead of rejecting the reviewed text-free artwork.
+        run_inputs["overlay_fingerprint"] = build_overlay_fingerprint(bundle)
 
     source = Image.open(artwork).convert("RGB")
     layout = build_page_layout(

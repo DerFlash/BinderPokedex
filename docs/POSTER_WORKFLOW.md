@@ -10,6 +10,7 @@ future work live in
 
 ```text
 fetch scope data
+  -> inspect the read-only poster work plan
   -> initialize poster manifest and source assets (optional)
   -> review the set scene brief
   -> generate a local ComfyUI candidate (optional)
@@ -34,6 +35,7 @@ that candidate build and publish only after it succeeds. See
 | Phase | Required for a normal PDF | Required for a poster PDF | May be repeated |
 | --- | --- | --- | --- |
 | Fetch scope data | yes | yes | whenever source data changes |
+| Inspect poster work plan | no | recommended | after fetch/configuration changes |
 | Initialize poster scope | no | yes | only when configuration changes |
 | Generate ComfyUI candidate | no | yes | until a candidate passes review |
 | Promote candidate | no | yes | once per accepted revision |
@@ -50,7 +52,47 @@ python scripts/fetcher/fetch.py --scope SV04
 The fetcher writes `data/output/SV04.json`. It does not create or regenerate a
 poster.
 
-## 2. Initialize poster configuration and source assets
+## 2. Inspect the read-only work plan
+
+After a fetch, ask the planner what actually changed before downloading assets
+or starting ComfyUI:
+
+```bash
+python scripts/poster_assets/poster_work_plan.py --scope SV04
+python scripts/poster_assets/poster_work_plan.py --scope Pokedex
+python scripts/poster_assets/poster_work_plan.py \
+  --scope Pokedex/sections/gen3
+python scripts/poster_assets/poster_work_plan.py \
+  --all-configured \
+  --json
+```
+
+The planner performs no downloads, writes, GPU work, promotion, or routing
+changes. It resolves aggregate routing and compares source data, scene briefs,
+cutout selection and pixels, logos, model contracts, effective prompts,
+semantic generation fingerprints, overlay fingerprints, and promoted outputs.
+Its stable states distinguish missing configuration/assets, readiness to
+generate, stale generation, invalid promotion, reviewed-but-disabled promotion,
+and a current enabled promotion. Overlay drift is reported with the cheap
+`refresh_promoted_overlay` action; it never recommends ComfyUI for text, logo,
+translation, panel-design, or `pdf.enabled` changes.
+
+Legacy promotions can be upgraded while their original full-manifest,
+cutout-hash, output, and regenerated-overlay checks still pass:
+
+```bash
+python scripts/poster_assets/migrate_poster_provenance.py --scope Base1
+python scripts/poster_assets/migrate_poster_provenance.py --all-enabled
+```
+
+Migration adds only semantic provenance metadata. It neither regenerates the
+text-free artwork nor changes promoted preview/card files, and it refuses
+ambiguous legacy drift instead of guessing. The migration infers only audited
+reference topologies and records their historical graph contract; it never
+relabels a v1 run as current v2. Such a reviewed promotion remains usable, while
+the planner reports the optional `upgrade_generation_pipeline` action.
+
+## 3. Initialize poster configuration and source assets
 
 Initialize one individual TCG set after its data has been fetched:
 
@@ -94,13 +136,14 @@ python scripts/poster_assets/init_poster_scope.py \
 ```
 
 This keeps `data/poster_assets/Pokedex/posters.yaml` separate from the nine
-generation manifests below `Pokedex/sections/`. Each binding remains disabled,
-has its own seed and provenance boundary, and selects only that generation's
-three starter `featured_elements`. Adding or promoting one generation therefore
-does not invalidate another generation's manifest hash. Other aggregate scopes
+generation manifests below `Pokedex/sections/`. New bindings begin disabled;
+reviewed bindings can then be enabled independently. Each has its own seed and
+provenance boundary and selects only that generation's three starter
+`featured_elements`. Adding or promoting one generation therefore does not
+invalidate another generation's generation fingerprint. Other aggregate scopes
 can use the same structure once their section scene briefs are reviewed.
 
-## 3. Review the creative brief
+## 4. Review the creative brief
 
 Review `data/poster_assets/<scope>/poster.yaml` for an individual set, or the
 selected aggregate leaf such as
@@ -124,7 +167,7 @@ This avoids tracked, duplicated full prompts drifting apart. The generated
 prompt snapshot is written to the scope's ignored `comfyui_poster/` workspace
 when the candidate is prepared.
 
-## 4. Start local ComfyUI
+## 5. Start local ComfyUI
 
 ```bash
 scripts/poster_assets/start_comfyui_poster.sh --scope SV04
@@ -141,7 +184,7 @@ scripts/poster_assets/start_comfyui_poster.sh \
   --scope Pokedex/sections/gen1
 ```
 
-## 5. Generate a candidate
+## 6. Generate a candidate
 
 In another terminal:
 
@@ -163,13 +206,15 @@ remain explicit experiment overrides. The default FLUX identity-lock flow:
 - generates one cohesive set-specific environment in ComfyUI;
 - places exact source figures at their final card-safe positions;
 - allows the final context pass to complete only the protected upper scene;
+- uses separate latent sampling and soft RGB feather masks so ComfyUI's binary
+  inpaint threshold cannot create a horizontal transition seam;
 - verifies that every fully opaque source pixel remains unchanged;
 - model-upscales to the physical print dimensions;
 - writes a localized preview, card crops, workflow, and run metadata.
 
 The command prints the exact candidate and metadata paths needed for promotion.
 
-## 6. Review and promote
+## 7. Review and promote
 
 Review all of the following before promotion:
 
@@ -198,7 +243,7 @@ for example `Pokedex/sections/gen1`.
 Promotion is transactional and records hashes for models, prompts, source
 figures, references, workflows, and outputs.
 
-## 7. Enable and consume the poster
+## 8. Enable and consume the poster
 
 After promotion, review and enable the manifest:
 

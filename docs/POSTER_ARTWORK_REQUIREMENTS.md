@@ -40,27 +40,34 @@ Last reviewed: 2026-07-27
 | `PA-013` | Multiple posters can be assigned to aggregate sections | Done | A routing index binds isolated poster bundles to stable section IDs; PDFs insert every enabled bundle after its matching cover, while legacy single posters retain their first-cover behavior |
 | `PA-014` | 4×3/4×4 PDFs use matching page renderers | Open | Add A3/custom page styles, templates, cutting guides, and rendered-PDF QA |
 | `PA-015` | Aggregate variant scopes receive section-specific scene briefs | Open | Model `normal`, `mega`, `primal`, and future sections without pretending they are one unambiguous TCG set |
-| `PA-016` | Post-fetch orchestration detects stale poster inputs | Open | Compare scope data, scene catalog, cutouts, logo, model contract, and promoted provenance before deciding whether work is needed |
+| `PA-016` | Post-fetch orchestration detects stale poster inputs | Done | A read-only planner compares routing, scope data, scene catalog, cutout selection/pixels, logos, dynamic model contracts, effective prompts, semantic generation/overlay fingerprints, and promoted outputs; it separates expensive regeneration from cheap overlay or routing work |
 | `PA-017` | Natural foreground occlusion may cross subjects safely | Research | Accept only a deterministic depth-aware method that retains exact identity and does not invent anatomy |
 | `PA-018` | Alternative engines remain selectable but gated | Ongoing | Anima, FLUX.1 Canny, and Qwen candidates must pass the same promotion checks as FLUX.2 |
 | `PA-019` | Pull requests prove that a complete release can be built without publishing it | Done | PRs reuse the read-only release-candidate workflow, validate all enabled posters, build every PDF and language archive, verify the manifest, and stop after a temporary Actions artifact |
 
 ## Current production boundary
 
-- `Base1`, `SV03.5`, and Pokédex Generations I and II have accepted, promoted
+- `Base1`, `SV03.5`, and Pokédex Generations I through III have accepted, promoted
   3×3 artwork and enabled PDF integration.
 - Every current individual TCG set can now be initialized with a set-specific
   scene brief and the same production contract.
 - The Pokédex has nine isolated, section-specific bundles with distinct seeds,
   regional scene briefs, deterministic nine-language section overlays, and
   exactly the three starter `featured_elements` from each generation.
-- The Generation I and II Pokédex bindings are enabled after visual card-cut
-  and rendered-PDF review. Generation III through IX remain disabled until each
+- The Generation I through III Pokédex bindings are enabled after visual
+  card-cut and rendered-PDF review. Generation IV through IX remain disabled until each
   artwork is generated, reviewed, promoted, and validated. That staged rollout
   remains tracked in [#2](https://github.com/DerFlash/BinderPokedex/issues/2).
 - The default workflow deliberately stops before automatic promotion. Semantic
   scene quality, character boundary quality, and natural grounding still need
   human review.
+- The read-only post-fetch planner reports stable states, reasons, actions, and
+  optional commands without downloading assets, mutating routing, starting
+  ComfyUI, or promoting a candidate. Generation and overlay fingerprints keep
+  text, logo, translation, panel, and `pdf.enabled` changes out of the
+  expensive regeneration path. Backfilled records preserve their audited
+  historical graph contract; accepted v1 artwork remains usable while an
+  optional v2 upgrade is reported explicitly.
 - Further aggregate variant scopes and wide PDF pages remain explicit roadmap
   work rather than hidden assumptions.
 - Pull requests and tagged releases use the same release-candidate build.

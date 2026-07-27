@@ -260,7 +260,7 @@ def build_upper_context_mask(
     manifest: dict[str, Any],
     output_dir: Path,
 ) -> tuple[int, int]:
-    """Protect a layout-aware lower scene band during identity-lock pass two."""
+    """Write separate sampling and feather masks for identity-lock pass two."""
     config = identity_lock_config(manifest)
     subject_tops = []
     for placement in placements:
@@ -302,6 +302,38 @@ def build_upper_context_mask(
     mask_image.putalpha(alpha)
     mask_image.save(
         output_dir / "upper_context_mask.png",
+        format="PNG",
+        optimize=True,
+    )
+
+    # VAEEncodeForInpaint thresholds/quantizes a soft mask in latent space.
+    # Feeding it the same feather that is used for the final RGB composite can
+    # therefore switch source images around the feather midpoint and create a
+    # straight exposure seam. Let sampling continue beyond the visible feather
+    # instead. Its hard latent boundary then lies where the final composite is
+    # already fully restored from the continuous first-pass scene.
+    latent_overlap = max(16, round(height * 0.02))
+    aligned_generation_end = (
+        (protected_start + latent_overlap + 15) // 16
+    ) * 16
+    generation_end = min(
+        height - 1,
+        subject_top - 1,
+        aligned_generation_end,
+    )
+    generation_alpha = Image.new("L", (width, height), 255)
+    ImageDraw.Draw(generation_alpha).rectangle(
+        (0, 0, width, generation_end),
+        fill=0,
+    )
+    generation_mask = Image.new(
+        "RGBA",
+        (width, height),
+        (0, 0, 0, 255),
+    )
+    generation_mask.putalpha(generation_alpha)
+    generation_mask.save(
+        output_dir / "upper_context_generation_mask.png",
         format="PNG",
         optimize=True,
     )

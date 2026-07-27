@@ -12,19 +12,30 @@ Last audited: 2026-07-27
 
 | Scope | Engine | Seed | Artwork verdict | PDF integration |
 | --- | --- | ---: | --- | --- |
-| `Base1` | FLUX.2 Klein 4B distilled, two-pass source-pixel lock, 2 x 4 steps | `260726503` | accepted | enabled |
-| `Pokedex/sections/gen1` | FLUX.2 Klein 4B distilled, two-pass source-pixel lock, 2 x 4 steps | `260782266` | accepted | enabled after Generation I cover |
-| `Pokedex/sections/gen2` | FLUX.2 Klein 4B distilled, two-pass source-pixel lock, 2 x 4 steps | `260753030` | accepted | enabled after Generation II cover |
-| `SV03.5` | FLUX.2 Klein 4B distilled, two-pass source-pixel lock, 2 x 4 steps | `260726101` | accepted | enabled |
+| `Base1` | FLUX.2 Klein 4B distilled, source-pixel lock v1, 2 x 4 steps | `260726503` | accepted | enabled |
+| `Pokedex/sections/gen1` | FLUX.2 Klein 4B distilled, source-pixel lock v1, 2 x 4 steps | `260782266` | accepted | enabled after Generation I cover |
+| `Pokedex/sections/gen2` | FLUX.2 Klein 4B distilled, source-pixel lock v1, 2 x 4 steps | `260753030` | accepted | enabled after Generation II cover |
+| `Pokedex/sections/gen3` | FLUX.2 Klein 4B distilled, source-pixel lock v2, 2 x 4 steps | `260750880` | accepted | enabled after Generation III cover |
+| `SV03.5` | FLUX.2 Klein 4B distilled, source-pixel lock v1, 2 x 4 steps | `260726101` | accepted | enabled |
 
-All four accepted candidates use the same local ComfyUI graph. Its first FLUX pass
-creates a full-bleed landscape with dynamic, latent-aligned overscan. The exact
-reviewed source figures are placed on its one continuous lower ground before a
-second FLUX pass sees their final composition and completes only the upper
-scene. No diffusion or VAE operation may touch the protected lower subject band.
-The resulting 1 MP artwork must pass an exact opaque-source-pixel comparison,
-is model-upscaled to the exact 300-dpi physical layout, and then receives only
-deterministic typography.
+All five accepted candidates use the same two-pass source-pixel-lock family.
+Its first FLUX pass creates a full-bleed landscape with dynamic, latent-aligned
+overscan. The exact reviewed source figures are placed on its one continuous
+lower ground before a second FLUX pass sees their final composition and
+completes only the upper scene. No diffusion or VAE operation may touch the
+protected lower subject band. The resulting 1 MP artwork must pass an exact
+opaque-source-pixel comparison, is model-upscaled to the exact 300-dpi physical
+layout, and then receives only deterministic typography.
+
+Generation III is the first accepted candidate produced with graph contract v2.
+That graph uses two distinct upper-context masks. A binary,
+latent-aligned sampling mask extends below the visible transition, while a
+separate soft RGB feather restores the continuous first-pass scene before the
+protected figure band. This prevents ComfyUI's internal inpaint-mask rounding
+from exposing a horizontal VAE transition seam. Base1, SV03.5, Generation I,
+and Generation II remain accepted under their historically accurate v1
+contract after visual review; the planner exposes a non-blocking upgrade action
+instead of relabeling those runs as v2.
 
 This replaces the former Base1 edit baseline. Direct FLUX edits, direct
 silhouette inpainting, native-resolution comparisons, FLUX.1 Canny, and Qwen
@@ -43,7 +54,8 @@ ways. They remain diagnostic evidence, not promoted artwork.
 - The runner compares every fully opaque source pixel immediately after
   generation. Base1 passes with 52,584 exact pixels; SV03.5 and Pokédex
   Generation I each pass with 62,719; Pokédex Generation II passes with
-  39,572. All record zero changed pixels in promoted provenance.
+  39,572; and Pokédex Generation III passes with 41,641. All record zero
+  changed pixels in promoted provenance.
 - Generation starts from freshly prepared source, mask, composition, and
   engine-specific identity references. It does not consume the legacy poster,
   background, or layout-reference result.
@@ -106,6 +118,18 @@ ways. They remain diagnostic evidence, not promoted artwork.
   PDF embeds every poster card at 300 ppi.
 - Promotion is transactional and stores hashes for model, encoder, VAE,
   upscaler, prompts, cutouts, references, workflows, and all promoted outputs.
+- New runs additionally store semantic generation and overlay fingerprints.
+  Generation fingerprints include the scene, safe-cell positions, model
+  contract, effective prompt, source IDs, and decoded cutout pixels. Overlay
+  fingerprints independently cover localized text, logo pixels, and panel
+  configuration, so those cheap changes never imply a new ComfyUI render.
+- Backfilled provenance preserves the graph contract recorded by the original
+  reference topology. It marks the migration origin explicitly and never
+  claims that a v1 artwork was rendered by the v2 two-mask graph.
+- The read-only post-fetch planner resolves individual and aggregate targets,
+  checks current inputs and promoted outputs, and reports stable states,
+  reasons, actions, and optional commands without mutating files or starting
+  ComfyUI.
 - Diagnostic and poster-skipped PDF modes use distinct filenames, and renderer
   failures propagate to a failing scope command.
 - Local ComfyUI sampling runs on Apple Metal/MPS. CPU is used only for the
@@ -113,7 +137,7 @@ ways. They remain diagnostic evidence, not promoted artwork.
   MPS tensor conversions.
 - FLUX.2, Anima, FLUX.1 Canny, and Qwen Edit remain separate selectable
   engines. The promoted implementation is scope-driven and has been exercised
-  with two independent sets plus one aggregate Pokédex section.
+  with two independent sets plus three aggregate Pokédex sections.
 
 ## Partially satisfied requirements
 
@@ -122,10 +146,10 @@ ways. They remain diagnostic evidence, not promoted artwork.
 | Natural occlusion | Exact identity-lock prevents scenery from crossing source pixels; one low continuous ground avoids contradictory depth | Add depth-aware foreground masks only if they preserve identity deterministically |
 | Engine extensibility | FLUX.2, Anima, FLUX.1 Canny, and Qwen Edit are selectable through one runner | Keep architecture-specific workflow construction and provenance isolated when adding another engine |
 | Alternative models | FLUX.1 Canny changed Mewtwo's face, chest, colors, and hand; Qwen created a giant fourth Mewtwo | Retain both adapters for controlled comparison, but do not promote either rejected candidate |
-| Anima | Workflow is retained and runnable | Promote only after it produces a candidate that passes the same review gate |
+| Anima | Workflow is retained; its LoRA metadata contract still needs to be aligned with the generic runner | Fix the explicit LoRA/steps contract, then promote only after a candidate passes the same review gate |
 | New set art direction | Every current individual set has an explicit catalog brief copied into its manifest | Review or refine the brief before spending the production render; catalog coverage does not replace visual art direction |
 | Wide PDF layouts | 4x3 and 4x4 artwork, placement, prompting, upscale, promotion, validation, slicing, and matching-grid rendering are modeled | Add physical A3 page styles/templates and rendered-PDF QA |
-| Aggregate scopes | The generic index, isolated leaf manifests, section filtering, PDF routing, cleanup, nested validation, and nine Pokédex generation configs are implemented; Generations I and II are promoted and enabled | Generate, review, promote, and enable Generation III through IX in [#2](https://github.com/DerFlash/BinderPokedex/issues/2); then model other aggregate variant scenes |
+| Aggregate scopes | The generic index, isolated leaf manifests, section filtering, PDF routing, cleanup, nested validation, and nine Pokédex generation configs are implemented; Generations I through III are promoted and enabled | Generate, review, promote, and enable Generation IV through IX in [#2](https://github.com/DerFlash/BinderPokedex/issues/2); then model other aggregate variant scenes |
 
 ## Remaining production requirements
 
@@ -145,8 +169,8 @@ ways. They remain diagnostic evidence, not promoted artwork.
   aggregate variant scopes.
 - Implement matching A3/custom PDF page renderers before enabling 4x3 or 4x4
   poster manifests for PDF output.
-- Add staleness detection before offering a higher-level post-fetch
-  `ensure-poster` orchestration command.
+- Keep any future mutating `ensure-poster` command separate from the completed
+  read-only planner and preserve the human promotion gate.
 
 ## Cleanup boundary
 
@@ -163,12 +187,14 @@ reviewed candidates and their provenance have been promoted.
 
 Completed on 2026-07-27:
 
-- The complete suite passes: 218 tests passed and one unrelated, pre-existing
+- The complete suite passes: 267 tests passed and one unrelated, pre-existing
   EX-logo feature test remains explicitly skipped.
 - Python compilation and `git diff --check` pass.
-- All four promoted bundles pass `validate_promoted_poster.py`, including manifest
-  equality, provenance hashes, 2368 x 3268 artwork, nine 750 x 1050 card crops,
-  300-dpi metadata, and exact opaque-source-pixel records.
+- All five promoted bundles pass `validate_promoted_poster.py`, including
+  semantic input equality, historically accurate and explicitly supported
+  graph-contract status, provenance hashes, 2368 x 3268 artwork, nine
+  750 x 1050 card crops, 300-dpi metadata, and exact opaque-source-pixel
+  records.
 - The configured model, encoder, VAE, and Real-ESRGAN hashes match the actual
   files in the local ComfyUI installation.
 - All ten Base1/SV03.5 overlays for `de`, `en`, `fr`, `es`, and `it` render at
@@ -184,21 +210,28 @@ Completed on 2026-07-27:
   An isolated batch initialization created the 23 missing standard-3x3
   manifests and preserved the existing reviewed Base1 manifest.
 - The Pokédex resolver loads nine isolated generation bundles with unique seeds
-  and section-local source data. Generations I and II are enabled; Generation
-  III through IX remain disabled. Its checked-in output contains localized section title,
-  region, and range values for all nine PDF languages.
-- A complete German Pokédex build with Generations I and II enabled produces
-  128 A4 pages. Generation II appears as page 20 followed by its poster on page
-  21; the `_NO_POSTER.pdf` countercheck produces the expected 126 pages without
-  empty gaps. Nested preparation resolves the full asset key instead of falling
-  back to a leaf-directory basename.
+  and section-local source data. Generations I through III are enabled;
+  Generation IV through IX remain disabled. Its checked-in output contains
+  localized section title, region, and range values for all nine PDF languages.
+- A complete German Pokédex build with Generations I through III enabled
+  produces 129 A4 pages. Generation III appears as page 34 followed by its
+  poster on page 35; the `_NO_POSTER.pdf` countercheck produces the expected
+  126 pages without empty gaps. Nested preparation resolves the full asset key
+  instead of falling back to a leaf-directory basename.
 - Release validation carries the resolved routing bundle through provenance
   checks and rejects any PDF artwork path other than the promoted, hashed
   output.
-- All four accepted artworks and all twelve 750 x 1050 bottom character cards were
-  visually compared with the reviewed cutouts after model upscaling. Character
-  anatomy, card padding, the continuous lower ground, and absence of adjacent
-  body-like shapes pass.
+- All five accepted artworks and all fifteen 750 x 1050 bottom character cards
+  were visually compared with the reviewed cutouts after model upscaling.
+  Character anatomy, card padding, the continuous lower ground, and absence of
+  adjacent body-like shapes pass.
+- The Generation III rerender uses the separate binary VAE sampling mask and
+  soft final-composite mask. The former full-width transition jump at row 759
+  dropped from a mean luminance delta of -7.95 to -2.16; the relocated binary
+  edge is hidden below the completed feather and remains visually absent.
+- One Generation III retry produced a non-finite MPS result. The runner's blank
+  output guard rejected it before upscaling or promotion; restarting ComfyUI
+  and rerunning the same reviewed seed produced the accepted candidate.
 - Repeating the complete SV03.5 generation with the same inputs produced
   bit-identical raw and model-upscaled PNG hashes.
 - The rejected FLUX.1 Canny and Qwen candidates remain local diagnostics only;
