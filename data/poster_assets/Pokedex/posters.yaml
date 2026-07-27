@@ -26,7 +26,7 @@ posters:
     section_id: gen4
     manifest: sections/gen4/poster.yaml
     pdf:
-      enabled: false
+      enabled: true
       artwork_file: poster-flux2-artwork.png
       insertion: after_section_cover
   - id: gen5

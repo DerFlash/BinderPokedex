@@ -1448,6 +1448,7 @@ def test_promoted_production_posters_match_provenance_and_print_geometry():
         "Pokedex/sections/gen1",
         "Pokedex/sections/gen2",
         "Pokedex/sections/gen3",
+        "Pokedex/sections/gen4",
         "SV03.5",
     ):
         result = validate_promoted_poster(scope)
