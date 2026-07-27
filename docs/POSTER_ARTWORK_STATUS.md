@@ -65,10 +65,10 @@ the same Generation VII seed `260726054`, distilled FLUX.2 Klein 4B model,
 four-step sampling, 1-MP generation canvas, reviewed Rowlet/Litten/Popplio
 sources, layout, and scene brief as the current comparison target.
 
-Joint-scene v3 is a true one-shot graph: one empty FLUX.2 target, one sampler,
-three neutral-canvas identity references, one dynamic scene/identity/placement
-prompt, and no landscape image. Normalized rectangles derived from the shared
-layout request each complete silhouette's position and size. No
+Joint-scene v4 is a true one-shot graph: one empty FLUX.2 target, one sampler,
+one neutral poster-shaped cast reference, one dynamic
+scene/identity/placement prompt, and no landscape image. The cast reference and
+normalized rectangles share the physical card coordinates. No
 full-scene/cutout draft, `inpaint_reference.png`, post-decode character
 composite, source restoration, or learned upscaler belongs to this mode.
 
@@ -77,7 +77,11 @@ pre-generated landscape was supplied as a strong final-pass reference.
 Candidate `00014` has coherent landscape depth and faithful designs, but all
 three figures extend above their bottom-row cards. Candidate `00015` proves
 that increasing the neutral identity canvas from 512 to 768 px does not fix
-that placement and only increases render cost. Both are rejected.
+that placement and only increases render cost. v4 candidate `00016` replaces
+the separate references with one common poster-shaped cast reference. It puts
+all three figures fully inside their card crops and keeps coherent depth, but
+invents a large pale marking on Litten's flank/hindquarter. All are rejected,
+and the three-attempt one-shot stop rule is now active.
 
 No Generation VII manifest value, promoted file, Pokédex routing entry, or PDF
 binding points to an experimental candidate. The enabled poster remains the
@@ -86,10 +90,9 @@ rejection reasons live in
 [POSTER_ARTWORK_EXPERIMENT_LOG.md](POSTER_ARTWORK_EXPERIMENT_LOG.md). A future
 promotion is allowed only after one candidate passes every hard gate in
 [POSTER_ARTWORK_REQUIREMENTS.md](POSTER_ARTWORK_REQUIREMENTS.md) and carries a
-complete v3 fingerprint plus explicit review bound to both raw and print-size
-pixels. FLUX.2 Klein currently supports at most three individual references in
-this reviewed graph; four-subject layouts need a separately reviewed reference
-strategy.
+complete current fingerprint plus explicit review bound to both raw and
+print-size pixels. The reviewed cast reference currently supports at most three
+subjects; four-subject layouts need a separately reviewed reference strategy.
 
 ## Accepted requirements
 
@@ -232,7 +235,7 @@ strategy.
 
 | Requirement | Current boundary | Acceptance criterion |
 | --- | --- | --- |
-| Natural grounding and occlusion | Accepted `identity_lock` keeps exact pixels but can read as composited. Identity-only one-shot `joint_scene` fixes scene depth in `00014`, but `00014` and `00015` fail bottom-card containment | Use the one remaining KISS placement experiment allowed by the decision rule; promote only if the same raw/print pair passes every hard gate |
+| Natural grounding and occlusion | Accepted `identity_lock` keeps exact pixels but can read as composited. One-shot v3 fixes depth but fails containment; v4 `00016` fixes containment but invents a Litten marking | Stop one-shot tuning and request an explicit choice between the accepted baseline, the more complex landscape-joint family, or a new spatial-control/model architecture |
 | Engine extensibility | FLUX.2, Anima, FLUX.1 Canny, and Qwen Edit are selectable through one manifest-driven runner and share the promotion gate | Keep architecture-specific workflow construction isolated when adding another engine |
 | Alternative models | FLUX.1 Canny changed Mewtwo's face, chest, colors, and hand; Qwen created a giant fourth Mewtwo | Retain both adapters for controlled comparison, but do not promote either rejected candidate |
 | Anima candidates | Workflow and provenance now share the exact model/LoRA/encoder/VAE/sampling contract | Keep the adapter experimental until a real candidate passes both the shared pixel gate and visual review |
@@ -252,9 +255,9 @@ strategy.
   not apply that equality claim to `joint_scene`, which redraws the complete
   image. Its raw and print identity checks remain explicit human review bound
   to deterministic provenance.
-- Run at most one more materially distinct Generation VII one-shot placement
-  experiment before requesting an explicit product/architecture decision.
-  Rejected candidates through `00015` cannot carry approval forward.
+- Do not run further Generation VII one-shot parameter or prompt experiments
+  until an explicit product/architecture decision is made. Rejected candidates
+  through `00016` cannot carry approval forward.
 - Design and review a separate reference strategy before attempting
   `joint_scene` with the four subjects required by `wide_4x3` or `wide_4x4`.
 - Keep Anima, FLUX.1 Canny, and Qwen Edit experimental until a candidate passes
@@ -289,8 +292,8 @@ Completed on 2026-07-27:
   failure for production identity-lock, engine-independent promotion
   rejection, and a complete passing Qwen run-metadata-to-promotion-to-validator
   contract test.
-- Joint-scene v3 regressions cover one empty target and one sampler, the ordered
-  three-identity reference chain, normalized silhouette rectangles, absence of
+- Joint-scene v4 regressions cover one empty target and one sampler, one
+  poster-shaped cast reference, normalized silhouette rectangles, absence of
   landscape/full-scene/inpaint conditioning and any post-decode composite,
   dynamic prompts, maximum reference count, deterministic Lanczos output,
   complete generation fingerprints, and the explicit raw/print visual gate.
@@ -387,10 +390,12 @@ Completed on 2026-07-27:
   over the Alola scene. This is a grounding/integration limitation rather than
   an identity regression and is tracked under PA-017.
 - The unpromoted Generation VII joint-scene experiments use the same seed and
-  sources. Candidates through `00015` are rejected. The identity-only v3 graph
+  sources. Candidates through `00016` are rejected. The identity-only v3 graph
   resolves the earlier landscape-depth conflict, but `00014` and `00015` cross
-  the upper boundary of all three bottom cards. Neither changes the accepted
-  manifest or PDF output; the full chronology is kept in the experiment log.
+  the upper boundary of all three bottom cards. The v4 common cast reference
+  fixes card containment and coherent depth in `00016`, but invents a pale
+  Litten marking. None changes the accepted manifest or PDF output; the full
+  chronology is kept in the experiment log.
 - The accepted Generation VIII candidate contains Grookey, Scorbunny, and
   Sobble, uses seed `260715405` and graph contract v2, and preserves all 34,011
   fully opaque source pixels with zero changes. The Galar upland lake, moor,

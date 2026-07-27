@@ -33,28 +33,27 @@ promotion.
 | `00013` | Pipeline v3: one empty target, one sampler, three identity references, no landscape image | Coherent landscape depth; an over-specific generic prompt list invented a flame on Litten's tail | Rejected; feature-name list removed |
 | `00014` | Reference-neutral identity wording | Coherent depth and faithful character designs | Rejected because all three characters extend above their bottom-row cards |
 | `00015` | Same v3 graph with 768 px neutral identity canvases instead of 512 px | Placement remained too high and too large; render cost increased | Rejected; 512 px default restored |
+| `00016` | Pipeline v4: replace the three global identity references with one neutral, poster-shaped cast layout containing the exact source figures inside their cards | All figures fit their real card crops with padding and the scene has coherent shadows/depth; Litten gains a large pale flank/hindquarter marking absent from the source | Rejected; third one-shot placement attempt fails identity and triggers the stop rule |
 
 ## Current checkpoint
 
-Pipeline v3 is deliberately small:
+Pipeline v4 is deliberately small:
 
 1. Create one empty FLUX.2 target latent.
-2. Condition it with one appearance reference per character and the complete
-   dynamic scene/placement prompt.
+2. Condition it with one neutral poster-shaped cast reference and the complete
+   dynamic scene/identity prompt.
 3. Sample and decode exactly once.
 4. Apply only deterministic Lanczos resizing and deterministic text/logo
    overlays after the text-free artwork review.
 
 There is no pre-generated landscape reference, inpaint reference, final
 character composite, learned post-upscaler, or source-pixel restoration in this
-mode. The visual depth problem is resolved in `00014`, but exact card-safe
-placement remains open. No Generation VII one-shot candidate is promoted at
-this checkpoint.
+mode. `00016` proves that a common spatial reference can solve physical card
+containment without reintroducing the landscape-depth problem, but its smaller
+character evidence loses a defining identity detail.
 
-The next experiment must change only one placement-control mechanism and must
-retain the one-shot final sampler. Its result is reviewed first as raw artwork
-and then as three independent bottom-row card crops. `00014` and `00015` count
-as two failed one-shot placement attempts under the decision rule in
-`POSTER_ARTWORK_REQUIREMENTS.md`; one materially distinct KISS placement
-experiment remains before the card-containment tradeoff must be brought back
-for an explicit product decision.
+The three-attempt one-shot placement budget is exhausted: `00014` and `00015`
+fail card containment; `00016` passes containment by violating identity. No
+Generation VII one-shot candidate is promoted. Further parameter, canvas,
+prompt, or reference tuning is paused until an explicit architecture/product
+decision selects which tradeoff may change.
