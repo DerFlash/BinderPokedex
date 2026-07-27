@@ -3,7 +3,9 @@
 This document is the stable product and engineering contract for scope posters.
 It separates accepted behavior from prepared extension points and open work.
 Detailed evidence for promoted candidates is recorded in
-[POSTER_ARTWORK_STATUS.md](POSTER_ARTWORK_STATUS.md).
+[POSTER_ARTWORK_STATUS.md](POSTER_ARTWORK_STATUS.md). Rejected local renders
+and isolated experiment changes are recorded in
+[POSTER_ARTWORK_EXPERIMENT_LOG.md](POSTER_ARTWORK_EXPERIMENT_LOG.md).
 
 Last reviewed: 2026-07-27
 
@@ -16,11 +18,56 @@ Last reviewed: 2026-07-27
 | Generation timing | Explicit optional post-fetch step, before PDF generation |
 | PDF behavior | Consume only promoted local artwork; never launch ComfyUI implicitly |
 | Prompt ownership | Set-specific creative briefs in one catalog plus one centrally generated technical/identity contract |
-| Character identity | Reviewed source pixels are immutable; any changed anatomy is a hard rejection |
+| Character identity | The accepted `identity_lock` path keeps reviewed source pixels immutable. A `joint_scene` candidate may redraw pixels only in one unified scene pass; identity, anatomy, markings, pose, scale, and card-safe placement remain strict visual invariants |
 | Form identity | Card/cover imagery and poster subjects are separate; Mega, Primal, X/Y, and other forms keep their exact allowlisted Official Artwork identity |
 | Promotion | Human visual review plus deterministic validation remains mandatory |
 | Missing poster | Normal PDF remains possible; enabled-but-missing promoted artwork is an error; `--skip-poster` is an explicit bypass |
 | CI boundary | Pull requests build and validate the complete release candidate with read-only permissions; only `v*` tags may publish it |
+
+## Successor acceptance gate
+
+The accepted `identity_lock` posters remain valid production baselines. A new
+integrated-artwork successor is promoted only when one candidate satisfies all
+hard gates below at the same time:
+
+| Gate | Priority | Acceptance |
+| --- | --- | --- |
+| One model-owned final scene | Hard | The final model pass starts from an empty target and generates landscape and characters together; no character pixels are composited, restored, moved, or replaced after its decode |
+| Character identity | Hard | Cast count, form, pose, stature, silhouette, anatomy, face, colors, and markings match the supplied references without invented or missing traits |
+| Physical card containment | Hard | Every complete character and appendage remains inside its assigned bottom-row card in the actual sliced 3×3 print raster |
+| Coherent scene depth | Hard | Shadows and ground contact agree; every connected landscape element keeps a physically plausible front/behind relationship instead of ending at or weaving around a character silhouette |
+| Deterministic print output | Hard | Text-free output reaches the exact configured physical 300-dpi dimensions through deterministic resampling; typography, logo, slicing, and PDF use remain deterministic |
+| Set-specific scene quality | Preferred | The result is attractive, recognizable for the scope, and preserves the requested text-safe regions |
+| Visible foreground overlap | Preferred | Natural foreground overlap may occur, but is not required. A coherent open patch of terrain is preferable to a forced or contradictory overlap |
+
+No hard gate is weakened implicitly. If a candidate meets some gates by
+violating another, it is rejected and the tradeoff is logged.
+
+## Experiment and decision rule
+
+1. A checkpoint commit records each architecture change before the next
+   material experiment.
+2. Each new render changes one placement, identity, or scene-control mechanism
+   at a time and is reviewed against the same hard gates.
+3. An architecture gets at most three materially distinct single-variable
+   attempts to fix one repeatedly failing hard gate.
+4. After the third failed attempt, generation stops. The unresolved conflict,
+   evidence, and available product choices are presented for an explicit
+   decision: retain the production baseline, relax one named gate, change
+   model/architecture, or accept additional implementation complexity.
+5. A later retry starts only when new evidence or a deliberately selected
+   mechanism makes it materially different from the logged failures.
+
+This prevents silent switching between `identity_lock`, landscape-referenced
+joint generation, and true one-shot generation.
+
+## Architecture evidence
+
+| Architecture | No post-composite | Identity | Card containment | Coherent occlusion | Current role |
+| --- | --- | --- | --- | --- | --- |
+| Two-pass `identity_lock` | No | Exact source pixels | Reliable | Weak: protected lower band can read as a layer | Accepted production fallback |
+| Subject-free landscape reference plus joint final pass | Yes | Usually strong | Tunable but inconsistent | Failed: retained plants can weave behind/in front of subjects | Rejected Generation VII experiment |
+| Identity-only true one-shot | Yes | Strong after neutral wording | Open: `00014`/`00015` cross the upper card boundary | Strong: landscape is invented around the cast | Current experimental checkpoint |
 
 ## Requirement register
 
@@ -33,7 +80,7 @@ Last reviewed: 2026-07-27
 | `PA-005` | Full prompts cannot drift per set | Done | Creative scene is scope-specific; identity, safe-area, continuous-ground, no-path, no-text, and no-landing-pad rules are generated centrally |
 | `PA-006` | Poster preparation is an optional post-fetch phase | Done | One-scope and missing-all-scope initialization commands exist; batch mode preserves reviewed manifests |
 | `PA-007` | Production generation follows the scope contract | Done | ComfyUI runner reads seed, engine, model, steps, resolution, dpi, and upscaler defaults from `poster.yaml` |
-| `PA-008` | Figures remain authentic | Done | Exact source cutouts are placed before final context generation and opaque source pixels are verified unchanged |
+| `PA-008` | Figures remain authentic | Done | The accepted `identity_lock` path restores exact source cutouts and verifies every opaque source pixel; any fully generated `joint_scene` successor requires a complete generation fingerprint plus explicit bound review of both raw and print-size artwork |
 | `PA-009` | Artwork matches later typography and card cuts | Done | Prompt safe areas and figure placement derive from the same physical layout used by finalization and slicing; visible source and conditioning pixels are also checked against the real generation canvas before composition |
 | `PA-010` | Only promoted artwork enters a normal PDF | Done | `pdf.enabled` plus a local promoted file gates automatic inclusion |
 | `PA-011` | Poster use is optional per build | Done | `--skip-poster` bypasses discovery/loading and writes a separate `_NO_POSTER.pdf` |
@@ -43,8 +90,8 @@ Last reviewed: 2026-07-27
 | `PA-015` | Aggregate variant scopes receive section-specific scene briefs | Ongoing | ExGen3 `normal` and `mega` are accepted section-local bundles; apply the same explicit scene, cast, and routing contract to `primal` and future sections instead of treating an aggregate as one unambiguous TCG set |
 | `PA-015A` | Variant poster subjects retain their exact form | Done | Featured selection, cutout files/manifests, planner checks, promotion validation, conditioning, and generation fingerprints use a validated Official Artwork subject identity; distinct forms of one species remain distinct and special forms never fall back silently to base artwork |
 | `PA-016` | Post-fetch orchestration detects stale poster inputs | Done | A read-only planner compares routing, scope data, scene catalog, cutout selection/pixels, logos, dynamic model contracts, effective prompts, semantic generation/overlay fingerprints, and promoted outputs; it separates expensive regeneration from cheap overlay or routing work |
-| `PA-017` | Natural grounding and foreground occlusion may cross subjects safely | Research | The protected lower band can look composited; keep the raw identity layer pixel-exact, then allow only a deterministic, recorded depth/occlusion layer to cover final visible pixels for real scene overlap without generating or mutating anatomy |
-| `PA-018` | Alternative engines remain selectable but gated | Done | FLUX.2, Anima, FLUX.1 Canny, and Qwen resolve model/sampling options from the matching manifest, record the exact effective contract, and require the same passed raw-generation opaque-source-pixel audit before any promotion; rejected experiments remain inspectable |
+| `PA-017` | Natural grounding may be generated jointly without losing identity or card safety | Ongoing | FLUX.2 `joint_scene` v3 uses one empty target, one sampler, up to three individual identity references, and no landscape image. A successor must pass every hard gate above in one candidate; Generation VII candidates through `00015` are rejected and production remains on `identity_lock` |
+| `PA-018` | Alternative engines and generation modes remain selectable but gated | Done | FLUX.2, Anima, FLUX.1 Canny, and Qwen resolve model/sampling options from the matching manifest and record the exact effective contract. Exact-source modes require their passed raw-pixel audit; fully generated `joint_scene` candidates instead require a complete fingerprint and explicit identity/scene review bound to raw and deterministic print pixels |
 | `PA-019` | Pull requests prove that a complete release can be built without publishing it | Done | PRs reuse the read-only release-candidate workflow, validate all enabled posters, build every PDF and language archive, verify the manifest, and stop after a temporary Actions artifact |
 | `PA-020` | Rasterized card geometry remains inside the real generation canvas at every supported resolution | Done | Card cells come from cumulative physical endpoints rasterized against both real canvas axes; preparation, finalization, slicing, promotion, and validation share those exact bounds, and new runs record raster geometry contract v2 |
 
@@ -93,29 +140,48 @@ Last reviewed: 2026-07-27
   optional current-v3 upgrade is reported explicitly.
 - Aggregate sections beyond the accepted ExGen3 section implementation and
   wide PDF pages remain explicit roadmap work rather than hidden assumptions.
-- Every generation engine now records an engine-neutral exact-source audit
-  bound to the raw ComfyUI output, its exact audit reference, dimensions, and
-  hashes. This check deliberately precedes the model/Lanczos upscale; the
-  print-size derivative still requires visual identity review rather than
-  claiming channel-exact source pixels after resampling.
-  Production FLUX identity-lock still aborts immediately on a changed pixel;
-  diagnostic engines may finish and retain a failed audit for comparison, but
-  promotion and promoted-bundle validation reject that record for every engine.
-  Existing FLUX promotions remain compatible through their legacy
-  `validation.identity_lock` record.
+- Every generation engine records the raw ComfyUI output, dimensions, and
+  hashes. Exact-source modes additionally record an audit reference and use the
+  engine-neutral opaque-pixel audit as a promotion gate. Production FLUX
+  `identity_lock` still aborts immediately on a changed pixel, and existing
+  promotions remain compatible through their legacy
+  `validation.identity_lock` record. `joint_scene` intentionally redraws every
+  final pixel and therefore has no source-pixel equality claim. Its promotion
+  gate instead binds an explicit human review to the complete generation
+  fingerprint, source identities, raw artwork, and deterministic print-size
+  text-free artwork.
 - The accepted identity-lock topology deliberately protects the complete lower
   subject band. The final context pass sees the figures, but has little freedom
   to improve ground contact around them; Generation VII demonstrates that this
-  can read as a composited layer. Exterior grounding plus a separate,
-  deterministic foreground-occlusion mask remains PA-017 research and is not
-  claimed by the current raw-pixel gate.
+  can read as a composited layer. The experimental `joint_scene` topology
+  addresses that tradeoff with one FLUX.2 pass from an
+  `EmptyFlux2LatentImage`. It receives only the separate identity references
+  and a generated prompt; no landscape image, full-scene/cutout draft, or
+  `inpaint_reference.png` enters conditioning. Normalized visible-silhouette
+  rectangles derived from the physical layout communicate each target
+  position, scale, baseline, padding, and card-safe region. The one pass invents
+  landscape and subjects together and may resolve z-order, ground contact,
+  shadow, and depth while subject identity and complete bottom-card containment
+  remain hard review gates.
+- Joint-scene print output is a deterministic Lanczos resize to the exact
+  configured 300-dpi `build_print_layout` dimensions. A learned upscaler is not
+  part of this mode.
+- FLUX.2 Klein `joint_scene` currently accepts at most three individual
+  identity references. Four-subject `wide_4x3` and `wide_4x4` generation
+  remains prepared at the layout level but needs a separately reviewed
+  reference strategy before this mode can support it.
+- The Generation VII `joint_scene` candidates are local evidence only.
+  Candidates through `00015` are rejected and unpromoted; no poster manifest,
+  promoted artwork, aggregate routing, or PDF binding has switched away from
+  the accepted `identity_lock` baseline. Every later candidate starts a new
+  review record rather than inheriting approval.
 - All thirteen enabled 1-MP source and conditioning compositions fit within
   their real 848 × 1168 generation canvases. Cumulative physical endpoints
   close exactly at every real canvas edge, even where latent alignment makes
   the card widths or heights differ by one pixel. New generation fingerprints
-  record raster geometry v2; new FLUX identity-lock fingerprints use graph
-  contract v3, while the reviewed v1/v2 promotions remain valid as accepted
-  legacy artifacts.
+  record raster geometry v2; new FLUX identity-lock and identity-only one-shot
+  `joint_scene` fingerprints use graph contract v3, while the reviewed v1/v2
+  identity-lock promotions remain valid as accepted legacy artifacts.
 - Pull requests and tagged releases use the same release-candidate build.
   Publication is a separate write-enabled job available only to `v*` tags.
 

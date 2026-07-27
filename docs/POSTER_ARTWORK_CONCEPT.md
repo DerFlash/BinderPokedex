@@ -61,11 +61,13 @@ The legacy experimental engines keep their reviewed prompts in
 `comfyui_poster/`. The production identity-lock prompt is built from the
 reviewed `artwork.scene` brief in `poster.yaml` plus one central immutable-source
 contract. Its exact `identity_lock_prompt.generated.txt` snapshot is hashed into
-run provenance but ignored as local scratch. Generated scene references,
-identity references, API workflows, masks, temporary files, raw artwork, and
-iteration previews are also ignored. A candidate enters source control only
-through the explicit transactional promotion step, together with its provenance
-record.
+run provenance but ignored as local scratch. The experimental `joint_scene`
+mode similarly records its generated one-shot scene/identity/placement prompt
+in `joint_scene_prompt.generated.txt`. Generated scene
+references, identity references, API workflows, masks, temporary files, raw
+artwork, and iteration previews are also ignored. A candidate enters source
+control only through the explicit transactional promotion step, together with
+its provenance record.
 
 ## Layout rules
 
@@ -242,6 +244,19 @@ typography. This produces a 2368 x 3268 px poster and nine 750 x 1050 px cards.
 The exact figures enter the ComfyUI graph between the two passes; the final pass
 sees their composition but cannot edit their protected lower band.
 
+Create a local unified-scene comparison without changing the manifest:
+
+```bash
+venv/bin/python scripts/poster_assets/run_comfyui_poster.py \
+  --engine flux --flux-mode joint_scene \
+  --scope Pokedex/sections/gen7 --language en
+```
+
+No output-size flag is needed: the runner derives the exact configured 300-dpi
+raster dimensions with `build_print_layout` and uses deterministic Lanczos
+scaling. `--output-dpi 300` may be passed explicitly and selects the same exact
+deterministic path for this mode, never the learned upscaler.
+
 Overscan scales with the target dimensions and remains latent-aligned. The
 second-pass protection band normally reaches 70 percent of the image height; if
 an unusually tall reviewed subject begins above that boundary, the mask moves
@@ -260,6 +275,7 @@ venv/bin/python scripts/poster_assets/run_comfyui_poster.py \
 | FLUX.2 Klein edit | `prompt.txt` | `scene_reference.png` | `workflow_api_edit_<size>_<seed>.json` | `_flux_edit_..._poster_` |
 | FLUX.2 Klein inpaint | `inpaint_prompt.txt` | `inpaint_reference.png` | `workflow_api_inpaint_<size>_<seed>.json` | `_flux_inpaint_..._poster_` |
 | FLUX.2 source-pixel lock | generated from `poster.yaml` | `inpaint_reference.png`, `upper_context_mask.png` | `workflow_api_identity_lock_<size>_<seed>.json` | `_flux_identity_lock_..._poster_` |
+| FLUX.2 unified joint scene | `joint_scene_prompt.generated.txt` | up to three `identity_reference_<n>.png` files; no landscape image | `workflow_api_joint_scene_<size>_<seed>.json` | `_flux_joint_scene_multi_reference_joint_..._poster_` |
 | AnimaEdit | `anima_prompt.txt` | `anima_scene_reference.png` | `anima_workflow_api_<mode>_<size>_<seed>.json` | `_anima_poster_` |
 | FLUX.1 Dev Canny | `flux1_canny_prompt.txt` | `structure_reference.png` | `flux1_canny_workflow_api_<size>_<seed>.json` | `_flux1_canny_..._poster_` |
 | Qwen Image Edit 2511 | `qwen_edit_prompt.txt` | composition plus two identity sheets | `qwen_edit_workflow_api_<size>_<seed>.json` | `_qwen_edit_..._poster_` |
@@ -290,15 +306,19 @@ but tends to retain abstract source geometry too literally. The empty-target
 `generate` path is implemented for the next experiment but has not yet been
 promoted or rendered at production resolution.
 
-Preparation creates one clean scene reference from every reviewed cutout at its
-exact intended position, size, and shared ground level. It also creates one compact
-neutral-canvas identity reference per subject. The workflow derives their count,
-order, English names, and invisible left-to-right print regions from the cutout
-manifest; no Pokemon name or fixed three-image chain remains in Python code.
-Position comes only from the combined scene image. Individual references preserve
-anatomy while their padding reinforces relative scale. None of these references
-contains a layout grid, landing pads, paths, text boxes, or previous generated
-artwork.
+Preparation creates the existing clean scene reference from every reviewed
+cutout at its exact intended position, size, and shared ground level for the
+modes that consume it. It also creates one compact neutral-canvas identity
+reference per subject. The workflow derives their count, order, English names,
+and invisible left-to-right print regions from the cutout manifest; no Pokemon
+name or fixed three-image chain remains in Python code. In `joint_scene` v3,
+position and size instead come from normalized visible-silhouette rectangles
+calculated from the shared layout and cutout alpha bounds. Neither
+`scene_reference.png`, a landscape image, nor `inpaint_reference.png`
+conditions its one shot.
+Individual references preserve anatomy while their padding reinforces relative
+scale. None of these references contains a layout grid, landing pads, paths,
+text boxes, or previous generated artwork.
 
 The FLUX.1 Canny adapter uses a fourth prepared representation:
 `structure_reference.png` flattens the exact final-size cutouts on opaque white.
@@ -333,7 +353,7 @@ conditioning:
 
 This replaces the former aspect-ratio heuristic that treated every tall subject
 like Mewtwo.
-The three FLUX modes deliberately use separate conditioning topologies.
+The four FLUX modes deliberately use separate conditioning topologies.
 `edit` uses an independent empty target latent and supplies the compensated
 composition through `ReferenceLatent`. It remains useful for fully generative
 experiments but can reinterpret anatomy. Direct `inpaint` keeps the figures as
@@ -359,23 +379,53 @@ silhouettes. The lower band is one shared, low-detail ground plane rather than
 three clearings, so that tradeoff does not reintroduce landing pads. It can,
 however, make a subject read as composited when the generated ground provides
 too little contact shadow or boundary interaction; Generation VII is the
-tracked example. PA-017 separates two future operations: exterior grounding
-must not touch the raw identity layer, while a deterministic, recorded
-foreground-depth mask may cover final visible pixels when real scenery belongs
-in front. Neither operation may generate or mutate adjacent anatomy, and the
-uncovered source layer must remain recoverable and pixel-exact.
+tracked example. This accepted topology and every current manifest remain
+unchanged while the alternative below is reviewed.
 
-Immediately after ComfyUI returns the 1 MP artwork, every engine compares every
-fully opaque source pixel with `inpaint_reference.png`. A one-value RGB
+The experimental `joint_scene` topology tests the opposite tradeoff:
+
+1. The shared physical layout and the visible alpha bounds of each reviewed
+   cutout produce normalized per-mille silhouette rectangles. Those coordinates
+   carry target position, scale, baseline, padding, and card-safe placement in
+   the prompt without flattening cutouts onto a landscape.
+2. Each subject contributes one neutral-canvas identity reference that is
+   authoritative for identity, anatomy, silhouette, colors, and markings.
+3. One `EmptyFlux2LatentImage` is sampled once. FLUX.2 receives only the
+   individual identity references and synthesizes the complete landscape and
+   all subjects in that one denoising pass.
+4. The final decode is saved directly. No cutout, mask repair, source-pixel
+   restore, or other character composite is applied afterwards.
+
+There is no landscape image, full-scene/cutout draft, or
+`inpaint_reference.png` conditioning input. The model invents the landscape
+around the cast from the first noise step so z-order, terrain contact, cast
+shadows, reflected light, color grading, perspective, depth, and plausible
+foreground occlusions can agree. Identity, anatomy, face, pose, stature,
+silhouette, colors, markings, scale, and complete card-safe placement remain
+mandatory review invariants.
+
+FLUX.2 Klein currently has reference capacity for at most three separate
+identity images in this reviewed graph. Four-subject layouts need a separately
+reviewed reference strategy; `wide_4x3` and `wide_4x4` must not be sent through
+this topology yet.
+
+Immediately after ComfyUI returns the 1 MP artwork, exact-source modes compare
+every fully opaque source pixel with `inpaint_reference.png`. A one-value RGB
 difference is a hard generation failure for production FLUX identity-lock.
-Experimental adapters retain the failed comparison beside their candidate so
-the output can still be inspected, but promotion and
-`validate_promoted_poster.py` require the same zero-change result for all
-engines. New records bind that audit to the raw artwork and reference hashes
-and dimensions. The later RealESRGAN or Lanczos resize is intentionally outside
-this channel-exact comparison, so print-size identity and silhouette quality
-remain part of visual review. Existing FLUX promotions remain compatible
-through their legacy `validation.identity_lock` record.
+Other exact-source adapters may retain a failed comparison beside their local
+candidate, but promotion and validation still require zero changes.
+`joint_scene`, by design, redraws every pixel and therefore does not create a
+source-pixel equality record. Its promotion instead requires a complete current
+generation fingerprint and explicit human approval bound to source identities,
+the raw artwork, and the deterministic print-size text-free artwork.
+
+The joint-scene print derivative uses Lanczos directly to the exact
+`build_print_layout` dimensions for the configured 300 dpi. It never uses
+RealESRGAN or another learned upscaler, because that would introduce a second
+model-driven reinterpretation after the reviewed unified pass. For
+`standard_3x3`, the current 1-MP 848 × 1168 raw image becomes the exact
+2368 × 3268 raster used by the 300-dpi card geometry. Existing FLUX promotions
+remain compatible through their legacy `validation.identity_lock` record.
 
 FLUX.2 Klein 4B generation remains stochastic in `edit` and direct `inpaint`
 modes. It can invent anatomy adjacent to a silhouette or reinterpret a supplied
@@ -472,6 +522,16 @@ venv/bin/python scripts/poster_assets/promote_comfyui_poster.py \
 Promotion also requires the candidate's generation metadata to match the
 reviewed `artwork.generation` block exactly. A changed seed, model, encoder,
 upscaler, or output method therefore fails before any stable file is replaced.
+
+For `joint_scene`, promotion additionally requires `--approve-joint-scene`.
+That explicit action records review of the exact raw and Lanczos-scaled
+text-free pixels against every source identity and the complete generation
+fingerprint. It does not waive manifest equality, source identity, geometry, or
+output-hash checks. All Generation VII candidates through `00015` are rejected,
+have not received this approval, and have not changed the
+manifest, promoted artwork, routing, or PDF output. A future candidate requires
+a new review bound to the v3 fingerprint and every hard acceptance gate;
+`identity_lock` remains the production baseline.
 
 Validate the committed bundle, hashes, dimensions, and embedded dpi metadata:
 

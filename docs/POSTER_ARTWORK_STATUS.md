@@ -58,6 +58,39 @@ Canny, and Qwen multi-reference editing remain diagnostic evidence rather than
 promoted artwork because their candidates do not satisfy the source comparison
 and visual acceptance gate.
 
+## Experimental Generation VII joint-scene
+
+`joint_scene` is an experimental FLUX.2 mode, not an accepted baseline. It uses
+the same Generation VII seed `260726054`, distilled FLUX.2 Klein 4B model,
+four-step sampling, 1-MP generation canvas, reviewed Rowlet/Litten/Popplio
+sources, layout, and scene brief as the current comparison target.
+
+Joint-scene v3 is a true one-shot graph: one empty FLUX.2 target, one sampler,
+three neutral-canvas identity references, one dynamic scene/identity/placement
+prompt, and no landscape image. Normalized rectangles derived from the shared
+layout request each complete silhouette's position and size. No
+full-scene/cutout draft, `inpaint_reference.png`, post-decode character
+composite, source restoration, or learned upscaler belongs to this mode.
+
+The identity-only graph fixes the contradictory depth ordering seen when a
+pre-generated landscape was supplied as a strong final-pass reference.
+Candidate `00014` has coherent landscape depth and faithful designs, but all
+three figures extend above their bottom-row cards. Candidate `00015` proves
+that increasing the neutral identity canvas from 512 to 768 px does not fix
+that placement and only increases render cost. Both are rejected.
+
+No Generation VII manifest value, promoted file, Pokédex routing entry, or PDF
+binding points to an experimental candidate. The enabled poster remains the
+accepted `identity_lock` artwork. Full candidate history, isolated changes, and
+rejection reasons live in
+[POSTER_ARTWORK_EXPERIMENT_LOG.md](POSTER_ARTWORK_EXPERIMENT_LOG.md). A future
+promotion is allowed only after one candidate passes every hard gate in
+[POSTER_ARTWORK_REQUIREMENTS.md](POSTER_ARTWORK_REQUIREMENTS.md) and carries a
+complete v3 fingerprint plus explicit review bound to both raw and print-size
+pixels. FLUX.2 Klein currently supports at most three individual references in
+this reviewed graph; four-subject layouts need a separately reviewed reference
+strategy.
+
 ## Accepted requirements
 
 - Each complete asset is produced in one local ComfyUI workflow. The source
@@ -189,17 +222,17 @@ and visual acceptance gate.
   contract from a matching manifest, with explicit CLI values acting only as
   overrides. Anima records its model, LoRA, encoder, VAE, steps, CFG, reference
   strength, and control method exactly; its workflow files are unique by mode,
-  size, and seed. Every engine records the same opaque-source-pixel audit
-  against the raw ComfyUI output. Diagnostic runs may retain a failed audit for
-  comparison, while promotion and promoted validation require zero changed
-  raw pixels regardless of engine. Upscaled print output remains a separate
-  visual-review boundary because resampling is not channel-exact.
+  size, and seed. Exact-source modes record an opaque-source-pixel audit against
+  the raw ComfyUI output and require zero changed pixels for promotion.
+  `joint_scene` intentionally redraws the subjects and has no equality audit;
+  promotion instead requires complete fingerprint provenance and an explicit
+  review bound to both raw and deterministic Lanczos print pixels.
 
 ## Partially satisfied requirements
 
 | Requirement | Current boundary | Acceptance criterion |
 | --- | --- | --- |
-| Natural grounding and occlusion | Exact identity-lock prevents scenery from crossing source pixels; the fully protected lower band can make subjects read as composited, as observed on Generation VII | Keep the raw identity layer exact; add deterministic exterior grounding and, where scene depth requires it, a separately recorded foreground mask that may cover final visible pixels without changing or inventing anatomy |
+| Natural grounding and occlusion | Accepted `identity_lock` keeps exact pixels but can read as composited. Identity-only one-shot `joint_scene` fixes scene depth in `00014`, but `00014` and `00015` fail bottom-card containment | Use the one remaining KISS placement experiment allowed by the decision rule; promote only if the same raw/print pair passes every hard gate |
 | Engine extensibility | FLUX.2, Anima, FLUX.1 Canny, and Qwen Edit are selectable through one manifest-driven runner and share the promotion gate | Keep architecture-specific workflow construction isolated when adding another engine |
 | Alternative models | FLUX.1 Canny changed Mewtwo's face, chest, colors, and hand; Qwen created a giant fourth Mewtwo | Retain both adapters for controlled comparison, but do not promote either rejected candidate |
 | Anima candidates | Workflow and provenance now share the exact model/LoRA/encoder/VAE/sampling contract | Keep the adapter experimental until a real candidate passes both the shared pixel gate and visual review |
@@ -215,12 +248,15 @@ and visual acceptance gate.
   color, or defining contour as a hard rejection even if the background improves.
 - Reject generated scenery beside a subject when it reads as an additional body
   part.
-- Keep exact opaque-pixel validation mandatory, but do not misrepresent it as
-  semantic depth, foreground-occlusion, or post-upscale channel-exact
-  validation.
-- Treat future foreground overlap as a separate deterministic output layer:
-  the raw identity pixels remain recoverable and exact even where audited
-  scenery legitimately covers them in the final composition.
+- Keep exact opaque-pixel validation mandatory for exact-source modes, but do
+  not apply that equality claim to `joint_scene`, which redraws the complete
+  image. Its raw and print identity checks remain explicit human review bound
+  to deterministic provenance.
+- Run at most one more materially distinct Generation VII one-shot placement
+  experiment before requesting an explicit product/architecture decision.
+  Rejected candidates through `00015` cannot carry approval forward.
+- Design and review a separate reference strategy before attempting
+  `joint_scene` with the four subjects required by `wide_4x3` or `wide_4x4`.
 - Keep Anima, FLUX.1 Canny, and Qwen Edit experimental until a candidate passes
   the same promotion gate.
 - Apply the demonstrated ExGen3 section workflow to remaining aggregate
@@ -245,7 +281,7 @@ reviewed candidates and their provenance have been promoted.
 
 Completed on 2026-07-27:
 
-- The complete suite passes with 493 tests; one unrelated EX-logo feature test
+- The complete suite passes with 515 tests; one unrelated EX-logo feature test
   remains explicitly skipped.
 - PA-018 regressions cover manifest-to-workflow resolution for every engine,
   exact Anima model/LoRA/encoder/VAE/sampling/control metadata, unique Anima
@@ -253,6 +289,11 @@ Completed on 2026-07-27:
   failure for production identity-lock, engine-independent promotion
   rejection, and a complete passing Qwen run-metadata-to-promotion-to-validator
   contract test.
+- Joint-scene v3 regressions cover one empty target and one sampler, the ordered
+  three-identity reference chain, normalized silhouette rectangles, absence of
+  landscape/full-scene/inpaint conditioning and any post-decode composite,
+  dynamic prompts, maximum reference count, deterministic Lanczos output,
+  complete generation fingerprints, and the explicit raw/print visual gate.
 - Python compilation and `git diff --check` pass.
 - All thirteen promoted bundles pass `validate_promoted_poster.py`, including
   semantic input equality, historically accurate and explicitly supported
@@ -345,6 +386,11 @@ Completed on 2026-07-27:
   its completely protected lower band makes the three figures read as layered
   over the Alola scene. This is a grounding/integration limitation rather than
   an identity regression and is tracked under PA-017.
+- The unpromoted Generation VII joint-scene experiments use the same seed and
+  sources. Candidates through `00015` are rejected. The identity-only v3 graph
+  resolves the earlier landscape-depth conflict, but `00014` and `00015` cross
+  the upper boundary of all three bottom cards. Neither changes the accepted
+  manifest or PDF output; the full chronology is kept in the experiment log.
 - The accepted Generation VIII candidate contains Grookey, Scorbunny, and
   Sobble, uses seed `260715405` and graph contract v2, and preserves all 34,011
   fully opaque source pixels with zero changes. The Galar upland lake, moor,
@@ -383,5 +429,7 @@ Completed on 2026-07-27:
 
 For every future candidate, the same whole-poster, per-card, localized-overlay,
 and rendered-PDF review remains the promotion gate. Identity-lock topology is
-covered by tests, but final anatomy, grounding, and silhouette-boundary review
-deliberately remains human visual QA; the code does not claim false confidence.
+covered by exact-pixel tests. Joint-scene promotion additionally binds explicit
+human review to the exact raw and deterministic text-free print artifacts,
+their source identities, and their generation fingerprint; the code does not
+claim false confidence from generative similarity.

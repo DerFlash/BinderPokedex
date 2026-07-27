@@ -231,7 +231,9 @@ manifest. The final production prompt is then generated from four inputs:
 
 This avoids tracked, duplicated full prompts drifting apart. The generated
 prompt snapshot is written to the scope's ignored `comfyui_poster/` workspace
-when the candidate is prepared.
+when the candidate is prepared. The experimental `joint_scene` mode records its
+one-shot scene/identity/placement prompt in the same way; no full prompt is
+maintained per scope by hand.
 
 ## 5. Start local ComfyUI
 
@@ -273,8 +275,9 @@ python scripts/poster_assets/run_comfyui_poster.py \
 ```
 
 The production runner reads the complete engine-specific model and sampling
-contract, seed, generation size, 300-dpi output, and upscaler defaults from the
-scope's `poster.yaml`. This includes all Anima
+contract, seed, generation size, and output contract from the scope's
+`poster.yaml`. Exact-source modes may select a learned illustration upscaler;
+`joint_scene` requires deterministic Lanczos output. This includes all Anima
 model/LoRA/encoder/VAE/steps/CFG/reference-strength/control-method fields and
 the corresponding FLUX.1 Canny or Qwen fields. Only a manifest whose `engine`
 matches the selected adapter supplies those values; CLI flags remain explicit
@@ -290,19 +293,78 @@ experiment overrides. The default FLUX identity-lock flow:
 - writes a localized preview, card crops, workflow, and run metadata.
 
 The command prints the exact candidate and metadata paths needed for promotion.
-Every engine writes an exact opaque-source-pixel audit bound to the raw
-ComfyUI output and exact audit-reference hashes and dimensions. FLUX
-identity-lock stops immediately if it changes a source pixel. An experimental
-Anima, FLUX.1, or Qwen run may finish with `passed: false` so its visual result
-can be compared, but that metadata cannot pass promotion. The audit runs before
-RealESRGAN or Lanczos resampling; the 300-dpi derivative is therefore still
-reviewed visually and is not described as channel-exact.
+Exact-source modes write an opaque-source-pixel audit bound to the raw ComfyUI
+output and the audit reference. FLUX identity-lock stops immediately if it
+changes a source pixel. An experimental Anima, FLUX.1, or Qwen run may finish
+with `passed: false` so its visual result can be compared, but that metadata
+cannot pass promotion. `joint_scene` has no equality audit because all pixels
+are generated; it uses a human review bound to the actual raw and deterministic
+print-size files instead.
+
+### Experimental unified scene A/B
+
+`identity_lock` remains the configured production mode. To create a local
+comparison without changing the manifest or any PDF binding, override only the
+FLUX mode:
+
+```bash
+python scripts/poster_assets/run_comfyui_poster.py \
+  --scope Pokedex/sections/gen7 \
+  --engine flux \
+  --flux-mode joint_scene \
+  --language en
+```
+
+With no output-size flag, the runner inherits the configured 300-dpi target.
+`--output-dpi 300` may also be passed explicitly. In `joint_scene` both forms
+derive the exact physical raster dimensions through `build_print_layout` and
+create the text-free print candidate with deterministic Lanczos scaling; they
+never select a learned upscaler. For `standard_3x3`, the 1-MP raw artwork is
+848 × 1168 px and the print candidate is exactly 2368 × 3268 px.
+
+The current `joint_scene` graph:
+
+1. derives each target silhouette rectangle from the shared physical layout
+   and cutout alpha bounds, then writes its normalized canvas coordinates into
+   the one-shot prompt;
+2. supplies one separate neutral-canvas identity reference for each of the
+   three subjects;
+3. starts from one `EmptyFlux2LatentImage`, invents the complete landscape and
+   all characters together, and samples exactly once;
+4. decodes and saves that result directly, with no character
+   composite, mask repair, or source-pixel restoration afterwards.
+
+The scene brief controls camera, terrain, atmosphere, palette, and broad
+composition. The normalized rectangles request position, size, baseline,
+visible padding, and card-safe regions. The individual references control
+identity, anatomy, pose, silhouette, colors, and markings. The model synthesizes
+landscape and Pokémon together and resolves z-order, shadows, reflected light,
+and physically plausible edge occlusion. A changed body part, face, marking,
+defining contour, scale, or placement remains a hard visual rejection.
+Joint-scene preparation produces only the individual identity references.
+It neither produces nor records `inpaint_reference.png`, scene references,
+identity-lock masks, or references for unrelated experimental engines.
+
+FLUX.2 Klein currently supports at most three individual identity references
+in this reviewed mode. The four-subject `wide_4x3` and `wide_4x4` layouts need
+a separately reviewed reference strategy before they can use it.
+
+Because `joint_scene` deliberately redraws all pixels, an opaque-source-pixel
+equality audit is not applicable. Its hard gates are a complete generation
+fingerprint and explicit human review of both the actual raw file and the
+deterministically scaled text-free print artwork. The CLI
+override above does not make the candidate production artwork: Generation VII
+still points to its promoted `identity_lock` result. Candidates through `00015`
+are rejected. Review evidence and the stop rule live in
+`POSTER_ARTWORK_EXPERIMENT_LOG.md` and
+`POSTER_ARTWORK_REQUIREMENTS.md`.
 
 ## 7. Review and promote
 
 Review all of the following before promotion:
 
 - complete text-free artwork;
+- raw ComfyUI artwork before any resize;
 - all bottom-row card crops;
 - character identity, anatomy, colors, pose, scale, and padding;
 - grounding and scenery at every silhouette boundary;
@@ -325,9 +387,31 @@ For an aggregate target, use the same asset key for promotion and validation,
 for example `Pokedex/sections/gen1`.
 
 Promotion is transactional and records hashes for models, prompts, source
-figures, references, workflows, and outputs. It requires a passed
-`exact_opaque_source_pixels` record for every engine; changing the manifest
-engine or supplying otherwise matching hashes cannot bypass that gate.
+figures, references, workflows, and outputs. Exact-source modes require a
+passed `exact_opaque_source_pixels` record; changing the manifest engine or
+supplying otherwise matching hashes cannot bypass that gate.
+
+A `joint_scene` candidate follows a separate fail-closed review contract. Its
+run must contain the complete current generation fingerprint, exact source
+identity records, raw-artwork hashes, and deterministic text-free print hashes.
+After comparing both artifacts and every subject crop with the reviewed
+cutouts, the reviewer must opt in explicitly:
+
+```bash
+python scripts/poster_assets/promote_comfyui_poster.py \
+  --scope <scope> \
+  --artwork <lanczos-scaled-text-free-artwork.png> \
+  --run-metadata <matching.run.json> \
+  --name flux2 \
+  --approve-joint-scene
+```
+
+This flag records a timestamped approval bound to those exact pixels and source
+identities; it is not a generic bypass. Promotion still rejects a candidate
+whose recorded generation contract differs from `poster.yaml`. The Generation
+VII A/B currently has no approval or manifest adoption: candidate `00003` is
+rejected and unpromoted, and neither its promoted artwork nor its PDF routing
+has changed.
 
 ## 8. Enable and consume the poster
 
