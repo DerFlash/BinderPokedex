@@ -1,4 +1,5 @@
 import sys
+from types import SimpleNamespace
 
 import pytest
 
@@ -20,6 +21,9 @@ from scripts.poster_assets.generation_options import (
     DEFAULT_FLUX_VAE,
     metadata_from_workflow_options,
     resolve_generation_options,
+)
+from scripts.poster_assets.generation_contract import (
+    validate_generation_contract,
 )
 
 
@@ -99,6 +103,123 @@ def test_flux_mode_override_does_not_reuse_incompatible_manifest_reference():
 
     assert resolved.workflow_options["flux_reference_mode"] == "identity"
     assert resolved.metadata["reference_mode"] == "identity"
+
+
+def test_joint_scene_uses_one_canonical_multi_reference_contract():
+    resolved = resolve_generation_options(
+        "flux",
+        {
+            "engine": "flux",
+            "mode": "identity_lock",
+            "reference_mode": "two_pass_source_pixels",
+        },
+        {"flux_mode": "joint_scene"},
+    )
+
+    assert resolved.workflow_options["flux_mode"] == "joint_scene"
+    assert resolved.workflow_options["flux_reference_mode"] == "identity"
+    assert resolved.metadata["mode"] == "joint_scene"
+    assert resolved.metadata["reference_mode"] == "multi_reference_joint"
+
+
+def test_joint_scene_rejects_composition_only_override():
+    with pytest.raises(
+        ValueError,
+        match="must be 'identity' for joint_scene",
+    ):
+        resolve_generation_options(
+            "flux",
+            None,
+            {
+                "flux_mode": "joint_scene",
+                "flux_reference_mode": "composition",
+            },
+        )
+
+
+def test_joint_scene_manifest_rejects_wrong_canonical_reference_mode():
+    with pytest.raises(ValueError, match="reference_mode is incompatible"):
+        resolve_generation_options(
+            "flux",
+            {
+                "engine": "flux",
+                "mode": "joint_scene",
+                "reference_mode": "identity",
+            },
+        )
+
+
+def test_joint_scene_cli_defaults_to_deterministic_print_dimensions(
+    monkeypatch,
+    tmp_path,
+):
+    configured = {
+        "engine": "flux",
+        "model": "model.safetensors",
+        "encoder": "encoder.safetensors",
+        "vae": "vae.safetensors",
+        "mode": "identity_lock",
+        "reference_mode": "two_pass_source_pixels",
+        "steps": 4,
+        "seed": 123,
+        "generation_megapixels": 1.0,
+        "output_method": "model_upscale",
+        "output_dpi": 300,
+        "upscale_model": "upscale.pth",
+    }
+    captured = {}
+
+    def fake_run(*args, **kwargs):
+        captured["kwargs"] = kwargs
+        return (
+            tmp_path / "raw.png",
+            tmp_path / "artwork.png",
+            tmp_path / "final.png",
+            tmp_path / "run.json",
+        )
+
+    monkeypatch.setattr(
+        poster_runner,
+        "configured_generation",
+        lambda _scope: configured,
+    )
+    monkeypatch.setattr(
+        poster_runner,
+        "poster_bundle",
+        lambda *_args, **_kwargs: SimpleNamespace(
+            manifest={"layout": {"name": "standard_3x3"}}
+        ),
+    )
+    monkeypatch.setattr(poster_runner, "run", fake_run)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "run_comfyui_poster.py",
+            "--scope",
+            "Example",
+            "--flux-mode",
+            "joint_scene",
+        ],
+    )
+
+    assert poster_runner.main() == 0
+    assert captured["kwargs"]["output_dpi"] == 300
+    assert captured["kwargs"]["output_megapixels"] is None
+
+
+def test_joint_scene_contract_rejects_a_learned_upscaler():
+    with pytest.raises(ValueError, match="learned upscaler"):
+        validate_generation_contract(
+            {
+                "engine": "flux",
+                "mode": "joint_scene",
+                "reference_mode": "multi_reference_joint",
+                "output_method": "lanczos",
+                "output_dpi": 300,
+                "upscale_model": "learned.pth",
+            }
+        )
 
 
 def test_wrong_engine_manifest_is_ignored_as_one_contract():

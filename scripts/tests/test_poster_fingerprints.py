@@ -22,6 +22,9 @@ from scripts.poster_assets.poster_config import (
 from scripts.poster_assets.poster_io import load_json, poster_bundle
 from scripts.poster_assets.poster_subject import PosterSubject
 from scripts.poster_assets.provenance import (
+    JOINT_SCENE_REVIEW_CRITERIA,
+    JOINT_SCENE_REVIEW_KEY,
+    approve_joint_scene_visual_review,
     build_generation_fingerprint,
     build_overlay_fingerprint,
     current_generation_pipeline_contract_version,
@@ -30,6 +33,7 @@ from scripts.poster_assets.provenance import (
     generation_fingerprint_pipeline_contract_version,
     load_run_metadata,
     required_model_artifact_hashes,
+    require_joint_scene_visual_review,
     sha256_file,
     write_run_metadata,
 )
@@ -435,11 +439,13 @@ def test_required_model_hashes_follow_the_selected_engine_artifacts():
 
 def test_pipeline_contract_versions_are_family_specific_and_strict():
     identity_generation = {"engine": "flux", "mode": "identity_lock"}
+    joint_generation = {"engine": "flux", "mode": "joint_scene"}
     edit_generation = {"engine": "qwen_edit", "mode": "edit"}
 
     assert current_generation_pipeline_contract_version(
         identity_generation
     ) == 3
+    assert current_generation_pipeline_contract_version(joint_generation) == 3
     assert current_generation_pipeline_contract_version(edit_generation) == 2
     accepted_legacy = provenance.fingerprint_record(
         {
@@ -466,12 +472,282 @@ def test_pipeline_contract_versions_are_family_specific_and_strict():
             unsupported,
             identity_generation,
         )
+    with pytest.raises(ValueError, match="Unsupported generation pipeline"):
+        generation_fingerprint_pipeline_contract_version(
+            accepted_legacy,
+            joint_generation,
+        )
+
+
+def test_joint_scene_fingerprint_enforces_reference_and_ignores_identity_lock(
+    tmp_path,
+):
+    _repository, assets, output, _scope_dir, bundle = _write_fixture(
+        tmp_path
+    )
+    manifest = copy.deepcopy(bundle.manifest)
+    generation = manifest["artwork"]["generation"]
+    generation.update(
+        mode="joint_scene",
+        reference_mode="multi_reference_joint",
+        output_method="lanczos",
+        output_megapixels=0.25,
+    )
+    for key in ("output_dpi", "upscale_model", "upscale_model_sha256"):
+        generation.pop(key, None)
+    joint_bundle = _with_manifest(bundle, manifest)
+    original = build_generation_fingerprint(
+        joint_bundle,
+        poster_assets=assets,
+        scope_data_dir=output,
+    )
+    assert "identity_lock" not in original["components"]
+
+    changed = copy.deepcopy(manifest)
+    changed["artwork"]["identity_lock"] = {
+        "overscan_ratio": 999,
+    }
+    unchanged = build_generation_fingerprint(
+        _with_manifest(bundle, changed),
+        poster_assets=assets,
+        scope_data_dir=output,
+    )
+    assert unchanged["sha256"] == original["sha256"]
+
+    changed = copy.deepcopy(manifest)
+    changed["conditioning"]["subjects"] = {
+        "1": {"composition": {"scale": 999}}
+    }
+    composition_only = build_generation_fingerprint(
+        _with_manifest(bundle, changed),
+        poster_assets=assets,
+        scope_data_dir=output,
+    )
+    assert composition_only["sha256"] == original["sha256"]
+
+    changed = copy.deepcopy(manifest)
+    changed["conditioning"]["identity_defaults"]["canvas_px"] = 640
+    identity_reference_change = build_generation_fingerprint(
+        _with_manifest(bundle, changed),
+        poster_assets=assets,
+        scope_data_dir=output,
+    )
+    assert identity_reference_change["sha256"] != original["sha256"]
+
+    changed = copy.deepcopy(manifest)
+    changed["artwork"]["generation"]["reference_mode"] = "identity"
+    with pytest.raises(ValueError, match="reference contract"):
+        build_generation_fingerprint(
+            _with_manifest(bundle, changed),
+            poster_assets=assets,
+            scope_data_dir=output,
+        )
+
+
+def test_joint_scene_rejects_a_learned_post_generation_upscaler(tmp_path):
+    _repository, assets, output, _scope_dir, bundle = _write_fixture(
+        tmp_path
+    )
+    manifest = copy.deepcopy(bundle.manifest)
+    manifest["artwork"]["generation"].update(
+        mode="joint_scene",
+        reference_mode="multi_reference_joint",
+    )
+
+    with pytest.raises(ValueError, match="deterministic Lanczos"):
+        build_generation_fingerprint(
+            _with_manifest(bundle, manifest),
+            poster_assets=assets,
+            scope_data_dir=output,
+        )
+
+
+def test_joint_scene_input_records_follow_reference_order(
+    tmp_path,
+    monkeypatch,
+):
+    repository, assets, _output, scope_dir, _bundle = _write_fixture(
+        tmp_path
+    )
+    work_dir = scope_dir / "comfyui_poster"
+    work_dir.mkdir()
+    workflow_path = work_dir / "workflow.json"
+    workflow_path.write_text("{}\n", encoding="utf-8")
+    (work_dir / provenance.JOINT_SCENE_PROMPT_FILE).write_text(
+        "draft\n\nfinal\n",
+        encoding="utf-8",
+    )
+    for index, color in enumerate(
+        ((80, 180, 90), (235, 120, 50), (80, 150, 220)),
+        start=1,
+    ):
+        Image.new("RGB", (32, 32), color).save(
+            work_dir / f"identity_reference_{index}.png"
+        )
+    monkeypatch.setattr(provenance, "POSTER_ASSETS", assets)
+    monkeypatch.setattr(provenance, "ROOT", repository)
+
+    records = provenance.generation_input_records(
+        "Example",
+        workflow_path,
+        {
+            "engine": "flux",
+            "mode": "joint_scene",
+            "reference_mode": "multi_reference_joint",
+            "output_method": "lanczos",
+            "output_megapixels": 0.25,
+        },
+    )
+
+    assert [
+        Path(record["file"]).name for record in records["references"]
+    ] == [
+        "identity_reference_1.png",
+        "identity_reference_2.png",
+        "identity_reference_3.png",
+    ]
+    assert "internal_references" not in records
+    assert "source_pixel_audit_reference" not in records
+
+
+def test_joint_scene_human_review_is_bound_to_artwork_and_source_identities(
+    tmp_path,
+):
+    artwork_path = tmp_path / "artwork.png"
+    raw_artwork_path = tmp_path / "raw.png"
+    Image.new("RGB", (100, 140), (40, 120, 80)).save(artwork_path)
+    Image.new("RGB", (80, 112), (50, 130, 90)).save(raw_artwork_path)
+    artwork_record = file_record(artwork_path, image=True)
+    raw_artwork_record = file_record(raw_artwork_path, image=True)
+    source_digests = ["c" * 64, "d" * 64, "e" * 64]
+    source_pixel_digests = ["3" * 64, "4" * 64, "5" * 64]
+    fingerprint = provenance.fingerprint_record(
+        {
+            "source_subject_ids": [722, 725, 728],
+            "cutouts": [
+                {
+                    "pokemon_id": pokemon_id,
+                    "pixel_sha256": source_pixel_digest,
+                }
+                for pokemon_id, source_pixel_digest in zip(
+                    (722, 725, 728),
+                    source_pixel_digests,
+                    strict=True,
+                )
+            ],
+        }
+    )
+    run = {
+        "generation": {
+            "engine": "flux",
+            "mode": "joint_scene",
+            "reference_mode": "multi_reference_joint",
+        },
+        "source_artwork": artwork_record,
+        "raw_artwork": raw_artwork_record,
+        "inputs": {
+            "cutouts": [
+                {
+                    "sha256": source_digest,
+                    "pixel_sha256": source_pixel_digest,
+                }
+                for source_digest, source_pixel_digest in zip(
+                    source_digests,
+                    source_pixel_digests,
+                    strict=True,
+                )
+            ],
+            "generation_fingerprint": fingerprint,
+        },
+        "validation": {
+            "source_pixels": {
+                "method": "exact_opaque_source_pixels",
+                "passed": False,
+                "changed_pixels": 100,
+            }
+        },
+    }
+
+    record = approve_joint_scene_visual_review(
+        run,
+        artwork_path=artwork_path,
+        raw_artwork_path=raw_artwork_path,
+    )
+
+    assert record["passed"] is True
+    assert record["criteria"] == list(JOINT_SCENE_REVIEW_CRITERIA)
+    assert record["reviewed_artwork_sha256"] == artwork_record["sha256"]
+    assert (
+        record["reviewed_artwork_pixel_sha256"]
+        == artwork_record["pixel_sha256"]
+    )
+    assert record["source_cutout_sha256"] == source_digests
+    assert record["source_cutout_pixel_sha256"] == source_pixel_digests
+    assert run["validation"][JOINT_SCENE_REVIEW_KEY] == record
+    assert (
+        require_joint_scene_visual_review(
+            run,
+            artwork_path=artwork_path,
+            raw_artwork_path=raw_artwork_path,
+        )
+        == record
+    )
+
+    missing_raw_digest = copy.deepcopy(run)
+    missing_raw_digest["raw_artwork"] = {}
+    with pytest.raises(ValueError, match="raw artwork provenance"):
+        approve_joint_scene_visual_review(
+            missing_raw_digest,
+            artwork_path=artwork_path,
+            raw_artwork_path=raw_artwork_path,
+        )
+
+    stale_cutout_pixels = copy.deepcopy(run)
+    stale_cutout_pixels["inputs"]["cutouts"][0]["pixel_sha256"] = "6" * 64
+    with pytest.raises(ValueError, match="do not match"):
+        approve_joint_scene_visual_review(
+            stale_cutout_pixels,
+            artwork_path=artwork_path,
+            raw_artwork_path=raw_artwork_path,
+        )
+
+    run["source_artwork"]["sha256"] = "f" * 64
+    with pytest.raises(ValueError, match="incomplete or stale"):
+        require_joint_scene_visual_review(run)
+
+    run["source_artwork"] = file_record(artwork_path, image=True)
+    Image.new("RGB", (80, 112), (200, 40, 40)).save(raw_artwork_path)
+    with pytest.raises(ValueError, match="raw artwork record does not match"):
+        require_joint_scene_visual_review(
+            run,
+            artwork_path=artwork_path,
+            raw_artwork_path=raw_artwork_path,
+        )
+
+
+def test_joint_scene_cannot_promote_without_explicit_human_review():
+    with pytest.raises(ValueError, match="lacks explicit visual identity"):
+        require_joint_scene_visual_review(
+            {
+                "generation": {
+                    "engine": "flux",
+                    "mode": "joint_scene",
+                },
+                "validation": {
+                    "source_pixels": {
+                        "method": "exact_opaque_source_pixels",
+                        "passed": False,
+                    }
+                },
+            }
+        )
 
 
 @pytest.mark.parametrize(
     ("engine", "mode", "current_version"),
     (
         ("flux", "identity_lock", 3),
+        ("flux", "joint_scene", 3),
         ("flux", "edit", 2),
         ("flux", "generate", 2),
         ("flux", "inpaint", 2),
@@ -774,7 +1050,7 @@ def _promotion_fixture(
         "standard_3x3",
         generation,
     )
-    candidate = tmp_path / "candidate.png"
+    candidate = repository / "candidate.png"
     Image.new(
         "RGB",
         (layout.width_px, layout.height_px),
@@ -861,6 +1137,17 @@ def _promotion_fixture(
             "overlay_fingerprint"
         ]
     else:
+        cutout_payload = load_json(
+            scope_dir / "cutouts" / "manifest.json"
+        )
+        cutout_records = [
+            file_record(
+                scope_dir / "cutouts" / item["file"],
+                image=True,
+            )
+            for item in cutout_payload["items"]
+        ]
+        artwork_record = file_record(candidate, image=True)
         run_metadata.write_text(
             json.dumps(
                 {
@@ -876,6 +1163,7 @@ def _promotion_fixture(
                             scope_dir / "poster.yaml"
                         ),
                         "prompt": {"sha256": prompt_hash},
+                        "cutouts": cutout_records,
                         "generation_fingerprint": generation_fingerprint,
                         "overlay_fingerprint": overlay_fingerprint,
                         "source_pixel_audit_reference": {
@@ -884,12 +1172,8 @@ def _promotion_fixture(
                             "height": layout.height_px,
                         },
                     },
-                    "source_artwork": {"sha256": candidate_hash},
-                    "raw_artwork": {
-                        "sha256": candidate_hash,
-                        "width": layout.width_px,
-                        "height": layout.height_px,
-                    },
+                    "source_artwork": artwork_record,
+                    "raw_artwork": artwork_record,
                     "validation": {
                         "source_pixels": {
                             "method": "exact_opaque_source_pixels",
@@ -959,6 +1243,71 @@ def _promotion_fixture(
         run_metadata,
         overlay_fingerprint,
     )
+
+
+def test_joint_scene_requires_review_then_promotes_and_validates(
+    tmp_path,
+    monkeypatch,
+):
+    generation = copy.deepcopy(_manifest()["artwork"]["generation"])
+    generation.update(
+        mode="joint_scene",
+        reference_mode="multi_reference_joint",
+        output_method="lanczos",
+        output_megapixels=0.25,
+    )
+    for key in ("output_dpi", "upscale_model", "upscale_model_sha256"):
+        generation.pop(key, None)
+    (
+        _repository,
+        _assets,
+        _output,
+        _scope_dir,
+        candidate,
+        run_metadata,
+        _overlay_fingerprint,
+    ) = _promotion_fixture(
+        tmp_path,
+        monkeypatch,
+        generation_override=generation,
+    )
+
+    with pytest.raises(ValueError, match="lacks explicit visual identity"):
+        promotion.promote(
+            "Example",
+            candidate,
+            run_metadata_path=run_metadata,
+        )
+
+    artwork, _preview, _cards, provenance_path = promotion.promote(
+        "Example",
+        candidate,
+        approve_joint_scene=True,
+        run_metadata_path=run_metadata,
+    )
+    promoted = load_json(provenance_path)
+    review = promoted["run"]["validation"][JOINT_SCENE_REVIEW_KEY]
+    assert review["passed"] is True
+    assert review["stage"] == "raw_and_text_free_print_artwork"
+
+    result = validator.validate("Example")
+    assert result["generation_fingerprint_current"] is True
+    assert result["identity_validation_method"] == (
+        "human_identity_and_scene_review"
+    )
+
+    promoted["run"]["inputs"].pop("generation_fingerprint")
+    promoted["run"]["source_artwork"]["sha256"] = sha256_file(artwork)
+    provenance_path.write_text(json.dumps(promoted), encoding="utf-8")
+    with pytest.raises(ValueError, match="cannot be legacy or unfingerprinted"):
+        validator.validate("Example")
+    with pytest.raises(ValueError, match="lacks its generation fingerprint"):
+        promotion.promote(
+            "Example",
+            artwork,
+            force=True,
+            run_metadata_path=provenance_path,
+        )
 
 
 def test_promotion_rebinds_overlay_and_validator_prefers_fingerprints(

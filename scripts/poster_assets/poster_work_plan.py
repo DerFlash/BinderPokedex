@@ -27,6 +27,10 @@ try:
         validate_png,
     )
     from .fetch_title_logos import resolve_logo_downloads
+    from .generation_contract import (
+        requires_generation_fingerprint,
+        validate_generation_contract,
+    )
     from .layout import build_page_layout
     from .poster_config import build_identity_lock_prompt, identity_lock_config
     from .poster_io import (
@@ -69,6 +73,10 @@ except ImportError:  # Direct script execution
         validate_png,
     )
     from fetch_title_logos import resolve_logo_downloads
+    from generation_contract import (
+        requires_generation_fingerprint,
+        validate_generation_contract,
+    )
     from layout import build_page_layout
     from poster_config import build_identity_lock_prompt, identity_lock_config
     from poster_io import (
@@ -433,13 +441,18 @@ def _validate_generation_contract(manifest: dict[str, Any]) -> None:
         "standard_3x3",
     )
     build_page_layout(str(layout_name))
-    identity_lock_config(manifest)
     artwork = manifest.get("artwork")
     if not isinstance(artwork, dict):
         raise ValueError("artwork must be a mapping")
     generation = artwork.get("generation")
     if not isinstance(generation, dict) or not generation:
         raise ValueError("artwork.generation must be a non-empty mapping")
+    validate_generation_contract(generation)
+    if (
+        generation.get("engine") == "flux"
+        and generation.get("mode") == "identity_lock"
+    ):
+        identity_lock_config(manifest)
     for field in ("engine", "mode", "output_method"):
         if not isinstance(generation.get(field), str) or not generation[field]:
             raise ValueError(
@@ -470,9 +483,26 @@ def _validate_generation_contract(manifest: dict[str, Any]) -> None:
             )
         artifact_fields.append("upscale_model")
     elif output_method == "lanczos":
+        output_dpi = generation.get("output_dpi")
         output_megapixels = generation.get("output_megapixels")
-        if (
+        has_dpi = output_dpi is not None
+        has_megapixels = output_megapixels is not None
+        if has_dpi == has_megapixels:
+            raise ValueError(
+                "artwork.generation with Lanczos output must define exactly "
+                "one of output_dpi or output_megapixels"
+            )
+        if has_dpi and (
+            not isinstance(output_dpi, int)
+            or isinstance(output_dpi, bool)
+            or output_dpi <= 0
+        ):
+            raise ValueError(
+                "artwork.generation.output_dpi must be a positive integer"
+            )
+        if has_megapixels and (
             not isinstance(output_megapixels, (int, float))
+            or isinstance(output_megapixels, bool)
             or output_megapixels <= 0
         ):
             raise ValueError(
@@ -502,7 +532,7 @@ def _validate_prompt_prerequisites(bundle: PosterBundle) -> None:
     generation = bundle.manifest.get("artwork", {}).get("generation", {})
     if (
         generation.get("engine") == "flux"
-        and generation.get("mode") == "identity_lock"
+        and generation.get("mode") in {"identity_lock", "joint_scene"}
     ):
         return
     path = prompt_path_for_generation(
@@ -785,9 +815,18 @@ def _promotion_drift_codes(
     if not isinstance(run, dict):
         invalid.append("provenance_run_missing")
         return drift, invalid, overlay_drift, pipeline_notes
-    if run.get("generation") != bundle.manifest.get("artwork", {}).get(
+    recorded_generation = run.get("generation")
+    configured_generation = bundle.manifest.get("artwork", {}).get(
         "generation"
+    )
+    if not isinstance(recorded_generation, dict) or not isinstance(
+        configured_generation, dict
     ):
+        invalid.append("generation_contract_invalid")
+        return drift, invalid, overlay_drift, pipeline_notes
+    validate_generation_contract(recorded_generation)
+    validate_generation_contract(configured_generation)
+    if recorded_generation != configured_generation:
         drift.append("generation_contract_drift")
     inputs = run.get("inputs")
     if not isinstance(inputs, dict):
@@ -798,6 +837,11 @@ def _promotion_drift_codes(
     cutout_records = inputs.get("cutouts")
     stored_generation_fingerprint = inputs.get("generation_fingerprint")
     stored_overlay_fingerprint = inputs.get("overlay_fingerprint")
+    if (
+        stored_generation_fingerprint is None
+        and requires_generation_fingerprint(recorded_generation)
+    ):
+        invalid.append("generation_fingerprint_required")
     manifest_matches = False
     if not isinstance(manifest_record, dict):
         invalid.append("provenance_manifest_record_missing")

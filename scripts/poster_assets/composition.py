@@ -64,11 +64,53 @@ def validate_visible_placements(
             )
 
 
+def normalized_visible_placement_contract(
+    placements: list[dict[str, Any]],
+    *,
+    canvas_size: tuple[int, int],
+) -> list[dict[str, int]]:
+    """Describe target silhouettes as stable per-mille canvas coordinates."""
+    validate_visible_placements(
+        placements,
+        canvas_size=canvas_size,
+    )
+    width, height = canvas_size
+    contract: list[dict[str, int]] = []
+    for placement in placements:
+        alpha_box = placement["image"].getchannel("A").getbbox()
+        if alpha_box is None:
+            raise ValueError("Character placement has no visible pixels")
+        left = int(placement["x"]) + alpha_box[0]
+        top = int(placement["y"]) + alpha_box[1]
+        right = int(placement["x"]) + alpha_box[2]
+        bottom = int(placement["y"]) + alpha_box[3]
+        contract.append(
+            {
+                "left_per_mille": round(left * 1000 / width),
+                "top_per_mille": round(top * 1000 / height),
+                "right_per_mille": round(right * 1000 / width),
+                "bottom_per_mille": round(bottom * 1000 / height),
+            }
+        )
+    return contract
+
+
 def cutout_placements(
     layout: PageLayout,
     scope_dir: Path,
+    *,
+    max_width_ratio: float = 0.84,
+    max_height_ratio: float = 0.68,
+    baseline_ratio: float = 0.80,
 ) -> list[dict[str, Any]]:
     """Place one complete cutout inside each bottom-row physical card."""
+    for name, value in (
+        ("max_width_ratio", max_width_ratio),
+        ("max_height_ratio", max_height_ratio),
+        ("baseline_ratio", baseline_ratio),
+    ):
+        if not 0 < value <= 1:
+            raise ValueError(f"{name} must be in the range (0, 1]")
     cells = layout.bottom_row_cells()
     items = load_cutout_items(scope_dir)
     if len(items) != len(cells):
@@ -82,13 +124,13 @@ def cutout_placements(
         cutout = Image.open(cutout_path).convert("RGBA")
         target = fit_image(
             cutout,
-            round(cell.width * 0.84),
-            round(cell.height * 0.68),
+            round(cell.width * max_width_ratio),
+            round(cell.height * max_height_ratio),
         )
         prepared.append((cell, item, target))
 
     placements = []
-    baseline = cells[0].y + round(cells[0].height * 0.80)
+    baseline = cells[0].y + round(cells[0].height * baseline_ratio)
     for cell, item, target in prepared:
         x = cell.x + (cell.width - target.width) // 2
         alpha_box = target.getchannel("A").getbbox()
@@ -109,3 +151,45 @@ def cutout_placements(
         canvas_size=(layout.width_px, layout.height_px),
     )
     return placements
+
+
+def joint_scene_cutout_placements(
+    layout: PageLayout,
+    scope_dir: Path,
+) -> list[dict[str, Any]]:
+    """Return conservative generative bounds with ample crop tolerance."""
+    placements = cutout_placements(
+        layout,
+        scope_dir,
+        max_width_ratio=0.58,
+        max_height_ratio=0.52,
+        baseline_ratio=0.88,
+    )
+    count = len(placements)
+    if count == 1:
+        directions = (0,)
+    elif count == 2:
+        directions = (-1, 1)
+    elif count == 3:
+        directions = (-1, 0, 1)
+    else:
+        raise ValueError(
+            "Joint-scene placement supports one to three subjects"
+        )
+    adjusted = []
+    for placement, direction in zip(
+        placements,
+        directions,
+        strict=True,
+    ):
+        item = dict(placement)
+        item["x"] = int(item["x"]) + round(
+            item["cell"].width * 0.16 * direction
+        )
+        adjusted.append(item)
+    validate_visible_placements(
+        adjusted,
+        canvas_size=(layout.width_px, layout.height_px),
+        description="Joint-scene",
+    )
+    return adjusted

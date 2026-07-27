@@ -61,6 +61,7 @@ data/poster_assets/**/comfyui_poster/identity_core.png
 data/poster_assets/**/comfyui_poster/identity_reference_*.png
 data/poster_assets/**/comfyui_poster/anima_scene_reference.png
 data/poster_assets/**/comfyui_poster/identity_lock_prompt.generated.txt
+data/poster_assets/**/comfyui_poster/joint_scene_prompt.generated.txt
 
 # Generated files (keep data, ignore PDFs)
 output/**/*.pdf

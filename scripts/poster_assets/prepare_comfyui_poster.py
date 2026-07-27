@@ -104,12 +104,17 @@ def build_identity_references(
     output_dir: Path | None = None,
     *,
     asset_key: str | None = None,
+    use_composition_compensation: bool = True,
+    align_to_regions: bool = False,
+    edge_padding_override: int | None = None,
+    bottom_padding_override: int | None = None,
 ) -> None:
     """Write compact appearance references without encoding scene placement.
 
-    Position belongs exclusively to ``scene_reference.png``. Neutral-canvas
-    padding reinforces the relative scene scale without the large poster-shaped
-    reference latents that exhaust unified memory on Apple Silicon.
+    Legacy modes take position from ``scene_reference.png``; ``joint_scene``
+    takes it from its normalized coordinate contract. Neutral-canvas padding
+    reinforces relative scale without poster-shaped reference latents that
+    exhaust unified memory on Apple Silicon.
     """
     layout_name = manifest.get("layout", {}).get("name", "standard_3x3")
     width, height = output_dimensions(asset_key or scope_dir.name, 1.0)
@@ -125,10 +130,14 @@ def build_identity_references(
         placements,
         canvas_size=(width, height),
     )
-    scene_placements = card_safe_conditioning_placements(
-        placements,
-        manifest,
-        canvas_size=(width, height),
+    scene_placements = (
+        card_safe_conditioning_placements(
+            placements,
+            manifest,
+            canvas_size=(width, height),
+        )
+        if use_composition_compensation
+        else placements
     )
     scene_extents = []
     for placement in scene_placements:
@@ -137,6 +146,16 @@ def build_identity_references(
             raise ValueError("Scene placement has no visible pixels")
         scene_extents.append(max(box[2] - box[0], box[3] - box[1]))
     largest_scene_extent = max(scene_extents)
+    if (
+        edge_padding_override is not None
+        and edge_padding_override < 0
+    ):
+        raise ValueError("edge_padding_override must not be negative")
+    if (
+        bottom_padding_override is not None
+        and bottom_padding_override < 0
+    ):
+        raise ValueError("bottom_padding_override must not be negative")
     conditioning = manifest.get("conditioning", {})
     identity_defaults = conditioning.get("identity_defaults", {})
     neutral_values = identity_defaults.get("neutral_rgb", [226, 224, 211])
@@ -180,15 +199,40 @@ def build_identity_references(
             identity_config.get("canvas_px", default_canvas_px)
         )
         bottom_padding = int(
-            identity_config.get(
-                "bottom_padding_px", default_bottom_padding_px
+            (
+                bottom_padding_override
+                if bottom_padding_override is not None
+                else identity_config.get(
+                    "bottom_padding_px",
+                    default_bottom_padding_px,
+                )
             )
         )
         reference = Image.new(
             "RGB", (canvas_extent, canvas_extent), neutral
         )
-        align_x = identity_config.get("align_x", "center")
-        x_padding = int(identity_config.get("x_padding_px", 24))
+        if align_to_regions:
+            if len(placements) == 1:
+                align_x = "center"
+            elif len(placements) == 2:
+                align_x = ("left", "right")[index - 1]
+            elif len(placements) == 3:
+                align_x = ("left", "center", "right")[index - 1]
+            else:
+                raise ValueError(
+                    "Region-aligned identity references support one to three "
+                    "subjects"
+                )
+        else:
+            align_x = identity_config.get("align_x", "center")
+        x_padding = int(
+            (
+                edge_padding_override
+                if edge_padding_override is not None
+                and align_x in {"left", "right"}
+                else identity_config.get("x_padding_px", 24)
+            )
+        )
         if align_x == "left":
             x = x_padding
         elif align_x == "right":
@@ -352,6 +396,8 @@ def build_scene_reference(
     scope: str,
     megapixels: float,
     output_dir: Path | None = None,
+    *,
+    include_identity_lock_assets: bool = True,
 ) -> Path:
     """Write model-compensated edit and exact identity-lock references."""
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
@@ -396,18 +442,19 @@ def build_scene_reference(
         format="PNG",
         optimize=True,
     )
-    build_upper_context_mask(
-        width,
-        height,
-        placements,
-        manifest,
-        reference_dir,
-    )
-    scope_data = load_poster_scope_data(bundle)
-    (reference_dir / IDENTITY_LOCK_PROMPT_FILE).write_text(
-        build_identity_lock_prompt(manifest, scope_data) + "\n",
-        encoding="utf-8",
-    )
+    if include_identity_lock_assets:
+        build_upper_context_mask(
+            width,
+            height,
+            placements,
+            manifest,
+            reference_dir,
+        )
+        scope_data = load_poster_scope_data(bundle)
+        (reference_dir / IDENTITY_LOCK_PROMPT_FILE).write_text(
+            build_identity_lock_prompt(manifest, scope_data) + "\n",
+            encoding="utf-8",
+        )
     # FLUX.1 Canny uses the exact reviewed figures only as line geometry. A
     # white opaque canvas prevents the LoadImage alpha channel from turning the
     # entire background into an unintended inpaint mask or black image.
@@ -431,6 +478,7 @@ def build_scene_reference(
         manifest,
         reference_dir,
         asset_key=bundle.asset_key,
+        use_composition_compensation=include_identity_lock_assets,
     )
     # AnimaEdit is an image-edit model and strongly retains the source material.
     # Give it only an abstract sky/meadow material scaffold—not prior artwork or
@@ -482,7 +530,41 @@ def build_scene_reference(
     return path
 
 
-def prepare(scope: str, megapixels: float = 1.0) -> Path:
+def build_joint_scene_references(
+    scope: str,
+    output_dir: Path | None = None,
+) -> None:
+    """Write only the appearance references consumed by ``joint_scene``."""
+    bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
+    scope_dir = bundle.asset_dir
+    manifest = bundle.manifest
+    reference_dir = output_dir or scope_dir / "comfyui_poster"
+    reference_dir.mkdir(parents=True, exist_ok=True)
+
+    # Joint-scene positions come from the normalized coordinate contract.
+    # In particular, do not read legacy per-subject composition compensation
+    # while constructing the appearance-only references.
+    build_identity_references(
+        scope_dir,
+        manifest,
+        reference_dir,
+        asset_key=bundle.asset_key,
+        use_composition_compensation=False,
+        align_to_regions=True,
+        edge_padding_override=0,
+        # The final model pass tends to place the baseline slightly high. Keep
+        # every source pixel at full identity-reference resolution while using
+        # the neutral canvas edge as a mild, model-facing downward bias.
+        bottom_padding_override=0,
+    )
+
+
+def prepare(
+    scope: str,
+    megapixels: float = 1.0,
+    *,
+    generation_mode: str | None = None,
+) -> Path:
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
     scope_dir = bundle.asset_dir
     work_dir = scope_dir / "comfyui_poster"
@@ -506,6 +588,30 @@ def prepare(scope: str, megapixels: float = 1.0) -> Path:
             raise FileNotFoundError(path)
 
     work_dir.mkdir(parents=True, exist_ok=True)
+    if generation_mode == "joint_scene":
+        for pattern in (
+            "pokemon_*.png",
+            "structure_guide.png",
+            "identity_reference_*.png",
+            "qwen_identity_reference_*.png",
+        ):
+            for stale_path in work_dir.glob(pattern):
+                stale_path.unlink()
+        for filename in (
+            "scene_reference.png",
+            "inpaint_reference.png",
+            "structure_reference.png",
+            "anima_scene_reference.png",
+            "identity_core.png",
+            "upper_context_mask.png",
+            "upper_context_generation_mask.png",
+            IDENTITY_LOCK_PROMPT_FILE,
+        ):
+            (work_dir / filename).unlink(missing_ok=True)
+        build_joint_scene_references(scope, work_dir)
+        return work_dir
+
+    # Preserve the established preparation contract for every legacy mode.
     for pattern in ("pokemon_*.png", "structure_guide.png"):
         for stale_path in work_dir.glob(pattern):
             stale_path.unlink()

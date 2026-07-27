@@ -7,9 +7,19 @@ import json
 from pathlib import Path
 
 try:
-    from .layout import latent_canvas_dimensions, page_canvas_dimensions
+    from .composition import (
+        joint_scene_cutout_placements,
+        normalized_visible_placement_contract,
+    )
+    from .layout import (
+        build_source_layout,
+        latent_canvas_dimensions,
+        page_canvas_dimensions,
+    )
     from .poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
+        JOINT_SCENE_PROMPT_FILE,
+        build_joint_scene_prompt,
         build_identity_lock_prompt,
         build_identity_reference_prompt,
         identity_lock_overscan,
@@ -21,9 +31,19 @@ try:
         poster_bundle,
     )
 except ImportError:
-    from layout import latent_canvas_dimensions, page_canvas_dimensions
+    from composition import (
+        joint_scene_cutout_placements,
+        normalized_visible_placement_contract,
+    )
+    from layout import (
+        build_source_layout,
+        latent_canvas_dimensions,
+        page_canvas_dimensions,
+    )
     from poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
+        JOINT_SCENE_PROMPT_FILE,
+        build_joint_scene_prompt,
         build_identity_lock_prompt,
         build_identity_reference_prompt,
         identity_lock_overscan,
@@ -73,6 +93,138 @@ def page_dimensions(scope: str, megapixels: float) -> tuple[int, int]:
     )
 
 
+def build_joint_scene_workflow(
+    scope: str,
+    seed: int,
+    megapixels: float,
+    *,
+    unet_name: str,
+    clip_name: str,
+    vae_name: str,
+    steps: int,
+) -> dict[str, object]:
+    """Build one whole-image pass from identity references and an empty target."""
+    bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
+    manifest = bundle.manifest
+    scope_data = load_poster_scope_data(bundle)
+    items = load_cutout_items(POSTER_ASSETS / scope)
+    if len(items) > 3:
+        raise ValueError(
+            "FLUX.2 Klein joint_scene currently supports at most three "
+            "individual subject references"
+        )
+    width, height = output_dimensions(scope, megapixels)
+    layout = build_source_layout(
+        str(
+            manifest.get("layout", {}).get(
+                "name",
+                "standard_3x3",
+            )
+        ),
+        width_px=width,
+        height_px=height,
+    )
+    placement_contract = normalized_visible_placement_contract(
+        joint_scene_cutout_placements(layout, bundle.asset_dir),
+        canvas_size=(width, height),
+    )
+    final_prompt = build_joint_scene_prompt(
+        manifest,
+        scope_data,
+        items,
+        placement_contract=placement_contract,
+    )
+
+    workflow = {
+        "1": node("UNETLoader", unet_name=unet_name, weight_dtype="default"),
+        "2": node(
+            "CLIPLoader",
+            clip_name=clip_name,
+            type="flux2",
+            device="default",
+        ),
+        "3": node("VAELoader", vae_name=vae_name),
+        # One-shot prompt: landscape, subjects, lighting, depth, and occlusion
+        # are synthesized together from a genuinely empty target.
+        "4": node("CLIPTextEncode", text=final_prompt, clip=["2", 0]),
+        "5": node("ConditioningZeroOut", conditioning=["4", 0]),
+        "6": node(
+            "EmptyFlux2LatentImage",
+            width=width,
+            height=height,
+            batch_size=1,
+        ),
+        "7": node(
+            "Flux2Scheduler",
+            steps=steps,
+            width=width,
+            height=height,
+        ),
+        "8": node("RandomNoise", noise_seed=seed),
+        "10": node("KSamplerSelect", sampler_name="euler"),
+    }
+
+    positive: list[object] = ["4", 0]
+    negative: list[object] = ["5", 0]
+    for index in range(1, len(items) + 1):
+        base = 30 + (index - 1) * 5
+        load_id = str(base)
+        encode_id = str(base + 1)
+        positive_id = str(base + 2)
+        negative_id = str(base + 3)
+        workflow[load_id] = node(
+            "LoadImage",
+            image=f"identity_reference_{index}.png",
+        )
+        workflow[encode_id] = node(
+            "VAEEncode",
+            pixels=[load_id, 0],
+            vae=["3", 0],
+        )
+        workflow[positive_id] = node(
+            "ReferenceLatent",
+            conditioning=positive,
+            latent=[encode_id, 0],
+        )
+        workflow[negative_id] = node(
+            "ReferenceLatent",
+            conditioning=negative,
+            latent=[encode_id, 0],
+        )
+        positive = [positive_id, 0]
+        negative = [negative_id, 0]
+
+    workflow["70"] = node(
+        "CFGGuider",
+        model=["1", 0],
+        positive=positive,
+        negative=negative,
+        cfg=1.0,
+    )
+    workflow["71"] = node(
+        "SamplerCustomAdvanced",
+        noise=["8", 0],
+        guider=["70", 0],
+        sampler=["10", 0],
+        sigmas=["7", 0],
+        latent_image=["6", 0],
+    )
+    workflow["72"] = node(
+        "VAEDecode",
+        samples=["71", 0],
+        vae=["3", 0],
+    )
+    workflow["73"] = node(
+        "SaveImage",
+        images=["72", 0],
+        filename_prefix=(
+            f"{poster_asset_slug(scope)}_flux2_joint_scene_"
+            f"{megapixel_marker(megapixels)}_seed_{seed}"
+        ),
+    )
+    return workflow
+
+
 def build_workflow(
     scope: str,
     seed: int,
@@ -85,12 +237,31 @@ def build_workflow(
     steps: int = 4,
     reference_mode: str = "identity",
 ) -> dict[str, object]:
-    if generation_mode not in {"edit", "inpaint", "identity_lock"}:
+    if generation_mode not in {
+        "edit",
+        "inpaint",
+        "identity_lock",
+        "joint_scene",
+    }:
         raise ValueError(f"Unsupported FLUX generation mode: {generation_mode}")
     if steps <= 0:
         raise ValueError("steps must be positive")
     if reference_mode not in {"composition", "identity"}:
         raise ValueError(f"Unsupported FLUX reference mode: {reference_mode}")
+    if generation_mode == "joint_scene":
+        if reference_mode != "identity":
+            raise ValueError(
+                "FLUX joint_scene requires individual identity references"
+            )
+        return build_joint_scene_workflow(
+            scope,
+            seed,
+            megapixels,
+            unet_name=unet_name,
+            clip_name=clip_name,
+            vae_name=vae_name,
+            steps=steps,
+        )
     work_dir = POSTER_ASSETS / scope / "comfyui_poster"
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
     manifest = bundle.manifest
@@ -349,6 +520,17 @@ def write_workflow(
             str(workflow["4"]["inputs"]["text"]).strip() + "\n",
             encoding="utf-8",
         )
+    elif generation_mode == "joint_scene":
+        snapshot = "\n\n".join(
+            (
+                "JOINT SCENE - ONE-SHOT FINAL SYNTHESIS",
+                str(workflow["4"]["inputs"]["text"]).strip(),
+            )
+        )
+        (target_dir / JOINT_SCENE_PROMPT_FILE).write_text(
+            snapshot.strip() + "\n",
+            encoding="utf-8",
+        )
     out_path.write_text(
         json.dumps(
             workflow,
@@ -367,7 +549,7 @@ def main() -> int:
     parser.add_argument("--megapixels", type=float, default=1.0)
     parser.add_argument(
         "--mode",
-        choices=("edit", "inpaint", "identity_lock"),
+        choices=("edit", "inpaint", "identity_lock", "joint_scene"),
         default="identity_lock",
     )
     parser.add_argument("--model", default="flux-2-klein-4b-fp8.safetensors")

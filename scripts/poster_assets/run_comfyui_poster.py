@@ -48,10 +48,15 @@ try:
         write_workflow as write_qwen_edit_workflow,
     )
     from .finalize_comfyui_poster import SUPPORTED_LANGUAGES, finalize
+    from .generation_contract import (
+        is_joint_scene_generation,
+        validate_generation_contract,
+    )
     from .generation_options import (
         metadata_from_workflow_options,
         resolve_generation_options,
     )
+    from .layout import build_print_layout
     from .prepare_comfyui_poster import prepare
     from .provenance import (
         add_model_artifact_hashes,
@@ -113,10 +118,15 @@ except ImportError:
         write_workflow as write_qwen_edit_workflow,
     )
     from finalize_comfyui_poster import SUPPORTED_LANGUAGES, finalize
+    from generation_contract import (
+        is_joint_scene_generation,
+        validate_generation_contract,
+    )
     from generation_options import (
         metadata_from_workflow_options,
         resolve_generation_options,
     )
+    from layout import build_print_layout
     from prepare_comfyui_poster import prepare
     from provenance import (
         add_model_artifact_hashes,
@@ -188,6 +198,38 @@ def resize_artwork(scope: str, source: Path, destination: Path, megapixels: floa
         image = image.resize(target_size, Image.Resampling.LANCZOS)
     destination.parent.mkdir(parents=True, exist_ok=True)
     image.save(destination, format="PNG", optimize=True)
+    validate_raw_artwork(destination)
+    return destination
+
+
+def resize_artwork_to_dpi(
+    scope: str,
+    source: Path,
+    destination: Path,
+    dpi: int,
+) -> Path:
+    """Resize deterministically to the exact physical card-grid raster."""
+    if dpi <= 0:
+        raise ValueError("dpi must be positive")
+    bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
+    layout_name = str(
+        bundle.manifest.get("layout", {}).get(
+            "name",
+            "standard_3x3",
+        )
+    )
+    print_layout = build_print_layout(layout_name, dpi)
+    target_size = (print_layout.width_px, print_layout.height_px)
+    image = Image.open(source).convert("RGB")
+    if image.size != target_size:
+        image = image.resize(target_size, Image.Resampling.LANCZOS)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    image.save(
+        destination,
+        format="PNG",
+        optimize=True,
+        dpi=(dpi, dpi),
+    )
     validate_raw_artwork(destination)
     return destination
 
@@ -382,7 +424,15 @@ def run(
         engine,
         workflow_options,
     )
-    work_dir = prepare(scope, megapixels)
+    joint_scene = is_joint_scene_generation(engine_generation)
+    if joint_scene:
+        work_dir = prepare(
+            scope,
+            megapixels,
+            generation_mode="joint_scene",
+        )
+    else:
+        work_dir = prepare(scope, megapixels)
     validate_server_input_directory(server, work_dir)
     comfy_root = server_comfyui_root(server)
     if comfy_root is None:
@@ -411,30 +461,35 @@ def run(
     if not raw_path.is_file():
         raise FileNotFoundError(f"ComfyUI reported an output that does not exist: {raw_path}")
     validate_raw_artwork(raw_path)
-    source_reference = work_dir / "inpaint_reference.png"
-    source_pixel_audit = audit_exact_source_pixels(
-        source_reference,
-        raw_path,
-        require_match=(engine == "flux" and flux_mode == "identity_lock"),
-    )
-    with Image.open(raw_path) as audited_artwork:
-        audit_width, audit_height = audited_artwork.size
-    source_pixel_audit.update(
-        {
-            "stage": "raw_generation",
-            "reference_sha256": sha256_file(source_reference),
-            "artwork_sha256": sha256_file(raw_path),
-            "width": audit_width,
-            "height": audit_height,
-        }
-    )
-    validation: dict[str, object] = {
-        "source_pixels": source_pixel_audit,
-    }
+    validation: dict[str, object] = {}
+    if not joint_scene:
+        source_reference = work_dir / "inpaint_reference.png"
+        source_pixel_audit = audit_exact_source_pixels(
+            source_reference,
+            raw_path,
+            require_match=(
+                engine == "flux"
+                and flux_mode == "identity_lock"
+            ),
+        )
+        with Image.open(raw_path) as audited_artwork:
+            audit_width, audit_height = audited_artwork.size
+        source_pixel_audit.update(
+            {
+                "stage": "raw_generation",
+                "reference_sha256": sha256_file(source_reference),
+                "artwork_sha256": sha256_file(raw_path),
+                "width": audit_width,
+                "height": audit_height,
+            }
+        )
+        validation["source_pixels"] = source_pixel_audit
     final_megapixels = output_megapixels or megapixels
     if engine == "flux":
         if flux_mode == "identity_lock":
             effective_reference_mode = "two_pass_source_pixels"
+        elif flux_mode == "joint_scene":
+            effective_reference_mode = "multi_reference_joint"
         elif flux_mode == "inpaint":
             effective_reference_mode = "source_pixels"
         else:
@@ -484,14 +539,24 @@ def run(
     )
     upscale_workflow_path = None
     if output_dpi is not None:
-        artwork_path, upscale_workflow_path = upscale(
-            scope,
-            raw_path,
-            server=server,
-            timeout=timeout,
-            dpi=output_dpi,
-            model_name=upscale_model,
-        )
+        if joint_scene:
+            artwork_path = resize_artwork_to_dpi(
+                scope,
+                raw_path,
+                work_dir
+                / "temp"
+                / f"{raw_path.stem}_to_{output_dpi}dpi.png",
+                output_dpi,
+            )
+        else:
+            artwork_path, upscale_workflow_path = upscale(
+                scope,
+                raw_path,
+                server=server,
+                timeout=timeout,
+                dpi=output_dpi,
+                model_name=upscale_model,
+            )
     else:
         artwork_marker = (
             f"to_{megapixel_marker(final_megapixels)}"
@@ -512,13 +577,21 @@ def run(
         "generation_megapixels": megapixels,
     }
     if output_dpi is not None:
-        generation.update(
-            {
-                "output_dpi": output_dpi,
-                "output_method": "model_upscale",
-                "upscale_model": upscale_model,
-            }
-        )
+        if joint_scene:
+            generation.update(
+                {
+                    "output_dpi": output_dpi,
+                    "output_method": "lanczos",
+                }
+            )
+        else:
+            generation.update(
+                {
+                    "output_dpi": output_dpi,
+                    "output_method": "model_upscale",
+                    "upscale_model": upscale_model,
+                }
+            )
     else:
         generation.update(
             {
@@ -526,6 +599,7 @@ def run(
                 "output_method": "lanczos",
             }
         )
+    validate_generation_contract(generation)
     generation = add_model_artifact_hashes(comfy_root, generation)
     run_metadata_path = write_run_metadata(
         scope,
@@ -560,7 +634,11 @@ def main() -> int:
     output_group.add_argument(
         "--output-dpi",
         type=int,
-        help="Model-upscale the text-free artwork to this physical print dpi (default: 300)",
+        help=(
+            "Write this exact physical print raster; joint_scene uses "
+            "deterministic Lanczos, legacy modes use their configured "
+            "model-upscale path (default: 300)"
+        ),
     )
     output_group.add_argument(
         "--output-megapixels",
@@ -608,10 +686,11 @@ def main() -> int:
     )
     parser.add_argument(
         "--flux-mode",
-        choices=("edit", "inpaint", "identity_lock"),
+        choices=("edit", "inpaint", "identity_lock", "joint_scene"),
         help=(
-            "Use the two-pass exact-source lock (default), direct inpainting, "
-            "or an independent reference edit"
+            "Use the two-pass exact-source lock (default), generate a "
+            "subject-free draft followed by one unified whole-image pass, "
+            "use direct inpainting, or an independent reference edit"
         ),
     )
     parser.add_argument("--flux-model")
@@ -684,16 +763,6 @@ def main() -> int:
         args.upscale_model
         or configured.get("upscale_model", DEFAULT_UPSCALE_MODEL)
     )
-    output_dpi = args.output_dpi
-    if output_dpi is None and args.output_megapixels is None:
-        if configured.get("output_method") == "lanczos":
-            args.output_megapixels = float(
-                configured.get("output_megapixels", megapixels)
-            )
-        else:
-            output_dpi = int(
-                configured.get("output_dpi", DEFAULT_OUTPUT_DPI)
-            )
     if selected_engine == "both":
         engines = ("flux", "anima")
     elif selected_engine == "all":
@@ -706,6 +775,31 @@ def main() -> int:
             configured,
             vars(args),
         )
+        output_megapixels = args.output_megapixels
+        output_dpi = args.output_dpi
+        if output_megapixels is None and output_dpi is None:
+            if is_joint_scene_generation(resolved.metadata):
+                if (
+                    configured.get("output_method") == "lanczos"
+                    and configured.get("output_megapixels") is not None
+                    and configured.get("output_dpi") is None
+                ):
+                    output_megapixels = float(
+                        configured.get("output_megapixels", megapixels)
+                    )
+                else:
+                    output_dpi = int(
+                        configured.get("output_dpi")
+                        or DEFAULT_OUTPUT_DPI
+                    )
+            elif configured.get("output_method") == "lanczos":
+                output_megapixels = float(
+                    configured.get("output_megapixels", megapixels)
+                )
+            else:
+                output_dpi = int(
+                    configured.get("output_dpi", DEFAULT_OUTPUT_DPI)
+                )
         raw_path, artwork_path, final_path, run_metadata_path = run(
             args.scope,
             seed,
@@ -715,7 +809,7 @@ def main() -> int:
             args.language,
             engine=engine,
             **resolved.workflow_options,
-            output_megapixels=args.output_megapixels,
+            output_megapixels=output_megapixels,
             output_dpi=output_dpi,
             upscale_model=upscale_model,
         )

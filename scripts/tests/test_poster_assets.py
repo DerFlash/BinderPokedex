@@ -1,3 +1,4 @@
+import copy
 import json
 import shutil
 import sys
@@ -51,7 +52,11 @@ from scripts.poster_assets.init_poster_scope import (
     init_scope,
     stable_scope_seed,
 )
-from scripts.poster_assets.poster_io import poster_bundle
+from scripts.poster_assets.poster_io import (
+    load_cutout_items,
+    load_poster_scope_data,
+    poster_bundle,
+)
 from scripts.poster_assets.poster_subject import (
     PosterSubject,
     official_artwork_id_from_url,
@@ -60,8 +65,11 @@ from scripts.poster_assets.poster_subject import (
 )
 from scripts.poster_assets.poster_config import (
     IDENTITY_LOCK_PROMPT_FILE,
+    JOINT_SCENE_PROMPT_FILE,
     build_identity_lock_prompt,
     build_identity_reference_prompt,
+    build_joint_prompt_snapshot,
+    build_joint_scene_prompt,
     identity_lock_config,
     identity_lock_overscan,
 )
@@ -77,15 +85,21 @@ from scripts.poster_assets.queue_comfyui_workflow import (
 )
 from scripts.poster_assets.prepare_comfyui_poster import (
     build_identity_references,
+    build_joint_scene_references,
     build_scene_reference,
     build_upper_context_mask,
     card_safe_conditioning_placements,
 )
 from scripts.poster_assets.composition import cutout_placements
+from scripts.poster_assets.composition import (
+    joint_scene_cutout_placements,
+    normalized_visible_placement_contract,
+)
 from scripts.poster_assets.typography import wrap_text
 from scripts.poster_assets.run_comfyui_poster import (
     configured_generation,
     resize_artwork,
+    resize_artwork_to_dpi,
     validate_identity_lock_pixels,
     validate_raw_artwork,
     write_engine_workflow,
@@ -732,6 +746,38 @@ def test_cutout_placements_stay_inside_bottom_card_cells():
         assert cell.y <= top < bottom <= cell.y + cell.height
 
 
+def test_joint_scene_placements_add_generative_crop_tolerance():
+    scope_dir = (
+        Path(__file__).resolve().parents[2]
+        / "data"
+        / "poster_assets"
+        / "Base1"
+    )
+    layout = build_page_layout("standard_3x3")
+    exact = cutout_placements(layout, scope_dir)
+    joint = joint_scene_cutout_placements(layout, scope_dir)
+
+    for exact_item, joint_item in zip(exact, joint, strict=True):
+        exact_box = exact_item["image"].getchannel("A").getbbox()
+        joint_box = joint_item["image"].getchannel("A").getbbox()
+        assert exact_box is not None and joint_box is not None
+        assert joint_box[2] - joint_box[0] < exact_box[2] - exact_box[0]
+        assert joint_box[3] - joint_box[1] < exact_box[3] - exact_box[1]
+        assert (
+            joint_item["y"] + joint_box[3]
+            > exact_item["y"] + exact_box[3]
+        )
+    joint_centers = []
+    for item in joint:
+        box = item["image"].getchannel("A").getbbox()
+        assert box is not None
+        joint_centers.append(
+            item["x"] + (box[0] + box[2]) / 2
+        )
+    assert joint_centers[0] < joint[0]["cell"].center[0]
+    assert joint_centers[2] > joint[2]["cell"].center[0]
+
+
 def test_real_canvas_guard_rejects_an_explicit_out_of_canvas_placement():
     scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
     layout = build_source_layout(
@@ -833,6 +879,64 @@ def test_inpaint_reference_uses_exact_final_placements(tmp_path: Path):
         actual,
         Image.open(tmp_path / "scene_reference.png").convert("RGBA"),
     ).getbbox() is not None
+
+
+def test_joint_scene_preparation_excludes_identity_lock_geometry(
+    tmp_path: Path,
+):
+    identity_lock_dir = tmp_path / "identity-lock"
+    joint_dir = tmp_path / "joint"
+    build_scene_reference("Base1", 0.25, identity_lock_dir)
+    build_joint_scene_references(
+        "Base1",
+        joint_dir,
+    )
+
+    assert not (joint_dir / "upper_context_mask.png").exists()
+    assert not (joint_dir / "upper_context_generation_mask.png").exists()
+    assert not (joint_dir / IDENTITY_LOCK_PROMPT_FILE).exists()
+    assert not (joint_dir / "inpaint_reference.png").exists()
+    assert not (joint_dir / "scene_reference.png").exists()
+    assert not (joint_dir / "structure_reference.png").exists()
+    assert not (joint_dir / "anima_scene_reference.png").exists()
+    assert (joint_dir / "identity_reference_1.png").is_file()
+
+    neutral = (226, 224, 211)
+    locked = Image.open(
+        identity_lock_dir / "identity_reference_1.png"
+    ).convert("RGB")
+    joint = Image.open(
+        joint_dir / "identity_reference_1.png"
+    ).convert("RGB")
+    assert joint.size == locked.size
+    locked_box = ImageChops.difference(
+        locked,
+        Image.new("RGB", locked.size, neutral),
+    ).getbbox()
+    joint_box = ImageChops.difference(
+        joint,
+        Image.new("RGB", joint.size, neutral),
+    ).getbbox()
+    assert locked_box is not None and joint_box is not None
+    assert joint_box[3] - joint_box[1] > locked_box[3] - locked_box[1]
+    centers = []
+    edge_boxes = []
+    for index in (1, 2, 3):
+        reference = Image.open(
+            joint_dir / f"identity_reference_{index}.png"
+        ).convert("RGB")
+        box = ImageChops.difference(
+            reference,
+            Image.new("RGB", reference.size, neutral),
+        ).getbbox()
+        assert box is not None
+        edge_boxes.append((box, reference.size))
+        centers.append((box[0] + box[2]) / (2 * reference.width))
+    assert centers[0] < 0.5
+    assert centers[1] == pytest.approx(0.5, abs=0.02)
+    assert centers[2] > 0.5
+    assert edge_boxes[0][0][0] == 0
+    assert edge_boxes[2][0][2] == edge_boxes[2][1][0]
 
 
 def test_identity_lock_mask_generates_only_above_the_bottom_subject_band(
@@ -1447,6 +1551,187 @@ def test_comfyui_identity_mode_appends_three_scale_aware_identity_references():
     assert workflow["9"]["inputs"]["positive"] == ["17", 0]
 
 
+def test_joint_scene_synthesizes_landscape_and_subjects_in_one_shot():
+    workflow = build_workflow(
+        "Base1",
+        seed=123,
+        megapixels=0.25,
+        generation_mode="joint_scene",
+        reference_mode="identity",
+    )
+
+    assert [
+        node["inputs"]["image"]
+        for node in workflow.values()
+        if node["class_type"] == "LoadImage"
+    ] == [
+        "identity_reference_1.png",
+        "identity_reference_2.png",
+        "identity_reference_3.png",
+    ]
+    assert sum(
+        node["class_type"] == "EmptyFlux2LatentImage"
+        for node in workflow.values()
+    ) == 1
+    assert sum(
+        node["class_type"] == "SamplerCustomAdvanced"
+        for node in workflow.values()
+    ) == 1
+    assert workflow["71"]["inputs"]["latent_image"] == ["6", 0]
+    assert workflow["8"]["inputs"]["noise_seed"] == 123
+
+    # IMAGE 1..3 are the only references, on both conditioning branches.
+    assert workflow["32"]["inputs"]["conditioning"] == ["4", 0]
+    assert workflow["33"]["inputs"]["conditioning"] == ["5", 0]
+    assert workflow["37"]["inputs"]["conditioning"] == ["32", 0]
+    assert workflow["38"]["inputs"]["conditioning"] == ["33", 0]
+    assert workflow["42"]["inputs"]["conditioning"] == ["37", 0]
+    assert workflow["43"]["inputs"]["conditioning"] == ["38", 0]
+    assert workflow["70"]["inputs"]["positive"] == ["42", 0]
+    assert workflow["70"]["inputs"]["negative"] == ["43", 0]
+
+    assert not any(
+        node["class_type"] == "ImageCompositeMasked"
+        for node in workflow.values()
+    )
+    assert [
+        node["inputs"]["pixels"]
+        for node in workflow.values()
+        if node["class_type"] == "VAEEncode"
+    ] == [["30", 0], ["35", 0], ["40", 0]]
+    assert workflow["73"]["inputs"]["images"] == ["72", 0]
+    assert not any(
+        node["class_type"] in {
+            "ImageCompositeMasked",
+            "VAEEncodeForInpaint",
+        }
+        for node in workflow.values()
+    )
+
+    prompt = workflow["4"]["inputs"]["text"]
+    assert "Generate the complete final image in one unified denoising pass" in prompt
+    assert "There is no later character overlay" in prompt
+    assert "There is no supplied landscape image" in prompt
+    assert "no pre-generated background plate" in prompt
+    assert "mandatory placement and scale contract" in prompt
+    assert "never paint the character as a flat top layer" in prompt
+    assert "must continue naturally in front" in prompt
+    assert "same physically plausible depth relationship" in prompt
+    assert "Mewtwo" in prompt
+    assert "Bulbasaur" in prompt
+    assert "Charmander" in prompt
+
+
+def test_joint_scene_prompt_is_dynamic_and_uses_only_identity_references():
+    bundle = poster_bundle("Pokedex/sections/gen7")
+    scope_data = load_poster_scope_data(bundle)
+    items = load_cutout_items(bundle.asset_dir)
+    width, height = latent_canvas_dimensions("standard_3x3", 1.0)
+    placement_contract = normalized_visible_placement_contract(
+        joint_scene_cutout_placements(
+            build_source_layout(
+                "standard_3x3",
+                width_px=width,
+                height_px=height,
+            ),
+            bundle.asset_dir,
+        ),
+        canvas_size=(width, height),
+    )
+
+    final = build_joint_scene_prompt(
+        bundle.manifest,
+        scope_data,
+        items,
+        placement_contract=placement_contract,
+    )
+    snapshot = build_joint_prompt_snapshot(
+        bundle.manifest,
+        scope_data,
+        items,
+        placement_contract=placement_contract,
+    )
+
+    assert "Rowlet" in final
+    assert "Litten" in final
+    assert "Popplio" in final
+    assert "IMAGE 4" not in final
+    assert "3 identity reference images" in final
+    assert "No scene, background, or combined character composition" in final
+    assert "x 4.2% to 17.2%" in final
+    assert "small physically plausible edge occlusions" in final
+    assert "JOINT SCENE - ONE-SHOT FINAL SYNTHESIS" in snapshot
+    assert "SUBJECT-FREE LANDSCAPE DRAFT" not in snapshot
+
+
+def test_joint_scene_scope_constraints_reach_the_one_shot_prompt():
+    bundle = poster_bundle("Pokedex/sections/gen7")
+    manifest = copy.deepcopy(bundle.manifest)
+    constraint = "Keep the distant observatory below the cloud line."
+    manifest["artwork"]["scene"]["constraints"] = [constraint]
+    scope_data = load_poster_scope_data(bundle)
+    items = load_cutout_items(bundle.asset_dir)
+    width, height = latent_canvas_dimensions("standard_3x3", 1.0)
+    placement_contract = normalized_visible_placement_contract(
+        joint_scene_cutout_placements(
+            build_source_layout(
+                "standard_3x3",
+                width_px=width,
+                height_px=height,
+            ),
+            bundle.asset_dir,
+        ),
+        canvas_size=(width, height),
+    )
+
+    assert constraint in build_joint_scene_prompt(
+        manifest,
+        scope_data,
+        items,
+        placement_contract=placement_contract,
+    )
+
+
+def test_joint_scene_workflow_writes_one_shot_prompt_snapshot(
+    tmp_path: Path,
+):
+    workflow_path = write_engine_workflow(
+        "flux",
+        "Base1",
+        123,
+        0.25,
+        flux_mode="joint_scene",
+        flux_reference_mode="identity",
+        workflow_output_dir=tmp_path,
+    )
+
+    snapshot = tmp_path / JOINT_SCENE_PROMPT_FILE
+    assert workflow_path.name == "workflow_api_joint_scene_0p25mp_123.json"
+    assert snapshot.is_file()
+    workflow = json.loads(workflow_path.read_text(encoding="utf-8"))
+    expected = "\n\n".join(
+        (
+            "JOINT SCENE - ONE-SHOT FINAL SYNTHESIS",
+            workflow["4"]["inputs"]["text"],
+        )
+    )
+    assert snapshot.read_text(encoding="utf-8") == expected.strip() + "\n"
+
+
+def test_joint_scene_rejects_composition_only_conditioning():
+    with pytest.raises(
+        ValueError,
+        match="requires individual identity references",
+    ):
+        build_workflow(
+            "Base1",
+            seed=123,
+            megapixels=0.25,
+            generation_mode="joint_scene",
+            reference_mode="composition",
+        )
+
+
 def test_sv035_workflow_uses_its_own_dynamic_cast_contract():
     workflow = build_workflow(
         "SV03.5",
@@ -1803,6 +2088,36 @@ def test_resize_artwork_uses_requested_poster_dimensions(tmp_path: Path):
     resize_artwork("Base1", source, destination, 0.25)
 
     assert Image.open(destination).size == (432, 596)
+
+
+@pytest.mark.parametrize(
+    "layout_name",
+    ("standard_3x3", "wide_4x3", "wide_4x4"),
+)
+def test_resize_artwork_to_dpi_uses_exact_print_dimensions(
+    tmp_path: Path,
+    monkeypatch,
+    layout_name: str,
+):
+    source = tmp_path / "source.png"
+    destination = tmp_path / f"{layout_name}.png"
+    source_image = Image.new("RGB", (64, 96), (40, 120, 80))
+    source_image.paste((180, 80, 40), (0, 0, 32, 48))
+    source_image.save(source)
+    monkeypatch.setattr(
+        poster_runner,
+        "poster_bundle",
+        lambda *_args, **_kwargs: SimpleNamespace(
+            manifest={"layout": {"name": layout_name}}
+        ),
+    )
+
+    resize_artwork_to_dpi("Example", source, destination, 300)
+
+    expected = build_print_layout(layout_name, 300)
+    with Image.open(destination) as resized:
+        assert resized.size == (expected.width_px, expected.height_px)
+        assert resized.info["dpi"] == pytest.approx((300, 300), abs=0.1)
 
 
 def test_generation_hashes_describe_selected_comfyui_model_files(
@@ -2269,6 +2584,7 @@ def test_new_promotion_rejects_an_unbound_legacy_source_pixel_audit(
     payload["generation"].update(
         engine="flux",
         mode="identity_lock",
+        reference_mode="two_pass_source_pixels",
     )
     payload["validation"] = {
         "identity_lock": {

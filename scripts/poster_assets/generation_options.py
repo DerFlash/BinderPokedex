@@ -49,6 +49,9 @@ try:
         DEFAULT_STEPS as DEFAULT_QWEN_STEPS,
         DEFAULT_VAE as DEFAULT_QWEN_VAE,
     )
+    from .generation_contract import (
+        validate_generation_reference_contract,
+    )
 except ImportError:  # Direct script execution
     from create_anima_poster_workflow import (
         DEFAULT_CFG as DEFAULT_ANIMA_CFG,
@@ -82,6 +85,7 @@ except ImportError:  # Direct script execution
         DEFAULT_STEPS as DEFAULT_QWEN_STEPS,
         DEFAULT_VAE as DEFAULT_QWEN_VAE,
     )
+    from generation_contract import validate_generation_reference_contract
 
 
 SUPPORTED_ENGINES = ("flux", "anima", "flux1_canny", "qwen_edit")
@@ -201,7 +205,7 @@ FLUX_FIELDS = (
         "flux_mode",
         "flux_mode",
         DEFAULT_FLUX_MODE,
-        _choice("edit", "inpaint", "identity_lock"),
+        _choice("edit", "inpaint", "identity_lock", "joint_scene"),
     ),
     FieldSpec(
         "steps",
@@ -489,6 +493,27 @@ def _resolve_flux_reference_mode(
     configured_mode = manifest.get("mode")
     explicit_reference = overrides.get("flux_reference_mode")
 
+    if mode == "joint_scene":
+        if explicit_reference not in {None, "identity"}:
+            raise ValueError(
+                "flux.reference_mode must be 'identity' for joint_scene"
+            )
+        workflow["flux_reference_mode"] = "identity"
+        metadata_reference = "multi_reference_joint"
+        if configured_mode == mode and "reference_mode" in manifest:
+            configured_reference = _string(
+                manifest["reference_mode"],
+                "flux.reference_mode",
+            )
+            if configured_reference != metadata_reference:
+                raise ValueError(
+                    "flux.reference_mode is incompatible with mode "
+                    f"{mode!r}: expected {metadata_reference!r}, "
+                    f"got {configured_reference!r}"
+                )
+        metadata["reference_mode"] = metadata_reference
+        return
+
     reference_source: object = DEFAULT_FLUX_WORKFLOW_REFERENCE_MODE
     if (
         explicit_reference is None
@@ -565,6 +590,7 @@ def resolve_generation_options(
         )
     else:
         _validate_fixed_metadata(engine, manifest, metadata)
+    validate_generation_reference_contract(metadata)
 
     if engine == "flux1_canny":
         low = float(metadata["canny_low"])

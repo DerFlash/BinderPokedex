@@ -17,6 +17,11 @@ try:
         scope_featured_elements,
         unique_by_poster_subject,
     )
+    from .generation_contract import (
+        is_joint_scene_generation,
+        requires_generation_fingerprint,
+        validate_generation_contract,
+    )
     from .layout import (
         build_generation_output_layout,
         build_page_layout,
@@ -30,8 +35,10 @@ try:
         current_generation_pipeline_contract_version,
         fingerprint_record_is_valid,
         generation_fingerprint_pipeline_contract_version,
+        image_pixel_record,
         required_model_artifact_hashes,
         require_exact_source_pixel_validation,
+        require_joint_scene_visual_review,
         sha256_file,
     )
     from .poster_io import (
@@ -48,6 +55,11 @@ except ImportError:
         scope_featured_elements,
         unique_by_poster_subject,
     )
+    from generation_contract import (
+        is_joint_scene_generation,
+        requires_generation_fingerprint,
+        validate_generation_contract,
+    )
     from layout import (
         build_generation_output_layout,
         build_page_layout,
@@ -61,8 +73,10 @@ except ImportError:
         current_generation_pipeline_contract_version,
         fingerprint_record_is_valid,
         generation_fingerprint_pipeline_contract_version,
+        image_pixel_record,
         required_model_artifact_hashes,
         require_exact_source_pixel_validation,
+        require_joint_scene_visual_review,
         sha256_file,
     )
     from poster_io import (
@@ -265,6 +279,12 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
 
     configured_generation = artwork_config.get("generation", {})
     recorded_generation = payload.get("run", {}).get("generation", {})
+    if not isinstance(configured_generation, dict) or not isinstance(
+        recorded_generation, dict
+    ):
+        raise ValueError("Promoted generation metadata must be a mapping")
+    validate_generation_contract(configured_generation)
+    validate_generation_contract(recorded_generation)
     if recorded_generation != configured_generation:
         raise ValueError(
             f"Generation metadata drift between {manifest_path} and "
@@ -276,6 +296,13 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
             f"Promoted provenance lacks generation inputs: {provenance_path}"
         )
     recorded_fingerprint = run_inputs.get("generation_fingerprint")
+    if (
+        recorded_fingerprint is None
+        and requires_generation_fingerprint(recorded_generation)
+    ):
+        raise ValueError(
+            "Joint-scene provenance cannot be legacy or unfingerprinted"
+        )
     generation_fingerprint_current: bool | None
     generation_pipeline_contract_version: int | None
     generation_pipeline_contract_status: str
@@ -337,10 +364,18 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
         raise ValueError(
             f"Missing promoted model hashes: {', '.join(missing_hashes)}"
         )
-    source_pixel_validation = require_exact_source_pixel_validation(
-        payload.get("run", {}),
-        allow_legacy=True,
-    )
+    is_joint_scene = is_joint_scene_generation(recorded_generation)
+    if is_joint_scene:
+        identity_validation = require_joint_scene_visual_review(
+            payload.get("run", {})
+        )
+        identity_pixels = None
+    else:
+        identity_validation = require_exact_source_pixel_validation(
+            payload.get("run", {}),
+            allow_legacy=True,
+        )
+        identity_pixels = int(identity_validation["opaque_pixels"])
     if recorded_generation.get("mode") == "identity_lock":
         prompt_record = (
             payload.get("run", {})
@@ -379,6 +414,20 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
     output_dpi = recorded_generation.get("output_dpi")
     outputs = payload.get("outputs", {})
     artwork_path = _validate_record(outputs["artwork"])
+    if is_joint_scene:
+        promoted_pixel_hash = image_pixel_record(
+            artwork_path,
+        )["pixel_sha256"]
+        output_pixel_hash = outputs["artwork"].get("pixel_sha256")
+        if (
+            output_pixel_hash != promoted_pixel_hash
+            or identity_validation.get("reviewed_artwork_pixel_sha256")
+            != promoted_pixel_hash
+        ):
+            raise ValueError(
+                "Promoted joint-scene artwork no longer matches its reviewed "
+                "text-free pixels"
+            )
     routed_artwork_path = bundle.asset_dir / bundle.artwork_file
     if artwork_path != routed_artwork_path:
         raise ValueError(
@@ -487,7 +536,8 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
         "card_dimensions_by_cell": tuple(expected_card_sizes),
         "effective_dpi": (dpi_x, dpi_y),
         "provenance": provenance_path,
-        "identity_pixels": int(source_pixel_validation["opaque_pixels"]),
+        "identity_pixels": identity_pixels,
+        "identity_validation_method": identity_validation["method"],
         "generation_fingerprint_current": generation_fingerprint_current,
         "generation_inputs_current": generation_fingerprint_current,
         "generation_pipeline_contract_version": (

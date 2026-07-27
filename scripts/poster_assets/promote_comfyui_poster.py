@@ -14,31 +14,49 @@ from PIL import Image
 
 try:
     from .finalize_comfyui_poster import finalize
+    from .generation_contract import (
+        is_joint_scene_generation,
+        requires_generation_fingerprint,
+        validate_generation_contract,
+    )
     from .layout import build_generation_output_layout
     from .poster_io import poster_bundle
     from .provenance import (
+        approve_joint_scene_visual_review,
         build_generation_fingerprint,
         build_overlay_fingerprint,
         fingerprint_record_is_valid,
         generation_fingerprint_pipeline_contract_version,
+        image_pixel_record,
         load_run_metadata,
         promoted_provenance,
+        recorded_repository_path,
         require_exact_source_pixel_validation,
+        require_joint_scene_visual_review,
         sha256_file,
     )
     from .slice_poster import slice_poster
 except ImportError:
     from finalize_comfyui_poster import finalize
+    from generation_contract import (
+        is_joint_scene_generation,
+        requires_generation_fingerprint,
+        validate_generation_contract,
+    )
     from layout import build_generation_output_layout
     from poster_io import poster_bundle
     from provenance import (
+        approve_joint_scene_visual_review,
         build_generation_fingerprint,
         build_overlay_fingerprint,
         fingerprint_record_is_valid,
         generation_fingerprint_pipeline_contract_version,
+        image_pixel_record,
         load_run_metadata,
         promoted_provenance,
+        recorded_repository_path,
         require_exact_source_pixel_validation,
+        require_joint_scene_visual_review,
         sha256_file,
     )
     from slice_poster import slice_poster
@@ -151,6 +169,7 @@ def promote(
     language: str = "en",
     name: str = "flux2",
     force: bool = False,
+    approve_joint_scene: bool = False,
     run_metadata_path: Path,
 ) -> tuple[Path, Path, list[Path], Path]:
     """Persist reviewed artwork, deterministic overlay, and physical card crops."""
@@ -199,25 +218,38 @@ def promote(
         )
     configured_generation = manifest.get("artwork", {}).get("generation")
     recorded_generation = run_metadata.get("generation")
+    if not isinstance(configured_generation, dict) or not isinstance(
+        recorded_generation, dict
+    ):
+        raise ValueError("Poster generation metadata must be a mapping")
+    validate_generation_contract(configured_generation)
+    validate_generation_contract(recorded_generation)
     if configured_generation != recorded_generation:
         raise ValueError(
             "Candidate generation metadata does not match "
             f"{manifest_path}. Review and update artwork.generation before "
             "promoting this candidate."
         )
-    require_exact_source_pixel_validation(
-        run_metadata,
-        allow_legacy=refreshing_existing_promotion,
-    )
+    is_joint_scene = is_joint_scene_generation(recorded_generation)
+    if approve_joint_scene and not is_joint_scene:
+        raise ValueError(
+            "--approve-joint-scene applies only to flux/joint_scene candidates"
+        )
     run_inputs = run_metadata.get("inputs")
     if not isinstance(run_inputs, dict):
-        if not refreshing_existing_promotion:
+        if (
+            requires_generation_fingerprint(recorded_generation)
+            or not refreshing_existing_promotion
+        ):
             raise ValueError(
                 "New poster candidate lacks generation input provenance"
             )
     else:
         recorded_fingerprint = run_inputs.get("generation_fingerprint")
-        if recorded_fingerprint is None and not refreshing_existing_promotion:
+        if recorded_fingerprint is None and (
+            requires_generation_fingerprint(recorded_generation)
+            or not refreshing_existing_promotion
+        ):
             raise ValueError(
                 "New poster candidate lacks its generation fingerprint"
             )
@@ -251,6 +283,37 @@ def promote(
         # expensive generation. Bind the promotion preview to their current
         # state instead of rejecting the reviewed text-free artwork.
         run_inputs["overlay_fingerprint"] = build_overlay_fingerprint(bundle)
+    if is_joint_scene:
+        if refreshing_existing_promotion:
+            if approve_joint_scene:
+                raise ValueError(
+                    "An existing promoted joint scene is already bound to its "
+                    "visual review"
+                )
+            require_joint_scene_visual_review(run_metadata)
+        else:
+            raw_record = run_metadata.get("raw_artwork")
+            if not isinstance(raw_record, dict):
+                raise ValueError(
+                    "Joint-scene candidate lacks its raw artwork record"
+                )
+            raw_artwork_path = recorded_repository_path(raw_record)
+            if approve_joint_scene:
+                approve_joint_scene_visual_review(
+                    run_metadata,
+                    artwork_path=artwork,
+                    raw_artwork_path=raw_artwork_path,
+                )
+            require_joint_scene_visual_review(
+                run_metadata,
+                artwork_path=artwork,
+                raw_artwork_path=raw_artwork_path,
+            )
+    else:
+        require_exact_source_pixel_validation(
+            run_metadata,
+            allow_legacy=refreshing_existing_promotion,
+        )
 
     with Image.open(artwork) as loaded_source:
         source = loaded_source.convert("RGB")
@@ -284,6 +347,19 @@ def promote(
         if output_dpi:
             save_options["dpi"] = (float(output_dpi), float(output_dpi))
         source.save(staged_artwork, **save_options)
+        if is_joint_scene:
+            reviewed = require_joint_scene_visual_review(run_metadata)
+            stable_pixels = image_pixel_record(
+                staged_artwork,
+            )["pixel_sha256"]
+            if (
+                reviewed.get("reviewed_artwork_pixel_sha256")
+                != stable_pixels
+            ):
+                raise ValueError(
+                    "Promoted joint-scene artwork is not pixel-identical to "
+                    "the reviewed text-free candidate"
+                )
         finalize(scope, staged_artwork, staged_final, language)
         staged_card_paths = slice_poster(
             scope,
@@ -342,6 +418,14 @@ def main() -> int:
     parser.add_argument("--language", default="en")
     parser.add_argument("--name", default="flux2")
     parser.add_argument("--force", action="store_true")
+    parser.add_argument(
+        "--approve-joint-scene",
+        action="store_true",
+        help=(
+            "Confirm that every subject crop and the integrated scene were "
+            "visually reviewed against the source identities"
+        ),
+    )
     parser.add_argument("--run-metadata", required=True, type=Path)
     args = parser.parse_args()
 
@@ -351,6 +435,7 @@ def main() -> int:
         language=args.language,
         name=args.name,
         force=args.force,
+        approve_joint_scene=args.approve_joint_scene,
         run_metadata_path=args.run_metadata,
     )
     print(f"Artwork: {artwork_path}")

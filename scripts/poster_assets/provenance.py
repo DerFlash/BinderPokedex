@@ -10,6 +10,10 @@ from typing import Any
 from PIL import Image
 
 try:
+    from .composition import (
+        joint_scene_cutout_placements,
+        normalized_visible_placement_contract,
+    )
     from .fetch_cutouts import (
         scope_featured_elements,
         unique_by_poster_subject,
@@ -18,13 +22,18 @@ try:
         RASTER_GEOMETRY_CONTRACT_VERSION,
         build_generation_output_layout,
         build_page_layout,
+        build_source_layout,
         latent_canvas_dimensions,
     )
+    from .generation_contract import validate_generation_contract
     from .poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
+        JOINT_SCENE_PROMPT_FILE,
         build_identity_lock_prompt,
         build_identity_reference_prompt,
+        build_joint_prompt_snapshot,
         identity_lock_config,
+        joint_scene_conditioning_contract,
     )
     from .poster_io import (
         SCOPE_DATA,
@@ -38,6 +47,10 @@ try:
         subject_fingerprint_identity,
     )
 except ImportError:
+    from composition import (
+        joint_scene_cutout_placements,
+        normalized_visible_placement_contract,
+    )
     from fetch_cutouts import (
         scope_featured_elements,
         unique_by_poster_subject,
@@ -46,13 +59,18 @@ except ImportError:
         RASTER_GEOMETRY_CONTRACT_VERSION,
         build_generation_output_layout,
         build_page_layout,
+        build_source_layout,
         latent_canvas_dimensions,
     )
+    from generation_contract import validate_generation_contract
     from poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
+        JOINT_SCENE_PROMPT_FILE,
         build_identity_lock_prompt,
         build_identity_reference_prompt,
+        build_joint_prompt_snapshot,
         identity_lock_config,
+        joint_scene_conditioning_contract,
     )
     from poster_io import (
         SCOPE_DATA,
@@ -78,6 +96,7 @@ GENERATION_PIPELINE_CONTRACT_VERSION = 3
 OVERLAY_PIPELINE_CONTRACT_VERSION = 2
 CURRENT_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
     ("flux", "identity_lock"): GENERATION_PIPELINE_CONTRACT_VERSION,
+    ("flux", "joint_scene"): 3,
     ("flux", "edit"): 2,
     ("flux", "generate"): 2,
     ("flux", "inpaint"): 2,
@@ -88,6 +107,7 @@ CURRENT_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
 }
 SUPPORTED_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
     ("flux", "identity_lock"): frozenset({1, 2, 3}),
+    ("flux", "joint_scene"): frozenset({3}),
     ("flux", "edit"): frozenset({1, 2}),
     ("flux", "generate"): frozenset({1, 2}),
     ("flux", "inpaint"): frozenset({1, 2}),
@@ -98,6 +118,7 @@ SUPPORTED_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
 }
 RASTER_GEOMETRY_PIPELINE_MINIMUM = {
     ("flux", "identity_lock"): 3,
+    ("flux", "joint_scene"): 3,
     ("flux", "edit"): 2,
     ("flux", "generate"): 2,
     ("flux", "inpaint"): 2,
@@ -116,6 +137,19 @@ MODEL_DIRECTORIES = {
     "upscale_model": ("upscale_models",),
 }
 SOURCE_PIXEL_VALIDATION_KEYS = ("source_pixels", "identity_lock")
+JOINT_SCENE_REVIEW_KEY = "joint_scene_visual_review"
+JOINT_SCENE_REVIEW_CRITERIA = (
+    "exact_cast_count",
+    "raw_generation_identity",
+    "text_free_output_identity",
+    "identity_and_form",
+    "silhouette_and_stature",
+    "anatomy_and_face",
+    "colors_and_markings",
+    "placement_and_card_safety",
+    "natural_scene_integration",
+    "coherent_landscape_occlusion",
+)
 
 
 def sha256_file(path: Path, chunk_size: int = 1024 * 1024) -> str:
@@ -287,6 +321,259 @@ def require_exact_source_pixel_validation(
     return record
 
 
+def _valid_sha256(value: object) -> bool:
+    return (
+        isinstance(value, str)
+        and len(value) == 64
+        and all(character in "0123456789abcdef" for character in value)
+    )
+
+
+def _valid_review_timestamp(value: object) -> bool:
+    if not isinstance(value, str) or not value:
+        return False
+    try:
+        parsed = datetime.fromisoformat(value)
+    except ValueError:
+        return False
+    return parsed.tzinfo is not None and parsed.utcoffset() is not None
+
+
+def recorded_repository_path(record: dict[str, Any]) -> Path:
+    """Resolve a recorded project file without allowing path traversal."""
+    filename = record.get("file")
+    if not isinstance(filename, str) or not filename:
+        raise ValueError("Recorded file path is missing")
+    relative = Path(filename)
+    if relative.is_absolute() or ".." in relative.parts:
+        raise ValueError(f"Unsafe recorded file path: {filename!r}")
+    resolved = (ROOT / relative).resolve()
+    if not resolved.is_relative_to(ROOT.resolve()):
+        raise ValueError(f"Recorded file escapes repository: {filename!r}")
+    return resolved
+
+
+def _verify_recorded_image(
+    record: dict[str, Any],
+    path: Path,
+    *,
+    label: str,
+) -> dict[str, Any]:
+    """Require a provenance image record to match the actual file."""
+    actual = file_record(path, image=True)
+    for field in (
+        "bytes",
+        "sha256",
+        "pixel_sha256",
+        "width",
+        "height",
+    ):
+        if record.get(field) != actual.get(field):
+            raise ValueError(
+                f"Joint-scene {label} record does not match {path}: {field}"
+            )
+    return actual
+
+
+def _joint_scene_review_inputs(
+    run_metadata: dict[str, Any],
+    *,
+    artwork_path: Path | None = None,
+    raw_artwork_path: Path | None = None,
+) -> dict[str, Any]:
+    """Return fully validated values bound by a joint-scene review."""
+    generation = run_metadata.get("generation")
+    if not isinstance(generation, dict):
+        raise ValueError("Joint-scene candidate lacks generation metadata")
+    validate_generation_contract(generation)
+    if (
+        generation.get("engine") != "flux"
+        or generation.get("mode") != "joint_scene"
+    ):
+        raise ValueError(
+            "Joint-scene visual approval applies only to flux/joint_scene"
+        )
+    artwork = run_metadata.get("source_artwork")
+    raw_artwork = run_metadata.get("raw_artwork")
+    inputs = run_metadata.get("inputs")
+    if (
+        not isinstance(artwork, dict)
+        or not isinstance(raw_artwork, dict)
+        or not isinstance(inputs, dict)
+    ):
+        raise ValueError(
+            "Joint-scene candidate lacks bound artwork or input provenance"
+        )
+    for label, record in (
+        ("text-free artwork", artwork),
+        ("raw artwork", raw_artwork),
+    ):
+        if (
+            not _valid_sha256(record.get("sha256"))
+            or not _valid_sha256(record.get("pixel_sha256"))
+            or not isinstance(record.get("width"), int)
+            or record["width"] <= 0
+            or not isinstance(record.get("height"), int)
+            or record["height"] <= 0
+        ):
+            raise ValueError(
+                f"Joint-scene {label} provenance is incomplete or invalid"
+            )
+    if (artwork_path is None) != (raw_artwork_path is None):
+        raise ValueError(
+            "Joint-scene file verification needs both raw and text-free paths"
+        )
+    if artwork_path is not None and raw_artwork_path is not None:
+        _verify_recorded_image(
+            artwork,
+            artwork_path,
+            label="text-free artwork",
+        )
+        _verify_recorded_image(
+            raw_artwork,
+            raw_artwork_path,
+            label="raw artwork",
+        )
+
+    fingerprint = inputs.get("generation_fingerprint")
+    if not fingerprint_record_is_valid(fingerprint):
+        raise ValueError(
+            "Joint-scene candidate requires a valid generation fingerprint"
+        )
+    components = fingerprint.get("components", {})
+    subjects = components.get("source_subject_ids")
+    fingerprint_cutouts = components.get("cutouts")
+    cutouts = inputs.get("cutouts")
+    if (
+        not isinstance(subjects, list)
+        or not subjects
+        or not isinstance(fingerprint_cutouts, list)
+        or not isinstance(cutouts, list)
+        or len(subjects) != len(fingerprint_cutouts)
+        or len(subjects) != len(cutouts)
+    ):
+        raise ValueError(
+            "Joint-scene candidate lacks one source identity per subject"
+        )
+    source_hashes = []
+    source_pixel_hashes = []
+    for cutout, fingerprint_cutout in zip(cutouts, fingerprint_cutouts):
+        if not isinstance(cutout, dict) or not isinstance(
+            fingerprint_cutout, dict
+        ):
+            raise ValueError("Joint-scene source identity records are invalid")
+        source_hash = cutout.get("sha256")
+        source_pixel_hash = cutout.get("pixel_sha256")
+        fingerprint_pixel_hash = fingerprint_cutout.get("pixel_sha256")
+        if (
+            not _valid_sha256(source_hash)
+            or not _valid_sha256(source_pixel_hash)
+            or not _valid_sha256(fingerprint_pixel_hash)
+            or source_pixel_hash != fingerprint_pixel_hash
+        ):
+            raise ValueError(
+                "Joint-scene source identities do not match the generation "
+                "fingerprint"
+            )
+        source_hashes.append(source_hash)
+        source_pixel_hashes.append(source_pixel_hash)
+    return {
+        "artwork": artwork,
+        "raw_artwork": raw_artwork,
+        "subjects": subjects,
+        "source_hashes": source_hashes,
+        "source_pixel_hashes": source_pixel_hashes,
+        "fingerprint_sha256": fingerprint["sha256"],
+    }
+
+
+def approve_joint_scene_visual_review(
+    run_metadata: dict[str, Any],
+    *,
+    artwork_path: Path,
+    raw_artwork_path: Path,
+) -> dict[str, Any]:
+    """Bind explicit review of both raw and output joint-scene artwork."""
+    bound = _joint_scene_review_inputs(
+        run_metadata,
+        artwork_path=artwork_path,
+        raw_artwork_path=raw_artwork_path,
+    )
+    validation = run_metadata.setdefault("validation", {})
+    if not isinstance(validation, dict):
+        raise ValueError("Poster validation record must be a mapping")
+    artwork = bound["artwork"]
+    raw_artwork = bound["raw_artwork"]
+    record = {
+        "method": "human_identity_and_scene_review",
+        "passed": True,
+        "stage": "raw_and_text_free_print_artwork",
+        "approval_source": "explicit_promotion_flag",
+        "reviewed_at": datetime.now(timezone.utc).isoformat(),
+        "reviewed_artwork_sha256": artwork["sha256"],
+        "reviewed_artwork_pixel_sha256": artwork["pixel_sha256"],
+        "raw_artwork_sha256": raw_artwork["sha256"],
+        "raw_artwork_pixel_sha256": raw_artwork["pixel_sha256"],
+        "generation_fingerprint_sha256": bound["fingerprint_sha256"],
+        "source_subject_ids": bound["subjects"],
+        "source_cutout_sha256": bound["source_hashes"],
+        "source_cutout_pixel_sha256": bound["source_pixel_hashes"],
+        "criteria": list(JOINT_SCENE_REVIEW_CRITERIA),
+    }
+    validation[JOINT_SCENE_REVIEW_KEY] = record
+    return record
+
+
+def require_joint_scene_visual_review(
+    run_metadata: dict[str, Any],
+    *,
+    artwork_path: Path | None = None,
+    raw_artwork_path: Path | None = None,
+) -> dict[str, Any]:
+    """Require a complete review bound to raw, output, and identity pixels."""
+    validation = run_metadata.get("validation")
+    record = (
+        validation.get(JOINT_SCENE_REVIEW_KEY)
+        if isinstance(validation, dict)
+        else None
+    )
+    if not isinstance(record, dict):
+        raise ValueError(
+            "Joint-scene candidate lacks explicit visual identity approval"
+        )
+    bound = _joint_scene_review_inputs(
+        run_metadata,
+        artwork_path=artwork_path,
+        raw_artwork_path=raw_artwork_path,
+    )
+    artwork = bound["artwork"]
+    raw_artwork = bound["raw_artwork"]
+    if (
+        record.get("method") != "human_identity_and_scene_review"
+        or record.get("passed") is not True
+        or record.get("stage") != "raw_and_text_free_print_artwork"
+        or record.get("approval_source") != "explicit_promotion_flag"
+        or not _valid_review_timestamp(record.get("reviewed_at"))
+        or record.get("criteria") != list(JOINT_SCENE_REVIEW_CRITERIA)
+        or record.get("reviewed_artwork_sha256") != artwork["sha256"]
+        or record.get("reviewed_artwork_pixel_sha256")
+        != artwork["pixel_sha256"]
+        or record.get("raw_artwork_sha256") != raw_artwork["sha256"]
+        or record.get("raw_artwork_pixel_sha256")
+        != raw_artwork["pixel_sha256"]
+        or record.get("generation_fingerprint_sha256")
+        != bound["fingerprint_sha256"]
+        or record.get("source_subject_ids") != bound["subjects"]
+        or record.get("source_cutout_sha256") != bound["source_hashes"]
+        or record.get("source_cutout_pixel_sha256")
+        != bound["source_pixel_hashes"]
+    ):
+        raise ValueError(
+            "Joint-scene visual identity approval is incomplete or stale"
+        )
+    return record
+
+
 def display_path(path: Path) -> str:
     """Use a repository-relative path without leaking machine-specific roots."""
     resolved = path.resolve()
@@ -312,6 +599,7 @@ def file_record(path: Path, *, image: bool = False) -> dict[str, Any]:
             dpi = loaded.info.get("dpi")
             if dpi:
                 record["dpi"] = [round(float(value), 4) for value in dpi]
+        record.update(image_pixel_record(path))
     return record
 
 
@@ -706,6 +994,41 @@ def _effective_generation_prompt(
     mode = str(generation.get("mode", ""))
     if engine == "flux" and mode == "identity_lock":
         return build_identity_lock_prompt(bundle.manifest, scope_data)
+    if engine == "flux" and mode == "joint_scene":
+        generation_megapixels = generation.get("generation_megapixels")
+        if (
+            not isinstance(generation_megapixels, (int, float))
+            or isinstance(generation_megapixels, bool)
+            or generation_megapixels <= 0
+        ):
+            raise ValueError(
+                "Joint-scene generation_megapixels must be positive"
+            )
+        layout_name = str(
+            bundle.manifest.get("layout", {}).get(
+                "name",
+                "standard_3x3",
+            )
+        )
+        width, height = latent_canvas_dimensions(
+            layout_name,
+            float(generation_megapixels),
+        )
+        layout = build_source_layout(
+            layout_name,
+            width_px=width,
+            height_px=height,
+        )
+        placement_contract = normalized_visible_placement_contract(
+            joint_scene_cutout_placements(layout, bundle.asset_dir),
+            canvas_size=(width, height),
+        )
+        return build_joint_prompt_snapshot(
+            bundle.manifest,
+            scope_data,
+            cutout_items,
+            placement_contract=placement_contract,
+        )
 
     prompt_path = prompt_path_for_generation(
         bundle.asset_dir / "comfyui_poster",
@@ -757,6 +1080,7 @@ def build_generation_fingerprint(
     )
     if not isinstance(effective_generation, dict):
         raise ValueError("artwork.generation must be a mapping")
+    validate_generation_contract(effective_generation)
     contract_version = (
         current_generation_pipeline_contract_version(effective_generation)
         if pipeline_contract_version is None
@@ -796,10 +1120,8 @@ def build_generation_fingerprint(
             contract_version,
         ),
         "scene": artwork.get("scene", {}),
-        "identity_lock": identity_lock_config(manifest),
         "generation": effective_generation,
         "pokemon": manifest.get("pokemon", {}),
-        "conditioning": manifest.get("conditioning", {}),
         "effective_prompt": {
             "encoding": "utf-8",
             "sha256": hashlib.sha256(prompt.encode("utf-8")).hexdigest(),
@@ -807,6 +1129,20 @@ def build_generation_fingerprint(
         "source_subject_ids": expected_subjects,
         "cutouts": cutouts,
     }
+    is_joint_scene = (
+        effective_generation.get("engine") == "flux"
+        and effective_generation.get("mode") == "joint_scene"
+    )
+    if not is_joint_scene:
+        components["conditioning"] = manifest.get("conditioning", {})
+        components["identity_lock"] = identity_lock_config(manifest)
+    else:
+        components["joint_scene_conditioning"] = (
+            joint_scene_conditioning_contract(
+                manifest,
+                raw_cutout_items,
+            )
+        )
     return fingerprint_record(components)
 
 
@@ -917,6 +1253,9 @@ def prompt_path_for_generation(
     if engine == "flux" and mode == "identity_lock":
         prompt_dir = workflow_path.parent if workflow_path is not None else work_dir
         return prompt_dir / IDENTITY_LOCK_PROMPT_FILE
+    if engine == "flux" and mode == "joint_scene":
+        prompt_dir = workflow_path.parent if workflow_path is not None else work_dir
+        return prompt_dir / JOINT_SCENE_PROMPT_FILE
     if engine == "flux" and mode == "inpaint":
         return work_dir / "inpaint_prompt.txt"
     if engine == "flux":
@@ -930,6 +1269,7 @@ def generation_input_records(
     generation: dict[str, Any],
 ) -> dict[str, Any]:
     """Collect the exact lightweight files that conditioned one generation."""
+    validate_generation_contract(generation)
     scope_dir = POSTER_ASSETS / scope
     work_dir = scope_dir / "comfyui_poster"
     cutout_manifest_path = scope_dir / "cutouts" / "manifest.json"
@@ -969,6 +1309,17 @@ def generation_input_records(
                 image=True,
             ),
         ]
+    elif (
+        generation.get("engine") == "flux"
+        and generation.get("mode") == "joint_scene"
+    ):
+        references = [
+            file_record(
+                work_dir / f"identity_reference_{index}.png",
+                image=True,
+            )
+            for index in range(1, len(cutouts) + 1)
+        ]
     elif generation.get("engine") == "flux" and generation.get("mode") == "inpaint":
         references = [
             file_record(work_dir / "inpaint_reference.png", image=True),
@@ -993,7 +1344,7 @@ def generation_input_records(
         )
         references.append(file_record(work_dir / "identity_core.png", image=True))
 
-    return {
+    records = {
         "scope_manifest": file_record(scope_dir / "poster.yaml"),
         "prompt": file_record(
             prompt_path_for_generation(
@@ -1005,12 +1356,17 @@ def generation_input_records(
         "cutout_manifest": file_record(cutout_manifest_path),
         "cutouts": cutouts,
         "references": references,
-        "source_pixel_audit_reference": file_record(
-            work_dir / "inpaint_reference.png",
-            image=True,
-        ),
         "workflow": file_record(workflow_path),
     }
+    if not (
+        generation.get("engine") == "flux"
+        and generation.get("mode") == "joint_scene"
+    ):
+        records["source_pixel_audit_reference"] = file_record(
+            work_dir / "inpaint_reference.png",
+            image=True,
+        )
+    return records
 
 
 def write_run_metadata(
@@ -1067,7 +1423,8 @@ def load_run_metadata(path: Path, artwork_path: Path) -> dict[str, Any]:
     truth for the unchanged text-free artwork.
     """
     payload = json.loads(path.read_text(encoding="utf-8"))
-    if payload.get("kind") == "promoted_poster":
+    is_promoted_container = payload.get("kind") == "promoted_poster"
+    if is_promoted_container:
         payload = payload.get("run")
         if not isinstance(payload, dict):
             raise ValueError(
@@ -1083,6 +1440,34 @@ def load_run_metadata(path: Path, artwork_path: Path) -> dict[str, Any]:
         raise ValueError(
             f"Run metadata does not describe {artwork_path}: "
             f"expected {expected_hash}, got {actual_hash}"
+        )
+    generation = payload.get("generation")
+    if (
+        isinstance(generation, dict)
+        and generation.get("engine") == "flux"
+        and generation.get("mode") == "joint_scene"
+        and not is_promoted_container
+    ):
+        source_record = payload.get("source_artwork")
+        raw_record = payload.get("raw_artwork")
+        if not isinstance(source_record, dict):
+            raise ValueError(
+                "Joint-scene run lacks its text-free artwork record"
+            )
+        _verify_recorded_image(
+            source_record,
+            artwork_path,
+            label="text-free artwork",
+        )
+        if not isinstance(raw_record, dict):
+            raise ValueError(
+                "Joint-scene run lacks its raw artwork record"
+            )
+        raw_path = recorded_repository_path(raw_record)
+        _verify_recorded_image(
+            raw_record,
+            raw_path,
+            label="raw artwork",
         )
     return payload
 
