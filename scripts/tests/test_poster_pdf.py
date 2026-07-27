@@ -91,6 +91,7 @@ def test_pokedex_enabled_generation_bundles_need_no_set_id():
             "gen5",
             "gen6",
             "gen7",
+            "gen8",
         ]
         assert [
             renderer.section_id for renderer in collection.renderers
@@ -102,6 +103,7 @@ def test_pokedex_enabled_generation_bundles_need_no_set_id():
             "gen5",
             "gen6",
             "gen7",
+            "gen8",
         ]
     finally:
         collection.cleanup()

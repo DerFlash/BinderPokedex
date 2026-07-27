@@ -1,0 +1,498 @@
+{
+  "asset_name": "flux2",
+  "kind": "promoted_poster",
+  "outputs": {
+    "artwork": {
+      "bytes": 5120586,
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "file": "data/poster_assets/Pokedex/sections/gen8/poster-flux2-artwork.png",
+      "height": 3268,
+      "sha256": "5b7929523aa61dcf6445b3df97f89eaa3a3aeb7434591faabfafa7d116d03677",
+      "width": 2368
+    },
+    "cards": [
+      {
+        "bytes": 449762,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/Pokedex/sections/gen8/poster-flux2-cards/card_r1_c1.png",
+        "height": 1050,
+        "sha256": "04e7286b62c652d6402ebadd8107bb0c54cd818aea2967f6ba76435dd0d2c845",
+        "width": 750
+      },
+      {
+        "bytes": 267869,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/Pokedex/sections/gen8/poster-flux2-cards/card_r1_c2.png",
+        "height": 1050,
+        "sha256": "0eee9d439feafcb784c2aebd68a6e60a581fd1f5fc2db2dd5fa9f67b43a22c1d",
+        "width": 750
+      },
+      {
+        "bytes": 165604,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/Pokedex/sections/gen8/poster-flux2-cards/card_r1_c3.png",
+        "height": 1050,
+        "sha256": "d8963a18d43da367573fbefda806dbec91d1faa5d276595fc59eb0a3a1774800",
+        "width": 750
+      },
+      {
+        "bytes": 665508,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/Pokedex/sections/gen8/poster-flux2-cards/card_r2_c1.png",
+        "height": 1050,
+        "sha256": "d6ae8fb961ab978c57306a58b7155ef66d9f0c732b871ab18aa6b644186e11a7",
+        "width": 750
+      },
+      {
+        "bytes": 355540,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/Pokedex/sections/gen8/poster-flux2-cards/card_r2_c2.png",
+        "height": 1050,
+        "sha256": "51e6afd67c6050e6747194d35a878ed879c518686ea55a4ce00125e6a8bff91e",
+        "width": 750
+      },
+      {
+        "bytes": 496612,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/Pokedex/sections/gen8/poster-flux2-cards/card_r2_c3.png",
+        "height": 1050,
+        "sha256": "ed93c5b6abffdf27796adc7c0a25e38466be60915247e1e51cfd689ac6bca29a",
+        "width": 750
+      },
+      {
+        "bytes": 691299,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/Pokedex/sections/gen8/poster-flux2-cards/card_r3_c1.png",
+        "height": 1050,
+        "sha256": "30d258a6f5217da6289bcc1e84e3eb491338466e1ea131dc51b20dfd0c669f6a",
+        "width": 750
+      },
+      {
+        "bytes": 568624,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/Pokedex/sections/gen8/poster-flux2-cards/card_r3_c2.png",
+        "height": 1050,
+        "sha256": "0446c66405b2ada5b578ffe387887e8b4fa28dad3d14f69053829f556fa901b0",
+        "width": 750
+      },
+      {
+        "bytes": 720544,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/Pokedex/sections/gen8/poster-flux2-cards/card_r3_c3.png",
+        "height": 1050,
+        "sha256": "c85e3ce20732529de5a1ba21417b0a786fbe99969744e79e9bd55ce372fd04a2",
+        "width": 750
+      }
+    ],
+    "preview": {
+      "bytes": 4910453,
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "file": "data/poster_assets/Pokedex/sections/gen8/poster-flux2.png",
+      "height": 3268,
+      "sha256": "fbf3355f94e564ae8246d442b312946b08e62ae403ec276dad43b26e01cc94c3",
+      "width": 2368
+    }
+  },
+  "poster_id": "gen8",
+  "preview_language": "en",
+  "promoted_at": "2026-07-27T04:37:12.520470+00:00",
+  "run": {
+    "created_at": "2026-07-27T04:35:21.197492+00:00",
+    "generation": {
+      "encoder": "qwen_3_4b.safetensors",
+      "encoder_sha256": "6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a",
+      "engine": "flux",
+      "generation_megapixels": 1.0,
+      "mode": "identity_lock",
+      "model": "flux-2-klein-4b-fp8.safetensors",
+      "model_sha256": "97ed34fe0567e436200f2faee3939b88f2b5d99f8af2a4dc16532c4245c0ccb6",
+      "output_dpi": 300,
+      "output_method": "model_upscale",
+      "reference_mode": "two_pass_source_pixels",
+      "seed": 260715405,
+      "steps": 4,
+      "upscale_model": "RealESRGAN_x4plus_anime_6B.pth",
+      "upscale_model_sha256": "f872d837d3c90ed2e05227bed711af5671a6fd1c9f7d7e91c911a61f155e99da",
+      "vae": "flux2-vae.safetensors",
+      "vae_sha256": "d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5"
+    },
+    "inputs": {
+      "cutout_manifest": {
+        "bytes": 1746,
+        "file": "data/poster_assets/Pokedex/sections/gen8/cutouts/manifest.json",
+        "sha256": "1522211bb3e1df1f8fd6e3635382a53170d81f6f19c0bdf9ccf4ffbb28a6392f"
+      },
+      "cutouts": [
+        {
+          "bytes": 111536,
+          "file": "data/poster_assets/Pokedex/sections/gen8/cutouts/pokemon_810_grookey.png",
+          "height": 475,
+          "sha256": "0a4b1c0662dd8e0ad7f00bf78c2f958b297bc25c70bbc7273d50b3d39d5de330",
+          "width": 475
+        },
+        {
+          "bytes": 65679,
+          "file": "data/poster_assets/Pokedex/sections/gen8/cutouts/pokemon_813_scorbunny.png",
+          "height": 475,
+          "sha256": "0099f4bb576966efc872c03c69616f954c8474d12608a2fd7e91304a9d271167",
+          "width": 475
+        },
+        {
+          "bytes": 102743,
+          "file": "data/poster_assets/Pokedex/sections/gen8/cutouts/pokemon_816_sobble.png",
+          "height": 475,
+          "sha256": "162c8c4c870624a42aa81f3859f29542d7d713bffd98bb4b4f7ab79ae9a881fb",
+          "width": 475
+        }
+      ],
+      "generation_fingerprint": {
+        "components": {
+          "conditioning": {
+            "identity_defaults": {
+              "bottom_padding_px": 24,
+              "canvas_px": 512,
+              "max_subject_px": 350,
+              "min_subject_px": 150,
+              "neutral_rgb": [
+                226,
+                224,
+                211
+              ]
+            }
+          },
+          "cutouts": [
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "1007dc8ec519ceb248b9a19942d488e3974128e63416c80d54b6eba894c60d35",
+              "pokemon_id": 810,
+              "width": 475
+            },
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "f88fc484d3b27caaf14d4bb02b3e9df6dc534154404af128db1597fe5f8e609e",
+              "pokemon_id": 813,
+              "width": 475
+            },
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "52f49d77a019e0c1ffbb8fcef6a807ce9f8405a7a48154aee4d6312b48f5b26a",
+              "pokemon_id": 816,
+              "width": 475
+            }
+          ],
+          "effective_prompt": {
+            "encoding": "utf-8",
+            "sha256": "32fbd4419e5b18e7b98287eff2a4a024ad545869680b4a9bcd5e165ede97d6ca"
+          },
+          "generation": {
+            "encoder": "qwen_3_4b.safetensors",
+            "encoder_sha256": "6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a",
+            "engine": "flux",
+            "generation_megapixels": 1.0,
+            "mode": "identity_lock",
+            "model": "flux-2-klein-4b-fp8.safetensors",
+            "model_sha256": "97ed34fe0567e436200f2faee3939b88f2b5d99f8af2a4dc16532c4245c0ccb6",
+            "output_dpi": 300,
+            "output_method": "model_upscale",
+            "reference_mode": "two_pass_source_pixels",
+            "seed": 260715405,
+            "steps": 4,
+            "upscale_model": "RealESRGAN_x4plus_anime_6B.pth",
+            "upscale_model_sha256": "f872d837d3c90ed2e05227bed711af5671a6fd1c9f7d7e91c911a61f155e99da",
+            "vae": "flux2-vae.safetensors",
+            "vae_sha256": "d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5"
+          },
+          "identity_lock": {
+            "max_protected_start_ratio": 0.7,
+            "overscan_ratio": 0.04,
+            "subject_clearance_ratio": 0.02,
+            "transition_ratio": 0.1
+          },
+          "layout": {
+            "columns": 3,
+            "name": "standard_3x3",
+            "rows": 3,
+            "safe_cells": {
+              "set_info": {
+                "column": 2,
+                "row": 2
+              },
+              "title": {
+                "column": 2,
+                "row": 1
+              }
+            }
+          },
+          "pipeline_contract": {
+            "name": "poster_generation",
+            "version": 2
+          },
+          "pokemon": {
+            "count": "auto_from_layout_columns",
+            "cutout_source": "pokeapi_official_artwork",
+            "fallback_candidates": [],
+            "row": "bottom",
+            "strategy": "featured_from_scope"
+          },
+          "scene": {
+            "concept": "a detailed Galar upland landscape beneath dramatic weather",
+            "ground_noun": "upland grass",
+            "lighting": "Broken gold sunlight enters from the upper left through cool clouds.",
+            "rendering": "Use detailed trading-card linework, restrained emerald and slate colors, and broad weather-filled depth.",
+            "setting": "The artwork contains a Galar-inspired green upland with stone walls confined to the distance, rolling moorland, a misty lake, and a tiny brick town silhouette with blank facades below dramatic clouds."
+          },
+          "source_subject_ids": [
+            810,
+            813,
+            816
+          ]
+        },
+        "schema_version": 1,
+        "sha256": "8ef65b9e0ab4f16ca348ea20e967226178bc92aa81a7fff7d75f93d62b390af2"
+      },
+      "overlay_fingerprint": {
+        "components": {
+          "languages": {
+            "de": {
+              "information": [
+                "Generation VIII",
+                "96 Karten",
+                "Pokédex #810 – #905"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "Pokédex"
+              }
+            },
+            "en": {
+              "information": [
+                "Generation VIII",
+                "96 cards",
+                "Pokédex #810 – #905"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "Pokédex"
+              }
+            },
+            "es": {
+              "information": [
+                "Generación VIII",
+                "96 cartas",
+                "Pokédex #810 – #905"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "Pokédex"
+              }
+            },
+            "fr": {
+              "information": [
+                "Génération VIII",
+                "96 cartes",
+                "Pokédex #810 – #905"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "Pokédex"
+              }
+            },
+            "it": {
+              "information": [
+                "Generazione VIII",
+                "96 carte",
+                "Pokédex #810 – #905"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "Pokédex"
+              }
+            },
+            "ja": {
+              "information": [
+                "8世代",
+                "96 枚",
+                "ポケモン図鑑 #810 – #905"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "Pokédex"
+              }
+            },
+            "ko": {
+              "information": [
+                "8세대",
+                "96 장",
+                "포켓몬 도감 #810 – #905"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "Pokédex"
+              }
+            },
+            "zh_hans": {
+              "information": [
+                "第8世代",
+                "96 张",
+                "宝可梦图鉴 #810 – #905"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "Pokédex"
+              }
+            },
+            "zh_hant": {
+              "information": [
+                "第8世代",
+                "96 張",
+                "寶可夢圖鑑 #810 – #905"
+              ],
+              "title": {
+                "kind": "text",
+                "value": "Pokédex"
+              }
+            }
+          },
+          "layout_name": "standard_3x3",
+          "logo_pixels": {},
+          "pipeline_contract": {
+            "name": "poster_overlay",
+            "version": 2
+          },
+          "text_cells": {
+            "set_info": {
+              "column": 2,
+              "max_height_ratio": 0.68,
+              "max_width_ratio": 0.92,
+              "row": 2
+            },
+            "title": {
+              "column": 2,
+              "row": 1
+            }
+          },
+          "text_content": {
+            "mode": "section_summary"
+          }
+        },
+        "schema_version": 1,
+        "sha256": "14104b2f54bf6e01ed7c86b66a7bd5911bcdeeaceb05ff3945ac612a1a32c76d"
+      },
+      "prompt": {
+        "bytes": 1866,
+        "file": "data/poster_assets/Pokedex/sections/gen8/comfyui_poster/identity_lock_prompt.generated.txt",
+        "sha256": "7f1aae4cddd3aac85917af16ca1da78cda8db380a5777c75ff1c0314cf31daec"
+      },
+      "references": [
+        {
+          "bytes": 103461,
+          "file": "data/poster_assets/Pokedex/sections/gen8/comfyui_poster/inpaint_reference.png",
+          "height": 1168,
+          "sha256": "7b15aba72c69b7e5eec68e0563021ed2713b2db2b79d12bcb58187a1bb07cb0e",
+          "width": 848
+        },
+        {
+          "bytes": 4603,
+          "file": "data/poster_assets/Pokedex/sections/gen8/comfyui_poster/upper_context_mask.png",
+          "height": 1168,
+          "sha256": "6ab5789bc87b2686a333665b5c3525017a55aac68916f4419e939b1160d6f62e",
+          "width": 848
+        },
+        {
+          "bytes": 4371,
+          "file": "data/poster_assets/Pokedex/sections/gen8/comfyui_poster/upper_context_generation_mask.png",
+          "height": 1168,
+          "sha256": "b54863c820b1aef3735f1bd629c5f43102a645fc98ea03906675d26a4c5395c1",
+          "width": 848
+        }
+      ],
+      "scope_manifest": {
+        "bytes": 2223,
+        "file": "data/poster_assets/Pokedex/sections/gen8/poster.yaml",
+        "sha256": "f15d1dec6b2dd84705cb8dc6137a93766137c0d85fd5ef3fef92052d4324ddef"
+      },
+      "upscale_workflow": {
+        "bytes": 933,
+        "file": "data/poster_assets/Pokedex/sections/gen8/comfyui_poster/workflow_api_upscale_300dpi.json",
+        "sha256": "dacd8de67c28a8293ccfc51639c03d132589873580c4e43fcbbb26972c1b7c3a"
+      },
+      "workflow": {
+        "bytes": 6207,
+        "file": "data/poster_assets/Pokedex/sections/gen8/comfyui_poster/workflow_api_identity_lock_1mp_260715405.json",
+        "sha256": "159c6cb5f4abcc4256bfa8f392bcc17c2b81c6fef95c0d1d8f66d0a810025d2f"
+      }
+    },
+    "kind": "poster_generation_run",
+    "poster_id": "gen8",
+    "raw_artwork": {
+      "bytes": 1398952,
+      "file": "data/poster_assets/Pokedex/sections/gen8/comfyui_poster/output/pokedex__sections__gen8_flux2_identity_lock_1mp_scene_seed_260715405_00001_.png",
+      "height": 1168,
+      "sha256": "14329ef0d403352e8ec626f1b3a7232170e80a11efd19f08bb50fb9bd646ed23",
+      "width": 848
+    },
+    "schema_version": 1,
+    "scope": "Pokedex/sections/gen8",
+    "section_id": "gen8",
+    "source_artwork": {
+      "bytes": 5120586,
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "file": "data/poster_assets/Pokedex/sections/gen8/comfyui_poster/temp/pokedex__sections__gen8_print_300dpi_RealESRGAN_x4plus_anime_6B_00001__print.png",
+      "height": 3268,
+      "sha256": "5b7929523aa61dcf6445b3df97f89eaa3a3aeb7434591faabfafa7d116d03677",
+      "width": 2368
+    },
+    "source_scope": "Pokedex",
+    "validation": {
+      "identity_lock": {
+        "changed_pixels": 0,
+        "method": "exact_opaque_source_pixels",
+        "opaque_pixels": 34011,
+        "passed": true
+      }
+    }
+  },
+  "schema_version": 1,
+  "scope": "Pokedex/sections/gen8",
+  "section_id": "gen8",
+  "source_scope": "Pokedex"
+}
