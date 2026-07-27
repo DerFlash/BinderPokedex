@@ -5,10 +5,20 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from PIL import Image, ImageChops, ImageStat
+from PIL import Image, ImageStat
 
 try:
-    from .create_anima_poster_workflow import write_workflow as write_anima_workflow
+    from .create_anima_poster_workflow import (
+        DEFAULT_CFG as DEFAULT_ANIMA_CFG,
+        DEFAULT_ENCODER as DEFAULT_ANIMA_ENCODER,
+        DEFAULT_GENERATION_MODE as DEFAULT_ANIMA_MODE,
+        DEFAULT_LORA as DEFAULT_ANIMA_LORA,
+        DEFAULT_MODEL as DEFAULT_ANIMA_MODEL,
+        DEFAULT_REFERENCE_STRENGTH,
+        DEFAULT_STEPS as DEFAULT_ANIMA_STEPS,
+        DEFAULT_VAE as DEFAULT_ANIMA_VAE,
+        write_workflow as write_anima_workflow,
+    )
     from .create_comfyui_poster_workflow import (
         megapixel_marker,
         page_dimensions,
@@ -38,8 +48,16 @@ try:
         write_workflow as write_qwen_edit_workflow,
     )
     from .finalize_comfyui_poster import SUPPORTED_LANGUAGES, finalize
+    from .generation_options import (
+        metadata_from_workflow_options,
+        resolve_generation_options,
+    )
     from .prepare_comfyui_poster import prepare
-    from .provenance import add_model_artifact_hashes, write_run_metadata
+    from .provenance import (
+        add_model_artifact_hashes,
+        sha256_file,
+        write_run_metadata,
+    )
     from .poster_io import (
         POSTER_ASSETS,
         poster_asset_slug,
@@ -51,10 +69,21 @@ try:
         validate_server_input_directory,
     )
     from .slice_poster import slice_poster
+    from .source_pixel_audit import audit_exact_source_pixels
     from .create_comfyui_upscale_workflow import DEFAULT_UPSCALE_MODEL
     from .upscale_comfyui_poster import upscale
 except ImportError:
-    from create_anima_poster_workflow import write_workflow as write_anima_workflow
+    from create_anima_poster_workflow import (
+        DEFAULT_CFG as DEFAULT_ANIMA_CFG,
+        DEFAULT_ENCODER as DEFAULT_ANIMA_ENCODER,
+        DEFAULT_GENERATION_MODE as DEFAULT_ANIMA_MODE,
+        DEFAULT_LORA as DEFAULT_ANIMA_LORA,
+        DEFAULT_MODEL as DEFAULT_ANIMA_MODEL,
+        DEFAULT_REFERENCE_STRENGTH,
+        DEFAULT_STEPS as DEFAULT_ANIMA_STEPS,
+        DEFAULT_VAE as DEFAULT_ANIMA_VAE,
+        write_workflow as write_anima_workflow,
+    )
     from create_comfyui_poster_workflow import (
         megapixel_marker,
         page_dimensions,
@@ -84,8 +113,16 @@ except ImportError:
         write_workflow as write_qwen_edit_workflow,
     )
     from finalize_comfyui_poster import SUPPORTED_LANGUAGES, finalize
+    from generation_options import (
+        metadata_from_workflow_options,
+        resolve_generation_options,
+    )
     from prepare_comfyui_poster import prepare
-    from provenance import add_model_artifact_hashes, write_run_metadata
+    from provenance import (
+        add_model_artifact_hashes,
+        sha256_file,
+        write_run_metadata,
+    )
     from poster_io import POSTER_ASSETS, poster_asset_slug, poster_bundle
     from queue_comfyui_workflow import (
         queue_workflow,
@@ -93,6 +130,7 @@ except ImportError:
         validate_server_input_directory,
     )
     from slice_poster import slice_poster
+    from source_pixel_audit import audit_exact_source_pixels
     from create_comfyui_upscale_workflow import DEFAULT_UPSCALE_MODEL
     from upscale_comfyui_poster import upscale
 
@@ -136,40 +174,11 @@ def validate_identity_lock_pixels(
         / "comfyui_poster"
         / "inpaint_reference.png"
     )
-    reference = Image.open(reference_path).convert("RGBA")
-    artwork = Image.open(raw_artwork).convert("RGB")
-    if artwork.size != reference.size:
-        raise ValueError(
-            "Identity-lock source and raw artwork dimensions differ: "
-            f"{reference.size} != {artwork.size}"
-        )
-
-    alpha = reference.getchannel("A")
-    opaque_pixels = alpha.histogram()[255]
-    if opaque_pixels <= 0:
-        raise ValueError(
-            f"Identity-lock reference has no fully opaque source pixels: "
-            f"{reference_path}"
-        )
-    opaque_mask = alpha.point(lambda value: 255 if value == 255 else 0)
-    difference = ImageChops.difference(
-        artwork,
-        reference.convert("RGB"),
+    return audit_exact_source_pixels(
+        reference_path,
+        raw_artwork,
+        require_match=True,
     )
-    opaque_difference = Image.new("RGB", artwork.size)
-    opaque_difference.paste(difference, mask=opaque_mask)
-    changed_box = opaque_difference.getbbox()
-    if changed_box is not None:
-        raise RuntimeError(
-            "Identity-lock output changed fully opaque source pixels inside "
-            f"{changed_box}: {raw_artwork}"
-        )
-    return {
-        "method": "exact_opaque_source_pixels",
-        "opaque_pixels": opaque_pixels,
-        "changed_pixels": 0,
-        "passed": True,
-    }
 
 
 def resize_artwork(scope: str, source: Path, destination: Path, megapixels: float) -> Path:
@@ -189,14 +198,21 @@ def write_engine_workflow(
     seed: int,
     megapixels: float,
     *,
-    reference_strength: float = 1.0,
-    anima_model: str = "AnimaYume_tuned_v05.safetensors",
-    anima_mode: str = "generate",
+    reference_strength: float = DEFAULT_REFERENCE_STRENGTH,
+    anima_model: str = DEFAULT_ANIMA_MODEL,
+    anima_lora: str = DEFAULT_ANIMA_LORA,
+    anima_encoder: str = DEFAULT_ANIMA_ENCODER,
+    anima_vae: str = DEFAULT_ANIMA_VAE,
+    anima_steps: int = DEFAULT_ANIMA_STEPS,
+    anima_cfg: float = DEFAULT_ANIMA_CFG,
+    anima_mode: str = DEFAULT_ANIMA_MODE,
+    anima_control_method: str = "edit_lora",
     flux_mode: str = "identity_lock",
     flux_model: str = "flux-2-klein-4b-fp8.safetensors",
     flux_steps: int = 4,
     flux_reference_mode: str = "identity",
     flux_clip: str = "qwen_3_4b.safetensors",
+    flux_vae: str = "flux2-vae.safetensors",
     flux1_model: str = DEFAULT_FLUX1_MODEL,
     flux1_clip: str = DEFAULT_FLUX1_CLIP,
     flux1_t5: str = DEFAULT_FLUX1_T5,
@@ -226,6 +242,7 @@ def write_engine_workflow(
             steps=flux_steps,
             reference_mode=flux_reference_mode,
             clip_name=flux_clip,
+            vae_name=flux_vae,
             output_dir=workflow_output_dir,
         )
     if engine == "anima":
@@ -234,7 +251,13 @@ def write_engine_workflow(
             seed,
             megapixels,
             reference_strength,
+            control_method=anima_control_method,
             model_name=anima_model,
+            lora_name=anima_lora,
+            encoder_name=anima_encoder,
+            vae_name=anima_vae,
+            steps=anima_steps,
+            cfg=anima_cfg,
             generation_mode=anima_mode,
             output_dir=workflow_output_dir,
         )
@@ -281,14 +304,21 @@ def run(
     language: str,
     *,
     engine: str = "flux",
-    reference_strength: float = 1.0,
-    anima_model: str = "AnimaYume_tuned_v05.safetensors",
-    anima_mode: str = "generate",
+    reference_strength: float = DEFAULT_REFERENCE_STRENGTH,
+    anima_model: str = DEFAULT_ANIMA_MODEL,
+    anima_lora: str = DEFAULT_ANIMA_LORA,
+    anima_encoder: str = DEFAULT_ANIMA_ENCODER,
+    anima_vae: str = DEFAULT_ANIMA_VAE,
+    anima_steps: int = DEFAULT_ANIMA_STEPS,
+    anima_cfg: float = DEFAULT_ANIMA_CFG,
+    anima_mode: str = DEFAULT_ANIMA_MODE,
+    anima_control_method: str = "edit_lora",
     flux_mode: str = "identity_lock",
     flux_model: str = "flux-2-klein-4b-fp8.safetensors",
     flux_steps: int = 4,
     flux_reference_mode: str = "identity",
     flux_clip: str = "qwen_3_4b.safetensors",
+    flux_vae: str = "flux2-vae.safetensors",
     flux1_model: str = DEFAULT_FLUX1_MODEL,
     flux1_clip: str = DEFAULT_FLUX1_CLIP,
     flux1_t5: str = DEFAULT_FLUX1_T5,
@@ -314,6 +344,44 @@ def run(
         raise ValueError("Choose either output_megapixels or output_dpi, not both")
     if output_dpi is not None and output_dpi <= 0:
         raise ValueError("output_dpi must be positive")
+    workflow_options = {
+        "reference_strength": reference_strength,
+        "anima_model": anima_model,
+        "anima_lora": anima_lora,
+        "anima_encoder": anima_encoder,
+        "anima_vae": anima_vae,
+        "anima_steps": anima_steps,
+        "anima_cfg": anima_cfg,
+        "anima_mode": anima_mode,
+        "anima_control_method": anima_control_method,
+        "flux_mode": flux_mode,
+        "flux_model": flux_model,
+        "flux_steps": flux_steps,
+        "flux_reference_mode": flux_reference_mode,
+        "flux_clip": flux_clip,
+        "flux_vae": flux_vae,
+        "flux1_model": flux1_model,
+        "flux1_clip": flux1_clip,
+        "flux1_t5": flux1_t5,
+        "flux1_vae": flux1_vae,
+        "flux1_controlnet": flux1_controlnet,
+        "flux1_steps": flux1_steps,
+        "flux1_guidance": flux1_guidance,
+        "flux1_control_strength": flux1_control_strength,
+        "flux1_canny_low": flux1_canny_low,
+        "flux1_canny_high": flux1_canny_high,
+        "qwen_model": qwen_model,
+        "qwen_clip": qwen_clip,
+        "qwen_vae": qwen_vae,
+        "qwen_lora": qwen_lora,
+        "qwen_steps": qwen_steps,
+        "qwen_cfg": qwen_cfg,
+        "qwen_shift": qwen_shift,
+    }
+    engine_generation = metadata_from_workflow_options(
+        engine,
+        workflow_options,
+    )
     work_dir = prepare(scope, megapixels)
     validate_server_input_directory(server, work_dir)
     comfy_root = server_comfyui_root(server)
@@ -327,31 +395,7 @@ def run(
         scope,
         seed,
         megapixels,
-        reference_strength=reference_strength,
-        anima_model=anima_model,
-        anima_mode=anima_mode,
-        flux_mode=flux_mode,
-        flux_model=flux_model,
-        flux_steps=flux_steps,
-        flux_reference_mode=flux_reference_mode,
-        flux_clip=flux_clip,
-        flux1_model=flux1_model,
-        flux1_clip=flux1_clip,
-        flux1_t5=flux1_t5,
-        flux1_vae=flux1_vae,
-        flux1_controlnet=flux1_controlnet,
-        flux1_steps=flux1_steps,
-        flux1_guidance=flux1_guidance,
-        flux1_control_strength=flux1_control_strength,
-        flux1_canny_low=flux1_canny_low,
-        flux1_canny_high=flux1_canny_high,
-        qwen_model=qwen_model,
-        qwen_clip=qwen_clip,
-        qwen_vae=qwen_vae,
-        qwen_lora=qwen_lora,
-        qwen_steps=qwen_steps,
-        qwen_cfg=qwen_cfg,
-        qwen_shift=qwen_shift,
+        **workflow_options,
     )
     outputs = queue_workflow(workflow_path, server=server, timeout=timeout)
     images = [item for item in outputs if item.get("type") == "output" and item.get("filename")]
@@ -367,12 +411,26 @@ def run(
     if not raw_path.is_file():
         raise FileNotFoundError(f"ComfyUI reported an output that does not exist: {raw_path}")
     validate_raw_artwork(raw_path)
-    validation: dict[str, object] = {}
-    if engine == "flux" and flux_mode == "identity_lock":
-        validation["identity_lock"] = validate_identity_lock_pixels(
-            scope,
-            raw_path,
-        )
+    source_reference = work_dir / "inpaint_reference.png"
+    source_pixel_audit = audit_exact_source_pixels(
+        source_reference,
+        raw_path,
+        require_match=(engine == "flux" and flux_mode == "identity_lock"),
+    )
+    with Image.open(raw_path) as audited_artwork:
+        audit_width, audit_height = audited_artwork.size
+    source_pixel_audit.update(
+        {
+            "stage": "raw_generation",
+            "reference_sha256": sha256_file(source_reference),
+            "artwork_sha256": sha256_file(raw_path),
+            "width": audit_width,
+            "height": audit_height,
+        }
+    )
+    validation: dict[str, object] = {
+        "source_pixels": source_pixel_audit,
+    }
     final_megapixels = output_megapixels or megapixels
     if engine == "flux":
         if flux_mode == "identity_lock":
@@ -448,66 +506,11 @@ def run(
         )
     finalize(scope, artwork_path, final_path, language)
     slice_poster(scope, final_path)
-    if engine == "flux":
-        generation = {
-            "engine": engine,
-            "model": flux_model,
-            "encoder": flux_clip,
-            "vae": "flux2-vae.safetensors",
-            "mode": flux_mode,
-            "reference_mode": effective_reference_mode,
-            "seed": seed,
-            "steps": flux_steps,
-            "generation_megapixels": megapixels,
-        }
-    elif engine == "anima":
-        generation = {
-            "engine": engine,
-            "model": anima_model,
-            "encoder": "qwen_3_06b_base.safetensors",
-            "vae": "qwen_image_vae.safetensors",
-            "mode": anima_mode,
-            "reference_mode": "cosmos",
-            "reference_strength": reference_strength,
-            "seed": seed,
-            "steps": 22,
-            "generation_megapixels": megapixels,
-        }
-    elif engine == "flux1_canny":
-        generation = {
-            "engine": engine,
-            "model": flux1_model,
-            "encoder": flux1_clip,
-            "encoder_2": flux1_t5,
-            "vae": flux1_vae,
-            "controlnet": flux1_controlnet,
-            "mode": "generate",
-            "reference_mode": "canny",
-            "seed": seed,
-            "steps": flux1_steps,
-            "guidance": flux1_guidance,
-            "control_strength": flux1_control_strength,
-            "canny_low": flux1_canny_low,
-            "canny_high": flux1_canny_high,
-            "generation_megapixels": megapixels,
-        }
-    elif engine == "qwen_edit":
-        generation = {
-            "engine": engine,
-            "model": qwen_model,
-            "encoder": qwen_clip,
-            "vae": qwen_vae,
-            "lora": qwen_lora,
-            "mode": "edit",
-            "reference_mode": "multi_reference",
-            "seed": seed,
-            "steps": qwen_steps,
-            "cfg": qwen_cfg,
-            "shift": qwen_shift,
-            "generation_megapixels": megapixels,
-        }
-    else:
-        raise ValueError(f"Unsupported engine: {engine}")
+    generation = {
+        **engine_generation,
+        "seed": seed,
+        "generation_megapixels": megapixels,
+    }
     if output_dpi is not None:
         generation.update(
             {
@@ -583,18 +586,24 @@ def main() -> int:
     parser.add_argument(
         "--reference-strength",
         type=float,
-        default=1.0,
         help="AnimaEdit LoRA strength; ignored by FLUX",
     )
     parser.add_argument(
         "--anima-model",
-        default="AnimaYume_tuned_v05.safetensors",
         help="Anima-compatible diffusion model; ignored by FLUX",
+    )
+    parser.add_argument("--anima-lora")
+    parser.add_argument("--anima-encoder")
+    parser.add_argument("--anima-vae")
+    parser.add_argument("--anima-steps", type=int)
+    parser.add_argument("--anima-cfg", type=float)
+    parser.add_argument(
+        "--anima-control-method",
+        choices=("edit_lora",),
     )
     parser.add_argument(
         "--anima-mode",
         choices=("generate", "edit"),
-        default="generate",
         help="Generate from an empty target or edit the material scaffold",
     )
     parser.add_argument(
@@ -614,7 +623,6 @@ def main() -> int:
     parser.add_argument(
         "--flux-reference-mode",
         choices=("composition", "identity"),
-        default="identity",
         help=(
             "Append one identity close-up per character or use only the "
             "scene composition; applies to edit mode"
@@ -624,39 +632,36 @@ def main() -> int:
         "--flux-clip",
         help="FLUX.2 text encoder matching the selected model size",
     )
-    parser.add_argument("--flux1-model", default=DEFAULT_FLUX1_MODEL)
-    parser.add_argument("--flux1-clip", default=DEFAULT_FLUX1_CLIP)
-    parser.add_argument("--flux1-t5", default=DEFAULT_FLUX1_T5)
-    parser.add_argument("--flux1-vae", default=DEFAULT_FLUX1_VAE)
-    parser.add_argument("--flux1-controlnet", default=DEFAULT_FLUX1_CONTROLNET)
-    parser.add_argument("--flux1-steps", type=int, default=DEFAULT_FLUX1_STEPS)
+    parser.add_argument("--flux-vae")
+    parser.add_argument("--flux1-model")
+    parser.add_argument("--flux1-clip")
+    parser.add_argument("--flux1-t5")
+    parser.add_argument("--flux1-vae")
+    parser.add_argument("--flux1-controlnet")
+    parser.add_argument("--flux1-steps", type=int)
     parser.add_argument(
         "--flux1-guidance",
         type=float,
-        default=DEFAULT_FLUX1_GUIDANCE,
     )
     parser.add_argument(
         "--flux1-control-strength",
         type=float,
-        default=DEFAULT_FLUX1_CONTROL_STRENGTH,
     )
     parser.add_argument(
         "--flux1-canny-low",
         type=float,
-        default=DEFAULT_FLUX1_CANNY_LOW,
     )
     parser.add_argument(
         "--flux1-canny-high",
         type=float,
-        default=DEFAULT_FLUX1_CANNY_HIGH,
     )
-    parser.add_argument("--qwen-model", default=DEFAULT_QWEN_MODEL)
-    parser.add_argument("--qwen-clip", default=DEFAULT_QWEN_CLIP)
-    parser.add_argument("--qwen-vae", default=DEFAULT_QWEN_VAE)
-    parser.add_argument("--qwen-lora", default=DEFAULT_QWEN_LORA)
-    parser.add_argument("--qwen-steps", type=int, default=DEFAULT_QWEN_STEPS)
-    parser.add_argument("--qwen-cfg", type=float, default=DEFAULT_QWEN_CFG)
-    parser.add_argument("--qwen-shift", type=float, default=DEFAULT_QWEN_SHIFT)
+    parser.add_argument("--qwen-model")
+    parser.add_argument("--qwen-clip")
+    parser.add_argument("--qwen-vae")
+    parser.add_argument("--qwen-lora")
+    parser.add_argument("--qwen-steps", type=int)
+    parser.add_argument("--qwen-cfg", type=float)
+    parser.add_argument("--qwen-shift", type=float)
     args = parser.parse_args()
     configured = configured_generation(args.scope)
     seed = (
@@ -675,20 +680,6 @@ def main() -> int:
         )
     )
     selected_engine = str(args.engine or configured.get("engine", "flux"))
-    flux_mode = str(args.flux_mode or configured.get("mode", "identity_lock"))
-    flux_model = str(
-        args.flux_model
-        or configured.get("model", "flux-2-klein-4b-fp8.safetensors")
-    )
-    flux_steps = (
-        args.flux_steps
-        if args.flux_steps is not None
-        else int(configured.get("steps", 4))
-    )
-    flux_clip = str(
-        args.flux_clip
-        or configured.get("encoder", "qwen_3_4b.safetensors")
-    )
     upscale_model = str(
         args.upscale_model
         or configured.get("upscale_model", DEFAULT_UPSCALE_MODEL)
@@ -710,6 +701,11 @@ def main() -> int:
     else:
         engines = (selected_engine,)
     for engine in engines:
+        resolved = resolve_generation_options(
+            engine,
+            configured,
+            vars(args),
+        )
         raw_path, artwork_path, final_path, run_metadata_path = run(
             args.scope,
             seed,
@@ -718,31 +714,7 @@ def main() -> int:
             args.timeout,
             args.language,
             engine=engine,
-            reference_strength=args.reference_strength,
-            anima_model=args.anima_model,
-            anima_mode=args.anima_mode,
-            flux_mode=flux_mode,
-            flux_model=flux_model,
-            flux_steps=flux_steps,
-            flux_reference_mode=args.flux_reference_mode,
-            flux_clip=flux_clip,
-            flux1_model=args.flux1_model,
-            flux1_clip=args.flux1_clip,
-            flux1_t5=args.flux1_t5,
-            flux1_vae=args.flux1_vae,
-            flux1_controlnet=args.flux1_controlnet,
-            flux1_steps=args.flux1_steps,
-            flux1_guidance=args.flux1_guidance,
-            flux1_control_strength=args.flux1_control_strength,
-            flux1_canny_low=args.flux1_canny_low,
-            flux1_canny_high=args.flux1_canny_high,
-            qwen_model=args.qwen_model,
-            qwen_clip=args.qwen_clip,
-            qwen_vae=args.qwen_vae,
-            qwen_lora=args.qwen_lora,
-            qwen_steps=args.qwen_steps,
-            qwen_cfg=args.qwen_cfg,
-            qwen_shift=args.qwen_shift,
+            **resolved.workflow_options,
             output_megapixels=args.output_megapixels,
             output_dpi=output_dpi,
             upscale_model=upscale_model,

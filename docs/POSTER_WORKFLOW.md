@@ -272,9 +272,13 @@ python scripts/poster_assets/run_comfyui_poster.py \
   --scope ExGen3/sections/mega
 ```
 
-The production runner reads engine, model, seed, step count, generation size,
-300-dpi output, and upscaler defaults from the scope's `poster.yaml`. CLI flags
-remain explicit experiment overrides. The default FLUX identity-lock flow:
+The production runner reads the complete engine-specific model and sampling
+contract, seed, generation size, 300-dpi output, and upscaler defaults from the
+scope's `poster.yaml`. This includes all Anima
+model/LoRA/encoder/VAE/steps/CFG/reference-strength/control-method fields and
+the corresponding FLUX.1 Canny or Qwen fields. Only a manifest whose `engine`
+matches the selected adapter supplies those values; CLI flags remain explicit
+experiment overrides. The default FLUX identity-lock flow:
 
 - generates one cohesive set-specific environment in ComfyUI;
 - places exact source figures at their final card-safe positions;
@@ -286,6 +290,13 @@ remain explicit experiment overrides. The default FLUX identity-lock flow:
 - writes a localized preview, card crops, workflow, and run metadata.
 
 The command prints the exact candidate and metadata paths needed for promotion.
+Every engine writes an exact opaque-source-pixel audit bound to the raw
+ComfyUI output and exact audit-reference hashes and dimensions. FLUX
+identity-lock stops immediately if it changes a source pixel. An experimental
+Anima, FLUX.1, or Qwen run may finish with `passed: false` so its visual result
+can be compared, but that metadata cannot pass promotion. The audit runs before
+RealESRGAN or Lanczos resampling; the 300-dpi derivative is therefore still
+reviewed visually and is not described as channel-exact.
 
 ## 7. Review and promote
 
@@ -314,7 +325,9 @@ For an aggregate target, use the same asset key for promotion and validation,
 for example `Pokedex/sections/gen1`.
 
 Promotion is transactional and records hashes for models, prompts, source
-figures, references, workflows, and outputs.
+figures, references, workflows, and outputs. It requires a passed
+`exact_opaque_source_pixels` record for every engine; changing the manifest
+engine or supplying otherwise matching hashes cannot bypass that gate.
 
 ## 8. Enable and consume the poster
 

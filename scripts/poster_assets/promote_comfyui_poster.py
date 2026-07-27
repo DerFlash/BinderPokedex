@@ -23,6 +23,8 @@ try:
         generation_fingerprint_pipeline_contract_version,
         load_run_metadata,
         promoted_provenance,
+        require_exact_source_pixel_validation,
+        sha256_file,
     )
     from .slice_poster import slice_poster
 except ImportError:
@@ -36,12 +38,74 @@ except ImportError:
         generation_fingerprint_pipeline_contract_version,
         load_run_metadata,
         promoted_provenance,
+        require_exact_source_pixel_validation,
+        sha256_file,
     )
     from slice_poster import slice_poster
 
 
 ROOT = Path(__file__).resolve().parents[2]
 POSTER_ASSETS = ROOT / "data" / "poster_assets"
+
+
+def _configured_refresh_paths(
+    scope_dir: Path,
+    manifest: dict,
+) -> tuple[Path, Path]:
+    artwork = manifest.get("artwork", {})
+    provenance_path = (
+        scope_dir
+        / str(
+            artwork.get(
+                "provenance_file",
+                "poster-flux2-provenance.json",
+            )
+        )
+    ).resolve()
+    artwork_path = (
+        scope_dir
+        / str(
+            artwork.get(
+                "promoted_file",
+                "poster-flux2-artwork.png",
+            )
+        )
+    ).resolve()
+    scope_root = scope_dir.resolve()
+    if (
+        not provenance_path.is_relative_to(scope_root)
+        or not artwork_path.is_relative_to(scope_root)
+    ):
+        raise ValueError("Configured promoted poster paths leave the scope")
+    return provenance_path, artwork_path
+
+
+def _is_existing_promotion_refresh(
+    *,
+    scope: str,
+    scope_dir: Path,
+    manifest: dict,
+    metadata_path: Path,
+    metadata_container: dict,
+    artwork_path: Path,
+) -> bool:
+    """Bind legacy allowances to the configured stable promotion bundle."""
+    if metadata_container.get("kind") != "promoted_poster":
+        return False
+    expected_metadata, expected_artwork = _configured_refresh_paths(
+        scope_dir,
+        manifest,
+    )
+    output_artwork = metadata_container.get("outputs", {}).get("artwork")
+    return (
+        metadata_container.get("scope") == scope
+        and metadata_path.resolve() == expected_metadata
+        and expected_metadata.is_file()
+        and artwork_path.resolve() == expected_artwork
+        and expected_artwork.is_file()
+        and isinstance(output_artwork, dict)
+        and output_artwork.get("sha256") == sha256_file(expected_artwork)
+    )
 
 
 def _replace_bundle(
@@ -104,9 +168,22 @@ def promote(
     metadata_container = json.loads(
         run_metadata_path.read_text(encoding="utf-8")
     )
-    refreshing_existing_promotion = (
-        metadata_container.get("kind") == "promoted_poster"
+    refreshing_existing_promotion = _is_existing_promotion_refresh(
+        scope=scope,
+        scope_dir=scope_dir,
+        manifest=manifest,
+        metadata_path=run_metadata_path,
+        metadata_container=metadata_container,
+        artwork_path=artwork,
     )
+    if (
+        metadata_container.get("kind") == "promoted_poster"
+        and not refreshing_existing_promotion
+    ):
+        raise ValueError(
+            "Promoted provenance refresh must use the configured existing "
+            "provenance and text-free artwork paths"
+        )
     if run_metadata.get("scope") != scope:
         raise ValueError(
             f"Run metadata is for scope {run_metadata.get('scope')!r}, not {scope!r}"
@@ -128,9 +205,22 @@ def promote(
             f"{manifest_path}. Review and update artwork.generation before "
             "promoting this candidate."
         )
+    require_exact_source_pixel_validation(
+        run_metadata,
+        allow_legacy=refreshing_existing_promotion,
+    )
     run_inputs = run_metadata.get("inputs")
-    if isinstance(run_inputs, dict):
+    if not isinstance(run_inputs, dict):
+        if not refreshing_existing_promotion:
+            raise ValueError(
+                "New poster candidate lacks generation input provenance"
+            )
+    else:
         recorded_fingerprint = run_inputs.get("generation_fingerprint")
+        if recorded_fingerprint is None and not refreshing_existing_promotion:
+            raise ValueError(
+                "New poster candidate lacks its generation fingerprint"
+            )
         if recorded_fingerprint is not None:
             if not fingerprint_record_is_valid(recorded_fingerprint):
                 raise ValueError(

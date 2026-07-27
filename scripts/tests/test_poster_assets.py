@@ -6,6 +6,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+import yaml
 from PIL import Image, ImageChops
 
 from scripts.poster_assets import fetch_cutouts
@@ -1217,6 +1218,7 @@ def test_runner_cli_resolves_production_defaults_from_the_scope(
     assert captured["kwargs"]["flux_model"] == generation["model"]
     assert captured["kwargs"]["flux_steps"] == generation["steps"]
     assert captured["kwargs"]["flux_clip"] == generation["encoder"]
+    assert captured["kwargs"]["flux_vae"] == generation["vae"]
     assert captured["kwargs"]["output_dpi"] == generation["output_dpi"]
     assert captured["kwargs"]["upscale_model"] == generation["upscale_model"]
 
@@ -1480,7 +1482,7 @@ def test_anima_workflow_uses_cosmos_reference_without_changing_flux_workflow():
         node["inputs"]["image"]
         for node in workflow.values()
         if node["class_type"] == "LoadImage"
-    } == {"scene_reference.png"}
+    } == {"anima_scene_reference.png"}
     sampler = next(node for node in workflow.values() if node["class_type"] == "KSampler")
     assert sampler["inputs"]["latent_image"] == ["10", 0]
 
@@ -1563,9 +1565,23 @@ def test_engine_workflows_have_separate_files(tmp_path: Path):
         workflow_output_dir=tmp_path,
     )
     assert flux.name == "workflow_api_identity_lock_0p25mp_123.json"
-    assert anima.name == "anima_workflow_api.json"
+    assert anima.name == "anima_workflow_api_generate_0p25mp_123.json"
     assert flux1.name == "flux1_canny_workflow_api_0p25_123.json"
     assert qwen.name == "qwen_edit_workflow_api_0p25_123.json"
+
+
+def test_flux_workflow_uses_the_selected_vae(tmp_path: Path):
+    workflow_path = write_engine_workflow(
+        "flux",
+        "Base1",
+        123,
+        0.25,
+        flux_vae="reviewed-vae.safetensors",
+        workflow_output_dir=tmp_path,
+    )
+
+    workflow = json.loads(workflow_path.read_text(encoding="utf-8"))
+    assert workflow["3"]["inputs"]["vae_name"] == "reviewed-vae.safetensors"
 
 
 def test_flux_workflow_files_are_unique_per_seed(tmp_path: Path):
@@ -1772,7 +1788,7 @@ def test_identity_lock_validation_requires_exact_opaque_source_pixels(
             reference_path,
         )
     except RuntimeError as error:
-        assert "changed fully opaque source pixels" in str(error)
+        assert "fully opaque pixels changed" in str(error)
     else:
         raise AssertionError("Changed identity-lock source pixel was accepted")
 
@@ -1881,6 +1897,9 @@ def test_identity_lock_provenance_excludes_unused_edit_references(
         "upper_context_mask.png",
         "upper_context_generation_mask.png",
     ]
+    assert records["source_pixel_audit_reference"]["file"] == (
+        "inpaint_reference.png"
+    )
 
 
 def test_slice_poster_exports_every_card_without_binder_gaps(tmp_path: Path):
@@ -2071,6 +2090,11 @@ def _promotion_fixture(tmp_path: Path, monkeypatch):
         (40, 120, 80),
     ).save(artwork)
     run_metadata = tmp_path / "candidate.run.json"
+    synthetic_fingerprint = {
+        "schema_version": 1,
+        "sha256": "synthetic",
+        "components": {},
+    }
     run_metadata.write_text(
         json.dumps(
             {
@@ -2082,6 +2106,32 @@ def _promotion_fixture(tmp_path: Path, monkeypatch):
                     "output_dpi": 10,
                 },
                 "source_artwork": {"sha256": sha256_file(artwork)},
+                "raw_artwork": {
+                    "sha256": sha256_file(artwork),
+                    "width": layout.width_px,
+                    "height": layout.height_px,
+                },
+                "inputs": {
+                    "generation_fingerprint": synthetic_fingerprint,
+                    "source_pixel_audit_reference": {
+                        "sha256": sha256_file(artwork),
+                        "width": layout.width_px,
+                        "height": layout.height_px,
+                    }
+                },
+                "validation": {
+                    "source_pixels": {
+                        "method": "exact_opaque_source_pixels",
+                        "opaque_pixels": 1,
+                        "changed_pixels": 0,
+                        "passed": True,
+                        "stage": "raw_generation",
+                        "reference_sha256": sha256_file(artwork),
+                        "artwork_sha256": sha256_file(artwork),
+                        "width": layout.width_px,
+                        "height": layout.height_px,
+                    }
+                },
             }
         ),
         encoding="utf-8",
@@ -2105,6 +2155,21 @@ def _promotion_fixture(tmp_path: Path, monkeypatch):
     monkeypatch.setattr(poster_promotion, "POSTER_ASSETS", assets_root)
     monkeypatch.setattr(poster_promotion, "finalize", fake_finalize)
     monkeypatch.setattr(poster_promotion, "slice_poster", fake_slice)
+    monkeypatch.setattr(
+        poster_promotion,
+        "fingerprint_record_is_valid",
+        lambda record: record == synthetic_fingerprint,
+    )
+    monkeypatch.setattr(
+        poster_promotion,
+        "build_generation_fingerprint",
+        lambda *_args, **_kwargs: synthetic_fingerprint,
+    )
+    monkeypatch.setattr(
+        poster_promotion,
+        "build_overlay_fingerprint",
+        lambda *_args, **_kwargs: synthetic_fingerprint,
+    )
     return scope_dir, artwork, run_metadata
 
 
@@ -2162,6 +2227,204 @@ def test_promotion_rejects_generation_metadata_drift(
 
     assert not (scope_dir / "poster-flux2-artwork.png").exists()
     assert not list(scope_dir.glob(".poster-promotion-*"))
+
+
+def test_promotion_rejects_failed_source_pixel_audit(
+    tmp_path: Path,
+    monkeypatch,
+):
+    scope_dir, artwork, run_metadata = _promotion_fixture(
+        tmp_path,
+        monkeypatch,
+    )
+    payload = json.loads(run_metadata.read_text(encoding="utf-8"))
+    payload["validation"]["source_pixels"].update(
+        changed_pixels=1,
+        passed=False,
+    )
+    run_metadata.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(
+        ValueError,
+        match="exact source-pixel validation did not pass",
+    ):
+        poster_promotion.promote(
+            "Example",
+            artwork,
+            run_metadata_path=run_metadata,
+        )
+
+    assert not (scope_dir / "poster-flux2-artwork.png").exists()
+
+
+def test_new_promotion_rejects_an_unbound_legacy_source_pixel_audit(
+    tmp_path: Path,
+    monkeypatch,
+):
+    scope_dir, artwork, run_metadata = _promotion_fixture(
+        tmp_path,
+        monkeypatch,
+    )
+    payload = json.loads(run_metadata.read_text(encoding="utf-8"))
+    payload["generation"].update(
+        engine="flux",
+        mode="identity_lock",
+    )
+    payload["validation"] = {
+        "identity_lock": {
+            "method": "exact_opaque_source_pixels",
+            "opaque_pixels": 1,
+            "changed_pixels": 0,
+            "passed": True,
+        }
+    }
+    manifest_path = scope_dir / "poster.yaml"
+    manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+    manifest["artwork"]["generation"] = payload["generation"]
+    manifest_path.write_text(
+        yaml.safe_dump(manifest, sort_keys=False),
+        encoding="utf-8",
+    )
+    run_metadata.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(
+        ValueError,
+        match="require the bound source-pixel validation record",
+    ):
+        poster_promotion.promote(
+            "Example",
+            artwork,
+            run_metadata_path=run_metadata,
+        )
+
+    assert not (scope_dir / "poster-flux2-artwork.png").exists()
+
+
+def test_new_run_cannot_gain_legacy_allowances_from_a_promoted_wrapper(
+    tmp_path: Path,
+    monkeypatch,
+):
+    scope_dir, artwork, run_metadata = _promotion_fixture(
+        tmp_path,
+        monkeypatch,
+    )
+    run = json.loads(run_metadata.read_text(encoding="utf-8"))
+    run["generation"].update(engine="flux", mode="identity_lock")
+    run["validation"] = {
+        "identity_lock": {
+            "method": "exact_opaque_source_pixels",
+            "opaque_pixels": 1,
+            "changed_pixels": 0,
+            "passed": True,
+        }
+    }
+    manifest_path = scope_dir / "poster.yaml"
+    manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+    manifest["artwork"]["generation"] = run["generation"]
+    manifest_path.write_text(
+        yaml.safe_dump(manifest, sort_keys=False),
+        encoding="utf-8",
+    )
+    run_metadata.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "kind": "promoted_poster",
+                "scope": "Example",
+                "run": run,
+                "outputs": {
+                    "artwork": {
+                        "sha256": sha256_file(artwork),
+                    }
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="must use the configured existing provenance",
+    ):
+        poster_promotion.promote(
+            "Example",
+            artwork,
+            run_metadata_path=run_metadata,
+        )
+
+    assert not (scope_dir / "poster-flux2-artwork.png").exists()
+
+
+def test_legacy_refresh_allowance_binds_to_the_configured_stable_bundle(
+    tmp_path: Path,
+    monkeypatch,
+):
+    scope_dir, candidate, _run_metadata = _promotion_fixture(
+        tmp_path,
+        monkeypatch,
+    )
+    stable_artwork = scope_dir / "poster-flux2-artwork.png"
+    shutil.copyfile(candidate, stable_artwork)
+    stable_provenance = scope_dir / "poster-flux2-provenance.json"
+    container = {
+        "schema_version": 1,
+        "kind": "promoted_poster",
+        "scope": "Example",
+        "outputs": {
+            "artwork": {
+                "sha256": sha256_file(stable_artwork),
+            }
+        },
+    }
+    stable_provenance.write_text(
+        json.dumps(container),
+        encoding="utf-8",
+    )
+    manifest = yaml.safe_load(
+        (scope_dir / "poster.yaml").read_text(encoding="utf-8")
+    )
+
+    assert poster_promotion._is_existing_promotion_refresh(
+        scope="Example",
+        scope_dir=scope_dir,
+        manifest=manifest,
+        metadata_path=stable_provenance,
+        metadata_container=container,
+        artwork_path=stable_artwork,
+    )
+    assert not poster_promotion._is_existing_promotion_refresh(
+        scope="Example",
+        scope_dir=scope_dir,
+        manifest=manifest,
+        metadata_path=tmp_path / "wrapped.json",
+        metadata_container=container,
+        artwork_path=stable_artwork,
+    )
+
+
+def test_promotion_rejects_a_new_run_without_generation_fingerprint(
+    tmp_path: Path,
+    monkeypatch,
+):
+    scope_dir, artwork, run_metadata = _promotion_fixture(
+        tmp_path,
+        monkeypatch,
+    )
+    payload = json.loads(run_metadata.read_text(encoding="utf-8"))
+    del payload["inputs"]["generation_fingerprint"]
+    run_metadata.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(
+        ValueError,
+        match="lacks its generation fingerprint",
+    ):
+        poster_promotion.promote(
+            "Example",
+            artwork,
+            run_metadata_path=run_metadata,
+        )
+
+    assert not (scope_dir / "poster-flux2-artwork.png").exists()
 
 
 def test_failed_promotion_keeps_existing_bundle(

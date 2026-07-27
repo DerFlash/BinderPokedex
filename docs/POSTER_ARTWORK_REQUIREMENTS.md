@@ -43,8 +43,8 @@ Last reviewed: 2026-07-27
 | `PA-015` | Aggregate variant scopes receive section-specific scene briefs | Ongoing | ExGen3 `normal` and `mega` are accepted section-local bundles; apply the same explicit scene, cast, and routing contract to `primal` and future sections instead of treating an aggregate as one unambiguous TCG set |
 | `PA-015A` | Variant poster subjects retain their exact form | Done | Featured selection, cutout files/manifests, planner checks, promotion validation, conditioning, and generation fingerprints use a validated Official Artwork subject identity; distinct forms of one species remain distinct and special forms never fall back silently to base artwork |
 | `PA-016` | Post-fetch orchestration detects stale poster inputs | Done | A read-only planner compares routing, scope data, scene catalog, cutout selection/pixels, logos, dynamic model contracts, effective prompts, semantic generation/overlay fingerprints, and promoted outputs; it separates expensive regeneration from cheap overlay or routing work |
-| `PA-017` | Natural foreground occlusion may cross subjects safely | Research | Accept only a deterministic depth-aware method that retains exact identity and does not invent anatomy |
-| `PA-018` | Alternative engines remain selectable but gated | Ongoing | Anima, FLUX.1 Canny, and Qwen candidates must pass the same promotion checks as FLUX.2 |
+| `PA-017` | Natural grounding and foreground occlusion may cross subjects safely | Research | The protected lower band can look composited; keep the raw identity layer pixel-exact, then allow only a deterministic, recorded depth/occlusion layer to cover final visible pixels for real scene overlap without generating or mutating anatomy |
+| `PA-018` | Alternative engines remain selectable but gated | Done | FLUX.2, Anima, FLUX.1 Canny, and Qwen resolve model/sampling options from the matching manifest, record the exact effective contract, and require the same passed raw-generation opaque-source-pixel audit before any promotion; rejected experiments remain inspectable |
 | `PA-019` | Pull requests prove that a complete release can be built without publishing it | Done | PRs reuse the read-only release-candidate workflow, validate all enabled posters, build every PDF and language archive, verify the manifest, and stop after a temporary Actions artifact |
 | `PA-020` | Rasterized card geometry remains inside the real generation canvas at every supported resolution | Done | Card cells come from cumulative physical endpoints rasterized against both real canvas axes; preparation, finalization, slicing, promotion, and validation share those exact bounds, and new runs record raster geometry contract v2 |
 
@@ -93,6 +93,22 @@ Last reviewed: 2026-07-27
   optional current-v3 upgrade is reported explicitly.
 - Aggregate sections beyond the accepted ExGen3 section implementation and
   wide PDF pages remain explicit roadmap work rather than hidden assumptions.
+- Every generation engine now records an engine-neutral exact-source audit
+  bound to the raw ComfyUI output, its exact audit reference, dimensions, and
+  hashes. This check deliberately precedes the model/Lanczos upscale; the
+  print-size derivative still requires visual identity review rather than
+  claiming channel-exact source pixels after resampling.
+  Production FLUX identity-lock still aborts immediately on a changed pixel;
+  diagnostic engines may finish and retain a failed audit for comparison, but
+  promotion and promoted-bundle validation reject that record for every engine.
+  Existing FLUX promotions remain compatible through their legacy
+  `validation.identity_lock` record.
+- The accepted identity-lock topology deliberately protects the complete lower
+  subject band. The final context pass sees the figures, but has little freedom
+  to improve ground contact around them; Generation VII demonstrates that this
+  can read as a composited layer. Exterior grounding plus a separate,
+  deterministic foreground-occlusion mask remains PA-017 research and is not
+  claimed by the current raw-pixel gate.
 - All thirteen enabled 1-MP source and conditioning compositions fit within
   their real 848 × 1168 generation canvases. Cumulative physical endpoints
   close exactly at every real canvas edge, even where latent alignment makes

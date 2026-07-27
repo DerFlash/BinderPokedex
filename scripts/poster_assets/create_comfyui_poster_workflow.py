@@ -323,6 +323,7 @@ def write_workflow(
     steps: int = 4,
     reference_mode: str = "identity",
     clip_name: str = "qwen_3_4b.safetensors",
+    vae_name: str = "flux2-vae.safetensors",
     output_dir: Path | None = None,
 ) -> Path:
     work_dir = POSTER_ASSETS / scope / "comfyui_poster"
@@ -341,6 +342,7 @@ def write_workflow(
         steps=steps,
         reference_mode=reference_mode,
         clip_name=clip_name,
+        vae_name=vae_name,
     )
     if generation_mode == "identity_lock":
         (target_dir / IDENTITY_LOCK_PROMPT_FILE).write_text(
@@ -376,6 +378,7 @@ def main() -> int:
         default="identity",
     )
     parser.add_argument("--clip", default="qwen_3_4b.safetensors")
+    parser.add_argument("--vae", default="flux2-vae.safetensors")
     args = parser.parse_args()
     print(
         write_workflow(
@@ -387,6 +390,7 @@ def main() -> int:
             steps=args.steps,
             reference_mode=args.reference_mode,
             clip_name=args.clip,
+            vae_name=args.vae,
         )
     )
     return 0

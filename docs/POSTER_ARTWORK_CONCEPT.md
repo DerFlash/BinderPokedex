@@ -260,7 +260,7 @@ venv/bin/python scripts/poster_assets/run_comfyui_poster.py \
 | FLUX.2 Klein edit | `prompt.txt` | `scene_reference.png` | `workflow_api_edit_<size>_<seed>.json` | `_flux_edit_..._poster_` |
 | FLUX.2 Klein inpaint | `inpaint_prompt.txt` | `inpaint_reference.png` | `workflow_api_inpaint_<size>_<seed>.json` | `_flux_inpaint_..._poster_` |
 | FLUX.2 source-pixel lock | generated from `poster.yaml` | `inpaint_reference.png`, `upper_context_mask.png` | `workflow_api_identity_lock_<size>_<seed>.json` | `_flux_identity_lock_..._poster_` |
-| AnimaEdit | `anima_prompt.txt` | `anima_scene_reference.png` | `anima_workflow_api.json` | `_anima_poster_` |
+| AnimaEdit | `anima_prompt.txt` | `anima_scene_reference.png` | `anima_workflow_api_<mode>_<size>_<seed>.json` | `_anima_poster_` |
 | FLUX.1 Dev Canny | `flux1_canny_prompt.txt` | `structure_reference.png` | `flux1_canny_workflow_api_<size>_<seed>.json` | `_flux1_canny_..._poster_` |
 | Qwen Image Edit 2511 | `qwen_edit_prompt.txt` | composition plus two identity sheets | `qwen_edit_workflow_api_<size>_<seed>.json` | `_qwen_edit_..._poster_` |
 
@@ -276,6 +276,9 @@ venv/bin/python scripts/poster_assets/run_comfyui_poster.py \
 
 Anima defaults to `AnimaYume_tuned_v05.safetensors`; another compatible
 backbone can be selected with `--anima-model` without changing the engine API.
+Model, LoRA, encoder, VAE, steps, CFG, reference strength, control method, and
+mode are resolved from a matching manifest and recorded from the same effective
+workflow options.
 Its default `--anima-mode generate` uses an empty target latent while supplying
 the exact character composition through Cosmos reference conditioning. The
 diagnostic `edit` mode retains the abstract material scaffold and is not the
@@ -353,13 +356,26 @@ This is not blind placement into a finished scene: the final generative pass see
 where every figure stands and completes the upper environment accordingly. It
 does intentionally give up free landscape occlusion across the protected
 silhouettes. The lower band is one shared, low-detail ground plane rather than
-three clearings, so that tradeoff does not reintroduce landing pads.
+three clearings, so that tradeoff does not reintroduce landing pads. It can,
+however, make a subject read as composited when the generated ground provides
+too little contact shadow or boundary interaction; Generation VII is the
+tracked example. PA-017 separates two future operations: exterior grounding
+must not touch the raw identity layer, while a deterministic, recorded
+foreground-depth mask may cover final visible pixels when real scenery belongs
+in front. Neither operation may generate or mutate adjacent anatomy, and the
+uncovered source layer must remain recoverable and pixel-exact.
 
-Immediately after ComfyUI returns the 1 MP artwork, the runner compares every
+Immediately after ComfyUI returns the 1 MP artwork, every engine compares every
 fully opaque source pixel with `inpaint_reference.png`. A one-value RGB
-difference is a hard failure before upscaling, typography, or promotion. The
-validation method, compared pixel count, and zero-change result are stored in
-the run provenance and required again by `validate_promoted_poster.py`.
+difference is a hard generation failure for production FLUX identity-lock.
+Experimental adapters retain the failed comparison beside their candidate so
+the output can still be inspected, but promotion and
+`validate_promoted_poster.py` require the same zero-change result for all
+engines. New records bind that audit to the raw artwork and reference hashes
+and dimensions. The later RealESRGAN or Lanczos resize is intentionally outside
+this channel-exact comparison, so print-size identity and silhouette quality
+remain part of visual review. Existing FLUX promotions remain compatible
+through their legacy `validation.identity_lock` record.
 
 FLUX.2 Klein 4B generation remains stochastic in `edit` and direct `inpaint`
 modes. It can invent anatomy adjacent to a silhouette or reinterpret a supplied

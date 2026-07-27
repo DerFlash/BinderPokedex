@@ -31,6 +31,7 @@ try:
         fingerprint_record_is_valid,
         generation_fingerprint_pipeline_contract_version,
         required_model_artifact_hashes,
+        require_exact_source_pixel_validation,
         sha256_file,
     )
     from .poster_io import (
@@ -61,6 +62,7 @@ except ImportError:
         fingerprint_record_is_valid,
         generation_fingerprint_pipeline_contract_version,
         required_model_artifact_hashes,
+        require_exact_source_pixel_validation,
         sha256_file,
     )
     from poster_io import (
@@ -335,27 +337,11 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
         raise ValueError(
             f"Missing promoted model hashes: {', '.join(missing_hashes)}"
         )
-    identity_validation = (
-        payload.get("run", {})
-        .get("validation", {})
-        .get("identity_lock")
+    source_pixel_validation = require_exact_source_pixel_validation(
+        payload.get("run", {}),
+        allow_legacy=True,
     )
     if recorded_generation.get("mode") == "identity_lock":
-        if not isinstance(identity_validation, dict):
-            raise ValueError(
-                "Promoted identity-lock artwork lacks its source-pixel "
-                "validation record"
-            )
-        if (
-            identity_validation.get("method")
-            != "exact_opaque_source_pixels"
-            or identity_validation.get("passed") is not True
-            or identity_validation.get("changed_pixels") != 0
-            or int(identity_validation.get("opaque_pixels", 0)) <= 0
-        ):
-            raise ValueError(
-                "Promoted identity-lock source-pixel validation did not pass"
-            )
         prompt_record = (
             payload.get("run", {})
             .get("inputs", {})
@@ -501,11 +487,7 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
         "card_dimensions_by_cell": tuple(expected_card_sizes),
         "effective_dpi": (dpi_x, dpi_y),
         "provenance": provenance_path,
-        "identity_pixels": (
-            int(identity_validation["opaque_pixels"])
-            if identity_validation
-            else None
-        ),
+        "identity_pixels": int(source_pixel_validation["opaque_pixels"]),
         "generation_fingerprint_current": generation_fingerprint_current,
         "generation_inputs_current": generation_fingerprint_current,
         "generation_pipeline_contract_version": (

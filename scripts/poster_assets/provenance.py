@@ -82,7 +82,7 @@ CURRENT_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
     ("flux", "generate"): 2,
     ("flux", "inpaint"): 2,
     ("anima", "edit"): 2,
-    ("anima", "generate"): 2,
+    ("anima", "generate"): 3,
     ("flux1_canny", "generate"): 2,
     ("qwen_edit", "edit"): 2,
 }
@@ -92,7 +92,7 @@ SUPPORTED_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
     ("flux", "generate"): frozenset({1, 2}),
     ("flux", "inpaint"): frozenset({1, 2}),
     ("anima", "edit"): frozenset({1, 2}),
-    ("anima", "generate"): frozenset({1, 2}),
+    ("anima", "generate"): frozenset({1, 2, 3}),
     ("flux1_canny", "generate"): frozenset({1, 2}),
     ("qwen_edit", "edit"): frozenset({1, 2}),
 }
@@ -115,6 +115,7 @@ MODEL_DIRECTORIES = {
     "lora": ("loras",),
     "upscale_model": ("upscale_models",),
 }
+SOURCE_PIXEL_VALIDATION_KEYS = ("source_pixels", "identity_lock")
 
 
 def sha256_file(path: Path, chunk_size: int = 1024 * 1024) -> str:
@@ -175,6 +176,115 @@ def required_model_artifact_hashes(
         for artifact in MODEL_DIRECTORIES
         if generation.get(artifact)
     )
+
+
+def require_exact_source_pixel_validation(
+    run_metadata: dict[str, Any],
+    *,
+    allow_legacy: bool = False,
+) -> dict[str, Any]:
+    """Require a successful exact-source audit for every promotable engine.
+
+    ``identity_lock`` is the legacy field used by the already promoted FLUX.2
+    bundles. New runs use the engine-neutral ``source_pixels`` key. Callers may
+    accept the old field only while validating or refreshing an existing
+    promoted FLUX identity-lock bundle.
+    """
+    validation = run_metadata.get("validation")
+    if not isinstance(validation, dict):
+        raise ValueError(
+            "Poster candidate lacks its exact source-pixel validation record"
+        )
+    is_current_record = "source_pixels" in validation
+    record = (
+        validation.get("source_pixels")
+        if is_current_record
+        else validation.get("identity_lock")
+    )
+    if not isinstance(record, dict):
+        raise ValueError(
+            "Poster candidate lacks its exact source-pixel validation record"
+        )
+    if not is_current_record:
+        generation = run_metadata.get("generation")
+        if (
+            not allow_legacy
+            or not isinstance(generation, dict)
+            or generation.get("engine") != "flux"
+            or generation.get("mode") != "identity_lock"
+        ):
+            raise ValueError(
+                "New poster candidates require the bound source-pixel "
+                "validation record"
+            )
+    opaque_pixels = record.get("opaque_pixels")
+    changed_pixels = record.get("changed_pixels")
+    if (
+        record.get("method") != "exact_opaque_source_pixels"
+        or record.get("passed") is not True
+        or isinstance(changed_pixels, bool)
+        or not isinstance(changed_pixels, int)
+        or changed_pixels != 0
+        or isinstance(opaque_pixels, bool)
+        or not isinstance(opaque_pixels, int)
+        or opaque_pixels <= 0
+    ):
+        raise ValueError(
+            "Poster candidate exact source-pixel validation did not pass"
+        )
+    if is_current_record:
+        width = record.get("width")
+        height = record.get("height")
+        reference_sha256 = record.get("reference_sha256")
+        artwork_sha256 = record.get("artwork_sha256")
+        valid_sha256 = lambda value: (
+            isinstance(value, str)
+            and len(value) == 64
+            and all(character in "0123456789abcdef" for character in value)
+        )
+        if (
+            record.get("stage") != "raw_generation"
+            or isinstance(width, bool)
+            or not isinstance(width, int)
+            or width <= 0
+            or isinstance(height, bool)
+            or not isinstance(height, int)
+            or height <= 0
+            or not valid_sha256(reference_sha256)
+            or not valid_sha256(artwork_sha256)
+        ):
+            raise ValueError(
+                "Poster candidate source-pixel audit lacks its raw-stage "
+                "image binding"
+            )
+        raw_artwork = run_metadata.get("raw_artwork")
+        if (
+            not isinstance(raw_artwork, dict)
+            or raw_artwork.get("sha256") != artwork_sha256
+            or raw_artwork.get("width") != width
+            or raw_artwork.get("height") != height
+        ):
+            raise ValueError(
+                "Poster candidate source-pixel audit does not match its raw "
+                "artwork record"
+            )
+        inputs = run_metadata.get("inputs")
+        audit_reference = (
+            inputs.get("source_pixel_audit_reference")
+            if isinstance(inputs, dict)
+            else None
+        )
+        if (
+            not isinstance(audit_reference, dict)
+            or audit_reference.get("sha256") != reference_sha256
+            or audit_reference.get("width") != width
+            or audit_reference.get("height") != height
+        ):
+            raise ValueError(
+                "Poster candidate source-pixel audit does not match its "
+                "recorded audit reference"
+            )
+    return record
 
 
 def display_path(path: Path) -> str:
@@ -877,11 +987,10 @@ def generation_input_records(
             for path in sorted(work_dir.glob("identity_reference_*.png"))
         )
     elif generation.get("engine") == "anima":
-        if generation.get("mode") == "edit":
-            references[0] = file_record(
-                work_dir / "anima_scene_reference.png",
-                image=True,
-            )
+        references[0] = file_record(
+            work_dir / "anima_scene_reference.png",
+            image=True,
+        )
         references.append(file_record(work_dir / "identity_core.png", image=True))
 
     return {
@@ -896,6 +1005,10 @@ def generation_input_records(
         "cutout_manifest": file_record(cutout_manifest_path),
         "cutouts": cutouts,
         "references": references,
+        "source_pixel_audit_reference": file_record(
+            work_dir / "inpaint_reference.png",
+            image=True,
+        ),
         "workflow": file_record(workflow_path),
     }
 

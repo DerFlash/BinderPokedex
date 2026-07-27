@@ -19,7 +19,7 @@ Last audited: 2026-07-27
 | `Pokedex/sections/gen4` | FLUX.2 Klein 4B distilled, source-pixel lock v2, 2 x 4 steps | `260734875` | accepted | enabled after Generation IV cover |
 | `Pokedex/sections/gen5` | FLUX.2 Klein 4B distilled, source-pixel lock v2, 2 x 4 steps | `260735038` | accepted | enabled after Generation V cover |
 | `Pokedex/sections/gen6` | FLUX.2 Klein 4B distilled, source-pixel lock v2, 2 x 4 steps | `260758583` | accepted | enabled after Generation VI cover |
-| `Pokedex/sections/gen7` | FLUX.2 Klein 4B distilled, source-pixel lock v2, 2 x 4 steps | `260726054` | accepted | enabled after Generation VII cover |
+| `Pokedex/sections/gen7` | FLUX.2 Klein 4B distilled, source-pixel lock v2, 2 x 4 steps | `260726054` | accepted baseline; grounding refinement tracked | enabled after Generation VII cover |
 | `Pokedex/sections/gen8` | FLUX.2 Klein 4B distilled, source-pixel lock v2, 2 x 4 steps | `260715405` | accepted | enabled after Generation VIII cover |
 | `Pokedex/sections/gen9` | FLUX.2 Klein 4B distilled, source-pixel lock v2, 2 x 4 steps | `260778637` | accepted | enabled after Generation IX cover |
 | `SV03.5` | FLUX.2 Klein 4B distilled, source-pixel lock v1, 2 x 4 steps | `260726101` | accepted | enabled |
@@ -185,15 +185,24 @@ and visual acceptance gate.
 - FLUX.2, Anima, FLUX.1 Canny, and Qwen Edit remain separate selectable
   engines. The promoted implementation is scope-driven and has been exercised
   with two individual sets plus eleven aggregate section bundles.
+- All four engine adapters now resolve their complete model and sampling
+  contract from a matching manifest, with explicit CLI values acting only as
+  overrides. Anima records its model, LoRA, encoder, VAE, steps, CFG, reference
+  strength, and control method exactly; its workflow files are unique by mode,
+  size, and seed. Every engine records the same opaque-source-pixel audit
+  against the raw ComfyUI output. Diagnostic runs may retain a failed audit for
+  comparison, while promotion and promoted validation require zero changed
+  raw pixels regardless of engine. Upscaled print output remains a separate
+  visual-review boundary because resampling is not channel-exact.
 
 ## Partially satisfied requirements
 
 | Requirement | Current boundary | Acceptance criterion |
 | --- | --- | --- |
-| Natural occlusion | Exact identity-lock prevents scenery from crossing source pixels; one low continuous ground avoids contradictory depth | Add depth-aware foreground masks only if they preserve identity deterministically |
-| Engine extensibility | FLUX.2, Anima, FLUX.1 Canny, and Qwen Edit are selectable through one runner | Keep architecture-specific workflow construction and provenance isolated when adding another engine |
+| Natural grounding and occlusion | Exact identity-lock prevents scenery from crossing source pixels; the fully protected lower band can make subjects read as composited, as observed on Generation VII | Keep the raw identity layer exact; add deterministic exterior grounding and, where scene depth requires it, a separately recorded foreground mask that may cover final visible pixels without changing or inventing anatomy |
+| Engine extensibility | FLUX.2, Anima, FLUX.1 Canny, and Qwen Edit are selectable through one manifest-driven runner and share the promotion gate | Keep architecture-specific workflow construction isolated when adding another engine |
 | Alternative models | FLUX.1 Canny changed Mewtwo's face, chest, colors, and hand; Qwen created a giant fourth Mewtwo | Retain both adapters for controlled comparison, but do not promote either rejected candidate |
-| Anima | Workflow is retained; its LoRA metadata contract still needs to be aligned with the generic runner | Fix the explicit LoRA/steps contract, then promote only after a candidate passes the same review gate |
+| Anima candidates | Workflow and provenance now share the exact model/LoRA/encoder/VAE/sampling contract | Keep the adapter experimental until a real candidate passes both the shared pixel gate and visual review |
 | New set art direction | Every current individual set has an explicit catalog brief copied into its manifest | Review or refine the brief before spending the production render; catalog coverage does not replace visual art direction |
 | Wide PDF layouts | 4x3 and 4x4 artwork, placement, prompting, upscale, promotion, validation, slicing, and matching-grid rendering are modeled | Add physical A3 page styles/templates and rendered-PDF QA |
 | Aggregate scopes | The generic index, isolated leaf manifests, section filtering, PDF routing, cleanup, nested validation, nine Pokédex generation configs, and form-aware poster-subject contract are implemented; Pokédex Generations I through IX and both ExGen3 sections are promoted and enabled | Prepare reviewed section scenes and casts for the remaining aggregate variants |
@@ -207,7 +216,11 @@ and visual acceptance gate.
 - Reject generated scenery beside a subject when it reads as an additional body
   part.
 - Keep exact opaque-pixel validation mandatory, but do not misrepresent it as
-  semantic depth or foreground-occlusion validation.
+  semantic depth, foreground-occlusion, or post-upscale channel-exact
+  validation.
+- Treat future foreground overlap as a separate deterministic output layer:
+  the raw identity pixels remain recoverable and exact even where audited
+  scenery legitimately covers them in the final composition.
 - Keep Anima, FLUX.1 Canny, and Qwen Edit experimental until a candidate passes
   the same promotion gate.
 - Apply the demonstrated ExGen3 section workflow to remaining aggregate
@@ -232,8 +245,14 @@ reviewed candidates and their provenance have been promoted.
 
 Completed on 2026-07-27:
 
-- The complete suite passes with 432 tests; one unrelated EX-logo feature test
+- The complete suite passes with 493 tests; one unrelated EX-logo feature test
   remains explicitly skipped.
+- PA-018 regressions cover manifest-to-workflow resolution for every engine,
+  exact Anima model/LoRA/encoder/VAE/sampling/control metadata, unique Anima
+  workflow files, soft audit recording for rejected experimental output, hard
+  failure for production identity-lock, engine-independent promotion
+  rejection, and a complete passing Qwen run-metadata-to-promotion-to-validator
+  contract test.
 - Python compilation and `git diff --check` pass.
 - All thirteen promoted bundles pass `validate_promoted_poster.py`, including
   semantic input equality, historically accurate and explicitly supported
@@ -320,10 +339,12 @@ Completed on 2026-07-27:
   Froakie, uses seed `260758583` and graph contract v2, and preserves all
   48,362 fully opaque source pixels with zero changes. The Kalos flower-country
   scene, complete poster, and three lower card cuts pass visual review.
-- The accepted Generation VII candidate contains Rowlet, Litten, and Popplio,
+- The enabled Generation VII baseline contains Rowlet, Litten, and Popplio,
   uses seed `260726054` and graph contract v2, and preserves all 39,935 fully
-  opaque source pixels with zero changes. The Alola volcanic-island scene,
-  complete poster, and three lower card cuts pass visual review.
+  opaque source pixels with zero changes. Later visual review identified that
+  its completely protected lower band makes the three figures read as layered
+  over the Alola scene. This is a grounding/integration limitation rather than
+  an identity regression and is tracked under PA-017.
 - The accepted Generation VIII candidate contains Grookey, Scorbunny, and
   Sobble, uses seed `260715405` and graph contract v2, and preserves all 34,011
   fully opaque source pixels with zero changes. The Galar upland lake, moor,
