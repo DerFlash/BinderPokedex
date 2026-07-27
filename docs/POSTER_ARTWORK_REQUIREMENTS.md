@@ -47,18 +47,21 @@ Last reviewed: 2026-07-27
 
 ## Current production boundary
 
-- `Base1`, `SV03.5`, and Pokédex Generations I through IV have accepted, promoted
+- `Base1`, `SV03.5`, and Pokédex Generations I through V have accepted, promoted
   3×3 artwork and enabled PDF integration.
 - Every current individual TCG set can now be initialized with a set-specific
   scene brief and the same production contract.
 - The Pokédex has nine isolated, section-specific bundles with distinct seeds,
   regional scene briefs, deterministic nine-language section overlays, and
   exactly the three starter `featured_elements` from each generation.
-- The Generation I through IV Pokédex bindings are enabled after visual
-  whole-poster, card-cut, and rendered-PDF review. The German build has 130
-  pages with all four posters versus 126 with `--skip-poster`; Generation IV
-  appears as cover page 51, poster page 52, and cards from page 53. Generations
-  V through IX remain disabled until each artwork is generated, reviewed,
+- The Generation V overlay deterministically uses `Einall`, `Unova`, `Unys`,
+  `Teselia`, and `Unima` for the `de`, `en`, `fr`, `es`, and `it` region
+  labels, respectively.
+- The Generation I through V Pokédex bindings are enabled after visual
+  whole-poster, card-cut, and rendered-PDF review. The German build has 131
+  pages with all five posters versus 126 with `--skip-poster`; Generation V
+  appears as cover page 65, poster page 66, and cards from page 67. Generations
+  VI through IX remain disabled until each artwork is generated, reviewed,
   promoted, and validated. That staged rollout remains tracked in
   [#2](https://github.com/DerFlash/BinderPokedex/issues/2).
 - The default workflow deliberately stops before automatic promotion. Semantic

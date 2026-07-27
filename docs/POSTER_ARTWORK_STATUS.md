@@ -17,9 +17,10 @@ Last audited: 2026-07-27
 | `Pokedex/sections/gen2` | FLUX.2 Klein 4B distilled, source-pixel lock v1, 2 x 4 steps | `260753030` | accepted | enabled after Generation II cover |
 | `Pokedex/sections/gen3` | FLUX.2 Klein 4B distilled, source-pixel lock v2, 2 x 4 steps | `260750880` | accepted | enabled after Generation III cover |
 | `Pokedex/sections/gen4` | FLUX.2 Klein 4B distilled, source-pixel lock v2, 2 x 4 steps | `260734875` | accepted | enabled after Generation IV cover |
+| `Pokedex/sections/gen5` | FLUX.2 Klein 4B distilled, source-pixel lock v2, 2 x 4 steps | `260735038` | accepted | enabled after Generation V cover |
 | `SV03.5` | FLUX.2 Klein 4B distilled, source-pixel lock v1, 2 x 4 steps | `260726101` | accepted | enabled |
 
-All six accepted candidates use the same two-pass source-pixel-lock family.
+All seven accepted candidates use the same two-pass source-pixel-lock family.
 Its first FLUX pass creates a full-bleed landscape with dynamic, latent-aligned
 overscan. The exact reviewed source figures are placed on its one continuous
 lower ground before a second FLUX pass sees their final composition and
@@ -28,11 +29,11 @@ protected lower subject band. The resulting 1 MP artwork must pass an exact
 opaque-source-pixel comparison, is model-upscaled to the exact 300-dpi physical
 layout, and then receives only deterministic typography.
 
-Generations III and IV use graph contract v2. That graph uses two distinct
-upper-context masks. A binary,
-latent-aligned sampling mask extends below the visible transition, while a
-separate soft RGB feather restores the continuous first-pass scene before the
-protected figure band. This prevents ComfyUI's internal inpaint-mask rounding
+Generations III through V use graph contract v2. That graph uses two distinct
+upper-context masks. A binary, latent-aligned sampling mask extends below the
+visible transition, while a separate soft RGB feather restores the continuous
+first-pass scene before the protected figure band. This prevents ComfyUI's
+internal inpaint-mask rounding
 from exposing a horizontal VAE transition seam. Base1, SV03.5, Generation I,
 and Generation II remain accepted under their historically accurate v1
 contract after visual review; the planner exposes a non-blocking upgrade action
@@ -56,8 +57,9 @@ and visual acceptance gate.
 - The runner compares every fully opaque source pixel immediately after
   generation. Base1 passes with 52,584 exact pixels; SV03.5 and Pokédex
   Generation I each pass with 62,719; Pokédex Generation II passes with
-  39,572; Pokédex Generation III passes with 41,641; and Pokédex Generation IV
-  passes with 43,050. All record zero changed pixels in promoted provenance.
+  39,572; Pokédex Generation III passes with 41,641; Pokédex Generation IV
+  passes with 43,050; and Pokédex Generation V passes with 52,186. All record
+  zero changed pixels in promoted provenance.
 - Generation starts from freshly prepared source, mask, composition, and
   engine-specific identity references. It does not consume the legacy poster,
   background, or layout-reference result.
@@ -103,6 +105,10 @@ and visual acceptance gate.
 - Deterministic overlays support all nine PDF languages. CJK output requires a
   matching system font and fails explicitly rather than silently substituting
   an incapable bitmap font.
+- The Generation V regional overlay uses the localized European names
+  `Einall` (`de`), `Unova` (`en`), `Unys` (`fr`), `Teselia` (`es`), and
+  `Unima` (`it`). These values are deterministic overlay inputs and do not
+  alter the generated scene.
 - Posters are sliced with the same geometry used by preparation and PDF
   rendering. Legacy bundles follow the first section cover; aggregate bundles
   follow the exact configured section cover.
@@ -139,7 +145,7 @@ and visual acceptance gate.
   MPS tensor conversions.
 - FLUX.2, Anima, FLUX.1 Canny, and Qwen Edit remain separate selectable
   engines. The promoted implementation is scope-driven and has been exercised
-  with two independent sets plus four aggregate Pokédex sections.
+  with two independent sets plus five aggregate Pokédex sections.
 
 ## Partially satisfied requirements
 
@@ -151,7 +157,7 @@ and visual acceptance gate.
 | Anima | Workflow is retained; its LoRA metadata contract still needs to be aligned with the generic runner | Fix the explicit LoRA/steps contract, then promote only after a candidate passes the same review gate |
 | New set art direction | Every current individual set has an explicit catalog brief copied into its manifest | Review or refine the brief before spending the production render; catalog coverage does not replace visual art direction |
 | Wide PDF layouts | 4x3 and 4x4 artwork, placement, prompting, upscale, promotion, validation, slicing, and matching-grid rendering are modeled | Add physical A3 page styles/templates and rendered-PDF QA |
-| Aggregate scopes | The generic index, isolated leaf manifests, section filtering, PDF routing, cleanup, nested validation, and nine Pokédex generation configs are implemented; Generations I through IV are promoted and enabled | Generate, review, promote, and enable Generation V through IX in [#2](https://github.com/DerFlash/BinderPokedex/issues/2); then model other aggregate variant scenes |
+| Aggregate scopes | The generic index, isolated leaf manifests, section filtering, PDF routing, cleanup, nested validation, and nine Pokédex generation configs are implemented; Generations I through V are promoted and enabled | Generate, review, promote, and enable Generation VI through IX in [#2](https://github.com/DerFlash/BinderPokedex/issues/2); then model other aggregate variant scenes |
 
 ## Remaining production requirements
 
@@ -189,10 +195,10 @@ reviewed candidates and their provenance have been promoted.
 
 Completed on 2026-07-27:
 
-- The complete suite passes: 267 tests passed and one unrelated, pre-existing
+- The complete suite passes: 268 tests passed and one unrelated, pre-existing
   EX-logo feature test remains explicitly skipped.
 - Python compilation and `git diff --check` pass.
-- All six promoted bundles pass `validate_promoted_poster.py`, including
+- All seven promoted bundles pass `validate_promoted_poster.py`, including
   semantic input equality, historically accurate and explicitly supported
   graph-contract status, provenance hashes, 2368 x 3268 artwork, nine
   750 x 1050 card crops, 300-dpi metadata, and exact opaque-source-pixel
@@ -212,26 +218,32 @@ Completed on 2026-07-27:
   An isolated batch initialization created the 23 missing standard-3x3
   manifests and preserved the existing reviewed Base1 manifest.
 - The Pokédex resolver loads nine isolated generation bundles with unique seeds
-  and section-local source data. Generations I through IV are enabled;
-  Generations V through IX remain disabled. Its checked-in output contains
+  and section-local source data. Generations I through V are enabled;
+  Generations VI through IX remain disabled. Its checked-in output contains
   localized section title, region, and range values for all nine PDF languages.
-- A complete German Pokédex build with Generations I through IV enabled
-  produces 130 A4 pages. Generation IV appears as cover page 51 followed by its
-  poster on page 52 and cards from page 53. The `--skip-poster` countercheck
-  produces 126 pages; Generation IV then appears as cover page 48 followed
-  directly by cards from page 49 without an empty gap. Nested preparation
+- A complete German Pokédex build with Generations I through V enabled
+  produces 131 A4 pages. Generation V appears as cover page 65 followed by its
+  poster on page 66 and cards from page 67. The `--skip-poster` countercheck
+  produces 126 pages; Generation V then appears as cover page 61 followed
+  directly by cards from page 62 without an empty gap. Nested preparation
   resolves the full asset key instead of falling back to a leaf-directory
   basename.
 - Release validation carries the resolved routing bundle through provenance
   checks and rejects any PDF artwork path other than the promoted, hashed
   output.
-- All six accepted artworks and all eighteen 750 x 1050 bottom character cards
-  were visually compared with the reviewed cutouts after model upscaling.
-  Character anatomy, card padding, the continuous lower ground, and absence of
-  adjacent body-like shapes pass.
+- All seven accepted artworks and all twenty-one 750 x 1050 bottom character
+  cards were visually compared with the reviewed cutouts after model
+  upscaling. Character anatomy, card padding, the continuous lower ground, and
+  absence of adjacent body-like shapes pass.
 - The accepted Generation IV candidate contains Turtwig, Chimchar, and Piplup,
   uses seed `260734875` and graph contract v2, and preserves all 43,050 fully
   opaque source pixels with zero changes.
+- The accepted Generation V candidate contains Snivy, Tepig, and Oshawott,
+  uses seed `260735038` and graph contract v2, and preserves all 52,186 fully
+  opaque source pixels with zero changes.
+- Generation V overlay localization deterministically resolves the region as
+  `Einall`, `Unova`, `Unys`, `Teselia`, and `Unima` for `de`, `en`, `fr`,
+  `es`, and `it`, respectively.
 - The Generation III rerender uses the separate binary VAE sampling mask and
   soft final-composite mask. The former full-width transition jump at row 759
   dropped from a mean luminance delta of -7.95 to -2.16; the relocated binary
