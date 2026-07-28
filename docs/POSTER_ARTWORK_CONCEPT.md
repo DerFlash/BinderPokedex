@@ -1,616 +1,233 @@
-# Poster Artwork
+# Poster Artwork Architecture
 
-Poster artwork is a reviewed, scope-specific asset. It is generated separately
-from the normal data pipeline so PDF generation can eventually consume a stable
-PNG without downloading or generating images during a build.
+This document describes the implementation contract behind generated binder
+posters. Use [Poster Workflow](POSTER_WORKFLOW.md) for commands,
+[Poster Requirements](POSTER_ARTWORK_REQUIREMENTS.md) for acceptance criteria,
+[Poster Status](POSTER_ARTWORK_STATUS.md) for the current rollout, and
+[Poster Experiment Log](POSTER_ARTWORK_EXPERIMENT_LOG.md) for rejected
+approaches.
 
-The branch acceptance matrix, remaining production requirements, and cleanup
-boundary are tracked in [Poster Artwork Feature Status](POSTER_ARTWORK_STATUS.md).
-For commands, use the concise [Poster Workflow](POSTER_WORKFLOW.md). Stable
-product decisions and roadmap IDs live in
-[Poster Requirements](POSTER_ARTWORK_REQUIREMENTS.md).
+## Goal
 
-The accepted and PDF-enabled scopes currently are:
+Create one set-specific, full-bleed scene that can be cut into physical card
+pages while:
 
-- `Base1`: Mewtwo, Bulbasaur, and Charmander in a late-1990s research meadow.
-- `SV03.5`: Bulbasaur, Charmander, and Squirtle in a Kanto coastal meadow for
-  Scarlet & Violet - 151.
-- `Pokedex/sections/gen1` through `gen9`: each generation's three starters in
-  its reviewed regional scene.
-- `ExGen3/sections/normal`: Koraidon, Pikachu, and Miraidon in a
-  Paldea-inspired Mediterranean valley.
-- `ExGen3/sections/mega`: the exact Mega Latias, Mega Diancie, and Mega Lucario
-  forms in a crystalline highland basin.
+- keeping each supplied Pokémon recognizable and inside its assigned card;
+- letting the landscape, lighting, shadows, and depth feel jointly authored;
+- reserving safe cells for deterministic logo and information overlays;
+- producing exact print geometry and auditable provenance;
+- remaining optional for fetching and PDF generation.
 
-All use the same `3x3` physical-card layout and generator code. Scene briefs,
-technical identity-lock bounds, and any rare subject-specific compensation live
-in the scope manifest. New `3x3`, `4x3`, and `4x4` scopes use the same artwork
-code path. Production PDF output remains `3x3`/A4 until matching A3 page
-renderers are implemented for the wide layouts.
+## Design principles
+
+1. **One active contract per scope.** `poster.yaml` is the source of truth for
+   model, mode, seed, layout, output, scene, and cast.
+2. **One preferred model family.** The production runtime supports FLUX.2
+   `joint_scene` plus FLUX.2 `identity_lock` as fallback.
+3. **Human review is a gate.** Automation can prove geometry, hashes, graph
+   shape, and exact fallback pixels; it cannot approve anatomy or coherent
+   depth in a generated one-shot.
+4. **Candidates are disposable.** ComfyUI references, workflows, raw outputs,
+   print candidates, and run metadata remain ignored until promotion.
+5. **Promotions are deterministic inputs.** PDFs and CI consume only tracked
+   masters, previews, slices, and provenance.
+6. **No hidden generation.** Fetching, PDF rendering, and CI never start
+   ComfyUI.
 
 ## Files
 
-Each scope stores its poster inputs and output below
-`data/poster_assets/<scope>/`:
+An individual scope or aggregate leaf owns:
 
 ```text
-poster.yaml
-poster-flux2-artwork.png
-poster-flux2.png
-poster-flux2-cards/
-poster-flux2-provenance.json
-logos/
-  logo-<language>.png
-comfyui_poster/
-  prompt.txt
-  inpaint_prompt.txt
-  anima_prompt.txt
-  flux1_canny_prompt.txt
-  qwen_edit_prompt.txt
-cutouts/
-  manifest.json
-  pokemon_<id>_<name>.png
-  pokemon_<species-id>_artwork_<form-id>_<name>.png
+data/poster_assets/<asset-key>/
+  poster.yaml
+  cutouts/
+    manifest.json
+    pokemon_*.png
+  logos/
+    manifest.json
+    ...
+  comfyui_poster/                 # ignored local workspace
+    joint_scene_cast_reference.png
+    identity_reference_*.png
+    joint_scene_prompt.generated.txt
+    workflow_api_*.json
+    output/
+    temp/
+  poster-flux2-artwork.png        # promoted text-free master
+  poster-flux2.png                # deterministic preview with overlay
+  poster-flux2-cards/             # promoted physical crops
+  poster-flux2-provenance.json
 ```
 
-Only reviewed source assets and the final render belong in this directory.
-Generator previews, masks, model workflows, and other iteration artifacts are
-local scratch data and must not be committed.
+An aggregate root additionally owns `posters.yaml`. It binds stable section IDs
+to independent leaf manifests and PDF insertion points. Generation and
+promotion never occur against the aggregate root as one ambiguous image.
 
-The legacy experimental engines keep their reviewed prompts in
-`comfyui_poster/`. The production identity-lock prompt is built from the
-reviewed `artwork.scene` brief in `poster.yaml` plus one central immutable-source
-contract. Its exact `identity_lock_prompt.generated.txt` snapshot is hashed into
-run provenance but ignored as local scratch. The experimental `joint_scene`
-mode similarly records its generated one-shot scene/identity/placement prompt
-in `joint_scene_prompt.generated.txt`. Generated scene
-references, identity references, API workflows, masks, temporary files, raw
-artwork, and iteration previews are also ignored. A candidate enters source
-control only through the explicit transactional promotion step, together with
-its provenance record.
+## Layout contract
 
-## Layout rules
+`standard_3x3` is the A4 production default. The same layout object drives:
 
-- Layout geometry is defined in `scripts/poster_assets/layout.py`.
-- Raster cells use cumulative physical endpoints against the real width and
-  height. Per-cell bounds are authoritative; independently rounded segment
-  sizes are never added repeatedly.
-- Manifest rows and columns are 1-based.
-- The Pokemon count follows the number of layout columns.
-- Pokemon occupy the bottom row, one per column.
-- Title and set information stay inside the cells configured in `poster.yaml`.
-- The information panel is centered in its cell and capped by
-  `max_height_ratio`; longer localized names wrap and shrink inside their
-  assigned row instead of growing the panel toward another card.
-- Pokemon silhouettes stay inside their card cells; the continuous background
-  may cross cut lines.
-- Missing layout-required Pokemon or source assets are hard errors.
-- `standard_3x3` is the A4 production default. `wide_4x3` and `wide_4x4`
-  retain full physical card size and advertise A3 landscape and A3 portrait as
-  their future matching PDF page families.
+- safe title and information cells;
+- subject card envelopes and visible padding;
+- reference placement;
+- generated prompt coordinates;
+- output raster dimensions;
+- promotion validation;
+- physical card slicing;
+- PDF placement.
 
-The `Base1` layout is:
+At 300 dpi the current 3×3 text-free master is 2368 × 3268 px and each card
+crop is 750 × 1050 px. Cumulative physical endpoints close exactly on the real
+canvas even when latent alignment creates one-pixel differences between source
+cells.
 
-```text
-[ background ][ set title  ][ background ]
-[ background ][ set info   ][ background ]
-[  Mewtwo    ][ Bulbasaur  ][ Charmander ]
-```
+`wide_4x3` and `wide_4x4` remain modeled extension points. They must use matching
+physical page formats and must not be squeezed onto A4.
 
-## Workflow
+## Scope manifest
 
-Initialize another individual TCG set directly from
-`data/output/<scope>.json`:
-
-```bash
-python scripts/poster_assets/init_poster_scope.py \
-  --scope SV04 --layout standard_3x3 --fetch
-```
-
-The initializer creates an identity-lock manifest from the reviewed Base1 model
-contract, copies the scope's explicit creative brief from
-`config/poster_scenes.yaml`, derives a stable scope seed, configures every
-available localized logo, selects the layout column count, and optionally
-fetches the transparent featured Pokemon and logos. It rejects aggregate scopes
-that cannot provide one unambiguous set name and publication date. PDF
-integration starts disabled and is enabled only after promotion.
-
-After fetching all data, missing individual-set manifests can be prepared
-without overwriting reviewed manifests:
-
-```bash
-python scripts/poster_assets/init_poster_scope.py --all-tcg-sets --fetch
-```
-
-Every current individual TCG set must have a catalog entry; exact coverage is
-enforced by tests. A scope owns only the creative fields while the source-pixel,
-continuous-ground, safe-area, no-text, no-path, and no-landing-pad rules remain
-central:
+The default generation contract for a new scope is:
 
 ```yaml
 artwork:
   scene:
-    concept: a Kanto collection
-    setting: >-
-      A quiet coastal meadow with layered woodland, distant hills, weathered
-      coastal forms, and a glimpse of a calm blue bay.
-    lighting: Warm late-afternoon sunlight enters from the upper left.
-    rendering: >-
-      Use clean linework, restrained natural colors, and gentle atmospheric
-      depth.
-    ground_noun: meadow
+    concept: ...
+    setting: ...
+    lighting: ...
+    rendering: ...
+    ground_noun: ...
+  generation:
+    engine: flux
+    model: flux-2-klein-4b-fp8.safetensors
+    encoder: qwen_3_4b.safetensors
+    vae: flux2-vae.safetensors
+    mode: joint_scene
+    reference_mode: spatial_identity_joint
+    seed: ...
+    steps: 4
+    generation_megapixels: 1.0
+    output_dpi: 300
+    output_method: lanczos
 ```
 
-Fetch transparent official-artwork cutouts:
-
-```bash
-venv/bin/python scripts/poster_assets/fetch_cutouts.py --scope Base1
-```
-
-The fetcher selects `featured_elements` from `data/output/<scope>.json`, then
-uses the explicit fallback list in `poster.yaml` if the layout needs more
-Pokemon. Existing reviewed cutouts are not overwritten unless `--force` is
-passed. The cover/card `image_url` is not a cutout source. The fetcher consumes
-the separate validated `poster_subject`, whose canonical PokeAPI Official
-Artwork ID distinguishes base species, Mega/Primal forms, and X/Y variants.
-Legacy ExGen/ME featured records recover that identity through their `card_id`
-and source card. Form cutout filenames include both species and artwork IDs;
-missing or inconsistent form artwork is a hard error with no base fallback.
-The form-to-species relationship is verified offline against the pinned
-`config/pokeapi_form_species.json` registry.
-
-Fetch every localized title logo configured in `poster.yaml`:
-
-```bash
-venv/bin/python scripts/poster_assets/fetch_title_logos.py --scope SV03.5
-```
-
-The fetcher resolves the language URLs from `data/output/<scope>.json`, writes
-stable local RGBA PNGs, and never leaves PDF generation dependent on the network.
-
-## Local ComfyUI workflow
-
-The production flow creates a complete scene with FLUX.2 Klein while protecting
-the reviewed Pokemon source pixels, then adds panels and typography
-deterministically. Its tracked inputs contain no generated-background layout
-guide or visible landing-pad composition.
-
-Start the local Metal-enabled ComfyUI server:
-
-```bash
-scripts/poster_assets/start_comfyui_poster.sh
-```
-
-Model weights remain outside this repository. The promoted FLUX flow expects
-these files below the ComfyUI `models/` directory:
-
-```text
-diffusion_models/flux-2-klein-4b-fp8.safetensors
-text_encoders/qwen_3_4b.safetensors
-vae/flux2-vae.safetensors
-upscale_models/RealESRGAN_x4plus_anime_6B.pth
-```
-
-The experimental structure-controlled FLUX.1 path additionally uses
-[ComfyUI-GGUF](https://github.com/city96/ComfyUI-GGUF) and these external files:
-
-```text
-unet/flux1-dev-Q4_K_S.gguf
-clip/clip_l.safetensors
-clip/t5-v1_1-xxl-encoder-Q4_K_S.gguf
-vae/ae.safetensors
-controlnet/instantx_flux_canny.safetensors
-```
-
-It is intentionally a separate engine. It does not replace or mutate the FLUX.2
-or Anima workflows.
-
-The Qwen multi-reference experiment uses the same GGUF loader and these external
-files:
-
-```text
-unet/qwen-image-edit-2511-Q3_K_M.gguf
-text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors
-vae/qwen_image_vae.safetensors
-loras/Qwen-Image-Edit-2511-Lightning-4steps-V1.0-bf16.safetensors
-```
-
-The reviewed SHA-256 values live in each scope's `poster.yaml`. Every new run
-resolves the actual ComfyUI installation from its reported absolute `main.py`
-path and hashes the selected local model files; it does not trust filenames
-alone. The illustration upscaler is the official
-[RealESRGAN x4plus anime 6B release](https://github.com/xinntao/Real-ESRGAN/releases/tag/v0.2.2.4).
-
-The server is scope-specific because ComfyUI resolves `LoadImage` nodes relative
-to its configured input directory. Pass the same scope that will be generated:
-
-```bash
-scripts/poster_assets/start_comfyui_poster.sh --scope SV03.5
-```
-
-In another terminal, run preparation, workflow creation, generation, and final
-text compositing with one command:
-
-```bash
-venv/bin/python scripts/poster_assets/run_comfyui_poster.py \
-  --engine flux --flux-mode identity_lock --scope Base1 \
-  --seed 260726503 --megapixels 1.0 --language en
-```
-
-The default `identity_lock` mode runs two four-step FLUX passes at 1 MP, applies
-the configured Real-ESRGAN illustration upscaler, and normalizes the complete
-text-free artwork to the exact 300-dpi physical layout before deterministic
-typography. This produces a 2368 x 3268 px poster and nine 750 x 1050 px cards.
-The exact figures enter the ComfyUI graph between the two passes; the final pass
-sees their composition but cannot edit their protected lower band.
-
-Create a local unified-scene comparison without changing the manifest:
-
-```bash
-venv/bin/python scripts/poster_assets/run_comfyui_poster.py \
-  --engine flux --flux-mode joint_scene \
-  --scope Pokedex/sections/gen7 --language en
-```
-
-No output-size flag is needed: the runner derives the exact configured 300-dpi
-raster dimensions with `build_print_layout` and uses deterministic Lanczos
-scaling. `--output-dpi 300` may be passed explicitly and selects the same exact
-deterministic path for this mode, never the learned upscaler.
-
-Overscan scales with the target dimensions and remains latent-aligned. The
-second-pass protection band normally reaches 70 percent of the image height; if
-an unusually tall reviewed subject begins above that boundary, the mask moves
-up automatically and retains configurable clearance above its silhouette.
-
-The FLUX and Anima branches are independent and can be compared with identical
-inputs. `both` runs them sequentially and keeps engine-specific final filenames:
-
-```bash
-venv/bin/python scripts/poster_assets/run_comfyui_poster.py \
-  --engine both --scope Base1 --seed 260716204 --megapixels 0.25 --language de
-```
-
-| Engine | Prompt | Scene input | Workflow | Final filename marker |
-| --- | --- | --- | --- | --- |
-| FLUX.2 Klein edit | `prompt.txt` | `scene_reference.png` | `workflow_api_edit_<size>_<seed>.json` | `_flux_edit_..._poster_` |
-| FLUX.2 Klein inpaint | `inpaint_prompt.txt` | `inpaint_reference.png` | `workflow_api_inpaint_<size>_<seed>.json` | `_flux_inpaint_..._poster_` |
-| FLUX.2 source-pixel lock | generated from `poster.yaml` | `inpaint_reference.png`, `upper_context_mask.png` | `workflow_api_identity_lock_<size>_<seed>.json` | `_flux_identity_lock_..._poster_` |
-| FLUX.2 unified joint scene | `joint_scene_prompt.generated.txt` | one neutral 0.5-MP spatial cast plus one unscaled 512 px identity reference per subject; no landscape image | `workflow_api_joint_scene_<size>_<seed>.json` | `_flux_joint_scene_spatial_identity_joint_..._poster_` |
-| AnimaEdit | `anima_prompt.txt` | `anima_scene_reference.png` | `anima_workflow_api_<mode>_<size>_<seed>.json` | `_anima_poster_` |
-| FLUX.1 Dev Canny | `flux1_canny_prompt.txt` | `structure_reference.png` | `flux1_canny_workflow_api_<size>_<seed>.json` | `_flux1_canny_..._poster_` |
-| Qwen Image Edit 2511 | `qwen_edit_prompt.txt` | composition plus two identity sheets | `qwen_edit_workflow_api_<size>_<seed>.json` | `_qwen_edit_..._poster_` |
-
-Run the FLUX.1 experiment independently:
-
-```bash
-venv/bin/python scripts/poster_assets/run_comfyui_poster.py \
-  --engine flux1_canny --scope Base1 \
-  --seed 260726201 --megapixels 1.0 \
-  --flux1-steps 20 --flux1-control-strength 0.75 \
-  --language en
-```
-
-Anima defaults to `AnimaYume_tuned_v05.safetensors`; another compatible
-backbone can be selected with `--anima-model` without changing the engine API.
-Model, LoRA, encoder, VAE, steps, CFG, reference strength, control method, and
-mode are resolved from a matching manifest and recorded from the same effective
-workflow options.
-Its default `--anima-mode generate` uses an empty target latent while supplying
-the exact character composition through Cosmos reference conditioning. The
-diagnostic `edit` mode retains the abstract material scaffold and is not the
-preferred poster path.
-
-Anima remains a selectable experimental engine. A Generation VII 0.25-MP
-empty-target preflight confirms that it preserves count and card placement, but
-the decoded landscape leaves the three subjects isolated on a flat lawn with
-no convincing contact shadows, terrain response, or occlusion. The graph also
-restores an eroded exact identity core through `ImageCompositeMasked` after
-decode, so `generate` is not a true unified final synthesis despite sampling
-from an empty latent. No 1-MP follow-up is justified for this topology.
-
-Preparation creates the existing clean scene reference from every reviewed
-cutout at its exact intended position, size, and shared ground level for the
-modes that consume it. It also creates one compact neutral-canvas identity
-reference per subject. The workflow derives their count, order, English names,
-and invisible left-to-right print regions from the cutout manifest; no Pokemon
-name or fixed three-image chain remains in Python code. In `joint_scene` v5,
-position and size come from normalized visible-silhouette rectangles calculated
-from the shared layout and cutout alpha bounds. Neither `scene_reference.png`, a
-landscape image, nor `inpaint_reference.png` conditions its one shot. One
-neutral 0.5-MP poster-shaped cast carries the figures in a common coordinate
-system as spatial authority only. One unscaled 512 px source reference per
-subject carries identity and anatomy detail. None contains a layout grid,
-landing pads, paths, text boxes, landscape, or previous generated artwork.
-
-The FLUX.1 Canny adapter uses a fourth prepared representation:
-`structure_reference.png` flattens the exact final-size cutouts on opaque white.
-The workflow derives Canny edges from it and applies those edges for the full
-sampling interval. This constrains both outer silhouettes and visible internal
-lines such as Mewtwo's face, chest, fingers, limbs, and tail while the scene and
-all three subjects are still drawn in one diffusion pass. It is not a
-post-generation character composite.
-
-Rare model-specific compensation is explicit and reviewable in `poster.yaml`.
-For example, Base1 makes Mewtwo smaller and left-biased in the conditioning image,
-while all SV03.5 subjects use the defaults:
+The fallback changes the active mode/output contract to:
 
 ```yaml
-conditioning:
-  identity_defaults:
-    canvas_px: 512
-    min_subject_px: 150
-    max_subject_px: 350
-  subjects:
-    150:
-      composition:
-        scale: 0.22
-        x_offset_cell: -0.28
-        baseline_offset_cell: 0.10
-      identity:
-        canvas_px: 768
-        align_x: left
-      prompt_notes:
-        - Preserve the reviewed head contour and complete silhouette.
+mode: identity_lock
+reference_mode: two_pass_source_pixels
+output_dpi: 300
+output_method: model_upscale
+upscale_model: RealESRGAN_x4plus_anime_6B.pth
+upscale_model_sha256: <from the matching run metadata>
 ```
 
-This replaces the former aspect-ratio heuristic that treated every tall subject
-like Mewtwo.
-The four FLUX modes deliberately use separate conditioning topologies.
-`edit` uses an independent empty target latent and supplies the compensated
-composition through `ReferenceLatent`. It remains useful for fully generative
-experiments but can reinterpret anatomy. Direct `inpaint` keeps the figures as
-unmasked source pixels and restores them after VAE decoding; testing showed that
-FLUX can still extend a visible contour into the generated background.
+The runner records the hashes for the FLUX model, encoder, VAE, and upscaler.
+Before IL promotion, its complete `generation` object becomes the active
+manifest contract; every hash is mandatory. Existing accepted IL manifests stay
+unchanged until their own one-shot replacement is reviewed.
 
-The production `identity_lock` path therefore separates scene invention from
-composition context:
+## Prompt ownership
 
-1. A first four-step pass generates a full-bleed, character-free landscape with
-   latent overscan; only the landscape is center-cropped.
-2. The exact final-size reviewed cutouts are placed together on that one
-   continuous ground inside the ComfyUI graph.
-3. A second four-step pass sees this complete composition but its soft edit mask
-   ends above the entire bottom subject band.
-4. The protected lower band is restored exactly after decoding, so neither
-   diffusion, the VAE, nor the upstage context pass can change a source pixel.
+Full prompts are generated, not maintained per scope. They combine:
 
-This is not blind placement into a finished scene: the final generative pass sees
-where every figure stands and completes the upper environment accordingly. It
-does intentionally give up free landscape occlusion across the protected
-silhouettes. The lower band is one shared, low-detail ground plane rather than
-three clearings, so that tradeoff does not reintroduce landing pads. It can,
-however, make a subject read as composited when the generated ground provides
-too little contact shadow or boundary interaction; Generation VII is the
-tracked example. This accepted topology and every current manifest remain
-unchanged while the alternative below is reviewed.
+1. the exact creative scene from `config/poster_scenes.yaml`;
+2. scope metadata;
+3. layout-safe title/information cells;
+4. normalized subject rectangles, baselines, and padding;
+5. supplied subject identity and anatomy rules;
+6. coherent lighting, grounding, shadow, and depth rules;
+7. exclusions for generated text, boxes, landing pads, paths, extra
+   characters, and layout guides.
 
-The experimental `joint_scene` topology tests the opposite tradeoff:
+Text and logos are deliberately absent from model output. They are localized
+and rendered after the text-free artwork has passed review.
 
-1. The shared physical layout and the visible alpha bounds of each reviewed
-   cutout produce normalized per-mille silhouette rectangles. Those coordinates
-   carry target position, scale, baseline, padding, and card-safe placement in
-   the prompt without flattening cutouts onto a landscape.
-2. One neutral 0.5-MP poster-shaped cast contains the source figures at those
-   coordinates and is authoritative only for count, pose, relative scale,
-   baseline, and the common spatial frame.
-3. One neutral 512 px reference per subject carries the original cutout at its
-   source resolution without resampling. These references are authoritative
-   only for identity, anatomy, silhouette, colors, and markings.
-4. One `EmptyFlux2LatentImage` is sampled once. FLUX.2 receives the ordered
-   spatial-plus-identity reference set and synthesizes the complete landscape
-   and all subjects in that one denoising pass.
-5. The final decode is saved directly. No cutout, mask repair, source-pixel
-   restore, or other character composite is applied afterwards.
+## Preferred `joint_scene` graph
 
-There is no landscape image, full-scene/cutout draft, or
-`inpaint_reference.png` conditioning input. The model invents the landscape
-around the cast from the first noise step so z-order, terrain contact, cast
-shadows, reflected light, color grading, perspective, depth, and plausible
-foreground occlusions can agree. Identity, anatomy, face, pose, stature,
-silhouette, colors, markings, scale, and complete card-safe placement remain
-mandatory review invariants.
+Preparation writes:
 
-The graph derives its reference count from the layout and has no hard
-three-subject limit. `standard_3x3` remains the production default.
-Four-subject `wide_4x3` and `wide_4x4` candidates still require their own
-memory and visual review before promotion.
+- one neutral poster-shaped spatial cast, capped at 0.5 MP, containing the
+  reviewed subjects at their final layout-derived positions;
+- one neutral 512 px identity reference per subject, retaining the original
+  Official Artwork pixels without source resampling;
+- one generated prompt snapshot.
 
-Immediately after ComfyUI returns the 1 MP artwork, exact-source modes compare
-every fully opaque source pixel with `inpaint_reference.png`. A one-value RGB
-difference is a hard generation failure for production FLUX identity-lock.
-Other exact-source adapters may retain a failed comparison beside their local
-candidate, but promotion and validation still require zero changes.
-`joint_scene`, by design, redraws every pixel and therefore does not create a
-source-pixel equality record. Its promotion instead requires a complete current
-generation fingerprint and explicit human approval bound to source identities,
-the raw artwork, and the deterministic print-size text-free artwork.
+The ComfyUI graph then:
 
-The joint-scene print derivative uses Lanczos directly to the exact
-`build_print_layout` dimensions for the configured 300 dpi. It never uses
-RealESRGAN or another learned upscaler, because that would introduce a second
-model-driven reinterpretation after the reviewed unified pass. For
-`standard_3x3`, the current 1-MP 848 × 1168 raw image becomes the exact
-2368 × 3268 raster used by the 300-dpi card geometry. Existing FLUX promotions
-remain compatible through their legacy `validation.identity_lock` record.
+1. loads the FLUX.2 model, encoder, and VAE;
+2. appends the spatial cast and ordered identity references to conditioning;
+3. starts from one `EmptyFlux2LatentImage`;
+4. samples once;
+5. decodes once;
+6. saves the decoded scene directly.
 
-FLUX.2 Klein 4B generation remains stochastic in `edit` and direct `inpaint`
-modes. It can invent anatomy adjacent to a silhouette or reinterpret a supplied
-subject even at higher resolution. Those candidates remain hard rejects; source
-pixel locking is the production answer when authenticity outranks generative
-reinterpretation.
+There is no input landscape, inpaint target, second sampler, post-decode
+character composite, mask repair, source restoration, or learned upscaler.
+The accepted raw image is resized with deterministic Lanczos to the exact
+300-dpi physical raster.
 
-Character authenticity outranks background detail. A candidate fails review if
-even one protected subject changes its head or face, chest geometry, digit count,
-limbs, tail, body proportions, pose, colors, or defining silhouette. A generated
-shape immediately beside a contour also fails if it can be read as an extra body
-part. Review is performed against the source cutout at the final bottom-card crop
-size, not only against the complete poster.
+Because all pixels are generated, identity approval is visual and fail-closed.
+Promotion binds the approval to the exact raw and print pixel hashes, exact
+source identities, generation fingerprint, references, prompt, workflow, and
+model artifacts.
 
-The default remains the distilled 4-step model. The undistilled Base model can be
-evaluated without changing the workflow architecture:
+## `identity_lock` fallback
 
-```bash
-venv/bin/python scripts/poster_assets/run_comfyui_poster.py \
-  --engine flux --flux-mode inpaint \
-  --flux-model flux-2-klein-base-4b-fp8.safetensors --flux-steps 24 \
-  --scope Base1 --seed 260715201 --megapixels 0.25 --language en
-```
+The fallback intentionally chooses exact identity over full scene integration.
+It builds the background and source-aware upper context in two FLUX.2 passes,
+keeps the reviewed figures immutable, and verifies every fully opaque source
+pixel against the raw ComfyUI result. It then uses the configured illustration
+upscaler to reach the same physical print raster.
 
-The initial controlled 0.25 MP comparison used seed `260716301`. Its inpaint
-workflow accidentally reused the edit-compensated composition, so the model saw
-undersized or apparently missing subjects and generated generic replacements.
-The corrected inpaint topology uses exact final-size cutouts and does not grow
-the background mask into their silhouettes. At 0.5 MP, however, small details
-still degrade during VAE reconstruction and upscaling. A fresh 2 MP run recovered
-more background detail and more of the source linework, but FLUX.2 still generated
-subject-like shapes next to open contours. The native edit comparison also
-changed Mewtwo's face, chest geometry, and finger count. All of those experimental
-candidates are rejected. These experiments show that more pixels and additional
-diffusion steps alone do not solve reference-identity hallucinations.
+The fallback is not automatic. If a scope cannot pass one-shot review, its
+manifest is switched deliberately and a matching candidate is promoted. This
+avoids two competing active contracts or silent degradation.
 
-The FLUX.1 Dev Q4_K_S Canny run used seed `260726201`, 20 steps, 1 MP, and
-ControlNet strength `0.75`. It retained the broad composition but turned Mewtwo
-purple, changed its face and chest, and simplified its hand. The MPS run took
-about 34 minutes. Canny constrains geometry, not source identity, so this
-candidate is rejected.
+## Promotion
 
-The Qwen Image Edit 2511 Q3_K_M run used seed `260726301`, the four-step
-Lightning LoRA, and three explicitly labeled references. It produced a detailed
-landscape but interpreted the large Mewtwo detail sheet as a giant fourth
-character. The 1 MP MPS run took 29:54 and used roughly 18 GB of swap on the
-16 GB machine. The adapter remains selectable, but this candidate is also
-rejected.
+Promotion is transactional:
 
-The accepted Base1 baseline is `poster-flux2.png`, generated with seed
-`260726503`, distilled FLUX.2 Klein 4B, the two-pass `identity_lock` mode, and
-`two_pass_source_pixels` reference mode. Both passes use four steps at 1 MP.
-The reviewed cutouts retain their exact 1 MP pixels and card-safe composition
-inside the workflow; the whole text-free scene is then model-upscaled to the
-exact 300-dpi layout before the deterministic overlay.
+1. validate that candidate generation metadata equals `poster.yaml`;
+2. rebuild and compare the semantic generation fingerprint;
+3. require either bound `joint_scene` visual approval or the IL exact-pixel
+   audit;
+4. validate print dimensions;
+5. install the text-free master;
+6. render the deterministic localized preview;
+7. slice every physical card;
+8. write provenance containing input, review/audit, and output hashes;
+9. replace the stable bundle atomically.
 
-The final review checked the complete poster and all three 750 x 1050 bottom
-cards. Mewtwo keeps the reviewed face, chest ridges, three digits on each hand,
-complete limbs and tail, with additional clear space above and to the right.
-No adjacent generated shape reads as extra anatomy.
+Changing scene, cast, model, mode, layout, prompt contract, or source pixels
+invalidates the generation fingerprint. Changing only localized overlay inputs
+can refresh preview/slices from the stable text-free master without ComfyUI.
 
-The promoted SV03.5 candidate uses the same model and topology with seed
-`260726101`. Both passes run at 1 MP before the complete text-free scene is
-model-upscaled to 300 dpi. Its 62,719 fully opaque source pixels compare exactly,
-and the complete poster plus all three bottom-card crops were visually checked.
-No Base1 subject-conditioning override is applied.
+## PDF and CI integration
 
-FLUX.2 Klein 9B FP8 with the 8B FP4-mixed encoder was also validated technically
-on MPS after adding CPU-side NVFP4 dequantization. On a 16 GB M4, however, prompt
-encoding plus model loading consumed roughly 12.7 GB of swap and took about ten
-minutes before sampling began. BFL documents the KV variant for approximately
-29 GB VRAM, so neither 9B path is considered a practical local poster engine on
-this machine. The failed 9B weights are not retained locally.
+The PDF layer discovers only enabled, promoted bundles. For each language it
+applies the localized title/logo and information block, slices with the shared
+layout, and inserts the poster after the configured cover. `--skip-poster`
+bypasses discovery and keeps ordinary PDF generation available.
 
-The finalizer never adds or alters Pokemon. For individual sets it draws the
-set logo, localized set name, card count, and release date. For aggregate
-sections it draws the localized section title, dynamic card count, and section
-description. It also adds the project signature and deterministic panel design.
-Exact spelling and typography therefore remain independent from the image model
-without breaking the integrity of the generated scene.
+Pull requests run the same validator and PDF/release-candidate builders as a
+release, but upload only a temporary Actions artifact. A separate tag-only job
+may publish after a successful `v*` build.
 
-After review, promote the exact text-free 300-dpi candidate. This transaction
-installs the stable artwork, deterministic localized preview, all physical card
-crops, and a complete provenance record only after every output succeeds:
+## Extension boundary
 
-```bash
-venv/bin/python scripts/poster_assets/promote_comfyui_poster.py \
-  --scope SV03.5 \
-  --artwork data/poster_assets/SV03.5/comfyui_poster/temp/<candidate>_print.png \
-  --run-metadata data/poster_assets/SV03.5/comfyui_poster/temp/<candidate>_print.run.json \
-  --language de
-```
+Adding a model family is not the current extension mechanism. First prove that
+the existing one-shot fails a hard gate across the bounded experiment budget.
+Only then may a new workflow writer be considered, and it must still preserve:
 
-Promotion also requires the candidate's generation metadata to match the
-reviewed `artwork.generation` block exactly. A changed seed, model, encoder,
-upscaler, or output method therefore fails before any stable file is replaced.
+- empty-target joint synthesis;
+- separate identity authority for every subject;
+- layout-driven placement;
+- one final sampler/decode;
+- no post-decode subject replacement;
+- deterministic print output;
+- complete promotion provenance.
 
-For `joint_scene`, promotion additionally requires `--approve-joint-scene`.
-That explicit action records review of the exact raw and Lanczos-scaled
-text-free pixels against every source identity and the complete generation
-fingerprint. It does not waive manifest equality, source identity, geometry, or
-output-hash checks. No Generation VII candidate through `00020` is promoted or
-has received this approval. Product review retains placement-corrected `00018`
-as the visually preferred experimental comparison under the explicitly relaxed
-print-detail identity tolerance. `00019` and `00020` fail the bounded depth
-tests and their prompt changes are reverted. None has changed the manifest,
-promoted artwork, routing, or PDF output. Promotion still requires a review
-bound to the current fingerprint and every current acceptance gate;
-`identity_lock` remains the accepted production fallback.
-
-Validate the committed bundle, hashes, dimensions, and embedded dpi metadata:
-
-```bash
-venv/bin/python scripts/poster_assets/validate_promoted_poster.py --scope SV03.5
-```
-
-Every finalized poster is then exported into one PNG per physical card cell. The
-card crops use the same `PageLayout` geometry that prepared the references and
-discard the binder gaps between cells. For `standard_3x3`, this produces nine
-files named `card_r1_c1.png` through `card_r3_c3.png`; the three Pokemon must each
-remain completely inside one of the three bottom-row files.
-
-Latent-aligned ComfyUI dimensions are allowed to differ slightly from the exact
-physical aspect ratio. Both real canvas axes are nevertheless authoritative:
-cumulative millimetre endpoints are mapped onto them once, so the final row and
-column always end exactly at the image boundary. Print layouts rasterize those
-same absolute millimetre endpoints directly at the requested dpi.
-
-## PDF and binder integration
-
-An individual scope keeps its optional `pdf` block in `poster.yaml`. An
-aggregate scope instead uses `posters.yaml` as a routing-only index and points
-to one isolated leaf `poster.yaml` per section. In both cases the configured
-file is the text-free generated artwork, not a language-specific final poster:
-
-```yaml
-pdf:
-  enabled: true
-  artwork_file: poster-flux2-artwork.png
-  insertion: after_first_section_cover
-```
-
-During 3x3 PDF generation, `PosterPageRenderer` applies the deterministic logo
-and localized text for the requested language, slices the result with the shared
-`PageLayout`, and draws all nine images at the existing physical card positions.
-The page therefore uses the same 63.5 x 88.9 mm cards, 5 mm binder gaps, and
-cutting guides as normal collection pages. Legacy single posters are inserted
-once after the first section cover. Aggregate bindings use
-`after_section_cover`, so each enabled artwork follows its matching cover before
-that section's cards. This is normal `scripts/pdf/generate_pdf.py` behavior; no
-poster-specific PDF command is needed.
-
-The renderer now matches poster rows and columns against the supplied PDF page
-renderer rather than treating nine cards as a universal poster invariant. The
-current page renderer is 3x3/A4. A future matching 4x3 or 4x4 page renderer can
-reuse the poster renderer; until then, a wide manifest produces an actionable
-A3 page-family error instead of being silently scaled or misrendered.
-
-The PDF build consumes only reviewed, promoted local artwork and never starts an
-expensive ComfyUI generation implicitly. A one-off build can bypass poster
-discovery and asset loading with `--skip-poster`. Its `_NO_POSTER.pdf` suffix
-keeps the result separate from the normal PDF. For a persistent per-scope
-opt-out, leave `pdf.enabled` false or omit the `pdf` block entirely. For an
-aggregate target, leave its routing-index binding disabled.
-
-## Current boundary
-
-Base1, SV03.5, Pokédex Generations I through IX, and both ExGen3 sections have
-promoted identity-lock artwork, exact-source-pixel validation, deterministic
-localized overlays, card-slice exports, and complete PDF integration. Every
-current individual TCG set has cataloged scene direction and can be initialized
-from existing scope data, but opts into PDF generation only after its text-free
-artwork passes the same whole-poster, per-card, and rendered-PDF review.
-
-The Pokédex provides nine generation bundles with regional briefs,
-section-local starter selection, nine-language overlays, and section-aware PDF
-routing. Generations I through IX are accepted and enabled; the final
-release-candidate gate is complete and recorded in
-[#2](https://github.com/DerFlash/BinderPokedex/issues/2). ExGen3 demonstrates
-the same aggregate contract for two different variant sections, including
-ordered curated casts and exact named-form artwork. Remaining aggregate
-variants and matching wide PDF pages are roadmap items.
+Rejected Anima, FLUX.1, Qwen, SDXL, and DreamO implementations are intentionally
+not retained as runnable production code. Their evidence is available in the
+experiment log and Git history.

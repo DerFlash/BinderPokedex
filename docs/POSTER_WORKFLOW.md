@@ -8,21 +8,62 @@ future work live in
 
 ## Lifecycle at a glance
 
-```text
-fetch scope data
-  -> inspect the read-only poster work plan
-  -> initialize poster manifest and source assets (optional)
-  -> review the set scene brief
-  -> generate a local ComfyUI candidate (optional)
-  -> visually review and promote the candidate
-  -> enable the promoted poster for PDF use
-  -> generate the normal PDF (poster may be skipped)
+```mermaid
+flowchart TD
+    subgraph DATA["1 · Data and planning"]
+        CONFIG["Scope config"] --> FETCH["Fetch scope data"]
+        FETCH --> OUTPUT["data/output/&lt;scope&gt;.json"]
+        OUTPUT --> PLAN["Read-only poster work plan"]
+        SCENES["Scene catalog"] --> PLAN
+        MANIFEST["poster.yaml / posters.yaml"] --> PLAN
+        PLAN --> READY{"Manifest and source assets ready?"}
+        READY -->|no| INIT["Initialize missing manifest and source assets"]
+        INIT --> BRIEF{"Review scene brief, cast, and forms"}
+        READY -->|yes| BRIEF
+    end
+
+    subgraph LOCAL["2 · Optional local generation · Apple Metal/MPS"]
+        BRIEF --> COMFY["Start scope-isolated ComfyUI"]
+        COMFY --> RUN["Run FLUX.2 poster pipeline"]
+        RUN --> JOINT["Default · joint_scene"]
+        JOINT --> JOINTREFS["Spatial cast + one identity reference per subject"]
+        JOINTREFS --> ONESHOT["Empty latent → one sampler → one decode"]
+        ONESHOT --> LANCZOS["Lanczos → exact 300-dpi text-free master"]
+
+        RUN -. explicit fallback .-> IL["identity_lock"]
+        IL --> ILPASS["Two-pass scene + immutable source figures"]
+        ILPASS --> AUDIT["Exact opaque-pixel audit + model upscale"]
+    end
+
+    subgraph GATE["3 · Review and stable assets"]
+        LANCZOS --> SCRATCH["Ignored candidate + run metadata"]
+        AUDIT --> SCRATCH
+        SCRATCH --> REVIEW{"Review raw, print master, identity, depth, and all card crops"}
+        REVIEW -->|reject| RUN
+        REVIEW -->|accept| PROMOTE["Transactional promotion"]
+        PROMOTE --> TRACKED["Tracked master + preview + card slices + provenance"]
+    end
+
+    subgraph CONSUME["4 · Deterministic consumers"]
+        TRACKED --> ROUTE{"PDF route enabled?"}
+        ROUTE -->|yes| PDF["PDF builder"]
+        OUTPUT --> PDF
+        PDF --> OVERLAY["Localized logo/info overlay and temporary slicing"]
+        OVERLAY --> A4["A4 3×3 binder PDF"]
+
+        TRACKED --> VALIDATE["CI validates every enabled promotion"]
+        VALIDATE --> BUILD["Build PDFs, ZIPs, and release manifest"]
+        BUILD --> PR["Pull request · artifact only"]
+        BUILD --> TAG["v* tag · publish release"]
+    end
 ```
 
 Data fetching and PDF rendering never start ComfyUI implicitly. Poster
 generation is an explicit post-fetch step because it is GPU-intensive,
 probabilistic, and subject to a visual promotion gate. A promoted poster is
 generated once and then reused deterministically for every supported language.
+Aggregate indexes fan out to independent section manifests before generation
+and join again only when the PDF page collection is assembled.
 
 CI uses the same boundary. Pull requests run a complete, read-only release
 rehearsal that validates promoted posters and builds every PDF, ZIP, and the
@@ -141,7 +182,7 @@ python scripts/poster_assets/init_poster_scope.py \
 
 `standard_3x3` is the default and should normally be omitted. The initializer:
 
-- copies the reviewed model and identity-lock contract;
+- creates the reviewed FLUX.2 `joint_scene` contract;
 - embeds the set-specific creative brief from `config/poster_scenes.yaml`;
 - derives a stable per-scope seed;
 - selects three featured Pokemon for the bottom row;
@@ -227,13 +268,11 @@ manifest. The final production prompt is then generated from four inputs:
 1. the set-specific creative scene;
 2. scope name, series, and release metadata;
 3. the configured card layout and text-safe cells;
-4. one central immutable-subject and continuous-ground contract.
+4. one central identity, placement, depth, and continuous-ground contract.
 
 This avoids tracked, duplicated full prompts drifting apart. The generated
 prompt snapshot is written to the scope's ignored `comfyui_poster/` workspace
-when the candidate is prepared. The experimental `joint_scene` mode records its
-one-shot scene/identity/placement prompt in the same way; no full prompt is
-maintained per scope by hand.
+when the candidate is prepared. No full prompt is maintained per scope by hand.
 
 ## 5. Start local ComfyUI
 
@@ -274,68 +313,9 @@ python scripts/poster_assets/run_comfyui_poster.py \
   --scope ExGen3/sections/mega
 ```
 
-The production runner reads the complete engine-specific model and sampling
-contract, seed, generation size, and output contract from the scope's
-`poster.yaml`. Exact-source modes may select a learned illustration upscaler;
-`joint_scene` requires deterministic Lanczos output. This includes all Anima
-model/LoRA/encoder/VAE/steps/CFG/reference-strength/control-method fields and
-the corresponding FLUX.1 Canny or Qwen fields. Only a manifest whose `engine`
-matches the selected adapter supplies those values; CLI flags remain explicit
-experiment overrides. The default FLUX identity-lock flow:
-
-- generates one cohesive set-specific environment in ComfyUI;
-- places exact source figures at their final card-safe positions;
-- allows the final context pass to complete only the protected upper scene;
-- uses separate latent sampling and soft RGB feather masks so ComfyUI's binary
-  inpaint threshold cannot create a horizontal transition seam;
-- verifies that every fully opaque source pixel remains unchanged;
-- model-upscales to the physical print dimensions;
-- writes a localized preview, card crops, workflow, and run metadata.
-
-The command prints the exact candidate and metadata paths needed for promotion.
-Exact-source modes write an opaque-source-pixel audit bound to the raw ComfyUI
-output and the audit reference. FLUX identity-lock stops immediately if it
-changes a source pixel. An experimental Anima, FLUX.1, or Qwen run may finish
-with `passed: false` so its visual result can be compared, but that metadata
-cannot pass promotion. `joint_scene` has no equality audit because all pixels
-are generated; it uses a human review bound to the actual raw and deterministic
-print-size files instead.
-
-### Experimental unified scene A/B
-
-`identity_lock` remains the configured production mode. To create a local
-comparison without changing the manifest or any PDF binding, override only the
-FLUX mode:
-
-```bash
-python scripts/poster_assets/run_comfyui_poster.py \
-  --scope Pokedex/sections/gen7 \
-  --engine flux \
-  --flux-mode joint_scene \
-  --language en
-```
-
-With no output-size flag, the runner inherits the configured 300-dpi target.
-`--output-dpi 300` may also be passed explicitly. In `joint_scene` both forms
-derive the exact physical raster dimensions through `build_print_layout` and
-create the text-free print candidate with deterministic Lanczos scaling; they
-never select a learned upscaler. For `standard_3x3`, the 1-MP raw artwork is
-848 × 1168 px and the print candidate is exactly 2368 × 3268 px.
-
-The engine adapters coexist in the same checkout. `--engine` and
-`--flux-mode` select a workflow; no Git reset or checkout is required.
-Preparation may replace ignored transient reference images in
-`comfyui_poster/`, but every run regenerates the inputs required by its selected
-mode. It does not alter another workflow builder, the promoted artwork, or PDF
-routing.
-
-The promoted `identity_lock` artwork and provenance are versioned. For
-unpromoted `00018`, the builder, exact input recipe, reference hashes, prompt,
-seed, and raw-output hash are versioned, while its concrete raw/print images,
-workflow JSON, and run metadata remain ignored local evidence until an explicit
-promotion or archival decision.
-
-The current `joint_scene` graph:
+The production runner reads the FLUX.2 model and sampling contract, seed,
+generation size, and output contract from the scope's `poster.yaml`. The
+preferred `joint_scene` path:
 
 1. derives each target silhouette rectangle from the shared physical layout
    and cutout alpha bounds, then writes its normalized canvas coordinates into
@@ -360,7 +340,7 @@ scale, or placement remains a hard visual rejection. Joint-scene preparation
 produces `joint_scene_cast_reference.png` followed by
 `identity_reference_1.png` through the current subject count. It neither
 produces nor records `inpaint_reference.png`, scene references, identity-lock
-masks, or references for unrelated experimental engines.
+masks, or references for rejected experiments.
 
 The graph has no hard three-subject limit. `standard_3x3` remains the default;
 four-subject `wide_4x3` and `wide_4x4` candidates need their own memory and
@@ -369,33 +349,52 @@ visual review before promotion.
 Because `joint_scene` deliberately redraws all pixels, an opaque-source-pixel
 equality audit is not applicable. Its hard gates are a complete generation
 fingerprint and explicit human review of both the actual raw file and the
-deterministically scaled text-free print artwork. The CLI
-override above does not make the candidate production artwork: Generation VII
-still points to its promoted `identity_lock` result. Candidates through `00016`
-are rejected, and v5 `00017` is superseded. v5 `00018` reuses the canonical
-card placement and is visually preferred over the composited baseline under
-the accepted print-detail tolerance, but remains unpromoted. `00019` and
-`00020` fail their bounded depth tests and are reverted. The v5 graph remains
-selectable, but it does not become production without an explicit review and
-promotion.
-Review evidence lives in
-`POSTER_ARTWORK_EXPERIMENT_LOG.md` and
-`POSTER_ARTWORK_REQUIREMENTS.md`.
+deterministically scaled text-free print artwork. Generation VII candidate
+`00018` passed that gate and is the first promoted `joint_scene` poster.
+Candidates `00019` and `00020` failed their bounded depth tests and their
+prompt changes were reverted.
 
-Anima can be evaluated independently with a low-cost empty-target preflight:
+`identity_lock` remains an explicit fallback when a scope cannot pass the
+one-shot identity or placement review:
 
 ```bash
 python scripts/poster_assets/run_comfyui_poster.py \
-  --scope Pokedex/sections/gen7 \
-  --engine anima --anima-mode generate \
-  --seed 260726054 --megapixels 0.25 \
-  --output-megapixels 0.25 --language en
+  --scope <scope> \
+  --flux-mode identity_lock
 ```
 
-The recorded Generation VII preflight passes count and card fit but restores an
-eroded identity core after decode and leaves the subjects without convincing
-grounding or terrain interaction. It is diagnostic evidence, not a unified
-joint-scene candidate, and does not justify a 1-MP retry with the same topology.
+The fallback still creates its own scene, places the exact reviewed source
+figures, verifies every fully opaque source pixel, and model-upscales to the
+same 300-dpi print geometry. A manifest describes one active generation
+contract at a time. Switch and promote a fallback deliberately; do not maintain
+two competing active promotions for one scope. Existing accepted IL scopes
+remain valid until each is migrated after review.
+
+The override above creates a fallback candidate but does not silently change
+the active manifest. The command prints the candidate and matching run-metadata
+paths. After accepting the result:
+
+1. copy the complete `generation` object from that `.run.json` into
+   `artwork.generation` in the scope's `poster.yaml`, including all model
+   hashes, `upscale_model`, `upscale_model_sha256`, `output_dpi: 300`, and
+   `output_method: model_upscale`;
+2. run the planner and require a promotable/currently matching contract;
+3. promote the IL candidate without `--approve-joint-scene`.
+
+```bash
+python scripts/poster_assets/poster_work_plan.py --scope <scope>
+
+python scripts/poster_assets/promote_comfyui_poster.py \
+  --scope <scope> \
+  --artwork <model-upscaled-text-free-artwork.png> \
+  --run-metadata <matching.run.json> \
+  --name flux2
+```
+
+Promotion rejects IL previews, missing upscaler hashes, and any contract other
+than the reviewed 300-dpi model-upscale path. All candidates, references,
+workflows, and run metadata remain ignored local workspace files until an
+accepted result is promoted.
 
 ## 7. Review and promote
 
@@ -416,7 +415,8 @@ python scripts/poster_assets/promote_comfyui_poster.py \
   --scope SV04 \
   --artwork <printed-text-free-artwork.png> \
   --run-metadata <matching.run.json> \
-  --name flux2
+  --name flux2 \
+  --approve-joint-scene
 
 python scripts/poster_assets/validate_promoted_poster.py --scope SV04
 ```
@@ -433,23 +433,11 @@ A `joint_scene` candidate follows a separate fail-closed review contract. Its
 run must contain the complete current generation fingerprint, exact source
 identity records, raw-artwork hashes, and deterministic text-free print hashes.
 After comparing both artifacts and every subject crop with the reviewed
-cutouts, the reviewer must opt in explicitly:
-
-```bash
-python scripts/poster_assets/promote_comfyui_poster.py \
-  --scope <scope> \
-  --artwork <lanczos-scaled-text-free-artwork.png> \
-  --run-metadata <matching.run.json> \
-  --name flux2 \
-  --approve-joint-scene
-```
-
-This flag records a timestamped approval bound to those exact pixels and source
+cutouts, the `--approve-joint-scene` flag above records a timestamped approval
+bound to those exact pixels and source
 identities; it is not a generic bypass. Promotion still rejects a candidate
-whose recorded generation contract differs from `poster.yaml`. The Generation
-VII A/B currently has no approval or manifest adoption: candidates through
-`00017` are rejected and unpromoted, and neither its promoted artwork nor its
-PDF routing has changed.
+whose recorded generation contract differs from `poster.yaml`. Generation VII
+`00018` is the first reviewed promotion using this contract.
 
 ## 8. Enable and consume the poster
 
