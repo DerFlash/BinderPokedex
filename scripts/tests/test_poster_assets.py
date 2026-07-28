@@ -1913,6 +1913,14 @@ def test_joint_scene_prompt_separates_spatial_and_identity_roles():
     assert "mandatory placement and scale contract" in final
     assert "not additional subjects" in final
     assert "small physically plausible edge occlusions" in final
+    assert (
+        "demonstrate both depth layers in every occupied bottom-row card"
+        in final
+    )
+    assert "remains visibly continuous as the same object" in final
+    assert "correctly hidden by the character" in final
+    assert "below ten percent of character height" in final
+    assert "feet, ground-contact points, defining appendages" in final
     assert "JOINT SCENE - ONE-SHOT FINAL SYNTHESIS" in snapshot
     assert "SUBJECT-FREE LANDSCAPE DRAFT" not in snapshot
 
