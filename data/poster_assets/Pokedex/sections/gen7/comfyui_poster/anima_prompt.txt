@@ -1,0 +1,23 @@
+masterpiece, best quality, safe, exactly three pokemon, Rowlet on the lower
+left, Litten in the lower center, Popplio on the lower right, match the supplied
+reference positions and sizes, keep every complete character inside its
+assigned bottom card with visible landscape padding, exact reference anatomy,
+silhouettes, faces, colors, markings, appendages, and character designs, no
+duplicate or additional characters, no changed or missing body parts,
+
+one cohesive Alola island landscape generated around all three characters,
+continuous tropical island grass, low tropical foliage, black volcanic slopes,
+a turquoise bay, distant cloud-wrapped islands, expansive sky, warm tropical
+sunlight from the upper left, cheerful modern cel-painted linework, controlled
+tropical colors, luminous oceanic depth, shared perspective, reflected light,
+ground contact, and directional cast shadows,
+
+physically consistent depth throughout every connected plant or landscape
+element, nearer scenery may overlap only a small non-defining exterior edge,
+farther scenery remains behind, preserve every defining contour, face, marking,
+limb, foot, and appendage,
+
+calm object-free upper-center and middle-center areas for later overlays, fill
+every edge, no character-specific clearings, platforms, circles, halos, landing
+pads, paths, text, letters, numbers, logos, panels, cards, borders, UI,
+watermarks, guides, or crop marks
