@@ -62,8 +62,8 @@ the spatial and scene-integration failures, but it still redraws identity-scale
 facial and paw details. Because the identity references already contain the
 unscaled source pixels, no second canvas/prompt parameter retry is justified.
 The v5 implementation remains selectable historical evidence and unpromoted;
-production stays on `identity_lock` while the materially different DreamO
-identity-control evaluation runs.
+production stays on `identity_lock` while successor research is limited to
+architectures with both multi-reference identity and explicit spatial control.
 
 ## Identity-control successor evaluation
 
@@ -92,8 +92,8 @@ not reopen prompt-only or reference-canvas tuning for the rejected FLUX.2
 | `sdxl_identity` | SDXL plus one identity adapter per subject, regional masks, and source-derived structural control | Closed after whole-card, exact-silhouette, and tight-box masks all fail identity, grounding, and scene quality |
 | `sdxl_identity_pokemon` | Same graph plus one Pokémon domain LoRA | Not rendered: the base graph fails reference binding and anatomy too broadly for a domain/style A/B to isolate |
 | `ms_diffusion` | SDXL multi-subject adapter with explicit reference-to-box assignment | Stopped at technical preflight: the available ComfyUI port hides its own Diffusers sampler and requires a substantial MPS/audit refactor |
-| `dreamo` | FLUX.1-dev plus three VAE-based DreamO object references before one common sampler | MPS graph proven technically; preflight A renders no subjects, so one prompt-binding diagnostic precedes any visual candidate |
-| `flux2_refcontrol` | FLUX.2 Klein 4B Base reference-plus-depth control | Retained only as a fallback if DreamO is technically unavailable; stop before rendering if one reference cannot bind three distinct subjects |
+| `dreamo` | FLUX.1-dev plus three VAE-based DreamO object references before one common sampler | Closed after preflight B binds only two redesigned subjects, omits the third, and misses the fixed card bounds |
+| `flux2_refcontrol` | FLUX.2 Klein 4B Base reference-plus-depth control | Stopped at contract preflight: one reference input cannot independently bind three subjects to three boxes |
 
 The intended generic/Pokémon-assisted SDXL A/B was conditional on a viable base
 graph. That condition is false, so no Pokémon LoRA is added to a broken
@@ -318,7 +318,8 @@ then the official v1.1 LoRA chain:
 
 The closed SDXL experiment's base checkpoint, CLIP Vision, IP-Adapter, and two
 ControlNets were hash-checked against their existing log before deletion.
-This recovers 12.45 GiB without touching any production model.
+Their recorded total is 13,371,197,431 bytes (about 12.45 GiB); no production
+model is touched.
 
 The first unchanged 0.25-MP graph reached the sampler only after a bounded
 compatibility patch forwarded ComfyUI's new `latent_shapes` keyword through
@@ -346,6 +347,24 @@ SHA-256 is
 The same seed, resolution, references, model chain, sampler, and scene contract
 remain fixed for preflight B. Only if subjects appear does DreamO earn a 1-MP
 visual candidate.
+
+Preflight B completed on Metal/MPS in 10:11. Its raw output SHA-256 is
+`6e027309f1e46bce0b21c40a1fc7d79bf12e00b5bca60dc34c51a5146ad8abb1`.
+The compact prompt changes binding, proving that the first result was not
+solely an empty-reference failure: Rowlet and Litten now appear. Both are
+substantially redesigned, oversized, and outside their target silhouettes;
+Popplio is absent. Rowlet gains a costume-like head outline and altered body,
+while Litten gains a white chest/muzzle design and altered markings and
+proportions. Count, identity/anatomy, and card containment therefore all fail
+before detailed grounding review.
+
+DreamO receives no 1-MP candidate. Raising resolution cannot supply the missing
+explicit reference-to-box control, and it is not justified while coarse count,
+identity, and placement already fail. Adding masks, per-subject passes, or a
+post-decode restoration would reintroduce the layered architecture this
+experiment is intended to replace. The pinned graph and prompt builder remain
+available as reproducible negative evidence, but `identity_lock` remains the
+production engine.
 
 ### Review record template
 
