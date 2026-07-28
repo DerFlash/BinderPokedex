@@ -366,6 +366,43 @@ experiment is intended to replace. The pinned graph and prompt builder remain
 available as reproducible negative evidence, but `identity_lock` remains the
 production engine.
 
+#### Selected Qwen spatial-subject preflight
+
+No new model is downloaded for the next bounded experiment. The existing
+Qwen-Image-Edit-2511 candidate had a concrete input-topology defect: its first
+image already contained all three positioned subjects, then Mewtwo appeared
+again on one detail sheet while Bulbasaur and Charmander appeared again on a
+second sheet. The model therefore saw the same cast both as composition and as
+additional image content. Its giant fourth Mewtwo is consistent with that
+ambiguity and does not isolate Qwen's actual three-subject binding ability.
+
+The replacement changes only that topology:
+
+1. exactly three poster-shaped neutral reference images are supplied;
+2. each image contains exactly one reviewed source subject, once, at that
+   subject's normalized final bottom-card position and scale;
+3. no subject appears in any other input image;
+4. one empty target, one common sampler, and one decode generate the complete
+   landscape and cast together;
+5. there is no background plate, structure image, inpaint target, mask,
+   post-decode composite, source restoration, or second generative pass.
+
+This is an isolated `qwen_spatial_subjects` preflight, not a production-engine
+change. The accepted artwork, manifest, PDF routing, and promotion state remain
+untouched. It reuses the already installed Qwen model, encoder, VAE, Lightning
+LoRA, fixed Generation VII seed `260726054`, and existing physical placement
+geometry.
+
+The stop rule is deliberately cheaper than another tuning branch. First run
+one 0.25-MP Metal/MPS binding preflight. Stop immediately on CPU fallback,
+memory failure, a missing or duplicate subject, a subject assigned to the
+wrong card, or gross anatomy change. Only a preflight that binds all three
+distinct subjects to the correct cards earns exactly one 1-MP candidate. A
+second 1-MP run is allowed only for a genuine near-pass that already satisfies
+count, placement, depth, and coarse anatomy; its sole changed variable may be
+the official native non-Lightning sampling preset. Any remaining anatomy
+change closes this Qwen topology.
+
 ### Review record template
 
 Every rendered candidate appends one row containing the exact workflow and
