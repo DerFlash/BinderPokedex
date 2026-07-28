@@ -113,12 +113,12 @@ retry. It keeps the same Generation VII sources, seed, scene brief, physical
    single-reference control contract can represent the complete three-subject
    cast without identity mixing.
 
-The generated artwork must still begin from an empty target or a subject-free
-scene and finish all characters, terrain, lighting, shadows, and occlusions in
-one common final model pass. A Pokémon model is domain guidance only; it cannot
-replace the supplied source artwork as identity and anatomy authority.
-Production configuration, promoted artwork, PDF routing, and release inputs
-remain unchanged throughout this comparison.
+The generated artwork must still begin from an empty target and finish all
+characters, terrain, lighting, shadows, and occlusions in one common model
+pass. A Pokémon model is domain guidance only; it cannot replace the supplied
+source artwork as identity and anatomy authority. Production configuration,
+promoted artwork, PDF routing, and release inputs remain unchanged throughout
+this comparison.
 
 ## Accepted requirements
 
