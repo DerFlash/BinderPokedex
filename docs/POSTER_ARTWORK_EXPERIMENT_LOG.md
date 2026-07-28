@@ -153,7 +153,7 @@ resolution, sampler family, and one-pass contract remain unchanged.
 | --- | --- | --- | --- | --- |
 | `sdxl_identity/00001` | Replace the rejected Union-ControlNet preflight with SDXL Canny-mid; the effective CLI strength is `0.72` | `253.74 s`; Metal/MPS; one empty target, sampler, and decode; no post-decode composite | Upper scene is a plausible Alola landscape, but the complete bottom row becomes a flat beige strip. All three Pokémon are tiny and visibly redesigned; Litten is severely malformed. No believable ground contact or scene integration remains | Rejected |
 | `sdxl_identity/00002` | Keep the effective `00001` graph, including strength `0.72`, fixed and restrict each IP-Adapter mask from its complete card to the exact placed source silhouette | `255.50 s`; Metal/MPS; same one-pass graph and workflow bytes as `00001` | The beige bottom-row seam disappears, but the whole landscape collapses into blurred, segmented color fields. Rowlet is simplified, Litten becomes an unrecognizable red floating body, and Popplio's face and anatomy change. None has credible ground contact | Rejected |
-| `sdxl_identity/00003` | Keep `00002` fixed and replace each sparse alpha mask with its tight, continuous visible-subject bounding box | Pending | Pending | Final regional-mask attempt |
+| `sdxl_identity/00003` | Keep `00002` fixed and replace each sparse alpha mask with its tight, continuous visible-subject bounding box | `282.13 s`; Metal/MPS; same one-pass graph and workflow bytes | The scene remains blurred and heavily color-segmented. All subjects are undersized and floating; Rowlet and Popplio lose canonical details, while Litten remains unrecognizable | Rejected; close generic SDXL regional-mask family |
 
 Candidate `00001` strongly indicates the pre-render review risk: a hard
 whole-card identity mask does not merely bind a subject to a card. Together
@@ -174,6 +174,15 @@ Candidate `00003` tests the simplest midpoint supported by the same node: one
 continuous tight region around each visible subject. It adds no padding,
 feathering, model, node, or sampler. If canonical identity still fails, the
 generic SDXL regional architecture stops rather than adding mask heuristics.
+
+`00003` fails that identity gate by a wide margin and does not recover the
+scene. Whole-card, exact-silhouette, and tight-box regions are now three
+materially distinct attempts with the same hard-gate failure. Further mask,
+weight, prompt, or ControlNet-strength tuning on this generic SDXL regional
+graph is closed. The planned public Pokémon-domain-LoRA A/B is not run on a
+base graph that already fails subject binding, anatomy, global scene quality,
+and ground contact; a domain/style prior cannot isolate which reference owns
+which non-human body.
 
 The `00001` snapshot also exposed a configuration drift: the Python workflow
 default had already been changed to the Canny-mid recommendation `0.5`, while
@@ -224,6 +233,20 @@ Its deterministic 300-dpi print resize is
 the nine review crops are below
 `data/poster_assets/Pokedex/sections/gen7/comfyui_poster/output/`
 `sdxl_identity_generic_00002_cards/`.
+
+The rejected `00003` evidence uses the unchanged workflow SHA-256
+`5989dcfb41b0bd0dd92419ca0a84d35230bcc7e2484f7c5c7232c740f03d8556`
+and subject-region SHA-256 values
+`b951b8d0fa4e7317001e59940b6a2be383e5163eba4fea847d18f3364d0091fe`,
+`6910097bc0962463dc8776cfb1be5fbaf8b0ebf8386a81b6a8501322db4fa08f`,
+and `c582e3672cc9fbe718b3240ead67be26a5cbcf6346bdda51c9efc039a3f39b8a`.
+Its raw artwork SHA-256 is
+`a3b14362bebf378b182d50606e98f02942e975816cd7f9c8dbba68a5d705ed43`;
+the deterministic 300-dpi print resize is
+`221d071df8027ccb80bd0005f0e09e36e9d890f8635560ecac3dcee3ce2a3144`.
+The nine review crops are below
+`data/poster_assets/Pokedex/sections/gen7/comfyui_poster/output/`
+`sdxl_identity_generic_00003_cards/`.
 
 ### Review record template
 
