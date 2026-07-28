@@ -50,6 +50,12 @@ fi
   --model-management-py "$COMFY_ROOT/comfy/model_management.py" \
   --nvfp4-py "$COMFY_PY_PREFIX/lib/python3.11/site-packages/comfy_kitchen/tensor/nvfp4.py"
 
+DREAMO_PY="$COMFY_ROOT/custom_nodes/ComfyUI-DreamO/dreamo.py"
+if [[ -f "$DREAMO_PY" ]]; then
+  "$COMFY_PY" "$ROOT_DIR/scripts/poster_assets/patch_comfyui_dreamo.py" \
+    "$DREAMO_PY"
+fi
+
 mkdir -p "$EXPERIMENT_DIR/output" "$EXPERIMENT_DIR/temp"
 exec "$COMFY_PY" "$COMFY_ROOT/main.py" \
   --listen 127.0.0.1 \

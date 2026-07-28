@@ -5,6 +5,11 @@ import pytest
 from PIL import Image, ImageChops
 
 from scripts.poster_assets import create_dreamo_identity_poster_workflow as dreamo
+from scripts.poster_assets.patch_comfyui_dreamo import (
+    NEW as PATCHED_DREAMO_WRAPPER,
+    OLD as ORIGINAL_DREAMO_WRAPPER,
+    patch as patch_dreamo,
+)
 from scripts.poster_assets.create_comfyui_poster_workflow import (
     output_dimensions,
 )
@@ -246,3 +251,28 @@ def test_dreamo_preflight_dimensions_are_latent_aligned():
     assert (width, height) == (432, 592)
     assert width % 16 == 0
     assert height % 16 == 0
+
+
+def test_dreamo_compatibility_patch_forwards_new_sampler_keywords(
+    tmp_path: Path,
+):
+    dreamo_py = tmp_path / "dreamo.py"
+    dreamo_py.write_text(ORIGINAL_DREAMO_WRAPPER, encoding="utf-8")
+
+    assert patch_dreamo(dreamo_py) is True
+    assert patch_dreamo(dreamo_py) is False
+    patched = dreamo_py.read_text(encoding="utf-8")
+    assert patched == PATCHED_DREAMO_WRAPPER
+    assert "seed=None, **kwargs" in patched
+    assert "seed, **kwargs)" in patched
+    assert dreamo_py.with_suffix(".py.pre-comfy-0.28").read_text(
+        encoding="utf-8"
+    ) == ORIGINAL_DREAMO_WRAPPER
+
+
+def test_dreamo_compatibility_patch_rejects_unknown_source(tmp_path: Path):
+    dreamo_py = tmp_path / "dreamo.py"
+    dreamo_py.write_text("def unrelated():\n    pass\n", encoding="utf-8")
+
+    with pytest.raises(RuntimeError, match="not found exactly once"):
+        patch_dreamo(dreamo_py)
