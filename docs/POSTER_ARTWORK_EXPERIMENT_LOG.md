@@ -20,6 +20,68 @@ KISS cleanup and remain recoverable through Git history.
 - Generated text, boxes, landing pads, paths, and visible layout guides are not
   part of the artwork.
 
+## Base1 / FLUX.2 Klein rollout
+
+The first representative rollout of the promoted Generation VII graph keeps
+the exact v5 `joint_scene` topology and changes only the scope inputs: seed
+`260726503`, the Base Set scene brief, the reviewed Mewtwo/Bulbasaur/Charmander
+sources, and their physical card placement. The active `Base1` manifest remains
+on `identity_lock` until this candidate is approved and promoted explicitly.
+
+| Candidate | Pipeline change | Result | Decision |
+| --- | --- | --- | --- |
+| `joint_scene/00001` | Apply the reviewed `00018` graph to `Base1`, including the canonical placement profile and additional Mewtwo anatomy/padding constraints | All three subjects remain complete inside their physical cards with useful padding, coherent ground contact, and directionally consistent shadows. Mewtwo retains the defining head, hand, chest, and tail anatomy within the accepted one-shot detail tolerance. The landscape does not intersect a subject, so difficult foreground continuity remains unproven | Retained on 2026-07-29 as a strong local review candidate; not promoted |
+
+The MPS render completed in 201.83 seconds. Reproducibility evidence:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Raw 848 × 1168 candidate | `105efc287a5687bd028ec07bfa90ff516df434db3831c46fb47fbca81b041da2` |
+| Text-free 2368 × 3268 print raster at 300 dpi | `dc5a1773c8f135d2f9b6adb9468cbda3a710bbbcc2936059cc5b29ca58fa08ea` |
+| Effective prompt | `63f7b1a2a24c53f070446cf442161a6affcca6212c8276cf6603aff1e7b302ea` |
+| ComfyUI API workflow | `890ff01dce52370b42c29d38e26407b522a9881c4c67e30315093e9349b51561` |
+
+The complete generation fingerprint is:
+
+```text
+d26549018a20003c0cb961cb5ab76f256c76872114deff3d34db04a17d7ec70a
+```
+
+### Prompt complexity audit
+
+The saved `00001` prompt contains 947 whitespace-delimited words, 6,340 bytes,
+and 1,300 Qwen tokens. The exact ComfyUI Klein chat template raises the
+effective input to 1,312 tokens. ComfyUI does not truncate this input, but it
+is substantially above the nominal 512-token FLUX.2 conditioning budget.
+The 512-token boundary falls inside the Mewtwo-specific paragraph; the
+one-shot integration, depth, and safe-area rules follow later.
+
+The length is not caused by one unavoidable requirement. The effective prompt
+defines the spatial authority twice, the identity authority three times, and
+repeats count, bounds, padding, and no-composite constraints in multiple
+sections. Those repetitions can compete with the late scene and depth
+instructions even though this particular render succeeds.
+
+The reviewed candidate remains the immutable comparison baseline. No production
+prompt is changed from this audit alone:
+
+- Safe first simplification: remove the decorative heading and consolidate only
+  repeated spatial-authority, identity-authority, count, and bounds prose.
+- Keep unchanged in meaning: normalized card rectangles, Mewtwo-specific
+  anatomy and padding, the Base Set scene brief, single-pass synthesis, depth
+  behavior, safe areas, and the concrete exclusion list.
+- Do not target the earlier 510-token form. Candidate `00020` combined
+  aggressive compression with a depth-rule change and failed the exact-count
+  gate, so it cannot establish a safe minimal prompt.
+- Validate any compact form as a new candidate with the same seed, model,
+  references, geometry, and sampler. It may replace the current wording only
+  after side-by-side identity, card-fit, grounding, depth, and count review.
+
+A conservative first A/B should aim for roughly 850–1,000 effective tokens by
+deduplication, not by deleting requirement classes. This also moves the
+Mewtwo-specific, scene, and depth instructions earlier without changing their
+contract.
+
 ## Generation VII / FLUX.2 Klein
 
 All candidates below use seed `260726054` and the `standard_3x3` layout. They

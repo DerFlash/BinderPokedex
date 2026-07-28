@@ -112,17 +112,19 @@ second tracked active bundle is maintained.
 
 ## Next production work
 
-1. Roll the one-shot contract out scope by scope, starting with:
-   `Base1` for tall Mewtwo anatomy and padding, `ExGen3/sections/mega` for exact
-   named-form identity, and one additional cast with strongly different body
-   proportions.
-2. Keep the same human identity/card/depth gate; do not mass-switch manifests
+1. Review the local `Base1 joint_scene/00001` rollout candidate. It passes the
+   initial Mewtwo anatomy, padding, card-fit, and grounding review but is not
+   promoted; the active `Base1` manifest remains on `identity_lock`.
+2. After that review, continue the scope-by-scope rollout with
+   `ExGen3/sections/mega` for exact named-form identity and one additional cast
+   with strongly different body proportions.
+3. Keep the same human identity/card/depth gate; do not mass-switch manifests
    before their replacements pass.
-3. Use those renders to test natural near/far landscape intersections. Do not
+4. Use those renders to test natural near/far landscape intersections. Do not
    reopen prompt-only depth stress unless new evidence changes the mechanism.
-4. Apply the section workflow to remaining aggregate variant sections only
+5. Apply the section workflow to remaining aggregate variant sections only
    after their scene briefs and curated casts are reviewed.
-5. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
+6. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
    matching physical page formats, memory tests, and visual QA exist.
 
 ## Cleanup boundary
