@@ -99,7 +99,7 @@ but fails the hard identity gate on Litten's paw and Popplio's facial details.
 It is rejected and unpromoted. The graph has no hard three-subject limit, but
 four-subject layouts still need separate memory and visual review.
 
-The next explicitly authorized experiment is a materially different
+The earlier successor search was a materially different
 identity-control successor, not another FLUX.2 prompt or reference-canvas
 retry. The first successor family used one joint SDXL pass with separate
 identity adapters, regional subject masks, and source-derived structural
@@ -143,6 +143,16 @@ one oversized Litten across almost the whole canvas. Rowlet, Popplio, the
 three-card placement, and the Alola landscape are absent. It therefore fails
 multiple coarse hard gates before identity-detail review and receives no 1-MP
 or prompt follow-up.
+
+The latest product review keeps `identity_lock` unchanged as the first-ranked
+baseline and reopens FLUX.2 v5 as the second-ranked experimental option. The
+small Litten-paw and Popplio face-line simplifications in `00017` are now
+acceptable for continued comparison; gross anatomy, silhouette, marking, or
+form changes remain hard failures. `00017` is still not promotion-ready because
+the figures are smaller and farther outward than the preferred card fit. The
+next candidate changes only the shared spatial placement profile. A separate
+occlusion-focused prompt test is allowed afterward only when the placement
+candidate does not itself provide meaningful foreground crossings.
 
 The generated artwork must still begin from an empty target and finish all
 characters, terrain, lighting, shadows, and occlusions in one common model
@@ -292,7 +302,7 @@ this comparison.
 
 | Requirement | Current boundary | Acceptance criterion |
 | --- | --- | --- |
-| Natural grounding and occlusion | Accepted `identity_lock` keeps exact pixels but can read as composited. v5 `00017` fixes containment and depth but changes small identity details. Regional SDXL and DreamO fail identity/binding; corrected Qwen spatial inputs collapse to one oversized Litten on the neutral field. MS-Diffusion and LAMIC fail the KISS/MPS technical boundary | No current local KISS architecture clears all hard gates. Retain `identity_lock` until an explicit product decision relaxes one named gate or authorizes a materially more complex successor |
+| Natural grounding and occlusion | Accepted `identity_lock` keeps exact pixels but can read as composited. v5 `00017` has coherent Litten/Popplio contact and shadows, while Rowlet's individual shadow is weak; it contains no decisive plant/character crossing that proves both front and rear depth around one subject | Keep `identity_lock` first. Evaluate one centered/larger v5 placement candidate, then use one isolated occlusion-prompt candidate only if natural crossings remain absent |
 | Engine extensibility | FLUX.2, Anima, FLUX.1 Canny, and Qwen Edit are selectable through one manifest-driven runner and share the promotion gate | Keep architecture-specific workflow construction isolated when adding another engine |
 | Alternative models | FLUX.1 Canny changed Mewtwo's face, chest, colors, and hand. Old Qwen duplicated a giant fourth Mewtwo; corrected spatial inputs instead collapse to one oversized Litten on the neutral field | Retain the adapters as diagnostic code, but do not render or promote another candidate without a materially new control mechanism |
 | Anima candidates | Workflow and provenance now share the exact model/LoRA/encoder/VAE/sampling contract | Keep the adapter experimental until a real candidate passes both the shared pixel gate and visual review |
@@ -312,10 +322,10 @@ this comparison.
   not apply that equality claim to `joint_scene`, which redraws the complete
   image. Its raw and print identity checks remain explicit human review bound
   to deterministic provenance.
-- Do not add another v5 canvas or prompt parameter retry. Candidate `00017`
-  already uses unscaled source identity references and fails only the hard
-  identity gate. Reopen the product decision instead of adding branches;
-  rejected candidates through `00017` cannot carry approval forward.
+- Keep v5 changes isolated. The next candidate may change only the shared
+  placement profile; do not alter prompt, model, reference topology, seed, or
+  sampler in the same run. A later occlusion candidate may change only the
+  foreground-depth wording and inherits no approval automatically.
 - Review memory and output separately before promoting `joint_scene` with the
   four subjects required by `wide_4x3` or `wide_4x4`.
 - Keep Anima and FLUX.1 Canny experimental. The existing Qwen adapter remains
@@ -451,14 +461,16 @@ Completed on 2026-07-27:
   over the Alola scene. This is a grounding/integration limitation rather than
   an identity regression and is tracked under PA-017.
 - The unpromoted Generation VII joint-scene experiments use the same seed and
-  sources. Candidates through `00017` are rejected. The identity-only v3 graph
-  resolves the earlier landscape-depth conflict, but `00014` and `00015` cross
-  the upper boundary of all three bottom cards. The v4 common cast reference
-  fixes card containment and coherent depth in `00016`, but invents a pale
-  Litten marking. The v5 Spatial+Identity candidate `00017` fixes containment,
-  shadows, and coherent scene depth, but simplifies Litten's front paw and
-  Popplio's eye/muzzle details. It is rejected. None changes the accepted
-  manifest or PDF output; the full chronology is kept in the experiment log.
+  sources. Candidates through `00016` remain rejected. The identity-only v3
+  graph resolves the earlier landscape-depth conflict, but `00014` and `00015`
+  cross the upper boundary of all three bottom cards. The v4 common cast
+  reference fixes card containment and coherent depth in `00016`, but invents
+  a pale Litten marking. The v5 Spatial+Identity candidate `00017` fixes
+  containment, shadows, and coherent scene depth while simplifying Litten's
+  front paw and Popplio's eye/muzzle details. It is retained only as the
+  second-ranked experimental comparison and remains unpromoted pending better
+  card fit and depth-intersection review. None changes the accepted manifest or
+  PDF output; the full chronology is kept in the experiment log.
 - The accepted Generation VIII candidate contains Grookey, Scorbunny, and
   Sobble, uses seed `260715405` and graph contract v2, and preserves all 34,011
   fully opaque source pixels with zero changes. The Galar upland lake, moor,

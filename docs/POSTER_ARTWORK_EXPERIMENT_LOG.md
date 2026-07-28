@@ -34,7 +34,7 @@ promotion.
 | `00014` | Reference-neutral identity wording | Coherent depth and faithful character designs | Rejected because all three characters extend above their bottom-row cards |
 | `00015` | Same v3 graph with 768 px neutral identity canvases instead of 512 px | Placement remained too high and too large; render cost increased | Rejected; 512 px default restored |
 | `00016` | Pipeline v4: replace the three global identity references with one neutral, poster-shaped cast layout containing the exact source figures inside their cards | All figures fit their real card crops with padding and the scene has coherent shadows/depth; Litten gains a large pale flank/hindquarter marking absent from the source | Rejected; third one-shot placement attempt fails identity and triggers the stop rule |
-| `00017` | Pipeline v5: 0.5-MP spatial cast followed by three unscaled 512 px source-identity references before the same single sampler | All three subjects fit their cards; depth, Litten/Popplio ground contact, and landscape intersections are coherent. Litten's front-paw digit structure is simplified, Popplio's eye and two muzzle strokes are reduced, and Rowlet lacks a convincing individual contact shadow | Rejected; spatial contract passes, but the non-negotiable identity gate fails |
+| `00017` | Pipeline v5: 0.5-MP spatial cast followed by three unscaled 512 px source-identity references before the same single sampler | All three subjects fit their cards; depth, Litten/Popplio ground contact, and landscape intersections are coherent. Litten's front-paw digit structure is simplified, Popplio's eye and two muzzle strokes are reduced, and Rowlet lacks a convincing individual contact shadow | Retained as the second-ranked comparison after the identity tolerance was explicitly relaxed; placement is still too small and too far outward |
 
 ## Current checkpoint
 
@@ -61,17 +61,26 @@ restoration in this mode. Candidate `00017` proves that graph contract v5 solves
 the spatial and scene-integration failures, but it still redraws identity-scale
 facial and paw details. Because the identity references already contain the
 unscaled source pixels, no second canvas/prompt parameter retry is justified.
-The v5 implementation remains selectable historical evidence and unpromoted;
-production stays on `identity_lock` while successor research is limited to
-architectures with both multi-reference identity and explicit spatial control.
+The product review on 2026-07-28 keeps `identity_lock` unchanged in first place
+and reclassifies v5 `00017` as the second-ranked experimental comparison. Its
+small front-paw and face-line simplifications are acceptable for continued
+evaluation, but a changed defining feature, body-part count, silhouette,
+marking, or form still fails. The next v5 candidate changes only the canonical
+spatial placement profile: center the outer subjects, enlarge all three toward
+the preferred card fill, and keep conservative card padding. It does not alter
+the model, seed, scene prompt, reference topology, identity images, sampler, or
+one-pass contract. Foreground/background crossings remain a separate review
+question and receive their own later prompt-only test only if the placement
+candidate contains no meaningful intersection.
 
 ## Identity-control successor evaluation
 
-The product decision on 2026-07-28 selects a materially stronger,
-object-reference control mechanism without relaxing the existing hard gates.
-This is a new architecture family, so it starts a new attempt budget. It does
-not reopen prompt-only or reference-canvas tuning for the rejected FLUX.2
-`joint_scene` v3-v5 graphs.
+The earlier product decision on 2026-07-28 selected a materially stronger,
+object-reference control mechanism without relaxing the then-current hard
+gates. That successor search remains closed under its recorded results. The
+later explicit review tolerance for v5 `00017` reopens only the FLUX.2
+placement and occlusion questions described above; it does not reopen SDXL,
+DreamO, Qwen, prompt-only identity tuning, or reference-canvas tuning.
 
 ### Frozen comparison fixture
 
