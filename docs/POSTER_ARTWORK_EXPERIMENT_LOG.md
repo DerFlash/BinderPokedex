@@ -34,7 +34,8 @@ promotion.
 | `00014` | Reference-neutral identity wording | Coherent depth and faithful character designs | Rejected because all three characters extend above their bottom-row cards |
 | `00015` | Same v3 graph with 768 px neutral identity canvases instead of 512 px | Placement remained too high and too large; render cost increased | Rejected; 512 px default restored |
 | `00016` | Pipeline v4: replace the three global identity references with one neutral, poster-shaped cast layout containing the exact source figures inside their cards | All figures fit their real card crops with padding and the scene has coherent shadows/depth; Litten gains a large pale flank/hindquarter marking absent from the source | Rejected; third one-shot placement attempt fails identity and triggers the stop rule |
-| `00017` | Pipeline v5: 0.5-MP spatial cast followed by three unscaled 512 px source-identity references before the same single sampler | All three subjects fit their cards; depth, Litten/Popplio ground contact, and landscape intersections are coherent. Litten's front-paw digit structure is simplified, Popplio's eye and two muzzle strokes are reduced, and Rowlet lacks a convincing individual contact shadow | Retained as the second-ranked comparison after the identity tolerance was explicitly relaxed; placement is still too small and too far outward |
+| `00017` | Pipeline v5: 0.5-MP spatial cast followed by three unscaled 512 px source-identity references before the same single sampler | All three subjects fit their cards and the scene contains no contradictory intersections, but plants avoid the silhouettes and therefore prove no real foreground crossing. Litten's front-paw digit structure is simplified, Popplio's eye and two muzzle strokes are reduced, and Rowlet lacks a convincing individual contact shadow | Retained as the second-ranked comparison after the identity tolerance was explicitly relaxed; placement is still too small and too far outward |
+| `00018` | Reuse the exact canonical `identity_lock` placement profile; model, seed, scene wording, reference topology, identity images, and sampler remain fixed | All three subjects now have nearly the preferred card fill, remain complete inside their physical card crops, and receive clear directionally coherent grounding shadows. No gross identity regression beyond the accepted v5 print-detail tolerance is apparent. Plants again avoid the silhouettes, so true foreground continuity remains unproven | Placement gate passed; retained as the new second-ranked v5 baseline for one separate prompt-only occlusion stress test |
 
 ## Current checkpoint
 
@@ -57,21 +58,23 @@ Spatial+Identity architecture:
 
 There is no pre-generated landscape reference, inpaint reference, second
 sampler, final character composite, learned post-upscaler, or source-pixel
-restoration in this mode. Candidate `00017` proves that graph contract v5 solves
-the spatial and scene-integration failures, but it still redraws identity-scale
-facial and paw details. Because the identity references already contain the
-unscaled source pixels, no second canvas/prompt parameter retry is justified.
-The product review on 2026-07-28 keeps `identity_lock` unchanged in first place
-and reclassifies v5 `00017` as the second-ranked experimental comparison. Its
-small front-paw and face-line simplifications are acceptable for continued
-evaluation, but a changed defining feature, body-part count, silhouette,
-marking, or form still fails. The next v5 candidate changes only the canonical
-spatial placement profile: center the outer subjects, enlarge all three toward
-the preferred card fill, and keep conservative card padding. It does not alter
-the model, seed, scene prompt, reference topology, identity images, sampler, or
-one-pass contract. Foreground/background crossings remain a separate review
-question and receive their own later prompt-only test only if the placement
-candidate contains no meaningful intersection.
+restoration in this mode. Candidate `00017` proves the v5 graph topology while
+still redrawing print-scale facial and paw details. The product review on
+2026-07-28 keeps `identity_lock` unchanged in first place and accepts those
+small simplifications for continued evaluation; a changed defining feature,
+body-part count, silhouette, marking, or form still fails.
+
+Candidate `00018` changes only the canonical spatial placement profile. It
+delegates to the already accepted `identity_lock` placement helper instead of
+maintaining separate shrink, lower-baseline, and outer-shift parameters. The
+result passes physical card containment and preferred-fill review without a
+new gross identity regression. Its raw SHA-256 is
+`fc1375f75ef771d6f1aac05bcd27ef67288597bdf3dd8d2f4baf60a908db5e98`;
+the MPS render completed in 180.43 seconds. Because no plant, leaf, flower, or
+other connected landscape element actually crosses a subject, `00018` does
+not prove foreground continuity. The next v5 candidate may therefore change
+only the generic foreground-depth wording. It inherits neither promotion nor
+approval from this placement result.
 
 ## Identity-control successor evaluation
 

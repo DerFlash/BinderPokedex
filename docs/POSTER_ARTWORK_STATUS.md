@@ -94,10 +94,14 @@ promotion is allowed only after one candidate passes every hard gate in
 complete current fingerprint plus explicit review bound to both raw and
 print-size pixels. The explicitly selected v5 experiment uses a 0.5-MP spatial
 cast plus one unscaled 512 px identity reference per subject before the single
-sampler. Candidate `00017` passes spatial integration and all three card crops,
-but fails the hard identity gate on Litten's paw and Popplio's facial details.
-It is rejected and unpromoted. The graph has no hard three-subject limit, but
-four-subject layouts still need separate memory and visual review.
+sampler. Product review explicitly tolerates the small print-scale paw and
+facial-line simplifications for continued v5 evaluation while retaining gross
+anatomy and design as hard gates. Candidate `00018` reuses the canonical
+Option-1 placement profile, passes all three physical card crops with preferred
+fill, and adds clear coherent grounding shadows. It remains unpromoted because
+the landscape again avoids real foreground crossings. The graph has no hard
+three-subject limit, but four-subject layouts still need separate memory and
+visual review.
 
 The earlier successor search was a materially different
 identity-control successor, not another FLUX.2 prompt or reference-canvas
@@ -146,13 +150,13 @@ or prompt follow-up.
 
 The latest product review keeps `identity_lock` unchanged as the first-ranked
 baseline and reopens FLUX.2 v5 as the second-ranked experimental option. The
-small Litten-paw and Popplio face-line simplifications in `00017` are now
-acceptable for continued comparison; gross anatomy, silhouette, marking, or
-form changes remain hard failures. `00017` is still not promotion-ready because
-the figures are smaller and farther outward than the preferred card fit. The
-next candidate changes only the shared spatial placement profile. A separate
-occlusion-focused prompt test is allowed afterward only when the placement
-candidate does not itself provide meaningful foreground crossings.
+small Litten-paw and Popplio face-line simplifications first measured in
+`00017` are acceptable for continued comparison; gross anatomy, silhouette,
+marking, or form changes remain hard failures. `00018` removes the separate v5
+shrink and outer-shift logic and passes preferred card fit by reusing the exact
+canonical Option-1 placement helper. Because it contains no meaningful
+foreground crossing, one next candidate may change only generic occlusion
+wording.
 
 The generated artwork must still begin from an empty target and finish all
 characters, terrain, lighting, shadows, and occlusions in one common model
@@ -302,7 +306,7 @@ this comparison.
 
 | Requirement | Current boundary | Acceptance criterion |
 | --- | --- | --- |
-| Natural grounding and occlusion | Accepted `identity_lock` keeps exact pixels but can read as composited. v5 `00017` has coherent Litten/Popplio contact and shadows, while Rowlet's individual shadow is weak; it contains no decisive plant/character crossing that proves both front and rear depth around one subject | Keep `identity_lock` first. Evaluate one centered/larger v5 placement candidate, then use one isolated occlusion-prompt candidate only if natural crossings remain absent |
+| Natural grounding and occlusion | Accepted `identity_lock` keeps exact pixels but can read as composited. v5 `00018` gives all three subjects coherent grounding and preferred card fill, but contains no decisive plant/character crossing that proves both front and rear depth around one subject | Keep `identity_lock` first. Use one isolated occlusion-prompt candidate that changes no model, geometry, reference, seed, or sampling parameter |
 | Engine extensibility | FLUX.2, Anima, FLUX.1 Canny, and Qwen Edit are selectable through one manifest-driven runner and share the promotion gate | Keep architecture-specific workflow construction isolated when adding another engine |
 | Alternative models | FLUX.1 Canny changed Mewtwo's face, chest, colors, and hand. Old Qwen duplicated a giant fourth Mewtwo; corrected spatial inputs instead collapse to one oversized Litten on the neutral field | Retain the adapters as diagnostic code, but do not render or promote another candidate without a materially new control mechanism |
 | Anima candidates | Workflow and provenance now share the exact model/LoRA/encoder/VAE/sampling contract | Keep the adapter experimental until a real candidate passes both the shared pixel gate and visual review |
@@ -322,10 +326,10 @@ this comparison.
   not apply that equality claim to `joint_scene`, which redraws the complete
   image. Its raw and print identity checks remain explicit human review bound
   to deterministic provenance.
-- Keep v5 changes isolated. The next candidate may change only the shared
-  placement profile; do not alter prompt, model, reference topology, seed, or
-  sampler in the same run. A later occlusion candidate may change only the
-  foreground-depth wording and inherits no approval automatically.
+- Keep v5 changes isolated. The placement-only candidate is complete. The next
+  candidate may change only the foreground-depth wording; do not alter model,
+  geometry, reference topology, identity images, seed, or sampler, and do not
+  inherit approval automatically.
 - Review memory and output separately before promoting `joint_scene` with the
   four subjects required by `wide_4x3` or `wide_4x4`.
 - Keep Anima and FLUX.1 Canny experimental. The existing Qwen adapter remains
@@ -465,12 +469,13 @@ Completed on 2026-07-27:
   graph resolves the earlier landscape-depth conflict, but `00014` and `00015`
   cross the upper boundary of all three bottom cards. The v4 common cast
   reference fixes card containment and coherent depth in `00016`, but invents
-  a pale Litten marking. The v5 Spatial+Identity candidate `00017` fixes
-  containment, shadows, and coherent scene depth while simplifying Litten's
-  front paw and Popplio's eye/muzzle details. It is retained only as the
-  second-ranked experimental comparison and remains unpromoted pending better
-  card fit and depth-intersection review. None changes the accepted manifest or
-  PDF output; the full chronology is kept in the experiment log.
+  a pale Litten marking. The v5 Spatial+Identity candidate `00017` demonstrates
+  the accepted print-detail identity tolerance but is undersized. `00018`
+  reuses the canonical Option-1 placement and passes preferred card fit,
+  containment, and grounding review. It is retained only as the second-ranked
+  experimental comparison and remains unpromoted pending a real
+  depth-intersection test. None changes the accepted manifest or PDF output;
+  the full chronology is kept in the experiment log.
 - The accepted Generation VIII candidate contains Grookey, Scorbunny, and
   Sobble, uses seed `260715405` and graph contract v2, and preserves all 34,011
   fully opaque source pixels with zero changes. The Galar upland lake, moor,

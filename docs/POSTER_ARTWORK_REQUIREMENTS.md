@@ -68,7 +68,7 @@ joint generation, and true one-shot generation.
 | Two-pass `identity_lock` | No | Exact source pixels | Reliable | Weak: protected lower band can read as a layer | Accepted production baseline |
 | Subject-free landscape reference plus joint final pass | Yes | Usually strong | Tunable but inconsistent | Failed: retained plants can weave behind/in front of subjects | Rejected Generation VII experiment |
 | FLUX.2 identity-only/cast-only true one-shot | Yes | v3 strong; v4 cast layout invents a Litten marking | v3 fails; v4 `00016` passes with padding | Strong: landscape is invented around the cast | Historical attempts closed |
-| FLUX.2 Spatial+Identity v5 true one-shot | Yes | `00017` preserves the recognizable designs while simplifying Litten's front-paw digits and Popplio's eye/muzzle strokes at print-detail scale | `00017` stays inside all three cards but is undersized and too far outward compared with the preferred baseline | Strong grounding; meaningful foreground crossings remain unproven | Ranked second and explicitly reopened for one placement-only candidate, followed by a separate occlusion test only if needed |
+| FLUX.2 Spatial+Identity v5 true one-shot | Yes | `00018` retains the recognizable designs within the explicitly accepted print-detail tolerance; gross anatomy, marking, silhouette, and form changes remain forbidden | `00018` reuses the exact canonical Option-1 placement profile and passes all three physical card crops with preferred fill | Strong grounding and shadows; meaningful foreground crossings remain unproven because plants avoid the silhouettes | Ranked second; one isolated prompt-only occlusion stress test is next |
 | Regional SDXL identity control | Yes | Fails all three mask scopes; Litten becomes unrecognizable | Subjects remain too small and ungrounded | Scene collapses into blurred color regions | Closed after three rejected candidates |
 | DreamO v1.1 multi-reference control | Yes, by the isolated graph contract | Preflight B redraws Rowlet/Litten and omits Popplio despite three intact post-BEN2 references | Fails: visible subjects are oversized and outside their target silhouettes | Common pass creates a coherent landscape but not the required cast | Closed before 1 MP; retained as reproducible negative evidence |
 | Qwen spatial-subject multi-reference | Yes: one empty target, sampler, and decode; each source occurs exactly once across three spatial references | Fails binding: only an oversized Litten appears; Rowlet and Popplio are absent | Fails: Litten fills nearly the complete canvas instead of its center bottom card | Fails: the neutral field remains and no Alola landscape is synthesized | Closed at 0.25 MP; no prompt, sampling, or 1-MP follow-up |
@@ -94,7 +94,7 @@ joint generation, and true one-shot generation.
 | `PA-015` | Aggregate variant scopes receive section-specific scene briefs | Ongoing | ExGen3 `normal` and `mega` are accepted section-local bundles; apply the same explicit scene, cast, and routing contract to `primal` and future sections instead of treating an aggregate as one unambiguous TCG set |
 | `PA-015A` | Variant poster subjects retain their exact form | Done | Featured selection, cutout files/manifests, planner checks, promotion validation, conditioning, and generation fingerprints use a validated Official Artwork subject identity; distinct forms of one species remain distinct and special forms never fall back silently to base artwork |
 | `PA-016` | Post-fetch orchestration detects stale poster inputs | Done | A read-only planner compares routing, scope data, scene catalog, cutout selection/pixels, logos, dynamic model contracts, effective prompts, semantic generation/overlay fingerprints, and promoted outputs; it separates expensive regeneration from cheap overlay or routing work |
-| `PA-017` | Natural grounding may be generated jointly without losing identity or card safety | FLUX.2 v5 evaluation reopened | `identity_lock` remains the first-ranked production baseline. The print-scale paw/eye/muzzle simplifications in v5 `00017` are accepted for continued evaluation, while gross anatomy or design changes remain forbidden. The next candidate changes only the spatial placement profile to center and enlarge the three subjects safely; foreground/background crossing is then reviewed separately instead of mixing prompt and geometry changes |
+| `PA-017` | Natural grounding may be generated jointly without losing identity or card safety | FLUX.2 v5 depth test open | `identity_lock` remains the first-ranked production baseline. v5 `00018` passes card fit by reusing its canonical placement and retains the accepted print-detail identity tolerance. One next candidate may change only generic foreground-depth wording and must prove a continuous landscape element in front of a small non-defining lower edge while another remains behind |
 | `PA-018` | Alternative engines and generation modes remain selectable but gated | Done | FLUX.2, Anima, FLUX.1 Canny, and Qwen resolve model/sampling options from the matching manifest and record the exact effective contract. Exact-source modes require their passed raw-pixel audit; fully generated `joint_scene` candidates instead require a complete fingerprint and explicit identity/scene review bound to raw and deterministic print pixels |
 | `PA-019` | Pull requests prove that a complete release can be built without publishing it | Done | PRs reuse the read-only release-candidate workflow, validate all enabled posters, build every PDF and language archive, verify the manifest, and stop after a temporary Actions artifact |
 | `PA-020` | Rasterized card geometry remains inside the real generation canvas at every supported resolution | Done | Card cells come from cumulative physical endpoints rasterized against both real canvas axes; preparation, finalization, slicing, promotion, and validation share those exact bounds, and new runs record raster geometry contract v2 |
@@ -177,12 +177,12 @@ joint generation, and true one-shot generation.
   four-subject `wide_4x3` and `wide_4x4` generation still needs a separate
   memory and visual review before promotion.
 - The Generation VII `joint_scene` candidates are local evidence only.
-  Candidates through `00016` are rejected. `00017` is retained as the
-  second-ranked experimental comparison under the relaxed print-detail
-  identity tolerance, but remains unpromoted; no poster manifest, promoted
-  artwork, aggregate routing, or PDF binding has switched away from the
-  first-ranked `identity_lock` baseline. Every later candidate starts a new
-  review record rather than inheriting approval.
+  Candidates through `00016` are rejected. `00018` supersedes `00017` as the
+  second-ranked experimental comparison after passing the placement gate under
+  the relaxed print-detail identity tolerance, but remains unpromoted; no
+  poster manifest, promoted artwork, aggregate routing, or PDF binding has
+  switched away from the first-ranked `identity_lock` baseline. Every later
+  candidate starts a new review record rather than inheriting approval.
 - All thirteen enabled 1-MP source and conditioning compositions fit within
   their real 848 × 1168 generation canvases. Cumulative physical endpoints
   close exactly at every real canvas edge, even where latent alignment makes

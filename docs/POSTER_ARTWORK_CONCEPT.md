@@ -531,9 +531,9 @@ For `joint_scene`, promotion additionally requires `--approve-joint-scene`.
 That explicit action records review of the exact raw and Lanczos-scaled
 text-free pixels against every source identity and the complete generation
 fingerprint. It does not waive manifest equality, source identity, geometry, or
-output-hash checks. No Generation VII candidate through `00017` is promoted or
-has received this approval. Product review retains `00017` only as the
-second-ranked experimental comparison under the explicitly relaxed
+output-hash checks. No Generation VII candidate through `00018` is promoted or
+has received this approval. Product review retains placement-corrected `00018`
+only as the second-ranked experimental comparison under the explicitly relaxed
 print-detail identity tolerance; it has not changed the manifest, promoted
 artwork, routing, or PDF output. A future candidate requires a new review bound
 to the current fingerprint and every current acceptance gate; `identity_lock`
