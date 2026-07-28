@@ -432,6 +432,22 @@ or composite node. The new focused tests and the existing poster workflow,
 generation-option, and provenance suites pass together with 230 tests. The
 complete repository suite passes with 536 tests and one expected skip.
 
+The 0.25-MP preflight completed on Metal/MPS with `--lowvram` in 14:38;
+four Euler/simple sampling steps took 12:45. The Qwen text encoder, VAE, and
+GGUF denoiser all reported MPS loading, while macOS swap reached approximately
+15.4 GiB. The resulting `432 × 592` raw image has SHA-256
+`d97a81d346dd3ff07f8fa0f2d79dbd0c7987fdb0f30f8688550db932b793b797`.
+
+The result retains the plain neutral reference field, renders one oversized
+Litten across almost the complete poster, omits Rowlet and Popplio, and creates
+no Alola landscape. Litten remains broadly recognizable, but count, distinct
+reference binding, target scale, card containment, final-scene synthesis, and
+set-specific scenery all fail at the cheapest gate. Because several coarse
+hard gates fail simultaneously, neither a 1-MP run nor a prompt/sampling
+follow-up is justified. The isolated topology is closed and retained only as
+reproducible evidence; the production `identity_lock` artwork remains
+unchanged.
+
 ### Review record template
 
 Every rendered candidate appends one row containing the exact workflow and

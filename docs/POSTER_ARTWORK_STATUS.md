@@ -134,6 +134,16 @@ justified. DreamO is closed without adding masks, per-subject passes, or
 restoration. FLUX.2 RefControl remains unsuitable as a direct fallback because
 its single-reference contract does not independently bind three subjects.
 
+The final bounded local reuse test corrected Qwen's old duplicated-subject
+topology. It supplied three separate canonical poster-shaped inputs containing
+Rowlet, Litten, and Popplio exactly once each at their target card positions,
+then used one empty target, one sampler, and one decode. The 0.25-MP Metal
+preflight completed in 14:38, but retained the neutral field and rendered only
+one oversized Litten across almost the whole canvas. Rowlet, Popplio, the
+three-card placement, and the Alola landscape are absent. It therefore fails
+multiple coarse hard gates before identity-detail review and receives no 1-MP
+or prompt follow-up.
+
 The generated artwork must still begin from an empty target and finish all
 characters, terrain, lighting, shadows, and occlusions in one common model
 pass. A Pokémon model is domain guidance only; it cannot replace the supplied
@@ -282,9 +292,9 @@ this comparison.
 
 | Requirement | Current boundary | Acceptance criterion |
 | --- | --- | --- |
-| Natural grounding and occlusion | Accepted `identity_lock` keeps exact pixels but can read as composited. v5 `00017` fixes containment and depth but changes small identity details. Regional SDXL is closed after three larger identity/scene failures; the MS-Diffusion port fails the KISS/MPS technical preflight. DreamO preflight B binds only two redesigned, misplaced subjects and omits the third | Require both explicit multi-reference identity and explicit spatial assignment in the next architecture; retain `identity_lock` until one common-pass candidate clears every hard gate |
+| Natural grounding and occlusion | Accepted `identity_lock` keeps exact pixels but can read as composited. v5 `00017` fixes containment and depth but changes small identity details. Regional SDXL and DreamO fail identity/binding; corrected Qwen spatial inputs collapse to one oversized Litten on the neutral field. MS-Diffusion and LAMIC fail the KISS/MPS technical boundary | No current local KISS architecture clears all hard gates. Retain `identity_lock` until an explicit product decision relaxes one named gate or authorizes a materially more complex successor |
 | Engine extensibility | FLUX.2, Anima, FLUX.1 Canny, and Qwen Edit are selectable through one manifest-driven runner and share the promotion gate | Keep architecture-specific workflow construction isolated when adding another engine |
-| Alternative models | FLUX.1 Canny changed Mewtwo's face, chest, colors, and hand; Qwen created a giant fourth Mewtwo | Retain both adapters for controlled comparison, but do not promote either rejected candidate |
+| Alternative models | FLUX.1 Canny changed Mewtwo's face, chest, colors, and hand. Old Qwen duplicated a giant fourth Mewtwo; corrected spatial inputs instead collapse to one oversized Litten on the neutral field | Retain the adapters as diagnostic code, but do not render or promote another candidate without a materially new control mechanism |
 | Anima candidates | Workflow and provenance now share the exact model/LoRA/encoder/VAE/sampling contract | Keep the adapter experimental until a real candidate passes both the shared pixel gate and visual review |
 | New set art direction | Every current individual set has an explicit catalog brief copied into its manifest | Review or refine the brief before spending the production render; catalog coverage does not replace visual art direction |
 | Wide PDF layouts | 4x3 and 4x4 artwork, placement, prompting, upscale, promotion, validation, slicing, and matching-grid rendering are modeled | Add physical A3 page styles/templates and rendered-PDF QA |
@@ -308,8 +318,10 @@ this comparison.
   rejected candidates through `00017` cannot carry approval forward.
 - Review memory and output separately before promoting `joint_scene` with the
   four subjects required by `wide_4x3` or `wide_4x4`.
-- Keep Anima, FLUX.1 Canny, and Qwen Edit experimental until a candidate passes
-  the same promotion gate.
+- Keep Anima and FLUX.1 Canny experimental. The existing Qwen adapter remains
+  selectable as historical diagnostic code, but both its duplicate-reference
+  candidate and the corrected spatial-subject preflight are closed; do not
+  render another Qwen candidate without a materially new binding mechanism.
 - Apply the demonstrated ExGen3 section workflow to remaining aggregate
   variants only after their section briefs and curated casts are reviewed.
 - Implement matching A3/custom PDF page renderers before enabling 4x3 or 4x4
