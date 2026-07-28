@@ -35,8 +35,9 @@ promotion.
 | `00015` | Same v3 graph with 768 px neutral identity canvases instead of 512 px | Placement remained too high and too large; render cost increased | Rejected; 512 px default restored |
 | `00016` | Pipeline v4: replace the three global identity references with one neutral, poster-shaped cast layout containing the exact source figures inside their cards | All figures fit their real card crops with padding and the scene has coherent shadows/depth; Litten gains a large pale flank/hindquarter marking absent from the source | Rejected; third one-shot placement attempt fails identity and triggers the stop rule |
 | `00017` | Pipeline v5: 0.5-MP spatial cast followed by three unscaled 512 px source-identity references before the same single sampler | All three subjects fit their cards and the scene contains no contradictory intersections, but plants avoid the silhouettes and therefore prove no real foreground crossing. Litten's front-paw digit structure is simplified, Popplio's eye and two muzzle strokes are reduced, and Rowlet lacks a convincing individual contact shadow | Retained as the second-ranked comparison after the identity tolerance was explicitly relaxed; placement is still too small and too far outward |
-| `00018` | Reuse the exact canonical `identity_lock` placement profile; model, seed, scene wording, reference topology, identity images, and sampler remain fixed | All three subjects now have nearly the preferred card fill, remain complete inside their physical card crops, and receive clear directionally coherent grounding shadows. No gross identity regression beyond the accepted v5 print-detail tolerance is apparent. Plants again avoid the silhouettes, so true foreground continuity remains unproven | Placement gate passed; retained as the new second-ranked v5 baseline for one separate prompt-only occlusion stress test |
+| `00018` | Reuse the exact canonical `identity_lock` placement profile; model, seed, scene wording, reference topology, identity images, and sampler remain fixed | All three subjects now have nearly the preferred card fill, remain complete inside their physical card crops, and receive clear directionally coherent grounding shadows. No gross identity regression beyond the accepted v5 print-detail tolerance is apparent. Plants again avoid the silhouettes, so true foreground continuity remains unproven | Placement gate passed; retained as the second-ranked v5 baseline after the later depth tests |
 | `00019` | Add an explicit prompt-only stress rule requiring connected front and rear landscape crossings in every occupied bottom card; all non-prompt inputs remain byte-identical to `00018` | Card fit, accepted identity tolerance, and shadows still pass. Rowlet, Litten, and Popplio each have zero actual foreground crossings and zero connected rear elements visibly interrupted by the character. There is no contradictory z-order because the model avoids every requested intersection | Fails as depth evidence; `00018` remains the preferred v5 placement checkpoint |
+| `00020` | Compact the effective prompt to 510 Qwen tokens including its chat template, move the depth rule to token 211, and request front/rear crossings in exactly one suitable bottom card; all image, model, geometry, seed, and sampling inputs remain fixed | The intended bottom cast stays recognizable, but the model renders a fourth character: a second, oversized Litten in the middle of the poster. No requested connected front/rear crossing is present | Rejected on hard character-count failure; prompt tuning closed and both experimental prompt changes reverted |
 
 ## Current checkpoint
 
@@ -73,23 +74,32 @@ new gross identity regression. Its raw SHA-256 is
 `fc1375f75ef771d6f1aac05bcd27ef67288597bdf3dd8d2f4baf60a908db5e98`;
 the MPS render completed in 180.43 seconds. Because no plant, leaf, flower, or
 other connected landscape element actually crosses a subject, `00018` does
-not prove foreground continuity. The next v5 candidate may therefore change
-only the generic foreground-depth wording. It inherits neither promotion nor
-approval from this placement result.
+not prove foreground continuity. The subsequent `00019` candidate therefore
+changes only the generic foreground-depth wording. It inherits neither
+promotion nor approval from this placement result.
 
 Candidate `00019` applies that isolated wording change. Its raw SHA-256 is
 `2fa1b35df5f240e5396de7c8a3faeb3e41dcd516f86de6c7be8719de04b4832a`;
 the MPS render completed in 180.20 seconds. Independent review confirms that
 all three physical card crops retain the `00018` fit and accepted identity
 tolerance, but not one requested front or rear crossing exists. A tokenizer
-audit explains why one bounded retry remains materially different: the actual
+audit justified one final bounded retry: the actual
 prompt contains 1,350 Qwen tokens and places the explicit stress rule after
 token 1,034. ComfyUI does not truncate it, but the official FLUX.2
-conditioning budget is 512 tokens. The final prompt-only retry must therefore
-remove duplicated identity/placement prose, stay at or below that intended
-budget, place the depth rule before token 300, request the crossing in exactly
-one suitable bottom card, and keep every model, reference, geometry, seed, and
-sampling input fixed. Prompt tuning stops after that candidate.
+conditioning budget is 512 tokens.
+
+Candidate `00020` performs that final bounded retry at 510 tokens, with the
+depth rule at token 211. Its raw SHA-256 is
+`610499556249a965cac52ea3ecea54fd206dd71487185fc967054282df31431c`;
+the MPS render completed in 174.18 seconds. It does not produce a controlled
+crossing and instead violates the hard count gate by adding a second, oversized
+Litten above the intended bottom cast. The compact-prompt refactor and the
+preceding stress wording are reverted in dedicated commits, returning the code
+exactly to the `00018` prompt behavior. Prompt-only depth tuning is closed:
+`identity_lock` remains first-ranked, `00018` remains the unpromoted
+second-ranked comparison, and any successor now requires a materially
+different control mechanism or an explicit product decision to accept
+intersection avoidance.
 
 ## Identity-control successor evaluation
 

@@ -101,8 +101,11 @@ Option-1 placement profile, passes all three physical card crops with preferred
 fill, and adds clear coherent grounding shadows. It remains unpromoted because
 the landscape again avoids real foreground crossings. `00019` explicitly
 requests both connected front and rear crossings, but produces none in any
-card. The graph has no hard three-subject limit, but four-subject layouts still
-need separate memory and visual review.
+card. Compact `00020` moves that rule inside the intended 512-token budget but
+adds a second oversized Litten and still produces no controlled crossing. Both
+prompt experiments are reverted to the `00018` behavior. The graph has no hard
+three-subject limit, but four-subject layouts still need separate memory and
+visual review.
 
 The earlier successor search was a materially different
 identity-control successor, not another FLUX.2 prompt or reference-canvas
@@ -158,9 +161,11 @@ shrink and outer-shift logic and passes preferred card fit by reusing the exact
 canonical Option-1 placement helper. Because it contains no meaningful
 foreground crossing, `00019` changes only generic occlusion wording. The model
 still avoids every requested intersection. A tokenizer audit finds 1,350
-encoded prompt tokens with the decisive instruction after token 1,034. One
-final same-seed retry may compact the prompt to the intended 512-token budget
-and move the same rule before token 300; prompt tuning stops afterward.
+encoded prompt tokens with the decisive instruction after token 1,034.
+`00020` compacts it to 510 tokens and moves the rule to token 211, but creates
+a fourth character and still no crossing. The experimental prompt commits are
+reverted. Prompt tuning is closed; a new attempt requires materially different
+control or an explicit acceptance of intersection avoidance.
 
 The generated artwork must still begin from an empty target and finish all
 characters, terrain, lighting, shadows, and occlusions in one common model
@@ -310,7 +315,7 @@ this comparison.
 
 | Requirement | Current boundary | Acceptance criterion |
 | --- | --- | --- |
-| Natural grounding and occlusion | Accepted `identity_lock` keeps exact pixels but can read as composited. v5 `00018` gives all three subjects coherent grounding and preferred card fill; `00019` preserves those qualities but ignores explicit connected front/rear crossings | Keep `identity_lock` first. Run one final compact-prompt candidate within the intended 512-token budget, then stop prompt tuning and decide from the recorded evidence |
+| Natural grounding and occlusion | Accepted `identity_lock` keeps exact pixels but can read as composited. v5 `00018` gives all three subjects coherent grounding and preferred card fill but avoids crossings; `00019` ignores explicit crossings; compact `00020` duplicates Litten | Keep `identity_lock` first and `00018` second. Do not add more prompt complexity; require a materially different control mechanism or explicitly accept intersection avoidance |
 | Engine extensibility | FLUX.2, Anima, FLUX.1 Canny, and Qwen Edit are selectable through one manifest-driven runner and share the promotion gate | Keep architecture-specific workflow construction isolated when adding another engine |
 | Alternative models | FLUX.1 Canny changed Mewtwo's face, chest, colors, and hand. Old Qwen duplicated a giant fourth Mewtwo; corrected spatial inputs instead collapse to one oversized Litten on the neutral field | Retain the adapters as diagnostic code, but do not render or promote another candidate without a materially new control mechanism |
 | Anima candidates | Workflow and provenance now share the exact model/LoRA/encoder/VAE/sampling contract | Keep the adapter experimental until a real candidate passes both the shared pixel gate and visual review |
@@ -330,11 +335,10 @@ this comparison.
   not apply that equality claim to `joint_scene`, which redraws the complete
   image. Its raw and print identity checks remain explicit human review bound
   to deterministic provenance.
-- Keep v5 changes isolated. Placement-only `00018` is complete and full-length
-  depth-stress `00019` fails. The final candidate may only remove duplicated
-  prompt prose and move the same depth rule earlier within the intended
-  512-token budget; do not alter model, geometry, reference topology, identity
-  images, seed, or sampler, and do not inherit approval automatically.
+- Keep v5 changes isolated. Placement-only `00018` is complete, full-length
+  depth-stress `00019` fails, and compact `00020` fails count. Their prompt
+  changes are reverted. Do not resume prompt tuning; any successor must use a
+  materially different control mechanism and inherits no approval.
 - Review memory and output separately before promoting `joint_scene` with the
   four subjects required by `wide_4x3` or `wide_4x4`.
 - Keep Anima and FLUX.1 Canny experimental. The existing Qwen adapter remains
@@ -477,10 +481,12 @@ Completed on 2026-07-27:
   a pale Litten marking. The v5 Spatial+Identity candidate `00017` demonstrates
   the accepted print-detail identity tolerance but is undersized. `00018`
   reuses the canonical Option-1 placement and passes preferred card fit,
-  containment, and grounding review. It is retained only as the second-ranked
-  experimental comparison and remains unpromoted pending a real
-  depth-intersection test. None changes the accepted manifest or PDF output;
-  the full chronology is kept in the experiment log.
+  containment, and grounding review. `00019` fails to create requested
+  intersections; compact `00020` duplicates Litten and also has no crossing.
+  Their prompt changes are reverted. `00018` is retained only as the
+  second-ranked experimental comparison and remains unpromoted. None changes
+  the accepted manifest or PDF output; the full chronology is kept in the
+  experiment log.
 - The accepted Generation VIII candidate contains Grookey, Scorbunny, and
   Sobble, uses seed `260715405` and graph contract v2, and preserves all 34,011
   fully opaque source pixels with zero changes. The Galar upland lake, moor,
