@@ -1726,17 +1726,22 @@ def test_joint_scene_synthesizes_landscape_and_subjects_in_one_shot():
     )
 
     prompt = workflow["4"]["inputs"]["text"]
-    assert "Generate the complete final image in one unified denoising pass" in prompt
-    assert "There is no later character overlay" in prompt
-    assert "There is no supplied landscape image" in prompt
-    assert "no pre-generated background plate" in prompt
-    assert "IMAGE 1 is the sole spatial cast-layout reference" in prompt
-    assert "IMAGE 2 is the exact identity and anatomy reference" in prompt
-    assert "not additional subjects" in prompt
-    assert "mandatory placement and scale contract" in prompt
-    assert "never paint the character as a flat top layer" in prompt
-    assert "must continue naturally in front" in prompt
-    assert "same physically plausible depth relationship" in prompt
+    assert "ONE-SHOT from an empty target" in prompt
+    assert "One denoising pass" in prompt
+    assert "no background plate, overlay, restoration" in prompt
+    assert "IMAGE 1 controls only count, pose" in prompt
+    assert "IMAGE 2=Mewtwo identity" in prompt
+    assert "not scenery or subjects" in prompt
+    assert "Bounds:" in prompt
+    assert "strictly inside padded bottom-card bounds" in prompt
+    assert "without crossing an edge" in prompt
+    assert "DEPTH TEST in one bottom card" in prompt
+    assert "passes behind the same character" in prompt
+    assert "Every connected landscape element keeps one z-order" in prompt
+    assert "Identity references fix silhouette, anatomy" in prompt
+    assert "upper third as open pale-blue sky" in prompt
+    assert "middle center visually calm" in prompt
+    assert "No character-shaped scenery, text" in prompt
     assert "Mewtwo" in prompt
     assert "Bulbasaur" in prompt
     assert "Charmander" in prompt
@@ -1907,20 +1912,23 @@ def test_joint_scene_prompt_separates_spatial_and_identity_roles():
     assert "Rowlet" in final
     assert "Litten" in final
     assert "Popplio" in final
-    assert "IMAGE 2 is the exact identity and anatomy reference" in final
-    assert "IMAGE 1 is the sole spatial cast-layout reference" in final
-    assert "neutral field is empty reference space" in final
-    assert "mandatory placement and scale contract" in final
-    assert "not additional subjects" in final
-    assert "small physically plausible edge occlusions" in final
-    assert (
-        "demonstrate both depth layers in every occupied bottom-row card"
-        in final
-    )
-    assert "remains visibly continuous as the same object" in final
-    assert "correctly hidden by the character" in final
-    assert "below ten percent of character height" in final
-    assert "feet, ground-contact points, defining appendages" in final
+    assert "IMAGE 2=Rowlet identity" in final
+    assert "IMAGE 1 controls only count, pose" in final
+    assert "Neutral fields are controls" in final
+    assert "not scenery or subjects" in final
+    assert "Bounds:" in final
+    assert "strictly inside padded bottom-card bounds" in final
+    assert "without crossing an edge" in final
+    assert "DEPTH TEST in one bottom card" in final
+    assert "visible on both sides and hidden between" in final
+    assert "Every connected landscape element keeps one z-order" in final
+    assert "below ten percent height" in final
+    assert "feet or contact, limbs, defining appendages" in final
+    assert "Identity references fix silhouette, anatomy" in final
+    assert "Scene: a cheerful Alola island landscape" in final
+    assert "object-free" in final
+    assert "No character-shaped scenery, text" in final
+    assert len(final.split()) <= 300
     assert "JOINT SCENE - ONE-SHOT FINAL SYNTHESIS" in snapshot
     assert "SUBJECT-FREE LANDSCAPE DRAFT" not in snapshot
 

@@ -227,12 +227,12 @@ def _compact_safe_area_sentence(
     title_region, information_region = _safe_area_regions(manifest)
     if title_region == information_region:
         return (
-            f"Keep the {title_region} cell open, low-detail, and low-contrast "
-            "for its later overlay."
+            f"Keep the {title_region} cell open, object-free, low-detail, and "
+            "low-contrast for its later overlay."
         )
     return (
         f"Keep the {title_region} and {information_region} cells open, "
-        "low-detail, and low-contrast for later overlays."
+        "object-free, low-detail, and low-contrast for later overlays."
     )
 
 
@@ -397,7 +397,7 @@ def build_joint_scene_prompt(
         "artwork.scene.ground_noun",
         default="ground",
     )
-    safe_areas = _safe_area_sentence(manifest, scene)
+    safe_areas = _compact_safe_area_sentence(manifest, scene)
     additional = _scene_constraints(scene)
     final_scene_description = " ".join(
         part.strip()
@@ -411,100 +411,91 @@ def build_joint_scene_prompt(
         )
         for item in items
     ]
-    if len(cast_names) == 1:
-        cast = cast_names[0]
-    else:
-        cast = ", ".join(cast_names[:-1]) + f", and {cast_names[-1]}"
+
+    if len(placement_contract) != len(items):
+        raise ValueError(
+            "Joint-scene placement must describe every subject"
+        )
+
+    def percentage(value: object) -> str:
+        if not isinstance(value, int) or not 0 <= value <= 1000:
+            raise ValueError(
+                "Joint-scene placement coordinates must be per-mille "
+                "integers between 0 and 1000"
+            )
+        return f"{value / 10:.1f}%"
+
+    identity_roles = []
+    bounds = []
+    for image_number, (name, contract) in enumerate(
+        zip(cast_names, placement_contract, strict=True),
+        start=2,
+    ):
+        if not isinstance(contract, dict):
+            raise ValueError(
+                "Joint-scene placement contract entries must be mappings"
+            )
+        region = reference_region_label(image_number - 2, len(items))
+        identity_roles.append(
+            f"IMAGE {image_number}={name} identity"
+        )
+        bounds.append(
+            (
+                f"{name}/{region}: "
+                f"x {percentage(contract.get('left_per_mille'))}-"
+                f"{percentage(contract.get('right_per_mille'))}, "
+                f"y {percentage(contract.get('top_per_mille'))}-"
+                f"{percentage(contract.get('bottom_per_mille'))}"
+            )
+        )
+
+    specific_notes = subject_prompt_notes(items, manifest)
+    note_text = f" {' '.join(specific_notes)}" if specific_notes else ""
 
     return "\n\n".join(
         (
-            build_spatial_identity_reference_prompt(
-                items,
-                manifest,
-                placement_contract=placement_contract,
+            (
+                "ONE-SHOT from an empty target: generate one landscape with "
+                f"exactly {len(items)} characters once. "
+                "One denoising pass; no background plate, overlay, restoration, "
+                "repair, or composite. IMAGE 1 controls only count, pose, "
+                "orientation, scale, baseline, and position. "
+                f"{'; '.join(identity_roles)}. Neutral fields are controls, "
+                "not scenery or subjects."
             ),
             (
-                "Generate the complete final image in one unified denoising "
-                "pass from an empty target. There is no supplied landscape "
-                "image and no pre-generated background plate. Invent the "
-                "landscape around the referenced characters from the first "
-                "noise step, and synthesize every final landscape and character "
-                "pixel together. There is no later character overlay, mask "
-                "repair, silhouette restore, or cutout compositing. Ground "
-                "contact, cast shadows, reflected light, color grading, "
-                "perspective, and depth must therefore agree naturally."
+                f"Bounds: {'; '.join(bounds)}. All silhouettes and appendages "
+                "stay strictly inside padded bottom-card bounds. Match targets "
+                "within two percent without crossing an edge. Never draw bounds "
+                "or divisions."
             ),
             (
-                f"Render exactly these {len(items)} characters once: {cast}. "
-                "IMAGE 1 is the strict authority for count, pose, orientation, "
-                "target scale, baseline, and poster position. The corresponding "
-                "individual identity image is the strict authority for each "
-                "character's exact silhouette shape, stature, anatomy, facial "
-                "features, colors, markings, and defining design details. "
-                "Permitted "
-                "changes are limited to scene lighting, reflected color, cast "
-                "shadow, and small physically plausible edge occlusions. Do "
-                "not redesign, restyle, humanize, merge, duplicate, simplify, "
-                "add, remove, enlarge, or reshape any referenced body part, "
-                "appendage, marking, eye, or facial feature. Never invent a "
-                "design trait that is absent from that subject's reference."
+                "DEPTH TEST in one bottom card: one connected near "
+                "landscape element crosses a small non-defining lower edge; "
+                "another connected element passes behind the same character, "
+                "visible on both sides and hidden between. Every connected "
+                "landscape element keeps one z-order everywhere. Foreground "
+                "overlap is below ten percent height; never cover face, "
+                "eyes, markings, feet or contact, "
+                "limbs, defining appendages, or defining contour."
             ),
             (
-                "Match every character's complete silhouette to the normalized "
-                "bounding rectangle, scale, baseline, and visible landscape "
-                "padding specified above; do not move or enlarge a character "
-                "to fill its region. Copy every "
-                "visible color boundary, marking contour, small anatomical "
-                "detail, and appendage from that character's individual identity "
-                "reference. Preserve every open negative "
-                "space between limbs, body parts, or appendages: continuous "
-                "landscape may remain visible through that gap, but do not "
-                "enclose, outline, or fill it as a new body patch. When a small "
-                "feature is ambiguous, preserve the reference instead of "
-                "simplifying or inventing it."
+                "Identity references fix silhouette, anatomy, face, "
+                "colors, markings, appendages, and gaps. Only lighting, shadow, "
+                "and permitted overlap may differ. Never add, remove, merge, "
+                "simplify, resize, reshape, or redesign body parts, markings, "
+                f"eyes, or faces.{note_text}"
             ),
             (
-                f"Create one cohesive full-bleed scene for {concept}. "
-                f"{final_scene_description} The characters and the {ground_noun} "
-                "share one camera space and one globally coherent depth order. "
-                "Resolve depth ordering explicitly at every "
-                "landscape-character intersection. A blade, leaf, branch, rock, "
-                "water edge, or other landscape element that is genuinely "
-                "closer to the camera must continue naturally in front of the "
-                "corresponding small exterior part of the character; never "
-                "truncate that element exactly at the character silhouette and "
-                "never paint the character as a flat top layer. A connected "
-                "plant, leaf cluster, stem, branch, or other continuous object "
-                "must keep the same physically plausible depth relationship "
-                "along its visible length instead of arbitrarily switching from "
-                "behind a character to in front of it. Landscape elements that "
-                "are farther away remain naturally behind. Deliberately "
-                "demonstrate both depth layers in every occupied bottom-row "
-                "card: one scene-appropriate connected landscape element, not "
-                "a prescribed plant type, crosses only a small non-defining "
-                "lower exterior edge and remains visibly continuous as the "
-                "same object on both sides of the overlap. A separate connected "
-                "landscape element must pass behind a different small lower "
-                "exterior part, remain identifiable on both sides, and be "
-                "correctly hidden by the character between those visible "
-                "sections. Keep each test overlap below ten percent of "
-                "character height. The foreground element must stay away from "
-                "eyes, face, markings, feet, ground-contact points, defining "
-                "appendages, and silhouette features. If a closer "
-                "element would hide an identity-critical body part, marking, "
-                "facial feature, or silhouette detail, bend, move, shorten, "
-                "lower, or regenerate that "
-                "landscape element instead of placing the character over it. "
-                "Keep defining anatomy and the print-safe silhouette readable."
+                f"Scene: {concept}. {final_scene_description} Characters and "
+                f"{ground_noun} share one camera, contact, shadows, "
+                "light, perspective, and depth."
             ),
             (
-                f"{safe_areas} Keep one continuous natural {ground_noun} plane "
-                "with no character-specific clearings, circles, platforms, "
-                "landing pads, spotlight patches, or paths. Fill the image "
-                "naturally to every edge. Do not draw extra creatures, people, "
-                "trainers, character-shaped scenery, text, letters, numbers, "
-                "logos, title art, boxes, plaques, panels, cards, borders, UI, "
-                "watermarks, or crop marks."
+                f"{safe_areas} Keep {ground_noun} continuous; no subject "
+                "clearings, platforms, landing pads, or "
+                "paths. Fill every edge. No character-shaped scenery, text, "
+                "graphics, UI, or crop marks."
             ),
         )
     )
@@ -695,106 +686,6 @@ def subject_prompt_notes(
                 f"{name}-specific constraints: {' '.join(notes)}"
             )
     return specific_notes
-
-
-def build_spatial_identity_reference_prompt(
-    items: list[dict[str, Any]],
-    manifest: dict[str, Any],
-    *,
-    placement_contract: list[dict[str, int]],
-) -> str:
-    """Assign distinct spatial and identity roles to the joint references."""
-    if not items:
-        raise ValueError("Joint scene generation needs at least one cutout")
-    if len(placement_contract) != len(items):
-        raise ValueError(
-            "Joint-scene placement contract must describe every subject"
-        )
-
-    regions = [
-        reference_region_label(index, len(items))
-        for index in range(len(items))
-    ]
-    region_summary = (
-        regions[0]
-        if len(regions) == 1
-        else ", ".join(regions[:-1]) + f", or {regions[-1]}"
-    )
-
-    def percentage(value: int) -> str:
-        if not isinstance(value, int) or not 0 <= value <= 1000:
-            raise ValueError(
-                "Joint-scene placement coordinates must be per-mille "
-                "integers between 0 and 1000"
-            )
-        return f"{value / 10:.1f}%"
-
-    coordinates = []
-    identity_descriptions = []
-    for index, (item, contract) in enumerate(
-        zip(items, placement_contract, strict=True),
-        start=2,
-    ):
-        if not isinstance(contract, dict):
-            raise ValueError(
-                "Joint-scene placement contract entries must be mappings"
-            )
-        name = item.get("name_en") or f"Pokemon #{item.get('pokemon_id', '?')}"
-        identity_descriptions.append(
-            f"IMAGE {index} is the exact identity and anatomy reference "
-            f"for {name}."
-        )
-        coordinates.append(
-            (
-                f"{name}: x {percentage(contract['left_per_mille'])} to "
-                f"{percentage(contract['right_per_mille'])}, y "
-                f"{percentage(contract['top_per_mille'])} to "
-                f"{percentage(contract['bottom_per_mille'])}"
-            )
-        )
-
-    paragraphs = [
-        (
-            "IMAGE 1 is the sole spatial cast-layout reference. It contains exactly "
-            f"{len(items)} complete characters on a flat neutral field, "
-            f"ordered across the {region_summary} bottom-row regions. The "
-            "reference is the authority only for character count, pose, "
-            "orientation, relative scale, shared baseline, poster coordinates, "
-            "and outer placement bounds. Its "
-            "neutral field is empty reference space, not sky, terrain, a "
-            "background plate, or a style request. Do not paste the "
-            "characters as a foreground layer; redraw the complete scene "
-            "and all character edges together from the empty target."
-        ),
-        (
-            f"{' '.join(identity_descriptions)} Each identity image is the sole "
-            "authority for that character's exact silhouette shape, stature, "
-            "anatomy, facial features, colors, markings, appendages, and defining "
-            "design details. Its centered position and scale on the neutral "
-            "canvas carry no placement meaning and must not override IMAGE 1. "
-            "These are detail views of the same cast already present in IMAGE 1, "
-            "not additional subjects. Their neutral fields are empty reference "
-            "space, not scenery."
-        ),
-        (
-            "The following normalized target silhouette rectangles are the "
-            "mandatory placement and scale contract: "
-            f"{'; '.join(coordinates)}. Match every complete silhouette, "
-            "baseline, and surrounding landscape clearance to these bounds "
-            "within two percent of the full canvas. Each rectangle is a "
-            "hard outer limit for every visible pixel of that character, "
-            "including every outermost referenced detail and appendage; do "
-            "not crop or extend any part beyond it. Render each character "
-            f"exactly once in its assigned {region_summary} bottom-row "
-            "region. No character may cross above the bottom row or an "
-            "invisible vertical region division. The coordinates and "
-            "divisions must never be drawn."
-        ),
-    ]
-    specific_notes = subject_prompt_notes(items, manifest)
-    if specific_notes:
-        paragraphs.append(" ".join(specific_notes))
-    return "\n\n".join(paragraphs)
 
 
 def build_sdxl_identity_control_prompt(
