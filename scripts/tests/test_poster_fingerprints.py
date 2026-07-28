@@ -37,9 +37,6 @@ from scripts.poster_assets.provenance import (
     sha256_file,
     write_run_metadata,
 )
-from scripts.poster_assets.source_pixel_audit import (
-    audit_exact_source_pixels,
-)
 
 
 def _manifest() -> dict:
@@ -418,21 +415,15 @@ def test_generation_fingerprint_rejects_duplicate_cutout_subjects(tmp_path):
 def test_required_model_hashes_follow_the_selected_engine_artifacts():
     assert required_model_artifact_hashes(
         {
-            "model": "model.gguf",
+            "model": "model.safetensors",
             "encoder": "clip.safetensors",
-            "encoder_2": "t5.gguf",
             "vae": "vae.safetensors",
-            "controlnet": "controlnet.safetensors",
-            "lora": "lightning.safetensors",
             "upscale_model": "upscale.pth",
         }
     ) == (
         "model_sha256",
         "encoder_sha256",
-        "encoder_2_sha256",
         "vae_sha256",
-        "controlnet_sha256",
-        "lora_sha256",
         "upscale_model_sha256",
     )
 
@@ -440,13 +431,11 @@ def test_required_model_hashes_follow_the_selected_engine_artifacts():
 def test_pipeline_contract_versions_are_family_specific_and_strict():
     identity_generation = {"engine": "flux", "mode": "identity_lock"}
     joint_generation = {"engine": "flux", "mode": "joint_scene"}
-    edit_generation = {"engine": "qwen_edit", "mode": "edit"}
 
     assert current_generation_pipeline_contract_version(
         identity_generation
     ) == 3
     assert current_generation_pipeline_contract_version(joint_generation) == 5
-    assert current_generation_pipeline_contract_version(edit_generation) == 2
     accepted_legacy = provenance.fingerprint_record(
         {
             "pipeline_contract": {
@@ -762,13 +751,6 @@ def test_joint_scene_cannot_promote_without_explicit_human_review():
     (
         ("flux", "identity_lock", 3),
         ("flux", "joint_scene", 5),
-        ("flux", "edit", 2),
-        ("flux", "generate", 2),
-        ("flux", "inpaint", 2),
-        ("anima", "edit", 2),
-        ("anima", "generate", 3),
-        ("flux1_canny", "generate", 2),
-        ("qwen_edit", "edit", 2),
     ),
 )
 def test_every_engine_family_versions_the_shared_raster_contract(
@@ -1040,6 +1022,20 @@ def _promotion_fixture(
             encoding="utf-8",
         )
         bundle = poster_bundle("Example", poster_assets=assets)
+    elif output_megapixels is None:
+        manifest = yaml.safe_load(
+            bundle.manifest_path.read_text(encoding="utf-8")
+        )
+        manifest["artwork"]["generation"]["output_dpi"] = 300
+        bundle.manifest_path.write_text(
+            yaml.safe_dump(
+                manifest,
+                sort_keys=False,
+                allow_unicode=True,
+            ),
+            encoding="utf-8",
+        )
+        bundle = poster_bundle("Example", poster_assets=assets)
     if output_megapixels is not None:
         manifest = yaml.safe_load(
             bundle.manifest_path.read_text(encoding="utf-8")
@@ -1060,10 +1056,7 @@ def _promotion_fixture(
         )
         bundle = poster_bundle("Example", poster_assets=assets)
     generation = bundle.manifest["artwork"]["generation"]
-    layout = build_generation_output_layout(
-        "standard_3x3",
-        generation,
-    )
+    layout = build_print_layout("standard_3x3", 10)
     candidate = repository / "candidate.png"
     Image.new(
         "RGB",
@@ -1073,33 +1066,6 @@ def _promotion_fixture(
 
     work_dir = scope_dir / "comfyui_poster"
     workflow_path = work_dir / "workflow_api.json"
-    if generation.get("engine") == "qwen_edit":
-        work_dir.mkdir()
-        (work_dir / "qwen_edit_prompt.txt").write_text(
-            "Integrate the supplied characters into the illustrated valley.",
-            encoding="utf-8",
-        )
-        workflow_path.write_text("{}\n", encoding="utf-8")
-        for filename in (
-            "structure_reference.png",
-            "qwen_identity_reference_1.png",
-            "qwen_identity_reference_2.png",
-        ):
-            Image.new(
-                "RGB",
-                (layout.width_px, layout.height_px),
-                (40, 120, 80),
-            ).save(work_dir / filename)
-        audit_reference = Image.new(
-            "RGBA",
-            (layout.width_px, layout.height_px),
-            (0, 0, 0, 0),
-        )
-        audit_reference.paste(
-            Image.new("RGBA", (10, 10), (40, 120, 80, 255)),
-            (5, 5),
-        )
-        audit_reference.save(work_dir / "inpaint_reference.png")
 
     monkeypatch.setattr(provenance, "POSTER_ASSETS", assets)
     monkeypatch.setattr(provenance, "SCOPE_DATA", output)
@@ -1122,49 +1088,20 @@ def _promotion_fixture(
     ).hexdigest()
     run_metadata = tmp_path / "candidate.run.json"
     candidate_hash = sha256_file(candidate)
-    if generation.get("engine") == "qwen_edit":
-        audit_reference_path = work_dir / "inpaint_reference.png"
-        source_pixel_audit = audit_exact_source_pixels(
-            audit_reference_path,
-            candidate,
-            require_match=True,
+    cutout_payload = load_json(
+        scope_dir / "cutouts" / "manifest.json"
+    )
+    cutout_records = [
+        file_record(
+            scope_dir / "cutouts" / item["file"],
+            image=True,
         )
-        source_pixel_audit.update(
+        for item in cutout_payload["items"]
+    ]
+    artwork_record = file_record(candidate, image=True)
+    run_metadata.write_text(
+        json.dumps(
             {
-                "stage": "raw_generation",
-                "reference_sha256": sha256_file(audit_reference_path),
-                "artwork_sha256": sha256_file(candidate),
-                "width": layout.width_px,
-                "height": layout.height_px,
-            }
-        )
-        write_run_metadata(
-            "Example",
-            candidate,
-            workflow_path,
-            generation,
-            output_path=run_metadata,
-            raw_artwork_path=candidate,
-            validation={"source_pixels": source_pixel_audit},
-        )
-        overlay_fingerprint = load_json(run_metadata)["inputs"][
-            "overlay_fingerprint"
-        ]
-    else:
-        cutout_payload = load_json(
-            scope_dir / "cutouts" / "manifest.json"
-        )
-        cutout_records = [
-            file_record(
-                scope_dir / "cutouts" / item["file"],
-                image=True,
-            )
-            for item in cutout_payload["items"]
-        ]
-        artwork_record = file_record(candidate, image=True)
-        run_metadata.write_text(
-            json.dumps(
-                {
                     "schema_version": 1,
                     "kind": "poster_generation_run",
                     "scope": "Example",
@@ -1201,10 +1138,10 @@ def _promotion_fixture(
                             "height": layout.height_px,
                         }
                     },
-                },
-            ),
-            encoding="utf-8",
-        )
+            },
+        ),
+        encoding="utf-8",
+    )
 
     def fake_finalize(_scope, source, destination, _language):
         save_options = {"format": "PNG"}
@@ -1239,10 +1176,20 @@ def _promotion_fixture(
         return paths
 
     monkeypatch.setattr(promotion, "POSTER_ASSETS", assets)
+    monkeypatch.setattr(
+        promotion,
+        "build_generation_output_layout",
+        lambda *_args, **_kwargs: layout,
+    )
     monkeypatch.setattr(promotion, "finalize", fake_finalize)
     monkeypatch.setattr(promotion, "slice_poster", fake_slice)
     monkeypatch.setattr(validator, "POSTER_ASSETS", assets)
     monkeypatch.setattr(validator, "ROOT", repository)
+    monkeypatch.setattr(
+        validator,
+        "build_generation_output_layout",
+        lambda *_args, **_kwargs: layout,
+    )
     monkeypatch.setattr(
         validator,
         "load_poster_scope_data",
@@ -1268,9 +1215,13 @@ def test_joint_scene_requires_review_then_promotes_and_validates(
         mode="joint_scene",
         reference_mode="spatial_identity_joint",
         output_method="lanczos",
-        output_megapixels=0.25,
+        output_dpi=300,
     )
-    for key in ("output_dpi", "upscale_model", "upscale_model_sha256"):
+    for key in (
+        "output_megapixels",
+        "upscale_model",
+        "upscale_model_sha256",
+    ):
         generation.pop(key, None)
     (
         _repository,
@@ -1391,79 +1342,9 @@ def test_promotion_rebinds_overlay_and_validator_prefers_fingerprints(
         validator.validate("Example")
 
 
-def test_qwen_edit_candidate_promotes_and_validates_with_bound_source_audit(
-    tmp_path,
-    monkeypatch,
-):
-    digest = "2" * 64
-    qwen_generation = {
-        "engine": "qwen_edit",
-        "model": "qwen.gguf",
-        "model_sha256": digest,
-        "encoder": "qwen-clip.safetensors",
-        "encoder_sha256": digest,
-        "vae": "qwen-vae.safetensors",
-        "vae_sha256": digest,
-        "lora": "qwen-lora.safetensors",
-        "lora_sha256": digest,
-        "mode": "edit",
-        "reference_mode": "multi_reference",
-        "seed": 321,
-        "steps": 5,
-        "cfg": 1.25,
-        "shift": 2.75,
-        "generation_megapixels": 0.01,
-        "output_method": "lanczos",
-        "output_megapixels": 0.01,
-    }
-    (
-        _repository,
-        _assets,
-        _output,
-        _scope_dir,
-        candidate,
-        run_metadata,
-        _old_overlay,
-    ) = _promotion_fixture(
-        tmp_path,
-        monkeypatch,
-        generation_override=qwen_generation,
-    )
-
-    generated = load_json(run_metadata)
-    source_pixels = generated["validation"]["source_pixels"]
-    assert generated["generation"] == qwen_generation
-    assert source_pixels["stage"] == "raw_generation"
-    assert source_pixels["artwork_sha256"] == generated["raw_artwork"][
-        "sha256"
-    ]
-    assert source_pixels["reference_sha256"] == generated["inputs"][
-        "source_pixel_audit_reference"
-    ]["sha256"]
-    assert fingerprint_record_is_valid(
-        generated["inputs"]["generation_fingerprint"]
-    )
-
-    _artwork, _preview, _cards, provenance_path = promotion.promote(
-        "Example",
-        candidate,
-        language="en",
-        run_metadata_path=run_metadata,
-    )
-    promoted = load_json(provenance_path)
-    assert promoted["run"]["generation"]["engine"] == "qwen_edit"
-    assert (
-        promoted["run"]["validation"]["source_pixels"]["changed_pixels"] == 0
-    )
-
-    result = validator.validate("Example")
-    assert result["identity_pixels"] == 100
-    assert result["generation_fingerprint_current"] is True
-    assert result["generation_pipeline_contract_version"] == 2
-    assert result["generation_pipeline_contract_status"] == "current"
 
 
-def test_validator_accepts_lanczos_output_without_dpi_metadata(
+def test_promotion_rejects_preview_output_without_300dpi_metadata(
     tmp_path,
     monkeypatch,
 ):
@@ -1481,31 +1362,13 @@ def test_validator_accepts_lanczos_output_without_dpi_metadata(
         output_megapixels=0.01,
     )
 
-    artwork, _preview, _cards, _provenance = promotion.promote(
-        "Example",
-        candidate,
-        language="en",
-        run_metadata_path=run_metadata,
-    )
-    with Image.open(artwork) as image:
-        assert "dpi" not in image.info
-
-    result = validator.validate("Example")
-
-    assert result["dimensions"] == (80, 110)
-    assert result["card_dimensions"] is None
-    assert result["card_dimensions_by_cell"] == (
-        (25, 35),
-        (26, 35),
-        (25, 35),
-        (25, 36),
-        (26, 36),
-        (25, 36),
-        (25, 35),
-        (26, 35),
-        (25, 35),
-    )
-    assert result["cards"] == 9
+    with pytest.raises(ValueError, match="exact 300-dpi print raster"):
+        promotion.promote(
+            "Example",
+            candidate,
+            language="en",
+            run_metadata_path=run_metadata,
+        )
 
 
 def test_promotion_rejects_output_size_outside_generation_contract(

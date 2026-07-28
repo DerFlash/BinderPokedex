@@ -20,7 +20,7 @@ try:
     from .generation_contract import (
         is_joint_scene_generation,
         requires_generation_fingerprint,
-        validate_generation_contract,
+        validate_promotable_generation_contract,
     )
     from .layout import (
         build_generation_output_layout,
@@ -58,7 +58,7 @@ except ImportError:
     from generation_contract import (
         is_joint_scene_generation,
         requires_generation_fingerprint,
-        validate_generation_contract,
+        validate_promotable_generation_contract,
     )
     from layout import (
         build_generation_output_layout,
@@ -283,8 +283,8 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
         recorded_generation, dict
     ):
         raise ValueError("Promoted generation metadata must be a mapping")
-    validate_generation_contract(configured_generation)
-    validate_generation_contract(recorded_generation)
+    validate_promotable_generation_contract(configured_generation)
+    validate_promotable_generation_contract(recorded_generation)
     if recorded_generation != configured_generation:
         raise ValueError(
             f"Generation metadata drift between {manifest_path} and "

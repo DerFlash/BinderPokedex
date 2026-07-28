@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Initialize a local identity-lock poster scope from generated set data."""
+"""Initialize a local joint-scene poster scope from generated set data."""
 from __future__ import annotations
 
 import argparse
@@ -56,6 +56,33 @@ def stable_scope_seed(scope: str) -> int:
     return 260700000 + int.from_bytes(digest[:4], "big") % 100000
 
 
+def joint_scene_generation(
+    template: dict[str, Any],
+    *,
+    seed: int,
+) -> dict[str, Any]:
+    """Return the default one-shot contract without legacy upscale fields."""
+    generation = copy.deepcopy(template)
+    generation.update(
+        {
+            "mode": "joint_scene",
+            "reference_mode": "spatial_identity_joint",
+            "seed": seed,
+            "steps": 4,
+            "generation_megapixels": 1.0,
+            "output_dpi": 300,
+            "output_method": "lanczos",
+        }
+    )
+    for field in (
+        "output_megapixels",
+        "upscale_model",
+        "upscale_model_sha256",
+    ):
+        generation.pop(field, None)
+    return generation
+
+
 def section_poster_title(
     scope: str,
     section_data: dict[str, Any],
@@ -110,17 +137,9 @@ def build_default_manifest(
     if not isinstance(generation_template, dict) or not generation_template:
         raise ValueError("A reviewed artwork.generation template is required")
 
-    generation = copy.deepcopy(generation_template)
-    generation.update(
-        {
-            "mode": "identity_lock",
-            "reference_mode": "two_pass_source_pixels",
-            "seed": stable_scope_seed(scope),
-            "steps": 4,
-            "generation_megapixels": 1.0,
-            "output_dpi": 300,
-            "output_method": "model_upscale",
-        }
+    generation = joint_scene_generation(
+        generation_template,
+        seed=stable_scope_seed(scope),
     )
     center_column = max(1, (int(layout["columns"]) + 1) // 2)
     manifest: dict[str, Any] = {
@@ -241,17 +260,9 @@ def build_section_manifest(
             "subjects"
         )
 
-    generation = copy.deepcopy(generation_template)
-    generation.update(
-        {
-            "mode": "identity_lock",
-            "reference_mode": "two_pass_source_pixels",
-            "seed": stable_scope_seed(asset_key),
-            "steps": 4,
-            "generation_megapixels": 1.0,
-            "output_dpi": 300,
-            "output_method": "model_upscale",
-        }
+    generation = joint_scene_generation(
+        generation_template,
+        seed=stable_scope_seed(asset_key),
     )
     center_column = max(1, (int(layout["columns"]) + 1) // 2)
     return {

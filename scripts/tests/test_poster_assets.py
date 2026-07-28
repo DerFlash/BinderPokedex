@@ -22,19 +22,6 @@ from scripts.poster_assets.create_comfyui_poster_workflow import (
 from scripts.poster_assets.create_comfyui_upscale_workflow import (
     build_workflow as build_upscale_workflow,
 )
-from scripts.poster_assets.create_anima_poster_workflow import (
-    build_workflow as build_anima_workflow,
-)
-from scripts.poster_assets.create_flux1_canny_poster_workflow import (
-    build_workflow as build_flux1_canny_workflow,
-)
-from scripts.poster_assets.create_qwen_edit_poster_workflow import (
-    build_workflow as build_qwen_edit_workflow,
-)
-from scripts.poster_assets.create_sdxl_identity_poster_workflow import (
-    build_workflow as build_sdxl_identity_workflow,
-    write_experiment as write_sdxl_identity_experiment,
-)
 from scripts.poster_assets.finalize_comfyui_poster import (
     draw_title_text_panel,
     finalize,
@@ -74,7 +61,6 @@ from scripts.poster_assets.poster_config import (
     IDENTITY_LOCK_PROMPT_FILE,
     JOINT_SCENE_PROMPT_FILE,
     build_identity_lock_prompt,
-    build_identity_reference_prompt,
     build_joint_prompt_snapshot,
     build_joint_scene_prompt,
     identity_lock_config,
@@ -91,12 +77,9 @@ from scripts.poster_assets.queue_comfyui_workflow import (
     validate_server_input_directory,
 )
 from scripts.poster_assets.prepare_comfyui_poster import (
-    build_identity_references,
     build_joint_scene_references,
-    build_scene_reference,
-    build_sdxl_identity_references,
+    build_identity_lock_references,
     build_upper_context_mask,
-    card_safe_conditioning_placements,
 )
 from scripts.poster_assets.composition import cutout_placements
 from scripts.poster_assets.composition import (
@@ -776,88 +759,11 @@ def test_joint_scene_placements_reuse_canonical_card_fit():
         ).getbbox() is None
 
 
-def test_real_canvas_guard_rejects_an_explicit_out_of_canvas_placement():
-    scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
-    layout = build_source_layout(
-        "standard_3x3",
-        width_px=848,
-        height_px=1168,
-    )
-    placements = cutout_placements(layout, scope_dir)
-    manifest = fetch_cutouts.load_yaml(scope_dir / "poster.yaml")
-    overflowing = dict(placements[-1])
-    alpha_box = overflowing["image"].getchannel("A").getbbox()
-    assert alpha_box is not None
-    overflowing["cell"] = replace(
-        overflowing["cell"],
-        width=overflowing["cell"].width + 1,
-    )
-    overflowing["x"] = layout.width_px - alpha_box[2] + 1
-
-    with pytest.raises(ValueError, match="outside the real generation canvas"):
-        card_safe_conditioning_placements(
-            [overflowing],
-            manifest,
-            canvas_size=(848, 1168),
-        )
-
-
-def test_tall_conditioning_subjects_gain_card_safe_padding():
-    scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
-    layout = build_page_layout("standard_3x3")
-    placements = cutout_placements(layout, scope_dir)
-    manifest = fetch_cutouts.load_yaml(scope_dir / "poster.yaml")
-    conditioned = card_safe_conditioning_placements(
-        placements,
-        manifest,
-        canvas_size=(layout.width_px, layout.height_px),
-    )
-
-    assert conditioned[0]["image"].height < placements[0]["image"].height
-    assert conditioned[1]["image"].size == placements[1]["image"].size
-    assert conditioned[2]["image"].size == placements[2]["image"].size
-    original_box = placements[0]["image"].getchannel("A").getbbox()
-    conditioned_box = conditioned[0]["image"].getchannel("A").getbbox()
-    assert original_box is not None and conditioned_box is not None
-    cell = placements[0]["cell"]
-    assert (
-        placements[0]["y"] + original_box[3] + round(cell.height * 0.10)
-        == conditioned[0]["y"] + conditioned_box[3]
-    )
-
-
-def test_sv035_uses_default_conditioning_without_base1_offsets():
-    scope_dir = (
-        Path(__file__).resolve().parents[2]
-        / "data"
-        / "poster_assets"
-        / "SV03.5"
-    )
-    layout = build_page_layout("standard_3x3")
-    placements = cutout_placements(
-        layout,
-        scope_dir,
-    )
-    manifest = fetch_cutouts.load_yaml(scope_dir / "poster.yaml")
-
-    conditioned = card_safe_conditioning_placements(
-        placements,
-        manifest,
-        canvas_size=(layout.width_px, layout.height_px),
-    )
-
-    assert [
-        (item["x"], item["y"], item["image"].size)
-        for item in conditioned
-    ] == [
-        (item["x"], item["y"], item["image"].size)
-        for item in placements
-    ]
 
 
 def test_inpaint_reference_uses_exact_final_placements(tmp_path: Path):
     scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
-    build_scene_reference("Base1", 0.25, tmp_path)
+    build_identity_lock_references("Base1", 0.25, tmp_path)
 
     actual = Image.open(tmp_path / "inpaint_reference.png").convert("RGBA")
     layout = build_source_layout(
@@ -873,10 +779,7 @@ def test_inpaint_reference_uses_exact_final_placements(tmp_path: Path):
         )
 
     assert ImageChops.difference(actual, expected).getbbox() is None
-    assert ImageChops.difference(
-        actual,
-        Image.open(tmp_path / "scene_reference.png").convert("RGBA"),
-    ).getbbox() is not None
+    assert not (tmp_path / "scene_reference.png").exists()
 
 
 def test_joint_scene_preparation_writes_spatial_and_unscaled_identity_refs(
@@ -958,99 +861,12 @@ def test_joint_scene_preparation_writes_spatial_and_unscaled_identity_refs(
         assert masked_difference.getbbox() is None
 
 
-def test_sdxl_identity_preparation_writes_structure_and_subject_regions(
-    tmp_path: Path,
-):
-    build_sdxl_identity_references(
-        "Pokedex/sections/gen7",
-        tmp_path,
-        megapixels=1.0,
-    )
-
-    structure = Image.open(
-        tmp_path / "sdxl_identity_structure.png"
-    ).convert("RGBA")
-    assert structure.size == output_dimensions(
-        "Pokedex/sections/gen7",
-        1.0,
-    )
-    layout = build_source_layout(
-        "standard_3x3",
-        width_px=structure.width,
-        height_px=structure.height,
-    )
-    expected = Image.new("RGBA", structure.size, (226, 224, 211, 255))
-    placements = joint_scene_cutout_placements(
-        layout,
-        Path(__file__).resolve().parents[2]
-        / "data"
-        / "poster_assets"
-        / "Pokedex"
-        / "sections"
-        / "gen7",
-    )
-    for placement in placements:
-        expected.alpha_composite(
-            placement["image"],
-            (placement["x"], placement["y"]),
-        )
-    assert ImageChops.difference(structure, expected).getbbox() is None
-
-    region_paths = sorted(tmp_path.glob("sdxl_identity_region_*.png"))
-    assert len(region_paths) == 3
-    for path, placement in zip(
-        region_paths,
-        placements,
-        strict=True,
-    ):
-        mask = Image.open(path).convert("L")
-        alpha_box = placement["image"].getchannel("A").getbbox()
-        assert alpha_box is not None
-        visible_box = (
-            placement["x"] + alpha_box[0],
-            placement["y"] + alpha_box[1],
-            placement["x"] + alpha_box[2],
-            placement["y"] + alpha_box[3],
-        )
-        expected_mask = Image.new("L", structure.size, 0)
-        ImageDraw.Draw(expected_mask).rectangle(
-            (
-                visible_box[0],
-                visible_box[1],
-                visible_box[2] - 1,
-                visible_box[3] - 1,
-            ),
-            fill=255,
-        )
-        assert ImageChops.difference(mask, expected_mask).getbbox() is None
-        assert mask.getbbox() == visible_box
-        assert mask.getextrema() == (0, 255)
-        assert mask.getbbox() != (
-            placement["cell"].x,
-            placement["cell"].y,
-            placement["cell"].x + placement["cell"].width,
-            placement["cell"].y + placement["cell"].height,
-        )
-        assert (
-            placement["cell"].x
-            <= mask.getbbox()[0]
-            < mask.getbbox()[2]
-            <= placement["cell"].x + placement["cell"].width
-        )
-        assert (
-            placement["cell"].y
-            <= mask.getbbox()[1]
-            < mask.getbbox()[3]
-            <= placement["cell"].y + placement["cell"].height
-        )
-    assert len(list(tmp_path.glob("identity_reference_*.png"))) == 3
-    assert not (tmp_path / "joint_scene_cast_reference.png").exists()
 
 
 def test_identity_lock_mask_generates_only_above_the_bottom_subject_band(
     tmp_path: Path,
 ):
-    build_scene_reference("Base1", 0.25, tmp_path)
+    build_identity_lock_references("Base1", 0.25, tmp_path)
 
     mask = Image.open(tmp_path / "upper_context_mask.png").convert("RGBA")
     alpha = mask.getchannel("A")
@@ -1096,140 +912,6 @@ def test_identity_lock_mask_moves_up_for_an_unusually_tall_subject(
     assert generation_alpha.getpixel((50, 55)) == 255
 
 
-def test_canny_structure_reference_flattens_exact_placements_on_white(
-    tmp_path: Path,
-):
-    scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
-    build_scene_reference("Base1", 0.25, tmp_path)
-
-    actual = Image.open(tmp_path / "structure_reference.png").convert("RGB")
-    layout = build_source_layout(
-        "standard_3x3",
-        width_px=actual.width,
-        height_px=actual.height,
-    )
-    expected = Image.new("RGBA", actual.size, (255, 255, 255, 255))
-    for placement in cutout_placements(layout, scope_dir):
-        expected.alpha_composite(
-            placement["image"],
-            (placement["x"], placement["y"]),
-        )
-
-    assert ImageChops.difference(
-        actual,
-        expected.convert("RGB"),
-    ).getbbox() is None
-
-
-def test_qwen_identity_references_prioritize_first_subject_detail(
-    tmp_path: Path,
-):
-    build_scene_reference("Base1", 0.25, tmp_path)
-
-    first = Image.open(
-        tmp_path / "qwen_identity_reference_1.png"
-    ).convert("RGB")
-    remaining = Image.open(
-        tmp_path / "qwen_identity_reference_2.png"
-    ).convert("RGB")
-    assert first.size == (512, 640)
-    assert remaining.size == (1024, 640)
-
-    first_box = ImageChops.difference(
-        first,
-        Image.new("RGB", first.size, (226, 224, 211)),
-    ).getbbox()
-    remaining_box = ImageChops.difference(
-        remaining,
-        Image.new("RGB", remaining.size, (226, 224, 211)),
-    ).getbbox()
-    assert first_box is not None
-    assert remaining_box is not None
-    assert first_box[2] - first_box[0] >= 300
-    assert first_box[3] - first_box[1] >= 400
-
-
-def test_identity_references_use_scale_aware_appearance_canvases(tmp_path: Path):
-    scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
-    manifest = fetch_cutouts.load_yaml(scope_dir / "poster.yaml")
-
-    build_identity_references(scope_dir, manifest, tmp_path)
-
-    layout = build_page_layout("standard_3x3", width_px=848)
-    extents = []
-    for index in range(1, layout.pokemon_count + 1):
-        image = Image.open(
-            tmp_path / f"identity_reference_{index}.png"
-        ).convert("RGB")
-        expected_size = (768, 768) if index == 1 else (512, 512)
-        assert image.size == expected_size
-        neutral = Image.new("RGB", image.size, (226, 224, 211))
-        bbox = ImageChops.difference(image, neutral).getbbox()
-        assert bbox is not None
-        assert bbox[0] > 0
-        assert bbox[1] > 0
-        assert bbox[2] < image.width
-        assert bbox[3] <= image.height - 24
-        assert bbox[2] - bbox[0] <= 350
-        assert bbox[3] - bbox[1] <= 350
-        extents.append(max(bbox[2] - bbox[0], bbox[3] - bbox[1]))
-    assert extents[0] < extents[1]
-    assert extents[0] < extents[2]
-    assert extents[2] == 350
-
-
-def test_identity_references_use_explicit_nested_asset_key(
-    tmp_path: Path,
-    monkeypatch,
-):
-    scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
-    manifest = fetch_cutouts.load_yaml(scope_dir / "poster.yaml")
-    requested_assets = []
-
-    def fake_output_dimensions(asset_key, _megapixels):
-        requested_assets.append(asset_key)
-        return 848, 1168
-
-    monkeypatch.setattr(
-        "scripts.poster_assets.prepare_comfyui_poster.output_dimensions",
-        fake_output_dimensions,
-    )
-
-    build_identity_references(
-        scope_dir,
-        manifest,
-        tmp_path,
-        asset_key="Pokedex/sections/gen1",
-    )
-
-    assert requested_assets == ["Pokedex/sections/gen1"]
-
-
-def test_identity_prompt_is_manifest_driven():
-    items = [
-        {"pokemon_id": 1, "name_en": "Alpha"},
-        {"pokemon_id": 2, "name_en": "Beta"},
-    ]
-    manifest = {
-        "conditioning": {
-            "subjects": {
-                2: {
-                    "prompt_notes": [
-                        "Keep the crescent marking unchanged.",
-                    ]
-                }
-            }
-        }
-    }
-
-    prompt = build_identity_reference_prompt(items, manifest)
-
-    assert "IMAGE 1" in prompt and "left region" in prompt
-    assert "IMAGE 2" in prompt and "right region" in prompt
-    assert "IMAGE 3 is the sole and final authority" in prompt
-    assert "Beta-specific constraints" in prompt
-    assert "crescent marking" in prompt
-    assert "Mewtwo" not in prompt
 
 
 def test_identity_lock_scene_prompt_is_scope_and_layout_driven():
@@ -1285,7 +967,7 @@ def test_identity_lock_geometry_defaults_scale_with_output_size():
     assert identity_lock_overscan(1696, 2336, manifest) == (1760, 2432)
 
 
-def test_new_tcg_set_manifest_bootstraps_the_dynamic_identity_lock_flow():
+def test_new_tcg_set_manifest_bootstraps_the_joint_scene_flow():
     scope_data = {
         "type": "tcg_set",
         "name": "Aurora Archive",
@@ -1319,11 +1001,15 @@ def test_new_tcg_set_manifest_bootstraps_the_dynamic_identity_lock_flow():
     assert manifest["scope"] == "EX42"
     assert manifest["layout"]["name"] == "wide_4x3"
     assert manifest["pokemon"]["count"] == "auto_from_layout_columns"
-    assert manifest["artwork"]["generation"]["mode"] == "identity_lock"
+    assert manifest["artwork"]["generation"]["mode"] == "joint_scene"
     assert (
         manifest["artwork"]["generation"]["reference_mode"]
-        == "two_pass_source_pixels"
+        == "spatial_identity_joint"
     )
+    assert manifest["artwork"]["generation"]["output_method"] == "lanczos"
+    assert manifest["artwork"]["generation"]["output_dpi"] == 300
+    assert "upscale_model" not in manifest["artwork"]["generation"]
+    assert "upscale_model_sha256" not in manifest["artwork"]["generation"]
     assert manifest["artwork"]["generation"]["seed"] == stable_scope_seed(
         "EX42"
     )
@@ -1537,33 +1223,6 @@ def test_long_localized_title_stays_inside_its_panel():
     assert max(y for _x, y in text_points) < panel_box[3]
 
 
-def test_comfyui_inpaint_uses_source_once_without_reference_conditioning():
-    workflow = build_workflow(
-        "Base1", seed=123, megapixels=0.25, generation_mode="inpaint"
-    )
-    loaded_images = {
-        node["inputs"]["image"]
-        for node in workflow.values()
-        if node["class_type"] == "LoadImage"
-    }
-
-    assert loaded_images == {"inpaint_reference.png"}
-    assert not any(node["class_type"] == "ReferenceLatent" for node in workflow.values())
-    assert any(node["class_type"] == "VAEEncodeForInpaint" for node in workflow.values())
-    assert workflow["18"] == {
-        "class_type": "ImageCompositeMasked",
-        "inputs": {
-            "destination": ["14", 0],
-            "source": ["12", 0],
-            "x": 0,
-            "y": 0,
-            "resize_source": False,
-            "mask": ["14", 1],
-        },
-    }
-    assert workflow["13"]["inputs"]["images"] == ["18", 0]
-    assert workflow["9"]["inputs"]["positive"] == ["4", 0]
-    assert workflow["15"]["inputs"]["grow_mask_by"] == 0
 
 
 def test_comfyui_identity_lock_uses_clean_ground_then_upper_context_pass():
@@ -1611,52 +1270,8 @@ def test_comfyui_identity_lock_uses_clean_ground_then_upper_context_pass():
     )
 
 
-def test_comfyui_edit_uses_reference_with_independent_empty_target():
-    workflow = build_workflow(
-        "Base1",
-        seed=123,
-        megapixels=0.25,
-        generation_mode="edit",
-        reference_mode="composition",
-    )
-
-    assert workflow["15"]["class_type"] == "EmptySD3LatentImage"
-    assert workflow["16"]["class_type"] == "VAEEncode"
-    assert workflow["17"]["class_type"] == "ReferenceLatent"
-    assert workflow["17"]["inputs"]["latent"] == ["16", 0]
-    assert workflow["11"]["inputs"]["latent_image"] == ["15", 0]
-    assert not any(node["class_type"] == "VAEEncodeForInpaint" for node in workflow.values())
-    assert not any(node["class_type"] == "ImageCompositeMasked" for node in workflow.values())
 
 
-def test_comfyui_identity_mode_appends_three_scale_aware_identity_references():
-    workflow = build_workflow(
-        "Base1",
-        seed=123,
-        megapixels=0.25,
-        generation_mode="edit",
-        reference_mode="identity",
-    )
-
-    loaded_images = [
-        node["inputs"]["image"]
-        for node in workflow.values()
-        if node["class_type"] == "LoadImage"
-    ]
-    assert loaded_images == [
-        "scene_reference.png",
-        "identity_reference_1.png",
-        "identity_reference_2.png",
-        "identity_reference_3.png",
-    ]
-    assert sum(
-        node["class_type"] == "ReferenceLatent" for node in workflow.values()
-    ) == 4
-    assert workflow["25"]["inputs"]["conditioning"] == ["4", 0]
-    assert workflow["28"]["inputs"]["conditioning"] == ["25", 0]
-    assert workflow["31"]["inputs"]["conditioning"] == ["28", 0]
-    assert workflow["17"]["inputs"]["conditioning"] == ["31", 0]
-    assert workflow["9"]["inputs"]["positive"] == ["17", 0]
 
 
 def test_joint_scene_synthesizes_landscape_and_subjects_in_one_shot():
@@ -1665,7 +1280,6 @@ def test_joint_scene_synthesizes_landscape_and_subjects_in_one_shot():
         seed=123,
         megapixels=0.25,
         generation_mode="joint_scene",
-        reference_mode="identity",
     )
 
     assert [
@@ -1742,136 +1356,6 @@ def test_joint_scene_synthesizes_landscape_and_subjects_in_one_shot():
     assert "Charmander" in prompt
 
 
-def test_sdxl_identity_workflow_is_one_empty_target_pass_with_three_regions():
-    workflow = build_sdxl_identity_workflow(
-        "Pokedex/sections/gen7",
-        seed=260726054,
-        megapixels=1.0,
-    )
-
-    assert sum(
-        item["class_type"] == "EmptyLatentImage"
-        for item in workflow.values()
-    ) == 1
-    assert sum(
-        item["class_type"] == "KSampler"
-        for item in workflow.values()
-    ) == 1
-    assert sum(
-        item["class_type"] == "VAEDecode"
-        for item in workflow.values()
-    ) == 1
-    assert not any(
-        item["class_type"]
-        in {"VAEEncode", "VAEEncodeForInpaint", "ImageCompositeMasked"}
-        for item in workflow.values()
-    )
-    assert [
-        item["inputs"]["image"]
-        for item in workflow.values()
-        if item["class_type"] == "LoadImage"
-    ] == [
-        "identity_reference_1.png",
-        "sdxl_identity_region_1.png",
-        "identity_reference_2.png",
-        "sdxl_identity_region_2.png",
-        "identity_reference_3.png",
-        "sdxl_identity_region_3.png",
-        "sdxl_identity_structure.png",
-    ]
-    assert sum(
-        item["class_type"] == "IPAdapterRegionalConditioning"
-        for item in workflow.values()
-    ) == 3
-    assert workflow["30"]["inputs"] == {
-        "params_1": ["13", 0],
-        "params_2": ["17", 0],
-        "params_3": ["21", 0],
-    }
-    assert workflow["31"]["inputs"]["ipadapter_params"] == ["30", 0]
-    assert "43" not in workflow
-    assert (
-        workflow["42"]["inputs"]["control_net_name"]
-        == "controlnet-canny-sdxl-1.0-mid-fp16.safetensors"
-    )
-    assert workflow["44"]["inputs"]["control_net"] == ["42", 0]
-    assert workflow["44"]["inputs"]["strength"] == 0.50
-    assert workflow["51"]["inputs"]["model"] == ["31", 0]
-    assert workflow["51"]["inputs"]["latent_image"] == ["50", 0]
-    assert workflow["51"]["inputs"]["positive"] == ["44", 0]
-    assert workflow["51"]["inputs"]["negative"] == ["44", 1]
-
-    prompt = workflow["4"]["inputs"]["text"]
-    assert "from an empty target in one unified denoising pass" in prompt
-    assert "source-derived structural guide" in prompt
-    assert "Rowlet in the left bottom card" in prompt
-    assert "Litten in the center bottom card" in prompt
-    assert "Popplio in the right bottom card" in prompt
-    assert "IMAGE 1" not in prompt
-    assert "no later character overlay" in prompt
-    assert len(prompt) < 3_500
-    assert len(prompt.split()) < 500
-    assert (
-        workflow["53"]["inputs"]["filename_prefix"]
-        == "pokedex__sections__gen7_sdxl_identity_generic_"
-        "1mp_seed_260726054"
-    )
-
-
-def test_sdxl_pokemon_variant_changes_only_the_model_lora_edge():
-    generic = build_sdxl_identity_workflow(
-        "Pokedex/sections/gen7",
-        seed=260726054,
-        megapixels=1.0,
-    )
-    pokemon = build_sdxl_identity_workflow(
-        "Pokedex/sections/gen7",
-        seed=260726054,
-        megapixels=1.0,
-        pokemon_lora_name="pokefa_sdxl_base_unet_lora.safetensors",
-    )
-
-    assert "2" not in generic
-    assert pokemon["2"] == {
-        "class_type": "LoraLoaderModelOnly",
-        "inputs": {
-            "model": ["1", 0],
-            "lora_name": "pokefa_sdxl_base_unet_lora.safetensors",
-            "strength_model": 0.30,
-        },
-    }
-    assert generic["3"]["inputs"]["model"] == ["1", 0]
-    assert pokemon["3"]["inputs"]["model"] == ["2", 0]
-    assert (
-        pokemon["53"]["inputs"]["filename_prefix"]
-        == "pokedex__sections__gen7_sdxl_identity_pokemon_"
-        "1mp_seed_260726054"
-    )
-    for node_id in set(generic) - {"3", "53"}:
-        assert pokemon[node_id] == generic[node_id]
-
-
-def test_sdxl_experiment_writer_labels_generic_artifacts(tmp_path: Path):
-    workflow_path = write_sdxl_identity_experiment(
-        "Pokedex/sections/gen7",
-        seed=260726054,
-        megapixels=0.25,
-        output_dir=tmp_path,
-    )
-
-    assert (
-        workflow_path.name
-        == "workflow_api_sdxl_identity_generic_0p25mp_260726054.json"
-    )
-    assert (
-        tmp_path / "sdxl_identity_generic_prompt.generated.txt"
-    ).is_file()
-    workflow = json.loads(workflow_path.read_text(encoding="utf-8"))
-    assert (
-        workflow["53"]["inputs"]["filename_prefix"]
-        == "pokedex__sections__gen7_sdxl_identity_generic_"
-        "0p25mp_seed_260726054"
-    )
 
 
 def test_joint_scene_prompt_separates_spatial_and_identity_roles():
@@ -1954,7 +1438,6 @@ def test_joint_scene_workflow_writes_one_shot_prompt_snapshot(
         123,
         0.25,
         flux_mode="joint_scene",
-        flux_reference_mode="identity",
         workflow_output_dir=tmp_path,
     )
 
@@ -1971,141 +1454,36 @@ def test_joint_scene_workflow_writes_one_shot_prompt_snapshot(
     assert snapshot.read_text(encoding="utf-8") == expected.strip() + "\n"
 
 
-def test_joint_scene_rejects_composition_only_conditioning():
-    with pytest.raises(
-        ValueError,
-        match="requires the spatial and identity reference set",
-    ):
-        build_workflow(
+
+
+def test_only_reviewed_flux_workflows_are_selectable(tmp_path: Path):
+    joint = write_engine_workflow(
+        "flux",
+        "Base1",
+        123,
+        0.25,
+        flux_mode="joint_scene",
+        workflow_output_dir=tmp_path,
+    )
+    locked = write_engine_workflow(
+        "flux",
+        "Base1",
+        123,
+        0.25,
+        flux_mode="identity_lock",
+        workflow_output_dir=tmp_path,
+    )
+
+    assert joint.name == "workflow_api_joint_scene_0p25mp_123.json"
+    assert locked.name == "workflow_api_identity_lock_0p25mp_123.json"
+    with pytest.raises(ValueError, match="only 'flux' is supported"):
+        write_engine_workflow(
+            "anima",
             "Base1",
-            seed=123,
-            megapixels=0.25,
-            generation_mode="joint_scene",
-            reference_mode="composition",
+            123,
+            0.25,
+            workflow_output_dir=tmp_path,
         )
-
-
-def test_sv035_workflow_uses_its_own_dynamic_cast_contract():
-    workflow = build_workflow(
-        "SV03.5",
-        seed=123,
-        megapixels=0.25,
-        generation_mode="edit",
-        reference_mode="identity",
-    )
-    prompt = workflow["4"]["inputs"]["text"]
-
-    assert "Bulbasaur" in prompt
-    assert "Charmander" in prompt
-    assert "Squirtle" in prompt
-    assert "Mewtwo" not in prompt
-    assert {
-        node["inputs"]["image"]
-        for node in workflow.values()
-        if node["class_type"] == "LoadImage"
-    } == {
-        "scene_reference.png",
-        "identity_reference_1.png",
-        "identity_reference_2.png",
-        "identity_reference_3.png",
-    }
-
-
-def test_anima_workflow_uses_cosmos_reference_without_changing_flux_workflow():
-    workflow = build_anima_workflow("Base1", seed=123, megapixels=0.25)
-    assert any(node["class_type"] == "ApplyCosmosReferenceLatent" for node in workflow.values())
-    assert any(node["class_type"] == "LoraLoaderModelOnly" for node in workflow.values())
-    assert any(node["class_type"] == "ImageCompositeMasked" for node in workflow.values())
-    assert {
-        node["inputs"]["image"]
-        for node in workflow.values()
-        if node["class_type"] == "LoadImage"
-    } == {"anima_scene_reference.png"}
-    sampler = next(node for node in workflow.values() if node["class_type"] == "KSampler")
-    assert sampler["inputs"]["latent_image"] == ["10", 0]
-
-
-def test_flux1_canny_workflow_binds_original_structure():
-    workflow = build_flux1_canny_workflow(
-        "Base1",
-        seed=123,
-        megapixels=1.0,
-        control_strength=0.8,
-    )
-
-    assert workflow["1"] == {
-        "class_type": "UnetLoaderGGUF",
-        "inputs": {"unet_name": "flux1-dev-Q4_K_S.gguf"},
-    }
-    assert workflow["2"]["class_type"] == "DualCLIPLoaderGGUF"
-    assert workflow["7"]["inputs"]["image"] == "structure_reference.png"
-    assert workflow["8"]["class_type"] == "Canny"
-    assert workflow["9"]["class_type"] == "ControlNetLoader"
-    assert workflow["10"]["class_type"] == "ControlNetApplySD3"
-    assert workflow["10"]["inputs"]["strength"] == 0.8
-    assert workflow["12"]["inputs"]["steps"] == 20
-    assert workflow["12"]["inputs"]["cfg"] == 1.0
-    assert not any(
-        node["class_type"] in {"ReferenceLatent", "ImageCompositeMasked"}
-        for node in workflow.values()
-    )
-
-
-def test_qwen_edit_workflow_separates_composition_and_detail_references():
-    workflow = build_qwen_edit_workflow(
-        "Base1",
-        seed=123,
-        megapixels=1.0,
-    )
-
-    assert workflow["1"]["class_type"] == "UnetLoaderGGUF"
-    assert workflow["5"]["inputs"]["type"] == "qwen_image"
-    assert [
-        workflow[node_id]["inputs"]["image"]
-        for node_id in ("7", "8", "9")
-    ] == [
-        "structure_reference.png",
-        "qwen_identity_reference_1.png",
-        "qwen_identity_reference_2.png",
-    ]
-    assert workflow["10"]["class_type"] == "TextEncodeQwenImageEditPlus"
-    assert workflow["10"]["inputs"]["image1"] == ["7", 0]
-    assert workflow["10"]["inputs"]["image2"] == ["8", 0]
-    assert workflow["10"]["inputs"]["image3"] == ["9", 0]
-    assert "Mewtwo" in workflow["10"]["inputs"]["prompt"]
-    assert workflow["12"]["inputs"]["reference_latents_method"] == (
-        "index_timestep_zero"
-    )
-    assert workflow["15"]["inputs"]["steps"] == 4
-    assert workflow["15"]["inputs"]["cfg"] == 1.0
-    assert workflow["15"]["inputs"]["latent_image"] == ["14", 0]
-
-
-def test_engine_workflows_have_separate_files(tmp_path: Path):
-    flux = write_engine_workflow(
-        "flux", "Base1", 123, 0.25, workflow_output_dir=tmp_path
-    )
-    anima = write_engine_workflow(
-        "anima", "Base1", 123, 0.25, workflow_output_dir=tmp_path
-    )
-    flux1 = write_engine_workflow(
-        "flux1_canny",
-        "Base1",
-        123,
-        0.25,
-        workflow_output_dir=tmp_path,
-    )
-    qwen = write_engine_workflow(
-        "qwen_edit",
-        "Base1",
-        123,
-        0.25,
-        workflow_output_dir=tmp_path,
-    )
-    assert flux.name == "workflow_api_identity_lock_0p25mp_123.json"
-    assert anima.name == "anima_workflow_api_generate_0p25mp_123.json"
-    assert flux1.name == "flux1_canny_workflow_api_0p25_123.json"
-    assert qwen.name == "qwen_edit_workflow_api_0p25_123.json"
 
 
 def test_flux_workflow_uses_the_selected_vae(tmp_path: Path):
@@ -2185,7 +1563,7 @@ def test_flux_model_and_steps_are_selectable():
         seed=123,
         megapixels=0.25,
         unet_name="flux-2-klein-base-4b-fp8.safetensors",
-        generation_mode="inpaint",
+        generation_mode="identity_lock",
         steps=24,
         clip_name="qwen_3_8b_fp4mixed.safetensors",
     )
@@ -2378,36 +1756,26 @@ def test_generation_hashes_describe_selected_comfyui_model_files(
 ):
     model = tmp_path / "models" / "diffusion_models" / "matching.safetensors"
     encoder = tmp_path / "models" / "text_encoders" / "encoder.safetensors"
-    encoder_2 = tmp_path / "models" / "clip" / "encoder.gguf"
-    controlnet = tmp_path / "models" / "controlnet" / "canny.safetensors"
-    lora = tmp_path / "models" / "loras" / "identity.safetensors"
+    vae = tmp_path / "models" / "vae" / "vae.safetensors"
     model.parent.mkdir(parents=True)
     encoder.parent.mkdir(parents=True)
-    encoder_2.parent.mkdir(parents=True)
-    controlnet.parent.mkdir(parents=True)
-    lora.parent.mkdir(parents=True)
+    vae.parent.mkdir(parents=True)
     model.write_bytes(b"model")
     encoder.write_bytes(b"encoder")
-    encoder_2.write_bytes(b"encoder-2")
-    controlnet.write_bytes(b"controlnet")
-    lora.write_bytes(b"lora")
+    vae.write_bytes(b"vae")
 
     enriched = add_model_artifact_hashes(
         tmp_path,
         {
             "model": "matching.safetensors",
             "encoder": "encoder.safetensors",
-            "encoder_2": "encoder.gguf",
-            "controlnet": "canny.safetensors",
-            "lora": "identity.safetensors",
+            "vae": "vae.safetensors",
         },
     )
 
     assert enriched["model_sha256"] == sha256_file(model)
     assert enriched["encoder_sha256"] == sha256_file(encoder)
-    assert enriched["encoder_2_sha256"] == sha256_file(encoder_2)
-    assert enriched["controlnet_sha256"] == sha256_file(controlnet)
-    assert enriched["lora_sha256"] == sha256_file(lora)
+    assert enriched["vae_sha256"] == sha256_file(vae)
 
 
 def test_identity_lock_provenance_excludes_unused_edit_references(
@@ -2645,8 +2013,13 @@ def _promotion_fixture(tmp_path: Path, monkeypatch):
             "  name: standard_3x3\n"
             "artwork:\n"
             "  generation:\n"
-            "    engine: test\n"
-            "    output_dpi: 10\n"
+            "    engine: flux\n"
+            "    mode: identity_lock\n"
+            "    reference_mode: two_pass_source_pixels\n"
+            "    output_method: model_upscale\n"
+            "    output_dpi: 300\n"
+            "    upscale_model: test-upscaler.pth\n"
+            f"    upscale_model_sha256: {'a' * 64}\n"
         ),
         encoding="utf-8",
     )
@@ -2670,8 +2043,13 @@ def _promotion_fixture(tmp_path: Path, monkeypatch):
                 "kind": "poster_generation_run",
                 "scope": "Example",
                 "generation": {
-                    "engine": "test",
-                    "output_dpi": 10,
+                    "engine": "flux",
+                    "mode": "identity_lock",
+                    "reference_mode": "two_pass_source_pixels",
+                    "output_method": "model_upscale",
+                    "output_dpi": 300,
+                    "upscale_model": "test-upscaler.pth",
+                    "upscale_model_sha256": "a" * 64,
                 },
                 "source_artwork": {"sha256": sha256_file(artwork)},
                 "raw_artwork": {
@@ -2721,6 +2099,11 @@ def _promotion_fixture(tmp_path: Path, monkeypatch):
         return outputs
 
     monkeypatch.setattr(poster_promotion, "POSTER_ASSETS", assets_root)
+    monkeypatch.setattr(
+        poster_promotion,
+        "build_generation_output_layout",
+        lambda *_args, **_kwargs: layout,
+    )
     monkeypatch.setattr(poster_promotion, "finalize", fake_finalize)
     monkeypatch.setattr(poster_promotion, "slice_poster", fake_slice)
     monkeypatch.setattr(
@@ -2789,7 +2172,7 @@ def test_promotion_rejects_generation_metadata_drift(
             run_metadata_path=run_metadata,
         )
     except ValueError as error:
-        assert "does not match" in str(error)
+        assert "Unsupported poster generation contract" in str(error)
     else:
         raise AssertionError("generation metadata drift was accepted")
 

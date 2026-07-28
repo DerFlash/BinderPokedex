@@ -17,7 +17,7 @@ try:
     from .generation_contract import (
         is_joint_scene_generation,
         requires_generation_fingerprint,
-        validate_generation_contract,
+        validate_promotable_generation_contract,
     )
     from .layout import build_generation_output_layout
     from .poster_io import poster_bundle
@@ -41,7 +41,7 @@ except ImportError:
     from generation_contract import (
         is_joint_scene_generation,
         requires_generation_fingerprint,
-        validate_generation_contract,
+        validate_promotable_generation_contract,
     )
     from layout import build_generation_output_layout
     from poster_io import poster_bundle
@@ -222,8 +222,8 @@ def promote(
         recorded_generation, dict
     ):
         raise ValueError("Poster generation metadata must be a mapping")
-    validate_generation_contract(configured_generation)
-    validate_generation_contract(recorded_generation)
+    validate_promotable_generation_contract(configured_generation)
+    validate_promotable_generation_contract(recorded_generation)
     if configured_generation != recorded_generation:
         raise ValueError(
             "Candidate generation metadata does not match "

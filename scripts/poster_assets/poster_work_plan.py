@@ -29,7 +29,7 @@ try:
     from .fetch_title_logos import resolve_logo_downloads
     from .generation_contract import (
         requires_generation_fingerprint,
-        validate_generation_contract,
+        validate_promotable_generation_contract,
     )
     from .layout import build_page_layout
     from .poster_config import build_identity_lock_prompt, identity_lock_config
@@ -75,7 +75,7 @@ except ImportError:  # Direct script execution
     from fetch_title_logos import resolve_logo_downloads
     from generation_contract import (
         requires_generation_fingerprint,
-        validate_generation_contract,
+        validate_promotable_generation_contract,
     )
     from layout import build_page_layout
     from poster_config import build_identity_lock_prompt, identity_lock_config
@@ -129,15 +129,6 @@ _SAFE_ASSET_PART = re.compile(r"[A-Za-z0-9._-]+")
 PromotionValidator = Callable[[PosterBundle], dict[str, Any]]
 ENGINE_REQUIRED_ARTIFACTS = {
     "flux": ("model", "encoder", "vae"),
-    "anima": ("model", "encoder", "vae", "lora"),
-    "flux1_canny": (
-        "model",
-        "encoder",
-        "encoder_2",
-        "vae",
-        "controlnet",
-    ),
-    "qwen_edit": ("model", "encoder", "vae", "lora"),
 }
 
 
@@ -447,7 +438,7 @@ def _validate_generation_contract(manifest: dict[str, Any]) -> None:
     generation = artwork.get("generation")
     if not isinstance(generation, dict) or not generation:
         raise ValueError("artwork.generation must be a non-empty mapping")
-    validate_generation_contract(generation)
+    validate_promotable_generation_contract(generation)
     if (
         generation.get("engine") == "flux"
         and generation.get("mode") == "identity_lock"
@@ -535,16 +526,9 @@ def _validate_prompt_prerequisites(bundle: PosterBundle) -> None:
         and generation.get("mode") in {"identity_lock", "joint_scene"}
     ):
         return
-    path = prompt_path_for_generation(
-        bundle.asset_dir / "comfyui_poster",
-        generation,
+    raise ValueError(
+        "Only flux/joint_scene and flux/identity_lock are supported"
     )
-    if not path.is_file():
-        raise FileNotFoundError(
-            f"Configured generation prompt is missing: {path}"
-        )
-    if not path.read_text(encoding="utf-8").strip():
-        raise ValueError(f"Configured generation prompt is empty: {path}")
 
 
 def _expected_subject_identities(
@@ -824,8 +808,8 @@ def _promotion_drift_codes(
     ):
         invalid.append("generation_contract_invalid")
         return drift, invalid, overlay_drift, pipeline_notes
-    validate_generation_contract(recorded_generation)
-    validate_generation_contract(configured_generation)
+    validate_promotable_generation_contract(recorded_generation)
+    validate_promotable_generation_contract(configured_generation)
     if recorded_generation != configured_generation:
         drift.append("generation_contract_drift")
     inputs = run.get("inputs")

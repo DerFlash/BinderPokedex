@@ -7,7 +7,6 @@ from typing import Any
 
 CANONICAL_REFERENCE_MODES = {
     ("flux", "identity_lock"): "two_pass_source_pixels",
-    ("flux", "inpaint"): "source_pixels",
     ("flux", "joint_scene"): "spatial_identity_joint",
 }
 JOINT_SCENE_CAST_MAX_MEGAPIXELS = 0.5
@@ -31,7 +30,14 @@ def validate_generation_reference_contract(
     key = (generation.get("engine"), generation.get("mode"))
     expected = CANONICAL_REFERENCE_MODES.get(key)
     if expected is None:
-        return
+        supported = ", ".join(
+            f"{engine}/{mode}"
+            for engine, mode in CANONICAL_REFERENCE_MODES
+        )
+        raise ValueError(
+            "Unsupported poster generation contract "
+            f"{key[0]}/{key[1]}; expected one of: {supported}"
+        )
     actual = generation.get("reference_mode")
     if actual != expected:
         raise ValueError(
@@ -114,6 +120,48 @@ def validate_generation_contract(
         raise TypeError("generation must be a mapping")
     validate_generation_reference_contract(generation)
     validate_generation_output_contract(generation)
+
+
+def validate_promotable_generation_contract(
+    generation: Mapping[str, Any],
+) -> None:
+    """Require the exact print contract used by promoted poster assets."""
+    validate_generation_contract(generation)
+    if generation.get("output_dpi") != 300:
+        raise ValueError(
+            "Promoted posters require the exact 300-dpi print raster"
+        )
+    if generation.get("output_megapixels") is not None:
+        raise ValueError(
+            "Promoted posters cannot use a preview output_megapixels target"
+        )
+
+    mode = generation.get("mode")
+    expected_method = (
+        "lanczos" if mode == "joint_scene" else "model_upscale"
+    )
+    if generation.get("output_method") != expected_method:
+        raise ValueError(
+            f"flux/{mode} promotion requires output_method "
+            f"{expected_method!r}"
+        )
+    if mode == "identity_lock":
+        for field in ("upscale_model", "upscale_model_sha256"):
+            value = generation.get(field)
+            if not isinstance(value, str) or not value:
+                raise ValueError(
+                    "flux/identity_lock promotion requires "
+                    f"{field}"
+                )
+        upscale_hash = str(generation["upscale_model_sha256"])
+        if len(upscale_hash) != 64 or any(
+            character not in "0123456789abcdef"
+            for character in upscale_hash
+        ):
+            raise ValueError(
+                "flux/identity_lock promotion requires "
+                "upscale_model_sha256 as a lowercase SHA-256 digest"
+            )
 
 
 def requires_generation_fingerprint(

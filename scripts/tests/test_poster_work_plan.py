@@ -505,72 +505,23 @@ def test_scene_catalog_is_required_subset_and_allows_reviewed_overrides(tmp_path
     assert "scene_catalog_drift" not in target(plan)["reason_codes"]
 
 
-def test_model_hash_requirements_follow_the_selected_engine(tmp_path):
+
+
+
+
+def test_removed_engine_contract_is_blocked(tmp_path):
     assets, output, catalog = setup_individual(tmp_path)
     manifest_path = assets / "Alpha" / "poster.yaml"
     payload = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
-    generation = payload["artwork"]["generation"]
-    generation.update(
-        {
-            "engine": "qwen_edit",
-            "mode": "edit",
-            "reference_mode": "multi_reference",
-            "lora": "edit-lora.safetensors",
-            "lora_sha256": "5" * 64,
-        }
+    payload["artwork"]["generation"].update(
+        {"engine": "anima", "mode": "edit", "reference_mode": "cosmos"}
     )
     save_yaml(manifest_path, payload)
 
-    missing_prompt = build("Alpha", assets, output, catalog)
-    assert target(missing_prompt)["state"] == "blocked"
-    assert "qwen_edit_prompt.txt" in target(missing_prompt)["detail"]
+    plan = build("Alpha", assets, output, catalog)
 
-    prompt_path = (
-        assets / "Alpha" / "comfyui_poster" / "qwen_edit_prompt.txt"
-    )
-    prompt_path.parent.mkdir()
-    prompt_path.write_text("A controlled Qwen edit.", encoding="utf-8")
-    valid = build("Alpha", assets, output, catalog)
-    assert target(valid)["state"] == "ready_to_generate"
-
-    generation.pop("lora_sha256")
-    save_yaml(manifest_path, payload)
-    incomplete = build("Alpha", assets, output, catalog)
-    assert target(incomplete)["state"] == "blocked"
-    assert "lora_sha256" in target(incomplete)["detail"]
-
-
-def test_anima_contract_requires_the_workflow_lora_and_prompt(tmp_path):
-    assets, output, catalog = setup_individual(tmp_path)
-    manifest_path = assets / "Alpha" / "poster.yaml"
-    payload = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
-    generation = payload["artwork"]["generation"]
-    generation.update(
-        {
-            "engine": "anima",
-            "mode": "edit",
-            "reference_mode": "cosmos",
-        }
-    )
-    save_yaml(manifest_path, payload)
-    prompt_path = assets / "Alpha" / "comfyui_poster" / "anima_prompt.txt"
-    prompt_path.parent.mkdir()
-    prompt_path.write_text("A controlled Anima edit.", encoding="utf-8")
-
-    missing_lora = build("Alpha", assets, output, catalog)
-
-    assert target(missing_lora)["state"] == "blocked"
-    assert "generation.lora" in target(missing_lora)["detail"]
-
-    generation.update(
-        {
-            "lora": "AnimaEditV1.safetensors",
-            "lora_sha256": "6" * 64,
-        }
-    )
-    save_yaml(manifest_path, payload)
-    ready = build("Alpha", assets, output, catalog)
-    assert target(ready)["state"] == "ready_to_generate"
+    assert target(plan)["state"] == "blocked"
+    assert "Unsupported poster generation contract" in target(plan)["detail"]
 
 
 def test_nested_leaf_uses_root_pdf_routing_and_root_keeps_index_order(tmp_path):
@@ -866,38 +817,6 @@ def test_overlay_only_change_requests_refresh_without_regeneration(tmp_path):
     assert target(plan)["commands"] == []
 
 
-def test_fingerprinted_non_flux_prompt_is_not_compared_as_identity_lock(
-    tmp_path,
-):
-    assets, output, catalog = setup_individual(tmp_path)
-    manifest_path = assets / "Alpha" / "poster.yaml"
-    payload = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
-    payload["artwork"]["generation"].update(
-        {
-            "engine": "qwen_edit",
-            "mode": "edit",
-            "reference_mode": "multi_reference",
-            "lora": "edit-lora.safetensors",
-            "lora_sha256": "5" * 64,
-        }
-    )
-    save_yaml(manifest_path, payload)
-    prompt_path = (
-        assets / "Alpha" / "comfyui_poster" / "qwen_edit_prompt.txt"
-    )
-    prompt_path.parent.mkdir()
-    prompt_path.write_text(
-        "Use all references and preserve exact anatomy.\n",
-        encoding="utf-8",
-    )
-    bundle = poster_bundles_for_scope("Alpha", poster_assets=assets)[0]
-    write_promotion(bundle, output)
-
-    plan = build("Alpha", assets, output, catalog)
-
-    assert target(plan)["state"] == "promoted_disabled"
-    assert "prompt_hash_drift" not in target(plan)["reason_codes"]
-    assert "regenerate_candidate" not in target(plan)["next_actions"]
 
 
 def test_legacy_manifest_drift_is_not_misclassified_as_safe_migration(

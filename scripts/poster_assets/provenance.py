@@ -29,7 +29,6 @@ try:
         IDENTITY_LOCK_PROMPT_FILE,
         JOINT_SCENE_PROMPT_FILE,
         build_identity_lock_prompt,
-        build_identity_reference_prompt,
         build_joint_prompt_snapshot,
         identity_lock_config,
         joint_scene_conditioning_contract,
@@ -65,7 +64,6 @@ except ImportError:
         IDENTITY_LOCK_PROMPT_FILE,
         JOINT_SCENE_PROMPT_FILE,
         build_identity_lock_prompt,
-        build_identity_reference_prompt,
         build_joint_prompt_snapshot,
         identity_lock_config,
         joint_scene_conditioning_contract,
@@ -95,43 +93,19 @@ OVERLAY_PIPELINE_CONTRACT_VERSION = 2
 CURRENT_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
     ("flux", "identity_lock"): GENERATION_PIPELINE_CONTRACT_VERSION,
     ("flux", "joint_scene"): 5,
-    ("flux", "edit"): 2,
-    ("flux", "generate"): 2,
-    ("flux", "inpaint"): 2,
-    ("anima", "edit"): 2,
-    ("anima", "generate"): 3,
-    ("flux1_canny", "generate"): 2,
-    ("qwen_edit", "edit"): 2,
 }
 SUPPORTED_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
     ("flux", "identity_lock"): frozenset({1, 2, 3}),
     ("flux", "joint_scene"): frozenset({5}),
-    ("flux", "edit"): frozenset({1, 2}),
-    ("flux", "generate"): frozenset({1, 2}),
-    ("flux", "inpaint"): frozenset({1, 2}),
-    ("anima", "edit"): frozenset({1, 2}),
-    ("anima", "generate"): frozenset({1, 2, 3}),
-    ("flux1_canny", "generate"): frozenset({1, 2}),
-    ("qwen_edit", "edit"): frozenset({1, 2}),
 }
 RASTER_GEOMETRY_PIPELINE_MINIMUM = {
     ("flux", "identity_lock"): 3,
     ("flux", "joint_scene"): 4,
-    ("flux", "edit"): 2,
-    ("flux", "generate"): 2,
-    ("flux", "inpaint"): 2,
-    ("anima", "edit"): 2,
-    ("anima", "generate"): 2,
-    ("flux1_canny", "generate"): 2,
-    ("qwen_edit", "edit"): 2,
 }
 MODEL_DIRECTORIES = {
     "model": ("diffusion_models", "unet"),
     "encoder": ("text_encoders", "clip"),
-    "encoder_2": ("text_encoders", "clip"),
     "vae": ("vae",),
-    "controlnet": ("controlnet",),
-    "lora": ("loras",),
     "upscale_model": ("upscale_models",),
 }
 SOURCE_PIXEL_VALIDATION_KEYS = ("source_pixels", "identity_lock")
@@ -1027,28 +1001,9 @@ def _effective_generation_prompt(
             placement_contract=placement_contract,
         )
 
-    prompt_path = prompt_path_for_generation(
-        bundle.asset_dir / "comfyui_poster",
-        generation,
+    raise ValueError(
+        f"Unsupported poster generation contract: {engine}/{mode}"
     )
-    prompt = prompt_path.read_text(encoding="utf-8").strip()
-    if not prompt:
-        raise ValueError(f"Prompt is empty: {prompt_path}")
-    if (
-        engine == "flux"
-        and mode == "edit"
-        and generation.get("reference_mode") == "identity"
-    ):
-        prompt = "\n\n".join(
-            (
-                build_identity_reference_prompt(
-                    cutout_items,
-                    bundle.manifest,
-                ),
-                prompt,
-            )
-        )
-    return prompt
 
 
 def build_generation_fingerprint(
@@ -1241,23 +1196,15 @@ def prompt_path_for_generation(
 ) -> Path:
     engine = str(generation.get("engine", ""))
     mode = str(generation.get("mode", ""))
-    if engine == "anima":
-        return work_dir / "anima_prompt.txt"
-    if engine == "flux1_canny":
-        return work_dir / "flux1_canny_prompt.txt"
-    if engine == "qwen_edit":
-        return work_dir / "qwen_edit_prompt.txt"
     if engine == "flux" and mode == "identity_lock":
         prompt_dir = workflow_path.parent if workflow_path is not None else work_dir
         return prompt_dir / IDENTITY_LOCK_PROMPT_FILE
     if engine == "flux" and mode == "joint_scene":
         prompt_dir = workflow_path.parent if workflow_path is not None else work_dir
         return prompt_dir / JOINT_SCENE_PROMPT_FILE
-    if engine == "flux" and mode == "inpaint":
-        return work_dir / "inpaint_prompt.txt"
-    if engine == "flux":
-        return work_dir / "prompt.txt"
-    raise ValueError(f"Unsupported provenance engine: {engine!r}")
+    raise ValueError(
+        f"Unsupported poster generation contract: {engine}/{mode}"
+    )
 
 
 def generation_input_records(
@@ -1278,23 +1225,7 @@ def generation_input_records(
     if not cutouts:
         raise ValueError(f"No cutouts listed in {cutout_manifest_path}")
 
-    if generation.get("engine") == "flux1_canny":
-        references = [
-            file_record(work_dir / "structure_reference.png", image=True),
-        ]
-    elif generation.get("engine") == "qwen_edit":
-        references = [
-            file_record(work_dir / "structure_reference.png", image=True),
-            file_record(
-                work_dir / "qwen_identity_reference_1.png",
-                image=True,
-            ),
-            file_record(
-                work_dir / "qwen_identity_reference_2.png",
-                image=True,
-            ),
-        ]
-    elif (
+    if (
         generation.get("engine") == "flux"
         and generation.get("mode") == "identity_lock"
     ):
@@ -1323,29 +1254,11 @@ def generation_input_records(
             )
             for index in range(1, len(cutouts) + 1)
         )
-    elif generation.get("engine") == "flux" and generation.get("mode") == "inpaint":
-        references = [
-            file_record(work_dir / "inpaint_reference.png", image=True),
-        ]
     else:
-        references = [
-            file_record(work_dir / "scene_reference.png", image=True)
-        ]
-    if (
-        generation.get("engine") == "flux"
-        and generation.get("mode") == "edit"
-        and generation.get("reference_mode") == "identity"
-    ):
-        references.extend(
-            file_record(path, image=True)
-            for path in sorted(work_dir.glob("identity_reference_*.png"))
+        raise ValueError(
+            "Unsupported poster generation contract: "
+            f"{generation.get('engine')}/{generation.get('mode')}"
         )
-    elif generation.get("engine") == "anima":
-        references[0] = file_record(
-            work_dir / "anima_scene_reference.png",
-            image=True,
-        )
-        references.append(file_record(work_dir / "identity_core.png", image=True))
 
     records = {
         "scope_manifest": file_record(scope_dir / "poster.yaml"),

@@ -135,8 +135,7 @@ def test_promotion_gate_accepts_the_legacy_identity_lock_record():
     assert record["opaque_pixels"] == 42
 
 
-@pytest.mark.parametrize("engine", ("flux", "anima", "flux1_canny", "qwen_edit"))
-def test_new_candidates_cannot_use_the_unbound_legacy_record(engine):
+def test_new_candidates_cannot_use_the_unbound_legacy_record():
     with pytest.raises(
         ValueError,
         match="require the bound source-pixel validation record",
@@ -144,12 +143,8 @@ def test_new_candidates_cannot_use_the_unbound_legacy_record(engine):
         require_exact_source_pixel_validation(
             {
                 "generation": {
-                    "engine": engine,
-                    "mode": (
-                        "identity_lock"
-                        if engine == "flux"
-                        else "edit"
-                    ),
+                    "engine": "flux",
+                    "mode": "identity_lock",
                 },
                 "validation": {
                     "identity_lock": {
@@ -161,30 +156,6 @@ def test_new_candidates_cannot_use_the_unbound_legacy_record(engine):
                 },
             }
         )
-
-
-@pytest.mark.parametrize("engine", ("anima", "flux1_canny", "qwen_edit"))
-def test_legacy_exception_is_restricted_to_flux_identity_lock(engine):
-    with pytest.raises(
-        ValueError,
-        match="require the bound source-pixel validation record",
-    ):
-        require_exact_source_pixel_validation(
-            {
-                "generation": {"engine": engine, "mode": "edit"},
-                "validation": {
-                    "identity_lock": {
-                        "method": "exact_opaque_source_pixels",
-                        "opaque_pixels": 42,
-                        "changed_pixels": 0,
-                        "passed": True,
-                    }
-                },
-            },
-            allow_legacy=True,
-        )
-
-
 def test_promotion_gate_binds_a_current_audit_to_raw_artwork_and_reference():
     artwork_hash = "a" * 64
     reference_hash = "b" * 64
