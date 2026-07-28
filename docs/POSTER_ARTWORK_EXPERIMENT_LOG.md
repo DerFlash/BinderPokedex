@@ -35,7 +35,7 @@ promotion.
 | `00015` | Same v3 graph with 768 px neutral identity canvases instead of 512 px | Placement remained too high and too large; render cost increased | Rejected; 512 px default restored |
 | `00016` | Pipeline v4: replace the three global identity references with one neutral, poster-shaped cast layout containing the exact source figures inside their cards | All figures fit their real card crops with padding and the scene has coherent shadows/depth; Litten gains a large pale flank/hindquarter marking absent from the source | Rejected; third one-shot placement attempt fails identity and triggers the stop rule |
 | `00017` | Pipeline v5: 0.5-MP spatial cast followed by three unscaled 512 px source-identity references before the same single sampler | All three subjects fit their cards and the scene contains no contradictory intersections, but plants avoid the silhouettes and therefore prove no real foreground crossing. Litten's front-paw digit structure is simplified, Popplio's eye and two muzzle strokes are reduced, and Rowlet lacks a convincing individual contact shadow | Retained as the second-ranked comparison after the identity tolerance was explicitly relaxed; placement is still too small and too far outward |
-| `00018` | Reuse the exact canonical `identity_lock` placement profile; model, seed, scene wording, reference topology, identity images, and sampler remain fixed | All three subjects now have nearly the preferred card fill, remain complete inside their physical card crops, and receive clear directionally coherent grounding shadows. No gross identity regression beyond the accepted v5 print-detail tolerance is apparent. Plants again avoid the silhouettes, so true foreground continuity remains unproven | Placement gate passed; retained as the second-ranked v5 baseline after the later depth tests |
+| `00018` | Reuse the exact canonical `identity_lock` placement profile; model, seed, scene wording, reference topology, identity images, and sampler remain fixed | All three subjects now have nearly the preferred card fill, remain complete inside their physical card crops, and receive clear directionally coherent grounding shadows. No gross identity regression beyond the accepted v5 print-detail tolerance is apparent. Plants again avoid the silhouettes, so true foreground continuity remains unproven | Placement gate passed; visually preferred on 2026-07-29, but still unpromoted |
 | `00019` | Add an explicit prompt-only stress rule requiring connected front and rear landscape crossings in every occupied bottom card; all non-prompt inputs remain byte-identical to `00018` | Card fit, accepted identity tolerance, and shadows still pass. Rowlet, Litten, and Popplio each have zero actual foreground crossings and zero connected rear elements visibly interrupted by the character. There is no contradictory z-order because the model avoids every requested intersection | Fails as depth evidence; `00018` remains the preferred v5 placement checkpoint |
 | `00020` | Compact the effective prompt to 510 Qwen tokens including its chat template, move the depth rule to token 211, and request front/rear crossings in exactly one suitable bottom card; all image, model, geometry, seed, and sampling inputs remain fixed | The intended bottom cast stays recognizable, but the model renders a fourth character: a second, oversized Litten in the middle of the poster. No requested connected front/rear crossing is present | Rejected on hard character-count failure; prompt tuning closed and both experimental prompt changes reverted |
 
@@ -62,9 +62,12 @@ There is no pre-generated landscape reference, inpaint reference, second
 sampler, final character composite, learned post-upscaler, or source-pixel
 restoration in this mode. Candidate `00017` proves the v5 graph topology while
 still redrawing print-scale facial and paw details. The product review on
-2026-07-28 keeps `identity_lock` unchanged in first place and accepts those
+2026-07-28 kept `identity_lock` unchanged in first place and accepted those
 small simplifications for continued evaluation; a changed defining feature,
-body-part count, silhouette, marking, or form still fails.
+body-part count, silhouette, marking, or form still fails. The later visual
+review on 2026-07-29 prefers `00018` over the composited appearance of
+`identity_lock`, while leaving the production manifest and promotion gate
+unchanged.
 
 Candidate `00018` changes only the canonical spatial placement profile. It
 delegates to the already accepted `identity_lock` placement helper instead of
@@ -96,10 +99,29 @@ crossing and instead violates the hard count gate by adding a second, oversized
 Litten above the intended bottom cast. The compact-prompt refactor and the
 preceding stress wording are reverted in dedicated commits, returning the code
 exactly to the `00018` prompt behavior. Prompt-only depth tuning is closed:
-`identity_lock` remains first-ranked, `00018` remains the unpromoted
-second-ranked comparison, and any successor now requires a materially
-different control mechanism or an explicit product decision to accept
-intersection avoidance.
+`00018` is the visually preferred candidate, `identity_lock` remains the
+promoted exact-source fallback, and any successor now requires a materially
+different control mechanism.
+
+### Anima empty-target preflight
+
+The existing Anima adapter was evaluated without changing either FLUX.2
+workflow. The Generation VII preflight uses the same seed `260726054`, reviewed
+Rowlet/Litten/Popplio positions, and Alola brief at 432 × 592 px (0.25 MP).
+`AnimaYume_tuned_v05`, `AnimaEditV1`, 22 `er_sde`/simple steps, CFG 3.4, and
+Cosmos reference conditioning completed on Metal/MPS in 165.57 seconds. The raw
+SHA-256 is
+`a4ff08c593f385b8d37ce4c0311c36f152a3702efee591d028edcd207fd53922`.
+
+All three subjects are complete and card-safe, but they remain visibly isolated
+on a broad flat lawn. There are no convincing contact or cast shadows, local
+terrain responses, foreground overlaps, or occlusions. The raw source audit
+also records 1,680 changed pixels among 9,461 fully opaque reference pixels.
+More importantly, the graph composites an eroded exact identity core back over
+the decoded result. It therefore samples from an empty latent but is not a
+single unified final synthesis under the joint-scene requirement. A 1-MP retry
+cannot remove that structural limitation and is not justified. The adapter
+remains selectable diagnostic code; `00018` remains decisively preferred.
 
 ## Identity-control successor evaluation
 

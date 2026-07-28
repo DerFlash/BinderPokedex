@@ -322,6 +322,19 @@ create the text-free print candidate with deterministic Lanczos scaling; they
 never select a learned upscaler. For `standard_3x3`, the 1-MP raw artwork is
 848 × 1168 px and the print candidate is exactly 2368 × 3268 px.
 
+The engine adapters coexist in the same checkout. `--engine` and
+`--flux-mode` select a workflow; no Git reset or checkout is required.
+Preparation may replace ignored transient reference images in
+`comfyui_poster/`, but every run regenerates the inputs required by its selected
+mode. It does not alter another workflow builder, the promoted artwork, or PDF
+routing.
+
+The promoted `identity_lock` artwork and provenance are versioned. For
+unpromoted `00018`, the builder, exact input recipe, reference hashes, prompt,
+seed, and raw-output hash are versioned, while its concrete raw/print images,
+workflow JSON, and run metadata remain ignored local evidence until an explicit
+promotion or archival decision.
+
 The current `joint_scene` graph:
 
 1. derives each target silhouette rectangle from the shared physical layout
@@ -358,14 +371,31 @@ equality audit is not applicable. Its hard gates are a complete generation
 fingerprint and explicit human review of both the actual raw file and the
 deterministically scaled text-free print artwork. The CLI
 override above does not make the candidate production artwork: Generation VII
-still points to its promoted `identity_lock` result. Candidates through `00017`
-are rejected. v5 `00017` passes the spatial, card, shadow, and depth checks but
-fails the hard identity gate on Litten's paw and Popplio's facial details. The
-v5 graph remains selectable, but it does not become production until a
-materially different identity-control mechanism passes every review gate.
+still points to its promoted `identity_lock` result. Candidates through `00016`
+are rejected, and v5 `00017` is superseded. v5 `00018` reuses the canonical
+card placement and is visually preferred over the composited baseline under
+the accepted print-detail tolerance, but remains unpromoted. `00019` and
+`00020` fail their bounded depth tests and are reverted. The v5 graph remains
+selectable, but it does not become production without an explicit review and
+promotion.
 Review evidence lives in
 `POSTER_ARTWORK_EXPERIMENT_LOG.md` and
 `POSTER_ARTWORK_REQUIREMENTS.md`.
+
+Anima can be evaluated independently with a low-cost empty-target preflight:
+
+```bash
+python scripts/poster_assets/run_comfyui_poster.py \
+  --scope Pokedex/sections/gen7 \
+  --engine anima --anima-mode generate \
+  --seed 260726054 --megapixels 0.25 \
+  --output-megapixels 0.25 --language en
+```
+
+The recorded Generation VII preflight passes count and card fit but restores an
+eroded identity core after decode and leaves the subjects without convincing
+grounding or terrain interaction. It is diagnostic evidence, not a unified
+joint-scene candidate, and does not justify a 1-MP retry with the same topology.
 
 ## 7. Review and promote
 

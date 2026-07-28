@@ -6,7 +6,7 @@ It complements the implementation-focused
 live in [Poster Workflow](POSTER_WORKFLOW.md); durable requirement IDs live in
 [Poster Requirements](POSTER_ARTWORK_REQUIREMENTS.md).
 
-Last audited: 2026-07-28
+Last audited: 2026-07-29
 
 ## Current accepted baselines
 
@@ -152,9 +152,18 @@ three-card placement, and the Alola landscape are absent. It therefore fails
 multiple coarse hard gates before identity-detail review and receives no 1-MP
 or prompt follow-up.
 
-The latest product review keeps `identity_lock` unchanged as the first-ranked
-baseline and reopens FLUX.2 v5 as the second-ranked experimental option. The
-small Litten-paw and Popplio face-line simplifications first measured in
+The isolated Anima `generate` preflight uses the same Generation VII seed and
+canonical placements at 432 × 592 px. It completes on Metal/MPS in 165.57
+seconds with exactly three complete, card-safe subjects, but leaves them on a
+flat lawn without convincing contact shadows, terrain response, vegetation
+interaction, or occlusion. Its `ImageCompositeMasked` node restores an eroded
+identity core after decode, so empty-target sampling still does not produce one
+unified final scene. This topology is closed before 1 MP and remains diagnostic
+only.
+
+The latest product review prefers FLUX.2 v5 `00018` visually over the
+composited `identity_lock` baseline. The small Litten-paw and Popplio face-line
+simplifications first measured in
 `00017` are acceptable for continued comparison; gross anatomy, silhouette,
 marking, or form changes remain hard failures. `00018` removes the separate v5
 shrink and outer-shift logic and passes preferred card fit by reusing the exact
@@ -165,7 +174,8 @@ encoded prompt tokens with the decisive instruction after token 1,034.
 `00020` compacts it to 510 tokens and moves the rule to token 211, but creates
 a fourth character and still no crossing. The experimental prompt commits are
 reverted. Prompt tuning is closed; a new attempt requires materially different
-control or an explicit acceptance of intersection avoidance.
+control. `00018` remains unpromoted, and `identity_lock` remains the accepted
+exact-source fallback until a separate promotion.
 
 The generated artwork must still begin from an empty target and finish all
 characters, terrain, lighting, shadows, and occlusions in one common model
@@ -315,10 +325,10 @@ this comparison.
 
 | Requirement | Current boundary | Acceptance criterion |
 | --- | --- | --- |
-| Natural grounding and occlusion | Accepted `identity_lock` keeps exact pixels but can read as composited. v5 `00018` gives all three subjects coherent grounding and preferred card fill but avoids crossings; `00019` ignores explicit crossings; compact `00020` duplicates Litten | Keep `identity_lock` first and `00018` second. Do not add more prompt complexity; require a materially different control mechanism or explicitly accept intersection avoidance |
+| Natural grounding and occlusion | Accepted `identity_lock` keeps exact pixels but can read as composited. v5 `00018` gives all three subjects coherent grounding and preferred card fill but avoids crossings; `00019` ignores explicit crossings; compact `00020` duplicates Litten | Treat `00018` as visually preferred and `identity_lock` as the promoted fallback. Keep promotion explicit and do not add more prompt complexity |
 | Engine extensibility | FLUX.2, Anima, FLUX.1 Canny, and Qwen Edit are selectable through one manifest-driven runner and share the promotion gate | Keep architecture-specific workflow construction isolated when adding another engine |
 | Alternative models | FLUX.1 Canny changed Mewtwo's face, chest, colors, and hand. Old Qwen duplicated a giant fourth Mewtwo; corrected spatial inputs instead collapse to one oversized Litten on the neutral field | Retain the adapters as diagnostic code, but do not render or promote another candidate without a materially new control mechanism |
-| Anima candidates | Workflow and provenance now share the exact model/LoRA/encoder/VAE/sampling contract | Keep the adapter experimental until a real candidate passes both the shared pixel gate and visual review |
+| Anima candidates | The 0.25-MP empty-target preflight passes count and card fit but uses a post-decode identity-core composite and fails grounding, terrain interaction, occlusion, and the exact-source audit | Keep the adapter as selectable diagnostic code; do not spend a 1-MP render on the same topology |
 | New set art direction | Every current individual set has an explicit catalog brief copied into its manifest | Review or refine the brief before spending the production render; catalog coverage does not replace visual art direction |
 | Wide PDF layouts | 4x3 and 4x4 artwork, placement, prompting, upscale, promotion, validation, slicing, and matching-grid rendering are modeled | Add physical A3 page styles/templates and rendered-PDF QA |
 | Aggregate scopes | The generic index, isolated leaf manifests, section filtering, PDF routing, cleanup, nested validation, nine Pokédex generation configs, and form-aware poster-subject contract are implemented; Pokédex Generations I through IX and both ExGen3 sections are promoted and enabled | Prepare reviewed section scenes and casts for the remaining aggregate variants |
@@ -341,10 +351,9 @@ this comparison.
   materially different control mechanism and inherits no approval.
 - Review memory and output separately before promoting `joint_scene` with the
   four subjects required by `wide_4x3` or `wide_4x4`.
-- Keep Anima and FLUX.1 Canny experimental. The existing Qwen adapter remains
-  selectable as historical diagnostic code, but both its duplicate-reference
-  candidate and the corrected spatial-subject preflight are closed; do not
-  render another Qwen candidate without a materially new binding mechanism.
+- Keep Anima and FLUX.1 Canny experimental. The current Anima topology and both
+  Qwen binding topologies are closed; do not render another candidate without a
+  materially different common-pass or binding mechanism.
 - Apply the demonstrated ExGen3 section workflow to remaining aggregate
   variants only after their section briefs and curated casts are reviewed.
 - Implement matching A3/custom PDF page renderers before enabling 4x3 or 4x4
@@ -483,10 +492,10 @@ Completed on 2026-07-27:
   reuses the canonical Option-1 placement and passes preferred card fit,
   containment, and grounding review. `00019` fails to create requested
   intersections; compact `00020` duplicates Litten and also has no crossing.
-  Their prompt changes are reverted. `00018` is retained only as the
-  second-ranked experimental comparison and remains unpromoted. None changes
-  the accepted manifest or PDF output; the full chronology is kept in the
-  experiment log.
+  Their prompt changes are reverted. `00018` is the visually preferred
+  experimental comparison and remains unpromoted; `identity_lock` remains the
+  accepted fallback. None changes the manifest or PDF output; the full
+  chronology is kept in the experiment log.
 - The accepted Generation VIII candidate contains Grookey, Scorbunny, and
   Sobble, uses seed `260715405` and graph contract v2, and preserves all 34,011
   fully opaque source pixels with zero changes. The Galar upland lake, moor,

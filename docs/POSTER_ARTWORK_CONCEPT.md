@@ -300,11 +300,13 @@ the exact character composition through Cosmos reference conditioning. The
 diagnostic `edit` mode retains the abstract material scaffold and is not the
 preferred poster path.
 
-Anima is currently frozen as an experimental engine. The validated edit path
-preserves the three protected identity cores and avoids duplicate characters,
-but tends to retain abstract source geometry too literally. The empty-target
-`generate` path is implemented for the next experiment but has not yet been
-promoted or rendered at production resolution.
+Anima remains a selectable experimental engine. A Generation VII 0.25-MP
+empty-target preflight confirms that it preserves count and card placement, but
+the decoded landscape leaves the three subjects isolated on a flat lawn with
+no convincing contact shadows, terrain response, or occlusion. The graph also
+restores an eroded exact identity core through `ImageCompositeMasked` after
+decode, so `generate` is not a true unified final synthesis despite sampling
+from an empty latent. No 1-MP follow-up is justified for this topology.
 
 Preparation creates the existing clean scene reference from every reviewed
 cutout at its exact intended position, size, and shared ground level for the
@@ -533,12 +535,12 @@ text-free pixels against every source identity and the complete generation
 fingerprint. It does not waive manifest equality, source identity, geometry, or
 output-hash checks. No Generation VII candidate through `00020` is promoted or
 has received this approval. Product review retains placement-corrected `00018`
-only as the second-ranked experimental comparison under the explicitly relaxed
+as the visually preferred experimental comparison under the explicitly relaxed
 print-detail identity tolerance. `00019` and `00020` fail the bounded depth
 tests and their prompt changes are reverted. None has changed the manifest,
-promoted artwork, routing, or PDF output. A future architecture requires a new
-review bound to the current fingerprint and every current acceptance gate;
-`identity_lock` remains the first-ranked production baseline.
+promoted artwork, routing, or PDF output. Promotion still requires a review
+bound to the current fingerprint and every current acceptance gate;
+`identity_lock` remains the accepted production fallback.
 
 Validate the committed bundle, hashes, dimensions, and embedded dpi metadata:
 
