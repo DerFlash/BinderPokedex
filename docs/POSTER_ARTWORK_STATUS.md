@@ -99,9 +99,10 @@ facial-line simplifications for continued v5 evaluation while retaining gross
 anatomy and design as hard gates. Candidate `00018` reuses the canonical
 Option-1 placement profile, passes all three physical card crops with preferred
 fill, and adds clear coherent grounding shadows. It remains unpromoted because
-the landscape again avoids real foreground crossings. The graph has no hard
-three-subject limit, but four-subject layouts still need separate memory and
-visual review.
+the landscape again avoids real foreground crossings. `00019` explicitly
+requests both connected front and rear crossings, but produces none in any
+card. The graph has no hard three-subject limit, but four-subject layouts still
+need separate memory and visual review.
 
 The earlier successor search was a materially different
 identity-control successor, not another FLUX.2 prompt or reference-canvas
@@ -155,8 +156,11 @@ small Litten-paw and Popplio face-line simplifications first measured in
 marking, or form changes remain hard failures. `00018` removes the separate v5
 shrink and outer-shift logic and passes preferred card fit by reusing the exact
 canonical Option-1 placement helper. Because it contains no meaningful
-foreground crossing, one next candidate may change only generic occlusion
-wording.
+foreground crossing, `00019` changes only generic occlusion wording. The model
+still avoids every requested intersection. A tokenizer audit finds 1,350
+encoded prompt tokens with the decisive instruction after token 1,034. One
+final same-seed retry may compact the prompt to the intended 512-token budget
+and move the same rule before token 300; prompt tuning stops afterward.
 
 The generated artwork must still begin from an empty target and finish all
 characters, terrain, lighting, shadows, and occlusions in one common model
@@ -306,7 +310,7 @@ this comparison.
 
 | Requirement | Current boundary | Acceptance criterion |
 | --- | --- | --- |
-| Natural grounding and occlusion | Accepted `identity_lock` keeps exact pixels but can read as composited. v5 `00018` gives all three subjects coherent grounding and preferred card fill, but contains no decisive plant/character crossing that proves both front and rear depth around one subject | Keep `identity_lock` first. Use one isolated occlusion-prompt candidate that changes no model, geometry, reference, seed, or sampling parameter |
+| Natural grounding and occlusion | Accepted `identity_lock` keeps exact pixels but can read as composited. v5 `00018` gives all three subjects coherent grounding and preferred card fill; `00019` preserves those qualities but ignores explicit connected front/rear crossings | Keep `identity_lock` first. Run one final compact-prompt candidate within the intended 512-token budget, then stop prompt tuning and decide from the recorded evidence |
 | Engine extensibility | FLUX.2, Anima, FLUX.1 Canny, and Qwen Edit are selectable through one manifest-driven runner and share the promotion gate | Keep architecture-specific workflow construction isolated when adding another engine |
 | Alternative models | FLUX.1 Canny changed Mewtwo's face, chest, colors, and hand. Old Qwen duplicated a giant fourth Mewtwo; corrected spatial inputs instead collapse to one oversized Litten on the neutral field | Retain the adapters as diagnostic code, but do not render or promote another candidate without a materially new control mechanism |
 | Anima candidates | Workflow and provenance now share the exact model/LoRA/encoder/VAE/sampling contract | Keep the adapter experimental until a real candidate passes both the shared pixel gate and visual review |
@@ -326,10 +330,11 @@ this comparison.
   not apply that equality claim to `joint_scene`, which redraws the complete
   image. Its raw and print identity checks remain explicit human review bound
   to deterministic provenance.
-- Keep v5 changes isolated. The placement-only candidate is complete. The next
-  candidate may change only the foreground-depth wording; do not alter model,
-  geometry, reference topology, identity images, seed, or sampler, and do not
-  inherit approval automatically.
+- Keep v5 changes isolated. Placement-only `00018` is complete and full-length
+  depth-stress `00019` fails. The final candidate may only remove duplicated
+  prompt prose and move the same depth rule earlier within the intended
+  512-token budget; do not alter model, geometry, reference topology, identity
+  images, seed, or sampler, and do not inherit approval automatically.
 - Review memory and output separately before promoting `joint_scene` with the
   four subjects required by `wide_4x3` or `wide_4x4`.
 - Keep Anima and FLUX.1 Canny experimental. The existing Qwen adapter remains
