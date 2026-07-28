@@ -562,8 +562,11 @@ def _write_unscaled_identity_references(
     reference_dir: Path,
     *,
     neutral: tuple[int, int, int],
+    filename_prefix: str = "identity_reference",
 ) -> None:
-    """Write exact source pixels on neutral square identity canvases."""
+    """Write unscaled source artwork on neutral square RGB canvases."""
+    if not filename_prefix:
+        raise ValueError("Identity-reference filename prefix must be non-empty")
     for index, placement in enumerate(placements, start=1):
         source_path = (
             scope_dir
@@ -596,10 +599,57 @@ def _write_unscaled_identity_references(
             source.getchannel("A"),
         )
         detail.save(
-            reference_dir / f"identity_reference_{index}.png",
+            reference_dir / f"{filename_prefix}_{index}.png",
             format="PNG",
             optimize=True,
         )
+
+
+def build_dreamo_identity_references(
+    scope: str,
+    output_dir: Path | None = None,
+) -> None:
+    """Write only the three source-derived RGB references used by DreamO."""
+    bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
+    scope_dir = bundle.asset_dir
+    manifest = bundle.manifest
+    reference_dir = output_dir or scope_dir / "comfyui_poster"
+    reference_dir.mkdir(parents=True, exist_ok=True)
+    width, height = output_dimensions(bundle.asset_key, 1.0)
+    placements = joint_scene_canvas_placements(
+        scope_dir,
+        layout_name=manifest.get("layout", {}).get(
+            "name",
+            "standard_3x3",
+        ),
+        canvas_size=(width, height),
+    )
+    if len(placements) != 3:
+        raise ValueError(
+            "The pinned DreamO node supports exactly 3 subject references"
+        )
+
+    defaults = manifest.get("conditioning", {}).get("identity_defaults", {})
+    neutral = defaults.get("neutral_rgb", [226, 224, 211])
+    if (
+        not isinstance(neutral, list)
+        or len(neutral) != 3
+        or not all(
+            isinstance(value, int) and 0 <= value <= 255
+            for value in neutral
+        )
+    ):
+        raise ValueError(
+            "conditioning.identity_defaults.neutral_rgb must contain "
+            "3 RGB integers"
+        )
+    _write_unscaled_identity_references(
+        scope_dir,
+        placements,
+        reference_dir,
+        neutral=tuple(neutral),
+        filename_prefix="dreamo_identity_reference",
+    )
 
 
 def build_sdxl_identity_references(

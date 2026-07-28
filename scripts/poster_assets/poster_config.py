@@ -854,3 +854,146 @@ def build_sdxl_identity_control_prompt(
     if specific_notes:
         paragraphs.append(" ".join(specific_notes))
     return "\n\n".join(paragraphs)
+
+
+def build_dreamo_identity_prompt(
+    manifest: dict[str, Any],
+    scope_data: dict[str, Any],
+    items: list[dict[str, Any]],
+    *,
+    placement_contract: list[dict[str, int]],
+) -> str:
+    """Build the isolated DreamO multi-reference poster prompt."""
+    if not items:
+        raise ValueError("DreamO identity control needs at least one subject")
+    if len(placement_contract) != len(items):
+        raise ValueError(
+            "DreamO placement contract must describe every subject"
+        )
+
+    artwork = _mapping(manifest.get("artwork"), "artwork")
+    scene = _mapping(artwork.get("scene"), "artwork.scene")
+    concept = _text(
+        scene.get("concept"),
+        "artwork.scene.concept",
+        default=_default_scene_concept(manifest, scope_data),
+    )
+    setting = _text(
+        scene.get("setting"),
+        "artwork.scene.setting",
+        default=(
+            "Build a broad natural landscape whose terrain, flora, distant "
+            "landmarks, and atmosphere subtly echo the set's theme."
+        ),
+    )
+    lighting = _text(
+        scene.get("lighting"),
+        "artwork.scene.lighting",
+        default="Soft directional daylight enters from the upper left.",
+    )
+    rendering = _text(
+        scene.get("rendering"),
+        "artwork.scene.rendering",
+        default=(
+            "Use polished trading-card illustration, clean cel-painted "
+            "linework, restrained natural colors, and atmospheric depth."
+        ),
+    )
+
+    def percentage(value: object) -> str:
+        if not isinstance(value, int) or not 0 <= value <= 1000:
+            raise ValueError(
+                "DreamO placement coordinates must be per-mille integers "
+                "between 0 and 1000"
+            )
+        return f"{value / 10:.1f}%"
+
+    references = []
+    placements = []
+    assignments = []
+    for index, (item, contract) in enumerate(
+        zip(items, placement_contract, strict=True),
+        start=1,
+    ):
+        if not isinstance(contract, dict):
+            raise ValueError(
+                "DreamO placement contract entries must be mappings"
+            )
+        name = item.get("name_en") or f"Pokemon #{item.get('pokemon_id', '?')}"
+        region = reference_region_label(index - 1, len(items))
+        references.append(
+            f"REFERENCE IMAGE {index} is the sole identity and anatomy "
+            f"authority for {name}"
+        )
+        assignments.append(f"{name} in the {region} bottom card")
+        placements.append(
+            (
+                f"{name}: x {percentage(contract.get('left_per_mille'))} to "
+                f"{percentage(contract.get('right_per_mille'))}, y "
+                f"{percentage(contract.get('top_per_mille'))} to "
+                f"{percentage(contract.get('bottom_per_mille'))}"
+            )
+        )
+
+    paragraphs = [
+        (
+            f"Create one cohesive full-bleed illustration for {concept}. "
+            f"{setting} {lighting} {rendering} Render exactly {len(items)} "
+            f"complete characters once: {'; '.join(assignments)}."
+        ),
+        (
+            f"The supplied references have a fixed left-to-right identity "
+            f"order. {'; '.join(references)}. Each reference fixes that "
+            "character's exact form, pose, stature, silhouette, anatomy, "
+            "face, colors, markings, appendages, and defining design details. "
+            "Preserve every referenced feature without adding, removing, "
+            "merging, simplifying, or reshaping it. The neutral reference "
+            "fields are empty input space, not scenery, and the references "
+            "describe the same final subjects rather than extra copies."
+        ),
+        (
+            "Use these normalized target silhouette rectangles as the "
+            f"placement and scale contract: {'; '.join(placements)}. Match "
+            "each complete silhouette and baseline to its rectangle, with "
+            "visible landscape padding around it. Every character pixel, "
+            "including the outermost appendage, must remain inside its named "
+            "bottom card. No character may cross above the bottom row or "
+            "through an invisible vertical card division. The rectangles "
+            "and card divisions are coordinates only and must never be drawn."
+        ),
+        (
+            "Generate the final landscape and all characters together from "
+            "one empty target in one unified denoising pass. There is no "
+            "supplied landscape, background plate, later character overlay, "
+            "restoration, or composite. Ground contact, directional cast "
+            "shadows, reflected light, perspective, linework, color grading, "
+            "and scene depth must agree so every character looks native to "
+            "the landscape rather than pasted over it."
+        ),
+        (
+            "Use one physically coherent depth order. If a landscape element "
+            "is genuinely nearer than a character, it may continue naturally "
+            "in front of a small non-defining exterior edge. Farther scenery "
+            "stays behind. A connected plant, branch, rock, or other element "
+            "must keep the same front-or-behind relationship along its visible "
+            "length. Move or shorten scenery instead of hiding an "
+            "identity-critical face, marking, limb, appendage, or silhouette "
+            "detail."
+        ),
+        (
+            f"{_safe_area_sentence(manifest, scene)} Fill every image edge "
+            "naturally. Keep one continuous natural ground plane without "
+            "character-specific clearings, paths, platforms, circles, halos, "
+            "or landing pads. Draw no extra creature, person, trainer, "
+            "character-shaped scenery, text, letters, numbers, logo, title "
+            "art, box, plaque, panel, card border, UI, watermark, guide, or "
+            "crop mark."
+        ),
+    ]
+    constraints = _scene_constraints(scene)
+    if constraints:
+        paragraphs.append(" ".join(constraints))
+    specific_notes = subject_prompt_notes(items, manifest)
+    if specific_notes:
+        paragraphs.append(" ".join(specific_notes))
+    return "\n\n".join(paragraphs)
