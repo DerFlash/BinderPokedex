@@ -6,7 +6,7 @@ It complements the implementation-focused
 live in [Poster Workflow](POSTER_WORKFLOW.md); durable requirement IDs live in
 [Poster Requirements](POSTER_ARTWORK_REQUIREMENTS.md).
 
-Last audited: 2026-07-27
+Last audited: 2026-07-28
 
 ## Current accepted baselines
 
@@ -98,6 +98,27 @@ sampler. Candidate `00017` passes spatial integration and all three card crops,
 but fails the hard identity gate on Litten's paw and Popplio's facial details.
 It is rejected and unpromoted. The graph has no hard three-subject limit, but
 four-subject layouts still need separate memory and visual review.
+
+The next explicitly authorized experiment is a materially different
+identity-control successor, not another FLUX.2 prompt or reference-canvas
+retry. It keeps the same Generation VII sources, seed, scene brief, physical
+3x3 geometry, and hard review gates while comparing:
+
+1. one joint SDXL pass with a separate identity adapter for each subject,
+   regional subject masks, and structural control derived from the reviewed
+   source silhouettes;
+2. the identical graph with a Pokémon domain LoRA as the only changed
+   variable; and
+3. an isolated FLUX.2 Klein 4B Base RefControl feasibility spike if its
+   single-reference control contract can represent the complete three-subject
+   cast without identity mixing.
+
+The generated artwork must still begin from an empty target or a subject-free
+scene and finish all characters, terrain, lighting, shadows, and occlusions in
+one common final model pass. A Pokémon model is domain guidance only; it cannot
+replace the supplied source artwork as identity and anatomy authority.
+Production configuration, promoted artwork, PDF routing, and release inputs
+remain unchanged throughout this comparison.
 
 ## Accepted requirements
 
@@ -240,7 +261,7 @@ four-subject layouts still need separate memory and visual review.
 
 | Requirement | Current boundary | Acceptance criterion |
 | --- | --- | --- |
-| Natural grounding and occlusion | Accepted `identity_lock` keeps exact pixels but can read as composited. v5 `00017` fixes containment and depth but still simplifies Litten's paw and Popplio's face details | Choose explicitly between protected source pixels, tolerance for generative identity drift, or a materially stronger identity-control mechanism |
+| Natural grounding and occlusion | Accepted `identity_lock` keeps exact pixels but can read as composited. v5 `00017` fixes containment and depth but still simplifies Litten's paw and Popplio's face details | Complete the selected SDXL per-subject identity/spatial-control A/B evaluation without relaxing any hard gate |
 | Engine extensibility | FLUX.2, Anima, FLUX.1 Canny, and Qwen Edit are selectable through one manifest-driven runner and share the promotion gate | Keep architecture-specific workflow construction isolated when adding another engine |
 | Alternative models | FLUX.1 Canny changed Mewtwo's face, chest, colors, and hand; Qwen created a giant fourth Mewtwo | Retain both adapters for controlled comparison, but do not promote either rejected candidate |
 | Anima candidates | Workflow and provenance now share the exact model/LoRA/encoder/VAE/sampling contract | Keep the adapter experimental until a real candidate passes both the shared pixel gate and visual review |

@@ -64,3 +64,55 @@ unscaled source pixels, no second canvas/prompt parameter retry is justified.
 The implementation remains selectable and unpromoted; production stays on
 `identity_lock` until the product chooses which conflicting invariant may
 change or a materially stronger identity-control mechanism becomes available.
+
+## Identity-control successor evaluation
+
+The product decision on 2026-07-28 selects a materially stronger,
+object-reference control mechanism without relaxing the existing hard gates.
+This is a new architecture family, so it starts a new attempt budget. It does
+not reopen prompt-only or reference-canvas tuning for the rejected FLUX.2
+`joint_scene` v3-v5 graphs.
+
+### Frozen comparison fixture
+
+| Input | Frozen value |
+| --- | --- |
+| Scope | `Pokedex/sections/gen7` |
+| Layout | `standard_3x3` with the real physical card raster |
+| Seed | `260726054` |
+| Subjects | Reviewed Rowlet, Litten, and Popplio Official Artwork cutouts |
+| Scene | Existing Alola scene brief from the promoted scope manifest |
+| Target | One text-free joint scene; deterministic print resize and overlays remain outside model evaluation |
+| Production effect | None until a candidate passes every hard gate and is promoted explicitly |
+
+### Planned single-variable matrix
+
+| Candidate family | Material change | Purpose |
+| --- | --- | --- |
+| `sdxl_identity` | SDXL plus one identity adapter per subject, regional masks, and source-derived structural control | Test explicit reference-to-region and geometry binding in one final scene pass |
+| `sdxl_identity_pokemon` | Same graph, inputs, seed, and controls; add one Pokémon domain LoRA | Measure whether Pokémon domain knowledge improves small canonical details without weakening placement or scene depth |
+| `flux2_refcontrol` | FLUX.2 Klein 4B Base reference-plus-depth control | Test the smallest compatible stronger-control option in the existing FLUX ecosystem; stop before rendering if its reference contract cannot bind three distinct subjects safely |
+
+The generic and Pokémon-assisted SDXL candidates are a strict A/B pair. Model
+choice is the only intended variable; scene wording, target geometry,
+references, masks, structural guide, seed, sampler settings, and output size
+must remain identical. The FLUX.2 RefControl candidate is evaluated separately
+because it uses a different control contract.
+
+### Review record template
+
+Every rendered candidate appends one row containing the exact workflow and
+model hashes, raw and deterministic print-size artifact paths, runtime, and
+the following result:
+
+| Gate | Required evidence |
+| --- | --- |
+| Joint final scene | Workflow contains one final sampler/decode and no post-decode source composite or restoration |
+| Identity and anatomy | Whole-poster and individual bottom-card review against all three supplied cutouts |
+| Card containment | Deterministic crop validation against the physical 3x3 raster |
+| Coherent depth | Visual review of contact shadows and every connected landscape/character intersection |
+| Set scene and safe areas | Whole-poster review before deterministic logo and text overlays |
+
+An architecture stops after three materially distinct attempts at the same
+failed hard gate. A Pokémon LoRA is retained only when the controlled A/B
+comparison improves identity without introducing a new hard-gate regression.
