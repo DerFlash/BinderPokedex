@@ -101,17 +101,30 @@ four-subject layouts still need separate memory and visual review.
 
 The next explicitly authorized experiment is a materially different
 identity-control successor, not another FLUX.2 prompt or reference-canvas
-retry. It keeps the same Generation VII sources, seed, scene brief, physical
-3x3 geometry, and hard review gates while comparing:
+retry. The first successor family used one joint SDXL pass with separate
+identity adapters, regional subject masks, and source-derived structural
+control. Whole-card, exact-silhouette, and tight-box masks all failed subject
+identity, grounding, and global scene quality, so that family is closed after
+three candidates. Its planned Pokémon-domain-LoRA A/B is intentionally skipped:
+a style/domain prior cannot repair a base graph that does not bind the three
+references to recognizable bodies.
 
-1. one joint SDXL pass with a separate identity adapter for each subject,
-   regional subject masks, and structural control derived from the reviewed
-   source silhouettes;
-2. the identical graph with a Pokémon domain LoRA as the only changed
-   variable; and
-3. an isolated FLUX.2 Klein 4B Base RefControl feasibility spike if its
-   single-reference control contract can represent the complete three-subject
-   cast without identity mixing.
+MS-Diffusion was then reviewed because its published architecture assigns
+separate references to explicit bounding boxes. The available ComfyUI port
+builds a hidden Diffusers SDXL pipeline, invokes xFormers and CUDA-specific
+cleanup paths, samples internally, and returns a final image. Making that port
+MPS-safe and exposing the required empty-target, one-sampler, one-decode audit
+would be a substantial fork rather than a small compatibility fix. The
+technical preflight therefore stops before model installation.
+
+DreamO v1.1 is the next isolated candidate. Its native ComfyUI node accepts
+three separate VAE-based object references and patches a normal FLUX model
+before the common sampler. The first graph must keep the frozen Generation VII
+sources, seed, scene brief, physical 3x3 geometry, and hard review gates; start
+from one empty target; and end in exactly one sampler and one decode. No
+DreamO result is production-approved yet. FLUX.2 RefControl remains only a
+fallback if DreamO is technically unavailable on the M4, because its
+single-reference contract does not independently bind three subjects.
 
 The generated artwork must still begin from an empty target and finish all
 characters, terrain, lighting, shadows, and occlusions in one common model
@@ -122,13 +135,13 @@ this comparison.
 
 ## Accepted requirements
 
-- Each complete asset is produced in one local ComfyUI workflow. The source
-  figures are present at their final position before the final context pass, so
-  the generator sees the intended composition instead of placing them blindly
-  into a finished scene.
-- Reviewed Pokemon pixels are immutable. They are never redrawn by diffusion,
-  reconstructed through the VAE, moved, or rescaled inside the identity-lock
-  workflow.
+- In the accepted `identity_lock` workflow, each complete asset is produced in
+  one local ComfyUI workflow. The source figures are present at their final
+  position before the final context pass, so the generator sees the intended
+  composition instead of placing them blindly into a finished scene.
+- In the accepted `identity_lock` workflow, reviewed Pokemon pixels are
+  immutable. They are never redrawn by diffusion, reconstructed through the
+  VAE, moved, or rescaled.
 - Card/cover imagery and poster subjects have separate contracts. The poster
   subject records the National-Dex species plus the exact allowlisted PokeAPI
   Official Artwork form ID and URL. Featured selection, cutout filenames and
@@ -261,7 +274,7 @@ this comparison.
 
 | Requirement | Current boundary | Acceptance criterion |
 | --- | --- | --- |
-| Natural grounding and occlusion | Accepted `identity_lock` keeps exact pixels but can read as composited. v5 `00017` fixes containment and depth but still simplifies Litten's paw and Popplio's face details | Complete the selected SDXL per-subject identity/spatial-control A/B evaluation without relaxing any hard gate |
+| Natural grounding and occlusion | Accepted `identity_lock` keeps exact pixels but can read as composited. v5 `00017` fixes containment and depth but changes small identity details. Regional SDXL is closed after three larger identity/scene failures; the MS-Diffusion port fails the KISS/MPS technical preflight | Evaluate the isolated DreamO v1.1 three-reference graph without relaxing any hard gate; retain `identity_lock` if it cannot pass |
 | Engine extensibility | FLUX.2, Anima, FLUX.1 Canny, and Qwen Edit are selectable through one manifest-driven runner and share the promotion gate | Keep architecture-specific workflow construction isolated when adding another engine |
 | Alternative models | FLUX.1 Canny changed Mewtwo's face, chest, colors, and hand; Qwen created a giant fourth Mewtwo | Retain both adapters for controlled comparison, but do not promote either rejected candidate |
 | Anima candidates | Workflow and provenance now share the exact model/LoRA/encoder/VAE/sampling contract | Keep the adapter experimental until a real candidate passes both the shared pixel gate and visual review |

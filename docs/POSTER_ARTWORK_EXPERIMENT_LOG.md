@@ -61,9 +61,9 @@ restoration in this mode. Candidate `00017` proves that graph contract v5 solves
 the spatial and scene-integration failures, but it still redraws identity-scale
 facial and paw details. Because the identity references already contain the
 unscaled source pixels, no second canvas/prompt parameter retry is justified.
-The implementation remains selectable and unpromoted; production stays on
-`identity_lock` until the product chooses which conflicting invariant may
-change or a materially stronger identity-control mechanism becomes available.
+The v5 implementation remains selectable historical evidence and unpromoted;
+production stays on `identity_lock` while the materially different DreamO
+identity-control evaluation runs.
 
 ## Identity-control successor evaluation
 
@@ -85,19 +85,21 @@ not reopen prompt-only or reference-canvas tuning for the rejected FLUX.2
 | Target | One text-free joint scene; deterministic print resize and overlays remain outside model evaluation |
 | Production effect | None until a candidate passes every hard gate and is promoted explicitly |
 
-### Planned single-variable matrix
+### Successor matrix
 
-| Candidate family | Material change | Purpose |
+| Candidate family | Material change | Result or next gate |
 | --- | --- | --- |
-| `sdxl_identity` | SDXL plus one identity adapter per subject, regional masks, and source-derived structural control | Test explicit reference-to-region and geometry binding in one final scene pass |
-| `sdxl_identity_pokemon` | Same graph, inputs, seed, and controls; add one Pokémon domain LoRA | Measure whether Pokémon domain knowledge improves small canonical details without weakening placement or scene depth |
-| `flux2_refcontrol` | FLUX.2 Klein 4B Base reference-plus-depth control | Test the smallest compatible stronger-control option in the existing FLUX ecosystem; stop before rendering if its reference contract cannot bind three distinct subjects safely |
+| `sdxl_identity` | SDXL plus one identity adapter per subject, regional masks, and source-derived structural control | Closed after whole-card, exact-silhouette, and tight-box masks all fail identity, grounding, and scene quality |
+| `sdxl_identity_pokemon` | Same graph plus one Pokémon domain LoRA | Not rendered: the base graph fails reference binding and anatomy too broadly for a domain/style A/B to isolate |
+| `ms_diffusion` | SDXL multi-subject adapter with explicit reference-to-box assignment | Stopped at technical preflight: the available ComfyUI port hides its own Diffusers sampler and requires a substantial MPS/audit refactor |
+| `dreamo` | FLUX.1-dev plus three VAE-based DreamO object references before one common sampler | Selected for an isolated MPS preflight; no candidate rendered yet |
+| `flux2_refcontrol` | FLUX.2 Klein 4B Base reference-plus-depth control | Retained only as a fallback if DreamO is technically unavailable; stop before rendering if one reference cannot bind three distinct subjects |
 
-The generic and Pokémon-assisted SDXL candidates are a strict A/B pair. Model
-choice is the only intended variable; scene wording, target geometry,
-references, masks, structural guide, seed, sampler settings, and output size
-must remain identical. The FLUX.2 RefControl candidate is evaluated separately
-because it uses a different control contract.
+The intended generic/Pokémon-assisted SDXL A/B was conditional on a viable base
+graph. That condition is false, so no Pokémon LoRA is added to a broken
+regional binding path. Every later family is evaluated as a new architecture
+against the same frozen fixture and hard gates rather than compared as a
+single-variable model swap.
 
 ### SDXL implementation checkpoint
 
@@ -248,6 +250,52 @@ The nine review crops are below
 `data/poster_assets/Pokedex/sections/gen7/comfyui_poster/output/`
 `sdxl_identity_generic_00003_cards/`.
 
+### Successor technical preflight
+
+The next architecture review starts before downloading another multi-gigabyte
+model. [MS-Diffusion](https://github.com/MS-Diffusion/MS-Diffusion) is
+conceptually attractive because it assigns multiple image references to
+explicit target boxes. The reviewed
+[ComfyUI port](https://github.com/smthemex/ComfyUI_MS_Diffusion) at commit
+`a5b97bb7cea2ad31d471ed51bb54f210a183ea82` does not expose that mechanism as a
+normal Comfy model condition, however. Its loader constructs a complete
+Diffusers `StableDiffusionXLPipeline`, unconditionally enables xFormers, and
+contains CUDA-only cache calls. Its sampler performs diffusion internally and
+returns an `IMAGE`, so the repository cannot statically verify one shared empty
+target, one final sampler, and one decode.
+
+Removing those assumptions and converting the hidden pipeline into auditable
+Comfy model/conditioning nodes would be a substantial fork. That contradicts
+the KISS boundary selected for this experiment, so `ms_diffusion` stops at
+technical preflight without installing its adapter or rendering a candidate.
+This is an integration rejection of the available port, not evidence against
+the published architecture itself.
+
+[DreamO v1.1](https://github.com/bytedance/DreamO) is selected next. The
+reviewed
+[native ComfyUI integration](https://github.com/ToTheBeginning/ComfyUI-DreamO)
+at commit `622f393a13b9e083ab3945d7534b8b3fe38d609e` exposes three optional
+reference latents, applies them to a normal FLUX model, and leaves the final
+sampling and decode visible in the graph. The upstream project documents
+Apple M1-M4/MPS operation and object/animal identity conditioning. The first
+candidate therefore has this fixed contract:
+
+1. three separate reviewed Official Artwork references, in left-to-right card
+   order;
+2. one empty target at the existing Generation VII fixture geometry;
+3. one shared scene prompt and one final sampler/decode;
+4. no target image encoding, inpainting, character composite, source-pixel
+   restoration, or second generative pass;
+5. a low-resolution MPS technical preflight before a 1-MP visual candidate;
+6. at most one higher-reference-resolution follow-up, and only when the first
+   result already passes count, binding, coarse anatomy, and placement.
+
+DreamO is still an experiment, not a new production engine. Its lack of an
+explicit three-box input is a known risk: natural-language left/center/right
+placement must pass the unchanged physical card-containment gate before any
+identity-detail tuning is justified. The accepted `identity_lock` artwork,
+manifests, PDF routing, and release inputs remain unchanged.
+
 ### Review record template
 
 Every rendered candidate appends one row containing the exact workflow and
@@ -257,8 +305,8 @@ the following result:
 | Gate | Automatic evidence | Mandatory visual evidence |
 | --- | --- | --- |
 | Joint final scene | Empty target, one final sampler/decode, and no post-decode source composite or restoration | The output does not read as separate pasted layers |
-| Identity and anatomy | Exact source hashes and one explicit reference-to-region binding per subject | Whole-poster and individual bottom-card comparison against all three supplied cutouts |
-| Card containment | Every input mask and structural guide remains inside its physical card envelope; the nine output crops use the exact shared geometry | Every generated silhouette and appendage remains inside its real bottom-card crop with visible padding |
+| Identity and anatomy | Exact source hashes and one explicit reference input per subject; record any architecture-specific spatial binding or control | Whole-poster and individual bottom-card comparison against all three supplied cutouts |
+| Card containment | Any supplied mask or structural guide remains inside its physical card envelope; all candidates produce the exact nine shared-geometry crops | Every generated silhouette and appendage remains inside its real bottom-card crop with visible padding |
 | Coherent depth | The workflow and prompt expose one common scene-depth contract | Contact shadows and every connected landscape/character intersection remain physically consistent |
 | Set scene and safe areas | Title and information cells are derived from the shared physical geometry | Whole-poster review before deterministic logo and text overlays |
 | Print output | Deterministic Lanczos output has the exact configured 300-dpi dimensions and nine expected crop dimensions | Raw and print-size crops retain the reviewed small identity details |
@@ -269,5 +317,7 @@ scores may help reject obvious failures but cannot approve anatomy,
 containment, grounding, or occlusion.
 
 An architecture stops after three materially distinct attempts at the same
-failed hard gate. A Pokémon LoRA is retained only when the controlled A/B
-comparison improves identity without introducing a new hard-gate regression.
+failed hard gate. A domain or training adapter is tested only after the base
+graph demonstrates correct per-subject binding, and is retained only when a
+controlled A/B improves identity without introducing a new hard-gate
+regression.
