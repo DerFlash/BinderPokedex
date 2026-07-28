@@ -153,6 +153,7 @@ resolution, sampler family, and one-pass contract remain unchanged.
 | --- | --- | --- | --- | --- |
 | `sdxl_identity/00001` | Replace the rejected Union-ControlNet preflight with SDXL Canny-mid; the effective CLI strength is `0.72` | `253.74 s`; Metal/MPS; one empty target, sampler, and decode; no post-decode composite | Upper scene is a plausible Alola landscape, but the complete bottom row becomes a flat beige strip. All three Pokémon are tiny and visibly redesigned; Litten is severely malformed. No believable ground contact or scene integration remains | Rejected |
 | `sdxl_identity/00002` | Keep the effective `00001` graph, including strength `0.72`, fixed and restrict each IP-Adapter mask from its complete card to the exact placed source silhouette | `255.50 s`; Metal/MPS; same one-pass graph and workflow bytes as `00001` | The beige bottom-row seam disappears, but the whole landscape collapses into blurred, segmented color fields. Rowlet is simplified, Litten becomes an unrecognizable red floating body, and Popplio's face and anatomy change. None has credible ground contact | Rejected |
+| `sdxl_identity/00003` | Keep `00002` fixed and replace each sparse alpha mask with its tight, continuous visible-subject bounding box | Pending | Pending | Final regional-mask attempt |
 
 Candidate `00001` strongly indicates the pre-render review risk: a hard
 whole-card identity mask does not merely bind a subject to a card. Together
@@ -169,6 +170,10 @@ boundary. It also shows that exact alpha silhouettes are too sparse for this
 regional attention path. They do not retain canonical anatomy and destabilize
 the global image despite unchanged structure, prompt, seed, model, and sampler.
 This is still a control-scope failure; neither result justifies prompt tuning.
+Candidate `00003` tests the simplest midpoint supported by the same node: one
+continuous tight region around each visible subject. It adds no padding,
+feathering, model, node, or sampler. If canonical identity still fails, the
+generic SDXL regional architecture stops rather than adding mask heuristics.
 
 The `00001` snapshot also exposed a configuration drift: the Python workflow
 default had already been changed to the Canny-mid recommendation `0.5`, while

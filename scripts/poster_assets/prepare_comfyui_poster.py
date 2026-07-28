@@ -608,7 +608,7 @@ def build_sdxl_identity_references(
     *,
     megapixels: float = 1.0,
 ) -> None:
-    """Write one structure guide and one subject-local identity mask per cutout."""
+    """Write one structure guide and one tight identity region per cutout."""
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
     scope_dir = bundle.asset_dir
     manifest = bundle.manifest
@@ -651,10 +651,20 @@ def build_sdxl_identity_references(
     )
 
     for index, placement in enumerate(placements, start=1):
+        alpha_box = placement["image"].getchannel("A").getbbox()
+        if alpha_box is None:
+            raise ValueError(
+                f"Cutout has no visible pixels: {placement['item']['file']}"
+            )
         mask = Image.new("L", (width, height), 0)
-        mask.paste(
-            placement["image"].getchannel("A"),
-            (placement["x"], placement["y"]),
+        ImageDraw.Draw(mask).rectangle(
+            (
+                placement["x"] + alpha_box[0],
+                placement["y"] + alpha_box[1],
+                placement["x"] + alpha_box[2] - 1,
+                placement["y"] + alpha_box[3] - 1,
+            ),
+            fill=255,
         )
         mask.convert("RGB").save(
             reference_dir / f"sdxl_identity_region_{index}.png",

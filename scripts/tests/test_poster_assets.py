@@ -8,7 +8,7 @@ from types import SimpleNamespace
 
 import pytest
 import yaml
-from PIL import Image, ImageChops
+from PIL import Image, ImageChops, ImageDraw
 
 from scripts.poster_assets import fetch_cutouts
 from scripts.poster_assets import promote_comfyui_poster as poster_promotion
@@ -968,7 +968,7 @@ def test_joint_scene_preparation_writes_spatial_and_unscaled_identity_refs(
         assert masked_difference.getbbox() is None
 
 
-def test_sdxl_identity_preparation_writes_structure_and_subject_masks(
+def test_sdxl_identity_preparation_writes_structure_and_subject_regions(
     tmp_path: Path,
 ):
     build_sdxl_identity_references(
@@ -1014,12 +1014,27 @@ def test_sdxl_identity_preparation_writes_structure_and_subject_masks(
         strict=True,
     ):
         mask = Image.open(path).convert("L")
+        alpha_box = placement["image"].getchannel("A").getbbox()
+        assert alpha_box is not None
+        visible_box = (
+            placement["x"] + alpha_box[0],
+            placement["y"] + alpha_box[1],
+            placement["x"] + alpha_box[2],
+            placement["y"] + alpha_box[3],
+        )
         expected_mask = Image.new("L", structure.size, 0)
-        expected_mask.paste(
-            placement["image"].getchannel("A"),
-            (placement["x"], placement["y"]),
+        ImageDraw.Draw(expected_mask).rectangle(
+            (
+                visible_box[0],
+                visible_box[1],
+                visible_box[2] - 1,
+                visible_box[3] - 1,
+            ),
+            fill=255,
         )
         assert ImageChops.difference(mask, expected_mask).getbbox() is None
+        assert mask.getbbox() == visible_box
+        assert mask.getextrema() == (0, 255)
         assert mask.getbbox() != (
             placement["cell"].x,
             placement["cell"].y,
