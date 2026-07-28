@@ -49,6 +49,7 @@ data/poster_assets/**/comfyui_poster/temp/
 data/poster_assets/**/comfyui_poster/workflow_api.json
 data/poster_assets/**/comfyui_poster/workflow_api_*.json
 data/poster_assets/**/comfyui_poster/anima_workflow_api.json
+data/poster_assets/**/comfyui_poster/anima_workflow_api_*.json
 data/poster_assets/**/comfyui_poster/flux1_canny_workflow_api_*.json
 data/poster_assets/**/comfyui_poster/qwen_edit_workflow_api_*.json
 data/poster_assets/**/comfyui_poster/workflow_api_qwen_spatial_subjects_*.json
