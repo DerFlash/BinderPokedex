@@ -968,7 +968,7 @@ def test_joint_scene_preparation_writes_spatial_and_unscaled_identity_refs(
         assert masked_difference.getbbox() is None
 
 
-def test_sdxl_identity_preparation_writes_exact_structure_and_card_masks(
+def test_sdxl_identity_preparation_writes_structure_and_subject_masks(
     tmp_path: Path,
 ):
     build_sdxl_identity_references(
@@ -1008,17 +1008,35 @@ def test_sdxl_identity_preparation_writes_exact_structure_and_card_masks(
 
     region_paths = sorted(tmp_path.glob("sdxl_identity_region_*.png"))
     assert len(region_paths) == 3
-    for path, cell in zip(
+    for path, placement in zip(
         region_paths,
-        layout.bottom_row_cells(),
+        placements,
         strict=True,
     ):
         mask = Image.open(path).convert("L")
-        assert mask.getbbox() == (
-            cell.x,
-            cell.y,
-            cell.x + cell.width,
-            cell.y + cell.height,
+        expected_mask = Image.new("L", structure.size, 0)
+        expected_mask.paste(
+            placement["image"].getchannel("A"),
+            (placement["x"], placement["y"]),
+        )
+        assert ImageChops.difference(mask, expected_mask).getbbox() is None
+        assert mask.getbbox() != (
+            placement["cell"].x,
+            placement["cell"].y,
+            placement["cell"].x + placement["cell"].width,
+            placement["cell"].y + placement["cell"].height,
+        )
+        assert (
+            placement["cell"].x
+            <= mask.getbbox()[0]
+            < mask.getbbox()[2]
+            <= placement["cell"].x + placement["cell"].width
+        )
+        assert (
+            placement["cell"].y
+            <= mask.getbbox()[1]
+            < mask.getbbox()[3]
+            <= placement["cell"].y + placement["cell"].height
         )
     assert len(list(tmp_path.glob("identity_reference_*.png"))) == 3
     assert not (tmp_path / "joint_scene_cast_reference.png").exists()

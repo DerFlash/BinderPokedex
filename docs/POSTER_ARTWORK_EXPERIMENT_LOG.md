@@ -152,7 +152,7 @@ resolution, sampler family, and one-pass contract remain unchanged.
 | Candidate | Single changed variable | Runtime and automatic result | Visual result | Decision |
 | --- | --- | --- | --- | --- |
 | `sdxl_identity/00001` | Replace the rejected Union-ControlNet preflight with SDXL Canny-mid; the effective CLI strength is `0.72` | `253.74 s`; Metal/MPS; one empty target, sampler, and decode; no post-decode composite | Upper scene is a plausible Alola landscape, but the complete bottom row becomes a flat beige strip. All three Pokémon are tiny and visibly redesigned; Litten is severely malformed. No believable ground contact or scene integration remains | Rejected |
-| `sdxl_identity/00002` | Keep the effective `00001` graph, including strength `0.72`, fixed and restrict each IP-Adapter mask from its complete card to the exact placed source silhouette | Pending | Pending | Next controlled attempt |
+| `sdxl_identity/00002` | Keep the effective `00001` graph, including strength `0.72`, fixed and restrict each IP-Adapter mask from its complete card to the exact placed source silhouette | `255.50 s`; Metal/MPS; same one-pass graph and workflow bytes as `00001` | The beige bottom-row seam disappears, but the whole landscape collapses into blurred, segmented color fields. Rowlet is simplified, Litten becomes an unrecognizable red floating body, and Popplio's face and anatomy change. None has credible ground contact | Rejected |
 
 Candidate `00001` strongly indicates the pre-render review risk: a hard
 whole-card identity mask does not merely bind a subject to a card. Together
@@ -162,6 +162,13 @@ bottom row. This points to a control-scope failure, not evidence that the scene
 prompt needs more detail. The next attempt therefore changes only the masks.
 It does not add feathering, another sampler, inpainting, source compositing, or
 new prompt clauses.
+
+The mask-only `00002` result confirms that the whole-card conditioning caused
+the beige strip: changing only the three mask images removes that exact
+boundary. It also shows that exact alpha silhouettes are too sparse for this
+regional attention path. They do not retain canonical anatomy and destabilize
+the global image despite unchanged structure, prompt, seed, model, and sampler.
+This is still a control-scope failure; neither result justifies prompt tuning.
 
 The `00001` snapshot also exposed a configuration drift: the Python workflow
 default had already been changed to the Canny-mid recommendation `0.5`, while
@@ -178,10 +185,13 @@ python scripts/poster_assets/create_sdxl_identity_poster_workflow.py \
   --controlnet-strength 0.72
 ```
 
-Its three subject-mask SHA-256 values are `cdc1aeb4…975fc9c`,
-`c413d9a5…c29060f`, and `13b6fc73…3cf0c`. Both candidate workflow snapshots
-remain byte-identical at SHA-256 `5989dcfb…538b0`; only those three input
-images change.
+Its three subject-mask SHA-256 values are
+`cdc1aeb492aeb5400a61cd4d15b1becb0f95108591127090b11db8620975fc9c`,
+`c413d9a56dd33f9b80de3949859542603218013559a4edc6d178d1577c29060f`,
+and `13b6fc73075878b81ee9d3125fce31ab6e780b8b8f2bee9aa71af78e9823cf0c`.
+Both candidate workflow snapshots remain byte-identical at SHA-256
+`5989dcfb41b0bd0dd92419ca0a84d35230bcc7e2484f7c5c7232c740f03d8556`;
+only those three input images change.
 
 The `00001` evidence is reproducible from:
 
@@ -201,6 +211,14 @@ The local model fingerprint for this comparison is SDXL Base
 is pinned to commit `b188a6cb39b512a9c6da7235b880af42c78ccd0d`. The
 print artifact is a deterministic resize of the reviewed model output, not a
 second generative or learned upscaling pass.
+
+The rejected `00002` raw artwork SHA-256 is
+`4d1172e6ec97e926236f689a7ef8fc97bee58186b69be331b80df29067209d2a`.
+Its deterministic 300-dpi print resize is
+`f76125b162d984535f082c35a74fcb4835ab228ddf84f7a88f2593e14ed8ba4a`;
+the nine review crops are below
+`data/poster_assets/Pokedex/sections/gen7/comfyui_poster/output/`
+`sdxl_identity_generic_00002_cards/`.
 
 ### Review record template
 

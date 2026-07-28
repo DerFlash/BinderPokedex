@@ -608,7 +608,7 @@ def build_sdxl_identity_references(
     *,
     megapixels: float = 1.0,
 ) -> None:
-    """Write one source-derived structure guide and regional identity masks."""
+    """Write one structure guide and one subject-local identity mask per cutout."""
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
     scope_dir = bundle.asset_dir
     manifest = bundle.manifest
@@ -651,16 +651,10 @@ def build_sdxl_identity_references(
     )
 
     for index, placement in enumerate(placements, start=1):
-        cell = placement["cell"]
         mask = Image.new("L", (width, height), 0)
-        ImageDraw.Draw(mask).rectangle(
-            (
-                cell.x,
-                cell.y,
-                cell.x + cell.width - 1,
-                cell.y + cell.height - 1,
-            ),
-            fill=255,
+        mask.paste(
+            placement["image"].getchannel("A"),
+            (placement["x"], placement["y"]),
         )
         mask.convert("RGB").save(
             reference_dir / f"sdxl_identity_region_{index}.png",
