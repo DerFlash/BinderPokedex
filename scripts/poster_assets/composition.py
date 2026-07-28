@@ -14,12 +14,6 @@ except ImportError:
     from poster_io import load_cutout_items
 
 
-JOINT_SCENE_MAX_WIDTH_RATIO = 0.58
-JOINT_SCENE_MAX_HEIGHT_RATIO = 0.52
-JOINT_SCENE_BASELINE_RATIO = 0.88
-JOINT_SCENE_OUTER_SHIFT_RATIO = 0.16
-
-
 def fit_image(image: Image.Image, max_width: int, max_height: int) -> Image.Image:
     scale = min(max_width / image.width, max_height / image.height)
     return image.resize(
@@ -163,42 +157,8 @@ def joint_scene_cutout_placements(
     layout: PageLayout,
     scope_dir: Path,
 ) -> list[dict[str, Any]]:
-    """Return conservative generative bounds with ample crop tolerance."""
-    placements = cutout_placements(
-        layout,
-        scope_dir,
-        max_width_ratio=JOINT_SCENE_MAX_WIDTH_RATIO,
-        max_height_ratio=JOINT_SCENE_MAX_HEIGHT_RATIO,
-        baseline_ratio=JOINT_SCENE_BASELINE_RATIO,
-    )
-    count = len(placements)
-    if count == 1:
-        directions = (0.0,)
-    else:
-        midpoint = (count - 1) / 2
-        directions = tuple(
-            (index - midpoint) / midpoint
-            for index in range(count)
-        )
-    adjusted = []
-    for placement, direction in zip(
-        placements,
-        directions,
-        strict=True,
-    ):
-        item = dict(placement)
-        item["x"] = int(item["x"]) + round(
-            item["cell"].width
-            * JOINT_SCENE_OUTER_SHIFT_RATIO
-            * direction
-        )
-        adjusted.append(item)
-    validate_visible_placements(
-        adjusted,
-        canvas_size=(layout.width_px, layout.height_px),
-        description="Joint-scene",
-    )
-    return adjusted
+    """Reuse the proven card-safe placement contract for the joint scene."""
+    return cutout_placements(layout, scope_dir)
 
 
 def joint_scene_canvas_placements(

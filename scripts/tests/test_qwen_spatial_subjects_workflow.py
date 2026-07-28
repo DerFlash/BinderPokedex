@@ -127,15 +127,15 @@ def test_qwen_spatial_prompt_binds_picture_name_card_and_coordinates():
     assert "PICTURE 2 = Litten, center bottom card" in prompt
     assert "PICTURE 3 = Popplio, right bottom card" in prompt
     assert (
-        "Rowlet: x 4.2% to 17.2%, y 85.1% to 96.1%"
+        "Rowlet: x 6.6% to 25.0%, y 77.8% to 93.6%"
         in prompt
     )
     assert (
-        "Litten: x 44.3% to 55.7%, y 85.1% to 96.1%"
+        "Litten: x 41.9% to 58.0%, y 77.7% to 93.6%"
         in prompt
     )
     assert (
-        "Popplio: x 81.5% to 96.8%, y 86.6% to 96.1%"
+        "Popplio: x 73.1% to 94.9%, y 79.8% to 93.6%"
         in prompt
     )
     assert (

@@ -754,7 +754,7 @@ def test_cutout_placements_stay_inside_bottom_card_cells():
         assert cell.y <= top < bottom <= cell.y + cell.height
 
 
-def test_joint_scene_placements_add_generative_crop_tolerance():
+def test_joint_scene_placements_reuse_canonical_card_fit():
     scope_dir = (
         Path(__file__).resolve().parents[2]
         / "data"
@@ -766,24 +766,14 @@ def test_joint_scene_placements_add_generative_crop_tolerance():
     joint = joint_scene_cutout_placements(layout, scope_dir)
 
     for exact_item, joint_item in zip(exact, joint, strict=True):
-        exact_box = exact_item["image"].getchannel("A").getbbox()
-        joint_box = joint_item["image"].getchannel("A").getbbox()
-        assert exact_box is not None and joint_box is not None
-        assert joint_box[2] - joint_box[0] < exact_box[2] - exact_box[0]
-        assert joint_box[3] - joint_box[1] < exact_box[3] - exact_box[1]
-        assert (
-            joint_item["y"] + joint_box[3]
-            > exact_item["y"] + exact_box[3]
-        )
-    joint_centers = []
-    for item in joint:
-        box = item["image"].getchannel("A").getbbox()
-        assert box is not None
-        joint_centers.append(
-            item["x"] + (box[0] + box[2]) / 2
-        )
-    assert joint_centers[0] < joint[0]["cell"].center[0]
-    assert joint_centers[2] > joint[2]["cell"].center[0]
+        assert joint_item["cell"] == exact_item["cell"]
+        assert joint_item["item"] == exact_item["item"]
+        assert joint_item["x"] == exact_item["x"]
+        assert joint_item["y"] == exact_item["y"]
+        assert ImageChops.difference(
+            joint_item["image"],
+            exact_item["image"],
+        ).getbbox() is None
 
 
 def test_real_canvas_guard_rejects_an_explicit_out_of_canvas_placement():
