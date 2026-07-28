@@ -51,12 +51,14 @@ data/poster_assets/**/comfyui_poster/workflow_api_*.json
 data/poster_assets/**/comfyui_poster/anima_workflow_api.json
 data/poster_assets/**/comfyui_poster/flux1_canny_workflow_api_*.json
 data/poster_assets/**/comfyui_poster/qwen_edit_workflow_api_*.json
+data/poster_assets/**/comfyui_poster/workflow_api_qwen_spatial_subjects_*.json
 data/poster_assets/**/comfyui_poster/scene_reference.png
 data/poster_assets/**/comfyui_poster/inpaint_reference.png
 data/poster_assets/**/comfyui_poster/structure_reference.png
 data/poster_assets/**/comfyui_poster/upper_context_mask.png
 data/poster_assets/**/comfyui_poster/upper_context_generation_mask.png
 data/poster_assets/**/comfyui_poster/qwen_identity_reference_*.png
+data/poster_assets/**/comfyui_poster/qwen_spatial_subject_reference_*.png
 data/poster_assets/**/comfyui_poster/identity_core.png
 data/poster_assets/**/comfyui_poster/identity_reference_*.png
 data/poster_assets/**/comfyui_poster/joint_scene_cast_reference.png
@@ -68,6 +70,7 @@ data/poster_assets/**/comfyui_poster/identity_lock_prompt.generated.txt
 data/poster_assets/**/comfyui_poster/joint_scene_prompt.generated.txt
 data/poster_assets/**/comfyui_poster/sdxl_identity_*_prompt.generated.txt
 data/poster_assets/**/comfyui_poster/dreamo_v1_1_prompt.generated.txt
+data/poster_assets/**/comfyui_poster/qwen_spatial_subjects_prompt.generated.txt
 
 # Generated files (keep data, ignore PDFs)
 output/**/*.pdf

@@ -403,6 +403,35 @@ count, placement, depth, and coarse anatomy; its sole changed variable may be
 the official native non-Lightning sampling preset. Any remaining anatomy
 change closes this Qwen topology.
 
+The preparation checkpoint implements that graph without changing the existing
+`qwen_edit` runner or its promotion semantics. That separation is intentional:
+the current runner treats Qwen as an exact-source edit, while this experiment
+is a complete unified redraw and must not inherit or weaken that source-pixel
+gate before it proves useful. All three opaque references use the canonical
+`848 × 1168` 1-MP poster canvas even for the 0.25-MP target. Qwen normalizes
+every reference to roughly 1 MP internally, so preparing a smaller reference
+would discard identity detail without reducing that conditioning cost.
+
+The prepared Generation VII evidence is:
+
+| Input | SHA-256 |
+| --- | --- |
+| Rowlet spatial reference | `bb9f28900c1d91639744c4de3c61570932d9c2201697906414416381ff9cd3f1` |
+| Litten spatial reference | `0b6ca1efa05c4d6421a9d361212a74edca899075c4075322c4331ae251d37733` |
+| Popplio spatial reference | `11d6a6936532509b40c37530e86e768504f3b8ccc97f3d79e2b43bb6decc9010` |
+| Dynamic prompt snapshot | `948e45849b8f9369a0ffc1e55513772fdd0b82b7f6b835ceac3ca09e0ecbdc32` |
+| 0.25-MP API workflow | `c0aa0af2322fa1acb11f07966f7c292edbd30ebc924e3c29a4555514cd762ce8` |
+
+The installed model contract is Qwen-Image-Edit-2511 Q3_K_M
+`5631fd3a…4e9e9`, Qwen 2.5 VL 7B FP8 `cb5636d8…5c0b4`, Qwen image VAE
+`a70580f0…23d1f`, and the four-step Lightning LoRA `22226e8d…a904f`.
+Automated tests compare every reference pixel against exactly one expected
+source placement, verify the prompt's picture/name/card order and normalized
+bounds, and reject any graph containing a source VAE target, inpaint, control,
+or composite node. The new focused tests and the existing poster workflow,
+generation-option, and provenance suites pass together with 230 tests. The
+complete repository suite passes with 536 tests and one expected skip.
+
 ### Review record template
 
 Every rendered candidate appends one row containing the exact workflow and

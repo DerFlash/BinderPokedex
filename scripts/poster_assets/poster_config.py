@@ -1005,3 +1005,146 @@ def build_dreamo_identity_prompt(
     if specific_notes:
         paragraphs.append(" ".join(specific_notes))
     return "\n\n".join(paragraphs)
+
+
+def build_qwen_spatial_subject_prompt(
+    manifest: dict[str, Any],
+    scope_data: dict[str, Any],
+    items: list[dict[str, Any]],
+    *,
+    placement_contract: list[dict[str, int]],
+) -> str:
+    """Build the isolated Qwen prompt for three spatial subject images."""
+    if len(items) != 3:
+        raise ValueError(
+            "Qwen spatial-subject control requires exactly 3 subjects"
+        )
+    if len(placement_contract) != len(items):
+        raise ValueError(
+            "Qwen spatial-subject placement must describe every subject"
+        )
+
+    artwork = _mapping(manifest.get("artwork"), "artwork")
+    scene = _mapping(artwork.get("scene"), "artwork.scene")
+    concept = _text(
+        scene.get("concept"),
+        "artwork.scene.concept",
+        default=_default_scene_concept(manifest, scope_data),
+    )
+    setting = _text(
+        scene.get("setting"),
+        "artwork.scene.setting",
+        default=(
+            "Build a broad natural landscape whose terrain, flora, distant "
+            "landmarks, and atmosphere subtly echo the set's theme."
+        ),
+    )
+    lighting = _text(
+        scene.get("lighting"),
+        "artwork.scene.lighting",
+        default="Soft directional daylight enters from the upper left.",
+    )
+    rendering = _text(
+        scene.get("rendering"),
+        "artwork.scene.rendering",
+        default=(
+            "Use polished trading-card illustration, clean cel-painted "
+            "linework, restrained natural colors, and atmospheric depth."
+        ),
+    )
+
+    def percentage(value: object) -> str:
+        if not isinstance(value, int) or not 0 <= value <= 1000:
+            raise ValueError(
+                "Qwen placement coordinates must be per-mille integers "
+                "between 0 and 1000"
+            )
+        return f"{value / 10:.1f}%"
+
+    assignments = []
+    bounds = []
+    for image_number, (item, contract) in enumerate(
+        zip(items, placement_contract, strict=True),
+        start=1,
+    ):
+        if not isinstance(contract, dict):
+            raise ValueError(
+                "Qwen placement contract entries must be mappings"
+            )
+        name = item.get("name_en") or f"Pokemon #{item.get('pokemon_id', '?')}"
+        region = reference_region_label(image_number - 1, len(items))
+        assignments.append(
+            f"PICTURE {image_number} = {name}, {region} bottom card"
+        )
+        bounds.append(
+            (
+                f"{name}: x {percentage(contract.get('left_per_mille'))} to "
+                f"{percentage(contract.get('right_per_mille'))}, y "
+                f"{percentage(contract.get('top_per_mille'))} to "
+                f"{percentage(contract.get('bottom_per_mille'))}"
+            )
+        )
+
+    paragraphs = [
+        (
+            f"Three source pictures are supplied in fixed order: "
+            f"{'; '.join(assignments)}. Each picture contains exactly one "
+            "member of the same final cast, already at its required poster "
+            "position and scale. Across all source pictures, each character "
+            "appears exactly once. Combine them into one final image and "
+            "render exactly these three characters once each. The identical "
+            "plain neutral fields are empty coordinate space, not scenery, "
+            "panels, cards, or separate backgrounds."
+        ),
+        (
+            "Each source picture is the strict authority for its named "
+            "character's pose, orientation, stature, proportions, silhouette, "
+            "anatomy, face, colors, markings, appendages, and position. "
+            "Preserve every defining feature. Do not add, remove, merge, "
+            "simplify, enlarge, reshape, duplicate, or redesign any body part "
+            "or marking."
+        ),
+        (
+            f"Mandatory visible silhouette bounds: {'; '.join(bounds)}. Keep "
+            "every complete character and appendage within its assigned "
+            "bottom-row card with visible landscape padding. Match the shown "
+            "baseline and scale. The coordinates and 3x3 card divisions are "
+            "invisible and must never be drawn."
+        ),
+        (
+            f"Create one cohesive full-bleed vertical illustration for "
+            f"{concept}. {setting} {lighting} {rendering}"
+        ),
+        (
+            "Generate the complete landscape and all three characters together "
+            "from an empty target in one unified denoising pass. There is no "
+            "background plate and no later overlay, restoration, mask repair, "
+            "or composite. Use coherent ground contact, cast shadows, reflected "
+            "light, perspective, linework, color grading, and depth so the "
+            "characters look native to the landscape."
+        ),
+        (
+            "Use one consistent depth order. Genuinely nearer scenery may cross "
+            "only a small non-defining outer edge; farther scenery stays behind. "
+            "A connected plant, leaf, branch, rock, or water edge must keep the "
+            "same plausible front-or-behind relationship along its visible "
+            "length. Move or shorten scenery instead of hiding a face, marking, "
+            "limb, appendage, or defining silhouette."
+        ),
+        (
+            f"{_compact_safe_area_sentence(manifest, scene)} Fill every edge "
+            "with one continuous natural ground plane, without "
+            "character-specific clearings, paths, platforms, circles, halos, "
+            "or landing pads. Draw no extra creature, person, trainer, "
+            "character-shaped scenery, text, letters, numbers, logo, title, "
+            "box, plaque, panel, card border, UI, watermark, guide, or crop "
+            "mark."
+        ),
+    ]
+    constraints = _scene_constraints(scene)
+    if constraints:
+        paragraphs.append(" ".join(constraints))
+    specific_notes = subject_prompt_notes(items, manifest)
+    if specific_notes:
+        paragraphs.append(" ".join(specific_notes))
+    return "\n\n".join(paragraphs)
