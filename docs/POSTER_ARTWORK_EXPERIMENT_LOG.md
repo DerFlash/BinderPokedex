@@ -105,13 +105,19 @@ Every rendered candidate appends one row containing the exact workflow and
 model hashes, raw and deterministic print-size artifact paths, runtime, and
 the following result:
 
-| Gate | Required evidence |
-| --- | --- |
-| Joint final scene | Workflow contains one final sampler/decode and no post-decode source composite or restoration |
-| Identity and anatomy | Whole-poster and individual bottom-card review against all three supplied cutouts |
-| Card containment | Deterministic crop validation against the physical 3x3 raster |
-| Coherent depth | Visual review of contact shadows and every connected landscape/character intersection |
-| Set scene and safe areas | Whole-poster review before deterministic logo and text overlays |
+| Gate | Automatic evidence | Mandatory visual evidence |
+| --- | --- | --- |
+| Joint final scene | Empty target, one final sampler/decode, and no post-decode source composite or restoration | The output does not read as separate pasted layers |
+| Identity and anatomy | Exact source hashes and one explicit reference-to-region binding per subject | Whole-poster and individual bottom-card comparison against all three supplied cutouts |
+| Card containment | Every input mask and structural guide remains inside its physical card envelope; the nine output crops use the exact shared geometry | Every generated silhouette and appendage remains inside its real bottom-card crop with visible padding |
+| Coherent depth | The workflow and prompt expose one common scene-depth contract | Contact shadows and every connected landscape/character intersection remain physically consistent |
+| Set scene and safe areas | Title and information cells are derived from the shared physical geometry | Whole-poster review before deterministic logo and text overlays |
+| Print output | Deterministic Lanczos output has the exact configured 300-dpi dimensions and nine expected crop dimensions | Raw and print-size crops retain the reviewed small identity details |
+
+Geometric crop validation cannot prove that a probabilistically generated
+character stayed inside its crop. Similarity, segmentation, CLIP, or DINO
+scores may help reject obvious failures but cannot approve anatomy,
+containment, grounding, or occlusion.
 
 An architecture stops after three materially distinct attempts at the same
 failed hard gate. A Pokémon LoRA is retained only when the controlled A/B
