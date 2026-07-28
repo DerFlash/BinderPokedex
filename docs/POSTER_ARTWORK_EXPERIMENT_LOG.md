@@ -117,6 +117,25 @@ All 163 poster-asset tests pass after this checkpoint. Visual identity,
 containment, grounding, and occlusion remain untested until the first local
 model render is recorded below.
 
+### SDXL pre-render review checkpoint
+
+A parallel KISS review verified the installed ComfyUI node schemas and found no
+production-path changes, but identified that the initial graph reused an
+834-word FLUX/Qwen prompt. SDXL's CLIP conditioning should not carry that much
+duplicated geometry prose, because the regional masks and structural
+ControlNet already own placement. The next workflow snapshot therefore uses a
+dedicated 362-word SDXL prompt containing only the scene, named regional cast,
+identity invariants, empty-target contract, coherent depth rule, safe areas,
+and exclusions. Generic and Pokémon-assisted output prefixes are also explicit
+so their artifacts cannot be confused.
+
+The review deliberately leaves the full source-derived Canny guide and hard
+per-card masks unchanged until candidate `sdxl_identity/00001` shows whether
+they actually cause rigid cutout edges or vertical conditioning seams. These
+are visual hypotheses, not reasons to add feathering or another control stage
+preemptively. The complete repository test suite passes with 518 tests and one
+expected skip.
+
 ### Review record template
 
 Every rendered candidate appends one row containing the exact workflow and

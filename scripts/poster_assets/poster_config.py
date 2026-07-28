@@ -332,19 +332,10 @@ def build_joint_scene_prompt(
     items: list[dict[str, Any]],
     *,
     placement_contract: list[dict[str, int]],
-    reference_contract: str = "numbered_images",
 ) -> str:
     """Build one final-scene prompt from spatial and identity references."""
     if not items:
         raise ValueError("Joint scene generation needs at least one subject")
-    if reference_contract not in {
-        "numbered_images",
-        "regional_identity_control",
-    }:
-        raise ValueError(
-            f"Unsupported joint-scene reference contract: "
-            f"{reference_contract}"
-        )
     artwork = _mapping(manifest.get("artwork"), "artwork")
     scene = _mapping(artwork.get("scene"), "artwork.scene")
     concept = _text(
@@ -397,37 +388,13 @@ def build_joint_scene_prompt(
     else:
         cast = ", ".join(cast_names[:-1]) + f", and {cast_names[-1]}"
 
-    if reference_contract == "numbered_images":
-        reference_prompt = build_spatial_identity_reference_prompt(
-            items,
-            manifest,
-            placement_contract=placement_contract,
-        )
-        reference_authority = (
-            "IMAGE 1 is the strict authority for count, pose, orientation, "
-            "target scale, baseline, and poster position. The corresponding "
-            "individual identity image is the strict authority for each "
-            "character's exact silhouette shape, stature, anatomy, facial "
-            "features, colors, markings, and defining design details."
-        )
-    else:
-        reference_prompt = build_regional_identity_reference_prompt(
-            items,
-            manifest,
-            placement_contract=placement_contract,
-        )
-        reference_authority = (
-            "The full-canvas structural guide is the strict authority for "
-            "count, pose, orientation, target scale, baseline, and poster "
-            "position. Each region-bound identity image is the strict "
-            "authority for its character's exact silhouette shape, stature, "
-            "anatomy, facial features, colors, markings, and defining design "
-            "details."
-        )
-
     return "\n\n".join(
         (
-            reference_prompt,
+            build_spatial_identity_reference_prompt(
+                items,
+                manifest,
+                placement_contract=placement_contract,
+            ),
             (
                 "Generate the complete final image in one unified denoising "
                 "pass from an empty target. There is no supplied landscape "
@@ -441,7 +408,11 @@ def build_joint_scene_prompt(
             ),
             (
                 f"Render exactly these {len(items)} characters once: {cast}. "
-                f"{reference_authority} "
+                "IMAGE 1 is the strict authority for count, pose, orientation, "
+                "target scale, baseline, and poster position. The corresponding "
+                "individual identity image is the strict authority for each "
+                "character's exact silhouette shape, stature, anatomy, facial "
+                "features, colors, markings, and defining design details. "
                 "Permitted "
                 "changes are limited to scene lighting, reflected color, cast "
                 "shadow, and small physically plausible edge occlusions. Do "
@@ -786,97 +757,99 @@ def build_spatial_identity_reference_prompt(
     return "\n\n".join(paragraphs)
 
 
-def build_regional_identity_reference_prompt(
-    items: list[dict[str, Any]],
+def build_sdxl_identity_control_prompt(
     manifest: dict[str, Any],
-    *,
-    placement_contract: list[dict[str, int]],
+    scope_data: dict[str, Any],
+    items: list[dict[str, Any]],
 ) -> str:
-    """Describe one structural guide plus region-bound identity references."""
+    """Build a compact CLIP prompt for regional SDXL identity control."""
     if not items:
-        raise ValueError("Regional identity control needs at least one cutout")
-    if len(placement_contract) != len(items):
-        raise ValueError(
-            "Regional identity placement contract must describe every subject"
-        )
-
-    regions = [
-        reference_region_label(index, len(items))
-        for index in range(len(items))
-    ]
-    region_summary = (
-        regions[0]
-        if len(regions) == 1
-        else ", ".join(regions[:-1]) + f", or {regions[-1]}"
+        raise ValueError("SDXL identity control needs at least one subject")
+    artwork = _mapping(manifest.get("artwork"), "artwork")
+    scene = _mapping(artwork.get("scene"), "artwork.scene")
+    concept = _text(
+        scene.get("concept"),
+        "artwork.scene.concept",
+        default=_default_scene_concept(manifest, scope_data),
     )
-
-    def percentage(value: int) -> str:
-        if not isinstance(value, int) or not 0 <= value <= 1000:
-            raise ValueError(
-                "Regional identity placement coordinates must be per-mille "
-                "integers between 0 and 1000"
-            )
-        return f"{value / 10:.1f}%"
-
-    identities = []
-    coordinates = []
-    for item, region, contract in zip(
-        items,
-        regions,
-        placement_contract,
-        strict=True,
-    ):
-        if not isinstance(contract, dict):
-            raise ValueError(
-                "Regional identity placement entries must be mappings"
-            )
+    setting = _text(
+        scene.get("setting"),
+        "artwork.scene.setting",
+        default=(
+            "Build a broad natural landscape whose terrain, flora, distant "
+            "landmarks, and atmosphere subtly echo the set's theme."
+        ),
+    )
+    lighting = _text(
+        scene.get("lighting"),
+        "artwork.scene.lighting",
+        default="Soft directional daylight enters from the upper left.",
+    )
+    rendering = _text(
+        scene.get("rendering"),
+        "artwork.scene.rendering",
+        default=(
+            "Use polished trading-card illustration, clean cel-painted "
+            "linework, restrained natural colors, and atmospheric depth."
+        ),
+    )
+    assignments = []
+    for index, item in enumerate(items):
         name = item.get("name_en") or f"Pokemon #{item.get('pokemon_id', '?')}"
-        identities.append(
-            f"The {region} regional identity reference belongs only to "
-            f"{name}."
-        )
-        coordinates.append(
-            (
-                f"{name}: x {percentage(contract['left_per_mille'])} to "
-                f"{percentage(contract['right_per_mille'])}, y "
-                f"{percentage(contract['top_per_mille'])} to "
-                f"{percentage(contract['bottom_per_mille'])}"
-            )
+        assignments.append(
+            f"{name} in the {reference_region_label(index, len(items))} "
+            "bottom card"
         )
 
     paragraphs = [
         (
-            "The full-canvas structural guide contains source-derived "
-            f"contours for exactly {len(items)} complete characters across "
-            f"the {region_summary} bottom-row regions. It controls only "
-            "character count, pose, orientation, relative scale, shared "
-            "baseline, poster coordinates, and outer placement bounds. It "
-            "is not a landscape image, background plate, style reference, "
-            "visible line art, or content to paste into the result."
+            f"Create one cohesive full-bleed illustration for {concept}. "
+            f"{setting} {lighting} {rendering} "
+            f"Render exactly {len(items)} complete characters once: "
+            f"{'; '.join(assignments)}."
         ),
         (
-            f"{' '.join(identities)} Each regional identity image is the sole "
-            "authority for that character's silhouette shape, stature, "
-            "anatomy, facial features, colors, markings, appendages, and "
-            "defining design details. Its centered position and neutral "
-            "field carry no placement or scenery meaning. The regional "
-            "masks are invisible controls only. These references describe "
-            "the same cast in the structural guide, not additional subjects."
+            "The source-derived structural guide fixes character count, pose, "
+            "orientation, scale, baseline, and card placement. Each regional "
+            "identity reference belongs only to its named character and fixes "
+            "that character's exact silhouette, stature, anatomy, face, "
+            "colors, markings, appendages, and defining details. Preserve "
+            "every referenced feature; never add, remove, merge, simplify, or "
+            "reshape anatomy or markings. Keep every complete silhouette and "
+            "appendage inside its assigned bottom-row card with visible "
+            "landscape padding. The neutral reference fields, guide, masks, "
+            "and card divisions are invisible controls, not scene content."
         ),
         (
-            "The following normalized target silhouette rectangles are the "
-            "mandatory placement and scale contract: "
-            f"{'; '.join(coordinates)}. Match every complete silhouette, "
-            "baseline, and surrounding landscape clearance to these bounds "
-            "within two percent of the full canvas. Each rectangle is a hard "
-            "outer limit for every visible character pixel, including every "
-            "outermost referenced detail and appendage. Render each character "
-            f"exactly once in its assigned {region_summary} bottom-row "
-            "region. No character may cross above the bottom row or an "
-            "invisible vertical region division. The guide, coordinates, "
-            "masks, and divisions must never be drawn."
+            "Generate the final landscape and all characters together from an "
+            "empty target in one unified denoising pass. There is no supplied "
+            "background plate and no later character overlay, restoration, or "
+            "composite. Ground contact, directional cast shadows, reflected "
+            "light, perspective, color grading, and scene depth must agree "
+            "naturally so the characters look native to the landscape."
+        ),
+        (
+            "Use one physically coherent depth order. A genuinely nearer "
+            "landscape element may continue naturally in front of a small "
+            "non-defining exterior character edge, while farther scenery "
+            "stays behind. A connected plant or branch must keep the same "
+            "depth relationship along its visible length. Move or shorten "
+            "scenery instead of hiding an identity-critical face, marking, "
+            "limb, appendage, or silhouette detail."
+        ),
+        (
+            f"{_safe_area_sentence(manifest, scene)} Fill every image edge "
+            "naturally. Keep one continuous natural ground plane without "
+            "character-specific clearings, paths, platforms, circles, halos, "
+            "or landing pads. Draw no extra creature, person, trainer, "
+            "character-shaped scenery, text, letters, numbers, logo, title "
+            "art, box, plaque, panel, card border, UI, watermark, guide, or "
+            "crop mark."
         ),
     ]
+    constraints = _scene_constraints(scene)
+    if constraints:
+        paragraphs.append(" ".join(constraints))
     specific_notes = subject_prompt_notes(items, manifest)
     if specific_notes:
         paragraphs.append(" ".join(specific_notes))

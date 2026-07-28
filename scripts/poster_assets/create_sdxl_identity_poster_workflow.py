@@ -7,16 +7,12 @@ import json
 from pathlib import Path
 
 try:
-    from .composition import (
-        joint_scene_canvas_placements,
-        normalized_visible_placement_contract,
-    )
     from .create_comfyui_poster_workflow import (
         megapixel_marker,
         node,
         output_dimensions,
     )
-    from .poster_config import build_joint_scene_prompt
+    from .poster_config import build_sdxl_identity_control_prompt
     from .poster_io import (
         load_cutout_items,
         load_poster_scope_data,
@@ -25,16 +21,12 @@ try:
     )
     from .prepare_comfyui_poster import build_sdxl_identity_references
 except ImportError:
-    from composition import (
-        joint_scene_canvas_placements,
-        normalized_visible_placement_contract,
-    )
     from create_comfyui_poster_workflow import (
         megapixel_marker,
         node,
         output_dimensions,
     )
-    from poster_config import build_joint_scene_prompt
+    from poster_config import build_sdxl_identity_control_prompt
     from poster_io import (
         load_cutout_items,
         load_poster_scope_data,
@@ -92,27 +84,15 @@ def build_workflow(
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
     manifest = bundle.manifest
     items = load_cutout_items(bundle.asset_dir)
-    if not 1 <= len(items) <= 5:
-        raise ValueError("SDXL regional identity control supports 1-5 subjects")
+    if len(items) not in {3, 4}:
+        raise ValueError("SDXL regional identity control supports 3-4 subjects")
     width, height = output_dimensions(scope, megapixels)
-    placements = joint_scene_canvas_placements(
-        bundle.asset_dir,
-        layout_name=str(
-            manifest.get("layout", {}).get("name", "standard_3x3")
-        ),
-        canvas_size=(width, height),
-    )
-    placement_contract = normalized_visible_placement_contract(
-        placements,
-        canvas_size=(width, height),
-    )
-    positive_prompt = build_joint_scene_prompt(
+    positive_prompt = build_sdxl_identity_control_prompt(
         manifest,
         load_poster_scope_data(bundle),
         items,
-        placement_contract=placement_contract,
-        reference_contract="regional_identity_control",
     )
+    variant = "pokemon" if pokemon_lora_name else "generic"
 
     workflow = {
         "1": node("CheckpointLoaderSimple", ckpt_name=checkpoint_name),
@@ -243,7 +223,7 @@ def build_workflow(
                 "SaveImage",
                 images=["52", 0],
                 filename_prefix=(
-                    f"{poster_asset_slug(scope)}_sdxl_identity_"
+                    f"{poster_asset_slug(scope)}_sdxl_identity_{variant}_"
                     f"{megapixel_marker(megapixels)}_seed_{seed}"
                 ),
             ),
@@ -277,7 +257,6 @@ def write_experiment(
         pokemon_lora_name=pokemon_lora_name,
         **workflow_options,
     )
-    variant = "pokemon" if pokemon_lora_name else "generic"
     marker = megapixel_marker(megapixels)
     workflow_path = (
         work_dir

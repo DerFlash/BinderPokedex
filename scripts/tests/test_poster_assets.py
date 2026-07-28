@@ -1771,14 +1771,20 @@ def test_sdxl_identity_workflow_is_one_empty_target_pass_with_three_regions():
     assert workflow["51"]["inputs"]["negative"] == ["44", 1]
 
     prompt = workflow["4"]["inputs"]["text"]
-    assert "one unified denoising pass from an empty target" in prompt
-    assert "full-canvas structural guide" in prompt
-    assert "regional identity reference belongs only to Rowlet" in prompt
-    assert "regional identity reference belongs only to Litten" in prompt
-    assert "regional identity reference belongs only to Popplio" in prompt
-    assert "not additional subjects" in prompt
+    assert "from an empty target in one unified denoising pass" in prompt
+    assert "source-derived structural guide" in prompt
+    assert "Rowlet in the left bottom card" in prompt
+    assert "Litten in the center bottom card" in prompt
+    assert "Popplio in the right bottom card" in prompt
     assert "IMAGE 1" not in prompt
-    assert "There is no later character overlay" in prompt
+    assert "no later character overlay" in prompt
+    assert len(prompt) < 3_500
+    assert len(prompt.split()) < 500
+    assert (
+        workflow["53"]["inputs"]["filename_prefix"]
+        == "pokedex__sections__gen7_sdxl_identity_generic_"
+        "1mp_seed_260726054"
+    )
 
 
 def test_sdxl_pokemon_variant_changes_only_the_model_lora_edge():
@@ -1805,7 +1811,12 @@ def test_sdxl_pokemon_variant_changes_only_the_model_lora_edge():
     }
     assert generic["3"]["inputs"]["model"] == ["1", 0]
     assert pokemon["3"]["inputs"]["model"] == ["2", 0]
-    for node_id in set(generic) - {"3"}:
+    assert (
+        pokemon["53"]["inputs"]["filename_prefix"]
+        == "pokedex__sections__gen7_sdxl_identity_pokemon_"
+        "1mp_seed_260726054"
+    )
+    for node_id in set(generic) - {"3", "53"}:
         assert pokemon[node_id] == generic[node_id]
 
 
