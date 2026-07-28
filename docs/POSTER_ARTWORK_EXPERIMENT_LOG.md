@@ -104,11 +104,12 @@ because it uses a different control contract.
 The first isolated SDXL graph is implemented but not yet visually accepted or
 connected to the production runner. It prepares a full-resolution
 source-derived structure guide, one exact source identity image per Pokémon,
-and one invisible regional mask per physical bottom-row card. The generated
-ComfyUI graph contains one empty target, three region-bound IP-Adapter
-conditions, one shared Canny/Union-ControlNet condition, one sampler, and one
-decode. It contains no background plate, image-to-image target, inpaint stage,
-post-decode character composite, or source-pixel restoration.
+and initially one invisible regional mask per physical bottom-row card. The
+generated ComfyUI graph contains one empty target, three region-bound
+IP-Adapter conditions, one shared structural ControlNet condition, one
+sampler, and one decode. It contains no background plate, image-to-image
+target, inpaint stage, post-decode character composite, or source-pixel
+restoration.
 
 The generic graph and its optional Pokémon-LoRA variant differ only at the
 single model-LoRA edge. The existing production engine registry, runner,
@@ -135,6 +136,71 @@ they actually cause rigid cutout edges or vertical conditioning seams. These
 are visual hypotheses, not reasons to add feathering or another control stage
 preemptively. The complete repository test suite passes with 518 tests and one
 expected skip.
+
+The first runtime preflight used the 2.5-GB Xinsir Union-ControlNet on the
+16-GB M4. ComfyUI remained on Metal and did not report an out-of-memory error
+or CPU fallback, but completed only 5 of 30 sampler steps in 11 minutes 15
+seconds, with the running estimate exceeding one hour. It was interrupted
+before decode and produced no candidate image. This is an operational
+rejection, not a visual identity result. The next graph replaces only that
+oversized structural model with the official 545-MB FP16 SDXL Canny-mid
+ControlNet. The source guide, regional identity adapters, empty target, seed,
+resolution, sampler family, and one-pass contract remain unchanged.
+
+### SDXL candidate record
+
+| Candidate | Single changed variable | Runtime and automatic result | Visual result | Decision |
+| --- | --- | --- | --- | --- |
+| `sdxl_identity/00001` | Replace the rejected Union-ControlNet preflight with SDXL Canny-mid; the effective CLI strength is `0.72` | `253.74 s`; Metal/MPS; one empty target, sampler, and decode; no post-decode composite | Upper scene is a plausible Alola landscape, but the complete bottom row becomes a flat beige strip. All three Pokémon are tiny and visibly redesigned; Litten is severely malformed. No believable ground contact or scene integration remains | Rejected |
+| `sdxl_identity/00002` | Keep the effective `00001` graph, including strength `0.72`, fixed and restrict each IP-Adapter mask from its complete card to the exact placed source silhouette | Pending | Pending | Next controlled attempt |
+
+Candidate `00001` strongly indicates the pre-render review risk: a hard
+whole-card identity mask does not merely bind a subject to a card. Together
+with the neutral identity reference, it appears to condition the card
+background itself and creates the exact horizontal seam at the top of the
+bottom row. This points to a control-scope failure, not evidence that the scene
+prompt needs more detail. The next attempt therefore changes only the masks.
+It does not add feathering, another sampler, inpainting, source compositing, or
+new prompt clauses.
+
+The `00001` snapshot also exposed a configuration drift: the Python workflow
+default had already been changed to the Canny-mid recommendation `0.5`, while
+the CLI parser still supplied `0.72`. The parser is corrected for future
+experiments. Candidate `00002` explicitly keeps `0.72` so its direct comparison
+with `00001` changes only the mask pixels; a later `0.5` run would be a
+separate candidate.
+
+The exact `00002` preparation command is:
+
+```text
+python scripts/poster_assets/create_sdxl_identity_poster_workflow.py \
+  --scope Pokedex/sections/gen7 --seed 260726054 --megapixels 1.0 \
+  --controlnet-strength 0.72
+```
+
+Its three subject-mask SHA-256 values are `cdc1aeb4…975fc9c`,
+`c413d9a5…c29060f`, and `13b6fc73…3cf0c`. Both candidate workflow snapshots
+remain byte-identical at SHA-256 `5989dcfb…538b0`; only those three input
+images change.
+
+The `00001` evidence is reproducible from:
+
+- workflow SHA-256
+  `5989dcfb41b0bd0dd92419ca0a84d35230bcc7e2484f7c5c7232c740f03d8556`;
+- raw `848 × 1168` artwork SHA-256
+  `f43d62a9f92fb0e9948399434f5710f46ab7cbfda2956848e1c2c43d23700c10`;
+- deterministic `2368 × 3268` 300-dpi print resize SHA-256
+  `03aa35e1c2d2a9d4cc62ba17317e4783a936653b714bc5df6c913448065b7439`;
+- nine deterministic `750 × 1050` card crops below
+  `data/poster_assets/Pokedex/sections/gen7/comfyui_poster/output/`
+  `sdxl_identity_generic_00001_cards/`.
+
+The local model fingerprint for this comparison is SDXL Base
+`31e35c80…f7e5b`, CLIP Vision `6ca9667d…7b030`, IP-Adapter Plus SDXL
+`3f5062b8…e6581`, and Canny-mid `15d4d3dd…b844fe`. The IP-Adapter custom node
+is pinned to commit `b188a6cb39b512a9c6da7235b880af42c78ccd0d`. The
+print artifact is a deterministic resize of the reviewed model output, not a
+second generative or learned upscaling pass.
 
 ### Review record template
 

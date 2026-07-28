@@ -33,6 +33,7 @@ from scripts.poster_assets.create_qwen_edit_poster_workflow import (
 )
 from scripts.poster_assets.create_sdxl_identity_poster_workflow import (
     build_workflow as build_sdxl_identity_workflow,
+    write_experiment as write_sdxl_identity_experiment,
 )
 from scripts.poster_assets.finalize_comfyui_poster import (
     draw_title_text_panel,
@@ -1765,6 +1766,13 @@ def test_sdxl_identity_workflow_is_one_empty_target_pass_with_three_regions():
         "params_3": ["21", 0],
     }
     assert workflow["31"]["inputs"]["ipadapter_params"] == ["30", 0]
+    assert "43" not in workflow
+    assert (
+        workflow["42"]["inputs"]["control_net_name"]
+        == "controlnet-canny-sdxl-1.0-mid-fp16.safetensors"
+    )
+    assert workflow["44"]["inputs"]["control_net"] == ["42", 0]
+    assert workflow["44"]["inputs"]["strength"] == 0.50
     assert workflow["51"]["inputs"]["model"] == ["31", 0]
     assert workflow["51"]["inputs"]["latent_image"] == ["50", 0]
     assert workflow["51"]["inputs"]["positive"] == ["44", 0]
@@ -1818,6 +1826,29 @@ def test_sdxl_pokemon_variant_changes_only_the_model_lora_edge():
     )
     for node_id in set(generic) - {"3", "53"}:
         assert pokemon[node_id] == generic[node_id]
+
+
+def test_sdxl_experiment_writer_labels_generic_artifacts(tmp_path: Path):
+    workflow_path = write_sdxl_identity_experiment(
+        "Pokedex/sections/gen7",
+        seed=260726054,
+        megapixels=0.25,
+        output_dir=tmp_path,
+    )
+
+    assert (
+        workflow_path.name
+        == "workflow_api_sdxl_identity_generic_0p25mp_260726054.json"
+    )
+    assert (
+        tmp_path / "sdxl_identity_generic_prompt.generated.txt"
+    ).is_file()
+    workflow = json.loads(workflow_path.read_text(encoding="utf-8"))
+    assert (
+        workflow["53"]["inputs"]["filename_prefix"]
+        == "pokedex__sections__gen7_sdxl_identity_generic_"
+        "0p25mp_seed_260726054"
+    )
 
 
 def test_joint_scene_prompt_separates_spatial_and_identity_roles():

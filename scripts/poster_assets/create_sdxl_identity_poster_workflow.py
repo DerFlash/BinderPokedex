@@ -40,9 +40,9 @@ ROOT = Path(__file__).resolve().parents[2]
 POSTER_ASSETS = ROOT / "data" / "poster_assets"
 
 DEFAULT_CHECKPOINT = "sd_xl_base_1.0.safetensors"
-DEFAULT_CONTROLNET = "xinsir-controlnet-union-sdxl-1.0.safetensors"
+DEFAULT_CONTROLNET = "controlnet-canny-sdxl-1.0-mid-fp16.safetensors"
 DEFAULT_IPADAPTER_WEIGHT = 1.0
-DEFAULT_CONTROLNET_STRENGTH = 0.72
+DEFAULT_CONTROLNET_STRENGTH = 0.50
 NEGATIVE_PROMPT = (
     "text, letters, numbers, logo, watermark, UI, panel, plaque, frame, "
     "border, crop marks, guide lines, visible masks, visible control lines, "
@@ -180,16 +180,11 @@ def build_workflow(
                 "ControlNetLoader",
                 control_net_name=controlnet_name,
             ),
-            "43": node(
-                "SetUnionControlNetType",
-                control_net=["42", 0],
-                type="canny/lineart/anime_lineart/mlsd",
-            ),
             "44": node(
                 "ControlNetApplyAdvanced",
                 positive=["4", 0],
                 negative=["5", 0],
-                control_net=["43", 0],
+                control_net=["42", 0],
                 image=["41", 0],
                 strength=controlnet_strength,
                 start_percent=0.0,
@@ -257,6 +252,7 @@ def write_experiment(
         pokemon_lora_name=pokemon_lora_name,
         **workflow_options,
     )
+    variant = "pokemon" if pokemon_lora_name else "generic"
     marker = megapixel_marker(megapixels)
     workflow_path = (
         work_dir
@@ -293,7 +289,11 @@ def main() -> int:
     parser.add_argument("--steps", type=int, default=30)
     parser.add_argument("--cfg", type=float, default=6.0)
     parser.add_argument("--ipadapter-weight", type=float, default=1.0)
-    parser.add_argument("--controlnet-strength", type=float, default=0.72)
+    parser.add_argument(
+        "--controlnet-strength",
+        type=float,
+        default=DEFAULT_CONTROLNET_STRENGTH,
+    )
     parser.add_argument("--pokemon-lora")
     parser.add_argument("--pokemon-lora-strength", type=float, default=0.30)
     args = parser.parse_args()
