@@ -99,6 +99,24 @@ references, masks, structural guide, seed, sampler settings, and output size
 must remain identical. The FLUX.2 RefControl candidate is evaluated separately
 because it uses a different control contract.
 
+### SDXL implementation checkpoint
+
+The first isolated SDXL graph is implemented but not yet visually accepted or
+connected to the production runner. It prepares a full-resolution
+source-derived structure guide, one exact source identity image per Pokémon,
+and one invisible regional mask per physical bottom-row card. The generated
+ComfyUI graph contains one empty target, three region-bound IP-Adapter
+conditions, one shared Canny/Union-ControlNet condition, one sampler, and one
+decode. It contains no background plate, image-to-image target, inpaint stage,
+post-decode character composite, or source-pixel restoration.
+
+The generic graph and its optional Pokémon-LoRA variant differ only at the
+single model-LoRA edge. The existing production engine registry, runner,
+promotion, manifest, PDF routing, and promoted artwork remain unchanged.
+All 163 poster-asset tests pass after this checkpoint. Visual identity,
+containment, grounding, and occlusion remain untested until the first local
+model render is recorded below.
+
 ### Review record template
 
 Every rendered candidate appends one row containing the exact workflow and

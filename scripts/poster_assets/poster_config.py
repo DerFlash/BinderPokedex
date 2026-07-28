@@ -332,10 +332,19 @@ def build_joint_scene_prompt(
     items: list[dict[str, Any]],
     *,
     placement_contract: list[dict[str, int]],
+    reference_contract: str = "numbered_images",
 ) -> str:
     """Build one final-scene prompt from spatial and identity references."""
     if not items:
         raise ValueError("Joint scene generation needs at least one subject")
+    if reference_contract not in {
+        "numbered_images",
+        "regional_identity_control",
+    }:
+        raise ValueError(
+            f"Unsupported joint-scene reference contract: "
+            f"{reference_contract}"
+        )
     artwork = _mapping(manifest.get("artwork"), "artwork")
     scene = _mapping(artwork.get("scene"), "artwork.scene")
     concept = _text(
@@ -388,13 +397,37 @@ def build_joint_scene_prompt(
     else:
         cast = ", ".join(cast_names[:-1]) + f", and {cast_names[-1]}"
 
+    if reference_contract == "numbered_images":
+        reference_prompt = build_spatial_identity_reference_prompt(
+            items,
+            manifest,
+            placement_contract=placement_contract,
+        )
+        reference_authority = (
+            "IMAGE 1 is the strict authority for count, pose, orientation, "
+            "target scale, baseline, and poster position. The corresponding "
+            "individual identity image is the strict authority for each "
+            "character's exact silhouette shape, stature, anatomy, facial "
+            "features, colors, markings, and defining design details."
+        )
+    else:
+        reference_prompt = build_regional_identity_reference_prompt(
+            items,
+            manifest,
+            placement_contract=placement_contract,
+        )
+        reference_authority = (
+            "The full-canvas structural guide is the strict authority for "
+            "count, pose, orientation, target scale, baseline, and poster "
+            "position. Each region-bound identity image is the strict "
+            "authority for its character's exact silhouette shape, stature, "
+            "anatomy, facial features, colors, markings, and defining design "
+            "details."
+        )
+
     return "\n\n".join(
         (
-            build_spatial_identity_reference_prompt(
-                items,
-                manifest,
-                placement_contract=placement_contract,
-            ),
+            reference_prompt,
             (
                 "Generate the complete final image in one unified denoising "
                 "pass from an empty target. There is no supplied landscape "
@@ -408,11 +441,7 @@ def build_joint_scene_prompt(
             ),
             (
                 f"Render exactly these {len(items)} characters once: {cast}. "
-                "IMAGE 1 is the strict authority for count, pose, orientation, "
-                "target scale, baseline, and poster position. The corresponding "
-                "individual identity image is the strict authority for each "
-                "character's exact silhouette shape, stature, anatomy, facial "
-                "features, colors, markings, and defining design details. "
+                f"{reference_authority} "
                 "Permitted "
                 "changes are limited to scene lighting, reflected color, cast "
                 "shadow, and small physically plausible edge occlusions. Do "
@@ -749,6 +778,103 @@ def build_spatial_identity_reference_prompt(
             "region. No character may cross above the bottom row or an "
             "invisible vertical region division. The coordinates and "
             "divisions must never be drawn."
+        ),
+    ]
+    specific_notes = subject_prompt_notes(items, manifest)
+    if specific_notes:
+        paragraphs.append(" ".join(specific_notes))
+    return "\n\n".join(paragraphs)
+
+
+def build_regional_identity_reference_prompt(
+    items: list[dict[str, Any]],
+    manifest: dict[str, Any],
+    *,
+    placement_contract: list[dict[str, int]],
+) -> str:
+    """Describe one structural guide plus region-bound identity references."""
+    if not items:
+        raise ValueError("Regional identity control needs at least one cutout")
+    if len(placement_contract) != len(items):
+        raise ValueError(
+            "Regional identity placement contract must describe every subject"
+        )
+
+    regions = [
+        reference_region_label(index, len(items))
+        for index in range(len(items))
+    ]
+    region_summary = (
+        regions[0]
+        if len(regions) == 1
+        else ", ".join(regions[:-1]) + f", or {regions[-1]}"
+    )
+
+    def percentage(value: int) -> str:
+        if not isinstance(value, int) or not 0 <= value <= 1000:
+            raise ValueError(
+                "Regional identity placement coordinates must be per-mille "
+                "integers between 0 and 1000"
+            )
+        return f"{value / 10:.1f}%"
+
+    identities = []
+    coordinates = []
+    for item, region, contract in zip(
+        items,
+        regions,
+        placement_contract,
+        strict=True,
+    ):
+        if not isinstance(contract, dict):
+            raise ValueError(
+                "Regional identity placement entries must be mappings"
+            )
+        name = item.get("name_en") or f"Pokemon #{item.get('pokemon_id', '?')}"
+        identities.append(
+            f"The {region} regional identity reference belongs only to "
+            f"{name}."
+        )
+        coordinates.append(
+            (
+                f"{name}: x {percentage(contract['left_per_mille'])} to "
+                f"{percentage(contract['right_per_mille'])}, y "
+                f"{percentage(contract['top_per_mille'])} to "
+                f"{percentage(contract['bottom_per_mille'])}"
+            )
+        )
+
+    paragraphs = [
+        (
+            "The full-canvas structural guide contains source-derived "
+            f"contours for exactly {len(items)} complete characters across "
+            f"the {region_summary} bottom-row regions. It controls only "
+            "character count, pose, orientation, relative scale, shared "
+            "baseline, poster coordinates, and outer placement bounds. It "
+            "is not a landscape image, background plate, style reference, "
+            "visible line art, or content to paste into the result."
+        ),
+        (
+            f"{' '.join(identities)} Each regional identity image is the sole "
+            "authority for that character's silhouette shape, stature, "
+            "anatomy, facial features, colors, markings, appendages, and "
+            "defining design details. Its centered position and neutral "
+            "field carry no placement or scenery meaning. The regional "
+            "masks are invisible controls only. These references describe "
+            "the same cast in the structural guide, not additional subjects."
+        ),
+        (
+            "The following normalized target silhouette rectangles are the "
+            "mandatory placement and scale contract: "
+            f"{'; '.join(coordinates)}. Match every complete silhouette, "
+            "baseline, and surrounding landscape clearance to these bounds "
+            "within two percent of the full canvas. Each rectangle is a hard "
+            "outer limit for every visible character pixel, including every "
+            "outermost referenced detail and appendage. Render each character "
+            f"exactly once in its assigned {region_summary} bottom-row "
+            "region. No character may cross above the bottom row or an "
+            "invisible vertical region division. The guide, coordinates, "
+            "masks, and divisions must never be drawn."
         ),
     ]
     specific_notes = subject_prompt_notes(items, manifest)

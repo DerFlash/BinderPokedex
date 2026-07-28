@@ -519,10 +519,7 @@ def build_joint_scene_references(
         ),
         canvas_size=(width, height),
     )
-    defaults = manifest.get("conditioning", {}).get(
-        "identity_defaults",
-        {},
-    )
+    defaults = manifest.get("conditioning", {}).get("identity_defaults", {})
     neutral = defaults.get("neutral_rgb", [226, 224, 211])
     if (
         not isinstance(neutral, list)
@@ -551,6 +548,22 @@ def build_joint_scene_references(
         format="PNG",
         optimize=True,
     )
+    _write_unscaled_identity_references(
+        scope_dir,
+        placements,
+        reference_dir,
+        neutral=tuple(neutral),
+    )
+
+
+def _write_unscaled_identity_references(
+    scope_dir: Path,
+    placements: list[dict[str, object]],
+    reference_dir: Path,
+    *,
+    neutral: tuple[int, int, int],
+) -> None:
+    """Write exact source pixels on neutral square identity canvases."""
     for index, placement in enumerate(placements, start=1):
         source_path = (
             scope_dir
@@ -587,6 +600,80 @@ def build_joint_scene_references(
             format="PNG",
             optimize=True,
         )
+
+
+def build_sdxl_identity_references(
+    scope: str,
+    output_dir: Path | None = None,
+    *,
+    megapixels: float = 1.0,
+) -> None:
+    """Write one source-derived structure guide and regional identity masks."""
+    bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
+    scope_dir = bundle.asset_dir
+    manifest = bundle.manifest
+    reference_dir = output_dir or scope_dir / "comfyui_poster"
+    reference_dir.mkdir(parents=True, exist_ok=True)
+    width, height = output_dimensions(bundle.asset_key, megapixels)
+    placements = joint_scene_canvas_placements(
+        scope_dir,
+        layout_name=manifest.get("layout", {}).get(
+            "name",
+            "standard_3x3",
+        ),
+        canvas_size=(width, height),
+    )
+    defaults = manifest.get("conditioning", {}).get("identity_defaults", {})
+    neutral = defaults.get("neutral_rgb", [226, 224, 211])
+    if (
+        not isinstance(neutral, list)
+        or len(neutral) != 3
+        or not all(
+            isinstance(value, int) and 0 <= value <= 255
+            for value in neutral
+        )
+    ):
+        raise ValueError(
+            "conditioning.identity_defaults.neutral_rgb must contain "
+            "3 RGB integers"
+        )
+
+    structure = Image.new("RGBA", (width, height), (*neutral, 255))
+    for placement in placements:
+        structure.alpha_composite(
+            placement["image"],
+            (placement["x"], placement["y"]),
+        )
+    structure.convert("RGB").save(
+        reference_dir / "sdxl_identity_structure.png",
+        format="PNG",
+        optimize=True,
+    )
+
+    for index, placement in enumerate(placements, start=1):
+        cell = placement["cell"]
+        mask = Image.new("L", (width, height), 0)
+        ImageDraw.Draw(mask).rectangle(
+            (
+                cell.x,
+                cell.y,
+                cell.x + cell.width - 1,
+                cell.y + cell.height - 1,
+            ),
+            fill=255,
+        )
+        mask.convert("RGB").save(
+            reference_dir / f"sdxl_identity_region_{index}.png",
+            format="PNG",
+            optimize=True,
+        )
+
+    _write_unscaled_identity_references(
+        scope_dir,
+        placements,
+        reference_dir,
+        neutral=tuple(neutral),
+    )
 
 
 def prepare(

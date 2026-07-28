@@ -31,6 +31,9 @@ from scripts.poster_assets.create_flux1_canny_poster_workflow import (
 from scripts.poster_assets.create_qwen_edit_poster_workflow import (
     build_workflow as build_qwen_edit_workflow,
 )
+from scripts.poster_assets.create_sdxl_identity_poster_workflow import (
+    build_workflow as build_sdxl_identity_workflow,
+)
 from scripts.poster_assets.finalize_comfyui_poster import (
     draw_title_text_panel,
     finalize,
@@ -90,6 +93,7 @@ from scripts.poster_assets.prepare_comfyui_poster import (
     build_identity_references,
     build_joint_scene_references,
     build_scene_reference,
+    build_sdxl_identity_references,
     build_upper_context_mask,
     card_safe_conditioning_placements,
 )
@@ -963,6 +967,62 @@ def test_joint_scene_preparation_writes_spatial_and_unscaled_identity_refs(
         assert masked_difference.getbbox() is None
 
 
+def test_sdxl_identity_preparation_writes_exact_structure_and_card_masks(
+    tmp_path: Path,
+):
+    build_sdxl_identity_references(
+        "Pokedex/sections/gen7",
+        tmp_path,
+        megapixels=1.0,
+    )
+
+    structure = Image.open(
+        tmp_path / "sdxl_identity_structure.png"
+    ).convert("RGBA")
+    assert structure.size == output_dimensions(
+        "Pokedex/sections/gen7",
+        1.0,
+    )
+    layout = build_source_layout(
+        "standard_3x3",
+        width_px=structure.width,
+        height_px=structure.height,
+    )
+    expected = Image.new("RGBA", structure.size, (226, 224, 211, 255))
+    placements = joint_scene_cutout_placements(
+        layout,
+        Path(__file__).resolve().parents[2]
+        / "data"
+        / "poster_assets"
+        / "Pokedex"
+        / "sections"
+        / "gen7",
+    )
+    for placement in placements:
+        expected.alpha_composite(
+            placement["image"],
+            (placement["x"], placement["y"]),
+        )
+    assert ImageChops.difference(structure, expected).getbbox() is None
+
+    region_paths = sorted(tmp_path.glob("sdxl_identity_region_*.png"))
+    assert len(region_paths) == 3
+    for path, cell in zip(
+        region_paths,
+        layout.bottom_row_cells(),
+        strict=True,
+    ):
+        mask = Image.open(path).convert("L")
+        assert mask.getbbox() == (
+            cell.x,
+            cell.y,
+            cell.x + cell.width,
+            cell.y + cell.height,
+        )
+    assert len(list(tmp_path.glob("identity_reference_*.png"))) == 3
+    assert not (tmp_path / "joint_scene_cast_reference.png").exists()
+
+
 def test_identity_lock_mask_generates_only_above_the_bottom_subject_band(
     tmp_path: Path,
 ):
@@ -1656,6 +1716,97 @@ def test_joint_scene_synthesizes_landscape_and_subjects_in_one_shot():
     assert "Mewtwo" in prompt
     assert "Bulbasaur" in prompt
     assert "Charmander" in prompt
+
+
+def test_sdxl_identity_workflow_is_one_empty_target_pass_with_three_regions():
+    workflow = build_sdxl_identity_workflow(
+        "Pokedex/sections/gen7",
+        seed=260726054,
+        megapixels=1.0,
+    )
+
+    assert sum(
+        item["class_type"] == "EmptyLatentImage"
+        for item in workflow.values()
+    ) == 1
+    assert sum(
+        item["class_type"] == "KSampler"
+        for item in workflow.values()
+    ) == 1
+    assert sum(
+        item["class_type"] == "VAEDecode"
+        for item in workflow.values()
+    ) == 1
+    assert not any(
+        item["class_type"]
+        in {"VAEEncode", "VAEEncodeForInpaint", "ImageCompositeMasked"}
+        for item in workflow.values()
+    )
+    assert [
+        item["inputs"]["image"]
+        for item in workflow.values()
+        if item["class_type"] == "LoadImage"
+    ] == [
+        "identity_reference_1.png",
+        "sdxl_identity_region_1.png",
+        "identity_reference_2.png",
+        "sdxl_identity_region_2.png",
+        "identity_reference_3.png",
+        "sdxl_identity_region_3.png",
+        "sdxl_identity_structure.png",
+    ]
+    assert sum(
+        item["class_type"] == "IPAdapterRegionalConditioning"
+        for item in workflow.values()
+    ) == 3
+    assert workflow["30"]["inputs"] == {
+        "params_1": ["13", 0],
+        "params_2": ["17", 0],
+        "params_3": ["21", 0],
+    }
+    assert workflow["31"]["inputs"]["ipadapter_params"] == ["30", 0]
+    assert workflow["51"]["inputs"]["model"] == ["31", 0]
+    assert workflow["51"]["inputs"]["latent_image"] == ["50", 0]
+    assert workflow["51"]["inputs"]["positive"] == ["44", 0]
+    assert workflow["51"]["inputs"]["negative"] == ["44", 1]
+
+    prompt = workflow["4"]["inputs"]["text"]
+    assert "one unified denoising pass from an empty target" in prompt
+    assert "full-canvas structural guide" in prompt
+    assert "regional identity reference belongs only to Rowlet" in prompt
+    assert "regional identity reference belongs only to Litten" in prompt
+    assert "regional identity reference belongs only to Popplio" in prompt
+    assert "not additional subjects" in prompt
+    assert "IMAGE 1" not in prompt
+    assert "There is no later character overlay" in prompt
+
+
+def test_sdxl_pokemon_variant_changes_only_the_model_lora_edge():
+    generic = build_sdxl_identity_workflow(
+        "Pokedex/sections/gen7",
+        seed=260726054,
+        megapixels=1.0,
+    )
+    pokemon = build_sdxl_identity_workflow(
+        "Pokedex/sections/gen7",
+        seed=260726054,
+        megapixels=1.0,
+        pokemon_lora_name="pokefa_sdxl_base_unet_lora.safetensors",
+    )
+
+    assert "2" not in generic
+    assert pokemon["2"] == {
+        "class_type": "LoraLoaderModelOnly",
+        "inputs": {
+            "model": ["1", 0],
+            "lora_name": "pokefa_sdxl_base_unet_lora.safetensors",
+            "strength_model": 0.30,
+        },
+    }
+    assert generic["3"]["inputs"]["model"] == ["1", 0]
+    assert pokemon["3"]["inputs"]["model"] == ["2", 0]
+    for node_id in set(generic) - {"3"}:
+        assert pokemon[node_id] == generic[node_id]
 
 
 def test_joint_scene_prompt_separates_spatial_and_identity_roles():
