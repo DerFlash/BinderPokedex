@@ -151,17 +151,7 @@ def _layout_region(
     return "-".join(part for part in (vertical, horizontal) if part)
 
 
-def _safe_area_sentence(
-    manifest: dict[str, Any],
-    scene: dict[str, Any],
-) -> str:
-    explicit = scene.get("safe_areas")
-    if explicit is not None:
-        return _text(
-            explicit,
-            "artwork.scene.safe_areas",
-        )
-
+def _safe_area_regions(manifest: dict[str, Any]) -> tuple[str, str]:
     layout_name = _mapping(manifest.get("layout"), "layout").get(
         "name",
         "standard_3x3",
@@ -193,6 +183,21 @@ def _safe_area_sentence(
         rows,
         columns,
     )
+    return title_region, information_region
+
+
+def _safe_area_sentence(
+    manifest: dict[str, Any],
+    scene: dict[str, Any],
+) -> str:
+    explicit = scene.get("safe_areas")
+    if explicit is not None:
+        return _text(
+            explicit,
+            "artwork.scene.safe_areas",
+        )
+
+    title_region, information_region = _safe_area_regions(manifest)
     if title_region == information_region:
         return (
             f"Keep the entire {title_region} cell as uninterrupted, "
@@ -205,6 +210,29 @@ def _safe_area_sentence(
         f"high-contrast focal detail. Keep the {information_region} cell "
         "open and low contrast with no foreground object, structure, or "
         "focal subject."
+    )
+
+
+def _compact_safe_area_sentence(
+    manifest: dict[str, Any],
+    scene: dict[str, Any],
+) -> str:
+    explicit = scene.get("safe_areas")
+    if explicit is not None:
+        return _text(
+            explicit,
+            "artwork.scene.safe_areas",
+        )
+
+    title_region, information_region = _safe_area_regions(manifest)
+    if title_region == information_region:
+        return (
+            f"Keep the {title_region} cell open, low-detail, and low-contrast "
+            "for its later overlay."
+        )
+    return (
+        f"Keep the {title_region} and {information_region} cells open, "
+        "low-detail, and low-contrast for later overlays."
     )
 
 
@@ -908,9 +936,8 @@ def build_dreamo_identity_prompt(
             )
         return f"{value / 10:.1f}%"
 
-    references = []
     placements = []
-    assignments = []
+    references = []
     for index, (item, contract) in enumerate(
         zip(items, placement_contract, strict=True),
         start=1,
@@ -922,10 +949,8 @@ def build_dreamo_identity_prompt(
         name = item.get("name_en") or f"Pokemon #{item.get('pokemon_id', '?')}"
         region = reference_region_label(index - 1, len(items))
         references.append(
-            f"REFERENCE IMAGE {index} is the sole identity and anatomy "
-            f"authority for {name}"
+            f"REFERENCE {index} = {name}, {region} bottom card"
         )
-        assignments.append(f"{name} in the {region} bottom card")
         placements.append(
             (
                 f"{name}: x {percentage(contract.get('left_per_mille'))} to "
@@ -937,57 +962,40 @@ def build_dreamo_identity_prompt(
 
     paragraphs = [
         (
-            f"Create one cohesive full-bleed illustration for {concept}. "
-            f"{setting} {lighting} {rendering} Render exactly {len(items)} "
-            f"complete characters once: {'; '.join(assignments)}."
+            f"References, fixed order: {'; '.join(references)}. Render exactly "
+            f"one of each. Each image fixes its character's identity and "
+            "complete design: pose, proportions, anatomy, silhouette, face, "
+            "colors, markings, and appendages. Do not alter, add, or remove "
+            "features. Neutral fields are empty."
         ),
         (
-            f"The supplied references have a fixed left-to-right identity "
-            f"order. {'; '.join(references)}. Each reference fixes that "
-            "character's exact form, pose, stature, silhouette, anatomy, "
-            "face, colors, markings, appendages, and defining design details. "
-            "Preserve every referenced feature without adding, removing, "
-            "merging, simplifying, or reshaping it. The neutral reference "
-            "fields are empty input space, not scenery, and the references "
-            "describe the same final subjects rather than extra copies."
+            f"Create {concept}. {setting} {lighting} {rendering}"
         ),
         (
-            "Use these normalized target silhouette rectangles as the "
-            f"placement and scale contract: {'; '.join(placements)}. Match "
-            "each complete silhouette and baseline to its rectangle, with "
-            "visible landscape padding around it. Every character pixel, "
-            "including the outermost appendage, must remain inside its named "
-            "bottom card. No character may cross above the bottom row or "
-            "through an invisible vertical card division. The rectangles "
-            "and card divisions are coordinates only and must never be drawn."
+            f"Bounds: {'; '.join(placements)}. Keep every complete silhouette, "
+            "appendage, and visible landscape padding inside its respective "
+            "bottom 3x3 card, below the row top and within its column. The "
+            "grid and coordinates are invisible."
         ),
         (
-            "Generate the final landscape and all characters together from "
-            "one empty target in one unified denoising pass. There is no "
-            "supplied landscape, background plate, later character overlay, "
-            "restoration, or composite. Ground contact, directional cast "
-            "shadows, reflected light, perspective, linework, color grading, "
-            "and scene depth must agree so every character looks native to "
-            "the landscape rather than pasted over it."
+            "Generate landscape and characters together from empty noise in "
+            "one denoising pass; no plate, overlay, restoration, or composite. "
+            "Use coherent ground contact, cast shadows, reflected light, "
+            "perspective, linework, color, and depth so they belong there."
         ),
         (
-            "Use one physically coherent depth order. If a landscape element "
-            "is genuinely nearer than a character, it may continue naturally "
-            "in front of a small non-defining exterior edge. Farther scenery "
-            "stays behind. A connected plant, branch, rock, or other element "
-            "must keep the same front-or-behind relationship along its visible "
-            "length. Move or shorten scenery instead of hiding an "
-            "identity-critical face, marking, limb, appendage, or silhouette "
-            "detail."
+            "Use consistent depth: near scenery may cover only a non-defining "
+            "outer edge; far scenery stays behind. A plant, branch, or rock "
+            "stays entirely in front or behind. Move it rather than hide a "
+            "face, marking, limb, appendage, or defining silhouette."
         ),
         (
-            f"{_safe_area_sentence(manifest, scene)} Fill every image edge "
-            "naturally. Keep one continuous natural ground plane without "
-            "character-specific clearings, paths, platforms, circles, halos, "
-            "or landing pads. Draw no extra creature, person, trainer, "
-            "character-shaped scenery, text, letters, numbers, logo, title "
-            "art, box, plaque, panel, card border, UI, watermark, guide, or "
-            "crop mark."
+            f"{_compact_safe_area_sentence(manifest, scene)} Fill every edge "
+            "with one "
+            "continuous ground plane, without character-specific clearings, "
+            "paths, platforms, halos, or landing pads. Draw no extra character "
+            "or character-shaped scenery, text, logo, title, box, panel, "
+            "border, watermark, guide, or crop mark."
         ),
     ]
     constraints = _scene_constraints(scene)

@@ -159,21 +159,20 @@ def test_dreamo_prompt_keeps_identity_position_and_scene_contracts():
     prompt = workflow["9"]["inputs"]["text"]
 
     assert "cheerful Alola island landscape" in prompt
+    first_paragraph = prompt.split("\n\n", 1)[0]
     for index, name in enumerate(("Rowlet", "Litten", "Popplio"), start=1):
-        assert (
-            f"REFERENCE IMAGE {index} is the sole identity and anatomy "
-            f"authority for {name}"
-        ) in prompt
+        assert f"REFERENCE {index} = {name}" in first_paragraph
     assert "Rowlet: x " in prompt
     assert "Litten: x " in prompt
     assert "Popplio: x " in prompt
-    assert "inside its named bottom card" in prompt
-    assert "one empty target in one unified denoising pass" in prompt
-    assert "There is no supplied landscape" in prompt
-    assert "rather than pasted over it" in prompt
-    assert "must keep the same front-or-behind relationship" in prompt
+    assert "inside its respective bottom 3x3 card" in prompt
+    assert "from empty noise in one denoising pass" in prompt
+    assert "no plate, overlay, restoration, or composite" in prompt
+    assert "so they belong there" in prompt
+    assert "stays entirely in front or behind" in prompt
     assert "source-derived structural guide" not in prompt
     assert "sole spatial cast-layout reference" not in prompt
+    assert len(prompt.split()) < 400
 
 
 def test_dreamo_writer_creates_only_its_three_unscaled_rgb_inputs(

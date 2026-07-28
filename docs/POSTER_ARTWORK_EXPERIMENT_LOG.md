@@ -92,7 +92,7 @@ not reopen prompt-only or reference-canvas tuning for the rejected FLUX.2
 | `sdxl_identity` | SDXL plus one identity adapter per subject, regional masks, and source-derived structural control | Closed after whole-card, exact-silhouette, and tight-box masks all fail identity, grounding, and scene quality |
 | `sdxl_identity_pokemon` | Same graph plus one Pokémon domain LoRA | Not rendered: the base graph fails reference binding and anatomy too broadly for a domain/style A/B to isolate |
 | `ms_diffusion` | SDXL multi-subject adapter with explicit reference-to-box assignment | Stopped at technical preflight: the available ComfyUI port hides its own Diffusers sampler and requires a substantial MPS/audit refactor |
-| `dreamo` | FLUX.1-dev plus three VAE-based DreamO object references before one common sampler | Selected for an isolated MPS preflight; no candidate rendered yet |
+| `dreamo` | FLUX.1-dev plus three VAE-based DreamO object references before one common sampler | MPS graph proven technically; preflight A renders no subjects, so one prompt-binding diagnostic precedes any visual candidate |
 | `flux2_refcontrol` | FLUX.2 Klein 4B Base reference-plus-depth control | Retained only as a fallback if DreamO is technically unavailable; stop before rendering if one reference cannot bind three distinct subjects |
 
 The intended generic/Pokémon-assisted SDXL A/B was conditional on a viable base
@@ -295,6 +295,57 @@ explicit three-box input is a known risk: natural-language left/center/right
 placement must pass the unchanged physical card-containment gate before any
 identity-detail tuning is justified. The accepted `identity_lock` artwork,
 manifests, PDF routing, and release inputs remain unchanged.
+
+#### DreamO installation and MPS preflight A
+
+The local installation is pinned rather than following moving upstream heads:
+ComfyUI `87d23b81765161624889febfb3b81f19f3c8435b`,
+ComfyUI-GGUF `6ea2651e7df66d7585f6ffee804b20e92fb38b8a`,
+ComfyUI-DreamO `622f393a13b9e083ab3945d7534b8b3fe38d609e`, and the
+DreamO facexlib fork
+`5e6c76170f8a9f9c5b4df62d8679f4f769230383`. The graph uses
+FLUX.1-dev Q4_K_S
+`75bb19459b5240c9f373b5af527584af15b675867fa142efadf7478d6abbf62b`,
+then the official v1.1 LoRA chain:
+
+| Model | SHA-256 |
+| --- | --- |
+| FLUX Turbo | `77f7523a5e9c3da6cfc730c6b07461129fa52997ea06168e9ed5312228aa0bff` |
+| DreamO base | `27f01aed81d0c6d4549309ec5ca0d5c96eef6f76cb47bdb370645780f304b90a` |
+| DreamO CFG distill | `dc7cb5b503829ab6ab765cf07abf972cef65d5c11bd04de1d17f1f4f0fae2c80` |
+| DreamO SFT | `596ce2e45175b07553c7f7051ced1ae940ec2860258e9232385974504f056c54` |
+| DreamO DPO | `e66b08922bbfdb0eb15e790160c2709ba5693c1ee59808e48e5cbb9d0d467551` |
+
+The closed SDXL experiment's base checkpoint, CLIP Vision, IP-Adapter, and two
+ControlNets were hash-checked against their existing log before deletion.
+This recovers 12.45 GiB without touching any production model.
+
+The first unchanged 0.25-MP graph reached the sampler only after a bounded
+compatibility patch forwarded ComfyUI's new `latent_shapes` keyword through
+DreamO's outer sampler wrapper. No model logic, conditioning, or sampler
+parameter changed. It then completed on Metal/MPS in 11:34 with 12 Euler/simple
+steps, CFG 1, guidance 4.5, one empty 432×592 target, one sampler, and one
+decode. Workflow SHA-256 before the prompt diagnostic was
+`beb2349e78b18ee215ba2d948aa9d849a3aa95f97dbbeb08991a90cd6f236860`.
+
+The raw preflight image SHA-256 is
+`46d8020099dff811ce0ade71c8eed3873c5d927bf4f04bdcce3e9f500893dffa`.
+It renders a coherent Alola landscape but omits Rowlet, Litten, and Popplio
+entirely, so it is not candidate `dreamo/00001` and no upscale, card crops, or
+promotion evidence is produced. A cheap diagnostic saved DreamO's own
+post-BEN2 reference outputs; all three remain complete and recognizable. The
+binding failure is therefore downstream of reference preparation.
+
+The only next variable is prompt conditioning. The preflight prompt contained
+765 T5 tokens, beyond the tokenizer's declared 512-token envelope, while the
+first pooled 77-token CLIP chunk contained scenery but none of the Pokémon.
+The compact replacement puts all three reference/name/card assignments in
+that first CLIP chunk and measures 501 T5 tokens for this scope. Its workflow
+SHA-256 is
+`ab0781ac2b47f8ab2a1e377255ccf8cdb74a3533e1acf1d8eee7c292c4a2bb51`.
+The same seed, resolution, references, model chain, sampler, and scene contract
+remain fixed for preflight B. Only if subjects appear does DreamO earn a 1-MP
+visual candidate.
 
 ### Review record template
 

@@ -117,14 +117,19 @@ MPS-safe and exposing the required empty-target, one-sampler, one-decode audit
 would be a substantial fork rather than a small compatibility fix. The
 technical preflight therefore stops before model installation.
 
-DreamO v1.1 is the next isolated candidate. Its native ComfyUI node accepts
-three separate VAE-based object references and patches a normal FLUX model
-before the common sampler. The first graph must keep the frozen Generation VII
-sources, seed, scene brief, physical 3x3 geometry, and hard review gates; start
-from one empty target; and end in exactly one sampler and one decode. No
-DreamO result is production-approved yet. FLUX.2 RefControl remains only a
-fallback if DreamO is technically unavailable on the M4, because its
-single-reference contract does not independently bind three subjects.
+DreamO v1.1 is the current isolated successor experiment. Its native ComfyUI
+node accepts three separate VAE-based object references and patches a normal
+FLUX model before the common sampler. The pinned graph now completes twelve
+steps on Metal/MPS from one empty target to one sampler and one decode. Its
+first 0.25-MP preflight renders a clean landscape but omits all three subjects.
+DreamO's own post-BEN2 debug outputs retain complete, recognizable Rowlet,
+Litten, and Popplio references, which localizes the failure after preprocessing.
+The original 765-token prompt also leaves every Pokémon outside FLUX's first
+pooled CLIP chunk. One compact, 501-T5-token prompt-binding preflight therefore
+keeps source images, seed, scene, geometry, model chain, and sampler fixed.
+Only visible subject binding permits a 1-MP visual candidate. No DreamO result
+is production-approved yet. FLUX.2 RefControl remains only a fallback because
+its single-reference contract does not independently bind three subjects.
 
 The generated artwork must still begin from an empty target and finish all
 characters, terrain, lighting, shadows, and occlusions in one common model
@@ -274,7 +279,7 @@ this comparison.
 
 | Requirement | Current boundary | Acceptance criterion |
 | --- | --- | --- |
-| Natural grounding and occlusion | Accepted `identity_lock` keeps exact pixels but can read as composited. v5 `00017` fixes containment and depth but changes small identity details. Regional SDXL is closed after three larger identity/scene failures; the MS-Diffusion port fails the KISS/MPS technical preflight | Evaluate the isolated DreamO v1.1 three-reference graph without relaxing any hard gate; retain `identity_lock` if it cannot pass |
+| Natural grounding and occlusion | Accepted `identity_lock` keeps exact pixels but can read as composited. v5 `00017` fixes containment and depth but changes small identity details. Regional SDXL is closed after three larger identity/scene failures; the MS-Diffusion port fails the KISS/MPS technical preflight. DreamO runs on MPS, but preflight A omits all subjects | Run the single compact prompt-binding diagnostic; create a 1-MP candidate only if all three references bind, otherwise close DreamO without adding heuristics |
 | Engine extensibility | FLUX.2, Anima, FLUX.1 Canny, and Qwen Edit are selectable through one manifest-driven runner and share the promotion gate | Keep architecture-specific workflow construction isolated when adding another engine |
 | Alternative models | FLUX.1 Canny changed Mewtwo's face, chest, colors, and hand; Qwen created a giant fourth Mewtwo | Retain both adapters for controlled comparison, but do not promote either rejected candidate |
 | Anima candidates | Workflow and provenance now share the exact model/LoRA/encoder/VAE/sampling contract | Keep the adapter experimental until a real candidate passes both the shared pixel gate and visual review |
