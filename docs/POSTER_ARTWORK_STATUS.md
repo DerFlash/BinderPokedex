@@ -119,6 +119,15 @@ stable generation fingerprint is:
 The promoted raw SHA-256 is
 `668d5d732771529e4bb3ce2ff8cf13b6bb58bede9d49c1eace86f459e3fb5c92`.
 
+Generation III remains on its accepted `identity_lock` fallback. A seed change
+fixed an extra-subject failure and produced faithful, card-safe Treecko,
+Torchic, and Mudkip, but a plant rooted at the lower-right foreground passed
+behind Mudkip. Moving the existing depth rule earlier left the contradiction
+unchanged. A final binary foreground rule moved the specific Mudkip plant but
+recreated the same front-to-back jump at Treecko's lower-left foreground
+plant. Prompt-only depth tuning is therefore closed after three bounded
+variants; no global prompt change was adopted.
+
 ## Accepted one-shot contract
 
 The preferred graph:
@@ -180,8 +189,9 @@ second tracked active bundle is maintained.
 2. Keep all remaining migrations scope-by-scope and review-gated; do not
    mechanically switch the seven accepted fallbacks.
 3. Use future requested renders to observe natural near/far landscape
-   intersections. Do not reopen prompt-only depth stress unless new evidence
-   changes the mechanism.
+   intersections. Generation III demonstrates that stronger or earlier prose
+   can relocate rather than solve a contradictory crossing; do not reopen
+   prompt-only depth stress unless new evidence changes the mechanism.
 4. Apply the section workflow to future aggregate variant sections only after
    their scene briefs and curated casts are reviewed.
 5. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until

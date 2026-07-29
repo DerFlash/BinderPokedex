@@ -66,7 +66,7 @@ is the accepted cost of exact identity preservation.
 
 | Architecture | Final scene jointly generated | Identity | Card containment | Scene integration | Role |
 | --- | --- | --- | --- | --- | --- |
-| FLUX.2 Spatial+Identity v5 `joint_scene` | Yes | Gen VII `00018`, Gen I `00001`, Gen II `00001`, Base1 `00001`, ExGen3 Mega `00001`, and ExGen3 Normal `00001` pass the accepted print-detail tolerance | All six promotions pass their physical crops with preferred fill | Coherent grounding and shadows; natural foreground crossings remain unproven | Default; six scopes promoted |
+| FLUX.2 Spatial+Identity v5 `joint_scene` | Yes | Gen VII `00018`, Gen I `00001`, Gen II `00001`, Base1 `00001`, ExGen3 Mega `00001`, and ExGen3 Normal `00001` pass the accepted print-detail tolerance | All six promotions pass their physical crops with preferred fill | Coherent grounding and shadows; three bounded Generation III prompt variants relocate rather than solve one contradictory foreground crossing | Default; six scopes promoted |
 | Two-pass `identity_lock` | No | Exact source pixels | Reliable | Protected lower band can read as a layer | Explicit fallback; seven promoted scopes remain valid |
 | Landscape reference plus joint final pass | Final pass only | Usually strong | Inconsistent | Retained plants can switch depth at silhouettes | Rejected |
 | Direct FLUX edit/inpaint | No | Inconsistent | Inconsistent | Retains cutout/composite artifacts | Rejected |

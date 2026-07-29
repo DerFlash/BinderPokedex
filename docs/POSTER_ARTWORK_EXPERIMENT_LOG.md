@@ -65,6 +65,37 @@ The complete generation fingerprint is:
 0ca3ebca51b6683e4956a71b7659123e9db312b961ec4a66b0108dcf88628455
 ```
 
+## Pokédex Generation III / foreground-depth boundary
+
+The unchanged production graph uses the Hoenn scene brief and reviewed Treecko,
+Torchic, and Mudkip references. Configured seed `260750880` first produced a
+fourth background creature and failed exact count. Seed `260750881` removed the
+extra subject and passed identity and card fit, but exposed the requested hard
+case: a plant rooted at the lower-right foreground passed behind Mudkip's rear
+body and tail.
+
+The subsequent depth test holds model, seed, references, rectangles, sampler,
+scene, count rules, identity rules, and all non-depth prompt text fixed.
+
+| Candidate | Sole depth change | Result | Decision |
+| --- | --- | --- | --- |
+| `depth/original` | Production prompt; depth paragraph begins after 648 whitespace-delimited words | Exactly three faithful, card-safe subjects, but the lower-right foreground plant passes behind Mudkip | Rejected at coherent-depth gate |
+| `depth/early` | Move the existing depth paragraph unchanged so it begins after 388 words; total remains 894 words | The same lower-right foreground relationship remains behind Mudkip | Rejected; prompt priority alone does not solve the crossing |
+| `depth/binary` | Keep the earlier position and replace only the depth paragraph with a 904-word total that defines bottom-edge vegetation as foreground and clarifies that anatomical completeness does not require every exterior pixel to remain visible | Mudkip's conflicting plant is moved away, but the lower-left foreground plant now passes behind Treecko's foot, body, and tail | Rejected; the contradiction moves to another subject |
+
+Metal/MPS evidence:
+
+| Candidate | Runtime | Raw 848 × 1168 SHA-256 | Workflow SHA-256 |
+| --- | ---: | --- | --- |
+| `depth/original` | 243.75 s | `e8103fe2f8e7a1d426f9aa7f9e036251db41cdeb506af0b85c080b1d39083a5e` | `a13685af821a31f409af117a0da77fddbec13420475d11c51be6cde463d93640` |
+| `depth/early` | 189.47 s | `3abfbf3c45c3815b58306b759eb341892634afdc820c8876277c76c3cbb0842c` | `a0f70730f9632270ed546841f45c2f87a44b808c0aed3d5bdb1aa9bedaa33a63` |
+| `depth/binary` | 206.11 s | `a6339c43c844897704fa251bd32d196347474881e1bd473e70ba3800436ba268` | `0408f3499909f72902879da377c1e51d51ff723fba547073583a49592c83064c` |
+
+The three materially distinct depth variants exhaust the prompt-only stop rule.
+No candidate is promoted, no central prompt wording or ordering changes, and
+Generation III remains on its accepted `identity_lock` fallback. A future
+retry requires a changed control mechanism rather than more prompt emphasis.
+
 ## Base1 / FLUX.2 Klein rollout
 
 The first representative rollout of the promoted Generation VII graph keeps
