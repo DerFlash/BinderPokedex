@@ -36,11 +36,12 @@ in the experiment log and Git history, not in the production runner.
 | `Pokedex/sections/gen7` | `joint_scene` v5 candidate `00018` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `Pokedex/sections/gen1` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `Pokedex/sections/gen2` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
+| `Pokedex/sections/gen3` | `joint_scene` candidate `00002` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `Base1` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `ExGen3/sections/mega` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `ExGen3/sections/normal` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `SV03.5` | `identity_lock` | Accepted and enabled |
-| `Pokedex/sections/gen3`–`gen6`, `gen8`, `gen9` | `identity_lock` | Accepted and enabled after their matching generation covers |
+| `Pokedex/sections/gen4`–`gen6`, `gen8`, `gen9` | `identity_lock` | Accepted and enabled after their matching generation covers |
 
 Generation VII `00018` is the first accepted one-shot poster. It uses seed
 `260726054`, the reviewed Rowlet/Litten/Popplio sources, the Alola scene brief,
@@ -119,6 +120,20 @@ stable generation fingerprint is:
 The promoted raw SHA-256 is
 `668d5d732771529e4bb3ce2ff8cf13b6bb58bede9d49c1eace86f459e3fb5c92`.
 
+Generation III `00002` is the seventh accepted one-shot poster. The configured
+seed's first candidate added a fourth background creature and failed the hard
+count gate. Changing only the seed to `260750881` yields exactly Treecko,
+Torchic, and Mudkip with faithful anatomy, card-safe placement, coherent
+shadows, and continuous tropical vegetation. Its stable generation fingerprint
+is:
+
+```text
+59bb1602f9798e26df2ba8faed62bcb533bd160913e1cf3ee4b0ef194faf5e49
+```
+
+The promoted raw SHA-256 is
+`e8103fe2f8e7a1d426f9aa7f9e036251db41cdeb506af0b85c080b1d39083a5e`.
+
 ## Accepted one-shot contract
 
 The preferred graph:
@@ -178,7 +193,7 @@ second tracked active bundle is maintained.
 1. Treat the representative rollout as complete: Gen VII, Base1, named Mega
    forms, and a strongly proportionally diverse cast now pass.
 2. Keep all remaining migrations scope-by-scope and review-gated; do not
-   mechanically switch the seven accepted fallbacks.
+   mechanically switch the six accepted fallbacks.
 3. Use future requested renders to observe natural near/far landscape
    intersections. Do not reopen prompt-only depth stress unless new evidence
    changes the mechanism.
