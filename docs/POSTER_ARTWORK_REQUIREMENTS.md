@@ -66,8 +66,8 @@ is the accepted cost of exact identity preservation.
 
 | Architecture | Final scene jointly generated | Identity | Card containment | Scene integration | Role |
 | --- | --- | --- | --- | --- | --- |
-| FLUX.2 Spatial+Identity v5 `joint_scene` | Yes | Gen VII `00018`, Base1 `00001`, and ExGen3 Mega `00001` pass the accepted print-detail tolerance | All three promotions pass their physical crops with preferred fill | Coherent grounding and shadows; natural foreground crossings remain unproven | Default; three scopes promoted |
-| Two-pass `identity_lock` | No | Exact source pixels | Reliable | Protected lower band can read as a layer | Explicit fallback; ten promoted scopes remain valid |
+| FLUX.2 Spatial+Identity v5 `joint_scene` | Yes | Gen VII `00018`, Base1 `00001`, ExGen3 Mega `00001`, and ExGen3 Normal `00001` pass the accepted print-detail tolerance | All four promotions pass their physical crops with preferred fill | Coherent grounding and shadows; natural foreground crossings remain unproven | Default; four scopes promoted |
+| Two-pass `identity_lock` | No | Exact source pixels | Reliable | Protected lower band can read as a layer | Explicit fallback; nine promoted scopes remain valid |
 | Landscape reference plus joint final pass | Final pass only | Usually strong | Inconsistent | Retained plants can switch depth at silhouettes | Rejected |
 | Direct FLUX edit/inpaint | No | Inconsistent | Inconsistent | Retains cutout/composite artifacts | Rejected |
 | Anima with restored identity core | No | Recognizable only because pixels are restored after decode | Card-safe in preflight | Flat lawn and weak contact | Rejected |
@@ -95,7 +95,7 @@ is the accepted cost of exact identity preservation.
 | `PA-015` | Aggregate variants receive section-specific scenes and casts | Ongoing | ExGen3 `normal` and `mega` are accepted; repeat only for reviewed future sections |
 | `PA-015A` | Variant subjects retain their exact form | Done | Selection, cutouts, planner, fingerprints, promotion, and validation bind exact Official Artwork identity |
 | `PA-016` | Post-fetch orchestration detects stale inputs | Done | Read-only planner separates expensive generation drift from cheap overlay/routing changes |
-| `PA-017` | Joint generation can provide natural grounding without losing identity or card safety | Done for three representative scopes; rollout ongoing | Gen VII `00018`, Base1 `00001`, and ExGen3 Mega `00001` are promoted; each additional scope must pass independently |
+| `PA-017` | Joint generation can provide natural grounding without losing identity or card safety | Done for four representative scopes; rollout ongoing | Gen VII `00018`, Base1 `00001`, ExGen3 Mega `00001`, and ExGen3 Normal `00001` are promoted; each additional scope must pass independently |
 | `PA-018` | Runtime remains KISS after experiments | Done | Production exposes only FLUX.2 `joint_scene` and `identity_lock`; rejected adapters are removed from the runner |
 | `PA-019` | Pull requests prove a release can be built without publishing | Done | PRs validate promotions, build every PDF/archive/manifest, and upload only a temporary artifact |
 | `PA-020` | Raster card geometry closes exactly on every real canvas | Done | Cumulative physical endpoints drive preparation, finalization, slicing, promotion, and validation |
@@ -104,17 +104,17 @@ is the accepted cost of exact identity preservation.
 ## Current production boundary
 
 - Thirteen promoted 3×3 bundles are enabled.
-- Generation VII `00018`, Base1 `00001`, and ExGen3 Mega `00001` are the three
-  promoted `joint_scene` bundles.
-- The other ten bundles remain accepted `identity_lock` fallbacks until
+- Generation VII `00018`, Base1 `00001`, ExGen3 Mega `00001`, and ExGen3
+  Normal `00001` are the four promoted `joint_scene` bundles.
+- The other nine bundles remain accepted `identity_lock` fallbacks until
   reviewed one-shot replacements exist.
 - New manifests start with `joint_scene`; existing manifests are never
   mechanically switched because that would invalidate accepted provenance.
 - Fetching, planning, PDF building, and CI do not start ComfyUI.
 - Generated candidates are local scratch; only promotion creates tracked input
   for deterministic PDF and release jobs.
-- The next rollout targets one ordinary, proportionally diverse cast before any
-  broad migration.
+- The representative rollout is complete. Future migrations remain
+  scope-by-scope and review-gated rather than broad or mechanical.
 - Wide PDF formats and remaining aggregate variant sections are explicit
   roadmap items.
 

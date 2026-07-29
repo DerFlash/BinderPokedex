@@ -139,6 +139,37 @@ The complete generation fingerprint is:
 099b69bd95a6b6a16e1f57e941b136c69acef484c6db6bd077076314f9005216
 ```
 
+## ExGen3 Normal / FLUX.2 Klein rollout
+
+The representative proportional-diversity test uses seed `260711318`, the
+unchanged v5 graph and prompt builder, the Paldea valley brief, and Koraidon,
+Pikachu, and Miraidon. It deliberately combines two large complex bodies with
+one small compact subject.
+
+| Candidate | Pipeline change | Result | Decision |
+| --- | --- | --- | --- |
+| `joint_scene/00001` | Apply the promoted graph to the non-Mega ExGen3 section without subject-specific prompt exceptions | Exactly three subjects appear. Pikachu remains intentionally smaller while Koraidon and Miraidon retain their defining crests, segmented chest/body structures, limbs, tails, colors, and markings within the accepted print-detail tolerance. All physical card crops pass and the cast shares coherent light and shadows | Accepted and promoted on 2026-07-29 as the fourth `joint_scene` scope |
+
+Foreground plants frame the outer card edges without producing a contradictory
+intersection. As in the other accepted candidates, the result proves that the
+graph can preserve very different proportions and card fill, but not that it
+can reliably create connected natural foreground crossings.
+
+The MPS render completed in 181.15 seconds. Reproducibility evidence:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Raw 848 × 1168 candidate | `f53c44c20905886a95cd6a0a54a6731b6209bfd5f73bbb7c006382acd9206fae` |
+| Text-free 2368 × 3268 print raster at 300 dpi | `5ed638ed90f00ca24120cbc6138bb20206e641f29ccec2ae92c241f1a4cf38b3` |
+| Prompt snapshot | `29519877d8a1ac56f4994a156b74d2e8432fe3210945a6b1613e9df17d127aeb` |
+| ComfyUI API workflow | `4988865cc16b8fe2530dc00e5863b5e95bdbb359523dc43e26cd776b157e7ec1` |
+
+The complete generation fingerprint is:
+
+```text
+133603d3b0ed6ec6b8fea273ff74dfba1893b8112424099bea786d8ee5d69955
+```
+
 ## Generation VII / FLUX.2 Klein
 
 All candidates below use seed `260726054` and the `standard_3x3` layout. They

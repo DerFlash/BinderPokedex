@@ -36,9 +36,9 @@ in the experiment log and Git history, not in the production runner.
 | `Pokedex/sections/gen7` | `joint_scene` v5 candidate `00018` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `Base1` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `ExGen3/sections/mega` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
+| `ExGen3/sections/normal` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `SV03.5` | `identity_lock` | Accepted and enabled |
 | `Pokedex/sections/gen1`–`gen6`, `gen8`, `gen9` | `identity_lock` | Accepted and enabled after their matching generation covers |
-| `ExGen3/sections/normal` | `identity_lock` | Accepted and enabled after its matching section cover |
 
 Generation VII `00018` is the first accepted one-shot poster. It uses seed
 `260726054`, the reviewed Rowlet/Litten/Popplio sources, the Alola scene brief,
@@ -80,6 +80,15 @@ generation fingerprint is:
 
 ```text
 099b69bd95a6b6a16e1f57e941b136c69acef484c6db6bd077076314f9005216
+```
+
+ExGen3 Normal `00001` is the fourth accepted one-shot poster. Koraidon,
+Pikachu, and Miraidon validate strongly different body proportions and target
+scales with the same graph and no prompt exception. Its stable generation
+fingerprint is:
+
+```text
+133603d3b0ed6ec6b8fea273ff74dfba1893b8112424099bea786d8ee5d69955
 ```
 
 ## Accepted one-shot contract
@@ -138,14 +147,15 @@ second tracked active bundle is maintained.
 
 ## Next production work
 
-1. Select one additional ordinary scope with strongly different body
-   proportions; avoid another specialized Mega-form test.
-2. Keep the same human identity/card/depth gate; do not mass-switch manifests
-   before their replacements pass.
-3. Use those renders to test natural near/far landscape intersections. Do not
-   reopen prompt-only depth stress unless new evidence changes the mechanism.
-4. Apply the section workflow to remaining aggregate variant sections only
-   after their scene briefs and curated casts are reviewed.
+1. Treat the representative rollout as complete: Gen VII, Base1, named Mega
+   forms, and a strongly proportionally diverse cast now pass.
+2. Keep all remaining migrations scope-by-scope and review-gated; do not
+   mechanically switch the nine accepted fallbacks.
+3. Use future requested renders to observe natural near/far landscape
+   intersections. Do not reopen prompt-only depth stress unless new evidence
+   changes the mechanism.
+4. Apply the section workflow to future aggregate variant sections only after
+   their scene briefs and curated casts are reviewed.
 5. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
    matching physical page formats, memory tests, and visual QA exist.
 
