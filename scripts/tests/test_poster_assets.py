@@ -1118,7 +1118,10 @@ def test_runner_cli_resolves_production_defaults_from_the_scope(
     assert captured["kwargs"]["flux_clip"] == generation["encoder"]
     assert captured["kwargs"]["flux_vae"] == generation["vae"]
     assert captured["kwargs"]["output_dpi"] == generation["output_dpi"]
-    assert captured["kwargs"]["upscale_model"] == generation["upscale_model"]
+    assert captured["kwargs"]["upscale_model"] == generation.get(
+        "upscale_model",
+        poster_runner.DEFAULT_UPSCALE_MODEL,
+    )
 
 
 def test_localized_title_logo_falls_back_to_english():

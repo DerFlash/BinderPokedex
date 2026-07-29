@@ -34,7 +34,8 @@ in the experiment log and Git history, not in the production runner.
 | Scope group | Active mode | Status |
 | --- | --- | --- |
 | `Pokedex/sections/gen7` | `joint_scene` v5 candidate `00018` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
-| `Base1`, `SV03.5` | `identity_lock` | Accepted and enabled |
+| `Base1` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
+| `SV03.5` | `identity_lock` | Accepted and enabled |
 | `Pokedex/sections/gen1`–`gen6`, `gen8`, `gen9` | `identity_lock` | Accepted and enabled after their matching generation covers |
 | `ExGen3/sections/normal`, `ExGen3/sections/mega` | `identity_lock` | Accepted and enabled after their matching section covers |
 
@@ -57,6 +58,19 @@ fc1375f75ef771d6f1aac05bcd27ef67288597bdf3dd8d2f4baf60a908db5e98
 The promotion records explicit visual approval bound to the reviewed raw,
 print-size artwork, source identities, prompt, workflow, and reference hashes.
 Stable `poster-flux2*` filenames keep PDF routing unchanged.
+
+Base1 `00001` is the second accepted one-shot poster. It applies the same graph
+to Mewtwo/Bulbasaur/Charmander with seed `260726503`; the tall Mewtwo silhouette,
+hand anatomy, padding, all three physical card crops, shadows, and grounding
+pass review. Its stable generation fingerprint is:
+
+```text
+d26549018a20003c0cb961cb5ab76f256c76872114deff3d34db04a17d7ec70a
+```
+
+Its promoted raw SHA-256 is
+`105efc287a5687bd028ec07bfa90ff516df434db3831c46fb47fbca81b041da2`.
+The existing stable PDF paths now resolve to this reviewed joint scene.
 
 ## Accepted one-shot contract
 
@@ -114,19 +128,16 @@ second tracked active bundle is maintained.
 
 ## Next production work
 
-1. Review the local `Base1 joint_scene/00001` rollout candidate. It passes the
-   initial Mewtwo anatomy, padding, card-fit, and grounding review but is not
-   promoted; the active `Base1` manifest remains on `identity_lock`.
-2. After that review, continue the scope-by-scope rollout with
-   `ExGen3/sections/mega` for exact named-form identity and one additional cast
-   with strongly different body proportions.
-3. Keep the same human identity/card/depth gate; do not mass-switch manifests
+1. Continue the scope-by-scope rollout with `ExGen3/sections/mega` for exact
+   named-form identity and one additional cast with strongly different body
+   proportions.
+2. Keep the same human identity/card/depth gate; do not mass-switch manifests
    before their replacements pass.
-4. Use those renders to test natural near/far landscape intersections. Do not
+3. Use those renders to test natural near/far landscape intersections. Do not
    reopen prompt-only depth stress unless new evidence changes the mechanism.
-5. Apply the section workflow to remaining aggregate variant sections only
+4. Apply the section workflow to remaining aggregate variant sections only
    after their scene briefs and curated casts are reviewed.
-6. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
+5. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
    matching physical page formats, memory tests, and visual QA exist.
 
 ## Cleanup boundary

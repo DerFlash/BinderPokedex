@@ -30,9 +30,9 @@ ROOT = Path(__file__).resolve().parents[2]
 POSTER_ASSETS = ROOT / "data" / "poster_assets"
 
 
-def test_legacy_poster_manifests_remain_isolated_single_bundles():
+def test_standalone_poster_manifests_remain_isolated_single_bundles():
     expected_hashes = {
-        "Base1": "2499ac743450c51e1496e800d47d14f880ea999dca2aabc4eed68ffee4647e02",
+        "Base1": "424ae822d7b7db3619379b9b910c68105aafaaaf42996bb58554ec1cb5ddd001",
         "SV03.5": "1ef4b42e9c0ac7e7abb7d6a856188f7f126693fc7b9672766844de34d828fcd2",
     }
 

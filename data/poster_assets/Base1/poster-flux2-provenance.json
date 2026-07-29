@@ -3,149 +3,169 @@
   "kind": "promoted_poster",
   "outputs": {
     "artwork": {
-      "bytes": 3453830,
+      "bytes": 5732371,
       "dpi": [
         299.9994,
         299.9994
       ],
       "file": "data/poster_assets/Base1/poster-flux2-artwork.png",
       "height": 3268,
-      "sha256": "4f3f64428c904ec8f401964561cf4efabff36dccd74d9aaa7902babff12ca9ab",
+      "mode": "RGBA",
+      "pixel_sha256": "1ca3cdf277e3ab1c5a7d85e6a5b878a8c8f29fcbace5afc24a1324a0f261a4ec",
+      "sha256": "dc5a1773c8f135d2f9b6adb9468cbda3a710bbbcc2936059cc5b29ca58fa08ea",
       "width": 2368
     },
     "cards": [
       {
-        "bytes": 53655,
+        "bytes": 408108,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r1_c1.png",
         "height": 1050,
-        "sha256": "8e8838e29fa287e57573c325b1494760addf47ed25d36fa63d3b89b22975a099",
+        "mode": "RGBA",
+        "pixel_sha256": "8a7bb8281c5cd4d3e98e3f28a4ba8daf31450e8d58c55bd3b4fdf3e51b6c82ed",
+        "sha256": "656eb9c03fd4af4b4b4b5240336b0617e586c0471abee8fd47793a339128ed55",
         "width": 750
       },
       {
-        "bytes": 187801,
+        "bytes": 446885,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r1_c2.png",
         "height": 1050,
-        "sha256": "78ef1194de5e669539e6be3e876c3cbdacdd8887723766a3449be5e7a74e35f6",
+        "mode": "RGBA",
+        "pixel_sha256": "be6f2dc5cea599963f95f540e96b972f935156128d5141132014efa5a12c13f5",
+        "sha256": "ec3e19a17d619439bb146794808cd876b0ec024c9db7bf47d856ed5eb72b0cd3",
         "width": 750
       },
       {
-        "bytes": 93493,
+        "bytes": 421372,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r1_c3.png",
         "height": 1050,
-        "sha256": "3318ccb22a6e8b4d0df0d7a5e31f8eb78adaa51c759a87841811c7050eee701a",
+        "mode": "RGBA",
+        "pixel_sha256": "b3a6643f7446779629d84dc71144e239028d3f94c04918dec09165900140c0d6",
+        "sha256": "a4ba6ce2d8eb45fafcac60d935218dbd11d74eb6fe24f71de494e1957563e5f1",
         "width": 750
       },
       {
-        "bytes": 509773,
+        "bytes": 664581,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r2_c1.png",
         "height": 1050,
-        "sha256": "fe8c2ddae41bb1a493c17f1138cdcf6bded6e16495291a2a4e00588897e4af60",
+        "mode": "RGBA",
+        "pixel_sha256": "f37b3167a066fde1460ad5a2a3e7e6fc3e94539b75d5ae1394e307972a0ea6e3",
+        "sha256": "8b619e01b1f7edf7df6b753491dd48491d24f962656a8dcb7e6e1657cc69bf3a",
         "width": 750
       },
       {
-        "bytes": 280861,
+        "bytes": 353434,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
-        "sha256": "5593ce02fec45c03277d04022c40064ebb889292fd5e732fb8602afca729d068",
+        "mode": "RGBA",
+        "pixel_sha256": "1164c902fcead8b2e8d6accc976fc4e87daec63af32ed9cc3c6e036454edf639",
+        "sha256": "c023ae5b509a744fab14288b177519d8d79785fcd8558f649851d379136a3719",
         "width": 750
       },
       {
-        "bytes": 589680,
+        "bytes": 588305,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r2_c3.png",
         "height": 1050,
-        "sha256": "2690bdcb1bfd5231528c76ea5e92227a18afb966f9bed3f53706d1460579f6eb",
+        "mode": "RGBA",
+        "pixel_sha256": "e55fb1242956b2a296eec161ec4947314452b63354eddb2520d2db72905a16b7",
+        "sha256": "be4f8ddfe4def0c9f7eb65392a83fdbc64e79ba9ab41568384579776a35b7171",
         "width": 750
       },
       {
-        "bytes": 523673,
+        "bytes": 808674,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r3_c1.png",
         "height": 1050,
-        "sha256": "c5ac2edf249d88f594cfbce12259c34c2d6d16deac684b2efa20586e9c1048e2",
+        "mode": "RGBA",
+        "pixel_sha256": "7e55668bd8806e7e7c1320d8f87beb11c253a0235083eea8817c4db84c0a20f8",
+        "sha256": "638ee2fcd8aad648fd03cb19766f92d00d66ace136d7cddd6b8c1881503cda9e",
         "width": 750
       },
       {
-        "bytes": 435795,
+        "bytes": 721925,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r3_c2.png",
         "height": 1050,
-        "sha256": "99b6b0bf5ff3b85899587ec8894e8398278d8509a6af42a220f5a04786bd25e8",
+        "mode": "RGBA",
+        "pixel_sha256": "aca6a9f38ca321699a6b6b0207bae2c07e67adaa35d8036c505f89be525ad5db",
+        "sha256": "991bf88927ee6e734a1124fbff572c84cceeaec69e570819f604c074f02ad780",
         "width": 750
       },
       {
-        "bytes": 537157,
+        "bytes": 774474,
         "dpi": [
           299.9994,
           299.9994
         ],
         "file": "data/poster_assets/Base1/poster-flux2-cards/card_r3_c3.png",
         "height": 1050,
-        "sha256": "db2322b20f67333f6fa7933316ffc3c36437d592c6245b44d90542b5ec8e6586",
+        "mode": "RGBA",
+        "pixel_sha256": "5de520f94c06313eaa9684773a7f3cb70437b86d889432288dffd41677b99718",
+        "sha256": "ab4a9a68d74656d4636d6c12b59dde0d82f4d06ac0e7189d9e1b4fcdc8c0d01e",
         "width": 750
       }
     ],
     "preview": {
-      "bytes": 3479236,
+      "bytes": 5682666,
       "dpi": [
         299.9994,
         299.9994
       ],
       "file": "data/poster_assets/Base1/poster-flux2.png",
       "height": 3268,
-      "sha256": "ea86b86c7136f8b5aa0768cf9c7a503e501cf1084070177250f1436165a6f55b",
+      "mode": "RGBA",
+      "pixel_sha256": "2a581bb1ed4145aaf00f930587bf926676d4e9bd693426f3810ba5402b654deb",
+      "sha256": "0c3ddd2eb0e284bd821b4119fd5e12130357b75f0985a49f2c16fc491d93d746",
       "width": 2368
     }
   },
   "poster_id": "Base1",
   "preview_language": "en",
-  "promoted_at": "2026-07-27T03:22:18.668769+00:00",
+  "promoted_at": "2026-07-29T11:47:45.984485+00:00",
   "run": {
-    "created_at": "2026-07-26T13:29:59.419814+00:00",
+    "created_at": "2026-07-28T23:40:40.716064+00:00",
     "generation": {
       "encoder": "qwen_3_4b.safetensors",
       "encoder_sha256": "6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a",
       "engine": "flux",
       "generation_megapixels": 1.0,
-      "mode": "identity_lock",
+      "mode": "joint_scene",
       "model": "flux-2-klein-4b-fp8.safetensors",
       "model_sha256": "97ed34fe0567e436200f2faee3939b88f2b5d99f8af2a4dc16532c4245c0ccb6",
       "output_dpi": 300,
-      "output_method": "model_upscale",
-      "reference_mode": "two_pass_source_pixels",
+      "output_method": "lanczos",
+      "reference_mode": "spatial_identity_joint",
       "seed": 260726503,
       "steps": 4,
-      "upscale_model": "RealESRGAN_x4plus_anime_6B.pth",
-      "upscale_model_sha256": "f872d837d3c90ed2e05227bed711af5671a6fd1c9f7d7e91c911a61f155e99da",
       "vae": "flux2-vae.safetensors",
       "vae_sha256": "d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5"
     },
@@ -160,6 +180,8 @@
           "bytes": 120336,
           "file": "data/poster_assets/Base1/cutouts/pokemon_150_mewtwo.png",
           "height": 475,
+          "mode": "RGBA",
+          "pixel_sha256": "ba8ef7c35c88cb509fa1617beab0041a3f8e8317041b1c97cc598fe1f936eefa",
           "sha256": "b7c00037d7ba9fb5cebc2da42ca0da54c7b664f4d7b2348d60ade5c6dc9de256",
           "width": 475
         },
@@ -167,6 +189,8 @@
           "bytes": 206887,
           "file": "data/poster_assets/Base1/cutouts/pokemon_001_bulbasaur.png",
           "height": 475,
+          "mode": "RGBA",
+          "pixel_sha256": "f96cfeddc294c4efbbdf1b35cd816341d950e3051dec2128c03f652448b04d10",
           "sha256": "8e8f5588a41f5dc9006b029347e26f3eb20761160a16e2b0e4df8fb7ea9eb24a",
           "width": 475
         },
@@ -174,43 +198,14 @@
           "bytes": 139307,
           "file": "data/poster_assets/Base1/cutouts/pokemon_004_charmander.png",
           "height": 475,
+          "mode": "RGBA",
+          "pixel_sha256": "84b721fa96a4480ee20afd28765c279e15d45b0f73c13f74c7988cf06a3b68df",
           "sha256": "a1ece1866497c8b11df3853190781c45f724a33a839cb5525597466d03deafd8",
           "width": 475
         }
       ],
       "generation_fingerprint": {
         "components": {
-          "conditioning": {
-            "identity_defaults": {
-              "bottom_padding_px": 24,
-              "canvas_px": 512,
-              "max_subject_px": 350,
-              "min_subject_px": 150,
-              "neutral_rgb": [
-                226,
-                224,
-                211
-              ]
-            },
-            "subjects": {
-              "150": {
-                "composition": {
-                  "baseline_offset_cell": 0.1,
-                  "scale": 0.22,
-                  "x_offset_cell": -0.28
-                },
-                "identity": {
-                  "align_x": "left",
-                  "canvas_px": 768,
-                  "x_padding_px": 24
-                },
-                "prompt_notes": [
-                  "Leave generous clear landscape space above Mewtwo's head and to the right of its hand; it must occupy at most seventy percent of its region's height and width, and its rightmost fingertip must end before the final quarter of its region.",
-                  "Copy the exact smooth head contour, short cranial nubs, three-digit hands, feet, and continuous tail curve without simplifying or redesigning them."
-                ]
-              }
-            }
-          },
           "cutouts": [
             {
               "height": 475,
@@ -236,35 +231,106 @@
           ],
           "effective_prompt": {
             "encoding": "utf-8",
-            "sha256": "484c76739fc0b87654b8380b75625eb6e64d78155f5b453c3b29dafafbd6368a"
+            "sha256": "e1318e3778dcff496e644f397c881279aba683748466826796eb898253019117"
           },
           "generation": {
             "encoder": "qwen_3_4b.safetensors",
             "encoder_sha256": "6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a",
             "engine": "flux",
             "generation_megapixels": 1.0,
-            "mode": "identity_lock",
+            "mode": "joint_scene",
             "model": "flux-2-klein-4b-fp8.safetensors",
             "model_sha256": "97ed34fe0567e436200f2faee3939b88f2b5d99f8af2a4dc16532c4245c0ccb6",
             "output_dpi": 300,
-            "output_method": "model_upscale",
-            "reference_mode": "two_pass_source_pixels",
+            "output_method": "lanczos",
+            "reference_mode": "spatial_identity_joint",
             "seed": 260726503,
             "steps": 4,
-            "upscale_model": "RealESRGAN_x4plus_anime_6B.pth",
-            "upscale_model_sha256": "f872d837d3c90ed2e05227bed711af5671a6fd1c9f7d7e91c911a61f155e99da",
             "vae": "flux2-vae.safetensors",
             "vae_sha256": "d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5"
           },
-          "identity_lock": {
-            "max_protected_start_ratio": 0.7,
-            "overscan_ratio": 0.04,
-            "subject_clearance_ratio": 0.02,
-            "transition_ratio": 0.1
+          "joint_scene_conditioning": {
+            "cast_max_megapixels": 0.5,
+            "identity_canvas_px": 512,
+            "identity_source_resampling": "none",
+            "reference_neutral_rgb": [
+              226,
+              224,
+              211
+            ],
+            "reference_strategy": "spatial_cast_plus_unscaled_identity"
           },
           "layout": {
             "columns": 3,
             "name": "standard_3x3",
+            "raster_geometry": {
+              "generation_canvas_px": [
+                848,
+                1168
+              ],
+              "generation_column_spans_px": [
+                [
+                  0,
+                  269
+                ],
+                [
+                  290,
+                  558
+                ],
+                [
+                  579,
+                  848
+                ]
+              ],
+              "generation_row_spans_px": [
+                [
+                  0,
+                  375
+                ],
+                [
+                  396,
+                  772
+                ],
+                [
+                  793,
+                  1168
+                ]
+              ],
+              "name": "cumulative_physical_endpoints",
+              "output_canvas_px": [
+                2368,
+                3268
+              ],
+              "output_column_spans_px": [
+                [
+                  0,
+                  750
+                ],
+                [
+                  809,
+                  1559
+                ],
+                [
+                  1618,
+                  2368
+                ]
+              ],
+              "output_row_spans_px": [
+                [
+                  0,
+                  1050
+                ],
+                [
+                  1109,
+                  2159
+                ],
+                [
+                  2218,
+                  3268
+                ]
+              ],
+              "version": 2
+            },
             "rows": 3,
             "safe_cells": {
               "set_info": {
@@ -279,7 +345,7 @@
           },
           "pipeline_contract": {
             "name": "poster_generation",
-            "version": 1
+            "version": 5
           },
           "pokemon": {
             "count": "auto_from_layout_columns",
@@ -313,7 +379,7 @@
           ]
         },
         "schema_version": 1,
-        "sha256": "51fa9878d86dd2e967f8970ec9811a0820c15a55bc18684c94c38e69f0b94d46"
+        "sha256": "d26549018a20003c0cb961cb5ab76f256c76872114deff3d34db04a17d7ec70a"
       },
       "overlay_fingerprint": {
         "components": {
@@ -506,24 +572,46 @@
         "sha256": "4c4ca7f57943413c2f40e0066abe5be09cb8b94392ddcf8d214209f824fc0991"
       },
       "prompt": {
-        "bytes": 1664,
-        "file": "data/poster_assets/Base1/comfyui_poster/identity_lock_prompt.generated.txt",
-        "sha256": "4f5cf44ba6c19d766cfb2009a5fe8d6b04e61c86f08f703b0f6b2d288915f62f"
+        "bytes": 6340,
+        "file": "data/poster_assets/Base1/comfyui_poster/joint_scene_prompt.generated.txt",
+        "sha256": "63f7b1a2a24c53f070446cf442161a6affcca6212c8276cf6603aff1e7b302ea"
       },
       "references": [
         {
-          "bytes": 156030,
-          "file": "data/poster_assets/Base1/comfyui_poster/inpaint_reference.png",
-          "height": 1168,
-          "sha256": "41ea16dab56659d01ecf1ea0ef4c97a24b94af145a5a6093f3b65600ed896352",
-          "width": 848
+          "bytes": 77728,
+          "file": "data/poster_assets/Base1/comfyui_poster/joint_scene_cast_reference.png",
+          "height": 832,
+          "mode": "RGBA",
+          "pixel_sha256": "044a82dd28320012a90131d928ee144d9b1790adacda9a6f09d689c5e9030c3c",
+          "sha256": "209ccc684186f80b6301f39d22c63eb49823de2d0e16f72233721c6082ccc676",
+          "width": 608
         },
         {
-          "bytes": 4603,
-          "file": "data/poster_assets/Base1/comfyui_poster/upper_context_mask.png",
-          "height": 1168,
-          "sha256": "6ab5789bc87b2686a333665b5c3525017a55aac68916f4419e939b1160d6f62e",
-          "width": 848
+          "bytes": 99971,
+          "file": "data/poster_assets/Base1/comfyui_poster/identity_reference_1.png",
+          "height": 512,
+          "mode": "RGBA",
+          "pixel_sha256": "73d02f7ee75c95762b93b9ba9e7c0c91a2c3364c1652656e1529a904522de64b",
+          "sha256": "e990eacea21beadd4d3cf20ccd0ac88978e25b709aba9e5e6efa04dd38d32ad2",
+          "width": 512
+        },
+        {
+          "bytes": 183658,
+          "file": "data/poster_assets/Base1/comfyui_poster/identity_reference_2.png",
+          "height": 512,
+          "mode": "RGBA",
+          "pixel_sha256": "722c5bee6941d870640e4008d57dfb2e3b1e312eaaf182fb5db75031789ec91b",
+          "sha256": "a9331ad3415cef27c68648eb7aba8bb3e10d90859a5c56d022b0870c39dc7529",
+          "width": 512
+        },
+        {
+          "bytes": 122538,
+          "file": "data/poster_assets/Base1/comfyui_poster/identity_reference_3.png",
+          "height": 512,
+          "mode": "RGBA",
+          "pixel_sha256": "7dcb8c5611f9affd14f208e99ea272c1409b41b26c110d31505ff22dbbd1ca2a",
+          "sha256": "e608b3234c8a3e3d33e893daa82153d5a009c5d293d8dd94c947a7663d303cf2",
+          "width": 512
         }
       ],
       "scope_manifest": {
@@ -531,50 +619,79 @@
         "file": "data/poster_assets/Base1/poster.yaml",
         "sha256": "2499ac743450c51e1496e800d47d14f880ea999dca2aabc4eed68ffee4647e02"
       },
-      "semantic_fingerprint_migration": {
-        "generation_pipeline_contract_version": 1,
-        "inferred_from": "recorded_reference_topology",
-        "origin": "backfilled_legacy",
-        "schema_version": 1
-      },
-      "upscale_workflow": {
-        "bytes": 897,
-        "file": "data/poster_assets/Base1/comfyui_poster/workflow_api_upscale_300dpi.json",
-        "sha256": "a2f8b5a0b02a5bc6b4362e85e72ab3df68ca95d5b31bcc82197dd68713030974"
-      },
       "workflow": {
-        "bytes": 5868,
-        "file": "data/poster_assets/Base1/comfyui_poster/workflow_api_identity_lock_1mp_260726503.json",
-        "sha256": "afedbd7dc0ce0669b12de01188c98c331914f2916558953dd16af5a3c322cc68"
+        "bytes": 10971,
+        "file": "data/poster_assets/Base1/comfyui_poster/workflow_api_joint_scene_1mp_260726503.json",
+        "sha256": "890ff01dce52370b42c29d38e26407b522a9881c4c67e30315093e9349b51561"
       }
     },
     "kind": "poster_generation_run",
+    "poster_id": "Base1",
     "raw_artwork": {
-      "bytes": 1447757,
-      "file": "data/poster_assets/Base1/comfyui_poster/output/base1_flux2_identity_lock_1mp_scene_seed_260726503_00001_.png",
+      "bytes": 1416934,
+      "file": "data/poster_assets/Base1/comfyui_poster/output/base1_flux2_joint_scene_1mp_seed_260726503_00001_.png",
       "height": 1168,
-      "sha256": "c31f9245c148ad48d8c53034dfce79f949e271af19bb4a6f1bdb5b8c817c5379",
+      "mode": "RGBA",
+      "pixel_sha256": "d8f9fd8af28370b54d4a03bb5424ea96bb8f5f5ac74db801e677e921ef42a88b",
+      "sha256": "105efc287a5687bd028ec07bfa90ff516df434db3831c46fb47fbca81b041da2",
       "width": 848
     },
     "schema_version": 1,
     "scope": "Base1",
+    "section_id": null,
     "source_artwork": {
-      "bytes": 3453830,
+      "bytes": 5732371,
       "dpi": [
         299.9994,
         299.9994
       ],
-      "file": "data/poster_assets/Base1/comfyui_poster/temp/base1_print_300dpi_RealESRGAN_x4plus_anime_6B_00001__print.png",
+      "file": "data/poster_assets/Base1/comfyui_poster/temp/base1_flux2_joint_scene_1mp_seed_260726503_00001__to_300dpi.png",
       "height": 3268,
-      "sha256": "4f3f64428c904ec8f401964561cf4efabff36dccd74d9aaa7902babff12ca9ab",
+      "mode": "RGBA",
+      "pixel_sha256": "1ca3cdf277e3ab1c5a7d85e6a5b878a8c8f29fcbace5afc24a1324a0f261a4ec",
+      "sha256": "dc5a1773c8f135d2f9b6adb9468cbda3a710bbbcc2936059cc5b29ca58fa08ea",
       "width": 2368
     },
+    "source_scope": "Base1",
     "validation": {
-      "identity_lock": {
-        "changed_pixels": 0,
-        "method": "exact_opaque_source_pixels",
-        "opaque_pixels": 52584,
-        "passed": true
+      "joint_scene_visual_review": {
+        "approval_source": "explicit_promotion_flag",
+        "criteria": [
+          "exact_cast_count",
+          "raw_generation_identity",
+          "text_free_output_identity",
+          "identity_and_form",
+          "silhouette_and_stature",
+          "anatomy_and_face",
+          "colors_and_markings",
+          "placement_and_card_safety",
+          "natural_scene_integration",
+          "coherent_landscape_occlusion"
+        ],
+        "generation_fingerprint_sha256": "d26549018a20003c0cb961cb5ab76f256c76872114deff3d34db04a17d7ec70a",
+        "method": "human_identity_and_scene_review",
+        "passed": true,
+        "raw_artwork_pixel_sha256": "d8f9fd8af28370b54d4a03bb5424ea96bb8f5f5ac74db801e677e921ef42a88b",
+        "raw_artwork_sha256": "105efc287a5687bd028ec07bfa90ff516df434db3831c46fb47fbca81b041da2",
+        "reviewed_artwork_pixel_sha256": "1ca3cdf277e3ab1c5a7d85e6a5b878a8c8f29fcbace5afc24a1324a0f261a4ec",
+        "reviewed_artwork_sha256": "dc5a1773c8f135d2f9b6adb9468cbda3a710bbbcc2936059cc5b29ca58fa08ea",
+        "reviewed_at": "2026-07-29T11:47:31.103235+00:00",
+        "source_cutout_pixel_sha256": [
+          "ba8ef7c35c88cb509fa1617beab0041a3f8e8317041b1c97cc598fe1f936eefa",
+          "f96cfeddc294c4efbbdf1b35cd816341d950e3051dec2128c03f652448b04d10",
+          "84b721fa96a4480ee20afd28765c279e15d45b0f73c13f74c7988cf06a3b68df"
+        ],
+        "source_cutout_sha256": [
+          "b7c00037d7ba9fb5cebc2da42ca0da54c7b664f4d7b2348d60ade5c6dc9de256",
+          "8e8f5588a41f5dc9006b029347e26f3eb20761160a16e2b0e4df8fb7ea9eb24a",
+          "a1ece1866497c8b11df3853190781c45f724a33a839cb5525597466d03deafd8"
+        ],
+        "source_subject_ids": [
+          150,
+          1,
+          4
+        ],
+        "stage": "raw_and_text_free_print_artwork"
       }
     }
   },

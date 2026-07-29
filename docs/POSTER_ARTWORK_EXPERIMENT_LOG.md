@@ -25,12 +25,13 @@ KISS cleanup and remain recoverable through Git history.
 The first representative rollout of the promoted Generation VII graph keeps
 the exact v5 `joint_scene` topology and changes only the scope inputs: seed
 `260726503`, the Base Set scene brief, the reviewed Mewtwo/Bulbasaur/Charmander
-sources, and their physical card placement. The active `Base1` manifest remains
-on `identity_lock` until this candidate is approved and promoted explicitly.
+sources, and their physical card placement. Candidate `00001` was reviewed and
+promoted on 2026-07-29; the later prompt-only `00002` failure never changed the
+production prompt or active candidate.
 
 | Candidate | Pipeline change | Result | Decision |
 | --- | --- | --- | --- |
-| `joint_scene/00001` | Apply the reviewed `00018` graph to `Base1`, including the canonical placement profile and additional Mewtwo anatomy/padding constraints | All three subjects remain complete inside their physical cards with useful padding, coherent ground contact, and directionally consistent shadows. Mewtwo retains the defining head, hand, chest, and tail anatomy within the accepted one-shot detail tolerance. The landscape does not intersect a subject, so difficult foreground continuity remains unproven | Retained on 2026-07-29 as a strong local review candidate; not promoted |
+| `joint_scene/00001` | Apply the reviewed `00018` graph to `Base1`, including the canonical placement profile and additional Mewtwo anatomy/padding constraints | All three subjects remain complete inside their physical cards with useful padding, coherent ground contact, and directionally consistent shadows. Mewtwo retains the defining head, hand, chest, and tail anatomy within the accepted one-shot detail tolerance. The landscape does not intersect a subject, so difficult foreground continuity remains unproven | Accepted and promoted on 2026-07-29 as the second `joint_scene` scope |
 | `joint_scene/00002` | Keep the `00001` seed, model, graph, references, geometry, sampler, Mewtwo notes, one-shot paragraph, scene/depth paragraph, safe areas, and exclusions byte-identical; consolidate only repeated spatial, identity, count, and bounds prose | The intended three bottom subjects remain visible, but the model adds a fourth subject behind Bulbasaur: an oversized, upright, cat-eared Mewtwo-like mutation. This violates both exact count and identity before print processing | Rejected; no production prompt change |
 
 The MPS render completed in 201.83 seconds. Reproducibility evidence:
@@ -47,6 +48,11 @@ The complete generation fingerprint is:
 ```text
 d26549018a20003c0cb961cb5ab76f256c76872114deff3d34db04a17d7ec70a
 ```
+
+Promotion binds the raw and text-free print hashes above to an explicit
+joint-scene visual review, nine 300-dpi physical card crops, and the stable
+`poster-flux2*` PDF assets. A German test PDF with poster enabled rendered
+successfully after promotion.
 
 ### Prompt complexity audit
 

@@ -350,7 +350,8 @@ Because `joint_scene` deliberately redraws all pixels, an opaque-source-pixel
 equality audit is not applicable. Its hard gates are a complete generation
 fingerprint and explicit human review of both the actual raw file and the
 deterministically scaled text-free print artwork. Generation VII candidate
-`00018` passed that gate and is the first promoted `joint_scene` poster.
+`00018` passed that gate and is the first promoted `joint_scene` poster; Base1
+candidate `00001` is the second.
 Candidates `00019` and `00020` failed their bounded depth tests and their
 prompt changes were reverted.
 
