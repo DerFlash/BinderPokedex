@@ -35,9 +35,10 @@ in the experiment log and Git history, not in the production runner.
 | --- | --- | --- |
 | `Pokedex/sections/gen7` | `joint_scene` v5 candidate `00018` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `Base1` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
+| `ExGen3/sections/mega` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `SV03.5` | `identity_lock` | Accepted and enabled |
 | `Pokedex/sections/gen1`–`gen6`, `gen8`, `gen9` | `identity_lock` | Accepted and enabled after their matching generation covers |
-| `ExGen3/sections/normal`, `ExGen3/sections/mega` | `identity_lock` | Accepted and enabled after their matching section covers |
+| `ExGen3/sections/normal` | `identity_lock` | Accepted and enabled after its matching section cover |
 
 Generation VII `00018` is the first accepted one-shot poster. It uses seed
 `260726054`, the reviewed Rowlet/Litten/Popplio sources, the Alola scene brief,
@@ -71,6 +72,15 @@ d26549018a20003c0cb961cb5ab76f256c76872114deff3d34db04a17d7ec70a
 Its promoted raw SHA-256 is
 `105efc287a5687bd028ec07bfa90ff516df434db3831c46fb47fbca81b041da2`.
 The existing stable PDF paths now resolve to this reviewed joint scene.
+
+ExGen3 Mega `00001` is the third accepted one-shot poster. The unmodified graph
+preserves the named Mega Latias, Mega Diancie, and Mega Lucario forms without
+per-subject prompt exceptions while passing all three card crops. Its stable
+generation fingerprint is:
+
+```text
+099b69bd95a6b6a16e1f57e941b136c69acef484c6db6bd077076314f9005216
+```
 
 ## Accepted one-shot contract
 
@@ -128,9 +138,8 @@ second tracked active bundle is maintained.
 
 ## Next production work
 
-1. Continue the scope-by-scope rollout with `ExGen3/sections/mega` for exact
-   named-form identity and one additional cast with strongly different body
-   proportions.
+1. Select one additional ordinary scope with strongly different body
+   proportions; avoid another specialized Mega-form test.
 2. Keep the same human identity/card/depth gate; do not mass-switch manifests
    before their replacements pass.
 3. Use those renders to test natural near/far landscape intersections. Do not

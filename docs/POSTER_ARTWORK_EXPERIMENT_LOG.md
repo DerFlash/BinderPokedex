@@ -108,6 +108,37 @@ deduplication is closed rather than followed by more near-identical variants:
 for this four-reference conditioning topology, the apparently redundant count
 and authority wording is behaviorally significant.
 
+## ExGen3 Mega / FLUX.2 Klein rollout
+
+The first `joint_scene` candidate uses seed `260751034`, the unchanged reviewed
+prompt builder and graph, the highland-basin scene brief, and exact Official
+Artwork form references for Mega Latias, Mega Diancie, and Mega Lucario.
+
+| Candidate | Pipeline change | Result | Decision |
+| --- | --- | --- | --- |
+| `joint_scene/00001` | Apply the promoted v5 graph to the aggregate Mega section without subject-specific prompt exceptions | Exactly the three named Mega forms appear once. Their defining silhouettes, Mega-form appendages, crystal/ribbon structures, colors, markings, and poses remain within the accepted one-shot detail tolerance. All three physical card crops pass; the shared wall, terrain, lighting, and shadows are coherent | Accepted and promoted on 2026-07-29 as the third `joint_scene` scope |
+
+The stone wall remains behind all three subjects and the nearest grass stays
+clear of their defining silhouettes. The result contains no contradictory
+depth transition, but it does not prove a connected natural foreground
+intersection. As with the first two promotions, open terrain is accepted over a
+forced or inconsistent crossing.
+
+The MPS render completed in 197.38 seconds. Reproducibility evidence:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Raw 848 × 1168 candidate | `7d3ecebc6e1eaec5a55869da011459265bae350ef3a94a191c7a77bf1ac4259b` |
+| Text-free 2368 × 3268 print raster at 300 dpi | `65bfabaf28dc711a907f7b692a7d26f75d85076374e24ee31c0ebc6367167dd4` |
+| Prompt snapshot | `62313ccf86f596d9871d23fcb7384d947eb2893318f3080333379adb38ec062f` |
+| ComfyUI API workflow | `694105167526465b00b5d8eda10a29c6293b3d5b1b6d736a91bc74a274969d91` |
+
+The complete generation fingerprint is:
+
+```text
+099b69bd95a6b6a16e1f57e941b136c69acef484c6db6bd077076314f9005216
+```
+
 ## Generation VII / FLUX.2 Klein
 
 All candidates below use seed `260726054` and the `standard_3x3` layout. They
