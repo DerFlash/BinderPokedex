@@ -7,7 +7,7 @@ requirements in
 evidence in
 [Poster Experiment Log](POSTER_ARTWORK_EXPERIMENT_LOG.md).
 
-Last audited: 2026-07-29
+Last audited: 2026-07-30
 
 ## Current decision
 
@@ -134,6 +134,19 @@ three soft neutral occupancy zones. It produced a bipedal Torchic/Mudkip
 hybrid and placed all three subjects primarily above their physical bottom-row
 cards without proving a foreground crossing. The zone-layout path is rejected;
 the complete spatial cast remains the preferred one-shot placement control.
+
+A subsequent cast-free regional-conditioning candidate binds each unscaled
+identity reference directly to its physical bottom-card model branch while a
+reference-free default branch generates the global landscape. All branches
+contribute to the same empty latent and the same four-step sampler; there is no
+later character insertion, mask repair, or composite. The 1-MP Generation III
+candidate passes count, identity/anatomy, card fit, padding, grounding,
+shadows, safe areas, and visible seam review. It contains no contradictory
+foreground/background switch, although its vegetation mostly avoids direct
+character intersections. This is now the preferred implementation candidate.
+The promoted Generation III asset remains `identity_lock` until the topology
+is integrated and deliberately approved; the existing spatial-cast
+`joint_scene` remains reproducible for its promoted scopes.
 
 ## Accepted one-shot contract
 

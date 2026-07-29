@@ -161,6 +161,55 @@ The zone candidate and its temporary assets are discarded, the complete
 spatial cast remains the `joint_scene` placement control, and Generation III
 remains on its promoted `identity_lock` fallback.
 
+### Cast-strength and regional-conditioning follow-up
+
+On 2026-07-30 a local implementation audit established why the earlier
+reference-image variants behaved this way. ComfyUI's `ReferenceLatent` appends
+each complete VAE latent to one ordered list. FLUX.2 gives those references
+separate sequence indices, but it provides no per-reference target rectangle,
+mask, or strength. Prompt roles such as `IMAGE 1` and `IMAGE 2` are therefore
+semantic conventions. The complete cast was the only strong placement signal,
+and its fully visible subjects also encoded the unwanted visual prior that
+every character lies in front of the complete landscape.
+
+One isolated 50-percent-opacity cast A/B kept the original Generation III
+prompt, seed `260750881`, graph, model, three identity-reference files, target
+geometry, and sampler unchanged. It preserved count, identity, and card fit,
+but nearby vegetation again avoided the subjects instead of proving a
+foreground crossing. No opacity sweep followed.
+
+The next bounded architecture removed the visible cast and bound each identity
+reference through ComfyUI's regional conditioning while retaining one empty
+latent, one four-step sampler trajectory, and one decode. A global,
+reference-free branch generated the complete Hoenn landscape. Three additional
+branches each received exactly one identity reference and were blended only
+into the corresponding physical bottom card.
+
+The first 0.25-MP variant used full-canvas branches plus soft masks. It failed
+because FLUX still placed each complete subject semantically on the full
+canvas; only the body part intersecting its mask survived. The single
+diagnostically justified correction used
+`ConditioningSetAreaPercentage` instead. Each subject branch then generated
+its complete character, local ground, shadow, vegetation, and occlusion inside
+the actual physical card region. No mask, box, silhouette, guide pixels, or
+post-decode composite entered the graph.
+
+| Candidate | Runtime on Metal/MPS | Raw SHA-256 | Workflow SHA-256 | Result |
+| --- | ---: | --- | --- | --- |
+| 50% spatial cast, 1 MP | `196.25 s` | `4ebcae043ffb2aead8cbd23e386c40ac5378168d5038337228f63f6cfe099ae2` | `d651828050d2b10abc334bfb7783f6b62ab8d26d4105cc6c23998a9957411878` | Count, identity, and fit pass; depth remains inconclusive; closed |
+| Full-context regional masks, 0.25 MP | `169.67 s` | `25451dc72f5b3ed6c55b433f3b43070e950140d4ee13eb4cd3914cf93044ca3a` | `28d0a50398d7797038861280a9e3004f78616420f80a92dd779d196f2680d9b7` | Hard fail: only partial body fragments land inside the masks |
+| Physical-card regional areas, 0.25 MP | `120.43 s` | `7aa3a1a4370867b06ef6e7d7ae42e84bf0237c0424aadf0f7592023898d3223c` | `513874c008320c3d144307d608e9480a46b8c22aad150121bc53ca7546d53746` | Coarse pass; earned one 1-MP confirmation |
+| Physical-card regional areas, 1 MP | `123.75 s` | `d36592391d59af97a941bbe59c1f54f52a3448d3d97b8452fa2aba869a1e6051` | `6915e98ac26bdc979c42445334a4cc8d4063a5d410b85f871722c3a3e9109863` | Passes count, identity, anatomy, physical crops, padding, grounding, shadows, safe areas, and visible seam review |
+
+The 1-MP candidate contains complete Treecko, Torchic, and Mudkip in the
+correct cards with no visible regional boundaries or pasted-layer appearance.
+No connected plant changes arbitrarily from behind to in front. Vegetation
+mostly avoids direct subject intersections, so this result removes the known
+contradiction but does not yet prove reliable foreground occlusion across
+different scenes. It is the preferred implementation candidate; Generation III
+stays on the accepted `identity_lock` asset until the new topology is
+implemented, reviewed by the user, and promoted deliberately.
+
 ## Base1 / FLUX.2 Klein rollout
 
 The first representative rollout of the promoted Generation VII graph keeps
