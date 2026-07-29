@@ -20,6 +20,29 @@ KISS cleanup and remain recoverable through Git history.
 - Generated text, boxes, landing pads, paths, and visible layout guides are not
   part of the artwork.
 
+## Pokédex Generation I / FLUX.2 Klein rollout
+
+The first remaining Pokédex migration applies the unchanged promoted graph and
+prompt builder to seed `260782266`, the Kanto scene brief, and the reviewed
+Bulbasaur, Charmander, and Squirtle references.
+
+| Candidate | Pipeline change | Result | Decision |
+| --- | --- | --- | --- |
+| `joint_scene/00001` | Change only the scope seed, scene brief, identities, and shared physical placement derived for Generation I | Exactly the three expected starters appear once and remain complete inside their assigned physical cards with useful padding. Their defining anatomy, faces, colors, markings, silhouettes, and poses match the references within the accepted one-shot print-detail tolerance. Morning light, contact shadows, continuous meadow terrain, and foreground plants remain spatially coherent | Accepted and promoted on 2026-07-29 as the fifth `joint_scene` scope |
+
+The Metal/MPS render completed in 229.93 seconds. Reproducibility evidence:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Raw 848 × 1168 candidate | `4d5ed1e63e1f972fc62054261d4e3d9c016f9e89864b1181cae6b443198b8969` |
+| Text-free 2368 × 3268 print raster at 300 dpi | `1a4c376d48d4fdde92d9901985f5baf44207909a0088831f5278e65d18b04df2` |
+
+The complete generation fingerprint is:
+
+```text
+3ad057acbcf8f95fd20b1661df5f938c7e06540d9c6275b773524db67b462f8d
+```
+
 ## Base1 / FLUX.2 Klein rollout
 
 The first representative rollout of the promoted Generation VII graph keeps

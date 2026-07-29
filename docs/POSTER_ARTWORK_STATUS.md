@@ -34,11 +34,12 @@ in the experiment log and Git history, not in the production runner.
 | Scope group | Active mode | Status |
 | --- | --- | --- |
 | `Pokedex/sections/gen7` | `joint_scene` v5 candidate `00018` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
+| `Pokedex/sections/gen1` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `Base1` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `ExGen3/sections/mega` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `ExGen3/sections/normal` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `SV03.5` | `identity_lock` | Accepted and enabled |
-| `Pokedex/sections/gen1`–`gen6`, `gen8`, `gen9` | `identity_lock` | Accepted and enabled after their matching generation covers |
+| `Pokedex/sections/gen2`–`gen6`, `gen8`, `gen9` | `identity_lock` | Accepted and enabled after their matching generation covers |
 
 Generation VII `00018` is the first accepted one-shot poster. It uses seed
 `260726054`, the reviewed Rowlet/Litten/Popplio sources, the Alola scene brief,
@@ -90,6 +91,19 @@ fingerprint is:
 ```text
 133603d3b0ed6ec6b8fea273ff74dfba1893b8112424099bea786d8ee5d69955
 ```
+
+Generation I `00001` is the fifth accepted one-shot poster. Bulbasaur,
+Charmander, and Squirtle remain complete and recognizable inside their three
+physical cards with useful padding, shared morning light, coherent contact
+shadows, and an uninterrupted Kanto meadow. Its stable generation fingerprint
+is:
+
+```text
+3ad057acbcf8f95fd20b1661df5f938c7e06540d9c6275b773524db67b462f8d
+```
+
+The promoted raw SHA-256 is
+`4d5ed1e63e1f972fc62054261d4e3d9c016f9e89864b1181cae6b443198b8969`.
 
 ## Accepted one-shot contract
 
@@ -150,7 +164,7 @@ second tracked active bundle is maintained.
 1. Treat the representative rollout as complete: Gen VII, Base1, named Mega
    forms, and a strongly proportionally diverse cast now pass.
 2. Keep all remaining migrations scope-by-scope and review-gated; do not
-   mechanically switch the nine accepted fallbacks.
+   mechanically switch the eight accepted fallbacks.
 3. Use future requested renders to observe natural near/far landscape
    intersections. Do not reopen prompt-only depth stress unless new evidence
    changes the mechanism.
