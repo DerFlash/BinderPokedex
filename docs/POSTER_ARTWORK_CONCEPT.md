@@ -21,7 +21,7 @@ pages while:
 ## Design principles
 
 1. **One active contract per scope.** `poster.yaml` is the source of truth for
-   model, mode, seed, layout, output, scene, and cast.
+   model, mode, reference topology, seed, layout, output, scene, and subjects.
 2. **One preferred model family.** The production runtime supports FLUX.2
    `joint_scene` plus FLUX.2 `identity_lock` as fallback.
 3. **Human review is a gate.** Automation can prove geometry, hashes, graph
@@ -48,9 +48,10 @@ data/poster_assets/<asset-key>/
     manifest.json
     ...
   comfyui_poster/                 # ignored local workspace
-    joint_scene_cast_reference.png
+    joint_scene_cast_reference.png # spatial_identity_joint only
     identity_reference_*.png
-    joint_scene_prompt.generated.txt
+    joint_scene_prompt.generated.txt # spatial topology only
+    joint_scene_regional_identity_prompt.generated.txt # regional only
     workflow_api_*.json
     output/
     temp/
@@ -70,7 +71,7 @@ promotion never occur against the aggregate root as one ambiguous image.
 
 - safe title and information cells;
 - subject card envelopes and visible padding;
-- reference placement;
+- reference and conditioning placement;
 - generated prompt coordinates;
 - output raster dimensions;
 - promotion validation;
@@ -111,6 +112,12 @@ artwork:
     output_method: lanczos
 ```
 
+`joint_scene` also supports the deliberately selected
+`regional_identity_joint` reference topology. Existing promoted
+`spatial_identity_joint` manifests remain unchanged and reproducible; the
+reference topology is part of generation metadata and the fingerprint rather
+than a third generation mode.
+
 The fallback changes the active mode/output contract to:
 
 ```yaml
@@ -143,7 +150,7 @@ Full prompts are generated, not maintained per scope. They combine:
 Text and logos are deliberately absent from model output. They are localized
 and rendered after the text-free artwork has passed review.
 
-## Preferred `joint_scene` graph
+## Promoted spatial `joint_scene` graph
 
 Preparation writes:
 
@@ -172,6 +179,30 @@ Promotion binds the approval to the exact raw and print pixel hashes, exact
 source identities, generation fingerprint, references, prompt, workflow, and
 model artifacts.
 
+## Selectable regional `joint_scene` graph
+
+`regional_identity_joint` removes the visible spatial cast. Preparation writes
+only the unscaled identity references and a sectioned prompt snapshot. The
+graph contains:
+
+1. one global, reference-free landscape conditioning marked as the default;
+2. one local conditioning branch per subject with exactly one identity
+   reference;
+3. one `ConditioningSetAreaPercentage` per branch, derived from that subject's
+   complete physical bottom-card cell;
+4. one empty FLUX.2 latent, one sampler trajectory, and one decode.
+
+The regional areas are sampler controls, not image inputs, so they cannot be
+drawn as boxes, landing pads, or silhouettes. Each local branch jointly
+generates its character, ground, shadow, vegetation, and intersections inside
+the card while the default branch fills the rest of the continuous landscape.
+There is no mask image, character composite, inpaint target, or post-decode
+repair.
+
+This topology is pipeline contract v6. Spatial v5 remains the default for new
+manifests until the regional approach has passed additional scopes; it can be
+selected explicitly for candidates without changing an existing promotion.
+
 ## `identity_lock` fallback
 
 The fallback intentionally chooses exact identity over full scene integration.
@@ -199,9 +230,10 @@ Promotion is transactional:
 8. write provenance containing input, review/audit, and output hashes;
 9. replace the stable bundle atomically.
 
-Changing scene, cast, model, mode, layout, prompt contract, or source pixels
-invalidates the generation fingerprint. Changing only localized overlay inputs
-can refresh preview/slices from the stable text-free master without ComfyUI.
+Changing scene, reference topology or inputs, model, mode, layout, prompt
+contract, or source pixels invalidates the generation fingerprint. Changing
+only localized overlay inputs can refresh preview/slices from the stable
+text-free master without ComfyUI.
 
 ## PDF and CI integration
 

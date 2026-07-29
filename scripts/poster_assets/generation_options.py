@@ -5,9 +5,15 @@ from dataclasses import dataclass
 from typing import Any, Mapping
 
 try:
-    from .generation_contract import CANONICAL_REFERENCE_MODES
+    from .generation_contract import (
+        CANONICAL_REFERENCE_MODES,
+        SUPPORTED_REFERENCE_MODES,
+    )
 except ImportError:  # Direct script execution
-    from generation_contract import CANONICAL_REFERENCE_MODES
+    from generation_contract import (
+        CANONICAL_REFERENCE_MODES,
+        SUPPORTED_REFERENCE_MODES,
+    )
 
 
 SUPPORTED_ENGINE = "flux"
@@ -145,16 +151,31 @@ def resolve_generation_options(
         ),
         "flux.steps",
     )
-    reference_mode = CANONICAL_REFERENCE_MODES[(SUPPORTED_ENGINE, mode)]
     configured_mode = manifest.get("mode")
-    if configured_mode == mode and manifest.get("reference_mode") not in {
-        None,
-        reference_mode,
-    }:
+    explicit_reference_mode = overrides.get("flux_reference_mode")
+    if explicit_reference_mode is not None:
+        reference_mode = _text(
+            explicit_reference_mode,
+            "flux.reference_mode",
+        )
+    elif configured_mode == mode and manifest.get("reference_mode") is not None:
+        reference_mode = _text(
+            manifest["reference_mode"],
+            "flux.reference_mode",
+        )
+    else:
+        reference_mode = CANONICAL_REFERENCE_MODES[
+            (SUPPORTED_ENGINE, mode)
+        ]
+    supported_reference_modes = SUPPORTED_REFERENCE_MODES[
+        (SUPPORTED_ENGINE, mode)
+    ]
+    if reference_mode not in supported_reference_modes:
+        expected = ", ".join(sorted(supported_reference_modes))
         raise ValueError(
             "flux.reference_mode is incompatible with mode "
-            f"{mode!r}: expected {reference_mode!r}, "
-            f"got {manifest.get('reference_mode')!r}"
+            f"{mode!r}: expected one of {expected}, got "
+            f"{reference_mode!r}"
         )
 
     return ResolvedGenerationOptions(
@@ -163,6 +184,7 @@ def resolve_generation_options(
             "flux_clip": encoder,
             "flux_vae": vae,
             "flux_mode": mode,
+            "flux_reference_mode": reference_mode,
             "flux_steps": steps,
         },
         metadata={

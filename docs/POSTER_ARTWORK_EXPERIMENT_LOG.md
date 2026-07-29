@@ -200,15 +200,16 @@ post-decode composite entered the graph.
 | Full-context regional masks, 0.25 MP | `169.67 s` | `25451dc72f5b3ed6c55b433f3b43070e950140d4ee13eb4cd3914cf93044ca3a` | `28d0a50398d7797038861280a9e3004f78616420f80a92dd779d196f2680d9b7` | Hard fail: only partial body fragments land inside the masks |
 | Physical-card regional areas, 0.25 MP | `120.43 s` | `7aa3a1a4370867b06ef6e7d7ae42e84bf0237c0424aadf0f7592023898d3223c` | `513874c008320c3d144307d608e9480a46b8c22aad150121bc53ca7546d53746` | Coarse pass; earned one 1-MP confirmation |
 | Physical-card regional areas, 1 MP | `123.75 s` | `d36592391d59af97a941bbe59c1f54f52a3448d3d97b8452fa2aba869a1e6051` | `6915e98ac26bdc979c42445334a4cc8d4063a5d410b85f871722c3a3e9109863` | Passes count, identity, anatomy, physical crops, padding, grounding, shadows, safe areas, and visible seam review |
+| Pipeline-v6 CLI confirmation, 1 MP | `201.38 s` | `800d412c8711f2ae3e4de9afb15a7fcca7e5f08d1c26229142918d20450e25b0` | `6a2671fa3710c625f7240a874a494565518c509b2a2349803919acc1631666cd` | The production prepare → workflow → Metal/MPS sampling → 300-dpi finalization path passes internal preflight; generation fingerprint `78e67a9c93a2be5b5511ee39f5c076b7100602efd289cc49504c04aa4221b8e1` |
 
 The 1-MP candidate contains complete Treecko, Torchic, and Mudkip in the
 correct cards with no visible regional boundaries or pasted-layer appearance.
 No connected plant changes arbitrarily from behind to in front. Vegetation
 mostly avoids direct subject intersections, so this result removes the known
 contradiction but does not yet prove reliable foreground occlusion across
-different scenes. It is the preferred implementation candidate; Generation III
-stays on the accepted `identity_lock` asset until the new topology is
-implemented, reviewed by the user, and promoted deliberately.
+different scenes. It is the leading Generation III depth-bias evaluation
+candidate; Generation III stays on the accepted `identity_lock` asset until the
+implemented topology is reviewed by the user and promoted deliberately.
 
 ## Base1 / FLUX.2 Klein rollout
 

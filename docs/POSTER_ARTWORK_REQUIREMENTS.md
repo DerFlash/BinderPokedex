@@ -6,7 +6,7 @@ accepted assets are listed in
 [Poster Workflow](POSTER_WORKFLOW.md), and rejected candidate evidence in
 [Poster Experiment Log](POSTER_ARTWORK_EXPERIMENT_LOG.md).
 
-Last reviewed: 2026-07-29
+Last reviewed: 2026-07-30
 
 ## Decisions
 
@@ -16,7 +16,7 @@ Last reviewed: 2026-07-29
 | Wide layouts | Keep `wide_4x3` and `wide_4x4` as artwork extension points; never squeeze them onto A4 |
 | Generation timing | Explicit optional post-fetch step, before PDF generation |
 | PDF behavior | Consume only promoted local artwork; never launch ComfyUI implicitly |
-| Generator | FLUX.2 `joint_scene` is the default for new candidates |
+| Generator | FLUX.2 `joint_scene` remains the mode for new candidates; promoted spatial conditioning is the default, while regional identity conditioning is selectively evaluable |
 | Fallback | FLUX.2 `identity_lock` remains explicitly selectable when a one-shot cannot pass identity or placement review |
 | Prompt ownership | Set-specific creative briefs in one catalog plus one centrally generated identity, placement, depth, and safe-area contract |
 | Character identity | Supplied Official Artwork is the authority for form, stature, anatomy, silhouette, pose, color, and markings |
@@ -67,6 +67,7 @@ is the accepted cost of exact identity preservation.
 | Architecture | Final scene jointly generated | Identity | Card containment | Scene integration | Role |
 | --- | --- | --- | --- | --- | --- |
 | FLUX.2 Spatial+Identity v5 `joint_scene` | Yes | Gen VII `00018`, Gen I `00001`, Gen II `00001`, Base1 `00001`, ExGen3 Mega `00001`, and ExGen3 Normal `00001` pass the accepted print-detail tolerance | All six promotions pass their physical crops with preferred fill | Coherent grounding and shadows; three bounded Generation III prompt variants relocate rather than solve one contradictory foreground crossing | Default; six scopes promoted |
+| FLUX.2 Regional Identity v6 `joint_scene` | Yes | The Generation III evaluation candidate keeps all three supplied identities within normal one-shot tolerance | All three complete subjects pass their physical bottom-card crops | No contradictory depth switch is visible in internal visual preflight; robustness with true foreground crossings still needs user review and additional scopes | Selectable candidate topology; not a promoted production default |
 | Two-pass `identity_lock` | No | Exact source pixels | Reliable | Protected lower band can read as a layer | Explicit fallback; seven promoted scopes remain valid |
 | Landscape reference plus joint final pass | Final pass only | Usually strong | Inconsistent | Retained plants can switch depth at silhouettes | Rejected |
 | Direct FLUX edit/inpaint | No | Inconsistent | Inconsistent | Retains cutout/composite artifacts | Rejected |
@@ -84,7 +85,7 @@ is the accepted cost of exact identity preservation.
 | `PA-004` | Every individual TCG set has explicit scene direction | Done | `config/poster_scenes.yaml` has exact one-to-one catalog coverage enforced by tests |
 | `PA-005` | Full prompts cannot drift per set | Done | Creative scene is scope-specific; technical requirements are generated centrally |
 | `PA-006` | Poster preparation is an optional post-fetch phase | Done | One-scope and batch initialization exist and preserve reviewed manifests |
-| `PA-007` | Generation follows the scope contract | Done | Runner reads FLUX.2 model, mode, seed, steps, generation size, output method, and dpi from `poster.yaml`; explicit overrides are recorded |
+| `PA-007` | Generation follows the scope contract | Done | Runner reads FLUX.2 model, mode, reference topology, seed, steps, generation size, output method, and dpi from `poster.yaml`; explicit overrides are recorded |
 | `PA-008` | Figures remain authentic | Done with human gate | One-shot promotion binds review to raw/print pixels and exact source identities; fallback enforces exact opaque pixels |
 | `PA-009` | Artwork matches typography and card cuts | Done | Prompt safe cells and subject placement derive from the same physical layout used by finalization and slicing |
 | `PA-010` | Only promoted artwork enters a normal PDF | Done | `pdf.enabled` plus a local tracked promoted file gates inclusion |
@@ -92,11 +93,11 @@ is the accepted cost of exact identity preservation.
 | `PA-012` | Every promotion is reproducible and auditable | Done | Provenance records model, prompt, source, references, workflow, review/audit, and output hashes |
 | `PA-013` | Aggregate sections can own separate posters | Done | `posters.yaml` routes isolated leaf manifests and inserts each enabled poster after its matching cover |
 | `PA-014` | 4×3/4×4 PDFs use matching page renderers | Open | Add physical page styles, templates, cutting guides, memory checks, and rendered-PDF QA |
-| `PA-015` | Aggregate variants receive section-specific scenes and casts | Ongoing | ExGen3 `normal` and `mega` are accepted; repeat only for reviewed future sections |
+| `PA-015` | Aggregate variants receive section-specific scenes and curated subject/reference sets | Ongoing | ExGen3 `normal` and `mega` are accepted; repeat only for reviewed future sections |
 | `PA-015A` | Variant subjects retain their exact form | Done | Selection, cutouts, planner, fingerprints, promotion, and validation bind exact Official Artwork identity |
 | `PA-016` | Post-fetch orchestration detects stale inputs | Done | Read-only planner separates expensive generation drift from cheap overlay/routing changes |
-| `PA-017` | Joint generation can provide natural grounding without losing identity or card safety | Done for six reviewed scopes; rollout ongoing | Gen VII `00018`, Gen I `00001`, Gen II `00001`, Base1 `00001`, ExGen3 Mega `00001`, and ExGen3 Normal `00001` are promoted; each additional scope must pass independently |
-| `PA-018` | Runtime remains KISS after experiments | Done | Production exposes only FLUX.2 `joint_scene` and `identity_lock`; rejected adapters are removed from the runner |
+| `PA-017` | Joint generation can provide natural grounding without losing identity or card safety | Done for six promoted scopes; regional evaluation ongoing | Gen VII `00018`, Gen I `00001`, Gen II `00001`, Base1 `00001`, ExGen3 Mega `00001`, and ExGen3 Normal `00001` are promoted; the regional Generation III candidate passes internal preflight, and every additional scope or reference topology must pass independently |
+| `PA-018` | Runtime remains KISS after experiments | Done | Production exposes only FLUX.2 `joint_scene` and `identity_lock`; regional identity is a conditioning topology inside `joint_scene`, not a third mode; rejected adapters are removed from the runner |
 | `PA-019` | Pull requests prove a release can be built without publishing | Done | PRs validate promotions, build every PDF/archive/manifest, and upload only a temporary artifact |
 | `PA-020` | Raster card geometry closes exactly on every real canvas | Done | Cumulative physical endpoints drive preparation, finalization, slicing, promotion, and validation |
 | `PA-021` | Default and fallback cannot become ambiguous | Done | One manifest owns one active generation contract; fallback selection and promotion are explicit |
@@ -111,11 +112,14 @@ is the accepted cost of exact identity preservation.
   reviewed one-shot replacements exist.
 - New manifests start with `joint_scene`; existing manifests are never
   mechanically switched because that would invalidate accepted provenance.
+- New manifests continue to use promoted `spatial_identity_joint` conditioning
+  by default. `regional_identity_joint` is an explicit v6 evaluation option
+  until it passes further scope-specific review.
 - Fetching, planning, PDF building, and CI do not start ComfyUI.
 - Generated candidates are local scratch; only promotion creates tracked input
   for deterministic PDF and release jobs.
-- The representative rollout is complete. Future migrations remain
-  scope-by-scope and review-gated rather than broad or mechanical.
+- The spatial-v5 representative rollout is complete. Regional-v6 remains
+  evaluation-only; future migrations stay scope-by-scope and review-gated.
 - Wide PDF formats and remaining aggregate variant sections are explicit
   roadmap items.
 

@@ -17,13 +17,16 @@ try:
     )
     from .create_comfyui_poster_workflow import output_dimensions
     from .generation_contract import (
+        CANONICAL_REFERENCE_MODES,
         JOINT_SCENE_CAST_MAX_MEGAPIXELS,
         JOINT_SCENE_IDENTITY_CANVAS_PX,
+        SUPPORTED_REFERENCE_MODES,
     )
     from .layout import build_source_layout
     from .poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
         JOINT_SCENE_PROMPT_FILE,
+        REGIONAL_JOINT_SCENE_PROMPT_FILE,
         build_identity_lock_prompt,
         identity_lock_config,
     )
@@ -36,13 +39,16 @@ except ImportError:
     )
     from create_comfyui_poster_workflow import output_dimensions
     from generation_contract import (
+        CANONICAL_REFERENCE_MODES,
         JOINT_SCENE_CAST_MAX_MEGAPIXELS,
         JOINT_SCENE_IDENTITY_CANVAS_PX,
+        SUPPORTED_REFERENCE_MODES,
     )
     from layout import build_source_layout
     from poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
         JOINT_SCENE_PROMPT_FILE,
+        REGIONAL_JOINT_SCENE_PROMPT_FILE,
         build_identity_lock_prompt,
         identity_lock_config,
     )
@@ -191,8 +197,9 @@ def build_joint_scene_references(
     output_dir: Path | None = None,
     *,
     megapixels: float = 1.0,
+    include_cast: bool = True,
 ) -> None:
-    """Write the spatial cast and unscaled per-subject identity references."""
+    """Write unscaled identities and, when requested, the spatial cast."""
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
     scope_dir = bundle.asset_dir
     manifest = bundle.manifest
@@ -228,21 +235,25 @@ def build_joint_scene_references(
             "conditioning.identity_defaults.neutral_rgb must contain "
             "3 RGB integers"
         )
-    reference = Image.new(
-        "RGBA",
-        (width, height),
-        (*neutral, 255),
-    )
-    for placement in placements:
-        reference.alpha_composite(
-            placement["image"],
-            (placement["x"], placement["y"]),
+    cast_path = reference_dir / "joint_scene_cast_reference.png"
+    if include_cast:
+        reference = Image.new(
+            "RGBA",
+            (width, height),
+            (*neutral, 255),
         )
-    reference.convert("RGB").save(
-        reference_dir / "joint_scene_cast_reference.png",
-        format="PNG",
-        optimize=True,
-    )
+        for placement in placements:
+            reference.alpha_composite(
+                placement["image"],
+                (placement["x"], placement["y"]),
+            )
+        reference.convert("RGB").save(
+            cast_path,
+            format="PNG",
+            optimize=True,
+        )
+    else:
+        cast_path.unlink(missing_ok=True)
     _write_unscaled_identity_references(
         scope_dir,
         placements,
@@ -308,10 +319,23 @@ def prepare(
     megapixels: float = 1.0,
     *,
     generation_mode: str = "joint_scene",
+    reference_mode: str | None = None,
 ) -> Path:
-    """Prepare exactly one of the two supported FLUX.2 reference sets."""
+    """Prepare exactly one supported FLUX.2 reference topology."""
     if generation_mode not in {"joint_scene", "identity_lock"}:
         raise ValueError(f"Unsupported FLUX generation mode: {generation_mode}")
+    key = ("flux", generation_mode)
+    effective_reference_mode = (
+        reference_mode
+        if reference_mode is not None
+        else CANONICAL_REFERENCE_MODES[key]
+    )
+    if effective_reference_mode not in SUPPORTED_REFERENCE_MODES[key]:
+        expected = ", ".join(sorted(SUPPORTED_REFERENCE_MODES[key]))
+        raise ValueError(
+            f"Unsupported reference mode for {generation_mode}: "
+            f"{effective_reference_mode!r}; expected one of {expected}"
+        )
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
     scope_dir = bundle.asset_dir
     work_dir = scope_dir / "comfyui_poster"
@@ -358,12 +382,17 @@ def prepare(
                 "identity_reference_*.png",
                 "joint_scene_cast_reference.png",
                 IDENTITY_LOCK_PROMPT_FILE,
+                JOINT_SCENE_PROMPT_FILE,
+                REGIONAL_JOINT_SCENE_PROMPT_FILE,
             ),
         )
         build_joint_scene_references(
             scope,
             work_dir,
             megapixels=megapixels,
+            include_cast=(
+                effective_reference_mode == "spatial_identity_joint"
+            ),
         )
     else:
         _remove_stale(
@@ -372,6 +401,7 @@ def prepare(
                 "joint_scene_cast_reference.png",
                 "identity_reference_*.png",
                 JOINT_SCENE_PROMPT_FILE,
+                REGIONAL_JOINT_SCENE_PROMPT_FILE,
             ),
         )
         build_identity_lock_references(scope, megapixels, work_dir)
@@ -387,12 +417,21 @@ def main() -> int:
         choices=("joint_scene", "identity_lock"),
         default="joint_scene",
     )
+    parser.add_argument(
+        "--reference-mode",
+        choices=(
+            "spatial_identity_joint",
+            "regional_identity_joint",
+            "two_pass_source_pixels",
+        ),
+    )
     args = parser.parse_args()
     print(
         prepare(
             args.scope,
             args.megapixels,
             generation_mode=args.mode,
+            reference_mode=args.reference_mode,
         )
     )
     return 0

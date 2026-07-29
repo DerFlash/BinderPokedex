@@ -24,12 +24,17 @@ try:
         build_page_layout,
         latent_canvas_dimensions,
     )
-    from .generation_contract import validate_generation_contract
+    from .generation_contract import (
+        CANONICAL_REFERENCE_MODES,
+        validate_generation_contract,
+    )
     from .poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
         JOINT_SCENE_PROMPT_FILE,
+        REGIONAL_JOINT_SCENE_PROMPT_FILE,
         build_identity_lock_prompt,
         build_joint_prompt_snapshot,
+        build_regional_joint_prompt_snapshot,
         identity_lock_config,
         joint_scene_conditioning_contract,
     )
@@ -59,12 +64,17 @@ except ImportError:
         build_page_layout,
         latent_canvas_dimensions,
     )
-    from generation_contract import validate_generation_contract
+    from generation_contract import (
+        CANONICAL_REFERENCE_MODES,
+        validate_generation_contract,
+    )
     from poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
         JOINT_SCENE_PROMPT_FILE,
+        REGIONAL_JOINT_SCENE_PROMPT_FILE,
         build_identity_lock_prompt,
         build_joint_prompt_snapshot,
+        build_regional_joint_prompt_snapshot,
         identity_lock_config,
         joint_scene_conditioning_contract,
     )
@@ -91,12 +101,22 @@ GENERATION_PIPELINE_CONTRACT_VERSION = 3
 # deterministic overlay v2 outputs.
 OVERLAY_PIPELINE_CONTRACT_VERSION = 2
 CURRENT_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
-    ("flux", "identity_lock"): GENERATION_PIPELINE_CONTRACT_VERSION,
-    ("flux", "joint_scene"): 5,
+    (
+        "flux",
+        "identity_lock",
+        "two_pass_source_pixels",
+    ): GENERATION_PIPELINE_CONTRACT_VERSION,
+    ("flux", "joint_scene", "spatial_identity_joint"): 5,
+    ("flux", "joint_scene", "regional_identity_joint"): 6,
 }
 SUPPORTED_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
-    ("flux", "identity_lock"): frozenset({1, 2, 3}),
-    ("flux", "joint_scene"): frozenset({5}),
+    (
+        "flux",
+        "identity_lock",
+        "two_pass_source_pixels",
+    ): frozenset({1, 2, 3}),
+    ("flux", "joint_scene", "spatial_identity_joint"): frozenset({5}),
+    ("flux", "joint_scene", "regional_identity_joint"): frozenset({6}),
 }
 RASTER_GEOMETRY_PIPELINE_MINIMUM = {
     ("flux", "identity_lock"): 3,
@@ -653,11 +673,23 @@ def current_generation_pipeline_contract_version(
     generation: dict[str, Any],
 ) -> int:
     """Return the current graph contract for the selected engine and mode."""
-    family = (
-        str(generation.get("engine", "")),
-        str(generation.get("mode", "")),
-    )
+    family = _generation_pipeline_family(generation)
     return CURRENT_GENERATION_PIPELINE_CONTRACT_VERSIONS.get(family, 1)
+
+
+def _generation_pipeline_family(
+    generation: dict[str, Any],
+) -> tuple[str, str, str]:
+    """Resolve historical missing reference modes to their canonical topology."""
+    engine = str(generation.get("engine", ""))
+    mode = str(generation.get("mode", ""))
+    reference_mode = generation.get("reference_mode")
+    if reference_mode is None:
+        reference_mode = CANONICAL_REFERENCE_MODES.get(
+            (engine, mode),
+            "",
+        )
+    return engine, mode, str(reference_mode)
 
 
 def validate_generation_pipeline_contract_version(
@@ -665,15 +697,12 @@ def validate_generation_pipeline_contract_version(
     version: int,
 ) -> None:
     """Reject contracts outside the explicit compatibility policy."""
-    family = (
-        str(generation.get("engine", "")),
-        str(generation.get("mode", "")),
-    )
+    family = _generation_pipeline_family(generation)
     supported = SUPPORTED_GENERATION_PIPELINE_CONTRACT_VERSIONS.get(family)
     if supported is None or version not in supported:
         raise ValueError(
             "Unsupported generation pipeline contract "
-            f"{family[0]}/{family[1]} v{version}"
+            f"{family[0]}/{family[1]}/{family[2]} v{version}"
         )
 
 
@@ -994,6 +1023,13 @@ def _effective_generation_prompt(
             ),
             canvas_size=(width, height),
         )
+        if generation.get("reference_mode") == "regional_identity_joint":
+            return build_regional_joint_prompt_snapshot(
+                bundle.manifest,
+                scope_data,
+                cutout_items,
+                placement_contract=placement_contract,
+            )
         return build_joint_prompt_snapshot(
             bundle.manifest,
             scope_data,
@@ -1093,6 +1129,9 @@ def build_generation_fingerprint(
             joint_scene_conditioning_contract(
                 manifest,
                 raw_cutout_items,
+                reference_mode=str(
+                    effective_generation.get("reference_mode", "")
+                ),
             )
         )
     return fingerprint_record(components)
@@ -1201,6 +1240,8 @@ def prompt_path_for_generation(
         return prompt_dir / IDENTITY_LOCK_PROMPT_FILE
     if engine == "flux" and mode == "joint_scene":
         prompt_dir = workflow_path.parent if workflow_path is not None else work_dir
+        if generation.get("reference_mode") == "regional_identity_joint":
+            return prompt_dir / REGIONAL_JOINT_SCENE_PROMPT_FILE
         return prompt_dir / JOINT_SCENE_PROMPT_FILE
     raise ValueError(
         f"Unsupported poster generation contract: {engine}/{mode}"
@@ -1241,12 +1282,14 @@ def generation_input_records(
         generation.get("engine") == "flux"
         and generation.get("mode") == "joint_scene"
     ):
-        references = [
-            file_record(
-                work_dir / "joint_scene_cast_reference.png",
-                image=True,
+        references = []
+        if generation.get("reference_mode") == "spatial_identity_joint":
+            references.append(
+                file_record(
+                    work_dir / "joint_scene_cast_reference.png",
+                    image=True,
+                )
             )
-        ]
         references.extend(
             file_record(
                 work_dir / f"identity_reference_{index}.png",

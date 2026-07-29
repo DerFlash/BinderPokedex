@@ -21,6 +21,9 @@ except ImportError:
 
 IDENTITY_LOCK_PROMPT_FILE = "identity_lock_prompt.generated.txt"
 JOINT_SCENE_PROMPT_FILE = "joint_scene_prompt.generated.txt"
+REGIONAL_JOINT_SCENE_PROMPT_FILE = (
+    "joint_scene_regional_identity_prompt.generated.txt"
+)
 DEFAULT_IDENTITY_LOCK = {
     "overscan_ratio": 0.04,
     "max_protected_start_ratio": 0.70,
@@ -493,6 +496,179 @@ def build_joint_prompt_snapshot(
     )
 
 
+def build_regional_joint_scene_prompts(
+    manifest: dict[str, Any],
+    scope_data: dict[str, Any],
+    items: list[dict[str, Any]],
+    *,
+    placement_contract: list[dict[str, int]],
+) -> tuple[str, list[str]]:
+    """Build one global landscape prompt and one regional prompt per subject."""
+    if not items:
+        raise ValueError("Regional joint scene generation needs at least one subject")
+    if len(placement_contract) != len(items):
+        raise ValueError(
+            "Regional joint-scene placement contract must describe every subject"
+        )
+
+    artwork = _mapping(manifest.get("artwork"), "artwork")
+    scene = _mapping(artwork.get("scene"), "artwork.scene")
+    concept = _text(
+        scene.get("concept"),
+        "artwork.scene.concept",
+        default=_default_scene_concept(manifest, scope_data),
+    )
+    setting = _text(
+        scene.get("setting"),
+        "artwork.scene.setting",
+        default=(
+            "Build a broad natural landscape whose terrain, flora, distant "
+            "landmarks, and atmosphere subtly echo the set's theme."
+        ),
+    )
+    lighting = _text(
+        scene.get("lighting"),
+        "artwork.scene.lighting",
+        default="Soft directional daylight enters from the upper left.",
+    )
+    rendering = _text(
+        scene.get("rendering"),
+        "artwork.scene.rendering",
+        default=(
+            "Use polished trading-card illustration, clean cel-painted "
+            "linework, restrained natural colors, and gentle atmospheric depth."
+        ),
+    )
+    ground_noun = _text(
+        scene.get("ground_noun"),
+        "artwork.scene.ground_noun",
+        default="ground",
+    )
+    safe_areas = _safe_area_sentence(manifest, scene)
+    additional = _scene_constraints(scene)
+    scene_description = " ".join(
+        part.strip()
+        for part in (setting, lighting, rendering, *additional)
+        if part.strip()
+    )
+    global_prompt = (
+        "Generate one cohesive full-bleed scene for "
+        f"{concept} from an empty target in the shared unified denoising "
+        f"pass. {scene_description} Use one continuous natural {ground_noun} "
+        f"plane, globally coherent perspective, light, shadows, and depth. "
+        f"{safe_areas} This global branch contains landscape only: no "
+        "creatures, people, trainers, text, logos, signs, boxes, panels, "
+        "cards, borders, watermarks, paths, platforms, landing pads, "
+        "character-shaped clearings, or crop marks."
+    )
+
+    def percentage(value: int) -> str:
+        if not isinstance(value, int) or not 0 <= value <= 1000:
+            raise ValueError(
+                "Regional joint-scene placement coordinates must be per-mille "
+                "integers between 0 and 1000"
+            )
+        return f"{value / 10:.1f}%"
+
+    local_prompts = []
+    for index, (item, contract) in enumerate(
+        zip(items, placement_contract, strict=True)
+    ):
+        if not isinstance(contract, dict):
+            raise ValueError(
+                "Regional joint-scene placement contract entries must be mappings"
+            )
+        name = str(
+            item.get("name_en")
+            or f"Pokemon #{item.get('pokemon_id', '?')}"
+        )
+        region = reference_region_label(index, len(items))
+        if region in {"left", "center", "right"}:
+            physical_region = f"lower-{region} physical card region"
+        else:
+            physical_region = f"bottom physical card region in {region}"
+        bounds = (
+            f"x {percentage(contract['left_per_mille'])} to "
+            f"{percentage(contract['right_per_mille'])}, y "
+            f"{percentage(contract['top_per_mille'])} to "
+            f"{percentage(contract['bottom_per_mille'])}"
+        )
+        prompt = (
+            "IMAGE 1 is the sole exact identity and anatomy reference for "
+            f"{name}. Generate exactly one complete {name}, once, in the "
+            f"{physical_region} of the same {concept}. Its complete "
+            f"visible silhouette must stay inside normalized poster bounds "
+            f"{bounds}, with natural padding and ground contact. Preserve the "
+            "reference's exact silhouette, stature, anatomy, face, colors, "
+            "markings, limbs, appendages, and defining details; do not "
+            "redesign, restyle, humanize, merge, duplicate, simplify, add, "
+            "remove, enlarge, or reshape any body part. Generate the "
+            f"character, local {ground_noun}, contact shadow, nearby "
+            "vegetation, reflected light, and scene edges together in the "
+            "shared unified denoising pass. Resolve every intersection "
+            "physically: a connected landscape element closer to the camera "
+            "may continue naturally in front of a small exterior part, while "
+            "farther elements stay behind; never truncate vegetation at the "
+            "character silhouette or paint the character as a flat top layer. "
+            "Move landscape elements instead of hiding identity-critical "
+            "anatomy. No other creature, text, logo, box, panel, platform, "
+            "path, border, watermark, or crop mark."
+        )
+        specific_notes = subject_prompt_notes([item], manifest)
+        if specific_notes:
+            prompt = f"{prompt}\n\n{' '.join(specific_notes)}"
+        local_prompts.append(prompt)
+
+    return global_prompt, local_prompts
+
+
+def build_regional_joint_prompt_snapshot(
+    manifest: dict[str, Any],
+    scope_data: dict[str, Any],
+    items: list[dict[str, Any]],
+    *,
+    placement_contract: list[dict[str, int]],
+) -> str:
+    """Return regional joint-scene prompts as a stable provenance snapshot."""
+    global_prompt, local_prompts = build_regional_joint_scene_prompts(
+        manifest,
+        scope_data,
+        items,
+        placement_contract=placement_contract,
+    )
+    return format_regional_joint_prompt_snapshot(
+        global_prompt,
+        items,
+        local_prompts,
+    )
+
+
+def format_regional_joint_prompt_snapshot(
+    global_prompt: str,
+    items: list[dict[str, Any]],
+    local_prompts: list[str],
+) -> str:
+    """Format the exact regional prompts used by a workflow."""
+    if len(items) != len(local_prompts):
+        raise ValueError(
+            "Regional prompt snapshot must contain one prompt per subject"
+        )
+    sections = [
+        "REGIONAL JOINT SCENE - ONE-SHOT FINAL SYNTHESIS",
+        f"GLOBAL LANDSCAPE\n\n{global_prompt}",
+    ]
+    for index, (item, prompt) in enumerate(
+        zip(items, local_prompts, strict=True),
+        start=1,
+    ):
+        name = str(
+            item.get("name_en")
+            or f"Pokemon #{item.get('pokemon_id', '?')}"
+        )
+        sections.append(f"LOCAL SUBJECT {index} - {name}\n\n{prompt}")
+    return "\n\n".join(sections)
+
+
 def format_joint_prompt_snapshot(prompt: str) -> str:
     """Add the stable heading shared by saved and fingerprinted prompts."""
     return "\n\n".join(
@@ -534,10 +710,18 @@ def subject_conditioning(
 def joint_scene_conditioning_contract(
     manifest: dict[str, Any],
     items: list[dict[str, Any]],
+    reference_mode: str = "spatial_identity_joint",
 ) -> dict[str, Any]:
     """Return only conditioning fields that affect joint-scene pixels."""
     if not items:
         raise ValueError("Joint-scene conditioning needs at least one subject")
+    if reference_mode not in {
+        "spatial_identity_joint",
+        "regional_identity_joint",
+    }:
+        raise ValueError(
+            f"Unknown joint-scene reference mode: {reference_mode}"
+        )
     conditioning = manifest.get("conditioning", {})
     if not isinstance(conditioning, dict):
         raise ValueError("conditioning must be a mapping")
@@ -560,13 +744,21 @@ def joint_scene_conditioning_contract(
             "conditioning.identity_defaults.neutral_rgb must contain "
             "3 RGB integers"
         )
-    return {
+    contract = {
         "reference_strategy": "spatial_cast_plus_unscaled_identity",
         "reference_neutral_rgb": neutral,
         "cast_max_megapixels": JOINT_SCENE_CAST_MAX_MEGAPIXELS,
         "identity_canvas_px": JOINT_SCENE_IDENTITY_CANVAS_PX,
         "identity_source_resampling": "none",
     }
+    if reference_mode == "regional_identity_joint":
+        contract = {
+            "reference_strategy": "regional_identity_per_physical_card",
+            "reference_neutral_rgb": neutral,
+            "identity_canvas_px": JOINT_SCENE_IDENTITY_CANVAS_PX,
+            "identity_source_resampling": "none",
+        }
+    return contract
 
 
 def reference_region_label(index: int, count: int) -> str:

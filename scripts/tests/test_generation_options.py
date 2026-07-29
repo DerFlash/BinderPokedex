@@ -38,6 +38,7 @@ def test_matching_flux_manifest_drives_workflow_and_canonical_metadata():
         "flux_clip": "manifest-encoder.safetensors",
         "flux_vae": "manifest-vae.safetensors",
         "flux_mode": "identity_lock",
+        "flux_reference_mode": "two_pass_source_pixels",
         "flux_steps": 7,
     }
     assert resolved.metadata == {
@@ -79,6 +80,37 @@ def test_mode_override_switches_the_whole_reference_contract():
 
     assert resolved.workflow_options["flux_mode"] == "identity_lock"
     assert resolved.metadata["reference_mode"] == "two_pass_source_pixels"
+
+
+def test_regional_joint_scene_reference_mode_is_selectable():
+    resolved = resolve_generation_options(
+        "flux",
+        {
+            "engine": "flux",
+            "mode": "joint_scene",
+            "reference_mode": "regional_identity_joint",
+        },
+    )
+
+    assert (
+        resolved.workflow_options["flux_reference_mode"]
+        == "regional_identity_joint"
+    )
+    assert resolved.metadata["reference_mode"] == "regional_identity_joint"
+
+
+def test_reference_mode_override_can_select_regional_joint_scene():
+    resolved = resolve_generation_options(
+        "flux",
+        {
+            "engine": "flux",
+            "mode": "joint_scene",
+            "reference_mode": "spatial_identity_joint",
+        },
+        {"flux_reference_mode": "regional_identity_joint"},
+    )
+
+    assert resolved.metadata["reference_mode"] == "regional_identity_joint"
 
 
 def test_manifest_rejects_wrong_canonical_reference_mode():
@@ -226,8 +258,47 @@ def test_joint_scene_cli_defaults_to_lanczos_300dpi(monkeypatch, tmp_path):
     )
 
     assert captured["kwargs"]["flux_mode"] == "joint_scene"
+    assert (
+        captured["kwargs"]["flux_reference_mode"]
+        == "spatial_identity_joint"
+    )
     assert captured["kwargs"]["output_dpi"] == 300
     assert captured["kwargs"]["output_megapixels"] is None
+
+
+def test_cli_can_select_regional_joint_scene(monkeypatch, tmp_path):
+    configured = {
+        "engine": "flux",
+        "model": "model.safetensors",
+        "encoder": "encoder.safetensors",
+        "vae": "vae.safetensors",
+        "mode": "joint_scene",
+        "reference_mode": "spatial_identity_joint",
+        "steps": 4,
+        "seed": 123,
+        "generation_megapixels": 1.0,
+        "output_method": "lanczos",
+        "output_dpi": 300,
+    }
+
+    captured = _capture_cli_run(
+        monkeypatch,
+        tmp_path,
+        configured,
+        [
+            "run_comfyui_poster.py",
+            "--scope",
+            "Example",
+            "--flux-reference-mode",
+            "regional_identity_joint",
+        ],
+    )
+
+    assert captured["kwargs"]["flux_mode"] == "joint_scene"
+    assert (
+        captured["kwargs"]["flux_reference_mode"]
+        == "regional_identity_joint"
+    )
 
 
 def test_identity_lock_override_gets_model_upscale_300dpi_default(

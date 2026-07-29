@@ -431,11 +431,20 @@ def test_required_model_hashes_follow_the_selected_engine_artifacts():
 def test_pipeline_contract_versions_are_family_specific_and_strict():
     identity_generation = {"engine": "flux", "mode": "identity_lock"}
     joint_generation = {"engine": "flux", "mode": "joint_scene"}
+    regional_generation = {
+        "engine": "flux",
+        "mode": "joint_scene",
+        "reference_mode": "regional_identity_joint",
+    }
 
     assert current_generation_pipeline_contract_version(
         identity_generation
     ) == 3
     assert current_generation_pipeline_contract_version(joint_generation) == 5
+    assert (
+        current_generation_pipeline_contract_version(regional_generation)
+        == 6
+    )
     accepted_legacy = provenance.fingerprint_record(
         {
             "pipeline_contract": {
@@ -465,6 +474,19 @@ def test_pipeline_contract_versions_are_family_specific_and_strict():
         generation_fingerprint_pipeline_contract_version(
             accepted_legacy,
             joint_generation,
+        )
+    spatial_v5 = provenance.fingerprint_record(
+        {
+            "pipeline_contract": {
+                "name": "poster_generation",
+                "version": 5,
+            }
+        }
+    )
+    with pytest.raises(ValueError, match="Unsupported generation pipeline"):
+        generation_fingerprint_pipeline_contract_version(
+            spatial_v5,
+            regional_generation,
         )
 
 
@@ -564,6 +586,42 @@ def test_joint_scene_rejects_a_learned_post_generation_upscaler(tmp_path):
         )
 
 
+def test_regional_joint_scene_fingerprint_uses_v6_without_cast_contract(
+    tmp_path,
+):
+    _repository, assets, output, _scope_dir, bundle = _write_fixture(
+        tmp_path
+    )
+    manifest = copy.deepcopy(bundle.manifest)
+    generation = manifest["artwork"]["generation"]
+    generation.update(
+        mode="joint_scene",
+        reference_mode="regional_identity_joint",
+        output_method="lanczos",
+        output_megapixels=0.25,
+    )
+    for key in ("output_dpi", "upscale_model", "upscale_model_sha256"):
+        generation.pop(key, None)
+
+    fingerprint = build_generation_fingerprint(
+        _with_manifest(bundle, manifest),
+        poster_assets=assets,
+        scope_data_dir=output,
+    )
+
+    assert (
+        fingerprint["components"]["pipeline_contract"]["version"]
+        == 6
+    )
+    conditioning = fingerprint["components"][
+        "joint_scene_conditioning"
+    ]
+    assert conditioning["reference_strategy"] == (
+        "regional_identity_per_physical_card"
+    )
+    assert "cast_max_megapixels" not in conditioning
+
+
 def test_joint_scene_input_records_follow_reference_order(
     tmp_path,
     monkeypatch,
@@ -610,6 +668,55 @@ def test_joint_scene_input_records_follow_reference_order(
         "identity_reference_3.png",
     ]
     assert "internal_references" not in records
+    assert "source_pixel_audit_reference" not in records
+
+
+def test_regional_joint_scene_input_records_do_not_include_a_cast(
+    tmp_path,
+    monkeypatch,
+):
+    repository, assets, _output, scope_dir, _bundle = _write_fixture(
+        tmp_path
+    )
+    work_dir = scope_dir / "comfyui_poster"
+    work_dir.mkdir()
+    workflow_path = work_dir / "workflow.json"
+    workflow_path.write_text("{}\n", encoding="utf-8")
+    (
+        work_dir / provenance.REGIONAL_JOINT_SCENE_PROMPT_FILE
+    ).write_text(
+        "regional prompt\n",
+        encoding="utf-8",
+    )
+    for index in range(1, 4):
+        Image.new("RGB", (32, 32), (226, 224, 211)).save(
+            work_dir / f"identity_reference_{index}.png"
+        )
+    monkeypatch.setattr(provenance, "POSTER_ASSETS", assets)
+    monkeypatch.setattr(provenance, "ROOT", repository)
+
+    records = provenance.generation_input_records(
+        "Example",
+        workflow_path,
+        {
+            "engine": "flux",
+            "mode": "joint_scene",
+            "reference_mode": "regional_identity_joint",
+            "output_method": "lanczos",
+            "output_megapixels": 0.25,
+        },
+    )
+
+    assert [
+        Path(record["file"]).name for record in records["references"]
+    ] == [
+        "identity_reference_1.png",
+        "identity_reference_2.png",
+        "identity_reference_3.png",
+    ]
+    assert Path(records["prompt"]["file"]).name == (
+        provenance.REGIONAL_JOINT_SCENE_PROMPT_FILE
+    )
     assert "source_pixel_audit_reference" not in records
 
 
@@ -747,20 +854,23 @@ def test_joint_scene_cannot_promote_without_explicit_human_review():
 
 
 @pytest.mark.parametrize(
-    ("engine", "mode", "current_version"),
+    ("engine", "mode", "reference_mode", "current_version"),
     (
-        ("flux", "identity_lock", 3),
-        ("flux", "joint_scene", 5),
+        ("flux", "identity_lock", "two_pass_source_pixels", 3),
+        ("flux", "joint_scene", "spatial_identity_joint", 5),
+        ("flux", "joint_scene", "regional_identity_joint", 6),
     ),
 )
 def test_every_engine_family_versions_the_shared_raster_contract(
     engine,
     mode,
+    reference_mode,
     current_version,
 ):
     generation = {
         "engine": engine,
         "mode": mode,
+        "reference_mode": reference_mode,
         "generation_megapixels": 1.0,
         "output_dpi": 300,
     }

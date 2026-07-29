@@ -9,6 +9,15 @@ CANONICAL_REFERENCE_MODES = {
     ("flux", "identity_lock"): "two_pass_source_pixels",
     ("flux", "joint_scene"): "spatial_identity_joint",
 }
+SUPPORTED_REFERENCE_MODES = {
+    ("flux", "identity_lock"): frozenset({"two_pass_source_pixels"}),
+    ("flux", "joint_scene"): frozenset(
+        {
+            "spatial_identity_joint",
+            "regional_identity_joint",
+        }
+    ),
+}
 JOINT_SCENE_CAST_MAX_MEGAPIXELS = 0.5
 JOINT_SCENE_IDENTITY_CANVAS_PX = 512
 
@@ -26,10 +35,10 @@ def is_joint_scene_generation(
 def validate_generation_reference_contract(
     generation: Mapping[str, Any],
 ) -> None:
-    """Require each protected FLUX mode's canonical reference semantics."""
+    """Require each protected FLUX mode's supported reference semantics."""
     key = (generation.get("engine"), generation.get("mode"))
-    expected = CANONICAL_REFERENCE_MODES.get(key)
-    if expected is None:
+    supported_modes = SUPPORTED_REFERENCE_MODES.get(key)
+    if supported_modes is None:
         supported = ", ".join(
             f"{engine}/{mode}"
             for engine, mode in CANONICAL_REFERENCE_MODES
@@ -39,10 +48,12 @@ def validate_generation_reference_contract(
             f"{key[0]}/{key[1]}; expected one of: {supported}"
         )
     actual = generation.get("reference_mode")
-    if actual != expected:
+    if actual not in supported_modes:
+        expected = ", ".join(sorted(repr(mode) for mode in supported_modes))
         raise ValueError(
             "Generation reference contract is incompatible with "
-            f"{key[0]}/{key[1]}: expected {expected!r}, got {actual!r}"
+            f"{key[0]}/{key[1]}: expected one of {expected}, got "
+            f"{actual!r}"
         )
 
 

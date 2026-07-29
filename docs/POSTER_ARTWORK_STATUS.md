@@ -12,11 +12,12 @@ Last audited: 2026-07-30
 ## Current decision
 
 The production generator has one model family and two deliberately different
-modes:
+modes. `joint_scene` currently has two reference topologies:
 
 | Role | Mode | Contract |
 | --- | --- | --- |
-| Default | FLUX.2 `joint_scene` | Spatial cast plus one identity reference per subject, empty target, one sampler, one decode, deterministic 300-dpi Lanczos output |
+| Default/promoted | FLUX.2 `joint_scene` + `spatial_identity_joint` | Spatial cast plus one identity reference per subject, empty target, one sampler, one decode, deterministic 300-dpi Lanczos output |
+| Selectable candidate | FLUX.2 `joint_scene` + `regional_identity_joint` | Reference-free global landscape plus one identity-bound physical-card branch per subject, empty target, one sampler, one decode, deterministic 300-dpi Lanczos output |
 | Fallback | FLUX.2 `identity_lock` | Two-pass scene construction, immutable source figures, exact opaque-pixel audit, 300-dpi model upscale |
 
 `joint_scene` is the default for new scope manifests. Existing accepted
@@ -33,12 +34,12 @@ in the experiment log and Git history, not in the production runner.
 
 | Scope group | Active mode | Status |
 | --- | --- | --- |
-| `Pokedex/sections/gen7` | `joint_scene` v5 candidate `00018` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
-| `Pokedex/sections/gen1` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
-| `Pokedex/sections/gen2` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
-| `Base1` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
-| `ExGen3/sections/mega` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
-| `ExGen3/sections/normal` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
+| `Pokedex/sections/gen7` | `joint_scene` / `spatial_identity_joint` v5 candidate `00018` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
+| `Pokedex/sections/gen1` | `joint_scene` / `spatial_identity_joint` v5 candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
+| `Pokedex/sections/gen2` | `joint_scene` / `spatial_identity_joint` v5 candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
+| `Base1` | `joint_scene` / `spatial_identity_joint` v5 candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
+| `ExGen3/sections/mega` | `joint_scene` / `spatial_identity_joint` v5 candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
+| `ExGen3/sections/normal` | `joint_scene` / `spatial_identity_joint` v5 candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `SV03.5` | `identity_lock` | Accepted and enabled |
 | `Pokedex/sections/gen3`–`gen6`, `gen8`, `gen9` | `identity_lock` | Accepted and enabled after their matching generation covers |
 
@@ -132,25 +133,28 @@ A later silhouette-free zone-layout A/B kept the Gen III one-shot graph and
 three identity references fixed but replaced the complete spatial cast with
 three soft neutral occupancy zones. It produced a bipedal Torchic/Mudkip
 hybrid and placed all three subjects primarily above their physical bottom-row
-cards without proving a foreground crossing. The zone-layout path is rejected;
-the complete spatial cast remains the preferred one-shot placement control.
+cards without proving a foreground crossing. The zone-layout path is rejected.
+The complete spatial cast remains the reproducible control for existing v5
+promotions.
 
 A subsequent cast-free regional-conditioning candidate binds each unscaled
 identity reference directly to its physical bottom-card model branch while a
 reference-free default branch generates the global landscape. All branches
 contribute to the same empty latent and the same four-step sampler; there is no
 later character insertion, mask repair, or composite. The 1-MP Generation III
-candidate passes count, identity/anatomy, card fit, padding, grounding,
-shadows, safe areas, and visible seam review. It contains no contradictory
-foreground/background switch, although its vegetation mostly avoids direct
-character intersections. This is now the preferred implementation candidate.
-The promoted Generation III asset remains `identity_lock` until the topology
-is integrated and deliberately approved; the existing spatial-cast
-`joint_scene` remains reproducible for its promoted scopes.
+candidate passes internal visual preflight for count, identity/anatomy, card
+fit, padding, grounding, shadows, safe areas, and visible seams. It contains no
+contradictory foreground/background switch, although its vegetation mostly
+avoids direct character intersections. This is the leading Generation III
+depth-bias evaluation candidate, not yet a production preference. The promoted
+Generation III asset remains `identity_lock` until the topology receives
+promotion-grade human approval; `regional_identity_joint` is implemented as
+selectable pipeline v6, while the existing spatial-cast pipeline v5 remains
+reproducible for its promoted scopes.
 
-## Accepted one-shot contract
+## Accepted and candidate one-shot contracts
 
-The preferred graph:
+The promoted spatial-v5 graph:
 
 1. derives subject rectangles and baselines from the same physical layout used
    for slicing;
@@ -165,6 +169,12 @@ The preferred graph:
 7. resamples the accepted text-free result deterministically to the configured
    300-dpi raster;
 8. adds localized logo and information only in deterministic post-processing.
+
+The selectable regional-v6 graph keeps steps 1 and 3–8, replaces the cast with
+one reference-free default landscape branch, and binds every individual
+identity reference to its complete physical bottom-card conditioning area.
+Those branches still update one common latent within one sampler trajectory;
+there is no image mask, layout-guide image, second pass, or subject composite.
 
 Human review remains mandatory because a generated one-shot cannot prove
 identity with pixel equality. Review covers cast count, exact form, anatomy,
@@ -204,8 +214,8 @@ second tracked active bundle is maintained.
 
 ## Next production work
 
-1. Treat the representative rollout as complete: Gen VII, Base1, named Mega
-   forms, and a strongly proportionally diverse cast now pass.
+1. Treat the spatial-v5 representative rollout as complete: Gen VII, Base1,
+   named Mega forms, and a strongly proportionally diverse subject set pass.
 2. Keep all remaining migrations scope-by-scope and review-gated; do not
    mechanically switch the seven accepted fallbacks.
 3. Use future requested renders to observe natural near/far landscape
@@ -213,7 +223,7 @@ second tracked active bundle is maintained.
    can relocate rather than solve a contradictory crossing; do not reopen
    prompt-only depth stress unless new evidence changes the mechanism.
 4. Apply the section workflow to future aggregate variant sections only after
-   their scene briefs and curated casts are reviewed.
+   their scene briefs and curated subject/reference sets are reviewed.
 5. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
    matching physical page formats, memory tests, and visual QA exist.
 

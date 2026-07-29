@@ -18,7 +18,7 @@ flowchart TD
         MANIFEST["poster.yaml / posters.yaml"] --> PLAN
         PLAN --> READY{"Manifest and source assets ready?"}
         READY -->|no| INIT["Initialize missing manifest and source assets"]
-        INIT --> BRIEF{"Review scene brief, cast, and forms"}
+        INIT --> BRIEF{"Review scene brief, subjects, and forms"}
         READY -->|yes| BRIEF
     end
 
@@ -26,8 +26,11 @@ flowchart TD
         BRIEF --> COMFY["Start scope-isolated ComfyUI"]
         COMFY --> RUN["Run FLUX.2 poster pipeline"]
         RUN --> JOINT["Default · joint_scene"]
-        JOINT --> JOINTREFS["Spatial cast + one identity reference per subject"]
-        JOINTREFS --> ONESHOT["Empty latent → one sampler → one decode"]
+        JOINT --> TOPOLOGY{"Reference topology"}
+        TOPOLOGY --> SPATIAL["Default/promoted · spatial cast + identities"]
+        TOPOLOGY -. selectable candidate .-> REGIONAL["Regional identity per physical card"]
+        SPATIAL --> ONESHOT["Empty latent → one sampler → one decode"]
+        REGIONAL --> ONESHOT
         ONESHOT --> LANCZOS["Lanczos → exact 300-dpi text-free master"]
 
         RUN -. explicit fallback .-> IL["identity_lock"]
@@ -313,9 +316,9 @@ python scripts/poster_assets/run_comfyui_poster.py \
   --scope ExGen3/sections/mega
 ```
 
-The production runner reads the FLUX.2 model and sampling contract, seed,
-generation size, and output contract from the scope's `poster.yaml`. The
-preferred `joint_scene` path:
+The production runner reads the FLUX.2 model, reference topology, sampling
+contract, seed, generation size, and output contract from the scope's
+`poster.yaml`. The promoted `spatial_identity_joint` path:
 
 1. derives each target silhouette rectangle from the shared physical layout
    and cutout alpha bounds, then writes its normalized canvas coordinates into
@@ -342,6 +345,49 @@ produces `joint_scene_cast_reference.png` followed by
 produces nor records `inpaint_reference.png`, scene references, identity-lock
 masks, or references for rejected experiments.
 
+The cast-free `regional_identity_joint` topology is available for bounded
+one-shot candidates:
+
+```bash
+python scripts/poster_assets/run_comfyui_poster.py \
+  --scope <scope> \
+  --flux-mode joint_scene \
+  --flux-reference-mode regional_identity_joint
+```
+
+It keeps the same empty target, one sampler, one decode, and deterministic
+print output, but replaces the cast with sampler-level regional conditioning:
+
+1. a reference-free default branch establishes the set-specific landscape in
+   every pixel not covered by a regional branch;
+2. each subject gets one local branch with exactly its own 512 px identity
+   reference;
+3. each branch is constrained to its complete physical bottom-card cell via
+   `ConditioningSetAreaPercentage`;
+4. the local branch generates the character, nearby terrain, shadow,
+   vegetation, and occlusion together during the same sampling trajectory.
+
+No box, mask, silhouette, or layout guide is supplied as image content, and
+there is still no later character insertion or repair. Preparation writes only
+`identity_reference_*.png` plus
+`joint_scene_regional_identity_prompt.generated.txt`; it does not write
+`joint_scene_cast_reference.png`.
+
+The override creates a review candidate and does not change the active
+manifest or promoted poster. Existing spatial-v5 promotions remain
+reproducible. Keep `identity_lock` as fallback until the regional candidate has
+passed the raw poster, all physical crops, identity/anatomy, region seams,
+grounding, shadows, and coherent landscape-depth review.
+
+After accepting a regional candidate:
+
+1. copy the complete `generation` object from its `.run.json` into
+   `artwork.generation` in the scope's `poster.yaml`, including
+   `reference_mode: regional_identity_joint` and every recorded model hash;
+2. run the planner and require the candidate to match the active manifest;
+3. promote it through the normal `joint_scene` path with
+   `--approve-joint-scene`.
+
 The graph has no hard three-subject limit. `standard_3x3` remains the default;
 four-subject `wide_4x3` and `wide_4x4` candidates need their own memory and
 visual review before promotion.
@@ -352,7 +398,8 @@ fingerprint and explicit human review of both the actual raw file and the
 deterministically scaled text-free print artwork. Generation VII candidate
 `00018` passed that gate and is the first promoted `joint_scene` poster; Base1
 candidate `00001` is the second, ExGen3 Mega `00001` is the third, and ExGen3
-Normal `00001` is the fourth.
+Normal `00001` is the fourth, Generation I `00001` is the fifth, and
+Generation II `00001` is the sixth.
 Candidates `00019` and `00020` failed their bounded depth tests and their
 prompt changes were reverted.
 

@@ -11,6 +11,9 @@ import yaml
 from PIL import Image, ImageChops, ImageDraw
 
 from scripts.poster_assets import fetch_cutouts
+from scripts.poster_assets import (
+    create_comfyui_poster_workflow as poster_workflow,
+)
 from scripts.poster_assets import promote_comfyui_poster as poster_promotion
 from scripts.poster_assets import run_comfyui_poster as poster_runner
 from scripts.poster_assets import slice_poster as poster_slicer
@@ -60,6 +63,7 @@ from scripts.poster_assets.poster_subject import (
 from scripts.poster_assets.poster_config import (
     IDENTITY_LOCK_PROMPT_FILE,
     JOINT_SCENE_PROMPT_FILE,
+    REGIONAL_JOINT_SCENE_PROMPT_FILE,
     build_identity_lock_prompt,
     build_joint_prompt_snapshot,
     build_joint_scene_prompt,
@@ -861,6 +865,28 @@ def test_joint_scene_preparation_writes_spatial_and_unscaled_identity_refs(
         assert masked_difference.getbbox() is None
 
 
+def test_regional_joint_scene_preparation_writes_only_identity_refs(
+    tmp_path: Path,
+):
+    (tmp_path / "joint_scene_cast_reference.png").write_bytes(b"stale")
+    build_joint_scene_references(
+        "Base1",
+        tmp_path,
+        megapixels=1.0,
+        include_cast=False,
+    )
+
+    assert not (tmp_path / "joint_scene_cast_reference.png").exists()
+    assert [
+        path.name
+        for path in sorted(tmp_path.glob("identity_reference_*.png"))
+    ] == [
+        "identity_reference_1.png",
+        "identity_reference_2.png",
+        "identity_reference_3.png",
+    ]
+
+
 
 
 def test_identity_lock_mask_generates_only_above_the_bottom_subject_band(
@@ -1359,6 +1385,169 @@ def test_joint_scene_synthesizes_landscape_and_subjects_in_one_shot():
     assert "Charmander" in prompt
 
 
+def test_regional_joint_scene_binds_each_identity_to_its_physical_card():
+    workflow = build_workflow(
+        "Base1",
+        seed=123,
+        megapixels=0.25,
+        generation_mode="joint_scene",
+        reference_mode="regional_identity_joint",
+    )
+
+    assert [
+        node["inputs"]["image"]
+        for node in workflow.values()
+        if node["class_type"] == "LoadImage"
+    ] == [
+        "identity_reference_1.png",
+        "identity_reference_2.png",
+        "identity_reference_3.png",
+    ]
+    assert sum(
+        node["class_type"] == "CLIPTextEncode"
+        for node in workflow.values()
+    ) == 4
+    assert sum(
+        node["class_type"] == "ReferenceLatent"
+        for node in workflow.values()
+    ) == 3
+    assert sum(
+        node["class_type"] == "ConditioningSetAreaPercentage"
+        for node in workflow.values()
+    ) == 3
+    assert sum(
+        node["class_type"] == "EmptyFlux2LatentImage"
+        for node in workflow.values()
+    ) == 1
+    assert sum(
+        node["class_type"] == "SamplerCustomAdvanced"
+        for node in workflow.values()
+    ) == 1
+    assert sum(
+        node["class_type"] == "VAEDecode"
+        for node in workflow.values()
+    ) == 1
+
+    width = workflow["6"]["inputs"]["width"]
+    height = workflow["6"]["inputs"]["height"]
+    layout = build_source_layout(
+        "standard_3x3",
+        width_px=width,
+        height_px=height,
+    )
+    for index, cell in enumerate(layout.bottom_row_cells(), start=1):
+        base = 20 + (index - 1) * 10
+        assert workflow[str(base + 3)]["inputs"] == {
+            "conditioning": [str(base), 0],
+            "latent": [str(base + 2), 0],
+        }
+        assert workflow[str(base + 4)]["inputs"] == {
+            "conditioning": [str(base + 3), 0],
+            "width": cell.width / width,
+            "height": cell.height / height,
+            "x": cell.x / width,
+            "y": cell.y / height,
+            "strength": 1.0,
+        }
+
+    assert workflow["69"]["class_type"] == "ConditioningSetDefaultCombine"
+    assert workflow["69"]["inputs"]["cond_DEFAULT"] == ["4", 0]
+    assert workflow["70"]["inputs"]["positive"] == ["69", 0]
+    assert workflow["70"]["inputs"]["negative"] == ["5", 0]
+    assert "landscape only" in workflow["4"]["inputs"]["text"]
+    assert "Mewtwo" in workflow["20"]["inputs"]["text"]
+    assert "Bulbasaur" in workflow["30"]["inputs"]["text"]
+    assert "Charmander" in workflow["40"]["inputs"]["text"]
+    assert not any(
+        node["class_type"]
+        in {
+            "ConditioningSetMask",
+            "ImageCompositeMasked",
+            "VAEEncodeForInpaint",
+        }
+        for node in workflow.values()
+    )
+
+
+def test_regional_joint_scene_supports_four_physical_card_regions(
+    tmp_path: Path,
+    monkeypatch,
+):
+    scope_dir = tmp_path / "Base1"
+    cutout_dir = scope_dir / "cutouts"
+    cutout_dir.mkdir(parents=True)
+    (scope_dir / "poster.yaml").write_text(
+        yaml.safe_dump(
+            {
+                "scope": "Base1",
+                "layout": {"name": "wide_4x3"},
+                "artwork": {
+                    "scene": {
+                        "concept": "Four-subject regional workflow test",
+                    }
+                },
+            },
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
+    items = []
+    for index in range(1, 5):
+        filename = f"subject_{index}.png"
+        Image.new(
+            "RGBA",
+            (64, 64),
+            (40 * index, 20 * index, 10 * index, 255),
+        ).save(cutout_dir / filename)
+        items.append(
+            {
+                "pokemon_id": index,
+                "name_en": f"Subject {index}",
+                "file": filename,
+            }
+        )
+    (cutout_dir / "manifest.json").write_text(
+        json.dumps({"items": items}),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(poster_workflow, "POSTER_ASSETS", tmp_path)
+
+    workflow = poster_workflow.build_workflow(
+        "Base1",
+        seed=123,
+        megapixels=0.25,
+        generation_mode="joint_scene",
+        reference_mode="regional_identity_joint",
+    )
+
+    assert [
+        workflow[str(21 + index * 10)]["inputs"]["image"]
+        for index in range(4)
+    ] == [
+        "identity_reference_1.png",
+        "identity_reference_2.png",
+        "identity_reference_3.png",
+        "identity_reference_4.png",
+    ]
+    assert all(
+        workflow[str(24 + index * 10)]["class_type"]
+        == "ConditioningSetAreaPercentage"
+        for index in range(4)
+    )
+    assert sum(
+        node["class_type"] == "ConditioningCombine"
+        for node in workflow.values()
+    ) == 3
+    assert sum(
+        node["class_type"] == "ConditioningSetDefaultCombine"
+        for node in workflow.values()
+    ) == 1
+    assert sum(
+        node["class_type"] == "SamplerCustomAdvanced"
+        for node in workflow.values()
+    ) == 1
+
+
 
 
 def test_joint_scene_prompt_separates_spatial_and_identity_roles():
@@ -1457,6 +1646,37 @@ def test_joint_scene_workflow_writes_one_shot_prompt_snapshot(
     assert snapshot.read_text(encoding="utf-8") == expected.strip() + "\n"
 
 
+def test_regional_joint_scene_writes_distinct_workflow_and_prompt_snapshot(
+    tmp_path: Path,
+):
+    workflow_path = write_engine_workflow(
+        "flux",
+        "Base1",
+        123,
+        0.25,
+        flux_mode="joint_scene",
+        flux_reference_mode="regional_identity_joint",
+        workflow_output_dir=tmp_path,
+    )
+
+    snapshot = tmp_path / REGIONAL_JOINT_SCENE_PROMPT_FILE
+    assert workflow_path.name == (
+        "workflow_api_joint_scene_regional_identity_joint_0p25mp_123.json"
+    )
+    assert snapshot.is_file()
+    workflow = json.loads(workflow_path.read_text(encoding="utf-8"))
+    expected = "\n\n".join(
+        (
+            "REGIONAL JOINT SCENE - ONE-SHOT FINAL SYNTHESIS",
+            f"GLOBAL LANDSCAPE\n\n{workflow['4']['inputs']['text']}",
+            f"LOCAL SUBJECT 1 - Mewtwo\n\n{workflow['20']['inputs']['text']}",
+            f"LOCAL SUBJECT 2 - Bulbasaur\n\n{workflow['30']['inputs']['text']}",
+            f"LOCAL SUBJECT 3 - Charmander\n\n{workflow['40']['inputs']['text']}",
+        )
+    )
+    assert snapshot.read_text(encoding="utf-8") == expected.strip() + "\n"
+
+
 
 
 def test_only_reviewed_flux_workflows_are_selectable(tmp_path: Path):
@@ -1485,6 +1705,15 @@ def test_only_reviewed_flux_workflows_are_selectable(tmp_path: Path):
             "Base1",
             123,
             0.25,
+            workflow_output_dir=tmp_path,
+        )
+    with pytest.raises(ValueError, match="Unsupported FLUX generation mode"):
+        write_engine_workflow(
+            "flux",
+            "Base1",
+            123,
+            0.25,
+            flux_mode="unsupported",
             workflow_output_dir=tmp_path,
         )
 

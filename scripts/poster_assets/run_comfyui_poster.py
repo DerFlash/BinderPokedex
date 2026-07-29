@@ -184,13 +184,14 @@ def write_engine_workflow(
     megapixels: float,
     *,
     flux_mode: str = DEFAULT_FLUX_MODE,
+    flux_reference_mode: str | None = None,
     flux_model: str = DEFAULT_FLUX_MODEL,
     flux_steps: int = DEFAULT_FLUX_STEPS,
     flux_clip: str = DEFAULT_FLUX_ENCODER,
     flux_vae: str = DEFAULT_FLUX_VAE,
     workflow_output_dir: Path | None = None,
 ) -> Path:
-    """Write one of the two supported FLUX.2 workflow graphs."""
+    """Write one supported FLUX.2 workflow graph."""
     if engine != ENGINE:
         raise ValueError(
             f"Unsupported engine {engine!r}; only {ENGINE!r} is supported"
@@ -200,6 +201,7 @@ def write_engine_workflow(
         seed,
         megapixels,
         generation_mode=flux_mode,
+        reference_mode=flux_reference_mode,
         unet_name=flux_model,
         steps=flux_steps,
         clip_name=flux_clip,
@@ -246,6 +248,7 @@ def run(
     *,
     engine: str = ENGINE,
     flux_mode: str = DEFAULT_FLUX_MODE,
+    flux_reference_mode: str | None = None,
     flux_model: str = DEFAULT_FLUX_MODEL,
     flux_steps: int = DEFAULT_FLUX_STEPS,
     flux_clip: str = DEFAULT_FLUX_ENCODER,
@@ -266,6 +269,7 @@ def run(
         raise ValueError("output_dpi must be positive")
     workflow_options = {
         "flux_mode": flux_mode,
+        "flux_reference_mode": flux_reference_mode,
         "flux_model": flux_model,
         "flux_steps": flux_steps,
         "flux_clip": flux_clip,
@@ -275,11 +279,16 @@ def run(
         ENGINE,
         workflow_options,
     )
+    effective_reference_mode = str(
+        generation_metadata["reference_mode"]
+    )
+    workflow_options["flux_reference_mode"] = effective_reference_mode
     joint_scene = is_joint_scene_generation(generation_metadata)
     work_dir = prepare(
         scope,
         megapixels,
         generation_mode=flux_mode,
+        reference_mode=effective_reference_mode,
     )
     validate_server_input_directory(server, work_dir)
     comfy_root = server_comfyui_root(server)
@@ -488,6 +497,15 @@ def main() -> int:
         "--flux-mode",
         choices=("joint_scene", "identity_lock"),
         help="Override the manifest mode; joint_scene is the default",
+    )
+    parser.add_argument(
+        "--flux-reference-mode",
+        choices=(
+            "spatial_identity_joint",
+            "regional_identity_joint",
+            "two_pass_source_pixels",
+        ),
+        help="Override the selected mode's reference topology",
     )
     parser.add_argument("--flux-model")
     parser.add_argument("--flux-steps", type=int)

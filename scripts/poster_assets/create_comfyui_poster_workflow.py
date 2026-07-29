@@ -12,16 +12,24 @@ try:
         normalized_visible_placement_contract,
     )
     from .layout import (
+        build_source_layout,
         latent_canvas_dimensions,
         page_canvas_dimensions,
     )
     from .poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
         JOINT_SCENE_PROMPT_FILE,
+        REGIONAL_JOINT_SCENE_PROMPT_FILE,
         build_joint_scene_prompt,
         build_identity_lock_prompt,
+        build_regional_joint_scene_prompts,
+        format_regional_joint_prompt_snapshot,
         format_joint_prompt_snapshot,
         identity_lock_overscan,
+    )
+    from .generation_contract import (
+        CANONICAL_REFERENCE_MODES,
+        SUPPORTED_REFERENCE_MODES,
     )
     from .poster_io import (
         load_cutout_items,
@@ -35,16 +43,24 @@ except ImportError:
         normalized_visible_placement_contract,
     )
     from layout import (
+        build_source_layout,
         latent_canvas_dimensions,
         page_canvas_dimensions,
     )
     from poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
         JOINT_SCENE_PROMPT_FILE,
+        REGIONAL_JOINT_SCENE_PROMPT_FILE,
         build_joint_scene_prompt,
         build_identity_lock_prompt,
+        build_regional_joint_scene_prompts,
+        format_regional_joint_prompt_snapshot,
         format_joint_prompt_snapshot,
         identity_lock_overscan,
+    )
+    from generation_contract import (
+        CANONICAL_REFERENCE_MODES,
+        SUPPORTED_REFERENCE_MODES,
     )
     from poster_io import (
         load_cutout_items,
@@ -220,6 +236,180 @@ def build_joint_scene_workflow(
     return workflow
 
 
+def build_regional_joint_scene_workflow(
+    scope: str,
+    seed: int,
+    megapixels: float,
+    *,
+    unet_name: str,
+    clip_name: str,
+    vae_name: str,
+    steps: int,
+) -> dict[str, object]:
+    """Build one cast-free pass with one identity-bound physical-card branch."""
+    bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
+    manifest = bundle.manifest
+    scope_data = load_poster_scope_data(bundle)
+    items = load_cutout_items(POSTER_ASSETS / scope)
+    width, height = output_dimensions(scope, megapixels)
+    layout_name = str(
+        manifest.get("layout", {}).get(
+            "name",
+            "standard_3x3",
+        )
+    )
+    layout = build_source_layout(
+        layout_name,
+        width_px=width,
+        height_px=height,
+    )
+    cells = layout.bottom_row_cells()
+    if len(items) != len(cells):
+        raise ValueError(
+            f"Layout {layout_name!r} needs {len(cells)} subjects, "
+            f"but {scope!r} contains {len(items)}"
+        )
+    placement_contract = normalized_visible_placement_contract(
+        joint_scene_canvas_placements(
+            bundle.asset_dir,
+            layout_name=layout_name,
+            canvas_size=(width, height),
+        ),
+        canvas_size=(width, height),
+    )
+    global_prompt, subject_prompts = build_regional_joint_scene_prompts(
+        manifest,
+        scope_data,
+        items,
+        placement_contract=placement_contract,
+    )
+
+    workflow = {
+        "1": node("UNETLoader", unet_name=unet_name, weight_dtype="default"),
+        "2": node(
+            "CLIPLoader",
+            clip_name=clip_name,
+            type="flux2",
+            device="default",
+        ),
+        "3": node("VAELoader", vae_name=vae_name),
+        "4": node("CLIPTextEncode", text=global_prompt, clip=["2", 0]),
+        "5": node("ConditioningZeroOut", conditioning=["4", 0]),
+        "6": node(
+            "EmptyFlux2LatentImage",
+            width=width,
+            height=height,
+            batch_size=1,
+        ),
+        "7": node(
+            "Flux2Scheduler",
+            steps=steps,
+            width=width,
+            height=height,
+        ),
+        "8": node("RandomNoise", noise_seed=seed),
+        "10": node("KSamplerSelect", sampler_name="euler"),
+    }
+
+    regional_conditioning: list[list[object]] = []
+    for index, (cell, prompt) in enumerate(
+        zip(cells, subject_prompts, strict=True),
+        start=1,
+    ):
+        base = 20 + (index - 1) * 10
+        prompt_id = str(base)
+        load_id = str(base + 1)
+        encode_id = str(base + 2)
+        reference_id = str(base + 3)
+        area_id = str(base + 4)
+        workflow[prompt_id] = node(
+            "CLIPTextEncode",
+            text=prompt,
+            clip=["2", 0],
+        )
+        workflow[load_id] = node(
+            "LoadImage",
+            image=f"identity_reference_{index}.png",
+        )
+        workflow[encode_id] = node(
+            "VAEEncode",
+            pixels=[load_id, 0],
+            vae=["3", 0],
+        )
+        workflow[reference_id] = node(
+            "ReferenceLatent",
+            conditioning=[prompt_id, 0],
+            latent=[encode_id, 0],
+        )
+        workflow[area_id] = node(
+            "ConditioningSetAreaPercentage",
+            conditioning=[reference_id, 0],
+            width=cell.width / width,
+            height=cell.height / height,
+            x=cell.x / width,
+            y=cell.y / height,
+            strength=1.0,
+        )
+        regional_conditioning.append([area_id, 0])
+
+    combine_start = max(60, 20 + len(cells) * 10)
+    combined = regional_conditioning[0]
+    for offset, current in enumerate(
+        regional_conditioning[1:],
+        start=0,
+    ):
+        combine_id = str(combine_start + offset)
+        workflow[combine_id] = node(
+            "ConditioningCombine",
+            conditioning_1=combined,
+            conditioning_2=current,
+        )
+        combined = [combine_id, 0]
+    final_start = max(
+        69,
+        combine_start + len(regional_conditioning) - 1,
+    )
+    default_id = str(final_start)
+    guider_id = str(final_start + 1)
+    sampler_id = str(final_start + 2)
+    decode_id = str(final_start + 3)
+    save_id = str(final_start + 4)
+    workflow[default_id] = node(
+        "ConditioningSetDefaultCombine",
+        cond=combined,
+        cond_DEFAULT=["4", 0],
+    )
+    workflow[guider_id] = node(
+        "CFGGuider",
+        model=["1", 0],
+        positive=[default_id, 0],
+        negative=["5", 0],
+        cfg=1.0,
+    )
+    workflow[sampler_id] = node(
+        "SamplerCustomAdvanced",
+        noise=["8", 0],
+        guider=[guider_id, 0],
+        sampler=["10", 0],
+        sigmas=["7", 0],
+        latent_image=["6", 0],
+    )
+    workflow[decode_id] = node(
+        "VAEDecode",
+        samples=[sampler_id, 0],
+        vae=["3", 0],
+    )
+    workflow[save_id] = node(
+        "SaveImage",
+        images=[decode_id, 0],
+        filename_prefix=(
+            f"{poster_asset_slug(scope)}_flux2_joint_scene_"
+            f"regional_identity_{megapixel_marker(megapixels)}_seed_{seed}"
+        ),
+    )
+    return workflow
+
+
 def build_workflow(
     scope: str,
     seed: int,
@@ -229,13 +419,36 @@ def build_workflow(
     clip_name: str = "qwen_3_4b.safetensors",
     vae_name: str = "flux2-vae.safetensors",
     generation_mode: str = "joint_scene",
+    reference_mode: str | None = None,
     steps: int = 4,
 ) -> dict[str, object]:
     if generation_mode not in {"identity_lock", "joint_scene"}:
         raise ValueError(f"Unsupported FLUX generation mode: {generation_mode}")
     if steps <= 0:
         raise ValueError("steps must be positive")
+    key = ("flux", generation_mode)
+    effective_reference_mode = (
+        reference_mode
+        if reference_mode is not None
+        else CANONICAL_REFERENCE_MODES[key]
+    )
+    if effective_reference_mode not in SUPPORTED_REFERENCE_MODES[key]:
+        expected = ", ".join(sorted(SUPPORTED_REFERENCE_MODES[key]))
+        raise ValueError(
+            f"Unsupported reference mode for {generation_mode}: "
+            f"{effective_reference_mode!r}; expected one of {expected}"
+        )
     if generation_mode == "joint_scene":
+        if effective_reference_mode == "regional_identity_joint":
+            return build_regional_joint_scene_workflow(
+                scope,
+                seed,
+                megapixels,
+                unet_name=unet_name,
+                clip_name=clip_name,
+                vae_name=vae_name,
+                steps=steps,
+            )
         return build_joint_scene_workflow(
             scope,
             seed,
@@ -376,6 +589,7 @@ def write_workflow(
     megapixels: float,
     *,
     generation_mode: str = "joint_scene",
+    reference_mode: str | None = None,
     unet_name: str = "flux-2-klein-4b-fp8.safetensors",
     steps: int = 4,
     clip_name: str = "qwen_3_4b.safetensors",
@@ -385,8 +599,19 @@ def write_workflow(
     work_dir = POSTER_ASSETS / scope / "comfyui_poster"
     target_dir = output_dir or work_dir
     target_dir.mkdir(parents=True, exist_ok=True)
+    if generation_mode not in {"identity_lock", "joint_scene"}:
+        raise ValueError(f"Unsupported FLUX generation mode: {generation_mode}")
+    key = ("flux", generation_mode)
+    effective_reference_mode = (
+        reference_mode
+        if reference_mode is not None
+        else CANONICAL_REFERENCE_MODES[key]
+    )
+    workflow_marker = generation_mode
+    if effective_reference_mode == "regional_identity_joint":
+        workflow_marker += "_regional_identity_joint"
     out_path = target_dir / (
-        f"workflow_api_{generation_mode}_"
+        f"workflow_api_{workflow_marker}_"
         f"{megapixel_marker(megapixels)}_{seed}.json"
     )
     workflow = build_workflow(
@@ -395,6 +620,7 @@ def write_workflow(
         megapixels,
         unet_name=unet_name,
         generation_mode=generation_mode,
+        reference_mode=effective_reference_mode,
         steps=steps,
         clip_name=clip_name,
         vae_name=vae_name,
@@ -404,11 +630,28 @@ def write_workflow(
             str(workflow["4"]["inputs"]["text"]).strip() + "\n",
             encoding="utf-8",
         )
-    elif generation_mode == "joint_scene":
+    elif (
+        generation_mode == "joint_scene"
+        and effective_reference_mode == "spatial_identity_joint"
+    ):
         snapshot = format_joint_prompt_snapshot(
             str(workflow["4"]["inputs"]["text"])
         )
         (target_dir / JOINT_SCENE_PROMPT_FILE).write_text(
+            snapshot.strip() + "\n",
+            encoding="utf-8",
+        )
+    elif generation_mode == "joint_scene":
+        items = load_cutout_items(POSTER_ASSETS / scope)
+        snapshot = format_regional_joint_prompt_snapshot(
+            str(workflow["4"]["inputs"]["text"]),
+            items,
+            [
+                str(workflow[str(20 + index * 10)]["inputs"]["text"])
+                for index in range(len(items))
+            ],
+        )
+        (target_dir / REGIONAL_JOINT_SCENE_PROMPT_FILE).write_text(
             snapshot.strip() + "\n",
             encoding="utf-8",
         )
@@ -433,6 +676,14 @@ def main() -> int:
         choices=("joint_scene", "identity_lock"),
         default="joint_scene",
     )
+    parser.add_argument(
+        "--reference-mode",
+        choices=(
+            "spatial_identity_joint",
+            "regional_identity_joint",
+            "two_pass_source_pixels",
+        ),
+    )
     parser.add_argument("--model", default="flux-2-klein-4b-fp8.safetensors")
     parser.add_argument("--steps", type=int, default=4)
     parser.add_argument("--clip", default="qwen_3_4b.safetensors")
@@ -444,6 +695,7 @@ def main() -> int:
             args.seed,
             args.megapixels,
             generation_mode=args.mode,
+            reference_mode=args.reference_mode,
             unet_name=args.model,
             steps=args.steps,
             clip_name=args.clip,
