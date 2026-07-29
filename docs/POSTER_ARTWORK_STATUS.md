@@ -123,10 +123,10 @@ Generation III remains on its accepted `identity_lock` fallback. A seed change
 fixed an extra-subject failure and produced faithful, card-safe Treecko,
 Torchic, and Mudkip, but a plant rooted at the lower-right foreground passed
 behind Mudkip. Moving the existing depth rule earlier left the contradiction
-unchanged. A final binary foreground rule moved the specific Mudkip plant but
-recreated the same front-to-back jump at Treecko's lower-left foreground
-plant. Prompt-only depth tuning is therefore closed after three bounded
-variants; no global prompt change was adopted.
+unchanged. A final binary foreground rule still left a lower-right blade behind
+Mudkip and additionally produced the same front-to-back jump at Treecko's
+lower-left foreground plant. Prompt-only depth tuning is therefore closed
+after three bounded variants; no global prompt change was adopted.
 
 ## Accepted one-shot contract
 

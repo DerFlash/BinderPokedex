@@ -81,7 +81,7 @@ scene, count rules, identity rules, and all non-depth prompt text fixed.
 | --- | --- | --- | --- |
 | `depth/original` | Production prompt; depth paragraph begins after 648 whitespace-delimited words | Exactly three faithful, card-safe subjects, but the lower-right foreground plant passes behind Mudkip | Rejected at coherent-depth gate |
 | `depth/early` | Move the existing depth paragraph unchanged so it begins after 388 words; total remains 894 words | The same lower-right foreground relationship remains behind Mudkip | Rejected; prompt priority alone does not solve the crossing |
-| `depth/binary` | Keep the earlier position and replace only the depth paragraph with a 904-word total that defines bottom-edge vegetation as foreground and clarifies that anatomical completeness does not require every exterior pixel to remain visible | Mudkip's conflicting plant is moved away, but the lower-left foreground plant now passes behind Treecko's foot, body, and tail | Rejected; the contradiction moves to another subject |
+| `depth/binary` | Keep the earlier position and replace only the depth paragraph with a 904-word total that defines bottom-edge vegetation as foreground and clarifies that anatomical completeness does not require every exterior pixel to remain visible | A lower-right blade still passes behind Mudkip's tail; additionally, the lower-left foreground plant passes behind Treecko's foot, body, and tail | Rejected; the contradiction remains and appears at another subject too |
 
 Metal/MPS evidence:
 
