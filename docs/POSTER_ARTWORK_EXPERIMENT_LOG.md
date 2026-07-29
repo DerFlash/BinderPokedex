@@ -96,6 +96,26 @@ No candidate is promoted, no central prompt wording or ordering changes, and
 Generation III remains on its accepted `identity_lock` fallback. A future
 retry requires a changed control mechanism rather than more prompt emphasis.
 
+### Discarded single-subject prompt retry
+
+On 2026-07-29 the prompt-only question was reopened once as a deliberately
+smaller diagnostic: one Mudkip, one forest clearing, 512 x 512 pixels, two
+fixed seeds, and an otherwise identical one-shot FLUX.2 Klein graph on
+Metal/MPS. A soft request to cross the rear-right area was avoided entirely.
+A concrete request for one connected fern frond to cross a named outer tail
+edge produced real foreground occlusion in both seeds, but one seed extended
+the overlap too far toward the rear body. Abstract depth wording and explicit
+contour/topology terminology produced unnatural dark connecting lines.
+
+The useful local wording did not generalize to the real three-character
+poster. With the original Generation III references, geometry, and seed held
+fixed, both a short generic overlap rule and a conditional rule declaring
+bottom-border vegetation as nearest foreground still allowed the connected
+lower-right plant to pass behind Mudkip. The retry is therefore discarded:
+its temporary workflows and renders are not retained, no production prompt or
+artwork is changed, and `identity_lock` remains the Generation III fallback.
+Further prompt-only depth variants stay closed.
+
 ## Base1 / FLUX.2 Klein rollout
 
 The first representative rollout of the promoted Generation VII graph keeps
