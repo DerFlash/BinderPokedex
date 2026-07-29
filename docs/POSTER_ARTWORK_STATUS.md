@@ -128,6 +128,13 @@ Mudkip and additionally produced the same front-to-back jump at Treecko's
 lower-left foreground plant. Prompt-only depth tuning is therefore closed
 after three bounded variants; no global prompt change was adopted.
 
+A later silhouette-free zone-layout A/B kept the Gen III one-shot graph and
+three identity references fixed but replaced the complete spatial cast with
+three soft neutral occupancy zones. It produced a bipedal Torchic/Mudkip
+hybrid and placed all three subjects primarily above their physical bottom-row
+cards without proving a foreground crossing. The zone-layout path is rejected;
+the complete spatial cast remains the preferred one-shot placement control.
+
 ## Accepted one-shot contract
 
 The preferred graph:

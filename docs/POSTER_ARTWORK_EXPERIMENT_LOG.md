@@ -116,6 +116,51 @@ its temporary workflows and renders are not retained, no production prompt or
 artwork is changed, and `identity_lock` remains the Generation III fallback.
 Further prompt-only depth variants stay closed.
 
+### Silhouette-free zone-layout A/B
+
+One bounded architecture A/B on 2026-07-29 tested whether the complete,
+unoccluded character pixels in `joint_scene_cast_reference.png` were the
+remaining structural depth bias. Candidate A reused the existing Generation
+III `depth/original` result at seed `260750881`. Candidate B kept the model,
+encoder, VAE, seed, 848 x 1168 empty target, four-step Euler sampler, CFG,
+identity-reference bytes and order, normalized rectangles, Hoenn scene,
+depth wording, and safe areas unchanged.
+
+B replaced only the first image reference with a silhouette-free 608 x 832
+occupancy map. It used the same neutral background as A and three identical,
+softly feathered, low-contrast zones at the exact A character bounds. The
+three IMAGE-role paragraphs were changed only as required to map Treecko,
+Torchic, and Mudkip to the left, center, and right zones and to transfer pose
+and orientation authority to their individual identity images.
+
+| Gate | A: complete spatial cast | B: soft occupancy zones |
+| --- | --- | --- |
+| Count and coarse order | Pass | Three subjects in left/center/right order |
+| Identity and anatomy | Pass within accepted one-shot tolerance | Hard fail: the right subject is a bipedal Torchic/Mudkip hybrid with missing Mudkip head fin, wrong limbs, colors, tail, and pose |
+| Physical bottom-row cards | Pass | Hard fail: all three subjects are much too high and large; the real bottom-row crops contain only their lowest extremities or no subject |
+| Visible control residue | None | No literal zone, box, outline, panel, or landing-pad leak |
+| Foreground-depth evidence | Known lower-right contradiction behind Mudkip | Inconclusive: foreground plants avoid every subject silhouette |
+
+Metal/MPS evidence:
+
+| Artifact | Value |
+| --- | --- |
+| Runtime | `188.31 s` |
+| A raw SHA-256 | `e8103fe2f8e7a1d426f9aa7f9e036251db41cdeb506af0b85c080b1d39083a5e` |
+| B raw SHA-256 | `172cd2b6191bc7b34c0e2785ba4f45b66f739f712c2125cb6805dba096635603` |
+| Zone-reference SHA-256 | `3f44d945163c37d59a35728580f8c270c2ad08e750a612405abb8555d08acef1` |
+| B prompt SHA-256 | `ed3e64632deb02e3be7fbb3f42fdfe68828632a5364735f221130af733b2d51f` |
+| B workflow SHA-256 | `b1a6e1222421acf58717e05d49bae1dbe557e1862994626dc5f468fb93c8fd17` |
+| A/B graph hash after removing prompt, first reference path, and output prefix | `311fb13cfb1df6b91c2088df90e64c4ac5fcb0b9e89288982e446afe52e8ebbe` |
+
+The result reproduces the earlier no-cast placement failure and additionally
+breaks identity binding. Making the zones stronger, colored, labeled, or
+hard-edged would test new leakage and panel biases rather than repair the
+missing reference-to-region control. No second zone variant is justified.
+The zone candidate and its temporary assets are discarded, the complete
+spatial cast remains the `joint_scene` placement control, and Generation III
+remains on its promoted `identity_lock` fallback.
+
 ## Base1 / FLUX.2 Klein rollout
 
 The first representative rollout of the promoted Generation VII graph keeps
