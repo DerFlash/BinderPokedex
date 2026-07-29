@@ -65,32 +65,6 @@ The complete generation fingerprint is:
 0ca3ebca51b6683e4956a71b7659123e9db312b961ec4a66b0108dcf88628455
 ```
 
-## Pokédex Generation III / FLUX.2 Klein rollout
-
-The unchanged graph and prompt builder use the Hoenn scene brief and reviewed
-Treecko, Torchic, and Mudkip references. The first configured seed fails one
-hard gate; the second candidate changes only that seed.
-
-| Candidate | Pipeline change | Result | Decision |
-| --- | --- | --- | --- |
-| `joint_scene/00001` | Use configured seed `260750880` with the Generation III scope inputs | Treecko, Torchic, and Mudkip are recognizable and card-safe, but a fourth orange-blue creature appears in the middle-right background | Rejected at exact-count gate |
-| `joint_scene/00002` | Change only the seed to `260750881` | Exactly the three expected starters appear once. Treecko's hands, feet, eye, belly, and tail; Torchic's crest, wings, and feet; and Mudkip's head fin, cheek fins, limbs, markings, and tail remain faithful within the accepted print-detail tolerance. All physical crops pass; tropical terrain, side vegetation, and shadows remain coherent | Accepted and promoted on 2026-07-29 as the seventh `joint_scene` scope |
-
-Metal/MPS runtime and raw evidence:
-
-| Candidate | Runtime | Raw 848 × 1168 SHA-256 |
-| --- | ---: | --- |
-| `00001` | 195.74 s | `d9a9bb719999b006df5709ffcadb351b0e2c609d815e37b280af61f955b2186b` |
-| `00002` | 243.75 s | `e8103fe2f8e7a1d426f9aa7f9e036251db41cdeb506af0b85c080b1d39083a5e` |
-
-The accepted 2368 × 3268 print raster SHA-256 is
-`dac52dc7277bd0e4ed8932f6c8320f72e0493b8e3c3d8167ad8ea2a8a89409f1`.
-Its complete generation fingerprint is:
-
-```text
-59bb1602f9798e26df2ba8faed62bcb533bd160913e1cf3ee4b0ef194faf5e49
-```
-
 ## Base1 / FLUX.2 Klein rollout
 
 The first representative rollout of the promoted Generation VII graph keeps
