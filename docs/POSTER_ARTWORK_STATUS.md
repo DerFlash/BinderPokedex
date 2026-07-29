@@ -85,7 +85,9 @@ Natural foreground overlap is allowed but not forced. A coherent open patch of
 terrain is preferable to a plant that changes front/behind order or terminates
 at a subject boundary. Candidates `00019` and `00020` showed that more prompt
 pressure did not create reliable crossings and could instead add a duplicate
-character; their prompt changes were reverted.
+character. The later Base1 `joint_scene/00002` A/B showed that even conservative
+deduplication of repeated authority prose can add a duplicate fourth subject.
+The reviewed long prompt therefore remains unchanged.
 
 ## Fallback contract
 
