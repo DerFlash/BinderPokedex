@@ -43,6 +43,28 @@ The complete generation fingerprint is:
 3ad057acbcf8f95fd20b1661df5f938c7e06540d9c6275b773524db67b462f8d
 ```
 
+## Pokédex Generation II / FLUX.2 Klein rollout
+
+The unchanged graph and prompt builder use seed `260753030`, the Johto scene
+brief, and the reviewed Chikorita, Cyndaquil, and Totodile references.
+
+| Candidate | Pipeline change | Result | Decision |
+| --- | --- | --- | --- |
+| `joint_scene/00001` | Change only the scope seed, scene brief, identities, and shared physical placement derived for Generation II | Exactly the three expected starters appear once. Chikorita's leaf and body markings, Cyndaquil's side pose and flame, and Totodile's raised-leg pose, jaws, teeth, limbs, and back spikes remain faithful within the accepted one-shot print-detail tolerance. All three physical crops pass with generous padding; shared warm light, shadows, meadow, and foreground vegetation remain coherent | Accepted and promoted on 2026-07-29 as the sixth `joint_scene` scope |
+
+The Metal/MPS render completed in 203.82 seconds. Reproducibility evidence:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Raw 848 × 1168 candidate | `668d5d732771529e4bb3ce2ff8cf13b6bb58bede9d49c1eace86f459e3fb5c92` |
+| Text-free 2368 × 3268 print raster at 300 dpi | `f9849c301d29c0176a41b611ecc0c4b0ec7abf9051743a86b3bcd144fb5e3a3d` |
+
+The complete generation fingerprint is:
+
+```text
+0ca3ebca51b6683e4956a71b7659123e9db312b961ec4a66b0108dcf88628455
+```
+
 ## Base1 / FLUX.2 Klein rollout
 
 The first representative rollout of the promoted Generation VII graph keeps

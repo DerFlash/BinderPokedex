@@ -35,11 +35,12 @@ in the experiment log and Git history, not in the production runner.
 | --- | --- | --- |
 | `Pokedex/sections/gen7` | `joint_scene` v5 candidate `00018` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `Pokedex/sections/gen1` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
+| `Pokedex/sections/gen2` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `Base1` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `ExGen3/sections/mega` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `ExGen3/sections/normal` | `joint_scene` candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `SV03.5` | `identity_lock` | Accepted and enabled |
-| `Pokedex/sections/gen2`–`gen6`, `gen8`, `gen9` | `identity_lock` | Accepted and enabled after their matching generation covers |
+| `Pokedex/sections/gen3`–`gen6`, `gen8`, `gen9` | `identity_lock` | Accepted and enabled after their matching generation covers |
 
 Generation VII `00018` is the first accepted one-shot poster. It uses seed
 `260726054`, the reviewed Rowlet/Litten/Popplio sources, the Alola scene brief,
@@ -105,6 +106,19 @@ is:
 The promoted raw SHA-256 is
 `4d5ed1e63e1f972fc62054261d4e3d9c016f9e89864b1181cae6b443198b8969`.
 
+Generation II `00001` is the sixth accepted one-shot poster. Chikorita,
+Cyndaquil, and Totodile retain their distinctive source poses and defining
+features while fitting their physical cards with generous padding. The Johto
+landscape, warm light, shadows, and foreground vegetation remain coherent. Its
+stable generation fingerprint is:
+
+```text
+0ca3ebca51b6683e4956a71b7659123e9db312b961ec4a66b0108dcf88628455
+```
+
+The promoted raw SHA-256 is
+`668d5d732771529e4bb3ce2ff8cf13b6bb58bede9d49c1eace86f459e3fb5c92`.
+
 ## Accepted one-shot contract
 
 The preferred graph:
@@ -164,7 +178,7 @@ second tracked active bundle is maintained.
 1. Treat the representative rollout as complete: Gen VII, Base1, named Mega
    forms, and a strongly proportionally diverse cast now pass.
 2. Keep all remaining migrations scope-by-scope and review-gated; do not
-   mechanically switch the eight accepted fallbacks.
+   mechanically switch the seven accepted fallbacks.
 3. Use future requested renders to observe natural near/far landscape
    intersections. Do not reopen prompt-only depth stress unless new evidence
    changes the mechanism.
