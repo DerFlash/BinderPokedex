@@ -851,6 +851,54 @@ follow-up is justified. The isolated topology is closed and retained only as
 reproducible evidence. It did not change the then-current `identity_lock`
 artwork and does not belong to the later `joint_scene` production runtime.
 
+## Regional-v6 representative rerender audit
+
+After Generation III regional-v6 passed visual review, every existing
+spatial-v5 promotion received one 1-MP Metal/MPS candidate with the same model,
+prompt builder, physical placement contract, scope seed, four-step sampler, and
+empty-target topology. No candidate replaced its existing promotion.
+
+| Scope | Candidate result | Decision |
+| --- | --- | --- |
+| `Base1` | Mewtwo and Bulbasaur remain close, but Charmander changes pose and detail; a generated edge frame and pseudo-signature are visible | Rejected; one new-seed retry also creates a separate lower panorama and frame |
+| `ExGen3/sections/normal` | Scene integration is strong, but Miraidon's defining open tail becomes a compact loop and Koraidon loses hand detail | Rejected on anatomy |
+| `ExGen3/sections/mega` | Mega Latias is cropped; Mega Lucario's chest spike and foot anatomy are malformed | Rejected on containment and anatomy |
+| `Pokedex/sections/gen1` | Count, identity, card fit, shadows, and local depth pass, but a generated paper/frame strip survives into the cards | Rejected; the single seed retry creates a second lower landscape and frame |
+| `Pokedex/sections/gen2` | Count, identity, card fit, and grounding pass, but a generated outer frame is visible | Rejected; the single retry splits the lower row into three framed landscapes and changes Cyndaquil/Totodile details |
+| `Pokedex/sections/gen7` | Rowlet, Litten, and Popplio are highly faithful and card-safe, but a second tropical lagoon begins below a full-width horizontal scene boundary | Rejected on global perspective |
+
+The failures exposed a deterministic topology risk. Every local branch owns a
+complete bottom-card `ConditioningSetAreaPercentage`. The subsequent
+`ConditioningSetDefaultCombine` marks the reference-free landscape as a
+default, and ComfyUI subtracts the local multipliers from that default. The
+global scene therefore has zero weight throughout the interiors of the lower
+cards; the local branches independently predict their own terrain, horizon,
+and foreground. Edge feathering hides some boundaries but cannot share scene
+geometry.
+
+Two same-seed Generation-I KISS tests changed only that combine behavior:
+
+| Test | Effective regional/global mix | Result | Decision |
+| --- | --- | --- | --- |
+| Ordinary additive `ConditioningCombine`, strength `1.0` | 50/50 inside each subject card | One continuous landscape, but all subjects become underconditioned; Charmander turns around and defining colors/anatomy collapse | Rejected |
+| Same additive graph, local strength `2.0` | 2:1 regional/global | More subject color returns, but pose/anatomy remain wrong and a lower panorama begins to reappear | Rejected; stop strength tuning |
+
+ComfyUI computes the additive result per latent pixel as
+`sum(output * strength) / sum(strength)`. Higher local strength would approach
+the original independent-card behavior; lower strength already fails identity.
+The additive experiment and its tests were reverted, leaving production code
+byte-equivalent to regional-v6 before this audit.
+
+Outcome:
+
+- Generation III keeps its explicitly reviewed regional-v6 promotion.
+- All six spatial-v5 promotions remain unchanged and approved.
+- No rerender receives a new approval.
+- Further regional-v6 seed, prompt, or strength sweeps are closed.
+- A successor must bind each identity and position while retaining one shared
+  full-frame scene prediction inside the subject zones; that is a new control
+  mechanism, not prompt tuning.
+
 ### Review record template
 
 Every rendered candidate appends one row containing the exact workflow and

@@ -345,12 +345,12 @@ produces `joint_scene_cast_reference.png` followed by
 produces nor records `inpaint_reference.png`, scene references, identity-lock
 masks, or references for rejected experiments.
 
-The cast-free `regional_identity_joint` topology is available for bounded
-one-shot candidates:
+The cast-free `regional_identity_joint` topology remains available to
+reproduce or diagnose the reviewed Generation III promotion:
 
 ```bash
 python scripts/poster_assets/run_comfyui_poster.py \
-  --scope <scope> \
+  --scope Pokedex/sections/gen3 \
   --flux-mode joint_scene \
   --flux-reference-mode regional_identity_joint
 ```
@@ -373,24 +373,20 @@ there is still no later character insertion or repair. Preparation writes only
 `joint_scene_regional_identity_prompt.generated.txt`; it does not write
 `joint_scene_cast_reference.png`.
 
-The override creates a review candidate and does not change the active
-manifest or promoted poster. Existing spatial-v5 promotions remain
-reproducible. Keep `identity_lock` as fallback until the regional candidate has
-passed the raw poster, all physical crops, identity/anatomy, region seams,
-grounding, shadows, and coherent landscape-depth review.
+The override creates a local diagnostic candidate and does not change the
+active manifest or promoted poster. Existing promotions remain reproducible.
+Do not use this override for a new promotion or mechanical migration. The 2026-07-30
+representative audit rerendered all six spatial-v5 promotions and approved
+none of their regional-v6 candidates. Complete-card regional conditioning can
+replace the global landscape prediction inside the lower row and produce
+separate horizons or card scenes. Generation III is a reviewed scope-specific
+exception. New scopes use spatial v5 or the explicit identity-lock fallback.
+Reopening regional work requires a materially different control mechanism and
+an explicit new decision; repeated seed, prompt, or regional-strength sweeps
+are outside the accepted stop rule.
 
-After accepting a regional candidate:
-
-1. copy the complete `generation` object from its `.run.json` into
-   `artwork.generation` in the scope's `poster.yaml`, including
-   `reference_mode: regional_identity_joint` and every recorded model hash;
-2. run the planner and require the candidate to match the active manifest;
-3. promote it through the normal `joint_scene` path with
-   `--approve-joint-scene`.
-
-The graph has no hard three-subject limit. `standard_3x3` remains the default;
-four-subject `wide_4x3` and `wide_4x4` candidates need their own memory and
-visual review before promotion.
+The retained graph has no hard three-subject limit, but only the standard-3x3
+Generation III result is reviewed. Wide layouts remain unapproved.
 
 Because `joint_scene` deliberately redraws all pixels, an opaque-source-pixel
 equality audit is not applicable. Its hard gates are a complete generation

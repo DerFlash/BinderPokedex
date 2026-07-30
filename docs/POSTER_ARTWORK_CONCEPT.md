@@ -195,13 +195,23 @@ graph contains:
 The regional areas are sampler controls, not image inputs, so they cannot be
 drawn as boxes, landing pads, or silhouettes. Each local branch jointly
 generates its character, ground, shadow, vegetation, and intersections inside
-the card while the default branch fills the rest of the continuous landscape.
-There is no mask image, character composite, inpaint target, or post-decode
-repair.
+the card while the default branch fills only pixels outside those complete
+card areas. That mechanical coverage does not guarantee one continuous scene
+prediction across the lower row. There is no mask image, character composite,
+inpaint target, or post-decode repair.
 
 This topology is pipeline contract v6. Spatial v5 remains the default for new
-manifests until the regional approach has passed additional scopes; it can be
-selected explicitly for candidates without changing an existing promotion.
+manifests. Regional v6 remains selectable so the reviewed Generation III
+promotion is reproducible, but it is not a general migration target.
+
+The 2026-07-30 representative rerender audit closed that broader rollout.
+ComfyUI's default-combine semantics exclude the global landscape prediction
+inside each complete card area, so a local branch can generate a second
+horizon or card-sized scene. Making the global condition additive removed the
+split but averaged away subject identity even after one bounded 2:1
+local/global test. Those experimental changes were reverted. Generation III
+remains the sole reviewed regional-v6 promotion; spatial v5 remains the
+production default, and further seed or prompt sweeps are not justified.
 
 ## `identity_lock` fallback
 

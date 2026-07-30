@@ -17,7 +17,7 @@ modes. `joint_scene` currently has two reference topologies:
 | Role | Mode | Contract |
 | --- | --- | --- |
 | Default/promoted | FLUX.2 `joint_scene` + `spatial_identity_joint` | Spatial cast plus one identity reference per subject, empty target, one sampler, one decode, deterministic 300-dpi Lanczos output |
-| Selectable/promoted per scope | FLUX.2 `joint_scene` + `regional_identity_joint` | Reference-free global landscape plus one identity-bound physical-card branch per subject, empty target, one sampler, one decode, deterministic 300-dpi Lanczos output |
+| Selectable/promoted for Generation III only | FLUX.2 `joint_scene` + `regional_identity_joint` | Reference-free global landscape plus one identity-bound physical-card branch per subject, empty target, one sampler, one decode, deterministic 300-dpi Lanczos output; broader rollout stopped after the 2026-07-30 audit |
 | Fallback | FLUX.2 `identity_lock` | Two-pass scene construction, immutable source figures, exact opaque-pixel audit, 300-dpi model upscale |
 
 `joint_scene` is the default for new scope manifests. Existing accepted
@@ -150,8 +150,25 @@ contradictory foreground/background switch, although its vegetation mostly
 avoids direct character intersections. This is the leading Generation III
 depth-bias evaluation candidate. After explicit user review it became the first
 promoted `regional_identity_joint` pipeline-v6 asset. The existing spatial-cast
-pipeline v5 remains reproducible for its promoted scopes while those scopes are
-rerendered and reviewed independently.
+pipeline v5 remains reproducible for its promoted scopes.
+
+The subsequent six-scope rerender audit did not approve another regional-v6
+poster. Base1, Generation I, Generation II, and Generation VII produced
+generated frames, repeated horizons, or separate lower-card landscapes.
+ExGen3 Normal changed defining Koraidon/Miraidon anatomy; ExGen3 Mega cropped
+Mega Latias and malformed defining Mega Lucario details. The single allowed
+retry for each of the three frame-only near-passes reproduced the structural
+lower-row split.
+
+The cause is the actual ComfyUI conditioning semantics, not a missing prompt
+sentence. `ConditioningSetDefaultCombine` removes the global default prediction
+inside every complete regional card. Each local branch can therefore invent
+its own terrain and horizon. An isolated additive-combine test restored one
+global scene, but 50/50 global/local prediction averaging destroyed identity;
+a final 2:1 local/global test still changed pose and anatomy and began
+reintroducing a lower panorama. Both experimental code changes were reverted.
+Generation III remains a visually accepted scope-specific result, not evidence
+that regional-v6 is safe to migrate mechanically.
 
 ## Accepted and candidate one-shot contracts
 
@@ -217,15 +234,19 @@ second tracked active bundle is maintained.
 
 1. Treat the spatial-v5 representative rollout as complete: Gen VII, Base1,
    named Mega forms, and a strongly proportionally diverse subject set pass.
-2. Keep all remaining migrations scope-by-scope and review-gated; do not
-   mechanically switch the six accepted fallbacks.
+2. Keep the six spatial-v5 promotions unchanged. Do not run additional
+   regional-v6 seed, prompt, or strength sweeps; the complete representative
+   rerender audit failed to generalize the topology.
 3. Use future requested renders to observe natural near/far landscape
    intersections. Generation III demonstrates that stronger or earlier prose
    can relocate rather than solve a contradictory crossing; do not reopen
    prompt-only depth stress unless new evidence changes the mechanism.
-4. Apply the section workflow to future aggregate variant sections only after
+4. Require any regional successor to preserve one global scene prediction
+   inside the subject zones without averaging away identity. Treat that as a
+   materially different control mechanism, not another prompt tweak.
+5. Apply the section workflow to future aggregate variant sections only after
    their scene briefs and curated subject/reference sets are reviewed.
-5. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
+6. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
    matching physical page formats, memory tests, and visual QA exist.
 
 ## Cleanup boundary
@@ -246,9 +267,9 @@ python -m scripts.poster_assets.validate_promoted_poster --all-enabled
 python -m scripts.poster_assets.poster_work_plan --all-configured
 ```
 
-Verified on 2026-07-29:
+Verified on 2026-07-30:
 
-- `464 passed, 1 skipped`;
+- `474 passed, 1 skipped`;
 - all 13 enabled poster bundles validate;
 - the planner reports all 13 configured targets as current;
 - the Generation VII prompt and workflow still reproduce the reviewed `00018`
