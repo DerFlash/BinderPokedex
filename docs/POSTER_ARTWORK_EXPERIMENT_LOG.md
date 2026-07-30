@@ -961,6 +961,39 @@ every possible occlusion case. The result passes the bounded depth regression
 gate and advances the same topology to the planned Base1 anatomy test; it does
 not replace the promoted Generation-VII poster.
 
+### Base1 anatomy validation
+
+Base1 first used its promoted seed `260726503` with the same graph and
+four-step settings. The input contains exactly one positioned reference each
+for Mewtwo, Bulbasaur, and Charmander. The `432 × 592` Metal/MPS render
+completed in `166.77 s`, but added a second full Mewtwo in the upper sky.
+Workflow SHA-256 is
+`20772ed8c9bc416013f108760da0a798851f958d506b31f7fffcd2c8b057acc7`;
+raw SHA-256 is
+`86a41e25461f694f7024ece3f46d59a7bcd0d53add2cf25020132d5d4351c188`.
+This is a hard count failure and did not earn a large render.
+
+Inspection confirmed that no reference, stale workflow input, or prompt text
+contained a duplicate. One bounded stochastic check therefore changed only
+the seed to `260726504`. Prompt SHA-256 remained
+`46f4e7226b248613ad65cb1fc821657db34cc379169c97cf75b736722b9f3d1d`;
+the three reference SHA-256 values remained
+`f799caa0f7aa65903e869dd6d226dfbd0ae0f2bbb58c6ea27b164e2642e7db9e`,
+`12016f7d3a74c62c7b61fb05d1ad0c248cf36fa23be6bdbe0f9b5e4bdad0dc48`,
+and `19a7a12476f833b59eea8bb64e62043aefe16df263f443ed74485fd50809e6b4`.
+
+| Target | Runtime | Workflow SHA-256 | Raw SHA-256 | Result |
+| --- | --- | --- | --- | --- |
+| 0.25 MP, seed `260726504` | `180.69 s` | `e0bc1ac0dabb412c9963da4b396eb9fd8c660910e91561720ed1bbaa6b2def3b` | `80c05589725984a9dac9269ffd86eef14107230c1d0740eb0262dced7075ee4d` | Exactly three complete subjects and one continuous meadow; Mewtwo's small hand details require the large confirmation |
+| 1 MP, seed `260726504` | `237.56 s` | `ef91a0c0168d64ba44ad8edd4f2b7dc0ca76d68d199f3fac50cc975d5a424aaa` | `aa3b711ddc79adb809244e8967efd587e61b0120e7bbd93959ebae7265faaa26` | Mewtwo retains short cranial nubs, three-digit hand structures, the non-human chest/hip anatomy, feet, continuous tail, and generous card padding; Bulbasaur and Charmander remain recognizable and card-safe |
+
+The retry passes the agent anatomy gate, but seed sensitivity is now explicit:
+the promoted seed duplicates Mewtwo while the adjacent seed does not. The
+current spatial-v5 promotion also renders Mewtwo larger and therefore retains
+some fine source linework more clearly. Human comparison of both physical
+Mewtwo crops remains mandatory before replacement. No Base1 promotion changes
+as part of this experiment.
+
 ### Review record template
 
 Every rendered candidate appends one row containing the exact workflow and

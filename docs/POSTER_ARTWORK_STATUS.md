@@ -241,17 +241,20 @@ second tracked active bundle is maintained.
    intersections. Generation III demonstrates that stronger or earlier prose
    can relocate rather than solve a contradictory crossing; do not reopen
    prompt-only depth stress unless new evidence changes the mechanism.
-4. Review the isolated Generation-I individual-spatial candidate. It replaces
-   the combined cast and regional branches with one positioned full-poster
-   reference per subject while retaining one shared empty target and sampler.
-   If accepted, validate the unchanged topology on Generation VII for depth
-   and Base1 for Mewtwo anatomy before considering production integration.
-5. Require any successor to preserve one global scene prediction inside the
+4. Review the individual-spatial Generation-I, Generation-VII, and Base1
+   candidates together. The unchanged topology passes the Generation-I and
+   Generation-VII agent gates. Base1 passes only after one bounded seed retry;
+   compare its Mewtwo crop with the larger, currently promoted spatial-v5 crop
+   before considering production integration.
+5. Treat seed stability as an explicit review property. A scope may select a
+   reviewed seed, but unbounded seed searching is not an acceptable substitute
+   for reliable count, identity, card containment, and one global scene.
+6. Require any successor to preserve one global scene prediction inside the
    subject zones without averaging away identity. Treat that as a materially
    different control mechanism, not another prompt tweak.
-6. Apply the section workflow to future aggregate variant sections only after
+7. Apply the section workflow to future aggregate variant sections only after
    their scene briefs and curated subject/reference sets are reviewed.
-7. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
+8. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
    matching physical page formats, memory tests, and visual QA exist.
 
 ## Cleanup boundary
