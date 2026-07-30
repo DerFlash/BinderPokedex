@@ -71,6 +71,7 @@ ROOT = Path(__file__).resolve().parents[2]
 POSTER_ASSETS = ROOT / "data" / "poster_assets"
 PROMPT_FILE = "individual_spatial_joint_prompt.generated.txt"
 REFERENCE_PREFIX = "individual_spatial_reference_"
+REFERENCE_MEGAPIXELS = 0.5
 
 
 def _percentage(value: int) -> str:
@@ -88,7 +89,7 @@ def build_individual_reference_prompt(
     *,
     placement_contract: list[dict[str, int]],
 ) -> str:
-    """Describe ordered spatial/detail pairs without a combined cast image."""
+    """Describe one poster-shaped identity and position image per subject."""
     if not items:
         raise ValueError("Individual spatial preflight needs at least one subject")
     if len(items) != len(placement_contract):
@@ -96,7 +97,7 @@ def build_individual_reference_prompt(
 
     roles = []
     bounds = []
-    for subject_index, (item, contract) in enumerate(
+    for image_index, (item, contract) in enumerate(
         zip(items, placement_contract, strict=True),
         start=1,
     ):
@@ -104,15 +105,12 @@ def build_individual_reference_prompt(
             item.get("name_en")
             or f"Pokemon #{item.get('pokemon_id', '?')}"
         )
-        spatial_image = subject_index * 2 - 1
-        detail_image = subject_index * 2
         roles.append(
             (
-                f"IMAGE {spatial_image} is the poster-shaped spatial reference "
-                f"for {name}; it contains exactly one complete {name} at the "
-                "required final pose, orientation, scale, baseline, and poster "
-                f"position. IMAGE {detail_image} is the unscaled identity and "
-                f"anatomy detail for the same {name}."
+                f"IMAGE {image_index} is the sole poster-shaped identity and "
+                f"position reference for {name}. It contains exactly one "
+                f"complete {name} at the required final pose, orientation, "
+                "scale, baseline, and poster position."
             )
         )
         bounds.append(
@@ -126,23 +124,19 @@ def build_individual_reference_prompt(
 
     paragraphs = [
         (
-            f"The {len(items) * 2} supplied images form {len(items)} ordered "
-            "spatial-and-detail pairs. "
-            f"{' '.join(roles)} Each pair describes one member of the same "
-            "final cast, not two subjects. Across all pairs, render exactly "
-            f"{len(items)} characters once each."
+            f"The {len(items)} supplied poster-shaped images describe the "
+            f"complete final cast. {' '.join(roles)} Across all images, render "
+            f"exactly these {len(items)} characters once each."
         ),
         (
-            "Every poster-shaped spatial reference is authoritative only for "
-            "its named character's pose, orientation, target scale, baseline, "
-            "poster coordinates, and outer placement bounds. Every paired "
-            "unscaled detail is authoritative only for that same character's "
-            "exact silhouette, stature, anatomy, face, colors, markings, "
-            "appendages, and defining details. The flat neutral fields are "
-            "empty coordinate space, not sky, terrain, separate pictures, "
-            "panels, cards, or a background plate. Do not paste any reference "
-            "as a foreground layer; redraw all scene and character edges "
-            "together from the empty target."
+            "Each reference is authoritative only for its named character's "
+            "exact identity, silhouette, stature, anatomy, face, colors, "
+            "markings, appendages, pose, orientation, target scale, baseline, "
+            "poster coordinates, and outer placement bounds. The flat neutral "
+            "fields are empty coordinate space, not sky, terrain, separate "
+            "pictures, panels, cards, or a background plate. Do not paste any "
+            "reference as a foreground layer; redraw all scene and character "
+            "edges together from the empty target."
         ),
         (
             "The mandatory normalized final silhouette bounds are "
@@ -210,18 +204,22 @@ def build_individual_spatial_prompt(
         "features, colors, markings, and defining design details."
     )
     replacement_authority = (
-        "The ordered poster-shaped references jointly control cast count, "
-        "pose, orientation, target scale, baseline, and poster position. "
-        "Each corresponding unscaled detail image controls only that named "
-        "character's exact silhouette shape, stature, anatomy, facial "
-        "features, colors, markings, and defining design details."
+        "The ordered individual poster-shaped references jointly control cast "
+        "count. Each named reference controls only that character's pose, "
+        "orientation, target scale, baseline, poster position, exact "
+        "silhouette shape, stature, anatomy, facial features, colors, "
+        "markings, and defining design details."
     )
     if accepted_authority not in prompt:
         raise RuntimeError("Accepted authority paragraph was not found")
-    return prompt.replace(
+    prompt = prompt.replace(
         accepted_authority,
         replacement_authority,
         1,
+    )
+    return prompt.replace(
+        "that character's individual identity reference",
+        "that character's named poster-shaped reference",
     )
 
 
@@ -229,9 +227,9 @@ def write_individual_spatial_references(
     scope: str,
     work_dir: Path,
     *,
-    megapixels: float,
+    megapixels: float = REFERENCE_MEGAPIXELS,
 ) -> list[Path]:
-    """Write one neutral poster-shaped final-position reference per subject."""
+    """Write one neutral poster-shaped identity/position reference per subject."""
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
     manifest = bundle.manifest
     width, height = output_dimensions(scope, megapixels)
@@ -327,14 +325,10 @@ def build_workflow(
         "10": node("KSamplerSelect", sampler_name="euler"),
     }
 
-    reference_names = []
-    for index in range(1, len(items) + 1):
-        reference_names.extend(
-            (
-                f"{REFERENCE_PREFIX}{index}.png",
-                f"identity_reference_{index}.png",
-            )
-        )
+    reference_names = [
+        f"{REFERENCE_PREFIX}{index}.png"
+        for index in range(1, len(items) + 1)
+    ]
     positive_conditioning: list[object] = ["4", 0]
     negative_conditioning: list[object] = ["5", 0]
     for index, reference_name in enumerate(reference_names):
@@ -411,10 +405,12 @@ def prepare_experiment(
         reference_mode="spatial_identity_joint",
     )
     (work_dir / "joint_scene_cast_reference.png").unlink(missing_ok=True)
+    for identity_reference in work_dir.glob("identity_reference_*.png"):
+        identity_reference.unlink()
     write_individual_spatial_references(
         scope,
         work_dir,
-        megapixels=megapixels,
+        megapixels=REFERENCE_MEGAPIXELS,
     )
     prompt = build_individual_spatial_prompt(
         scope,
