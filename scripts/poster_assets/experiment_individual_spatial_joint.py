@@ -287,7 +287,7 @@ def build_workflow(
     vae_name: str = DEFAULT_FLUX_VAE,
     steps: int = DEFAULT_FLUX_STEPS,
 ) -> dict[str, object]:
-    """Build one full-frame sampler with paired position and detail references."""
+    """Build one full-frame sampler from one spatial reference per subject."""
     if steps <= 0:
         raise ValueError("steps must be positive")
     items = load_cutout_items(

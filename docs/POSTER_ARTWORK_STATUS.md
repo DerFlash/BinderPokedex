@@ -241,12 +241,17 @@ second tracked active bundle is maintained.
    intersections. Generation III demonstrates that stronger or earlier prose
    can relocate rather than solve a contradictory crossing; do not reopen
    prompt-only depth stress unless new evidence changes the mechanism.
-4. Require any regional successor to preserve one global scene prediction
-   inside the subject zones without averaging away identity. Treat that as a
-   materially different control mechanism, not another prompt tweak.
-5. Apply the section workflow to future aggregate variant sections only after
+4. Review the isolated Generation-I individual-spatial candidate. It replaces
+   the combined cast and regional branches with one positioned full-poster
+   reference per subject while retaining one shared empty target and sampler.
+   If accepted, validate the unchanged topology on Generation VII for depth
+   and Base1 for Mewtwo anatomy before considering production integration.
+5. Require any successor to preserve one global scene prediction inside the
+   subject zones without averaging away identity. Treat that as a materially
+   different control mechanism, not another prompt tweak.
+6. Apply the section workflow to future aggregate variant sections only after
    their scene briefs and curated subject/reference sets are reviewed.
-6. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
+7. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
    matching physical page formats, memory tests, and visual QA exist.
 
 ## Cleanup boundary
@@ -269,7 +274,7 @@ python -m scripts.poster_assets.poster_work_plan --all-configured
 
 Verified on 2026-07-30:
 
-- `474 passed, 1 skipped`;
+- `476 passed, 1 skipped`;
 - all 13 enabled poster bundles validate;
 - the planner reports all 13 configured targets as current;
 - the Generation VII prompt and workflow still reproduce the reviewed `00018`

@@ -899,6 +899,48 @@ Outcome:
   full-frame scene prediction inside the subject zones; that is a new control
   mechanism, not prompt tuning.
 
+## Individual spatial-reference successor preflight
+
+The next bounded experiment removes both known sources of conflicting scene
+geometry: the combined three-character cast image from spatial v5 and the
+per-card conditioning branches from regional v6. Each subject instead receives
+one neutral, poster-shaped reference containing only its supplied source
+cutout at the canonical final position. All references condition one shared
+text prompt and one empty full-frame FLUX.2 target through a single sampler and
+decode. There are no area conditions, masks, inpainting, decoded composites, or
+post-generation source restoration.
+
+The model, encoder, VAE, four-step sampler, Generation-I seed `260782266`,
+prompt contract, and physical placement profile remained fixed. The experiment
+uses `flux-2-klein-4b-fp8.safetensors`
+(`97ed34fe0567e436200f2faee3939b88f2b5d99f8af2a4dc16532c4245c0ccb6`),
+`qwen_3_4b.safetensors`
+(`6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a`),
+and `flux2-vae.safetensors`
+(`d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5`).
+Every render ran on Metal/MPS.
+
+| Attempt | Isolated change | Result | Decision |
+| --- | --- | --- | --- |
+| Six references, 0.25 MP | Three 0.25-MP poster-position references plus three separate 0.25-MP identity-detail references | The `432 × 592` render completes in `195.95 s` but contains five creatures: the intended three plus an extra green biped and a second Charmander. Raw SHA-256: `ab451373bd2a2d109a9b7391e76c958eb3ef877ad10ebe55eed02d11711df495` | Hard count failure. Commit `131d0ae` retains the reproducible topology; no larger render |
+| Three references, 0.25 MP | Remove the duplicate detail channel and give each subject one 0.5-MP identity-and-position reference | Exactly Bulbasaur, Charmander, and Squirtle appear once in the correct bottom cards. The landscape, contact shadows, and foreground/rear vegetation are continuous. Runtime `150.96 s`; workflow SHA-256 `e09b231268f64c1068e7ecf38338a9bd5d2e91e10adb7cd3a7012a8a65aa4f32`; raw SHA-256 `7323d0d490ea787971c6eeb9569230349a46ea6d009865b2c938b182dfedc746` | Coarse gate passes and earns one 1-MP confirmation |
+| Three references, 1 MP | Keep the successful topology, seed, prompt, reference resolution, model, and sampler unchanged; enlarge only the empty target to `848 × 1168` | Exactly three recognizable starters remain complete with useful card padding. Defining anatomy, markings, poses, and silhouettes remain within the current one-shot tolerance. Foreground blades overlap Bulbasaur and Squirtle while separate rear vegetation remains behind them; shadows and terrain are jointly synthesized. Runtime `206.38 s`; workflow SHA-256 `a09f52d73f44b7a70654c6f96d37d24cf31805c108f14a9ef97427415382b182`; raw SHA-256 `cf80fd3f0a2f909bb1d58ecc7f43c015431e074ff25adb86fdf4bdee785642ae` | Agent preflight passes; user review and representative-scope validation remain required before production integration |
+
+The three successful 0.5-MP references have SHA-256 values
+`b589d1e80fb63ba393a5f7de3bd996c211f1d2bd8d6a4d121f65a8f459236c5d`,
+`ebef71bdc22632759f9e5752e30d43d5850522b544a25b5372b9eeec25e4a921`,
+and `1ce381cbdcb3c6a2d1e39d088472881d2c491aa9d3b1146f3c275bc1c816d5c5`.
+They are deterministic derivatives of the tracked source cutouts and canonical
+placement profile, so they remain ignored scratch files.
+
+This is positive evidence for the materially different control mechanism
+required by the regional-v6 audit, not yet a new default. Spatial v5 remains
+the production default and Generation III remains the sole regional-v6
+promotion. If the Generation-I candidate passes user review, the next bounded
+validation is the unchanged topology on Generation VII (known depth stress)
+and Base1 (Mewtwo anatomy stress). Production integration is justified only if
+both preserve count, identity, card containment, and one global scene.
+
 ### Review record template
 
 Every rendered candidate appends one row containing the exact workflow and
