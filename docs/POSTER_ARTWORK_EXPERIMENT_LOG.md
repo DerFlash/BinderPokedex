@@ -941,6 +941,26 @@ validation is the unchanged topology on Generation VII (known depth stress)
 and Base1 (Mewtwo anatomy stress). Production integration is justified only if
 both preserve count, identity, card containment, and one global scene.
 
+### Generation VII depth validation
+
+User review accepted the Generation-I preflight for continued evaluation. The
+unchanged three-reference topology then used Generation VII's promoted seed
+`260726054`, scene brief, physical placement profile, cutouts, model, encoder,
+VAE, and four-step sampler. Only the scope-specific inputs changed.
+
+| Target | Runtime | Workflow SHA-256 | Raw SHA-256 | Result |
+| --- | --- | --- | --- | --- |
+| 0.25 MP, `432 × 592` | `149.72 s` | `f0f8a196578d0f76e16ff1a6fe6c660af6ca0be1252e6a799e5f32f71277b8ef` | `9b05b903fc8610180d1c7a2b06ab5847fd9ff8924aef0c8d903cae9ca2d5bbbb` | Exactly Rowlet, Litten, and Popplio appear once, complete and inside their assigned cards; one continuous Alola coast earns the 1-MP confirmation |
+| 1 MP, `848 × 1168` | `234.67 s` | `288d5dd20c1ce4a74e8b62e52653e7d2288ad9a783738c202b2b0beb85112d4f` | `45a5aa1103f6f7ccb4190d7c699802e0ca9b083442081a5f4438d010ef9a1392` | Count, defining anatomy, pose, card padding, grounding shadows, and the single global coast pass agent review |
+
+Foreground and rear vegetation occupy coherent depth layers without the
+abruptly terminated blades, separate lower panorama, or card frames seen in
+earlier graphs. The scene does not force a dramatic plant crossing through a
+silhouette, so it demonstrates consistent integration rather than proving
+every possible occlusion case. The result passes the bounded depth regression
+gate and advances the same topology to the planned Base1 anatomy test; it does
+not replace the promoted Generation-VII poster.
+
 ### Review record template
 
 Every rendered candidate appends one row containing the exact workflow and
