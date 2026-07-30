@@ -398,8 +398,8 @@ fingerprint and explicit human review of both the actual raw file and the
 deterministically scaled text-free print artwork. Generation VII candidate
 `00018` passed that gate and is the first promoted `joint_scene` poster; Base1
 candidate `00001` is the second, ExGen3 Mega `00001` is the third, and ExGen3
-Normal `00001` is the fourth, Generation I `00001` is the fifth, and
-Generation II `00001` is the sixth.
+Normal `00001` is the fourth, Generation I `00001` is the fifth, Generation II
+`00001` is the sixth, and Generation III regional-v6 `00001` is the seventh.
 Candidates `00019` and `00020` failed their bounded depth tests and their
 prompt changes were reverted.
 

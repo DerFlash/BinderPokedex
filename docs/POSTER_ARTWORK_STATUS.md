@@ -17,7 +17,7 @@ modes. `joint_scene` currently has two reference topologies:
 | Role | Mode | Contract |
 | --- | --- | --- |
 | Default/promoted | FLUX.2 `joint_scene` + `spatial_identity_joint` | Spatial cast plus one identity reference per subject, empty target, one sampler, one decode, deterministic 300-dpi Lanczos output |
-| Selectable candidate | FLUX.2 `joint_scene` + `regional_identity_joint` | Reference-free global landscape plus one identity-bound physical-card branch per subject, empty target, one sampler, one decode, deterministic 300-dpi Lanczos output |
+| Selectable/promoted per scope | FLUX.2 `joint_scene` + `regional_identity_joint` | Reference-free global landscape plus one identity-bound physical-card branch per subject, empty target, one sampler, one decode, deterministic 300-dpi Lanczos output |
 | Fallback | FLUX.2 `identity_lock` | Two-pass scene construction, immutable source figures, exact opaque-pixel audit, 300-dpi model upscale |
 
 `joint_scene` is the default for new scope manifests. Existing accepted
@@ -40,8 +40,9 @@ in the experiment log and Git history, not in the production runner.
 | `Base1` | `joint_scene` / `spatial_identity_joint` v5 candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `ExGen3/sections/mega` | `joint_scene` / `spatial_identity_joint` v5 candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `ExGen3/sections/normal` | `joint_scene` / `spatial_identity_joint` v5 candidate `00001` | Promoted, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
+| `Pokedex/sections/gen3` | `joint_scene` / `regional_identity_joint` v6 candidate `00001` | Promoted after user review, enabled, 2368 × 3268 px, nine card slices, 300 dpi |
 | `SV03.5` | `identity_lock` | Accepted and enabled |
-| `Pokedex/sections/gen3`–`gen6`, `gen8`, `gen9` | `identity_lock` | Accepted and enabled after their matching generation covers |
+| `Pokedex/sections/gen4`–`gen6`, `gen8`, `gen9` | `identity_lock` | Accepted and enabled after their matching generation covers |
 
 Generation VII `00018` is the first accepted one-shot poster. It uses seed
 `260726054`, the reviewed Rowlet/Litten/Popplio sources, the Alola scene brief,
@@ -120,14 +121,15 @@ stable generation fingerprint is:
 The promoted raw SHA-256 is
 `668d5d732771529e4bb3ce2ff8cf13b6bb58bede9d49c1eace86f459e3fb5c92`.
 
-Generation III remains on its accepted `identity_lock` fallback. A seed change
-fixed an extra-subject failure and produced faithful, card-safe Treecko,
-Torchic, and Mudkip, but a plant rooted at the lower-right foreground passed
-behind Mudkip. Moving the existing depth rule earlier left the contradiction
-unchanged. A final binary foreground rule still left a lower-right blade behind
-Mudkip and additionally produced the same front-to-back jump at Treecko's
-lower-left foreground plant. Prompt-only depth tuning is therefore closed
-after three bounded variants; no global prompt change was adopted.
+Generation III previously remained on its accepted `identity_lock` fallback.
+A seed change had fixed an extra-subject failure and produced faithful,
+card-safe Treecko, Torchic, and Mudkip, but a plant rooted at the lower-right
+foreground passed behind Mudkip. Moving the existing depth rule earlier left
+the contradiction unchanged. A final binary foreground rule still left a
+lower-right blade behind Mudkip and additionally produced the same
+front-to-back jump at Treecko's lower-left foreground plant. Prompt-only depth
+tuning was therefore closed after three bounded variants; no global prompt
+change was adopted.
 
 A later silhouette-free zone-layout A/B kept the Gen III one-shot graph and
 three identity references fixed but replaced the complete spatial cast with
@@ -146,11 +148,10 @@ candidate passes internal visual preflight for count, identity/anatomy, card
 fit, padding, grounding, shadows, safe areas, and visible seams. It contains no
 contradictory foreground/background switch, although its vegetation mostly
 avoids direct character intersections. This is the leading Generation III
-depth-bias evaluation candidate, not yet a production preference. The promoted
-Generation III asset remains `identity_lock` until the topology receives
-promotion-grade human approval; `regional_identity_joint` is implemented as
-selectable pipeline v6, while the existing spatial-cast pipeline v5 remains
-reproducible for its promoted scopes.
+depth-bias evaluation candidate. After explicit user review it became the first
+promoted `regional_identity_joint` pipeline-v6 asset. The existing spatial-cast
+pipeline v5 remains reproducible for its promoted scopes while those scopes are
+rerendered and reviewed independently.
 
 ## Accepted and candidate one-shot contracts
 
@@ -217,7 +218,7 @@ second tracked active bundle is maintained.
 1. Treat the spatial-v5 representative rollout as complete: Gen VII, Base1,
    named Mega forms, and a strongly proportionally diverse subject set pass.
 2. Keep all remaining migrations scope-by-scope and review-gated; do not
-   mechanically switch the seven accepted fallbacks.
+   mechanically switch the six accepted fallbacks.
 3. Use future requested renders to observe natural near/far landscape
    intersections. Generation III demonstrates that stronger or earlier prose
    can relocate rather than solve a contradictory crossing; do not reopen

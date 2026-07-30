@@ -67,7 +67,7 @@ is the accepted cost of exact identity preservation.
 | Architecture | Final scene jointly generated | Identity | Card containment | Scene integration | Role |
 | --- | --- | --- | --- | --- | --- |
 | FLUX.2 Spatial+Identity v5 `joint_scene` | Yes | Gen VII `00018`, Gen I `00001`, Gen II `00001`, Base1 `00001`, ExGen3 Mega `00001`, and ExGen3 Normal `00001` pass the accepted print-detail tolerance | All six promotions pass their physical crops with preferred fill | Coherent grounding and shadows; three bounded Generation III prompt variants relocate rather than solve one contradictory foreground crossing | Default; six scopes promoted |
-| FLUX.2 Regional Identity v6 `joint_scene` | Yes | The Generation III evaluation candidate keeps all three supplied identities within normal one-shot tolerance | All three complete subjects pass their physical bottom-card crops | No contradictory depth switch is visible in internal visual preflight; robustness with true foreground crossings still needs user review and additional scopes | Selectable candidate topology; not a promoted production default |
+| FLUX.2 Regional Identity v6 `joint_scene` | Yes | The promoted Generation III candidate keeps all three supplied identities within normal one-shot tolerance | All three complete subjects pass their physical bottom-card crops | No contradictory depth switch is visible in the user-reviewed promotion; robustness with true foreground crossings still needs additional scopes | Selectable topology with one promoted scope; not the default for new manifests |
 | Two-pass `identity_lock` | No | Exact source pixels | Reliable | Protected lower band can read as a layer | Explicit fallback; seven promoted scopes remain valid |
 | Landscape reference plus joint final pass | Final pass only | Usually strong | Inconsistent | Retained plants can switch depth at silhouettes | Rejected |
 | Direct FLUX edit/inpaint | No | Inconsistent | Inconsistent | Retains cutout/composite artifacts | Rejected |
@@ -96,7 +96,7 @@ is the accepted cost of exact identity preservation.
 | `PA-015` | Aggregate variants receive section-specific scenes and curated subject/reference sets | Ongoing | ExGen3 `normal` and `mega` are accepted; repeat only for reviewed future sections |
 | `PA-015A` | Variant subjects retain their exact form | Done | Selection, cutouts, planner, fingerprints, promotion, and validation bind exact Official Artwork identity |
 | `PA-016` | Post-fetch orchestration detects stale inputs | Done | Read-only planner separates expensive generation drift from cheap overlay/routing changes |
-| `PA-017` | Joint generation can provide natural grounding without losing identity or card safety | Done for six promoted scopes; regional evaluation ongoing | Gen VII `00018`, Gen I `00001`, Gen II `00001`, Base1 `00001`, ExGen3 Mega `00001`, and ExGen3 Normal `00001` are promoted; the regional Generation III candidate passes internal preflight, and every additional scope or reference topology must pass independently |
+| `PA-017` | Joint generation can provide natural grounding without losing identity or card safety | Done for seven promoted scopes; regional rollout ongoing | Six spatial-v5 scopes and Generation III regional-v6 are promoted; every additional scope or reference topology must pass independently |
 | `PA-018` | Runtime remains KISS after experiments | Done | Production exposes only FLUX.2 `joint_scene` and `identity_lock`; regional identity is a conditioning topology inside `joint_scene`, not a third mode; rejected adapters are removed from the runner |
 | `PA-019` | Pull requests prove a release can be built without publishing | Done | PRs validate promotions, build every PDF/archive/manifest, and upload only a temporary artifact |
 | `PA-020` | Raster card geometry closes exactly on every real canvas | Done | Cumulative physical endpoints drive preparation, finalization, slicing, promotion, and validation |
@@ -106,20 +106,20 @@ is the accepted cost of exact identity preservation.
 
 - Thirteen promoted 3×3 bundles are enabled.
 - Generation VII `00018`, Generation I `00001`, Generation II `00001`, Base1
-  `00001`, ExGen3 Mega `00001`, and ExGen3 Normal `00001` are the six promoted
-  `joint_scene` bundles.
-- The other seven bundles remain accepted `identity_lock` fallbacks until
+  `00001`, ExGen3 Mega `00001`, ExGen3 Normal `00001`, and Generation III
+  regional-v6 `00001` are the seven promoted `joint_scene` bundles.
+- The other six bundles remain accepted `identity_lock` fallbacks until
   reviewed one-shot replacements exist.
 - New manifests start with `joint_scene`; existing manifests are never
   mechanically switched because that would invalidate accepted provenance.
 - New manifests continue to use promoted `spatial_identity_joint` conditioning
-  by default. `regional_identity_joint` is an explicit v6 evaluation option
-  until it passes further scope-specific review.
+  by default. `regional_identity_joint` is an explicit v6 option with one
+  promoted scope; further scopes still require independent review.
 - Fetching, planning, PDF building, and CI do not start ComfyUI.
 - Generated candidates are local scratch; only promotion creates tracked input
   for deterministic PDF and release jobs.
-- The spatial-v5 representative rollout is complete. Regional-v6 remains
-  evaluation-only; future migrations stay scope-by-scope and review-gated.
+- The spatial-v5 representative rollout is complete. Regional-v6 is promoted
+  selectively; future migrations stay scope-by-scope and review-gated.
 - Wide PDF formats and remaining aggregate variant sections are explicit
   roadmap items.
 

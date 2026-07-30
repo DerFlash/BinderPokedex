@@ -208,8 +208,9 @@ No connected plant changes arbitrarily from behind to in front. Vegetation
 mostly avoids direct subject intersections, so this result removes the known
 contradiction but does not yet prove reliable foreground occlusion across
 different scenes. It is the leading Generation III depth-bias evaluation
-candidate; Generation III stays on the accepted `identity_lock` asset until the
-implemented topology is reviewed by the user and promoted deliberately.
+candidate. The user approved it on 2026-07-30; it was then promoted
+transactionally as the first `regional_identity_joint` pipeline-v6 asset with
+the recorded raw, print, prompt, workflow, reference, and source hashes.
 
 ## Base1 / FLUX.2 Klein rollout
 
