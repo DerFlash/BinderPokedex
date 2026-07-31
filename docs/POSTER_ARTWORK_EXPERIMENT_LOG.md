@@ -1073,6 +1073,31 @@ anatomy, physical-card fit, one-scene continuity, grounding, or shadows regress.
 Until that trigger occurs, the simpler individual-spatial one-shot remains the
 only topology under evaluation.
 
+### Generation VII clarified-depth continuation
+
+The user clarified that visible foreground overlap is optional: clean
+separation and one physically consistent overlap both pass. With prompt,
+references, model, encoder, VAE, graph, four-step sampler, and all placement
+geometry fixed, the continuation changed only the seed. Prompt SHA-256 is
+`059c8e0bf05c778c4c6c48eb9bc9bcc0a74849f6b1a60662b580da141f322d78`
+at 0.25 MP and
+`6c5966d0a5aab04bce23d6c05a85aa9b5aba78bd328b258d2b301b42b86e0860`
+at 1 MP. The three positioned references remain byte-identical to the hashes
+recorded above.
+
+| Target | Runtime | Workflow SHA-256 | Raw SHA-256 | Result |
+| --- | --- | --- | --- | --- |
+| 0.25 MP, seed `260726057` | `168.91 s` | `f3a730fa6f2f001de8eed81a269edb406cf49e6f1853ee59302b734aa5fa2e2c` | `38102c026d2e37185c574eaa07ca207be519cbe2eedd54776d2c4e0f4a13d0a4` | Exactly three card-safe subjects and clean Popplio/vegetation separation; earns the required 1-MP check |
+| 1 MP, seed `260726057` | `202.11 s` | `4d4c2c4f440e860cb27046a73f6fbe123f49b35e8a5d7c9b988cf37b6b1e7176` | `f92a731fd1359049a5011a51387d8bda26b9bf32de91ff9bb7c2f92b3b6457c5` | Adds a fourth Litten-like subject above the bottom row; rejected on the exact-count gate before depth review |
+| 0.25 MP, seed `260726058` | `158.58 s` | `09d819f3f5572438b5295ec8c66e3429a78043fe19d6f6d4ddf0321a57d2cdbf` | `9a6989a011ae35959e71860b7d7be430691f2c5b8c224d2922a3c81e43f721aa` | Exactly Rowlet, Litten, and Popplio appear once in the correct physical cards; one open Alola grass plane and clean right-card separation earn the 1-MP check |
+| 1 MP, seed `260726058` | `201.44 s` | `78071e50dc7dd3d49dd4795e6819c82ba59b537d54ec387aa7fef8664dd3eac0` | `d9aa528feba024ca1db3f12c038da134e324a13dd07b3a71e4271ea579f54cbb` | Exactly three faithful subjects, complete silhouettes, useful card padding, coherent contact shadows, and one Alola scene; the large right plant remains consistently behind Popplio and the nearer bottom leaf stays clear |
+
+Seed `260726058` is the preferred Generation-VII individual-spatial candidate
+after agent review. It satisfies coherent depth through clean separation at the
+remaining risky foreground boundary rather than by forcing a crossing. Further
+seed searching is closed pending direct human review, and the deferred explicit
+guide remains inactive. The promoted production asset is unchanged.
+
 ### Base1 anatomy validation
 
 Base1 first used its promoted seed `260726503` with the same graph and

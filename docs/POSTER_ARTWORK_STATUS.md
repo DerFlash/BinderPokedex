@@ -251,18 +251,24 @@ second tracked active bundle is maintained.
    discontinuity in human review. The second bounded seed-only retry
    `260726056` preserves count, anatomy, card fit, and one global scene, but
    human review still finds a lower-right blade slipping behind Popplio. There
-   is no accepted individual-spatial Gen-VII successor. A reciprocal 1-MP
-   scene swap then rendered Popplio cleanly in the Generation-I meadow and
-   Squirtle cleanly in Alola, proving that neither scene language nor subject
-   alone is sufficient to cause the failure. Base1 passes only after one
-   bounded seed retry; compare its Mewtwo crop with the larger, currently
-   promoted spatial-v5 crop before considering production integration.
+   was no accepted individual-spatial Gen-VII successor at that point. A
+   reciprocal 1-MP scene swap then rendered Popplio cleanly in the Generation-I
+   meadow and Squirtle cleanly in Alola, proving that neither scene language
+   nor subject alone is sufficient to cause the failure. After clean separation
+   was explicitly accepted as coherent depth, seed `260726057` failed at 1 MP
+   by adding a fourth Litten-like subject; seed `260726058` passes the complete
+   agent gate with exactly three faithful, card-safe subjects and no broken
+   landscape intersection. It is the preferred Generation-VII review candidate
+   but still needs direct human confirmation before promotion. Base1 passes
+   only after one bounded seed retry; compare its Mewtwo crop with the larger,
+   currently promoted spatial-v5 crop before considering production
+   integration.
 5. Treat seed stability as an explicit review property. A scope may select a
    reviewed seed, but unbounded seed searching is not an acceptable substitute
    for reliable count, identity, card containment, one global scene, and
-   coherent depth. Under the clarified depth contract, one further bounded
-   Gen-VII seed may pass either through clean separation or through one
-   consistent overlap; it need not manufacture a foreground crossing.
+   coherent depth. The clarified-depth continuation is closed at seed
+   `260726058`; do not continue Gen-VII seed searching unless human review
+   rejects that candidate for a new, concrete hard-gate defect.
 6. Treat the reciprocal scene swap as a diagnostic, not a prompt candidate.
    Scene wording can move broad foreground objects away from the character
    band, but this avoids a collision rather than controlling its z-order. If a
