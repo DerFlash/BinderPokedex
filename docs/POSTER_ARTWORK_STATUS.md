@@ -279,10 +279,11 @@ second tracked active bundle is maintained.
    sampler; treat it as a materially different mechanism, not another prompt
    tweak.
 7. Continue the legacy-scope rollout one reviewed scope at a time. Generation
-   IV seed `260734875` passes the individual-spatial 0.25-MP and 1-MP agent
-   gates with exactly Turtwig, Chimchar, and Piplup in one Sinnoh scene; it is
-   ready for direct human review, while the promoted `identity_lock` asset
-   remains unchanged.
+   IV seed `260734875` passes with exactly Turtwig, Chimchar, and Piplup in one
+   Sinnoh scene. Generation V seeds `260735038` and `260735039` both pass after
+   enlarged source comparison; `260735039` is preferred for clearer Snivy and
+   Oshawott details. Both scopes are ready for direct human review, while their
+   promoted `identity_lock` assets remain unchanged.
 8. Apply the section workflow to future aggregate variant sections only after
    their scene briefs and curated subject/reference sets are reviewed.
 9. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until

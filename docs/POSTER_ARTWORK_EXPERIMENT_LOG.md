@@ -1154,6 +1154,33 @@ after agent review. No prompt or topology retry is warranted before direct
 human review. The promoted Generation-IV `identity_lock` asset remains
 unchanged.
 
+### Generation V legacy-scope preflight
+
+Generation V reused its Unova riverside scene, placement profile, source
+cutouts, and unchanged individual-spatial graph. Prompt SHA-256 is
+`f4d79dd26b857797d6c07de88872400a262ea9e47cfa7176531a012f5911b18a`
+at 0.25 MP and
+`55a89c3b363dfbced414edb47be627dea17b921566ca8008c0490c12310bee70`
+at 1 MP. The positioned Snivy, Tepig, and Oshawott reference SHA-256 values are
+`50bbc1f9eed5145b99c28ed721970e132f21c183f731ff221d05ff2ba4911e20`,
+`c235bf3acc4c7bed3f4a188c307325194831e04798868c42e9364f8f96b30879`,
+and `8645b1173c45d5128c79ce610046092c084a9d4d2fdb3f69ff704085bc7c4512`.
+
+| Target | Runtime | Workflow SHA-256 | Raw SHA-256 | Result |
+| --- | --- | --- | --- | --- |
+| 0.25 MP, seed `260735038` | `158.26 s` | `77d4a5b50ec6c2b3340749ebddfeca8b9946ba329cf52b1c9c8329b2e95ffa0d` | `7109c27b3fca6f5d950ca6d0e3e9a3e1cf07318e44006cab28adc28ae088f609` | Exactly three correctly assigned, card-safe subjects and one continuous riverside park; earns the 1-MP check |
+| 1 MP, seed `260735038` | `203.96 s` | `6d1589366b8271f529337197ff6e0d27189459cba8de072720c61484996aacfd` | `ab402831038a99fb4c7fb02afa336be939c0dd80d90aa68aa8e89320c2006160` | Count, card fit, scene, grounding, and depth pass. A first small-preview inspection incorrectly suspected a missing Snivy arm; the enlarged physical crop confirms both arms and hands are present |
+| 0.25 MP, seed `260735039` | `149.45 s` | `bc5ad3635c53244439e462fbb2c98033b01186bc96ae0e91ef28ea9561673604` | `7854107682efbb9302ac03a2d3361308287ad8fb1349f80da4156f6da7e4149a` | Exactly three complete subjects, correct physical cards, and one continuous Unova park; earns the 1-MP check |
+| 1 MP, seed `260735039` | `213.83 s` | `a4a827536b289d05235c34fe02db2680e7980504b97bf6e77b3b7a275eb75efb` | `056184234c953e038ef23680e6a863fae5a4c5874c38f1afc6bf973da2afa720` | Both Snivy arms and hands, Tepig's ears, legs, snout, and curled tail, and Oshawott's shell, limbs, facial structure, and tail remain readable; all three fit their cards with coherent shadows and clean landscape separation |
+
+Both seeds pass the agent hard gates after enlarged crop review. Seed
+`260735039` is preferred because Snivy's two hands and Oshawott's reference pose
+read more clearly at card size, while the park and skyline remain balanced.
+The retry was caused by an agent preview-reading error rather than a confirmed
+model defect; no Snivy-specific prompt note or code path was added. The
+promoted Generation-V `identity_lock` asset remains unchanged pending direct
+human review.
+
 ### Review record template
 
 Every rendered candidate appends one row containing the exact workflow and
