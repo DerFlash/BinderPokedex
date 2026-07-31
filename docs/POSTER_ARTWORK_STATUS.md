@@ -199,9 +199,12 @@ identity with pixel equality. Review covers cast count, exact form, anatomy,
 face, markings, silhouette, pose, card fit, grounding, shadows, coherent depth,
 safe text cells, and every physical card crop.
 
-Natural foreground overlap is allowed but not forced. A coherent open patch of
-terrain is preferable to a plant that changes front/behind order or terminates
-at a subject boundary. Candidates `00019` and `00020` showed that more prompt
+Natural foreground overlap is allowed but not forced. At every potential
+landscape/character interaction, either the connected landscape object stays
+fully clear of the character or it keeps one plausible front/behind order for
+its entire visible intersection. Both outcomes pass; a plant that changes
+front/behind order or terminates at a subject boundary fails. Candidates
+`00019` and `00020` showed that more prompt
 pressure did not create reliable crossings and could instead add a duplicate
 character. The later Base1 `joint_scene/00002` A/B showed that even conservative
 deduplication of repeated authority prose can add a duplicate fourth subject.
@@ -257,14 +260,18 @@ second tracked active bundle is maintained.
 5. Treat seed stability as an explicit review property. A scope may select a
    reviewed seed, but unbounded seed searching is not an acceptable substitute
    for reliable count, identity, card containment, one global scene, and
-   coherent depth. Pause further Gen-VII seed-only retries after the same
-   Popplio depth failure in seeds `260726054` through `260726056`.
+   coherent depth. Under the clarified depth contract, one further bounded
+   Gen-VII seed may pass either through clean separation or through one
+   consistent overlap; it need not manufacture a foreground crossing.
 6. Treat the reciprocal scene swap as a diagnostic, not a prompt candidate.
    Scene wording can move broad foreground objects away from the character
-   band, but this avoids a collision rather than controlling its z-order. Any
-   successor that guarantees such crossings must add an explicit depth or
-   occlusion signal while preserving one global scene and subject identity;
-   treat that as a materially different mechanism, not another prompt tweak.
+   band, but this avoids a collision rather than controlling its z-order. If a
+   bounded normal candidate can achieve neither clean separation nor a
+   consistent overlap, the next experiment may add the minimal depth/occlusion
+   guide defined in the experiment log. The guide remains deferred and must
+   preserve one global scene, the existing identity inputs, and one final
+   sampler; treat it as a materially different mechanism, not another prompt
+   tweak.
 7. Apply the section workflow to future aggregate variant sections only after
    their scene briefs and curated subject/reference sets are reviewed.
 8. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until

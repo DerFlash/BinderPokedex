@@ -36,10 +36,10 @@ gates at the same time:
 | One model-owned final scene | Hard | The final pass starts from an empty target and generates landscape and characters together; no character pixels are composited, restored, moved, or replaced after decode |
 | Character identity | Hard | Cast count, exact form, pose, stature, silhouette, defining anatomy, face, colors, and markings match the supplied references without invented or missing traits |
 | Physical card containment | Hard | Every complete character and appendage remains inside its assigned bottom-row card in the actual print raster, with visually appropriate padding |
-| Coherent scene depth | Hard | Shadows and ground contact agree; every connected landscape element keeps a physically plausible front/behind relationship instead of ending at or weaving around a character |
+| Coherent scene depth | Hard | Shadows and ground contact agree. A connected landscape element either stays clear of a character or keeps one physically plausible front/behind relationship for its entire visible intersection; ending at a silhouette or switching depth around it fails |
 | Deterministic print output | Hard | Text-free output reaches the exact configured 300-dpi dimensions through deterministic resampling; typography, logo, slicing, and PDF use remain deterministic |
 | Set-specific scene quality | Preferred | The result is attractive, recognizable for the scope, and preserves the requested text-safe regions |
-| Visible foreground overlap | Preferred | Natural foreground overlap may occur, but is not required. A coherent open patch is preferable to a forced contradictory overlap |
+| Visible foreground overlap | Preferred | Natural foreground overlap may occur, but is not required. Clean separation and one coherent overlap are equally valid; both are preferable to a forced contradictory overlap |
 
 Minor print-scale simplification of a non-defining line may be accepted only
 after direct comparison at final card size. A changed body-part count, facial

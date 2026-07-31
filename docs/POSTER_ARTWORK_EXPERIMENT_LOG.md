@@ -1049,6 +1049,30 @@ production prompt, a new default, or a promotion. A guaranteed foreground
 crossing would require a materially different explicit depth or occlusion
 control.
 
+#### Deferred minimal depth/occlusion guide
+
+The acceptance contract does not require a foreground crossing. A candidate
+passes when every connected landscape object either remains entirely clear of
+the character or keeps one physically plausible front/behind order for its
+whole visible intersection. Abrupt termination at a silhouette and switching
+between front and rear along the same object remain hard failures.
+
+A minimal explicit guide is therefore reserved as a future experiment, not an
+active workflow branch. It is triggered only when a bounded normal candidate
+for a scope can achieve neither clean separation nor coherent overlap. The
+guide may encode only coarse `near`, `subject`, and `far` depth ownership around
+the three final subject zones. The existing three positioned identity
+references remain authoritative for identity and placement; generation still
+starts from one empty full-frame target and ends in one sampler and one decode.
+The guide must contain no landscape texture, scene plate, character pixels, or
+post-decode composite.
+
+The experiment is intentionally bounded: one 0.25-MP binding check followed by
+at most one 1-MP confirmation. It is rejected immediately if count, defining
+anatomy, physical-card fit, one-scene continuity, grounding, or shadows regress.
+Until that trigger occurs, the simpler individual-spatial one-shot remains the
+only topology under evaluation.
+
 ### Base1 anatomy validation
 
 Base1 first used its promoted seed `260726503` with the same graph and
