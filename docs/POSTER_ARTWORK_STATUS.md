@@ -248,17 +248,23 @@ second tracked active bundle is maintained.
    discontinuity in human review. The second bounded seed-only retry
    `260726056` preserves count, anatomy, card fit, and one global scene, but
    human review still finds a lower-right blade slipping behind Popplio. There
-   is no accepted individual-spatial Gen-VII successor. Base1 passes only after
-   one bounded seed retry; compare its Mewtwo crop with the larger, currently
+   is no accepted individual-spatial Gen-VII successor. A reciprocal 1-MP
+   scene swap then rendered Popplio cleanly in the Generation-I meadow and
+   Squirtle cleanly in Alola, proving that neither scene language nor subject
+   alone is sufficient to cause the failure. Base1 passes only after one
+   bounded seed retry; compare its Mewtwo crop with the larger, currently
    promoted spatial-v5 crop before considering production integration.
 5. Treat seed stability as an explicit review property. A scope may select a
    reviewed seed, but unbounded seed searching is not an acceptable substitute
    for reliable count, identity, card containment, one global scene, and
    coherent depth. Pause further Gen-VII seed-only retries after the same
    Popplio depth failure in seeds `260726054` through `260726056`.
-6. Require any successor to preserve one global scene prediction inside the
-   subject zones without averaging away identity. Treat that as a materially
-   different control mechanism, not another prompt tweak.
+6. Treat the reciprocal scene swap as a diagnostic, not a prompt candidate.
+   Scene wording can move broad foreground objects away from the character
+   band, but this avoids a collision rather than controlling its z-order. Any
+   successor that guarantees such crossings must add an explicit depth or
+   occlusion signal while preserving one global scene and subject identity;
+   treat that as a materially different mechanism, not another prompt tweak.
 7. Apply the section workflow to future aggregate variant sections only after
    their scene briefs and curated subject/reference sets are reviewed.
 8. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until

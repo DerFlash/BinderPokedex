@@ -1017,6 +1017,38 @@ review. Further seed-only searching is paused rather than treated as a control
 mechanism. None of these experiments changes the promoted Generation-VII
 asset.
 
+### Generation I / VII cross-scene diagnostic
+
+A bounded reciprocal A/B tested whether the Alola scene description alone
+causes the Popplio depth failure. Each pair kept its cast, positioned
+references, seed, dimensions, model, encoder, VAE, four-step sampler, and
+individual-spatial graph unchanged. Only the complete `artwork.scene` mapping
+was copied from the other scope; no depth sentence or subject constraint was
+added.
+
+| Cast and substituted scene | Target | Runtime | Workflow SHA-256 | Prompt SHA-256 | Raw SHA-256 | Agent result |
+| --- | --- | --- | --- | --- | --- | --- |
+| Generation VII cast, Generation-I scene | 0.25 MP | `218.52 s` | `3baaecd29ddc0e3a4f497bfd5dcd6af38d3b2495d4e26cd62688b6dd8005dda3` | `072d6f19a75da95ba5f19afb6b4dc4df95f509c87bc583c3ee424e5db366b1c3` | `151999677465e4393ca03f5fd363ef49fce22bb360484095fbcbd6739e0c45c5` | Exactly three complete subjects; fine meadow vegetation avoids the Popplio flipper |
+| Generation VII cast, Generation-I scene | 1 MP | `242.08 s` | `77aef37d8d67f9adef4488b9343225e25692a1bb42168c836ed3c17fea476d8f` | `28c97c1dcff116cd9d613fc0a0cd31d28ec6c9547df9cb542ad4a98748d09406` | `aa790d0d88018e4875138afb905a57a36220666d55f86a9f6582870dff668c47` | Count, anatomy, card fit, and one scene pass; the continuous fine foreground remains outside Popplio's flipper without a broken intersection |
+| Generation-I cast, Generation-VII scene | 0.25 MP | `189.60 s` | `daff0d30dc0813bbd5faaeb499a4cffefdd2a1d62435eb0375fa78b75b1f06ff` | `73898f02e74e21c51cbacbfddc6b80521986e6e2e385c102c30b9ebc35b0cd89` | `4f92d3757d167c6df5d7fe9df0412a58f8144be4705db8776261e6b894955f18` | Exactly three complete subjects; broad tropical foliage frames the cast without a direct right-card crossing |
+| Generation-I cast, Generation-VII scene | 1 MP | `229.67 s` | `0afadc134982a2e7d5f091b4fa8c85831de22ee98ce1ccea02bc12d89731ce1f` | `0dd53e728024aa98093251dc21f3c83ed022cc1f776ac4e9eee92a54fed6ece2` | `77cbc4a4b280e09b2a5835e88a0160aa521506fbce7818bc85fcbb8f8ee3c8f6` | Count, anatomy, card fit, and one Alola scene pass; the lower-right tropical cluster retains one coherent relationship at Squirtle's tail without the Popplio-style front/back jump |
+
+The 0.25-MP outputs are useful only for count and gross composition: the
+accepted Generation-I control develops its reviewed small foreground
+crossings only at 1 MP. The paired 1-MP results show that meadow language can
+remove the problematic Popplio collision, but Alola language does not by
+itself break Squirtle. Neither the scene nor the subject is therefore a
+sufficient cause. The failure is specific to the interaction between
+Popplio's low extended flipper, the sampled Alola plant geometry, and
+conditioning that contains no explicit z-order signal.
+
+Scene wording can reduce risky intersections by generating a continuous low
+character band or moving broad foliage toward the frame, but that is collision
+avoidance rather than depth control. The diagnostic does not justify a new
+production prompt, a new default, or a promotion. A guaranteed foreground
+crossing would require a materially different explicit depth or occlusion
+control.
+
 ### Base1 anatomy validation
 
 Base1 first used its promoted seed `260726503` with the same graph and
