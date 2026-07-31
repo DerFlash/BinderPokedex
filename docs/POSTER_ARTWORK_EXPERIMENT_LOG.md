@@ -1251,6 +1251,31 @@ after agent review. No landscape element creates a broken subject intersection,
 and no retry or explicit occlusion guide is warranted before human review. The
 promoted Generation-IX `identity_lock` asset remains unchanged.
 
+### SV03.5 legacy-scope preflight
+
+The final legacy scope reused its Kanto coastal-meadow scene, seed `260726101`,
+placement profile, Bulbasaur/Charmander/Squirtle cutouts, and unchanged
+individual-spatial graph. Prompt SHA-256 is
+`d615f31a6529df2264ffb3a6de810ba99e3d86476999cd8e7e05569b694cc379`
+at 0.25 MP and
+`d43964bdd6a834a76af04c414f9bc24bb23d3471dd91a00ea849817e4296772b`
+at 1 MP. The three positioned reference SHA-256 values are
+`b589d1e80fb63ba393a5f7de3bd996c211f1d2bd8d6a4d121f65a8f459236c5d`,
+`ebef71bdc22632759f9e5752e30d43d5850522b544a25b5372b9eeec25e4a921`,
+and `1ce381cbdcb3c6a2d1e39d088472881d2c491aa9d3b1146f3c275bc1c816d5c5`.
+
+| Target | Runtime | Workflow SHA-256 | Raw SHA-256 | Result |
+| --- | --- | --- | --- | --- |
+| 0.25 MP | `146.67 s` | `e782b3436441bba1cc94ba990f68aeca19ba28cb9583427a7373594d7f47c775` | `818d85566ec47732a7eac7464bec25e534631c1351529802c234ac6b30441096` | Exactly Bulbasaur, Charmander, and Squirtle once in the correct physical cards, one continuous coastal meadow, and a calm upper logo area; earns the 1-MP check |
+| 1 MP | `218.89 s` | `3774244de3731885307cf9f43d3e2e5c0102318a93b96c6d400bd8bed42c464c` | `0cd3e8a3b391e652aa53e97e6bc2932b40c41abaf840837b8791a7a0fc9d0043` | All three sources retain defining face, anatomy, markings, appendages, and pose within the accepted print-detail tolerance; card padding, contact shadows, coherent grasses, bay depth, and the text-free logo area pass |
+
+Seed `260726101` is the preferred `SV03.5` individual-spatial candidate after
+agent review. The deterministic German finalizer then places the tracked
+`Karmesin & Purpur 151` logo and release-information block without changing any
+artwork or character pixel. No generated text, extra character, or broken
+landscape intersection appears. The promoted `SV03.5` `identity_lock` asset
+remains unchanged pending direct human review.
+
 ### Review record template
 
 Every rendered candidate appends one row containing the exact workflow and

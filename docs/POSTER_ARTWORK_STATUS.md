@@ -287,9 +287,11 @@ second tracked active bundle is maintained.
    dense flower-depth review. Generation VIII seed `260715405` passes directly
    with exactly Grookey, Scorbunny, and Sobble in one coherent Galar scene.
    Generation IX seed `260778637` likewise passes directly with all defining
-   details of Sprigatito, Fuecoco, and Quaxly. All five generation scopes are
-   ready for direct human review, while their promoted `identity_lock` assets
-   remain unchanged.
+   details of Sprigatito, Fuecoco, and Quaxly. `SV03.5` seed `260726101` also
+   passes with the Kanto trio, coastal set scene, clear logo area, and verified
+   deterministic German logo/info overlay. Every previously remaining
+   `identity_lock` scope now has a preferred individual-spatial candidate ready
+   for direct human review; all promoted assets remain unchanged.
 8. Apply the section workflow to future aggregate variant sections only after
    their scene briefs and curated subject/reference sets are reviewed.
 9. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
