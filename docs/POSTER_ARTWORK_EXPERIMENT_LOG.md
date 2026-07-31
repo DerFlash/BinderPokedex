@@ -1131,6 +1131,29 @@ some fine source linework more clearly. Human comparison of both physical
 Mewtwo crops remains mandatory before replacement. No Base1 promotion changes
 as part of this experiment.
 
+### Generation IV legacy-scope preflight
+
+The first legacy `identity_lock` scope reused its existing Sinnoh scene brief,
+seed `260734875`, cutouts, placement profile, FLUX.2 model, encoder, VAE, and
+four-step sampler in the unchanged individual-spatial graph. Prompt SHA-256 is
+`56b65aaf1d3fb46197221b047c3b2c603fb4141170bb383efccfb3416d01d179`
+at 0.25 MP and
+`9448f8819d78d1f0931c2fa36586b40d9cc6cb48a61e72b648755dbb17ebd85f`
+at 1 MP. The positioned Turtwig, Chimchar, and Piplup reference SHA-256 values
+are `6f7e227e97e97c5f2e101dddab82418717d89c99a180ce62b3228f9c5c284c22`,
+`a9a7f2220fb8c6645cd64513729a6ec02c63d52e168838909c65654e104294e3`,
+and `876ea00e42025594ae420021e31870a0e0a4ad2d718b87ba8e72be8c1508b7a1`.
+
+| Target | Runtime | Workflow SHA-256 | Raw SHA-256 | Result |
+| --- | --- | --- | --- | --- |
+| 0.25 MP | `150.23 s` | `60bbc5e58e058829e13a6e850cb62aac199cec1f6cd77e85ce7acb4dce1a6736` | `eebec824263e6e6640760e8041d751203e4337d7e572debc1c11f6b063b5f1c5` | Exactly three complete subjects in the correct physical cards, one continuous alpine meadow and lake, and no gross identity or depth defect; earns the 1-MP check |
+| 1 MP | `199.28 s` | `741a0c79482f03b1318dec608faff5a3414338a6b1eeb87dfc6451da2bbac907` | `17ffc408f9dba4ec634e18b740620de305c95ecb9c1f8e0abccdbe3dbb56e63e` | Turtwig, Chimchar, and Piplup retain their defining anatomy, faces, markings, appendages, and poses within the accepted print-detail tolerance; all three have useful card padding, contact shadows, and coherent landscape separation |
+
+Seed `260734875` is the preferred Generation-IV individual-spatial candidate
+after agent review. No prompt or topology retry is warranted before direct
+human review. The promoted Generation-IV `identity_lock` asset remains
+unchanged.
+
 ### Review record template
 
 Every rendered candidate appends one row containing the exact workflow and

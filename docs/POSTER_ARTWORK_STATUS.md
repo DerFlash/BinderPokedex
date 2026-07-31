@@ -278,9 +278,14 @@ second tracked active bundle is maintained.
    preserve one global scene, the existing identity inputs, and one final
    sampler; treat it as a materially different mechanism, not another prompt
    tweak.
-7. Apply the section workflow to future aggregate variant sections only after
+7. Continue the legacy-scope rollout one reviewed scope at a time. Generation
+   IV seed `260734875` passes the individual-spatial 0.25-MP and 1-MP agent
+   gates with exactly Turtwig, Chimchar, and Piplup in one Sinnoh scene; it is
+   ready for direct human review, while the promoted `identity_lock` asset
+   remains unchanged.
+8. Apply the section workflow to future aggregate variant sections only after
    their scene briefs and curated subject/reference sets are reviewed.
-8. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
+9. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
    matching physical page formats, memory tests, and visual QA exist.
 
 ## Cleanup boundary
