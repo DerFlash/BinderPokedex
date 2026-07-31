@@ -282,8 +282,10 @@ second tracked active bundle is maintained.
    IV seed `260734875` passes with exactly Turtwig, Chimchar, and Piplup in one
    Sinnoh scene. Generation V seeds `260735038` and `260735039` both pass after
    enlarged source comparison; `260735039` is preferred for clearer Snivy and
-   Oshawott details. Both scopes are ready for direct human review, while their
-   promoted `identity_lock` assets remain unchanged.
+   Oshawott details. Generation VI seed `260758583` duplicates Fennekin only at
+   1 MP and fails; adjacent seed `260758584` passes count, identity, cards, and
+   dense flower-depth review. All three scopes are ready for direct human
+   review, while their promoted `identity_lock` assets remain unchanged.
 8. Apply the section workflow to future aggregate variant sections only after
    their scene briefs and curated subject/reference sets are reviewed.
 9. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until

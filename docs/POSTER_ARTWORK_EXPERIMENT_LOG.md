@@ -1181,6 +1181,30 @@ model defect; no Snivy-specific prompt note or code path was added. The
 promoted Generation-V `identity_lock` asset remains unchanged pending direct
 human review.
 
+### Generation VI legacy-scope preflight
+
+Generation VI reused its Kalos flower-country scene, placement profile,
+cutouts, and unchanged individual-spatial graph. Prompt SHA-256 is
+`c9e7a5888777cba28b0bb0de410d03c69164ee1cc7bc318342efa78c181fb8b2`
+at 0.25 MP and
+`ffd806d05ea09c98d046b16c842c70206ecde89f5e92dafa70162d4a7076abd9`
+at 1 MP. The positioned Chespin, Fennekin, and Froakie reference SHA-256 values
+are `ec2aea81a7c1bbe93c115849ee6c30085e483c3c27b027b37d88c91d39e9af49`,
+`b5dc948e3d2f0404437d5d4e97c9429ba96f3c6aac055133677d044470873ae7`,
+and `4fe8995e00067ccfafe55a38cfaf87308521ffbb6bd9c0d5890dc6cb02b3ceee`.
+
+| Target | Runtime | Workflow SHA-256 | Raw SHA-256 | Result |
+| --- | --- | --- | --- | --- |
+| 0.25 MP, seed `260758583` | `148.95 s` | `e34ca743c7bb3597829cb39cb8394eed2514979670da5f5bd6ae2f8c26e56927` | `9ee4effc185e24d553f6aaefdf20a86452bc150bb8088bba48e4d25f8881caeb` | Exactly three card-safe subjects and one coherent flower meadow; earns the required 1-MP check |
+| 1 MP, seed `260758583` | `200.94 s` | `f46c1cb36e83f972eabdbf1d6966cde488f8867a82127c18fa6e56c32b77db43` | `0c8b56472171ad88ec75ec595cbb7858156a24ad0ed62bb965acfaaa2ffdcb27` | Adds a second full Fennekin above the bottom row; rejected on the exact-count gate before anatomy or depth promotion |
+| 0.25 MP, seed `260758584` | `150.49 s` | `68200c36d3acdc8b7e60b47f9e1bed082fdc313283e46892becfc9b9d8315260` | `f73ec2dafe8cb61d3f97d48d428108f425570e2c12fa52d5a0df021bc1ea324f` | Exactly Chespin, Fennekin, and Froakie once, complete in their physical cards and surrounded by one continuous Kalos meadow; earns the 1-MP check |
+| 1 MP, seed `260758584` | `217.84 s` | `7b6fd9246730a1c4f49b73dc26201743b83c13fa115b379b98b0c2aadcbd4509` | `b16afecbc9a3cd45039ae4eea2a26279832f7121941e0d09a0cf76a31006d4f8` | Exactly three faithful subjects with card padding, grounding, and shadows; dense flowers either stay clear or retain one plausible depth layer around the silhouettes |
+
+Seed `260758584` is the preferred Generation-VI individual-spatial candidate
+after agent review. The normal graph resolves even its dense flower foreground
+without the deferred explicit occlusion guide. The promoted Generation-VI
+`identity_lock` asset remains unchanged pending direct human review.
+
 ### Review record template
 
 Every rendered candidate appends one row containing the exact workflow and
