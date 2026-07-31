@@ -244,12 +244,14 @@ second tracked active bundle is maintained.
 4. Review the individual-spatial Generation-I, Generation-VII, and Base1
    candidates together. Generation I passes its agent gate. Generation VII's
    first seed `260726054` has one user-found foreground blade ending at
-   Popplio; the bounded seed-only retry `260726055` removes that defect while
-   retaining count, anatomy, card fit, and one global scene, and is now the
-   preferred experimental Gen-VII candidate pending explicit promotion.
-   Base1 passes only after one bounded seed retry; compare its Mewtwo crop with
-   the larger, currently promoted spatial-v5 crop before considering production
-   integration.
+   Popplio; retry `260726055` improves it but retains a smaller plant-depth
+   discontinuity in human review. The second bounded seed-only retry
+   `260726056` preserves count, anatomy, card fit, and one global scene while
+   keeping the complete foreground cluster outside Popplio's silhouette. It is
+   the agent-preferred experimental Gen-VII candidate pending explicit human
+   review and promotion. Base1 passes only after one bounded seed retry;
+   compare its Mewtwo crop with the larger, currently promoted spatial-v5 crop
+   before considering production integration.
 5. Treat seed stability as an explicit review property. A scope may select a
    reviewed seed, but unbounded seed searching is not an acceptable substitute
    for reliable count, identity, card containment, and one global scene.

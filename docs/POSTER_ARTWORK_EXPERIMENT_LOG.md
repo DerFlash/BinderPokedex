@@ -978,10 +978,25 @@ and `f804e98423adc2705c04d0ef433584f5bc88d2b04c64a939e6d03d592502a742`.
 | 0.25 MP, seed `260726055` | `209.29 s` | `59c43adb3daec4feba6386462ba9aefc8ae6c64ed999f4f58321b59269466918` | `92bc241c540d85577afe2603b1ee63b9a9d67f909f0998cc10fddce5fe1da8d3` | Exactly three complete, correctly assigned subjects inside their cards and one continuous coast; earns the 1-MP confirmation |
 | 1 MP, seed `260726055` | `215.73 s` | `8fa83b06da3795286a1e584eb9bdf406ebae7dad478e955e4add2f1f8940ca46` | `e1c060e1dedc6aed317225cfd440818f66544ad01b0a67bfe256bffb12c990a4` | Rowlet, Litten, and Popplio retain defining anatomy, padding, grounding, and shadows; the lower-right vegetation is one coherent rooted cluster and no blade terminates at Popplio's boundary |
 
-Seed `260726055` is therefore the preferred Generation-VII candidate for the
-individual-spatial topology. Seed `260726054` remains recorded as the direct
-control. Neither changes the promoted Generation-VII asset until explicit
-human review and promotion.
+Seed `260726055` initially became the preferred Generation-VII candidate for
+the individual-spatial topology. Subsequent user review found a smaller but
+still visible continuation of the same defect: part of the lower-right plant
+breaks or changes depth unexpectedly beside Popplio. It therefore improves on
+seed `260726054` but does not pass the final human depth review.
+
+One further bounded seed-only A/B changed only the noise seed to `260726056`.
+The 0.25-MP and 1-MP prompt hashes and all three positioned-reference hashes
+remain byte-identical to the values recorded above.
+
+| Target | Runtime | Workflow SHA-256 | Raw SHA-256 | Result |
+| --- | --- | --- | --- | --- |
+| 0.25 MP, seed `260726056` | `252.46 s` | `1a636a773954f5205454860277710c20fd2c1d3d76197ec1bc8ccfd65046ef85` | `bf32d03fa337c475b3f435069d5bb4b91b8b46fa96c32dc73bfb27de813e7837` | Exactly three complete, correctly assigned and card-safe subjects; the lower-right plant is coherent and does not intersect Popplio, so the candidate earns the 1-MP confirmation |
+| 1 MP, seed `260726056` | `246.64 s` | `8392740075f96ca5155fc8e5ddf45a3399bd72c1ffdd6adb47d214cd4026aff9` | `7ca71c468924130966c1b7796b4274be01afe61b9804ee82a08697a8658d5f66` | Count, defining anatomy, physical-card containment, shadows, and one continuous Alola scene pass agent review; the complete foreground cluster stays outside Popplio's silhouette without a broken blade or front/back switch |
+
+Seed `260726056` is now the agent-preferred Generation-VII candidate for the
+individual-spatial topology, pending explicit human review. Seeds `260726054`
+and `260726055` remain recorded as direct controls. None of these experiments
+changes the promoted Generation-VII asset without a separate promotion.
 
 ### Base1 anatomy validation
 
