@@ -246,15 +246,16 @@ second tracked active bundle is maintained.
    first seed `260726054` has one user-found foreground blade ending at
    Popplio; retry `260726055` improves it but retains a smaller plant-depth
    discontinuity in human review. The second bounded seed-only retry
-   `260726056` preserves count, anatomy, card fit, and one global scene while
-   keeping the complete foreground cluster outside Popplio's silhouette. It is
-   the agent-preferred experimental Gen-VII candidate pending explicit human
-   review and promotion. Base1 passes only after one bounded seed retry;
-   compare its Mewtwo crop with the larger, currently promoted spatial-v5 crop
-   before considering production integration.
+   `260726056` preserves count, anatomy, card fit, and one global scene, but
+   human review still finds a lower-right blade slipping behind Popplio. There
+   is no accepted individual-spatial Gen-VII successor. Base1 passes only after
+   one bounded seed retry; compare its Mewtwo crop with the larger, currently
+   promoted spatial-v5 crop before considering production integration.
 5. Treat seed stability as an explicit review property. A scope may select a
    reviewed seed, but unbounded seed searching is not an acceptable substitute
-   for reliable count, identity, card containment, and one global scene.
+   for reliable count, identity, card containment, one global scene, and
+   coherent depth. Pause further Gen-VII seed-only retries after the same
+   Popplio depth failure in seeds `260726054` through `260726056`.
 6. Require any successor to preserve one global scene prediction inside the
    subject zones without averaging away identity. Treat that as a materially
    different control mechanism, not another prompt tweak.

@@ -991,12 +991,31 @@ remain byte-identical to the values recorded above.
 | Target | Runtime | Workflow SHA-256 | Raw SHA-256 | Result |
 | --- | --- | --- | --- | --- |
 | 0.25 MP, seed `260726056` | `252.46 s` | `1a636a773954f5205454860277710c20fd2c1d3d76197ec1bc8ccfd65046ef85` | `bf32d03fa337c475b3f435069d5bb4b91b8b46fa96c32dc73bfb27de813e7837` | Exactly three complete, correctly assigned and card-safe subjects; the lower-right plant is coherent and does not intersect Popplio, so the candidate earns the 1-MP confirmation |
-| 1 MP, seed `260726056` | `246.64 s` | `8392740075f96ca5155fc8e5ddf45a3399bd72c1ffdd6adb47d214cd4026aff9` | `7ca71c468924130966c1b7796b4274be01afe61b9804ee82a08697a8658d5f66` | Count, defining anatomy, physical-card containment, shadows, and one continuous Alola scene pass agent review; the complete foreground cluster stays outside Popplio's silhouette without a broken blade or front/back switch |
+| 1 MP, seed `260726056` | `246.64 s` | `8392740075f96ca5155fc8e5ddf45a3399bd72c1ffdd6adb47d214cd4026aff9` | `7ca71c468924130966c1b7796b4274be01afe61b9804ee82a08697a8658d5f66` | Count, defining anatomy, physical-card containment, shadows, and one continuous Alola scene passed the initial agent review; subsequent human review found that a lower-right blade still slips behind Popplio instead of retaining its foreground depth |
 
-Seed `260726056` is now the agent-preferred Generation-VII candidate for the
-individual-spatial topology, pending explicit human review. Seeds `260726054`
-and `260726055` remain recorded as direct controls. None of these experiments
-changes the promoted Generation-VII asset without a separate promotion.
+Seed `260726056` therefore also fails the final human depth review. A
+cross-scope comparison rules out the placement geometry alone: Generation-I
+Squirtle occupies `x 72.1–96.1%`, `y 75.6–93.6%`, while Generation-VII
+Popplio occupies the nearly identical `x 73.1–94.9%`, `y 79.8–93.6%`. Both
+use the same model, encoder, VAE, four-step sampler, individual-spatial graph,
+and depth paragraph. Generation I nevertheless produces coherent foreground
+crossings at Bulbasaur and Squirtle.
+
+The remaining material differences are the subject pose, scene language, and
+noise. The neutral references show every subject with a complete unobscured
+silhouette and provide no explicit depth or occlusion channel. Popplio's low,
+extended flipper meets the broad tropical foliage requested by the Alola
+scene; the model must resolve the conflict between exact visible identity and
+foreground continuity from text alone. The meadow scenes more often produce
+thin blades crossing only small exterior parts. The successful Generation-I
+crossings therefore prove that the graph can synthesize the relationship, but
+seeds `260726054` through `260726056` prove that it does not control it
+reliably for this Popplio scene.
+
+There is no preferred individual-spatial Generation-VII successor after human
+review. Further seed-only searching is paused rather than treated as a control
+mechanism. None of these experiments changes the promoted Generation-VII
+asset.
 
 ### Base1 anatomy validation
 
