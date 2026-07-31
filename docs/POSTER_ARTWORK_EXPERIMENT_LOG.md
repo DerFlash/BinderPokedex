@@ -953,13 +953,35 @@ VAE, and four-step sampler. Only the scope-specific inputs changed.
 | 0.25 MP, `432 × 592` | `149.72 s` | `f0f8a196578d0f76e16ff1a6fe6c660af6ca0be1252e6a799e5f32f71277b8ef` | `9b05b903fc8610180d1c7a2b06ab5847fd9ff8924aef0c8d903cae9ca2d5bbbb` | Exactly Rowlet, Litten, and Popplio appear once, complete and inside their assigned cards; one continuous Alola coast earns the 1-MP confirmation |
 | 1 MP, `848 × 1168` | `234.67 s` | `288d5dd20c1ce4a74e8b62e52653e7d2288ad9a783738c202b2b0beb85112d4f` | `45a5aa1103f6f7ccb4190d7c699802e0ca9b083442081a5f4438d010ef9a1392` | Count, defining anatomy, pose, card padding, grounding shadows, and the single global coast pass agent review |
 
-Foreground and rear vegetation occupy coherent depth layers without the
-abruptly terminated blades, separate lower panorama, or card frames seen in
-earlier graphs. The scene does not force a dramatic plant crossing through a
-silhouette, so it demonstrates consistent integration rather than proving
-every possible occlusion case. The result passes the bounded depth regression
-gate and advances the same topology to the planned Base1 anatomy test; it does
-not replace the promoted Generation-VII poster.
+Foreground and rear vegetation initially appeared to occupy coherent depth
+layers without the separate lower panorama or card frames seen in earlier
+graphs. Subsequent user review of the physical Popplio crop found one local
+depth defect that the first agent pass missed: a lower-right foreground blade
+ends abruptly at Popplio's silhouette. Count, identity, card containment, and
+the global scene still pass, but seed `260726054` no longer passes the complete
+depth-intersection gate for this experimental topology. It does not replace
+the promoted Generation-VII poster.
+
+One bounded seed-only A/B then changed the noise seed to `260726055`. Prompt
+and reference conditioning were otherwise unchanged. The 0.25-MP prompt
+SHA-256 remained
+`76ab58c6bcc33d3fe783965ab1f7922100728dd0a843b4b9476d21bf59d1a43e`;
+the 1-MP prompt SHA-256 remained
+`935ce0ab57c7ba5b5de8f5f7674f31d69a1ee7256960449c5f5cb76ce8f194f5`.
+The three positioned-reference SHA-256 values remained
+`1dca9b44a80f977c44aae6da73af13d10e2110646c6a8bd2e3801febc84cddf3`,
+`e65ca5a711496bde12c09c549117c636b5d98a6712299cf85736e938cfc5daa5`,
+and `f804e98423adc2705c04d0ef433584f5bc88d2b04c64a939e6d03d592502a742`.
+
+| Target | Runtime | Workflow SHA-256 | Raw SHA-256 | Result |
+| --- | --- | --- | --- | --- |
+| 0.25 MP, seed `260726055` | `209.29 s` | `59c43adb3daec4feba6386462ba9aefc8ae6c64ed999f4f58321b59269466918` | `92bc241c540d85577afe2603b1ee63b9a9d67f909f0998cc10fddce5fe1da8d3` | Exactly three complete, correctly assigned subjects inside their cards and one continuous coast; earns the 1-MP confirmation |
+| 1 MP, seed `260726055` | `215.73 s` | `8fa83b06da3795286a1e584eb9bdf406ebae7dad478e955e4add2f1f8940ca46` | `e1c060e1dedc6aed317225cfd440818f66544ad01b0a67bfe256bffb12c990a4` | Rowlet, Litten, and Popplio retain defining anatomy, padding, grounding, and shadows; the lower-right vegetation is one coherent rooted cluster and no blade terminates at Popplio's boundary |
+
+Seed `260726055` is therefore the preferred Generation-VII candidate for the
+individual-spatial topology. Seed `260726054` remains recorded as the direct
+control. Neither changes the promoted Generation-VII asset until explicit
+human review and promotion.
 
 ### Base1 anatomy validation
 

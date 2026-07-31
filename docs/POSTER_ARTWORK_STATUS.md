@@ -7,7 +7,7 @@ requirements in
 evidence in
 [Poster Experiment Log](POSTER_ARTWORK_EXPERIMENT_LOG.md).
 
-Last audited: 2026-07-30
+Last audited: 2026-07-31
 
 ## Current decision
 
@@ -242,10 +242,14 @@ second tracked active bundle is maintained.
    can relocate rather than solve a contradictory crossing; do not reopen
    prompt-only depth stress unless new evidence changes the mechanism.
 4. Review the individual-spatial Generation-I, Generation-VII, and Base1
-   candidates together. The unchanged topology passes the Generation-I and
-   Generation-VII agent gates. Base1 passes only after one bounded seed retry;
-   compare its Mewtwo crop with the larger, currently promoted spatial-v5 crop
-   before considering production integration.
+   candidates together. Generation I passes its agent gate. Generation VII's
+   first seed `260726054` has one user-found foreground blade ending at
+   Popplio; the bounded seed-only retry `260726055` removes that defect while
+   retaining count, anatomy, card fit, and one global scene, and is now the
+   preferred experimental Gen-VII candidate pending explicit promotion.
+   Base1 passes only after one bounded seed retry; compare its Mewtwo crop with
+   the larger, currently promoted spatial-v5 crop before considering production
+   integration.
 5. Treat seed stability as an explicit review property. A scope may select a
    reviewed seed, but unbounded seed searching is not an acceptable substitute
    for reliable count, identity, card containment, and one global scene.
@@ -275,7 +279,7 @@ python -m scripts.poster_assets.validate_promoted_poster --all-enabled
 python -m scripts.poster_assets.poster_work_plan --all-configured
 ```
 
-Verified on 2026-07-30:
+Verified on 2026-07-31:
 
 - `476 passed, 1 skipped`;
 - all 13 enabled poster bundles validate;
