@@ -285,9 +285,11 @@ second tracked active bundle is maintained.
    Oshawott details. Generation VI seed `260758583` duplicates Fennekin only at
    1 MP and fails; adjacent seed `260758584` passes count, identity, cards, and
    dense flower-depth review. Generation VIII seed `260715405` passes directly
-   with exactly Grookey, Scorbunny, and Sobble in one coherent Galar scene. All
-   four scopes are ready for direct human review, while their promoted
-   `identity_lock` assets remain unchanged.
+   with exactly Grookey, Scorbunny, and Sobble in one coherent Galar scene.
+   Generation IX seed `260778637` likewise passes directly with all defining
+   details of Sprigatito, Fuecoco, and Quaxly. All five generation scopes are
+   ready for direct human review, while their promoted `identity_lock` assets
+   remain unchanged.
 8. Apply the section workflow to future aggregate variant sections only after
    their scene briefs and curated subject/reference sets are reviewed.
 9. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until

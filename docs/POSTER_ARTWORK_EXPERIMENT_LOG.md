@@ -1228,6 +1228,29 @@ the nearest grasses do not create a broken intersection. No retry or explicit
 occlusion guide is warranted before human review. The promoted Generation-VIII
 `identity_lock` asset remains unchanged.
 
+### Generation IX legacy-scope preflight
+
+Generation IX reused its Paldea valley scene, seed `260778637`, placement
+profile, cutouts, and unchanged individual-spatial graph. Prompt SHA-256 is
+`dabe6626a34ae4a9af4f4744b119b9281ae53759bcce054d193d1578ea05dfa8`
+at 0.25 MP and
+`06354f1ff060fdcd133d75033369be39a9e2a543ff923cc56807d162fc20645b`
+at 1 MP. The positioned Sprigatito, Fuecoco, and Quaxly reference SHA-256
+values are
+`2da64541d18b9dfce71b708f5f97c90f353bbe31b3ebea02887a1bd852aa254b`,
+`1cac440a48341c3433e124312f84716a514e23267eb52dfb07bf5a60a5b4f843`,
+and `e64935797e02d0c3619ab41908f020dde288715d18523883a19b7b463f2399dd`.
+
+| Target | Runtime | Workflow SHA-256 | Raw SHA-256 | Result |
+| --- | --- | --- | --- | --- |
+| 0.25 MP | `176.54 s` | `313a5e24333c037e39ac74041a6aac4935d04cf467a0bbb19209799a0849b43a` | `0ab6d0fed65364bcb52cc696b10855b4e34d52f33e99c5bbb98d8ed2ede08d79` | Exactly three complete subjects in the correct physical cards and one coherent Mediterranean valley, coast, woodland, and distant academy; earns the 1-MP check |
+| 1 MP | `223.01 s` | `d492e9cde34125f53c0f905defa4779a4c925f5631f351fc7b12e85e99c04620` | `3478f01ce419195dd563e60a8798b7c520f36ad9648f6e6b07a7a454b37131e5` | Sprigatito retains face, leaf collar, four legs, and tail; Fuecoco retains both teeth, crest, markings, arms, four feet, and tail; Quaxly retains both wings, cap, face, beak, and feet. Count, card padding, grounding, shadows, and clean depth pass |
+
+Seed `260778637` is the preferred Generation-IX individual-spatial candidate
+after agent review. No landscape element creates a broken subject intersection,
+and no retry or explicit occlusion guide is warranted before human review. The
+promoted Generation-IX `identity_lock` asset remains unchanged.
+
 ### Review record template
 
 Every rendered candidate appends one row containing the exact workflow and
