@@ -1205,6 +1205,29 @@ after agent review. The normal graph resolves even its dense flower foreground
 without the deferred explicit occlusion guide. The promoted Generation-VI
 `identity_lock` asset remains unchanged pending direct human review.
 
+### Generation VIII legacy-scope preflight
+
+Generation VIII reused its Galar upland scene, seed `260715405`, placement
+profile, cutouts, and unchanged individual-spatial graph. Prompt SHA-256 is
+`99b3a5f342094554b940887f7661dff9607600bb3859fe9c81be66177b3344fe`
+at 0.25 MP and
+`1b31c815c9c77ca3280bc3b9601c5dbdb475e0b1826410b4b66e8ade8aa459b2`
+at 1 MP. The positioned Grookey, Scorbunny, and Sobble reference SHA-256 values
+are `8e1bb37c30772f2e1c30e08e5f7d060551a2501470c11eaf528e1294e41adce3`,
+`ce0fab4411182c3878f90072236b150dd555176d9d7bc1a0ee17b362a59cfcff`,
+and `47bc881e95d22745ee40166ce57a1dc20613b34d7b1cdd0568498423d622df9b`.
+
+| Target | Runtime | Workflow SHA-256 | Raw SHA-256 | Result |
+| --- | --- | --- | --- | --- |
+| 0.25 MP | `158.91 s` | `04759386356562671cc12ceb378224481f24fc98a8ae44351eb50683f472d871` | `185df697ee8b53d97393ea786a0e9fc7fb1e978b0213c2be17312710475e1e57` | Exactly three complete, correctly assigned subjects inside their physical cards and one coherent moorland, lake, wall, and distant town; earns the 1-MP check |
+| 1 MP | `207.43 s` | `bc1625cdeff5d3a9f4198f5bf0918486508fbd45559327274f2df4a88f4b132e` | `cbee5de594939146490f58bb2cdd19118c3551c1f0fab421fc0c6f59a10b857c` | Grookey's stick, leaves, limbs, and tail, Scorbunny's ears, running pose, foot marking, and limbs, and Sobble's face, crest, limbs, and tail remain readable; card padding, dramatic shared light, shadows, and landscape depth pass |
+
+Seed `260715405` is the preferred Generation-VIII individual-spatial candidate
+after agent review. The stone wall remains wholly behind the subject plane and
+the nearest grasses do not create a broken intersection. No retry or explicit
+occlusion guide is warranted before human review. The promoted Generation-VIII
+`identity_lock` asset remains unchanged.
+
 ### Review record template
 
 Every rendered candidate appends one row containing the exact workflow and
