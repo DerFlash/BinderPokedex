@@ -1232,6 +1232,7 @@ def build_overlay_fingerprint(
             else:
                 title = {
                     "kind": "text",
+                    "renderer": "direct_outlined_v1",
                     "value": readable_overlay_text(header_text),
                 }
         language_components[language] = {

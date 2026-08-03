@@ -1362,3 +1362,10 @@ collection name, while every Ex-generation section uses the compact three-row
 panel without a per-scope switch. The overlapping ExGen3 description prefixes
 were shortened to date range plus distinguishing variant detail; no generated
 artwork or PDF routing changed.
+
+The remaining plain-text fallback still used a pale generic panel, most visibly
+for the `Pokédex` collection title. That panel is now removed from the common
+fallback renderer: plain titles use the same bounded outlined-text treatment as
+the textual part of inline-logo titles. The fingerprint records
+`direct_outlined_v1`, so only affected text-title overlays become stale; no
+scope-specific display flag or artwork regeneration is required.

@@ -400,48 +400,35 @@ def draw_project_signature(canvas: Image.Image) -> None:
     draw.text((x, y), text, font=font, fill=(246, 239, 207, 215))
 
 
-def draw_title_text_panel(
+def draw_title_text(
     canvas: Image.Image,
     title_cell,
     title: str,
     language: str,
 ) -> tuple[int, int, int, int]:
-    """Draw a localized title fully inside its deterministic panel."""
-    panel_box = title_cell.inset(0.09, 0.27)
-    composite_panel(
-        canvas,
-        panel_box,
-        fill=(253, 244, 202, 238),
-        outline=(44, 84, 52, 245),
-        radius=max(8, round(24 * canvas.width / 1400)),
-    )
-    width = panel_box[2] - panel_box[0]
-    height = panel_box[3] - panel_box[1]
-    pad_x = max(4, round(width * 0.05))
-    pad_y = max(4, round(height * 0.10))
-    text_box = (
-        panel_box[0] + pad_x,
-        panel_box[1] + pad_y,
-        panel_box[2] - pad_x,
-        panel_box[3] - pad_y,
-    )
+    """Draw a localized, outlined title directly on the artwork."""
+    text_box = title_cell.inset(0.05, 0.31)
     font = fitted_font(
         title,
         text_box,
-        preferred_size=max(14, title_cell.height // 8),
-        minimum_size=max(10, title_cell.height // 22),
+        preferred_size=max(14, title_cell.height // 7),
+        minimum_size=max(10, title_cell.height // 24),
         bold=True,
         language=language,
     )
+    stroke_width = max(1, round(font.size / 28))
     draw_text_centered(
         ImageDraw.Draw(canvas, "RGBA"),
         title,
         text_box,
         font,
-        (35, 65, 42, 255),
-        shadow_fill=None,
+        (255, 248, 215, 255),
+        shadow_fill=(5, 16, 22, 145),
+        stroke_width=stroke_width,
+        stroke_fill=(32, 68, 57, 245),
+        shadow_offset=max(2, round(canvas.width / 390)),
     )
-    return panel_box
+    return text_box
 
 
 def draw_inline_logo_title(
@@ -583,7 +570,7 @@ def draw_final_text_cells(canvas, layout, manifest, scope_data, scope_dir: Path,
                 language,
             )
         else:
-            draw_title_text_panel(
+            draw_title_text(
                 canvas,
                 title_cell,
                 readable_overlay_text(header_text),

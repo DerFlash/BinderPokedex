@@ -163,8 +163,8 @@ resolves localized set name, card count, release label/date, and project mark;
 `section_summary` resolves localized section title, subtitle or region,
 Pokémon count, description/range, and project mark. The finalizer chooses the top
 renderer from the resolved value: a complete set logo wins, one supported
-trailing logo token becomes an inline logo group, and everything else uses the
-text panel. If that textual top value equals the first information row after
+trailing logo token becomes an inline logo group, and everything else uses
+outlined text directly on the artwork. If that textual top value equals the first information row after
 token normalization, the duplicate row is removed automatically. Thus a
 Pokédex poster keeps `Generation I` below the collection title `Pokédex`, an
 Ex-generation poster does not repeat its section title, and a set with a full

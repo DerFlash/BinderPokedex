@@ -78,7 +78,8 @@ not invented and are not PDF targets.
 Scope JSON is the only semantic copy source for both covers and posters.
 Poster manifests no longer copy titles or select title/deduplication styles.
 The overlay infers complete logo, inline token logo, or text rendering and
-removes an identical title row automatically. Cover count labels use the scope
+draws plain text directly without a title panel. It removes an identical title
+row automatically. Cover count labels use the scope
 type, so TCG-set totals are cards while Pokédex and variant totals are Pokémon.
 
 The poster now contains all semantic cover information: collection/set title,

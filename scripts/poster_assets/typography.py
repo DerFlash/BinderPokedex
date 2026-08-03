@@ -135,6 +135,10 @@ def draw_text_centered(
     font: ImageFont.ImageFont,
     fill: tuple[int, int, int, int],
     shadow_fill: tuple[int, int, int, int] | None = (0, 0, 0, 150),
+    *,
+    stroke_width: int = 0,
+    stroke_fill: tuple[int, int, int, int] | None = None,
+    shadow_offset: int = 2,
 ) -> None:
     left, top, right, bottom = box
     lines = wrap_text(text, font, max_width=right - left)
@@ -154,12 +158,19 @@ def draw_text_centered(
         draw_y = y - bounds[1]
         if shadow_fill:
             draw.text(
-                (x + 2, draw_y + 2),
+                (x + shadow_offset, draw_y + shadow_offset),
                 line,
                 font=font,
                 fill=shadow_fill,
             )
-        draw.text((x, draw_y), line, font=font, fill=fill)
+        draw.text(
+            (x, draw_y),
+            line,
+            font=font,
+            fill=fill,
+            stroke_width=stroke_width,
+            stroke_fill=stroke_fill,
+        )
         y += line_height + round(font.size * 0.28)
 
 

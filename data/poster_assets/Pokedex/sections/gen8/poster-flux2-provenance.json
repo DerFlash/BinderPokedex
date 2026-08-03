@@ -30,7 +30,7 @@
         "width": 750
       },
       {
-        "bytes": 216018,
+        "bytes": 292862,
         "dpi": [
           299.9994,
           299.9994
@@ -38,8 +38,8 @@
         "file": "data/poster_assets/Pokedex/sections/gen8/poster-flux2-cards/card_r1_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "3fb2c95d9b9b737628234266012c0aad06b425b8008cf63e9530de2b25c23336",
-        "sha256": "3a40d4048272282d086f02effca72663821e1c5fc2c50a00f67fc61d4a57f63e",
+        "pixel_sha256": "f08ce6863ce8a3ef6e5cd68524260311ce49403b2e3b0afb9d0d893cfe669706",
+        "sha256": "2a04ff2961632d20d139086b4afc54433e37c03328c0a10577e136c0c4e96eba",
         "width": 750
       },
       {
@@ -135,7 +135,7 @@
       }
     ],
     "preview": {
-      "bytes": 4974925,
+      "bytes": 5047486,
       "dpi": [
         299.9994,
         299.9994
@@ -143,14 +143,14 @@
       "file": "data/poster_assets/Pokedex/sections/gen8/poster-flux2.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "26ffae19f130f22714a35c562e346ca3980c12c78eb046583f7a2fa4bf117699",
-      "sha256": "e458b5ed7c8f8e04d2d2dc2cc638c682046ac146f9415dda7725a8b1f64d978d",
+      "pixel_sha256": "9d7d5c094a6eef0e0bdf7a0a6b2f77177a17d892d29d968d91a8b3f9d279e751",
+      "sha256": "6254227a152f2f6345fb803e0f3e265f01309d8e120afcd4a7e1161cbdcdf5fa",
       "width": 2368
     }
   },
   "poster_id": "gen8",
   "preview_language": "en",
-  "promoted_at": "2026-08-03T16:12:22.254117+00:00",
+  "promoted_at": "2026-08-03T19:11:19.892927+00:00",
   "run": {
     "created_at": "2026-08-03T12:38:40.779219+00:00",
     "generation": {
@@ -381,6 +381,7 @@
               ],
               "title": {
                 "kind": "text",
+                "renderer": "direct_outlined_v1",
                 "value": "Pokédex"
               }
             },
@@ -393,6 +394,7 @@
               ],
               "title": {
                 "kind": "text",
+                "renderer": "direct_outlined_v1",
                 "value": "Pokédex"
               }
             },
@@ -405,6 +407,7 @@
               ],
               "title": {
                 "kind": "text",
+                "renderer": "direct_outlined_v1",
                 "value": "Pokédex"
               }
             },
@@ -417,6 +420,7 @@
               ],
               "title": {
                 "kind": "text",
+                "renderer": "direct_outlined_v1",
                 "value": "Pokédex"
               }
             },
@@ -429,6 +433,7 @@
               ],
               "title": {
                 "kind": "text",
+                "renderer": "direct_outlined_v1",
                 "value": "Pokédex"
               }
             },
@@ -441,6 +446,7 @@
               ],
               "title": {
                 "kind": "text",
+                "renderer": "direct_outlined_v1",
                 "value": "Pokédex"
               }
             },
@@ -453,6 +459,7 @@
               ],
               "title": {
                 "kind": "text",
+                "renderer": "direct_outlined_v1",
                 "value": "Pokédex"
               }
             },
@@ -465,6 +472,7 @@
               ],
               "title": {
                 "kind": "text",
+                "renderer": "direct_outlined_v1",
                 "value": "Pokédex"
               }
             },
@@ -477,6 +485,7 @@
               ],
               "title": {
                 "kind": "text",
+                "renderer": "direct_outlined_v1",
                 "value": "Pokédex"
               }
             }
@@ -504,7 +513,7 @@
           }
         },
         "schema_version": 1,
-        "sha256": "394e4db9ece51d2ecfce1e48cbf720e94f204feba778887637802da5cb1d2f0b"
+        "sha256": "d6389fccba1bcfd5a543fb865fbeeda7ca5dad1ba8519652d50c732f0ff1e05b"
       },
       "prompt": {
         "bytes": 5746,
