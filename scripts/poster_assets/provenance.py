@@ -1170,6 +1170,7 @@ def build_overlay_fingerprint(
     """Fingerprint cheap deterministic overlay inputs independently."""
     try:
         from .finalize_comfyui_poster import (
+            PLAIN_TITLE_RENDERER_CONTRACT,
             SUPPORTED_LANGUAGES,
             info_panel_values,
             inline_title_logo,
@@ -1179,6 +1180,7 @@ def build_overlay_fingerprint(
         )
     except ImportError:
         from finalize_comfyui_poster import (
+            PLAIN_TITLE_RENDERER_CONTRACT,
             SUPPORTED_LANGUAGES,
             info_panel_values,
             inline_title_logo,
@@ -1232,7 +1234,7 @@ def build_overlay_fingerprint(
             else:
                 title = {
                     "kind": "text",
-                    "renderer": "direct_outlined_v1",
+                    "renderer": PLAIN_TITLE_RENDERER_CONTRACT,
                     "value": readable_overlay_text(header_text),
                 }
         language_components[language] = {

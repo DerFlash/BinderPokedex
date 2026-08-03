@@ -15,7 +15,6 @@ try:
         poster_bundle,
     )
     from .typography import (
-        composite_panel,
         draw_text_centered,
         load_font,
         wrap_text,
@@ -24,7 +23,6 @@ except ImportError:
     from layout import build_image_layout
     from poster_io import load_poster_scope_data, poster_bundle
     from typography import (
-        composite_panel,
         draw_text_centered,
         load_font,
         wrap_text,
@@ -96,6 +94,7 @@ INLINE_TITLE_LOGOS = {
     "[EX]": ROOT / "images" / "logos" / "ex" / "default.png",
     "[M]": ROOT / "images" / "logos" / "m_pokemon" / "default.png",
 }
+PLAIN_TITLE_RENDERER_CONTRACT = "direct_outlined_v1"
 
 
 def readable_overlay_text(value: object) -> str:

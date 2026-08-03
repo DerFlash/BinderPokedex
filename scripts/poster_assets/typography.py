@@ -1,9 +1,7 @@
 """Deterministic typography primitives for localized poster overlays."""
 from __future__ import annotations
 
-from typing import Any
-
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from PIL import ImageDraw, ImageFont
 
 
 FONT_CANDIDATES = [
@@ -172,50 +170,3 @@ def draw_text_centered(
             stroke_fill=stroke_fill,
         )
         y += line_height + round(font.size * 0.28)
-
-
-def composite_panel(
-    canvas: Image.Image,
-    box: tuple[int, int, int, int],
-    fill: tuple[int, int, int, int] = (250, 242, 202, 218),
-    outline: tuple[int, int, int, int] = (54, 82, 56, 230),
-    radius: int = 20,
-) -> None:
-    overlay = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
-    draw = ImageDraw.Draw(overlay, "RGBA")
-    shadow_box = (box[0] + 8, box[1] + 10, box[2] + 8, box[3] + 10)
-    draw.rounded_rectangle(
-        shadow_box,
-        radius=radius,
-        fill=(15, 24, 20, 95),
-    )
-    overlay = overlay.filter(ImageFilter.GaussianBlur(5))
-    draw = ImageDraw.Draw(overlay, "RGBA")
-    draw.rounded_rectangle(
-        box,
-        radius=radius,
-        fill=fill,
-        outline=outline,
-        width=3,
-    )
-    inner = (box[0] + 6, box[1] + 6, box[2] - 6, box[3] - 6)
-    draw.rounded_rectangle(
-        inner,
-        radius=max(4, radius - 6),
-        outline=(255, 255, 255, 105),
-        width=2,
-    )
-    canvas.alpha_composite(overlay)
-
-
-def scope_title(scope_data: dict[str, Any]) -> str:
-    name = scope_data.get("name")
-    if isinstance(name, dict):
-        return name.get("en") or next(iter(name.values()))
-    if isinstance(name, str):
-        return name
-    for section in scope_data.get("sections", {}).values():
-        title = section.get("title")
-        if isinstance(title, dict):
-            return title.get("en") or next(iter(title.values()))
-    return "Poster"

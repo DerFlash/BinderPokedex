@@ -8,6 +8,7 @@ import pytest
 import yaml
 from PIL import Image
 
+from scripts.poster_assets import finalize_comfyui_poster as finalizer
 from scripts.poster_assets import promote_comfyui_poster as promotion
 from scripts.poster_assets import provenance
 from scripts.poster_assets import validate_promoted_poster as validator
@@ -1076,6 +1077,38 @@ def test_overlay_fingerprint_tracks_the_rendering_contract(
     )
 
     assert legacy["sha256"] != current["sha256"]
+
+
+def test_overlay_fingerprint_tracks_plain_title_renderer_contract(
+    tmp_path,
+    monkeypatch,
+):
+    _repository, assets, output, _scope_dir, bundle = _write_fixture(
+        tmp_path
+    )
+    current = build_overlay_fingerprint(
+        bundle,
+        poster_assets=assets,
+        scope_data_dir=output,
+    )
+
+    assert {
+        component["title"]["renderer"]
+        for component in current["components"]["languages"].values()
+    } == {"direct_outlined_v1"}
+
+    monkeypatch.setattr(
+        finalizer,
+        "PLAIN_TITLE_RENDERER_CONTRACT",
+        "direct_outlined_v2",
+    )
+    changed = build_overlay_fingerprint(
+        bundle,
+        poster_assets=assets,
+        scope_data_dir=output,
+    )
+
+    assert changed["sha256"] != current["sha256"]
 
 
 def test_load_run_metadata_accepts_promoted_provenance_for_overlay_refresh(
