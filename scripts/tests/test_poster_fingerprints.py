@@ -1064,7 +1064,7 @@ def test_overlay_fingerprint_tracks_the_rendering_contract(
 
     assert current["components"]["pipeline_contract"] == {
         "name": "poster_overlay",
-        "version": 2,
+        "version": 3,
     }
     monkeypatch.setattr(
         provenance,

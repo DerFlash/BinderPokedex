@@ -103,7 +103,7 @@ GENERATION_PIPELINE_CONTRACT_VERSION = 3
 # all promoted overlays already use the same absolute 300-dpi endpoints.
 # Therefore it belongs to generation v3 without relabeling pixel-identical
 # deterministic overlay v2 outputs.
-OVERLAY_PIPELINE_CONTRACT_VERSION = 2
+OVERLAY_PIPELINE_CONTRACT_VERSION = 3
 CURRENT_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
     (
         "flux",
