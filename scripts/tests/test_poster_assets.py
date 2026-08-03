@@ -1205,6 +1205,9 @@ def test_every_current_aggregate_section_bootstraps_from_shared_code():
             )
 
             assert len(selected) == count
+            assert manifest["text_content"]["include_section_title"] is (
+                path.stem == "Pokedex"
+            )
             checked.append(f"{path.stem}/{section_id}")
 
     assert len(checked) == 15

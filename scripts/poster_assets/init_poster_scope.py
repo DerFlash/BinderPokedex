@@ -313,7 +313,10 @@ def build_section_manifest(
             },
         },
         "title_text": section_poster_title(scope, section_data),
-        "text_content": {"mode": "section_summary"},
+        "text_content": {
+            "mode": "section_summary",
+            "include_section_title": scope == "Pokedex",
+        },
         "artwork": {
             "promoted_file": "poster-flux2-artwork.png",
             "preview_file": "poster-flux2.png",

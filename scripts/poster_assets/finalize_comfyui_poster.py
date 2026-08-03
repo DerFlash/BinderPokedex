@@ -203,6 +203,8 @@ def info_panel_values(
     scope_data: dict,
     language: str,
     content_mode: str,
+    *,
+    include_section_title: bool = True,
 ) -> tuple[str, ...]:
     """Resolve the deterministic text rows for one poster overlay profile."""
     if content_mode == "set_summary":
@@ -216,12 +218,13 @@ def info_panel_values(
         section = selected_section(scope_data)
         cards = section.get("cards")
         section_card_count = len(cards) if isinstance(cards, list) else 0
-        return (
+        values = (
             localized_value(section.get("title"), language),
             localized_value(section.get("subtitle"), language),
             f"{section_card_count} {CARD_LABELS[language]}",
             localized_value(section.get("description"), language),
         )
+        return values if include_section_title else values[1:]
     raise ValueError(f"Unsupported text_content.mode: {content_mode}")
 
 
@@ -283,6 +286,7 @@ def draw_info_panel(
     config: dict | None = None,
     *,
     content_mode: str = "set_summary",
+    include_section_title: bool = True,
 ) -> None:
     box = info_panel_box(cell, config)
     scale = canvas.width / 1400
@@ -298,7 +302,12 @@ def draw_info_panel(
     draw.rounded_rectangle(inner, radius=max(5, radius - 5), outline=(255, 244, 190, 75), width=max(1, round(2 * scale)))
     canvas.alpha_composite(overlay)
 
-    values = info_panel_values(scope_data, language, content_mode)
+    values = info_panel_values(
+        scope_data,
+        language,
+        content_mode,
+        include_section_title=include_section_title,
+    )
 
     text_draw = ImageDraw.Draw(canvas, "RGBA")
     pad_x = max(5, round((box[2] - box[0]) * 0.04))
@@ -310,12 +319,18 @@ def draw_info_panel(
             (values[2], (box[0] + pad_x, box[1] + round(height * 0.57), box[2] - pad_x, box[1] + round(height * 0.76)), max(8, cell.height // 24), max(7, cell.height // 28), False, (185, 210, 190, 255)),
             (values[3], (box[0] + pad_x, box[1] + round(height * 0.75), box[2] - pad_x, box[3] - 4), max(8, cell.height // 21), max(7, cell.height // 27), False, (244, 238, 207, 255)),
         )
-    else:
+    elif include_section_title:
         rows = (
             (values[0], (box[0] + pad_x, box[1] + round(height * 0.05), box[2] - pad_x, box[1] + round(height * 0.29)), max(11, cell.height // 13), max(9, cell.height // 20), True, (255, 244, 190, 255)),
             (values[1], (box[0] + pad_x, box[1] + round(height * 0.28), box[2] - pad_x, box[1] + round(height * 0.48)), max(9, cell.height // 18), max(8, cell.height // 24), False, (185, 210, 190, 255)),
             (values[2], (box[0] + pad_x, box[1] + round(height * 0.47), box[2] - pad_x, box[1] + round(height * 0.67)), max(9, cell.height // 18), max(8, cell.height // 24), True, (232, 213, 151, 255)),
             (values[3], (box[0] + pad_x, box[1] + round(height * 0.66), box[2] - pad_x, box[3] - round(height * 0.05)), max(8, cell.height // 22), max(7, cell.height // 28), False, (244, 238, 207, 255)),
+        )
+    else:
+        rows = (
+            (values[0], (box[0] + pad_x, box[1] + round(height * 0.08), box[2] - pad_x, box[1] + round(height * 0.36)), max(10, cell.height // 16), max(8, cell.height // 23), False, (185, 210, 190, 255)),
+            (values[1], (box[0] + pad_x, box[1] + round(height * 0.36), box[2] - pad_x, box[1] + round(height * 0.61)), max(10, cell.height // 16), max(8, cell.height // 23), True, (232, 213, 151, 255)),
+            (values[2], (box[0] + pad_x, box[1] + round(height * 0.60), box[2] - pad_x, box[3] - round(height * 0.06)), max(9, cell.height // 19), max(7, cell.height // 27), False, (244, 238, 207, 255)),
         )
     for text, text_box, preferred_size, minimum_size, bold, color in rows:
         font = fitted_font(
@@ -557,6 +572,9 @@ def draw_final_text_cells(canvas, layout, manifest, scope_data, scope_dir: Path,
         language,
         info_cfg,
         content_mode=content_config.get("mode", "set_summary"),
+        include_section_title=bool(
+            content_config.get("include_section_title", True)
+        ),
     )
     draw_project_signature(canvas)
 

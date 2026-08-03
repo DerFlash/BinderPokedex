@@ -1351,3 +1351,11 @@ remain unchanged; only previews, top-center card slices, and overlay
 fingerprints were refreshed. The read-only planner reports both promotions as
 current, and the German `ExGen3_DE_TEST_NO_IMAGES.pdf` smoke build confirms the
 unchanged cover followed by the new cut-safe `Pokémon` plus `ex` poster title.
+
+The following review caught that this exact section title was still repeated
+as the first row of the middle information panel. Aggregate manifests now
+state whether that row belongs there: Pokédex keeps it because the upper title
+is the collection name, while every Ex-generation section omits it because the
+upper title already names that section. Subtitle, card count, and description
+then use the three-row panel layout; no generated artwork or PDF routing is
+changed.

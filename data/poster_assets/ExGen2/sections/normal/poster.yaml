@@ -28,6 +28,7 @@ title_text:
   zh_hant: 寶可夢EX - 第二代
 text_content:
   mode: section_summary
+  include_section_title: false
 artwork:
   promoted_file: poster-flux2-artwork.png
   preview_file: poster-flux2.png

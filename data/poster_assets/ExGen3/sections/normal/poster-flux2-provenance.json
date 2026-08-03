@@ -69,7 +69,7 @@
         "width": 750
       },
       {
-        "bytes": 327131,
+        "bytes": 325999,
         "dpi": [
           299.9994,
           299.9994
@@ -77,8 +77,8 @@
         "file": "data/poster_assets/ExGen3/sections/normal/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "67cc7a9f0ce1ebc8d90046a57d61547dddb0d6306ade5ce2becb1fa0bb3a0d8f",
-        "sha256": "451517fabbe9991ecb4b5bbbcfb9a3191f503ea32ff92542e4aa0089674c70ea",
+        "pixel_sha256": "22dcb43c2ddd6169540832020d7e575806fa984cc9d95dc3eb6c1c1de7ed40bd",
+        "sha256": "be3a28e1fd53bfd747e7ec782563cf2f0626688ea66f1029457601557ea3916a",
         "width": 750
       },
       {
@@ -135,7 +135,7 @@
       }
     ],
     "preview": {
-      "bytes": 5094417,
+      "bytes": 5092865,
       "dpi": [
         299.9994,
         299.9994
@@ -143,14 +143,14 @@
       "file": "data/poster_assets/ExGen3/sections/normal/poster-flux2.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "5329c84a68e5e17379528c08a28b52020fd2eae3a3224f9a81cfac9e67815cc1",
-      "sha256": "b8b0aa19332d850dc7f288b31b23c9687db6f95ea5f1fc5b5cca971cdc40a0bb",
+      "pixel_sha256": "9c2d147a3dcb35144460ac30ada30d1dc488778e55804d825458e7f7621fdf80",
+      "sha256": "bbee53d335226f2c0b892321fb13cb20fcf75a8070e4a4ba190d460a2351cf67",
       "width": 2368
     }
   },
   "poster_id": "normal",
   "preview_language": "en",
-  "promoted_at": "2026-08-03T15:13:57.708115+00:00",
+  "promoted_at": "2026-08-03T15:45:29.459190+00:00",
   "run": {
     "created_at": "2026-07-29T12:07:30.565056+00:00",
     "generation": {
@@ -378,7 +378,6 @@
           "languages": {
             "de": {
               "information": [
-                "Pokémon ex",
                 "Moderne Pokémon-ex-Ära (seit 2023)",
                 "192 Karten",
                 "Moderne Pokémon-ex-Ära (2023–heute) • Pokémon ex ohne Mega-Entwicklung"
@@ -392,7 +391,6 @@
             },
             "en": {
               "information": [
-                "Pokémon ex",
                 "Modern Pokémon ex era (since 2023)",
                 "192 cards",
                 "Modern Pokémon ex era (2023–present) • non-Mega Pokémon ex"
@@ -406,7 +404,6 @@
             },
             "es": {
               "information": [
-                "Pokémon ex",
                 "Era moderna de Pokémon ex (desde 2023)",
                 "192 cartas",
                 "Era moderna de Pokémon ex (2023–presente) • Pokémon ex sin Megaevolución"
@@ -420,7 +417,6 @@
             },
             "fr": {
               "information": [
-                "Pokémon ex",
                 "Ère moderne des Pokémon ex (depuis 2023)",
                 "192 cartes",
                 "Ère moderne des Pokémon ex (2023–présent) • Pokémon ex hors Méga-Évolution"
@@ -434,7 +430,6 @@
             },
             "it": {
               "information": [
-                "Pokémon ex",
                 "Era moderna dei Pokémon ex (dal 2023)",
                 "192 carte",
                 "Era moderna dei Pokémon ex (2023–presente) • Pokémon ex non megaevoluti"
@@ -448,7 +443,6 @@
             },
             "ja": {
               "information": [
-                "ポケモン ex",
                 "現代のポケモン ex 時代（2023年～）",
                 "192 枚",
                 "現代のポケモンex時代（2023年～）• メガシンカ以外のポケモンex"
@@ -462,7 +456,6 @@
             },
             "ko": {
               "information": [
-                "포켓몬 ex",
                 "현대 포켓몬 ex 시대 (2023년~)",
                 "192 장",
                 "현대 포켓몬 ex 시대 (2023년~) • 메가진화가 아닌 포켓몬 ex"
@@ -476,7 +469,6 @@
             },
             "zh_hans": {
               "information": [
-                "宝可梦 ex",
                 "现代宝可梦 ex 时代（2023年至今）",
                 "192 张",
                 "现代宝可梦ex时代（2023年至今）• 非超级进化宝可梦ex"
@@ -490,7 +482,6 @@
             },
             "zh_hant": {
               "information": [
-                "寶可夢 ex",
                 "現代寶可夢 ex 時代（2023年至今）",
                 "192 張",
                 "現代寶可夢ex時代（2023年至今）• 非超級進化寶可夢ex"
@@ -530,11 +521,12 @@
             }
           },
           "text_content": {
+            "include_section_title": false,
             "mode": "section_summary"
           }
         },
         "schema_version": 1,
-        "sha256": "08dcb32503b413fb7cb02f0d42962c6ef9b7752273282ed0364b89a95fe76eed"
+        "sha256": "3f62d41e188d4f420a426ead5069642a4a00c9c146cac8c0e17a0db92b42577f"
       },
       "prompt": {
         "bytes": 6432,

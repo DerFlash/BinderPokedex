@@ -1249,6 +1249,9 @@ def build_overlay_fingerprint(
                     scope_data,
                     language,
                     content_mode,
+                    include_section_title=bool(
+                        content.get("include_section_title", True)
+                    ),
                 )
             ),
         }

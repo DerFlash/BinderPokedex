@@ -258,12 +258,23 @@ def test_section_manifest_preserves_title_logo_token_but_info_hides_tokens():
 
     assert manifest["title_text"]["en"] == "Mega-Pokémon [EX_NEW]"
     assert manifest["text_cells"]["title"]["style"] == "inline_logo"
+    assert manifest["text_content"]["include_section_title"] is False
     assert info_panel_values(
         {"sections": {"mega": section}},
         "en",
         "section_summary",
     ) == (
         "Mega-Pokémon ex",
+        "ex Series",
+        "3 cards",
+        "Mega Evolution with Tera ex and EX",
+    )
+    assert info_panel_values(
+        {"sections": {"mega": section}},
+        "en",
+        "section_summary",
+        include_section_title=False,
+    ) == (
         "ex Series",
         "3 cards",
         "Mega Evolution with Tera ex and EX",
