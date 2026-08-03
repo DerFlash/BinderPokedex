@@ -14,6 +14,7 @@ from scripts.poster_assets.typography import load_font, wrap_text
 from scripts.poster_assets.init_poster_scope import (
     build_section_manifest,
     section_poster_title,
+    section_title_style,
 )
 from scripts.poster_assets.poster_io import (
     load_poster_scope_data,
@@ -207,7 +208,7 @@ def test_section_overlay_uses_localized_title_count_and_description():
     )
 
 
-def test_section_manifest_and_overlay_hide_internal_variant_tokens():
+def test_section_manifest_preserves_title_logo_token_but_info_hides_tokens():
     languages = (
         "de",
         "en",
@@ -255,7 +256,8 @@ def test_section_manifest_and_overlay_hide_internal_variant_tokens():
         },
     )
 
-    assert manifest["title_text"]["en"] == "Mega-Pokémon ex"
+    assert manifest["title_text"]["en"] == "Mega-Pokémon [EX_NEW]"
+    assert manifest["text_cells"]["title"]["style"] == "inline_logo"
     assert info_panel_values(
         {"sections": {"mega": section}},
         "en",
@@ -274,6 +276,13 @@ def test_pokedex_section_poster_title_remains_backward_compatible():
         "Pokedex",
         {"title": {"en": "Generation I"}},
     ) == "Pokédex"
+
+
+def test_section_title_with_multiple_logo_tokens_keeps_panel_style():
+    assert section_title_style(
+        "ExGen2",
+        {"title": {"en": "[M] Pokémon [EX]"}},
+    ) == "panel"
 
 
 @pytest.mark.parametrize("language", SUPPORTED_LANGUAGES)

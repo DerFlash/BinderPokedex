@@ -177,7 +177,7 @@ python -m scripts.poster_assets.poster_work_plan --all-configured
 
 Verified on 2026-08-03:
 
-- the full suite passes with `491 passed, 1 skipped`;
+- the full suite passes with `501 passed, 1 skipped`;
 - all 13 enabled poster bundles validate;
 - the planner reports 41 configured targets: 13 current and 28 needing assets;
 - every v7 production graph matches its reviewed candidate graph except for

@@ -26,6 +26,7 @@ from scripts.poster_assets.create_comfyui_upscale_workflow import (
     build_workflow as build_upscale_workflow,
 )
 from scripts.poster_assets.finalize_comfyui_poster import (
+    draw_inline_logo_title,
     draw_title_text_panel,
     finalize,
     fitted_font,
@@ -1386,6 +1387,49 @@ def test_long_localized_title_stays_inside_its_panel():
     assert max(x for x, _y in text_points) < panel_box[2]
     assert min(y for _x, y in text_points) >= panel_box[1]
     assert max(y for _x, y in text_points) < panel_box[3]
+
+
+@pytest.mark.parametrize(
+    ("language", "title"),
+    (
+        ("de", "Pokémon [EX_NEW]"),
+        ("en", "Pokémon [EX_NEW]"),
+        ("fr", "Pokémon [EX_NEW]"),
+        ("es", "Pokémon [EX_NEW]"),
+        ("it", "Pokémon [EX_NEW]"),
+        ("ja", "ポケモン [EX_NEW]"),
+        ("ko", "포켓몬 [EX_NEW]"),
+        ("zh_hans", "宝可梦 [EX_NEW]"),
+        ("zh_hant", "寶可夢 [EX_NEW]"),
+    ),
+)
+def test_inline_logo_title_stays_inside_its_cell_without_panel(language, title):
+    canvas = Image.new("RGBA", (848, 1168), (74, 151, 211, 255))
+    title_cell = build_page_layout(
+        "standard_3x3",
+        width_px=canvas.width,
+    ).cell(1, 2)
+
+    title_box = draw_inline_logo_title(
+        canvas,
+        title_cell,
+        title,
+        language,
+    )
+
+    assert title_box[0] >= title_cell.x
+    assert title_box[1] >= title_cell.y
+    assert title_box[2] <= title_cell.x + title_cell.width
+    assert title_box[3] <= title_cell.y + title_cell.height
+    cell_pixels = canvas.crop(
+        (
+            title_cell.x,
+            title_cell.y,
+            title_cell.x + title_cell.width,
+            title_cell.y + title_cell.height,
+        )
+    ).get_flattened_data()
+    assert all(pixel[:3] != (253, 244, 202) for pixel in cell_pixels)
 
 
 

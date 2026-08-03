@@ -81,6 +81,12 @@ OVERLAY_TOKEN_TEXT = {
     "[EX]": "EX",
     "[M]": "Mega",
 }
+INLINE_TITLE_LOGOS = {
+    "[EX_NEW]": ROOT / "images" / "logos" / "ex_new" / "default.png",
+    "[EX_TERA]": ROOT / "images" / "logos" / "ex_tera" / "default.png",
+    "[EX]": ROOT / "images" / "logos" / "ex" / "default.png",
+    "[M]": ROOT / "images" / "logos" / "m_pokemon" / "default.png",
+}
 
 
 def readable_overlay_text(value: object) -> str:
@@ -89,6 +95,30 @@ def readable_overlay_text(value: object) -> str:
     for token, replacement in OVERLAY_TOKEN_TEXT.items():
         text = text.replace(token, replacement)
     return text
+
+
+def localized_raw_value(value: object, language: str, *, default: str = "") -> str:
+    """Resolve a localized scalar while preserving inline-logo tokens."""
+    if isinstance(value, dict):
+        selected = value.get(language) or value.get("en")
+        if selected is None:
+            selected = next((item for item in value.values() if item), default)
+        return str(selected)
+    return str(default if value is None else value)
+
+
+def inline_title_logo(value: str) -> tuple[str, Path] | None:
+    """Resolve the single inline-logo token supported by a title."""
+    matches = [
+        (token, path)
+        for token, path in INLINE_TITLE_LOGOS.items()
+        if token in value
+    ]
+    if not matches:
+        return None
+    if len(matches) > 1 or value.count(matches[0][0]) != 1:
+        raise ValueError(f"Inline title needs exactly one logo token: {value!r}")
+    return matches[0]
 
 
 def draw_title_logo(canvas: Image.Image, cell, logo_path: Path) -> None:
@@ -131,14 +161,9 @@ def localized_set_name(scope_data: dict, language: str) -> str:
 
 def localized_value(value: object, language: str, *, default: str = "") -> str:
     """Resolve one localized scalar with a stable English/first-value fallback."""
-    if isinstance(value, dict):
-        selected = value.get(language) or value.get("en")
-        if selected is None:
-            selected = next((item for item in value.values() if item), default)
-        return readable_overlay_text(selected)
-    if value is None:
-        return readable_overlay_text(default)
-    return readable_overlay_text(value)
+    return readable_overlay_text(
+        localized_raw_value(value, language, default=default)
+    )
 
 
 def selected_section(scope_data: dict) -> dict:
@@ -368,6 +393,123 @@ def draw_title_text_panel(
     return panel_box
 
 
+def draw_inline_logo_title(
+    canvas: Image.Image,
+    title_cell,
+    title: str,
+    language: str,
+) -> tuple[int, int, int, int]:
+    """Draw localized title text and one real logo directly on the artwork."""
+    resolved = inline_title_logo(title)
+    if resolved is None:
+        raise ValueError(f"Inline title has no supported logo token: {title!r}")
+    token, logo_path = resolved
+    if not logo_path.is_file():
+        raise FileNotFoundError(f"Inline title logo not found: {logo_path}")
+
+    label = title.removesuffix(token).strip()
+    if not label or title != f"{label} {token}":
+        raise ValueError(
+            f"Inline title logo token must be the final title element: {title!r}"
+        )
+    max_width = round(title_cell.width * 0.90)
+    max_height = round(title_cell.height * 0.38)
+    preferred_size = max(14, title_cell.height // 7)
+    minimum_size = max(10, title_cell.height // 24)
+    with Image.open(logo_path) as loaded_logo:
+        logo_source = loaded_logo.convert("RGBA")
+
+    fitted = None
+    for size in range(preferred_size, minimum_size - 1, -1):
+        font = load_font(size, bold=True, language=language)
+        text_box = font.getbbox(label)
+        text_width = text_box[2] - text_box[0]
+        text_height = text_box[3] - text_box[1]
+        logo_height = max(1, round(size * 0.92))
+        logo_width = max(
+            1,
+            round(logo_source.width * logo_height / logo_source.height),
+        )
+        gap = max(4, round(size * 0.16))
+        total_width = text_width + gap + logo_width
+        total_height = max(logo_height, text_height)
+        if total_width <= max_width and total_height <= max_height:
+            fitted = (
+                font,
+                text_box,
+                text_width,
+                text_height,
+                logo_width,
+                logo_height,
+                gap,
+                total_width,
+                total_height,
+            )
+            break
+    if fitted is None:
+        raise ValueError(f"Inline title does not fit its cell: {title!r}")
+
+    (
+        font,
+        text_box,
+        text_width,
+        text_height,
+        logo_width,
+        logo_height,
+        gap,
+        total_width,
+        total_height,
+    ) = fitted
+    x = title_cell.x + (title_cell.width - total_width) // 2
+    center_y = title_cell.y + title_cell.height // 2
+    box = (
+        x,
+        center_y - total_height // 2,
+        x + total_width,
+        center_y + (total_height + 1) // 2,
+    )
+    overlay = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+    draw = ImageDraw.Draw(overlay, "RGBA")
+    stroke_width = max(1, round(font.size / 28))
+    shadow_offset = max(2, round(canvas.width / 390))
+    text_y = center_y - text_height // 2 - text_box[1]
+    draw.text(
+        (x + shadow_offset, text_y + shadow_offset),
+        label,
+        font=font,
+        fill=(5, 16, 22, 145),
+        stroke_width=stroke_width + 1,
+        stroke_fill=(5, 16, 22, 115),
+    )
+    draw.text(
+        (x, text_y),
+        label,
+        font=font,
+        fill=(255, 248, 215, 255),
+        stroke_width=stroke_width,
+        stroke_fill=(32, 68, 57, 245),
+    )
+
+    logo_x = x + text_width + gap
+    logo_y = center_y - logo_height // 2
+    logo = logo_source.resize(
+        (logo_width, logo_height),
+        Image.Resampling.LANCZOS,
+    )
+    shadow_alpha = logo.getchannel("A").filter(
+        ImageFilter.GaussianBlur(max(2, canvas.width // 320))
+    )
+    shadow = Image.new("RGBA", logo.size, (5, 16, 22, 110))
+    shadow.putalpha(shadow_alpha.point(lambda alpha: round(alpha * 0.50)))
+    overlay.alpha_composite(
+        shadow,
+        (logo_x + shadow_offset, logo_y + shadow_offset),
+    )
+    overlay.alpha_composite(logo, (logo_x, logo_y))
+    canvas.alpha_composite(overlay)
+    return box
+
+
 def draw_final_text_cells(canvas, layout, manifest, scope_data, scope_dir: Path, language: str) -> None:
     text_cells = manifest.get("text_cells", {})
     title_cfg = text_cells.get("title", {"row": 1, "column": 2})
@@ -382,17 +524,29 @@ def draw_final_text_cells(canvas, layout, manifest, scope_data, scope_dir: Path,
         draw_title_logo(canvas, title_cell, logo_path)
     else:
         configured_title = manifest.get("title_text")
-        title = (
-            localized_value(configured_title, language)
-            if configured_title is not None
-            else scope_title(scope_data)
-        )
-        draw_title_text_panel(
-            canvas,
-            title_cell,
-            title,
-            language,
-        )
+        title_style = str(title_cfg.get("style", "panel"))
+        if title_style == "inline_logo":
+            title = localized_raw_value(configured_title, language)
+            draw_inline_logo_title(
+                canvas,
+                title_cell,
+                title,
+                language,
+            )
+        elif title_style == "panel":
+            title = (
+                localized_value(configured_title, language)
+                if configured_title is not None
+                else scope_title(scope_data)
+            )
+            draw_title_text_panel(
+                canvas,
+                title_cell,
+                title,
+                language,
+            )
+        else:
+            raise ValueError(f"Unsupported title style: {title_style}")
     content_config = manifest.get("text_content", {})
     if not isinstance(content_config, dict):
         raise ValueError("text_content must be a mapping")

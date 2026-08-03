@@ -30,7 +30,7 @@
         "width": 750
       },
       {
-        "bytes": 130090,
+        "bytes": 174420,
         "dpi": [
           299.9994,
           299.9994
@@ -38,8 +38,8 @@
         "file": "data/poster_assets/ExGen3/sections/mega/poster-flux2-cards/card_r1_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "d4c4405c089be44d59acec0ae2e52a0f2a6b60004c8d43a0b8b563f289e11b2d",
-        "sha256": "605eb517479da291bf548f7bcbd4976809db5f39936f27a03bae3d6aeabd7294",
+        "pixel_sha256": "49518820bc0a289ff3f723b3d2dca3c2a2481ad2c89715e3c7f39096bf3167b1",
+        "sha256": "7ce0a41c2a1ed976e5bfaacdb1c8d2ee71933e47cc46779b29c26a6a548222d6",
         "width": 750
       },
       {
@@ -135,7 +135,7 @@
       }
     ],
     "preview": {
-      "bytes": 4474277,
+      "bytes": 4511531,
       "dpi": [
         299.9994,
         299.9994
@@ -143,14 +143,14 @@
       "file": "data/poster_assets/ExGen3/sections/mega/poster-flux2.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "92b8cd31c5f0dcbb052b8ad03ecfd6ae0dfc36ca453fcb781b58023f8e321392",
-      "sha256": "a21416eb2f4f1e87878d09ab44e97d53195936128e87d0ba79ba883b389fb29b",
+      "pixel_sha256": "bcd51f4cdeab6b3d37fd5f15242300c09dee29ddda01e5ceba8f77d4e75d1e8a",
+      "sha256": "dceb72bc79d875e63bf97f2429c7e7a63a905d030939823eab0c0776889fcc16",
       "width": 2368
     }
   },
   "poster_id": "mega",
   "preview_language": "en",
-  "promoted_at": "2026-08-03T13:30:32.000920+00:00",
+  "promoted_at": "2026-08-03T15:14:07.289815+00:00",
   "run": {
     "created_at": "2026-07-29T11:57:10.409092+00:00",
     "generation": {
@@ -414,8 +414,10 @@
                 "Mega-Entwicklungs-Serie (2025–heute) • Mega-Entwicklungen als Pokémon ex"
               ],
               "title": {
-                "kind": "text",
-                "value": "Mega-Pokémon ex"
+                "kind": "inline_logo",
+                "pixel_sha256": "534c9326a26b14389e0db3f699587febd92b957cb488f7f145ad30259714a941",
+                "token": "[EX_NEW]",
+                "value": "Mega-Pokémon [EX_NEW]"
               }
             },
             "en": {
@@ -426,8 +428,10 @@
                 "Mega Evolution Series (2025–present) • Mega Evolutions as Pokémon ex"
               ],
               "title": {
-                "kind": "text",
-                "value": "Mega Pokémon ex"
+                "kind": "inline_logo",
+                "pixel_sha256": "534c9326a26b14389e0db3f699587febd92b957cb488f7f145ad30259714a941",
+                "token": "[EX_NEW]",
+                "value": "Mega Pokémon [EX_NEW]"
               }
             },
             "es": {
@@ -438,8 +442,10 @@
                 "Serie Megaevolución (2025–presente) • Megaevoluciones como Pokémon ex"
               ],
               "title": {
-                "kind": "text",
-                "value": "Mega-Pokémon ex"
+                "kind": "inline_logo",
+                "pixel_sha256": "534c9326a26b14389e0db3f699587febd92b957cb488f7f145ad30259714a941",
+                "token": "[EX_NEW]",
+                "value": "Mega-Pokémon [EX_NEW]"
               }
             },
             "fr": {
@@ -450,8 +456,10 @@
                 "Série Méga-Évolution (2025–présent) • Méga-Évolutions en Pokémon ex"
               ],
               "title": {
-                "kind": "text",
-                "value": "Méga-Pokémon ex"
+                "kind": "inline_logo",
+                "pixel_sha256": "534c9326a26b14389e0db3f699587febd92b957cb488f7f145ad30259714a941",
+                "token": "[EX_NEW]",
+                "value": "Méga-Pokémon [EX_NEW]"
               }
             },
             "it": {
@@ -462,8 +470,10 @@
                 "Serie Megaevoluzione (2025–presente) • Megaevoluzioni come Pokémon ex"
               ],
               "title": {
-                "kind": "text",
-                "value": "Mega-Pokémon ex"
+                "kind": "inline_logo",
+                "pixel_sha256": "534c9326a26b14389e0db3f699587febd92b957cb488f7f145ad30259714a941",
+                "token": "[EX_NEW]",
+                "value": "Mega-Pokémon [EX_NEW]"
               }
             },
             "ja": {
@@ -474,8 +484,10 @@
                 "メガシンカシリーズ (2025–現在) • メガシンカポケモンex"
               ],
               "title": {
-                "kind": "text",
-                "value": "メガポケモン ex"
+                "kind": "inline_logo",
+                "pixel_sha256": "534c9326a26b14389e0db3f699587febd92b957cb488f7f145ad30259714a941",
+                "token": "[EX_NEW]",
+                "value": "メガポケモン [EX_NEW]"
               }
             },
             "ko": {
@@ -486,8 +498,10 @@
                 "메가진화 시리즈 (2025–현재) • 메가진화 포켓몬 ex"
               ],
               "title": {
-                "kind": "text",
-                "value": "메가 포켓몬 ex"
+                "kind": "inline_logo",
+                "pixel_sha256": "534c9326a26b14389e0db3f699587febd92b957cb488f7f145ad30259714a941",
+                "token": "[EX_NEW]",
+                "value": "메가 포켓몬 [EX_NEW]"
               }
             },
             "zh_hans": {
@@ -498,8 +512,10 @@
                 "超级进化系列 (2025–至今) • 超级进化宝可梦ex"
               ],
               "title": {
-                "kind": "text",
-                "value": "超级宝可梦 ex"
+                "kind": "inline_logo",
+                "pixel_sha256": "534c9326a26b14389e0db3f699587febd92b957cb488f7f145ad30259714a941",
+                "token": "[EX_NEW]",
+                "value": "超级宝可梦 [EX_NEW]"
               }
             },
             "zh_hant": {
@@ -510,13 +526,22 @@
                 "超級進化系列 (2025–至今) • 超級進化寶可夢ex"
               ],
               "title": {
-                "kind": "text",
-                "value": "超級寶可夢 ex"
+                "kind": "inline_logo",
+                "pixel_sha256": "534c9326a26b14389e0db3f699587febd92b957cb488f7f145ad30259714a941",
+                "token": "[EX_NEW]",
+                "value": "超級寶可夢 [EX_NEW]"
               }
             }
           },
           "layout_name": "standard_3x3",
-          "logo_pixels": {},
+          "logo_pixels": {
+            "inline:[EX_NEW]": {
+              "height": 150,
+              "mode": "RGBA",
+              "pixel_sha256": "534c9326a26b14389e0db3f699587febd92b957cb488f7f145ad30259714a941",
+              "width": 276
+            }
+          },
           "pipeline_contract": {
             "name": "poster_overlay",
             "version": 3
@@ -530,7 +555,8 @@
             },
             "title": {
               "column": 2,
-              "row": 1
+              "row": 1,
+              "style": "inline_logo"
             }
           },
           "text_content": {
@@ -538,7 +564,7 @@
           }
         },
         "schema_version": 1,
-        "sha256": "d3ca2ee2d9f9525d845f3327b4b0e29975c1ee51ca67b63aedea3a3b2eb15fc4"
+        "sha256": "a1ae7ec304a8757ac4787b7684e115eec8506bc9bdb3cfef9222a93af2f08af2"
       },
       "prompt": {
         "bytes": 6441,

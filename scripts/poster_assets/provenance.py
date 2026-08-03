@@ -1172,6 +1172,8 @@ def build_overlay_fingerprint(
         from .finalize_comfyui_poster import (
             SUPPORTED_LANGUAGES,
             info_panel_values,
+            inline_title_logo,
+            localized_raw_value,
             localized_value,
             title_logo_file,
         )
@@ -1180,6 +1182,8 @@ def build_overlay_fingerprint(
         from finalize_comfyui_poster import (
             SUPPORTED_LANGUAGES,
             info_panel_values,
+            inline_title_logo,
+            localized_raw_value,
             localized_value,
             title_logo_file,
         )
@@ -1196,6 +1200,13 @@ def build_overlay_fingerprint(
         raise ValueError("text_content must be a mapping")
     content_mode = str(content.get("mode", "set_summary"))
     configured_title = manifest.get("title_text")
+    text_cells = manifest.get("text_cells", {})
+    if not isinstance(text_cells, dict):
+        raise ValueError("text_cells must be a mapping")
+    title_config = text_cells.get("title", {})
+    if not isinstance(title_config, dict):
+        raise ValueError("text_cells.title must be a mapping")
+    title_style = str(title_config.get("style", "panel"))
     language_components: dict[str, Any] = {}
     logo_records: dict[str, Any] = {}
     for language in SUPPORTED_LANGUAGES:
@@ -1206,6 +1217,22 @@ def build_overlay_fingerprint(
             logo_records[language] = logo_record
             title: dict[str, Any] = {
                 "kind": "logo",
+                "pixel_sha256": logo_record["pixel_sha256"],
+            }
+        elif title_style == "inline_logo":
+            title_value = localized_raw_value(configured_title, language)
+            resolved = inline_title_logo(title_value)
+            if resolved is None:
+                raise ValueError(
+                    f"Inline title has no supported logo token: {title_value!r}"
+                )
+            token, logo_path = resolved
+            logo_record = image_pixel_record(logo_path)
+            logo_records[f"inline:{token}"] = logo_record
+            title = {
+                "kind": "inline_logo",
+                "value": title_value,
+                "token": token,
                 "pixel_sha256": logo_record["pixel_sha256"],
             }
         else:
@@ -1234,7 +1261,7 @@ def build_overlay_fingerprint(
             "name",
             "standard_3x3",
         ),
-        "text_cells": manifest.get("text_cells", {}),
+        "text_cells": text_cells,
         "text_content": content,
         "languages": language_components,
         "logo_pixels": logo_records,

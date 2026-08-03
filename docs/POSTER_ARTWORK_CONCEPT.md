@@ -163,6 +163,10 @@ project mark. `section_summary` renders collection/section title, localized
 subtitle or region, card count, description/range, and the project mark. Every
 current aggregate section provides all nine PDF translations; an individual
 TCG set follows only the languages advertised by its fetched set data.
+Section titles with one supported trailing logo token preserve that token and
+render the tracked transparent logo inline with the localized title, directly
+on the artwork. Text-only section titles keep the bounded title panel, while a
+set with a complete title logo continues to use that logo by itself.
 
 ## Default individual-spatial `joint_scene` graph
 

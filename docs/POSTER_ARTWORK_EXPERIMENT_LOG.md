@@ -1334,3 +1334,20 @@ read-only planner. German Pokédex and `SV03.5` PDF smoke builds confirm the
 depth/occlusion guide remains documented but inactive; it is reserved for a
 future scope that cannot achieve either clean separation or coherent overlap
 within the bounded normal candidate rule.
+
+## ExGen3 inline title-logo overlay — 2026-08-03
+
+The ExGen3 section source already supplies localized titles ending in
+`[EX_NEW]`, and the existing cover renderer turns that marker into the tracked
+silver `ex` artwork. The poster overlay had flattened the same marker to plain
+text and placed it inside the generic pale title panel. The deterministic
+poster finalizer now supports one trailing inline-logo token: it centers the
+localized title and tracked transparent logo as one bounded group directly on
+the text-safe artwork cell, with a restrained outline/shadow and no panel.
+
+Both ExGen3 section manifests now retain their exact `[EX_NEW]` source titles.
+Their stable text-free artwork, generation fingerprint, and visual approval
+remain unchanged; only previews, top-center card slices, and overlay
+fingerprints were refreshed. The read-only planner reports both promotions as
+current, and the German `ExGen3_DE_TEST_NO_IMAGES.pdf` smoke build confirms the
+unchanged cover followed by the new cut-safe `Pokémon` plus `ex` poster title.

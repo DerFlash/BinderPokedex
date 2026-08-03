@@ -11,21 +11,22 @@ text_cells:
   title:
     row: 1
     column: 2
+    style: inline_logo
   set_info:
     row: 2
     column: 2
     max_width_ratio: 0.92
     max_height_ratio: 0.68
 title_text:
-  de: Pokémon ex
-  en: Pokémon ex
-  fr: Pokémon ex
-  es: Pokémon ex
-  it: Pokémon ex
-  ja: ポケモン ex
-  ko: 포켓몬 ex
-  zh_hans: 宝可梦 ex
-  zh_hant: 寶可夢 ex
+  de: Pokémon [EX_NEW]
+  en: Pokémon [EX_NEW]
+  fr: Pokémon [EX_NEW]
+  es: Pokémon [EX_NEW]
+  it: Pokémon [EX_NEW]
+  ja: ポケモン [EX_NEW]
+  ko: 포켓몬 [EX_NEW]
+  zh_hans: 宝可梦 [EX_NEW]
+  zh_hant: 寶可夢 [EX_NEW]
 text_content:
   mode: section_summary
 artwork:

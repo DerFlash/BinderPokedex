@@ -30,7 +30,7 @@
         "width": 750
       },
       {
-        "bytes": 85279,
+        "bytes": 151076,
         "dpi": [
           299.9994,
           299.9994
@@ -38,8 +38,8 @@
         "file": "data/poster_assets/ExGen3/sections/normal/poster-flux2-cards/card_r1_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "346c0d28571c50d50423cc4c3dcf0d1eff75416c9543246b51f92bf9e6e96871",
-        "sha256": "0a7e99567dd109f9cf5488e8df9c7fceff115b06427db99a2b650e4aae70d915",
+        "pixel_sha256": "53aae4ac194ec2bf29355871d2096c225f1b8c83fda2e2f9aaa00b763b95f1b3",
+        "sha256": "da879e68f84b750bed423d456bc2db1a6c6d9309604b5dad74070998109ccd76",
         "width": 750
       },
       {
@@ -135,7 +135,7 @@
       }
     ],
     "preview": {
-      "bytes": 5030204,
+      "bytes": 5094417,
       "dpi": [
         299.9994,
         299.9994
@@ -143,14 +143,14 @@
       "file": "data/poster_assets/ExGen3/sections/normal/poster-flux2.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "2392a64cc79df14348120d583f52b8e0d13bc161e36d60802840d5058d233a50",
-      "sha256": "41c2c7c95e06ff52843b419b694273ecfa5d76cc0667b91017a5de64df6d4fd5",
+      "pixel_sha256": "5329c84a68e5e17379528c08a28b52020fd2eae3a3224f9a81cfac9e67815cc1",
+      "sha256": "b8b0aa19332d850dc7f288b31b23c9687db6f95ea5f1fc5b5cca971cdc40a0bb",
       "width": 2368
     }
   },
   "poster_id": "normal",
   "preview_language": "en",
-  "promoted_at": "2026-08-03T13:30:56.383547+00:00",
+  "promoted_at": "2026-08-03T15:13:57.708115+00:00",
   "run": {
     "created_at": "2026-07-29T12:07:30.565056+00:00",
     "generation": {
@@ -384,8 +384,10 @@
                 "Moderne Pokémon-ex-Ära (2023–heute) • Pokémon ex ohne Mega-Entwicklung"
               ],
               "title": {
-                "kind": "text",
-                "value": "Pokémon ex"
+                "kind": "inline_logo",
+                "pixel_sha256": "534c9326a26b14389e0db3f699587febd92b957cb488f7f145ad30259714a941",
+                "token": "[EX_NEW]",
+                "value": "Pokémon [EX_NEW]"
               }
             },
             "en": {
@@ -396,8 +398,10 @@
                 "Modern Pokémon ex era (2023–present) • non-Mega Pokémon ex"
               ],
               "title": {
-                "kind": "text",
-                "value": "Pokémon ex"
+                "kind": "inline_logo",
+                "pixel_sha256": "534c9326a26b14389e0db3f699587febd92b957cb488f7f145ad30259714a941",
+                "token": "[EX_NEW]",
+                "value": "Pokémon [EX_NEW]"
               }
             },
             "es": {
@@ -408,8 +412,10 @@
                 "Era moderna de Pokémon ex (2023–presente) • Pokémon ex sin Megaevolución"
               ],
               "title": {
-                "kind": "text",
-                "value": "Pokémon ex"
+                "kind": "inline_logo",
+                "pixel_sha256": "534c9326a26b14389e0db3f699587febd92b957cb488f7f145ad30259714a941",
+                "token": "[EX_NEW]",
+                "value": "Pokémon [EX_NEW]"
               }
             },
             "fr": {
@@ -420,8 +426,10 @@
                 "Ère moderne des Pokémon ex (2023–présent) • Pokémon ex hors Méga-Évolution"
               ],
               "title": {
-                "kind": "text",
-                "value": "Pokémon ex"
+                "kind": "inline_logo",
+                "pixel_sha256": "534c9326a26b14389e0db3f699587febd92b957cb488f7f145ad30259714a941",
+                "token": "[EX_NEW]",
+                "value": "Pokémon [EX_NEW]"
               }
             },
             "it": {
@@ -432,8 +440,10 @@
                 "Era moderna dei Pokémon ex (2023–presente) • Pokémon ex non megaevoluti"
               ],
               "title": {
-                "kind": "text",
-                "value": "Pokémon ex"
+                "kind": "inline_logo",
+                "pixel_sha256": "534c9326a26b14389e0db3f699587febd92b957cb488f7f145ad30259714a941",
+                "token": "[EX_NEW]",
+                "value": "Pokémon [EX_NEW]"
               }
             },
             "ja": {
@@ -444,8 +454,10 @@
                 "現代のポケモンex時代（2023年～）• メガシンカ以外のポケモンex"
               ],
               "title": {
-                "kind": "text",
-                "value": "ポケモン ex"
+                "kind": "inline_logo",
+                "pixel_sha256": "534c9326a26b14389e0db3f699587febd92b957cb488f7f145ad30259714a941",
+                "token": "[EX_NEW]",
+                "value": "ポケモン [EX_NEW]"
               }
             },
             "ko": {
@@ -456,8 +468,10 @@
                 "현대 포켓몬 ex 시대 (2023년~) • 메가진화가 아닌 포켓몬 ex"
               ],
               "title": {
-                "kind": "text",
-                "value": "포켓몬 ex"
+                "kind": "inline_logo",
+                "pixel_sha256": "534c9326a26b14389e0db3f699587febd92b957cb488f7f145ad30259714a941",
+                "token": "[EX_NEW]",
+                "value": "포켓몬 [EX_NEW]"
               }
             },
             "zh_hans": {
@@ -468,8 +482,10 @@
                 "现代宝可梦ex时代（2023年至今）• 非超级进化宝可梦ex"
               ],
               "title": {
-                "kind": "text",
-                "value": "宝可梦 ex"
+                "kind": "inline_logo",
+                "pixel_sha256": "534c9326a26b14389e0db3f699587febd92b957cb488f7f145ad30259714a941",
+                "token": "[EX_NEW]",
+                "value": "宝可梦 [EX_NEW]"
               }
             },
             "zh_hant": {
@@ -480,13 +496,22 @@
                 "現代寶可夢ex時代（2023年至今）• 非超級進化寶可夢ex"
               ],
               "title": {
-                "kind": "text",
-                "value": "寶可夢 ex"
+                "kind": "inline_logo",
+                "pixel_sha256": "534c9326a26b14389e0db3f699587febd92b957cb488f7f145ad30259714a941",
+                "token": "[EX_NEW]",
+                "value": "寶可夢 [EX_NEW]"
               }
             }
           },
           "layout_name": "standard_3x3",
-          "logo_pixels": {},
+          "logo_pixels": {
+            "inline:[EX_NEW]": {
+              "height": 150,
+              "mode": "RGBA",
+              "pixel_sha256": "534c9326a26b14389e0db3f699587febd92b957cb488f7f145ad30259714a941",
+              "width": 276
+            }
+          },
           "pipeline_contract": {
             "name": "poster_overlay",
             "version": 3
@@ -500,7 +525,8 @@
             },
             "title": {
               "column": 2,
-              "row": 1
+              "row": 1,
+              "style": "inline_logo"
             }
           },
           "text_content": {
@@ -508,7 +534,7 @@
           }
         },
         "schema_version": 1,
-        "sha256": "a87c69dd5e6b3b1e64813544f4bd5cebd9b8e358796c1e2a7165a570cd625dd4"
+        "sha256": "08dcb32503b413fb7cb02f0d42962c6ef9b7752273282ed0364b89a95fe76eed"
       },
       "prompt": {
         "bytes": 6432,
