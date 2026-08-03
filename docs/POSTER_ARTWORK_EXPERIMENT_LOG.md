@@ -1369,3 +1369,22 @@ fallback renderer: plain titles use the same bounded outlined-text treatment as
 the textual part of inline-logo titles. The fingerprint records
 `direct_outlined_v1`, so only affected text-title overlays become stale; no
 scope-specific display flag or artwork regeneration is required.
+
+## ExGen2 initial section candidates — 2026-08-04
+
+All three sections use the unchanged FLUX.2 individual-spatial v7 one-shot
+workflow at 1 MP and the section-specific seeds already stored in their
+manifests. The generated candidates remain ignored local review artifacts;
+none is promoted or enabled by this record.
+
+| Section | Seed | Raw SHA-256 | Agent review |
+| --- | ---: | --- | --- |
+| `normal` | `260737078` | `d7f1aa42a121e58b3ec5ae6d5ae34ec23c21a67801701afe42ba7b168fe8ab30` | Exactly Mewtwo, Mew, and Lugia once in the three bottom cards; identity, padding, grounding, shadows, and continuous valley vegetation pass preflight; pending human review |
+| `mega` | `260736802` | `f12dd7053571fcd439265f11620140596a2c2ae906fbceb7e8f7e536abb66fea` | Exactly Mega Mewtwo X, Mega Rayquaza, and Mega Latios once; the apparent hip forms on Mega Mewtwo X match its supplied Official Artwork reference; identity, card containment, and shared landscape pass preflight; pending human review |
+| `mega` diagnostic | `260736803` | `f0b1f1945222d7171a978726a27e34d9dc1f30368838f390f0034425bcaa7785` | Adds a second Mega Mewtwo X and Mega Rayquaza above the intended bottom cast; rejected on the exact-count gate, with no prompt or production change |
+| `primal` | `260759901` | `c7a335d31a48a2804ef78f54304ddfb3d434e5b17712e063b6e62ea2267892d6` | Exactly Primal Kyogre and Primal Groudon once in the outer bottom cards, with the center card retained as continuous terrain; anatomy, padding, rain, contact, and coastal depth pass preflight; pending human review |
+
+The bounded retry confirms that seed variation can regress exact subject count
+without improving the generation contract. The configured Mega seed remains
+the review candidate; no prompt branch, per-section workflow, or automatic
+seed sweep is added.
