@@ -260,15 +260,15 @@ class TransformBlackWhiteEXStep(BaseStep):
                     'section_id': 'mega',
                     'color_hex': '#7B2CBF',
                     'title': {
-                        'de': '[M] Pokémon [EX]',
-                        'en': '[M] Pokémon [EX]',
-                        'fr': '[M] Pokémon [EX]',
-                        'es': '[M] Pokémon [EX]',
-                        'it': '[M] Pokémon [EX]',
-                        'ja': '[M] ポケモン [EX]',
-                        'ko': '[M] 포켓몬 [EX]',
-                        'zh_hans': '[M] 宝可梦 [EX]',
-                        'zh_hant': '[M] 寶可夢 [EX]'
+                        'de': 'Mega-Pokémon [EX]',
+                        'en': 'Mega Pokémon [EX]',
+                        'fr': 'Méga-Pokémon [EX]',
+                        'es': 'Mega-Pokémon [EX]',
+                        'it': 'Mega-Pokémon [EX]',
+                        'ja': 'メガポケモン [EX]',
+                        'ko': '메가 포켓몬 [EX]',
+                        'zh_hans': '超级宝可梦 [EX]',
+                        'zh_hant': '超級寶可夢 [EX]'
                     },
                     'subtitle': {
                         'de': 'Mega-Entwicklung',

@@ -323,6 +323,26 @@ def test_section_title_with_multiple_logo_tokens_uses_plain_text_panel():
     assert inline_title_logo("[M] Pokémon [EX]") is None
 
 
+def test_exgen2_sections_keep_one_logo_header_and_distinct_info_copy():
+    source_data = json.loads(
+        (ROOT / "data" / "output" / "ExGen2.json").read_text(
+            encoding="utf-8",
+        )
+    )
+
+    for section_id in ("normal", "mega", "primal"):
+        section = source_data["sections"][section_id]
+        for language in SUPPORTED_LANGUAGES:
+            assert inline_title_logo(section["title"][language]) is not None
+
+    assert source_data["sections"]["normal"]["title"]["en"] == (
+        "Pokémon [EX]"
+    )
+    assert source_data["sections"]["normal"]["subtitle"]["en"] == (
+        "Generation 2"
+    )
+
+
 @pytest.mark.parametrize("language", SUPPORTED_LANGUAGES)
 def test_section_poster_finalizes_in_every_pdf_language(tmp_path, language):
     raw_path = tmp_path / f"raw-{language}.png"
