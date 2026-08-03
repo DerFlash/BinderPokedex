@@ -128,6 +128,40 @@ def test_skip_images_removes_only_remote_card_sources():
     assert "image_url" in source["sections"]["all"]["cards"][0]
 
 
+def test_skip_images_removes_remote_cover_image_tags_only_from_copy():
+    source = {
+        "sections": {
+            "all": {
+                "title": {"en": "Set title"},
+                "subtitle": {
+                    "en": (
+                        "[image]https://example.test/logo.png[/image]"
+                    ),
+                    "de": (
+                        "Sammlung "
+                        "[image]https://example.test/logo-de.png[/image]"
+                    ),
+                },
+                "description": {
+                    "en": "Keeps local [image]images/logo.png[/image]",
+                },
+                "cards": [_card(1)],
+            }
+        }
+    }
+
+    prepared = prepare_variant_data(source, skip_images=True)
+    section = prepared["sections"]["all"]
+
+    assert section["subtitle"] == {"en": "", "de": "Sammlung"}
+    assert section["description"] == source["sections"]["all"][
+        "description"
+    ]
+    assert "https://example.test/logo.png" in source["sections"]["all"][
+        "subtitle"
+    ]["en"]
+
+
 def test_options_support_legacy_flat_pokemon_data():
     source = {"pokemon": [_card(card_id) for card_id in range(1, 13)]}
 

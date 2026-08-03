@@ -1,11 +1,16 @@
 """Prepare scope data for optional PDF generation modes."""
 
 from copy import deepcopy
+import re
 from typing import Any
 
 
 TEST_CARD_LIMIT = 9
 POSTER_PAGE_MODES = ("cards", "full-page")
+REMOTE_IMAGE_TAG = re.compile(
+    r"\[image\]https?://.*?\[/image\]",
+    flags=re.IGNORECASE,
+)
 
 
 def validate_poster_page_mode(value: str) -> None:
@@ -66,6 +71,9 @@ def prepare_variant_data(
     sections = prepared.get("sections")
 
     if isinstance(sections, dict) and sections:
+        if skip_images:
+            for section in sections.values():
+                _remove_remote_cover_images(section)
         if test_mode:
             ordered_sections = sorted(
                 sections.items(),
@@ -102,6 +110,19 @@ def prepare_variant_data(
         _remove_remote_image_urls(pokemon, skip_images)
 
     return prepared
+
+
+def _remove_remote_cover_images(section: dict[str, Any]) -> None:
+    """Remove remote inline cover images while retaining localized copy."""
+    for field in ("title", "subtitle", "description"):
+        value = section.get(field)
+        if isinstance(value, dict):
+            section[field] = {
+                language: REMOTE_IMAGE_TAG.sub("", str(text)).strip()
+                for language, text in value.items()
+            }
+        elif isinstance(value, str):
+            section[field] = REMOTE_IMAGE_TAG.sub("", value).strip()
 
 
 def _remove_remote_image_urls(cards: list[dict[str, Any]], enabled: bool) -> None:

@@ -59,6 +59,11 @@ def test_get_font_names():
         logger.info(f"✓ {language}: {font} (registered)")
 
 
+def test_japanese_uses_complete_cid_font():
+    assert FontManager.get_font_name('ja') == 'HeiseiKakuGo-W5'
+    assert FontManager._font_cache['HeiseiKakuGo-W5'] is True
+
+
 
 def test_cid_fonts():
     """Test CJK language detection."""
