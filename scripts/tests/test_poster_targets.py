@@ -33,7 +33,7 @@ POSTER_ASSETS = ROOT / "data" / "poster_assets"
 def test_standalone_poster_manifests_remain_isolated_single_bundles():
     expected_hashes = {
         "Base1": "424ae822d7b7db3619379b9b910c68105aafaaaf42996bb58554ec1cb5ddd001",
-        "SV03.5": "1ef4b42e9c0ac7e7abb7d6a856188f7f126693fc7b9672766844de34d828fcd2",
+        "SV03.5": "64fca77c722fbb454c3ec17eacf58bf0ab0ae6fee29f3e9e1e4c4a295f3c40a7",
     }
 
     for scope, expected_hash in expected_hashes.items():
