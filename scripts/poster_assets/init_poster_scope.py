@@ -18,7 +18,10 @@ try:
         unique_by_poster_subject,
     )
     from .fetch_title_logos import fetch_title_logos
-    from .finalize_comfyui_poster import readable_overlay_text
+    from .finalize_comfyui_poster import (
+        SUPPORTED_LANGUAGES,
+        readable_overlay_text,
+    )
     from .generation_contract import CANONICAL_REFERENCE_MODES
     from .layout import DEFAULT_LAYOUT_NAME, LAYOUTS, resolve_layout_name
     from .poster_io import POSTER_ASSETS, SCOPE_DATA, load_json, load_yaml
@@ -30,14 +33,16 @@ except ImportError:
         unique_by_poster_subject,
     )
     from fetch_title_logos import fetch_title_logos
-    from finalize_comfyui_poster import readable_overlay_text
+    from finalize_comfyui_poster import (
+        SUPPORTED_LANGUAGES,
+        readable_overlay_text,
+    )
     from generation_contract import CANONICAL_REFERENCE_MODES
     from layout import DEFAULT_LAYOUT_NAME, LAYOUTS, resolve_layout_name
     from poster_io import POSTER_ASSETS, SCOPE_DATA, load_json, load_yaml
     from scene_catalog import scene_for_scope, section_scenes_for_scope
 
 
-SUPPORTED_LANGUAGES = ("de", "en", "fr", "es", "it")
 FALLBACK_POKEMON = (25, 1, 4, 7, 133, 6)
 SAFE_IDENTIFIER = re.compile(r"[A-Za-z0-9._-]+")
 

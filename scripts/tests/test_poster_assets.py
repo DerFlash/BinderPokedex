@@ -1052,6 +1052,42 @@ def test_new_tcg_set_manifest_bootstraps_the_joint_scene_flow():
     assert "middle-column-2" in prompt
 
 
+def test_new_tcg_set_manifest_keeps_every_advertised_pdf_language_logo():
+    languages = (
+        "de",
+        "en",
+        "fr",
+        "es",
+        "it",
+        "ja",
+        "ko",
+        "zh_hans",
+        "zh_hant",
+    )
+    scope_data = {
+        "type": "tcg_set",
+        "name": "Worldwide Archive",
+        "release_date": "2026-08-03",
+        "available_languages": list(languages),
+        "logo_urls": {
+            language: f"https://example.test/{language}.png"
+            for language in languages
+        },
+    }
+
+    manifest = build_default_manifest(
+        "WW01",
+        scope_data,
+        "standard_3x3",
+        {"engine": "flux"},
+    )
+
+    assert manifest["title_logo"]["files"] == {
+        language: f"logos/logo-{language}.png"
+        for language in languages
+    }
+
+
 def test_every_current_tcg_set_bootstraps_without_set_specific_python():
     root = Path(__file__).resolve().parents[2]
     generation_template = fetch_cutouts.load_yaml(
