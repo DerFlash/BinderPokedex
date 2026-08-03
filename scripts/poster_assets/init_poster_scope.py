@@ -225,17 +225,7 @@ def build_section_manifest(
         localized = section_data.get(field)
         missing = [
             language
-            for language in (
-                "de",
-                "en",
-                "fr",
-                "es",
-                "it",
-                "ja",
-                "ko",
-                "zh_hans",
-                "zh_hant",
-            )
+            for language in SUPPORTED_LANGUAGES
             if not isinstance(localized, dict) or not localized.get(language)
         ]
         if missing:
@@ -244,11 +234,14 @@ def build_section_manifest(
                 f"{', '.join(missing)}"
             )
     featured = section_data.get("featured_elements")
-    expected_subjects = int(layout["columns"])
-    if not isinstance(featured, list) or len(featured) != expected_subjects:
+    maximum_subjects = int(layout["columns"])
+    if (
+        not isinstance(featured, list)
+        or not 1 <= len(featured) <= maximum_subjects
+    ):
         raise ValueError(
-            f"{scope}/{section_id} needs exactly {expected_subjects} "
-            "featured_elements"
+            f"{scope}/{section_id} needs 1 to {maximum_subjects} "
+            "featured_elements for this layout"
         )
     try:
         resolved_featured = scope_featured_elements(
@@ -263,7 +256,7 @@ def build_section_manifest(
             f"{scope}/{section_id} featured_elements have invalid "
             "poster subjects"
         ) from error
-    if len(unique_featured) != expected_subjects:
+    if len(unique_featured) != len(featured):
         raise ValueError(
             f"{scope}/{section_id} featured_elements need unique poster "
             "subjects"
@@ -310,7 +303,11 @@ def build_section_manifest(
         },
         "pokemon": {
             "strategy": "featured_from_scope",
-            "count": "auto_from_layout_columns",
+            "count": (
+                "auto_from_layout_columns"
+                if len(unique_featured) == maximum_subjects
+                else len(unique_featured)
+            ),
             "row": "bottom",
             "cutout_source": "pokeapi_official_artwork",
             "fallback_candidates": [],

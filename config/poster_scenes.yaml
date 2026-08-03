@@ -328,6 +328,82 @@ scopes:
 # These briefs use the same centrally generated identity, layout, safe-area,
 # no-text, and continuous-ground contract as individual TCG sets.
 section_scopes:
+  ExGen1:
+    normal:
+      concept: >-
+        the classic 2003–2007 Pokémon ex era and its adventurous frontier mood
+      setting: >-
+        The artwork contains an expansive Hoenn-inspired frontier where a
+        bright meadow meets layered tropical woodland, weathered pale rock,
+        distant blue water, and a small research outpost with completely blank
+        facades low on the outer horizon.
+      lighting: Warm clear expedition daylight enters from the upper left.
+      rendering: >-
+        Use nostalgic mid-2000s trading-card illustration, clean cel-painted
+        linework, restrained natural colors, and broad atmospheric depth.
+      ground_noun: frontier grass
+      constraints:
+        - >-
+          Keep the outpost, rocks, and prominent foliage distant or at the
+          outer edges, away from the protected subject silhouettes.
+
+  ExGen2:
+    normal:
+      concept: >-
+        the Black and White through XY Pokémon-EX era and its energetic journey
+      setting: >-
+        The artwork contains a broad Unova-to-Kalos-inspired river valley with
+        open grass, layered woodland, pale distant cliffs, a graceful bridge,
+        and a tiny modern skyline with completely blank facades low on the
+        horizon.
+      lighting: Clear blue-gold afternoon light enters from the upper left.
+      rendering: >-
+        Use polished 2010s trading-card illustration, crisp cel-painted
+        linework, controlled blue and gold accents, and deep readable
+        perspective.
+      ground_noun: river grass
+      constraints:
+        - >-
+          Keep the bridge, skyline, cliffs, and other landmarks distant and
+          away from the protected subject silhouettes.
+
+    mega:
+      concept: >-
+        the XY Mega Evolution chapter and its precise crystalline energy
+      setting: >-
+        The artwork contains an elegant Kalos-inspired highland garden with
+        broad low grass, distant pale terraces, restrained crystalline ridges,
+        sparse wind-shaped trees at the outer edges, and faint refracted energy
+        confined to the far atmosphere.
+      lighting: Silver-gold daylight enters from the upper left.
+      rendering: >-
+        Use premium 2010s trading-card illustration, crisp cel-painted
+        linework, restrained jewel tones, and spacious atmospheric depth.
+      ground_noun: highland grass
+      constraints:
+        - >-
+          Keep crystals, energy effects, terraces, and trees distant or at the
+          outer edges, away from the protected subject silhouettes.
+
+    primal:
+      concept: >-
+        the ancient Hoenn Primal Reversion conflict between ocean and land
+      setting: >-
+        The artwork contains a vast ancient Hoenn coastal basin where dark
+        volcanic stone and a calm deep ocean meet beneath distant storm layers,
+        with restrained magma glow on one outer horizon and cold rain light on
+        the other.
+      lighting: Copper volcanic light and cool oceanic light meet in the distant sky.
+      rendering: >-
+        Use dramatic premium trading-card illustration, crisp cel-painted
+        linework, controlled red and blue contrast, and monumental atmospheric
+        depth.
+      ground_noun: coastal stone
+      constraints:
+        - >-
+          Keep lava, spray, rocks, and other prominent effects distant or at
+          the outer edges, away from the two protected subject silhouettes.
+
   ExGen3:
     normal:
       concept: >-

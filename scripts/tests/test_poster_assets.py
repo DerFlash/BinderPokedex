@@ -46,6 +46,7 @@ from scripts.poster_assets.layout import (
 from scripts.poster_assets.init_poster_scope import (
     available_tcg_scopes,
     build_default_manifest,
+    build_section_manifest,
     init_scope,
     stable_scope_seed,
 )
@@ -105,7 +106,9 @@ from scripts.poster_assets import upscale_comfyui_poster as poster_upscale
 from scripts.poster_assets.scene_catalog import (
     load_scene_catalog,
     scene_for_scope,
+    section_scenes_for_scope,
     validate_catalog_coverage,
+    validate_section_catalog_coverage,
 )
 from scripts.poster_assets.validate_promoted_poster import (
     enabled_poster_scopes,
@@ -742,6 +745,30 @@ def test_cutout_placements_stay_inside_bottom_card_cells():
         assert cell.y <= top < bottom <= cell.y + cell.height
 
 
+def test_two_cutouts_use_the_outer_bottom_cards(tmp_path: Path):
+    scope_dir = tmp_path / "scope"
+    cutout_dir = scope_dir / "cutouts"
+    cutout_dir.mkdir(parents=True)
+    items = []
+    for index in range(2):
+        filename = f"pokemon_{index}.png"
+        Image.new("RGBA", (200, 300), (40 + index, 80, 120, 255)).save(
+            cutout_dir / filename
+        )
+        items.append({"file": filename, "pokemon_id": index + 1})
+    (cutout_dir / "manifest.json").write_text(
+        json.dumps({"items": items}),
+        encoding="utf-8",
+    )
+
+    placements = cutout_placements(
+        build_page_layout("standard_3x3"),
+        scope_dir,
+    )
+
+    assert [placement["cell"].column for placement in placements] == [1, 3]
+
+
 def test_joint_scene_placements_reuse_canonical_card_fit():
     scope_dir = (
         Path(__file__).resolve().parents[2]
@@ -1135,6 +1162,78 @@ def test_scene_catalog_covers_every_current_individual_tcg_set_exactly():
     assert set(available_tcg_scopes()) == set(scenes)
     assert all(scene["setting"] for scene in scenes.values())
     assert all("safe_areas" not in scene for scene in scenes.values())
+
+
+def test_scene_catalog_covers_every_current_aggregate_section_exactly():
+    missing, stale = validate_section_catalog_coverage()
+
+    assert missing == set()
+    assert stale == set()
+
+
+def test_every_current_aggregate_section_bootstraps_from_shared_code():
+    root = Path(__file__).resolve().parents[2]
+    generation = fetch_cutouts.load_yaml(
+        root / "data" / "poster_assets" / "Base1" / "poster.yaml"
+    )["artwork"]["generation"]
+    checked = []
+    for path in sorted((root / "data" / "output").glob("*.json")):
+        scope_data = fetch_cutouts.load_json(path)
+        if scope_data.get("type") == "tcg_set":
+            continue
+        scenes = section_scenes_for_scope(path.stem)
+        for section_id, section in scope_data.get("sections", {}).items():
+            manifest = build_section_manifest(
+                f"{path.stem}/sections/{section_id}",
+                path.stem,
+                section_id,
+                section,
+                "standard_3x3",
+                generation,
+                scenes[section_id],
+            )
+            count = fetch_cutouts.resolve_requested_count(
+                manifest,
+                build_page_layout("standard_3x3"),
+            )
+            selected = fetch_cutouts.select_pokemon(
+                manifest,
+                {"set_id": path.stem, "sections": {section_id: section}},
+                count,
+                {},
+            )
+
+            assert len(selected) == count
+            checked.append(f"{path.stem}/{section_id}")
+
+    assert len(checked) == 15
+
+
+def test_primal_section_uses_its_two_canonical_subjects_without_duplication():
+    root = Path(__file__).resolve().parents[2]
+    scope_data = fetch_cutouts.load_json(root / "data" / "output" / "ExGen2.json")
+    section = scope_data["sections"]["primal"]
+    generation = fetch_cutouts.load_yaml(
+        root / "data" / "poster_assets" / "Base1" / "poster.yaml"
+    )["artwork"]["generation"]
+    scene = fetch_cutouts.load_yaml(root / "config" / "poster_scenes.yaml")[
+        "section_scopes"
+    ]["ExGen2"]["primal"]
+
+    manifest = build_section_manifest(
+        "ExGen2/sections/primal",
+        "ExGen2",
+        "primal",
+        section,
+        "standard_3x3",
+        generation,
+        scene,
+    )
+
+    assert manifest["pokemon"]["count"] == 2
+    assert [
+        item["pokemon_name"] for item in section["featured_elements"]
+    ] == ["Primal Kyogre", "Primal Groudon"]
 
 
 def test_runner_uses_the_scope_generation_contract_as_its_defaults():

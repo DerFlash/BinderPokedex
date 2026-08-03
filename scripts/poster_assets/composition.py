@@ -113,11 +113,22 @@ def cutout_placements(
             raise ValueError(f"{name} must be in the range (0, 1]")
     cells = layout.bottom_row_cells()
     items = load_cutout_items(scope_dir)
-    if len(items) != len(cells):
+    if not 1 <= len(items) <= len(cells):
         raise ValueError(
-            f"Layout '{layout.name}' needs {len(cells)} character cutouts, "
-            f"but {scope_dir / 'cutouts' / 'manifest.json'} contains {len(items)}"
+            f"Layout '{layout.name}' supports 1 to {len(cells)} character "
+            f"cutouts, but {scope_dir / 'cutouts' / 'manifest.json'} contains "
+            f"{len(items)}"
         )
+    if len(items) < len(cells):
+        if len(items) == 1:
+            cells = [cells[len(cells) // 2]]
+        else:
+            last = len(cells) - 1
+            divisor = len(items) - 1
+            cells = [
+                cells[(index * last + divisor // 2) // divisor]
+                for index in range(len(items))
+            ]
     prepared = []
     for cell, item in zip(cells, items):
         cutout_path = scope_dir / "cutouts" / item["file"]

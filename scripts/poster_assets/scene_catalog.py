@@ -119,3 +119,43 @@ def validate_catalog_coverage(
     configured = set(load_scene_catalog(catalog_path))
     current = current_tcg_scopes(data_dir)
     return current - configured, configured - current
+
+
+def current_section_targets(data_dir: Path | None = None) -> set[str]:
+    """Return every aggregate section as ``scope/section``."""
+    scope_dir = data_dir or SCOPE_DATA
+    result = set()
+    for path in scope_dir.glob("*.json"):
+        scope_data = load_json(path)
+        if scope_data.get("type") == "tcg_set":
+            continue
+        sections = scope_data.get("sections")
+        if not isinstance(sections, dict):
+            continue
+        result.update(f"{path.stem}/{section_id}" for section_id in sections)
+    return result
+
+
+def validate_section_catalog_coverage(
+    *,
+    catalog_path: Path | None = None,
+    data_dir: Path | None = None,
+) -> tuple[set[str], set[str]]:
+    """Return missing and stale briefs for aggregate poster sections."""
+    path = catalog_path or SCENE_CATALOG
+    catalog = load_yaml(path)
+    if catalog.get("version") != 1:
+        raise ValueError(f"Unsupported poster scene catalog version: {path}")
+    aggregate_scopes = catalog.get("section_scopes", {})
+    if not isinstance(aggregate_scopes, dict):
+        raise ValueError(f"section_scopes must be a mapping: {path}")
+    configured = set()
+    for scope, sections in aggregate_scopes.items():
+        if not isinstance(sections, dict):
+            raise ValueError(f"section_scopes.{scope} must be a mapping: {path}")
+        for section_id, scene in sections.items():
+            target = f"{scope}/{section_id}"
+            _validate_scene(target, scene)
+            configured.add(target)
+    current = current_section_targets(data_dir)
+    return current - configured, configured - current
