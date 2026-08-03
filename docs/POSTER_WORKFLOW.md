@@ -548,18 +548,22 @@ poster follows the first section cover; aggregate posters follow their
 respective configured section covers. The step does not contact ComfyUI or
 regenerate the background.
 
-The deterministic information block depends on the target type:
+All semantic copy comes from `data/output/<scope>.json`; `poster.yaml` only
+selects its layout and rendering contract. The deterministic information block
+depends on the target type:
 
 | Target | Top cell | Middle information cell | Footer |
 | --- | --- | --- | --- |
-| Individual TCG set | Localized set logo, with configured text fallback | Localized set name, card count, localized release label, release date | `Binder Pokedex` |
-| Aggregate section | Collection title such as `Pokédex` or localized section title | Localized section title, subtitle/region, card count, description/range | `Binder Pokedex` |
+| Individual TCG set | Localized full set logo, otherwise the source set name | Set name when the top is a logo; card count; localized release label; release date | `Binder Pokedex` |
+| Pokédex section | Source collection name `Pokédex` | Localized generation title, region, Pokémon count, Pokédex range | `Binder Pokedex` |
+| Other aggregate section | Localized source section title, including one inferred trailing token logo when supported | Subtitle, representative Pokémon count, description/date range | `Binder Pokedex` |
 
 These rows mirror the semantic cover information. The representative Pokémon
 are already part of the jointly generated scene. The existing cover remains
 present until a separate, explicitly reviewed PDF-renderer change replaces it.
 The cover's cutting hint and build timestamp are operational footer metadata
-and are not repeated inside the permanent artwork.
+and are not repeated inside the permanent artwork. Covers use the same scope
+type to label TCG-set totals as cards and Pokédex/variant totals as Pokémon.
 
 To keep an enabled 3×3 poster whole, without card gaps or cutting guides:
 

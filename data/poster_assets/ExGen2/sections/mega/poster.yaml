@@ -16,19 +16,8 @@ text_cells:
     column: 2
     max_width_ratio: 0.92
     max_height_ratio: 0.68
-title_text:
-  de: Mega Pokémon EX
-  en: Mega Pokémon EX
-  fr: Mega Pokémon EX
-  es: Mega Pokémon EX
-  it: Mega Pokémon EX
-  ja: Mega ポケモン EX
-  ko: Mega 포켓몬 EX
-  zh_hans: Mega 宝可梦 EX
-  zh_hant: Mega 寶可夢 EX
 text_content:
   mode: section_summary
-  include_section_title: false
 artwork:
   promoted_file: poster-flux2-artwork.png
   preview_file: poster-flux2.png

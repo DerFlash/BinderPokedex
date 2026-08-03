@@ -19,7 +19,6 @@ text_cells:
     max_width_ratio: 0.92
     max_height_ratio: 0.68
 
-title_text: Pokédex
 text_content:
   mode: section_summary
 

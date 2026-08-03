@@ -18,7 +18,6 @@ try:
         composite_panel,
         draw_text_centered,
         load_font,
-        scope_title,
         wrap_text,
     )
 except ImportError:
@@ -28,7 +27,6 @@ except ImportError:
         composite_panel,
         draw_text_centered,
         load_font,
-        scope_title,
         wrap_text,
     )
 
@@ -56,6 +54,17 @@ CARD_LABELS = {
     "ko": "장",
     "zh_hans": "张",
     "zh_hant": "張",
+}
+POKEMON_LABELS = {
+    "de": "Pokémon",
+    "en": "Pokémon",
+    "fr": "Pokémon",
+    "es": "Pokémon",
+    "it": "Pokémon",
+    "ja": "ポケモン",
+    "ko": "포켓몬",
+    "zh_hans": "宝可梦",
+    "zh_hant": "寶可夢",
 }
 RELEASE_LABELS = {
     "de": "Veröffentlicht",
@@ -108,17 +117,17 @@ def localized_raw_value(value: object, language: str, *, default: str = "") -> s
 
 
 def inline_title_logo(value: str) -> tuple[str, Path] | None:
-    """Resolve the single inline-logo token supported by a title."""
+    """Resolve one supported trailing logo token, otherwise use plain text."""
     matches = [
         (token, path)
         for token, path in INLINE_TITLE_LOGOS.items()
         if token in value
     ]
-    if not matches:
+    if len(matches) != 1 or value.count(matches[0][0]) != 1:
         return None
-    if len(matches) > 1 or value.count(matches[0][0]) != 1:
-        raise ValueError(f"Inline title needs exactly one logo token: {value!r}")
-    return matches[0]
+    token, path = matches[0]
+    label = value.removesuffix(token).strip()
+    return (token, path) if label and value == f"{label} {token}" else None
 
 
 def draw_title_logo(canvas: Image.Image, cell, logo_path: Path) -> None:
@@ -156,7 +165,22 @@ def localized_set_name(scope_data: dict, language: str) -> str:
         title = section.get("title")
         if isinstance(title, dict):
             return title.get(language) or title.get("en") or next(iter(title.values()))
-    return scope_title(scope_data)
+    name = scope_data.get("name")
+    if isinstance(name, dict):
+        return str(name.get(language) or name.get("en") or next(iter(name.values())))
+    return str(name or "Poster")
+
+
+def resolved_title_text(scope_data: dict, language: str) -> str:
+    """Resolve the one source-owned textual header before choosing its renderer."""
+    if scope_data.get("type") == "pokedex":
+        return localized_raw_value(scope_data.get("name"), language)
+    return localized_set_name(scope_data, language)
+
+
+def canonical_overlay_text(value: object) -> str:
+    """Normalize rendered text only for semantic duplicate detection."""
+    return " ".join(readable_overlay_text(value).split()).casefold()
 
 
 def localized_value(value: object, language: str, *, default: str = "") -> str:
@@ -204,28 +228,34 @@ def info_panel_values(
     language: str,
     content_mode: str,
     *,
-    include_section_title: bool = True,
+    header_text: str | None = None,
 ) -> tuple[str, ...]:
     """Resolve the deterministic text rows for one poster overlay profile."""
     if content_mode == "set_summary":
-        return (
+        values = (
             localized_set_name(scope_data, language),
             f"{card_count(scope_data)} {CARD_LABELS[language]}",
             RELEASE_LABELS[language],
             localized_date(str(scope_data["release_date"]), language),
         )
-    if content_mode == "section_summary":
+    elif content_mode == "section_summary":
         section = selected_section(scope_data)
         cards = section.get("cards")
         section_card_count = len(cards) if isinstance(cards, list) else 0
         values = (
             localized_value(section.get("title"), language),
             localized_value(section.get("subtitle"), language),
-            f"{section_card_count} {CARD_LABELS[language]}",
+            f"{section_card_count} {POKEMON_LABELS[language]}",
             localized_value(section.get("description"), language),
         )
-        return values if include_section_title else values[1:]
-    raise ValueError(f"Unsupported text_content.mode: {content_mode}")
+    else:
+        raise ValueError(f"Unsupported text_content.mode: {content_mode}")
+    if (
+        header_text is not None
+        and canonical_overlay_text(header_text) == canonical_overlay_text(values[0])
+    ):
+        return values[1:]
+    return values
 
 
 def info_panel_box(cell, config: dict | None = None) -> tuple[int, int, int, int]:
@@ -286,7 +316,7 @@ def draw_info_panel(
     config: dict | None = None,
     *,
     content_mode: str = "set_summary",
-    include_section_title: bool = True,
+    header_text: str | None = None,
 ) -> None:
     box = info_panel_box(cell, config)
     scale = canvas.width / 1400
@@ -306,20 +336,26 @@ def draw_info_panel(
         scope_data,
         language,
         content_mode,
-        include_section_title=include_section_title,
+        header_text=header_text,
     )
 
     text_draw = ImageDraw.Draw(canvas, "RGBA")
     pad_x = max(5, round((box[2] - box[0]) * 0.04))
     height = box[3] - box[1]
-    if content_mode == "set_summary":
+    if content_mode == "set_summary" and len(values) == 4:
         rows = (
             (values[0], (box[0] + pad_x, box[1] + round(height * 0.05), box[2] - pad_x, box[1] + round(height * 0.34)), max(11, cell.height // 13), max(9, cell.height // 20), True, (255, 244, 190, 255)),
             (values[1], (box[0] + pad_x, box[1] + round(height * 0.34), box[2] - pad_x, box[1] + round(height * 0.57)), max(9, cell.height // 18), max(8, cell.height // 24), True, (232, 213, 151, 255)),
             (values[2], (box[0] + pad_x, box[1] + round(height * 0.57), box[2] - pad_x, box[1] + round(height * 0.76)), max(8, cell.height // 24), max(7, cell.height // 28), False, (185, 210, 190, 255)),
             (values[3], (box[0] + pad_x, box[1] + round(height * 0.75), box[2] - pad_x, box[3] - 4), max(8, cell.height // 21), max(7, cell.height // 27), False, (244, 238, 207, 255)),
         )
-    elif include_section_title:
+    elif content_mode == "set_summary":
+        rows = (
+            (values[0], (box[0] + pad_x, box[1] + round(height * 0.10), box[2] - pad_x, box[1] + round(height * 0.38)), max(10, cell.height // 16), max(8, cell.height // 23), True, (232, 213, 151, 255)),
+            (values[1], (box[0] + pad_x, box[1] + round(height * 0.38), box[2] - pad_x, box[1] + round(height * 0.62)), max(9, cell.height // 20), max(7, cell.height // 27), False, (185, 210, 190, 255)),
+            (values[2], (box[0] + pad_x, box[1] + round(height * 0.61), box[2] - pad_x, box[3] - round(height * 0.08)), max(10, cell.height // 17), max(8, cell.height // 24), False, (244, 238, 207, 255)),
+        )
+    elif len(values) == 4:
         rows = (
             (values[0], (box[0] + pad_x, box[1] + round(height * 0.05), box[2] - pad_x, box[1] + round(height * 0.29)), max(11, cell.height // 13), max(9, cell.height // 20), True, (255, 244, 190, 255)),
             (values[1], (box[0] + pad_x, box[1] + round(height * 0.28), box[2] - pad_x, box[1] + round(height * 0.48)), max(9, cell.height // 18), max(8, cell.height // 24), False, (185, 210, 190, 255)),
@@ -423,10 +459,6 @@ def draw_inline_logo_title(
         raise FileNotFoundError(f"Inline title logo not found: {logo_path}")
 
     label = title.removesuffix(token).strip()
-    if not label or title != f"{label} {token}":
-        raise ValueError(
-            f"Inline title logo token must be the final title element: {title!r}"
-        )
     max_width = round(title_cell.width * 0.90)
     max_height = round(title_cell.height * 0.38)
     preferred_size = max(14, title_cell.height // 7)
@@ -531,40 +563,32 @@ def draw_final_text_cells(canvas, layout, manifest, scope_data, scope_dir: Path,
     info_cfg = text_cells.get("set_info", {"row": 2, "column": 2})
     title_cell = layout.cell(int(title_cfg["row"]), int(title_cfg["column"]))
     info_cell = layout.cell(int(info_cfg["row"]), int(info_cfg["column"]))
+    content_config = manifest.get("text_content", {})
+    if not isinstance(content_config, dict):
+        raise ValueError("text_content must be a mapping")
     logo_file = title_logo_file(manifest, language)
+    header_text: str | None = None
     if logo_file:
         logo_path = scope_dir / logo_file
         if not logo_path.is_file():
             raise FileNotFoundError(f"Title logo not found: {logo_path}")
         draw_title_logo(canvas, title_cell, logo_path)
     else:
-        configured_title = manifest.get("title_text")
-        title_style = str(title_cfg.get("style", "panel"))
-        if title_style == "inline_logo":
-            title = localized_raw_value(configured_title, language)
+        header_text = resolved_title_text(scope_data, language)
+        if inline_title_logo(header_text) is not None:
             draw_inline_logo_title(
                 canvas,
                 title_cell,
-                title,
-                language,
-            )
-        elif title_style == "panel":
-            title = (
-                localized_value(configured_title, language)
-                if configured_title is not None
-                else scope_title(scope_data)
-            )
-            draw_title_text_panel(
-                canvas,
-                title_cell,
-                title,
+                header_text,
                 language,
             )
         else:
-            raise ValueError(f"Unsupported title style: {title_style}")
-    content_config = manifest.get("text_content", {})
-    if not isinstance(content_config, dict):
-        raise ValueError("text_content must be a mapping")
+            draw_title_text_panel(
+                canvas,
+                title_cell,
+                readable_overlay_text(header_text),
+                language,
+            )
     draw_info_panel(
         canvas,
         info_cell,
@@ -572,9 +596,7 @@ def draw_final_text_cells(canvas, layout, manifest, scope_data, scope_dir: Path,
         language,
         info_cfg,
         content_mode=content_config.get("mode", "set_summary"),
-        include_section_title=bool(
-            content_config.get("include_section_title", True)
-        ),
+        header_text=header_text,
     )
     draw_project_signature(canvas)
 

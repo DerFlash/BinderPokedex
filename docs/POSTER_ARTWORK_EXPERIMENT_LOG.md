@@ -1345,17 +1345,20 @@ poster finalizer now supports one trailing inline-logo token: it centers the
 localized title and tracked transparent logo as one bounded group directly on
 the text-safe artwork cell, with a restrained outline/shadow and no panel.
 
-Both ExGen3 section manifests now retain their exact `[EX_NEW]` source titles.
-Their stable text-free artwork, generation fingerprint, and visual approval
-remain unchanged; only previews, top-center card slices, and overlay
-fingerprints were refreshed. The read-only planner reports both promotions as
-current, and the German `ExGen3_DE_TEST_NO_IMAGES.pdf` smoke build confirms the
+Both ExGen3 overlays now read their exact `[EX_NEW]` titles directly from the
+section source; the manifests contain no copied title or style switch. Their
+stable text-free artwork, generation fingerprint, and visual approval remain
+unchanged; only previews, top-center card slices, and overlay fingerprints are
+refreshed. The German `ExGen3_DE_TEST_NO_IMAGES.pdf` smoke build confirms the
 unchanged cover followed by the new cut-safe `Pokémon` plus `ex` poster title.
 
 The following review caught that this exact section title was still repeated
-as the first row of the middle information panel. Aggregate manifests now
-state whether that row belongs there: Pokédex keeps it because the upper title
-is the collection name, while every Ex-generation section omits it because the
-upper title already names that section. Subtitle, card count, and description
-then use the three-row panel layout; no generated artwork or PDF routing is
-changed.
+as the first row of the middle information panel. A temporary manifest Boolean
+fixed that output but created another data branch. The final form instead
+normalizes the resolved top text and first semantic information row, removes a
+match automatically, and chooses inline-logo versus text rendering from the
+same source value. Pokédex therefore keeps its generation row below the
+collection name, while every Ex-generation section uses the compact three-row
+panel without a per-scope switch. The overlapping ExGen3 description prefixes
+were shortened to date range plus distinguishing variant detail; no generated
+artwork or PDF routing changed.

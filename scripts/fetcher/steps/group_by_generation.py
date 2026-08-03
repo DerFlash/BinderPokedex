@@ -175,6 +175,8 @@ class GroupByGenerationStep(BaseStep):
         # Build final target structure (no root-level description)
         target_data = {
             'version': '2.0',
+            'type': 'pokedex',
+            'name': 'Pokédex',
             'consolidated_date': datetime.now().strftime('%Y-%m-%d'),
             'total_generations': len(sections),
             'sections': sections,

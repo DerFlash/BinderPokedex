@@ -16,19 +16,8 @@ text_cells:
     column: 2
     max_width_ratio: 0.92
     max_height_ratio: 0.68
-title_text:
-  de: Pokémon EX - Generation 1
-  en: Pokémon EX - Generation 1
-  fr: Pokémon EX - Génération 1
-  es: Pokémon EX - Generación 1
-  it: Pokémon EX - Generazione 1
-  ja: ポケモンEX - ジェネレーション1
-  ko: 포켓몬 EX - 세대 1
-  zh_hans: 宝可梦EX - 第一代
-  zh_hant: 寶可夢EX - 第一代
 text_content:
   mode: section_summary
-  include_section_title: false
 artwork:
   promoted_file: poster-flux2-artwork.png
   preview_file: poster-flux2.png

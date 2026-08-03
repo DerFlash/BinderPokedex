@@ -26,7 +26,7 @@
         "height": 1050,
         "mode": "RGBA",
         "pixel_sha256": "f6a3944978ccbc734b18ef56c30acf78d21689589a84f0e1a839d6de9a7dd8b3",
-        "sha256": "049836c36efc67b80d5292081e69f35e6d956bf73feda2b8823b1f302a394530",
+        "sha256": "ad25de6f91bcd9338e328370475635ade2e8b3546cd5e32e5222200963b4fcd3",
         "width": 750
       },
       {
@@ -69,7 +69,7 @@
         "width": 750
       },
       {
-        "bytes": 321312,
+        "bytes": 322371,
         "dpi": [
           299.9994,
           299.9994
@@ -77,8 +77,8 @@
         "file": "data/poster_assets/Pokedex/sections/gen5/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "70b7b64d0319948b748e486d2e580159337bb92fda5d3807e0e2c168905170a3",
-        "sha256": "5222085a886349b978ff42921bf1921f471b6f6ef099c13f47b5ab5b75d83a5e",
+        "pixel_sha256": "441ffbdb7b711751b66cb0f4266c5dfce84acfd6f88a61855754756a38074f06",
+        "sha256": "12c208ab19c35cb17dd040c6f784d97773a5c6d62940013eb8cadbb04da80407",
         "width": 750
       },
       {
@@ -104,7 +104,7 @@
         "height": 1050,
         "mode": "RGBA",
         "pixel_sha256": "f6ab2c61ccb718c90b4b603a2792604810611e0b1ec8b360b60fdce6734e9865",
-        "sha256": "b4ddf90ea6a275749a7d4f1e7a55c908e0a4d7977b6b4864495c5d0019db4b78",
+        "sha256": "9a865444ed57039b1978ab3b443f7787d537e422f1cf9b7ea00b67475768fb66",
         "width": 750
       },
       {
@@ -135,7 +135,7 @@
       }
     ],
     "preview": {
-      "bytes": 3963612,
+      "bytes": 3964854,
       "dpi": [
         299.9994,
         299.9994
@@ -143,14 +143,14 @@
       "file": "data/poster_assets/Pokedex/sections/gen5/poster-flux2.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "b5a7567bdf8ecf48d00295b183d520ee3df85db5f7f98548dd7bce28ff745ca9",
-      "sha256": "0fdcd4914c90ac4ea5eaccc7e862b8e180e84f93ccbed0b8fcc2f054bea74be5",
+      "pixel_sha256": "afbed4b00cc7df75d99072a97e58f7067f0409185f8a752861c12c270f71022b",
+      "sha256": "195c6a5ddca413bca8f3de2b5133f9ff9234bfe43c0a41d11731788fdead8475",
       "width": 2368
     }
   },
   "poster_id": "gen5",
   "preview_language": "en",
-  "promoted_at": "2026-08-03T13:31:30.881268+00:00",
+  "promoted_at": "2026-08-03T16:12:21.473486+00:00",
   "run": {
     "created_at": "2026-08-03T12:35:32.239050+00:00",
     "generation": {
@@ -376,7 +376,7 @@
               "information": [
                 "Generation V",
                 "Einall",
-                "156 Karten",
+                "156 Pokémon",
                 "Pokédex #494 – #649"
               ],
               "title": {
@@ -388,7 +388,7 @@
               "information": [
                 "Generation V",
                 "Unova",
-                "156 cards",
+                "156 Pokémon",
                 "Pokédex #494 – #649"
               ],
               "title": {
@@ -400,7 +400,7 @@
               "information": [
                 "Generación V",
                 "Teselia",
-                "156 cartas",
+                "156 Pokémon",
                 "Pokédex #494 – #649"
               ],
               "title": {
@@ -412,7 +412,7 @@
               "information": [
                 "Génération V",
                 "Unys",
-                "156 cartes",
+                "156 Pokémon",
                 "Pokédex #494 – #649"
               ],
               "title": {
@@ -424,7 +424,7 @@
               "information": [
                 "Generazione V",
                 "Unima",
-                "156 carte",
+                "156 Pokémon",
                 "Pokédex #494 – #649"
               ],
               "title": {
@@ -436,7 +436,7 @@
               "information": [
                 "5世代",
                 "イッシュ",
-                "156 枚",
+                "156 ポケモン",
                 "ポケモン図鑑 #494 – #649"
               ],
               "title": {
@@ -448,7 +448,7 @@
               "information": [
                 "5세대",
                 "이슈",
-                "156 장",
+                "156 포켓몬",
                 "포켓몬 도감 #494 – #649"
               ],
               "title": {
@@ -460,7 +460,7 @@
               "information": [
                 "第5世代",
                 "合众",
-                "156 张",
+                "156 宝可梦",
                 "宝可梦图鉴 #494 – #649"
               ],
               "title": {
@@ -472,7 +472,7 @@
               "information": [
                 "第5世代",
                 "合眾",
-                "156 張",
+                "156 寶可夢",
                 "寶可夢圖鑑 #494 – #649"
               ],
               "title": {
@@ -504,7 +504,7 @@
           }
         },
         "schema_version": 1,
-        "sha256": "8a48fc9df8506fca6962f7048d8c57628c0b287efc84f195e2f5842ccaa9c5c4"
+        "sha256": "f58e597b8d30042c52029ced142d33d196ec54ca679970e413da08f013c5785b"
       },
       "prompt": {
         "bytes": 5712,

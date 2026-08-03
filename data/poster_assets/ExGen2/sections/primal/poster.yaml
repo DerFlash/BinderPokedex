@@ -16,19 +16,8 @@ text_cells:
     column: 2
     max_width_ratio: 0.92
     max_height_ratio: 0.68
-title_text:
-  de: Primal Pokémon EX
-  en: Primal Pokémon EX
-  fr: Pokémon Primo EX
-  es: Pokémon Primigenio EX
-  it: Pokémon Archeo EX
-  ja: ゲンシポケモン EX
-  ko: 원시포켓몬 EX
-  zh_hans: 原始宝可梦 EX
-  zh_hant: 原始寶可夢 EX
 text_content:
   mode: section_summary
-  include_section_title: false
 artwork:
   promoted_file: poster-flux2-artwork.png
   preview_file: poster-flux2.png

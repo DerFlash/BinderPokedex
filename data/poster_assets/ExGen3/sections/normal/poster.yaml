@@ -11,25 +11,13 @@ text_cells:
   title:
     row: 1
     column: 2
-    style: inline_logo
   set_info:
     row: 2
     column: 2
     max_width_ratio: 0.92
     max_height_ratio: 0.68
-title_text:
-  de: Pokémon [EX_NEW]
-  en: Pokémon [EX_NEW]
-  fr: Pokémon [EX_NEW]
-  es: Pokémon [EX_NEW]
-  it: Pokémon [EX_NEW]
-  ja: ポケモン [EX_NEW]
-  ko: 포켓몬 [EX_NEW]
-  zh_hans: 宝可梦 [EX_NEW]
-  zh_hant: 寶可夢 [EX_NEW]
 text_content:
   mode: section_summary
-  include_section_title: false
 artwork:
   promoted_file: poster-flux2-artwork.png
   preview_file: poster-flux2.png

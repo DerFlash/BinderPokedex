@@ -69,7 +69,7 @@
         "width": 750
       },
       {
-        "bytes": 372883,
+        "bytes": 373266,
         "dpi": [
           299.9994,
           299.9994
@@ -77,8 +77,8 @@
         "file": "data/poster_assets/Pokedex/sections/gen7/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "a4c5ac7931ddcd68c1dd30179591e37b9c58a26bebf1e1d7cef8afb59d729c79",
-        "sha256": "a9d6013e7521231cd2670eb5b2016738bf7a45cefc8bce67320327592e77bc14",
+        "pixel_sha256": "8661b399b9ee35ed597ef51e9d56ca87eb53fcaca51387e121c964dba7bb48f0",
+        "sha256": "e628b86b40f581c9bd53569927b6aad780d4849ca82065f80cd8989d383047cc",
         "width": 750
       },
       {
@@ -135,7 +135,7 @@
       }
     ],
     "preview": {
-      "bytes": 5010172,
+      "bytes": 5010767,
       "dpi": [
         299.9994,
         299.9994
@@ -143,14 +143,14 @@
       "file": "data/poster_assets/Pokedex/sections/gen7/poster-flux2.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "ae23c0f3095d6a2a0fc8305b104c5210a20c91e1395f946402b23812af9f0cde",
-      "sha256": "8fcad8e9e16b40d2c3d6c4025fea923f6ddc12d39a9862c29baf13d54a60a34f",
+      "pixel_sha256": "bb62973d5c394596abde7a4a2d0ee1da27690d49ab69e1ee6f074758873590e3",
+      "sha256": "cf66745e6c3f105b12e358375db69e0daf350d571e5cb32e0ee4de7dace35a3c",
       "width": 2368
     }
   },
   "poster_id": "gen7",
   "preview_language": "en",
-  "promoted_at": "2026-08-03T13:31:50.092140+00:00",
+  "promoted_at": "2026-08-03T16:12:20.863653+00:00",
   "run": {
     "created_at": "2026-08-03T12:37:37.476836+00:00",
     "generation": {
@@ -376,7 +376,7 @@
               "information": [
                 "Generation VII",
                 "Alola",
-                "88 Karten",
+                "88 Pokémon",
                 "Pokédex #722 – #809"
               ],
               "title": {
@@ -388,7 +388,7 @@
               "information": [
                 "Generation VII",
                 "Alola",
-                "88 cards",
+                "88 Pokémon",
                 "Pokédex #722 – #809"
               ],
               "title": {
@@ -400,7 +400,7 @@
               "information": [
                 "Generación VII",
                 "Alola",
-                "88 cartas",
+                "88 Pokémon",
                 "Pokédex #722 – #809"
               ],
               "title": {
@@ -412,7 +412,7 @@
               "information": [
                 "Génération VII",
                 "Alola",
-                "88 cartes",
+                "88 Pokémon",
                 "Pokédex #722 – #809"
               ],
               "title": {
@@ -424,7 +424,7 @@
               "information": [
                 "Generazione VII",
                 "Alola",
-                "88 carte",
+                "88 Pokémon",
                 "Pokédex #722 – #809"
               ],
               "title": {
@@ -436,7 +436,7 @@
               "information": [
                 "7世代",
                 "アローラ",
-                "88 枚",
+                "88 ポケモン",
                 "ポケモン図鑑 #722 – #809"
               ],
               "title": {
@@ -448,7 +448,7 @@
               "information": [
                 "7세대",
                 "알롤라",
-                "88 장",
+                "88 포켓몬",
                 "포켓몬 도감 #722 – #809"
               ],
               "title": {
@@ -460,7 +460,7 @@
               "information": [
                 "第7世代",
                 "阿罗拉",
-                "88 张",
+                "88 宝可梦",
                 "宝可梦图鉴 #722 – #809"
               ],
               "title": {
@@ -472,7 +472,7 @@
               "information": [
                 "第7世代",
                 "阿羅拉",
-                "88 張",
+                "88 寶可夢",
                 "寶可夢圖鑑 #722 – #809"
               ],
               "title": {
@@ -504,7 +504,7 @@
           }
         },
         "schema_version": 1,
-        "sha256": "15ae82c4ed8a38288faf1b77e79f7f457224596531e409f4402720d083f2b3d6"
+        "sha256": "a1ef7b359f24cea5d62cb2091443e4baa6bdd02b3a3be2b5fc355304faf8518d"
       },
       "prompt": {
         "bytes": 5694,

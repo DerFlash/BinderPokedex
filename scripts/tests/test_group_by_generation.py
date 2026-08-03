@@ -34,6 +34,8 @@ def test_generation_sections_use_nested_ui_and_region_translations():
     }
 
     result = GroupByGenerationStep("group").execute(context, {})
+    assert result.get_data()["type"] == "pokedex"
+    assert result.get_data()["name"] == "Pokédex"
     section = result.get_data()["sections"]["gen1"]
 
     assert section["section_order"] == 1

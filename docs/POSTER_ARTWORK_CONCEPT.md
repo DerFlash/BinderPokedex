@@ -157,19 +157,20 @@ Full prompts are generated, not maintained per scope. They combine:
 Text and logos are deliberately absent from model output. They are localized
 and rendered after the text-free artwork has passed review.
 
-The overlay has two semantic profiles. `set_summary` renders the localized set
-name, card count, release label/date, localized logo where available, and the
-project mark. `section_summary` renders localized subtitle or region, card
-count, description/range, and the project mark. It also includes the section
-title when the separate upper title represents a collection, as on Pokédex
-posters; Ex-generation posters omit that row because their upper title already
-is the section title. Every current aggregate section provides all nine PDF
-translations; an individual TCG set follows only the languages advertised by
-its fetched set data.
-Section titles with one supported trailing logo token preserve that token and
-render the tracked transparent logo inline with the localized title, directly
-on the artwork. Text-only section titles keep the bounded title panel, while a
-set with a complete title logo continues to use that logo by itself.
+The fetched scope JSON owns all semantic copy. Poster manifests control layout,
+artifacts, and routing, but do not copy or override a title. `set_summary`
+resolves localized set name, card count, release label/date, and project mark;
+`section_summary` resolves localized section title, subtitle or region,
+Pokémon count, description/range, and project mark. The finalizer chooses the top
+renderer from the resolved value: a complete set logo wins, one supported
+trailing logo token becomes an inline logo group, and everything else uses the
+text panel. If that textual top value equals the first information row after
+token normalization, the duplicate row is removed automatically. Thus a
+Pokédex poster keeps `Generation I` below the collection title `Pokédex`, an
+Ex-generation poster does not repeat its section title, and a set with a full
+logo keeps its readable set name in the information block. Every current
+aggregate section provides all nine PDF translations; an individual TCG set
+follows only the languages advertised by its fetched set data.
 
 ## Default individual-spatial `joint_scene` graph
 

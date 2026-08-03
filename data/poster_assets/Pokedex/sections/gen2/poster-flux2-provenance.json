@@ -69,7 +69,7 @@
         "width": 750
       },
       {
-        "bytes": 287665,
+        "bytes": 288230,
         "dpi": [
           299.9994,
           299.9994
@@ -77,8 +77,8 @@
         "file": "data/poster_assets/Pokedex/sections/gen2/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "85fb4ff45d2efb757586639226edd6250dfae0a5db6cbc59d03759635197af24",
-        "sha256": "a9b05cf3192a986f9d412ea4cb502f25d31b3f59731b25a3cc59d72cb94c5896",
+        "pixel_sha256": "f73d8b90e7f23ba66366ddb7617ddf7b7ab6f3e0aee4288a8410cadd066026e0",
+        "sha256": "ed040b1e4bca004af298662d594bfe39b6394652b12316e3530c35f2d7189257",
         "width": 750
       },
       {
@@ -121,7 +121,7 @@
         "width": 750
       },
       {
-        "bytes": 823667,
+        "bytes": 823666,
         "dpi": [
           299.9994,
           299.9994
@@ -130,12 +130,12 @@
         "height": 1050,
         "mode": "RGBA",
         "pixel_sha256": "721aa9486e73627cae0061323399792fe1164f0ac7924ede11be5f128d912687",
-        "sha256": "5deaef285ab8d0365c94cc9069ea9ecdd8ed71144d6634523e40f02fee49bc80",
+        "sha256": "9cf8d4493d30228dd3c72833ba73be4de2f207b1c17ec2fbbc6a4910b95d2c5e",
         "width": 750
       }
     ],
     "preview": {
-      "bytes": 4461226,
+      "bytes": 4462207,
       "dpi": [
         299.9994,
         299.9994
@@ -143,14 +143,14 @@
       "file": "data/poster_assets/Pokedex/sections/gen2/poster-flux2.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "a6eb19cd03d5fe08a1f35b7d6d0502ffd89aac556a05affb651b7f91f24e1c64",
-      "sha256": "a8217c45358c80fad0023ed9a70f5cb4a25ec7bec1f33d4d1f5bce7cca194567",
+      "pixel_sha256": "fac17fb18000dc586256051895da0ee00a86dfd64f11e04e6afd652c36275858",
+      "sha256": "a461e7093bf9ef462037e662f0fd492892584772895c131b2466fa1737926119",
       "width": 2368
     }
   },
   "poster_id": "gen2",
   "preview_language": "en",
-  "promoted_at": "2026-08-03T13:30:54.637504+00:00",
+  "promoted_at": "2026-08-03T16:12:19.700627+00:00",
   "run": {
     "created_at": "2026-07-29T19:33:53.826749+00:00",
     "generation": {
@@ -377,7 +377,7 @@
               "information": [
                 "Generation II",
                 "Johto",
-                "100 Karten",
+                "100 Pokémon",
                 "Pokédex #152 – #251"
               ],
               "title": {
@@ -389,7 +389,7 @@
               "information": [
                 "Generation II",
                 "Johto",
-                "100 cards",
+                "100 Pokémon",
                 "Pokédex #152 – #251"
               ],
               "title": {
@@ -401,7 +401,7 @@
               "information": [
                 "Generación II",
                 "Johto",
-                "100 cartas",
+                "100 Pokémon",
                 "Pokédex #152 – #251"
               ],
               "title": {
@@ -413,7 +413,7 @@
               "information": [
                 "Génération II",
                 "Johto",
-                "100 cartes",
+                "100 Pokémon",
                 "Pokédex #152 – #251"
               ],
               "title": {
@@ -425,7 +425,7 @@
               "information": [
                 "Generazione II",
                 "Johto",
-                "100 carte",
+                "100 Pokémon",
                 "Pokédex #152 – #251"
               ],
               "title": {
@@ -437,7 +437,7 @@
               "information": [
                 "2世代",
                 "ジョウト",
-                "100 枚",
+                "100 ポケモン",
                 "ポケモン図鑑 #152 – #251"
               ],
               "title": {
@@ -449,7 +449,7 @@
               "information": [
                 "2세대",
                 "조토",
-                "100 장",
+                "100 포켓몬",
                 "포켓몬 도감 #152 – #251"
               ],
               "title": {
@@ -461,7 +461,7 @@
               "information": [
                 "第2世代",
                 "城都",
-                "100 张",
+                "100 宝可梦",
                 "宝可梦图鉴 #152 – #251"
               ],
               "title": {
@@ -473,7 +473,7 @@
               "information": [
                 "第2世代",
                 "城都",
-                "100 張",
+                "100 寶可夢",
                 "寶可夢圖鑑 #152 – #251"
               ],
               "title": {
@@ -505,7 +505,7 @@
           }
         },
         "schema_version": 1,
-        "sha256": "f17a6ed60109b4819c3236bab24caeacfbec528f516170e0423218d49a5c07c9"
+        "sha256": "2aa0b24d46cd4d1cb4248454cbe79e0ef1bf90a0406489b35b5d521a32f51cd3"
       },
       "prompt": {
         "bytes": 6100,

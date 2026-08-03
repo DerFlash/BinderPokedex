@@ -70,13 +70,19 @@ visual approval.
 
 The deterministic overlay contract is complete for all 266 language outputs
 currently implied by those targets. Aggregate sections contain title,
-subtitle/region, card count, and description/range in all nine PDF languages.
+subtitle/region, Pokémon count, and description/range in all nine PDF languages.
 Individual TCG sets define localized set copy and logo routes for every
 language advertised by their fetched source data. Missing TCG languages are
 not invented and are not PDF targets.
 
+Scope JSON is the only semantic copy source for both covers and posters.
+Poster manifests no longer copy titles or select title/deduplication styles.
+The overlay infers complete logo, inline token logo, or text rendering and
+removes an identical title row automatically. Cover count labels use the scope
+type, so TCG-set totals are cards while Pokédex and variant totals are Pokémon.
+
 The poster now contains all semantic cover information: collection/set title,
-section title where applicable, subtitle/region, card count, description or
+section title where applicable, subtitle/region, collection count, description or
 release date, representative Pokémon, and the `Binder Pokedex` project mark.
 The existing cover is nevertheless still rendered before the poster. Its
 build-time footer (cutting hint and build date) is operational metadata, not
@@ -177,13 +183,15 @@ python -m scripts.poster_assets.poster_work_plan --all-configured
 
 Verified on 2026-08-03:
 
-- the full suite passes with `501 passed, 1 skipped`;
+- the full suite passes with `510 passed, 1 skipped`;
 - all 13 enabled poster bundles validate;
 - the planner reports 41 configured targets: 13 current and 28 needing assets;
 - every v7 production graph matches its reviewed candidate graph except for
   the output filename prefix;
 - a full German Pokédex PDF plus Japanese Pokédex and German ExGen3 smoke PDFs
   build successfully with posters enabled;
+- fresh German Base1, Pokédex, and ExGen3 smoke PDFs confirm the shared title,
+  count-unit, description, and poster-insertion data flow;
 - rendered poster pages preserve the 3x3 card grid, overlays, card containment,
   and full-bleed scene continuity;
 - rendered Base1 smoke PDFs verify both the default cuttable page and the

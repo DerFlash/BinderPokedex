@@ -7,14 +7,17 @@ from PIL import Image, ImageChops
 
 from scripts.poster_assets.finalize_comfyui_poster import (
     SUPPORTED_LANGUAGES,
+    canonical_overlay_text,
     finalize,
     info_panel_values,
+    inline_title_logo,
+    readable_overlay_text,
+    resolved_title_text,
+    title_logo_file,
 )
 from scripts.poster_assets.typography import load_font, wrap_text
 from scripts.poster_assets.init_poster_scope import (
     build_section_manifest,
-    section_poster_title,
-    section_title_style,
 )
 from scripts.poster_assets.poster_io import (
     load_poster_scope_data,
@@ -40,22 +43,55 @@ def test_every_current_poster_target_has_a_checked_in_manifest():
 
 def test_every_generated_pdf_language_has_complete_poster_copy():
     checked = []
-    for path in sorted((ROOT / "data" / "output").glob("*.json")):
-        scope_data = json.loads(path.read_text(encoding="utf-8"))
-        if scope_data.get("type") == "tcg_set":
-            for language in scope_data.get("available_languages", []):
-                assert all(
-                    info_panel_values(scope_data, language, "set_summary")
+    configured_scopes = {
+        path.parent.name
+        for pattern in ("*/poster.yaml", "*/posters.yaml")
+        for path in POSTER_ASSETS.glob(pattern)
+    }
+    for scope in sorted(configured_scopes):
+        for bundle in poster_bundles_for_scope(scope):
+            scope_data = load_poster_scope_data(bundle)
+            languages = scope_data.get(
+                "available_languages",
+                SUPPORTED_LANGUAGES,
+            )
+            content_mode = bundle.manifest.get("text_content", {}).get(
+                "mode",
+                "set_summary",
+            )
+            for language in languages:
+                logo_file = title_logo_file(bundle.manifest, language)
+                if logo_file:
+                    if bundle.pdf_enabled:
+                        assert (bundle.asset_dir / logo_file).is_file()
+                    header_text = None
+                else:
+                    header_text = resolved_title_text(scope_data, language)
+                    assert readable_overlay_text(header_text).strip()
+
+                complete_values = info_panel_values(
+                    scope_data,
+                    language,
+                    content_mode,
                 )
-                checked.append(f"{path.stem}/{language}")
-            continue
-        for section_id, section in scope_data.get("sections", {}).items():
-            isolated = {"sections": {section_id: section}}
-            for language in SUPPORTED_LANGUAGES:
-                assert all(
-                    info_panel_values(isolated, language, "section_summary")
+                visible_values = info_panel_values(
+                    scope_data,
+                    language,
+                    content_mode,
+                    header_text=header_text,
                 )
-                checked.append(f"{path.stem}/{section_id}/{language}")
+                assert all(visible_values)
+
+                visible_texts = list(visible_values)
+                if header_text is not None:
+                    visible_texts.insert(0, readable_overlay_text(header_text))
+                for expected in complete_values:
+                    assert sum(
+                        canonical_overlay_text(value)
+                        == canonical_overlay_text(expected)
+                        for value in visible_texts
+                    ) == 1
+                checked.append(f"{bundle.asset_key}/{language}")
 
     assert len(checked) == 266
 
@@ -166,7 +202,7 @@ def test_checked_in_pokedex_output_has_localized_section_overlay_values():
     ) == (
         "Génération I",
         "Kanto",
-        "151 cartes",
+        "151 Pokémon",
         "Pokédex #001 – #151",
     )
     assert info_panel_values(
@@ -176,7 +212,7 @@ def test_checked_in_pokedex_output_has_localized_section_overlay_values():
     ) == (
         "1世代",
         "カントー",
-        "151 枚",
+        "151 ポケモン",
         "ポケモン図鑑 #001 – #151",
     )
 
@@ -203,7 +239,7 @@ def test_section_overlay_uses_localized_title_count_and_description():
     assert values == (
         "Generation I",
         "カントー",
-        "2 枚",
+        "2 ポケモン",
         "ポケモン図鑑 #001 – #151",
     )
 
@@ -256,9 +292,10 @@ def test_section_manifest_preserves_title_logo_token_but_info_hides_tokens():
         },
     )
 
-    assert manifest["title_text"]["en"] == "Mega-Pokémon [EX_NEW]"
-    assert manifest["text_cells"]["title"]["style"] == "inline_logo"
-    assert manifest["text_content"]["include_section_title"] is False
+    assert "title_text" not in manifest
+    assert inline_title_logo(
+        resolved_title_text({"sections": {"mega": section}}, "en")
+    ) is not None
     assert info_panel_values(
         {"sections": {"mega": section}},
         "en",
@@ -266,34 +303,24 @@ def test_section_manifest_preserves_title_logo_token_but_info_hides_tokens():
     ) == (
         "Mega-Pokémon ex",
         "ex Series",
-        "3 cards",
+        "3 Pokémon",
         "Mega Evolution with Tera ex and EX",
     )
     assert info_panel_values(
         {"sections": {"mega": section}},
         "en",
         "section_summary",
-        include_section_title=False,
+        header_text="Mega-Pokémon [EX_NEW]",
     ) == (
         "ex Series",
-        "3 cards",
+        "3 Pokémon",
         "Mega Evolution with Tera ex and EX",
     )
     assert section == source
 
 
-def test_pokedex_section_poster_title_remains_backward_compatible():
-    assert section_poster_title(
-        "Pokedex",
-        {"title": {"en": "Generation I"}},
-    ) == "Pokédex"
-
-
-def test_section_title_with_multiple_logo_tokens_keeps_panel_style():
-    assert section_title_style(
-        "ExGen2",
-        {"title": {"en": "[M] Pokémon [EX]"}},
-    ) == "panel"
+def test_section_title_with_multiple_logo_tokens_uses_plain_text_panel():
+    assert inline_title_logo("[M] Pokémon [EX]") is None
 
 
 @pytest.mark.parametrize("language", SUPPORTED_LANGUAGES)

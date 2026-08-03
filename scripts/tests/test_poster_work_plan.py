@@ -798,7 +798,13 @@ def test_overlay_only_change_requests_refresh_without_regeneration(tmp_path):
     bundle = poster_bundles_for_scope("Alpha", poster_assets=assets)[0]
     write_promotion(bundle, output)
     payload = yaml.safe_load(bundle.manifest_path.read_text(encoding="utf-8"))
-    payload["title_text"] = localized("Reviewed title")
+    payload["text_cells"] = {
+        "set_info": {
+            "row": 2,
+            "column": 2,
+            "max_width_ratio": 0.8,
+        },
+    }
     save_yaml(bundle.manifest_path, payload)
 
     plan = build("Alpha", assets, output, catalog)

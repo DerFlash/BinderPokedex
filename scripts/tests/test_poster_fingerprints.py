@@ -54,7 +54,6 @@ def _manifest() -> dict:
                 "max_height_ratio": 0.68,
             },
         },
-        "title_text": {"de": "Beispiel", "en": "Example"},
         "text_content": {"mode": "section_summary"},
         "pdf": {
             "enabled": True,
@@ -206,7 +205,6 @@ def test_generation_fingerprint_excludes_routing_and_overlay_only_inputs(
     changed = copy.deepcopy(bundle.manifest)
     changed["pdf"]["enabled"] = False
     changed["pdf"]["artwork_file"] = "another-promoted-artwork.png"
-    changed["title_text"] = {"en": "A New Exact Title"}
     changed["title_logo"] = {"file": "another-logo.png"}
     changed["text_content"] = {"mode": "set_summary"}
     changed["text_cells"]["set_info"]["max_width_ratio"] = 0.74
@@ -1010,14 +1008,14 @@ def test_overlay_fingerprint_tracks_text_and_logo_but_not_pdf_routing(
     )
     assert routing_changed["sha256"] == original["sha256"]
 
-    title = copy.deepcopy(bundle.manifest)
-    title["title_text"]["en"] = "Changed Exact Title"
-    title_changed = build_overlay_fingerprint(
-        _with_manifest(bundle, title),
+    layout = copy.deepcopy(bundle.manifest)
+    layout["text_cells"]["set_info"]["max_width_ratio"] = 0.8
+    layout_changed = build_overlay_fingerprint(
+        _with_manifest(bundle, layout),
         poster_assets=assets,
         scope_data_dir=output,
     )
-    assert title_changed["sha256"] != original["sha256"]
+    assert layout_changed["sha256"] != original["sha256"]
 
     source_path = output / "Example.json"
     source = load_json(source_path)
@@ -1402,7 +1400,7 @@ def test_promotion_rebinds_overlay_and_validator_prefers_fingerprints(
 
     manifest_path = scope_dir / "poster.yaml"
     manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
-    manifest["title_text"]["en"] = "Changed after expensive generation"
+    manifest["text_cells"]["set_info"]["max_width_ratio"] = 0.81
     manifest_path.write_text(
         yaml.safe_dump(manifest, sort_keys=False, allow_unicode=True),
         encoding="utf-8",
@@ -1434,7 +1432,7 @@ def test_promotion_rebinds_overlay_and_validator_prefers_fingerprints(
     assert routing_only["generation_fingerprint_current"] is True
     assert routing_only["overlay_fingerprint_current"] is True
 
-    manifest["title_text"]["en"] = "Another cheap overlay change"
+    manifest["text_cells"]["set_info"]["max_width_ratio"] = 0.79
     manifest_path.write_text(
         yaml.safe_dump(manifest, sort_keys=False, allow_unicode=True),
         encoding="utf-8",
@@ -1443,7 +1441,7 @@ def test_promotion_rebinds_overlay_and_validator_prefers_fingerprints(
     assert overlay_stale["generation_fingerprint_current"] is True
     assert overlay_stale["overlay_fingerprint_current"] is False
 
-    manifest["title_text"]["en"] = "Changed after expensive generation"
+    manifest["text_cells"]["set_info"]["max_width_ratio"] = 0.81
     manifest["artwork"]["scene"]["concept"] = "a different generated scene"
     manifest_path.write_text(
         yaml.safe_dump(manifest, sort_keys=False, allow_unicode=True),

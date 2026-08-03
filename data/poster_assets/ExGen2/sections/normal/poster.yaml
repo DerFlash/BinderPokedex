@@ -16,19 +16,8 @@ text_cells:
     column: 2
     max_width_ratio: 0.92
     max_height_ratio: 0.68
-title_text:
-  de: Pokémon EX - Generation 2
-  en: Pokémon EX - Generation 2
-  fr: Pokémon EX - Génération 2
-  es: Pokémon EX - Generación 2
-  it: Pokémon EX - Generazione 2
-  ja: ポケモンEX - ジェネレーション2
-  ko: 포켓몬 EX - 세대 2
-  zh_hans: 宝可梦EX - 第二代
-  zh_hant: 寶可夢EX - 第二代
 text_content:
   mode: section_summary
-  include_section_title: false
 artwork:
   promoted_file: poster-flux2-artwork.png
   preview_file: poster-flux2.png

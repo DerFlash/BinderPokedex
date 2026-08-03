@@ -69,7 +69,7 @@
         "width": 750
       },
       {
-        "bytes": 325999,
+        "bytes": 314862,
         "dpi": [
           299.9994,
           299.9994
@@ -77,8 +77,8 @@
         "file": "data/poster_assets/ExGen3/sections/normal/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "22dcb43c2ddd6169540832020d7e575806fa984cc9d95dc3eb6c1c1de7ed40bd",
-        "sha256": "be3a28e1fd53bfd747e7ec782563cf2f0626688ea66f1029457601557ea3916a",
+        "pixel_sha256": "d96a4b94c2abe8b9e317c010011cc9da101093f9b20aced9b4fe548ddf9a919c",
+        "sha256": "beeaa1236dd1cd89d281a2d74874550cdeeb258995b3877ee091f94f6d88ea7a",
         "width": 750
       },
       {
@@ -135,7 +135,7 @@
       }
     ],
     "preview": {
-      "bytes": 5092865,
+      "bytes": 5078676,
       "dpi": [
         299.9994,
         299.9994
@@ -143,14 +143,14 @@
       "file": "data/poster_assets/ExGen3/sections/normal/poster-flux2.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "9c2d147a3dcb35144460ac30ada30d1dc488778e55804d825458e7f7621fdf80",
-      "sha256": "bbee53d335226f2c0b892321fb13cb20fcf75a8070e4a4ba190d460a2351cf67",
+      "pixel_sha256": "6f8813359a570aef44e6d40d201ef73e029c70cbd3710ee4176b5fd89040b884",
+      "sha256": "40cf6b5f72db82b77da6b51decc0d34ab19f14801b461ae3d49e6f6d7126230d",
       "width": 2368
     }
   },
   "poster_id": "normal",
   "preview_language": "en",
-  "promoted_at": "2026-08-03T15:45:29.459190+00:00",
+  "promoted_at": "2026-08-03T16:12:18.760940+00:00",
   "run": {
     "created_at": "2026-07-29T12:07:30.565056+00:00",
     "generation": {
@@ -379,8 +379,8 @@
             "de": {
               "information": [
                 "Moderne Pokémon-ex-Ära (seit 2023)",
-                "192 Karten",
-                "Moderne Pokémon-ex-Ära (2023–heute) • Pokémon ex ohne Mega-Entwicklung"
+                "192 Pokémon",
+                "2023–heute • Pokémon ex ohne Mega-Entwicklung"
               ],
               "title": {
                 "kind": "inline_logo",
@@ -392,8 +392,8 @@
             "en": {
               "information": [
                 "Modern Pokémon ex era (since 2023)",
-                "192 cards",
-                "Modern Pokémon ex era (2023–present) • non-Mega Pokémon ex"
+                "192 Pokémon",
+                "2023–present • non-Mega Pokémon ex"
               ],
               "title": {
                 "kind": "inline_logo",
@@ -405,8 +405,8 @@
             "es": {
               "information": [
                 "Era moderna de Pokémon ex (desde 2023)",
-                "192 cartas",
-                "Era moderna de Pokémon ex (2023–presente) • Pokémon ex sin Megaevolución"
+                "192 Pokémon",
+                "2023–presente • Pokémon ex sin Megaevolución"
               ],
               "title": {
                 "kind": "inline_logo",
@@ -418,8 +418,8 @@
             "fr": {
               "information": [
                 "Ère moderne des Pokémon ex (depuis 2023)",
-                "192 cartes",
-                "Ère moderne des Pokémon ex (2023–présent) • Pokémon ex hors Méga-Évolution"
+                "192 Pokémon",
+                "2023–aujourd’hui • Pokémon ex hors Méga-Évolution"
               ],
               "title": {
                 "kind": "inline_logo",
@@ -431,8 +431,8 @@
             "it": {
               "information": [
                 "Era moderna dei Pokémon ex (dal 2023)",
-                "192 carte",
-                "Era moderna dei Pokémon ex (2023–presente) • Pokémon ex non megaevoluti"
+                "192 Pokémon",
+                "2023–presente • Pokémon ex non megaevoluti"
               ],
               "title": {
                 "kind": "inline_logo",
@@ -444,8 +444,8 @@
             "ja": {
               "information": [
                 "現代のポケモン ex 時代（2023年～）",
-                "192 枚",
-                "現代のポケモンex時代（2023年～）• メガシンカ以外のポケモンex"
+                "192 ポケモン",
+                "2023年～ • メガシンカ以外のポケモンex"
               ],
               "title": {
                 "kind": "inline_logo",
@@ -457,8 +457,8 @@
             "ko": {
               "information": [
                 "현대 포켓몬 ex 시대 (2023년~)",
-                "192 장",
-                "현대 포켓몬 ex 시대 (2023년~) • 메가진화가 아닌 포켓몬 ex"
+                "192 포켓몬",
+                "2023년~ • 메가진화가 아닌 포켓몬 ex"
               ],
               "title": {
                 "kind": "inline_logo",
@@ -470,8 +470,8 @@
             "zh_hans": {
               "information": [
                 "现代宝可梦 ex 时代（2023年至今）",
-                "192 张",
-                "现代宝可梦ex时代（2023年至今）• 非超级进化宝可梦ex"
+                "192 宝可梦",
+                "2023年至今 • 非超级进化宝可梦ex"
               ],
               "title": {
                 "kind": "inline_logo",
@@ -483,8 +483,8 @@
             "zh_hant": {
               "information": [
                 "現代寶可夢 ex 時代（2023年至今）",
-                "192 張",
-                "現代寶可夢ex時代（2023年至今）• 非超級進化寶可夢ex"
+                "192 寶可夢",
+                "2023年至今 • 非超級進化寶可夢ex"
               ],
               "title": {
                 "kind": "inline_logo",
@@ -516,17 +516,15 @@
             },
             "title": {
               "column": 2,
-              "row": 1,
-              "style": "inline_logo"
+              "row": 1
             }
           },
           "text_content": {
-            "include_section_title": false,
             "mode": "section_summary"
           }
         },
         "schema_version": 1,
-        "sha256": "3f62d41e188d4f420a426ead5069642a4a00c9c146cac8c0e17a0db92b42577f"
+        "sha256": "58834727b8c265c3196838344868579b8ad3f5d3391f76d4bcee2c20e3bd01b0"
       },
       "prompt": {
         "bytes": 6432,

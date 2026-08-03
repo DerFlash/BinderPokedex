@@ -1173,21 +1173,19 @@ def build_overlay_fingerprint(
             SUPPORTED_LANGUAGES,
             info_panel_values,
             inline_title_logo,
-            localized_raw_value,
-            localized_value,
+            readable_overlay_text,
+            resolved_title_text,
             title_logo_file,
         )
-        from .typography import scope_title
     except ImportError:
         from finalize_comfyui_poster import (
             SUPPORTED_LANGUAGES,
             info_panel_values,
             inline_title_logo,
-            localized_raw_value,
-            localized_value,
+            readable_overlay_text,
+            resolved_title_text,
             title_logo_file,
         )
-        from typography import scope_title
 
     bundle, scope_data = _bundle_and_scope_data(
         target,
@@ -1199,18 +1197,17 @@ def build_overlay_fingerprint(
     if not isinstance(content, dict):
         raise ValueError("text_content must be a mapping")
     content_mode = str(content.get("mode", "set_summary"))
-    configured_title = manifest.get("title_text")
     text_cells = manifest.get("text_cells", {})
     if not isinstance(text_cells, dict):
         raise ValueError("text_cells must be a mapping")
     title_config = text_cells.get("title", {})
     if not isinstance(title_config, dict):
         raise ValueError("text_cells.title must be a mapping")
-    title_style = str(title_config.get("style", "panel"))
     language_components: dict[str, Any] = {}
     logo_records: dict[str, Any] = {}
     for language in SUPPORTED_LANGUAGES:
         logo_file = title_logo_file(manifest, language)
+        header_text: str | None = None
         if logo_file:
             logo_path = _safe_overlay_asset(bundle, str(logo_file))
             logo_record = image_pixel_record(logo_path)
@@ -1219,29 +1216,24 @@ def build_overlay_fingerprint(
                 "kind": "logo",
                 "pixel_sha256": logo_record["pixel_sha256"],
             }
-        elif title_style == "inline_logo":
-            title_value = localized_raw_value(configured_title, language)
-            resolved = inline_title_logo(title_value)
-            if resolved is None:
-                raise ValueError(
-                    f"Inline title has no supported logo token: {title_value!r}"
-                )
-            token, logo_path = resolved
-            logo_record = image_pixel_record(logo_path)
-            logo_records[f"inline:{token}"] = logo_record
-            title = {
-                "kind": "inline_logo",
-                "value": title_value,
-                "token": token,
-                "pixel_sha256": logo_record["pixel_sha256"],
-            }
         else:
-            title_value = (
-                localized_value(configured_title, language)
-                if configured_title is not None
-                else scope_title(scope_data)
-            )
-            title = {"kind": "text", "value": title_value}
+            header_text = resolved_title_text(scope_data, language)
+            resolved = inline_title_logo(header_text)
+            if resolved is not None:
+                token, logo_path = resolved
+                logo_record = image_pixel_record(logo_path)
+                logo_records[f"inline:{token}"] = logo_record
+                title = {
+                    "kind": "inline_logo",
+                    "value": header_text,
+                    "token": token,
+                    "pixel_sha256": logo_record["pixel_sha256"],
+                }
+            else:
+                title = {
+                    "kind": "text",
+                    "value": readable_overlay_text(header_text),
+                }
         language_components[language] = {
             "title": title,
             "information": list(
@@ -1249,9 +1241,7 @@ def build_overlay_fingerprint(
                     scope_data,
                     language,
                     content_mode,
-                    include_section_title=bool(
-                        content.get("include_section_title", True)
-                    ),
+                    header_text=header_text,
                 )
             ),
         }

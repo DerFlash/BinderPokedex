@@ -69,7 +69,7 @@
         "width": 750
       },
       {
-        "bytes": 350462,
+        "bytes": 351341,
         "dpi": [
           299.9994,
           299.9994
@@ -77,8 +77,8 @@
         "file": "data/poster_assets/Pokedex/sections/gen1/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "c324a97f2007be45235358fb53bc926ead0b24c2b01c0c9e9abf416da92d9311",
-        "sha256": "4e555c44d0a40c44f98fc3d7d68fe4a40a808bdd600d18984a2bdd97d3168634",
+        "pixel_sha256": "259bca1cd1a94434564bfb5dfc030baf3e8e7b968ddce26854ffd50df25396d0",
+        "sha256": "61ff7a5c5fc9aef14112796703689acda48a07069a6498bca6ff4d7f2952db53",
         "width": 750
       },
       {
@@ -135,7 +135,7 @@
       }
     ],
     "preview": {
-      "bytes": 5024712,
+      "bytes": 5025753,
       "dpi": [
         299.9994,
         299.9994
@@ -143,14 +143,14 @@
       "file": "data/poster_assets/Pokedex/sections/gen1/poster-flux2.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "36583dccfa5b61fc6d7c0aa2f020d82b098151feb5291030d833a89a91fbd8de",
-      "sha256": "37674d5dd5efd2c163d2182fa593af48c05cdbafefa17ec4820eb500c3c07b7d",
+      "pixel_sha256": "f9811731b52b6ab7907581336430fa622b4cf08c6b48a176ee311711b5f09788",
+      "sha256": "62447d40daae6cb8cb687af3a592099ead7f7706da3c03ab48dcce707cb6a5e8",
       "width": 2368
     }
   },
   "poster_id": "gen1",
   "preview_language": "en",
-  "promoted_at": "2026-08-03T13:30:43.708141+00:00",
+  "promoted_at": "2026-08-03T16:12:20.879506+00:00",
   "run": {
     "created_at": "2026-07-29T19:25:11.679208+00:00",
     "generation": {
@@ -377,7 +377,7 @@
               "information": [
                 "Generation I",
                 "Kanto",
-                "151 Karten",
+                "151 Pokémon",
                 "Pokédex #001 – #151"
               ],
               "title": {
@@ -389,7 +389,7 @@
               "information": [
                 "Generation I",
                 "Kanto",
-                "151 cards",
+                "151 Pokémon",
                 "Pokédex #001 – #151"
               ],
               "title": {
@@ -401,7 +401,7 @@
               "information": [
                 "Generación I",
                 "Kanto",
-                "151 cartas",
+                "151 Pokémon",
                 "Pokédex #001 – #151"
               ],
               "title": {
@@ -413,7 +413,7 @@
               "information": [
                 "Génération I",
                 "Kanto",
-                "151 cartes",
+                "151 Pokémon",
                 "Pokédex #001 – #151"
               ],
               "title": {
@@ -425,7 +425,7 @@
               "information": [
                 "Generazione I",
                 "Kanto",
-                "151 carte",
+                "151 Pokémon",
                 "Pokédex #001 – #151"
               ],
               "title": {
@@ -437,7 +437,7 @@
               "information": [
                 "1世代",
                 "カントー",
-                "151 枚",
+                "151 ポケモン",
                 "ポケモン図鑑 #001 – #151"
               ],
               "title": {
@@ -449,7 +449,7 @@
               "information": [
                 "1세대",
                 "칸토",
-                "151 장",
+                "151 포켓몬",
                 "포켓몬 도감 #001 – #151"
               ],
               "title": {
@@ -461,7 +461,7 @@
               "information": [
                 "第1世代",
                 "关都",
-                "151 张",
+                "151 宝可梦",
                 "宝可梦图鉴 #001 – #151"
               ],
               "title": {
@@ -473,7 +473,7 @@
               "information": [
                 "第1世代",
                 "關都",
-                "151 張",
+                "151 寶可夢",
                 "寶可夢圖鑑 #001 – #151"
               ],
               "title": {
@@ -505,7 +505,7 @@
           }
         },
         "schema_version": 1,
-        "sha256": "ba07aa015e37d9e21f881e2a668684a91383ff7f289a52d0678f751314b80720"
+        "sha256": "242e4c4a07a1f544b2b25469959330c9eef24268cb491d71148f5530ea8b74f9"
       },
       "prompt": {
         "bytes": 6111,

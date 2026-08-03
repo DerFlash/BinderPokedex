@@ -18,10 +18,7 @@ try:
         unique_by_poster_subject,
     )
     from .fetch_title_logos import fetch_title_logos
-    from .finalize_comfyui_poster import (
-        INLINE_TITLE_LOGOS,
-        SUPPORTED_LANGUAGES,
-    )
+    from .finalize_comfyui_poster import SUPPORTED_LANGUAGES
     from .generation_contract import CANONICAL_REFERENCE_MODES
     from .layout import DEFAULT_LAYOUT_NAME, LAYOUTS, resolve_layout_name
     from .poster_io import POSTER_ASSETS, SCOPE_DATA, load_json, load_yaml
@@ -33,10 +30,7 @@ except ImportError:
         unique_by_poster_subject,
     )
     from fetch_title_logos import fetch_title_logos
-    from finalize_comfyui_poster import (
-        INLINE_TITLE_LOGOS,
-        SUPPORTED_LANGUAGES,
-    )
+    from finalize_comfyui_poster import SUPPORTED_LANGUAGES
     from generation_contract import CANONICAL_REFERENCE_MODES
     from layout import DEFAULT_LAYOUT_NAME, LAYOUTS, resolve_layout_name
     from poster_io import POSTER_ASSETS, SCOPE_DATA, load_json, load_yaml
@@ -90,41 +84,6 @@ def joint_scene_generation(
     ):
         generation.pop(field, None)
     return generation
-
-
-def section_poster_title(
-    scope: str,
-    section_data: dict[str, Any],
-) -> str | dict[str, str]:
-    """Return a localized title while preserving supported inline-logo tokens."""
-    if scope == "Pokedex":
-        return "Pokédex"
-    return {
-        str(language): str(value)
-        for language, value in section_data["title"].items()
-    }
-
-
-def section_title_style(scope: str, section_data: dict[str, Any]) -> str:
-    """Use direct inline logos when every localized section title has one."""
-    if scope == "Pokedex":
-        return "panel"
-    titles = section_data.get("title", {})
-
-    def has_one_suffix_logo(value: object) -> bool:
-        text = str(value)
-        matches = [token for token in INLINE_TITLE_LOGOS if token in text]
-        return (
-            len(matches) == 1
-            and text.count(matches[0]) == 1
-            and text.endswith(f" {matches[0]}")
-        )
-
-    if isinstance(titles, dict) and titles and all(
-        has_one_suffix_logo(value) for value in titles.values()
-    ):
-        return "inline_logo"
-    return "panel"
 
 
 def _title_logo_config(scope_data: dict[str, Any]) -> dict[str, Any] | None:
@@ -300,11 +259,7 @@ def build_section_manifest(
         },
         "layout": {"name": layout_name},
         "text_cells": {
-            "title": {
-                "row": 1,
-                "column": center_column,
-                "style": section_title_style(scope, section_data),
-            },
+            "title": {"row": 1, "column": center_column},
             "set_info": {
                 "row": min(2, int(layout["rows"])),
                 "column": center_column,
@@ -312,11 +267,7 @@ def build_section_manifest(
                 "max_height_ratio": 0.68,
             },
         },
-        "title_text": section_poster_title(scope, section_data),
-        "text_content": {
-            "mode": "section_summary",
-            "include_section_title": scope == "Pokedex",
-        },
+        "text_content": {"mode": "section_summary"},
         "artwork": {
             "promoted_file": "poster-flux2-artwork.png",
             "preview_file": "poster-flux2.png",

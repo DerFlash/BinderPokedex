@@ -69,7 +69,7 @@
         "width": 750
       },
       {
-        "bytes": 379847,
+        "bytes": 380532,
         "dpi": [
           299.9994,
           299.9994
@@ -77,8 +77,8 @@
         "file": "data/poster_assets/Pokedex/sections/gen6/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "da35fbeca29de2dcdcd039ffe11fc6c7218ab381369ccd4640e17541abf963d3",
-        "sha256": "e3c3d8b0708e122ab9176c6b822656b248ecbeb697030f95923df791a93a96b8",
+        "pixel_sha256": "0994c3d9e0b6663d5b8bc63e1888cf64168403a361ad5e4806223d3e2fef7fd2",
+        "sha256": "9abc6aa81d53855e3431a1ced589b0fa437a451c925cb6fbcdfac78cb2a5a70f",
         "width": 750
       },
       {
@@ -135,7 +135,7 @@
       }
     ],
     "preview": {
-      "bytes": 5540159,
+      "bytes": 5541105,
       "dpi": [
         299.9994,
         299.9994
@@ -143,14 +143,14 @@
       "file": "data/poster_assets/Pokedex/sections/gen6/poster-flux2.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "bcacbe1ec32758e7b28c24272bb6258477cc03c2712dff36c20ea8ce97aab6a1",
-      "sha256": "639133ab4a51a6bf132edb7a4113312e36c43f470988a0c26202823b4fd125c2",
+      "pixel_sha256": "c905df309a8dd21cfdebc4cb50bba0604469181240610131e632987b764881b5",
+      "sha256": "2b585b0e5a9d223b476a1a681aa9513869aa69f0c3ded8e270ffddc7fe7a2436",
       "width": 2368
     }
   },
   "poster_id": "gen6",
   "preview_language": "en",
-  "promoted_at": "2026-08-03T13:31:39.251090+00:00",
+  "promoted_at": "2026-08-03T16:12:17.813944+00:00",
   "run": {
     "created_at": "2026-08-03T12:36:31.206527+00:00",
     "generation": {
@@ -376,7 +376,7 @@
               "information": [
                 "Generation VI",
                 "Kalos",
-                "72 Karten",
+                "72 Pokémon",
                 "Pokédex #650 – #721"
               ],
               "title": {
@@ -388,7 +388,7 @@
               "information": [
                 "Generation VI",
                 "Kalos",
-                "72 cards",
+                "72 Pokémon",
                 "Pokédex #650 – #721"
               ],
               "title": {
@@ -400,7 +400,7 @@
               "information": [
                 "Generación VI",
                 "Kalos",
-                "72 cartas",
+                "72 Pokémon",
                 "Pokédex #650 – #721"
               ],
               "title": {
@@ -412,7 +412,7 @@
               "information": [
                 "Génération VI",
                 "Kalos",
-                "72 cartes",
+                "72 Pokémon",
                 "Pokédex #650 – #721"
               ],
               "title": {
@@ -424,7 +424,7 @@
               "information": [
                 "Generazione VI",
                 "Kalos",
-                "72 carte",
+                "72 Pokémon",
                 "Pokédex #650 – #721"
               ],
               "title": {
@@ -436,7 +436,7 @@
               "information": [
                 "6世代",
                 "カロス",
-                "72 枚",
+                "72 ポケモン",
                 "ポケモン図鑑 #650 – #721"
               ],
               "title": {
@@ -448,7 +448,7 @@
               "information": [
                 "6세대",
                 "칼로스",
-                "72 장",
+                "72 포켓몬",
                 "포켓몬 도감 #650 – #721"
               ],
               "title": {
@@ -460,7 +460,7 @@
               "information": [
                 "第6世代",
                 "卡洛斯",
-                "72 张",
+                "72 宝可梦",
                 "宝可梦图鉴 #650 – #721"
               ],
               "title": {
@@ -472,7 +472,7 @@
               "information": [
                 "第6世代",
                 "卡洛斯",
-                "72 張",
+                "72 寶可夢",
                 "寶可夢圖鑑 #650 – #721"
               ],
               "title": {
@@ -504,7 +504,7 @@
           }
         },
         "schema_version": 1,
-        "sha256": "51d4baacce49b88e3903bb8167403b2c1fc86991ab3f4bf17711ae201246a1de"
+        "sha256": "fe5a6c18d0529280f586b38a2ba359e09e2f13ef69fc2c364af879f19e5d26f0"
       },
       "prompt": {
         "bytes": 5713,

@@ -104,6 +104,7 @@ def update_readme_en(path: Path, manifest: dict[str, Any], explicit_url: str | N
     scope_count = manifest["scope_count"]
     mega_scopes = ", ".join(manifest["scope_groups"]["mega"])
     sv_count = len(manifest["scope_groups"]["scarlet_violet"])
+    language_separator = " |\n"
     text = path.read_text(encoding="utf-8")
 
     text = replace_one(text, r"!\[v[^\]]+\]\(https://img\.shields\.io/badge/version-v[^)]+-green\.svg\)", f"![{tag}](https://img.shields.io/badge/version-{tag}-green.svg)", path)
@@ -119,7 +120,7 @@ def update_readme_en(path: Path, manifest: dict[str, Any], explicit_url: str | N
     text = replace_one(
         text,
         r"\*\*By Language \(v[^)]+\):\*\*\n(?:.+\n){8}.+",
-        f"**By Language ({tag}):**\n{language_links(tag, LANGUAGE_LINKS_EN, ' |\n')}",
+        f"**By Language ({tag}):**\n{language_links(tag, LANGUAGE_LINKS_EN, language_separator)}",
         path,
     )
     text = upsert_release_note(text, path, "en", manifest)

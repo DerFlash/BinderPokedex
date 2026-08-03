@@ -1,5 +1,7 @@
 {
   "version": "2.0",
+  "type": "pokedex",
+  "name": "Pokédex",
   "consolidated_date": "2026-07-27",
   "total_generations": 9,
   "sections": {

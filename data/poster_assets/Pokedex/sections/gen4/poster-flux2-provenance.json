@@ -26,7 +26,7 @@
         "height": 1050,
         "mode": "RGBA",
         "pixel_sha256": "a3892817d15f18debcf9edcac606edef513ca2e2e7abfd0714d3a9b119de4da6",
-        "sha256": "f3b92ed3980d86e3e25088283e4938596ffd6b24578cc7a014ee6456d3de297d",
+        "sha256": "081c6aee293624141d4d67a78d6165d0bb16f746eb1fdf0654744375cd73d19f",
         "width": 750
       },
       {
@@ -65,11 +65,11 @@
         "height": 1050,
         "mode": "RGBA",
         "pixel_sha256": "2db7f3d1c37115f2b42d0ec5c8e7c393ca3195aea0b3390fc7a25148ea18ed9f",
-        "sha256": "2189c9eea4963337a496aa8a7d5dc05b054f178095a902c5e3ac3ad3035bcbbc",
+        "sha256": "c4b9dea84090c0f4e366af08a1fd9b0c0b350b536fb7d513771f4034771e3c39",
         "width": 750
       },
       {
-        "bytes": 356288,
+        "bytes": 356913,
         "dpi": [
           299.9994,
           299.9994
@@ -77,8 +77,8 @@
         "file": "data/poster_assets/Pokedex/sections/gen4/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "95d55e5f0910b982d82050e3c0a3930e0b672526a3151bedf75abee8173567df",
-        "sha256": "68e821122765b13907e644ae60ec92f5d427879911a33e658b2f92bd2adb9f95",
+        "pixel_sha256": "8df9fa619bd15cd948dba270c91ca1c0a558cc8e33afe8d2fdc77fc15146923d",
+        "sha256": "56760bda4a614ab80d338892e1dd317066af55ca02ea6fcbc9c48bd0a1631f05",
         "width": 750
       },
       {
@@ -108,7 +108,7 @@
         "width": 750
       },
       {
-        "bytes": 714106,
+        "bytes": 714105,
         "dpi": [
           299.9994,
           299.9994
@@ -117,7 +117,7 @@
         "height": 1050,
         "mode": "RGBA",
         "pixel_sha256": "83636bb1c5129bd9e5338eba9b77d435ea53951ea81abec371e69a983882df1f",
-        "sha256": "1355c0b7648462413228ec77daf7f7680e4e004ebb17ce7e48c2174a581f3e73",
+        "sha256": "cdc5de4fdde5465d624c35b43a3c3263eb3965bd5f6de1c3d920358d87116e4e",
         "width": 750
       },
       {
@@ -135,7 +135,7 @@
       }
     ],
     "preview": {
-      "bytes": 5261951,
+      "bytes": 5263211,
       "dpi": [
         299.9994,
         299.9994
@@ -143,14 +143,14 @@
       "file": "data/poster_assets/Pokedex/sections/gen4/poster-flux2.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "294e97cd26e3561c8fa47e2180384c7ed1bab058d71b9eb55be1bab94fe3a233",
-      "sha256": "77519e8dd3112c3d6bc888d1986d6953c9be0c28b72ad7856f3477d67f575110",
+      "pixel_sha256": "82f35f296f731205ebb6343c4619c4f06fd6537f4a47d1df7446df5f86561d8f",
+      "sha256": "351a8cae6a587db1c64be51d90a06d190e14f6c413e84361ed48a3f7d3af127f",
       "width": 2368
     }
   },
   "poster_id": "gen4",
   "preview_language": "en",
-  "promoted_at": "2026-08-03T13:31:19.367265+00:00",
+  "promoted_at": "2026-08-03T16:12:20.466239+00:00",
   "run": {
     "created_at": "2026-08-03T12:34:27.546443+00:00",
     "generation": {
@@ -376,7 +376,7 @@
               "information": [
                 "Generation IV",
                 "Sinnoh",
-                "107 Karten",
+                "107 Pokémon",
                 "Pokédex #387 – #493"
               ],
               "title": {
@@ -388,7 +388,7 @@
               "information": [
                 "Generation IV",
                 "Sinnoh",
-                "107 cards",
+                "107 Pokémon",
                 "Pokédex #387 – #493"
               ],
               "title": {
@@ -400,7 +400,7 @@
               "information": [
                 "Generación IV",
                 "Sinnoh",
-                "107 cartas",
+                "107 Pokémon",
                 "Pokédex #387 – #493"
               ],
               "title": {
@@ -412,7 +412,7 @@
               "information": [
                 "Génération IV",
                 "Sinnoh",
-                "107 cartes",
+                "107 Pokémon",
                 "Pokédex #387 – #493"
               ],
               "title": {
@@ -424,7 +424,7 @@
               "information": [
                 "Generazione IV",
                 "Sinnoh",
-                "107 carte",
+                "107 Pokémon",
                 "Pokédex #387 – #493"
               ],
               "title": {
@@ -436,7 +436,7 @@
               "information": [
                 "4世代",
                 "シンオウ",
-                "107 枚",
+                "107 ポケモン",
                 "ポケモン図鑑 #387 – #493"
               ],
               "title": {
@@ -448,7 +448,7 @@
               "information": [
                 "4세대",
                 "신오",
-                "107 장",
+                "107 포켓몬",
                 "포켓몬 도감 #387 – #493"
               ],
               "title": {
@@ -460,7 +460,7 @@
               "information": [
                 "第4世代",
                 "神奥",
-                "107 张",
+                "107 宝可梦",
                 "宝可梦图鉴 #387 – #493"
               ],
               "title": {
@@ -472,7 +472,7 @@
               "information": [
                 "第4世代",
                 "神奧",
-                "107 張",
+                "107 寶可夢",
                 "寶可夢圖鑑 #387 – #493"
               ],
               "title": {
@@ -504,7 +504,7 @@
           }
         },
         "schema_version": 1,
-        "sha256": "6f953a7c5cf30e88e5886564f33cc316b04f9975bca97d4826ec77a064659680"
+        "sha256": "1ad77f572103a411571f3672620d979ca5571af2a293f43de64d56866cb25733"
       },
       "prompt": {
         "bytes": 5731,
