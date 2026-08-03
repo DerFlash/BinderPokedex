@@ -193,6 +193,7 @@ def info_panel_values(
         section_card_count = len(cards) if isinstance(cards, list) else 0
         return (
             localized_value(section.get("title"), language),
+            localized_value(section.get("subtitle"), language),
             f"{section_card_count} {CARD_LABELS[language]}",
             localized_value(section.get("description"), language),
         )
@@ -286,9 +287,10 @@ def draw_info_panel(
         )
     else:
         rows = (
-            (values[0], (box[0] + pad_x, box[1] + round(height * 0.09), box[2] - pad_x, box[1] + round(height * 0.40)), max(11, cell.height // 13), max(9, cell.height // 20), True, (255, 244, 190, 255)),
-            (values[1], (box[0] + pad_x, box[1] + round(height * 0.40), box[2] - pad_x, box[1] + round(height * 0.66)), max(9, cell.height // 18), max(8, cell.height // 24), True, (232, 213, 151, 255)),
-            (values[2], (box[0] + pad_x, box[1] + round(height * 0.65), box[2] - pad_x, box[3] - round(height * 0.08)), max(8, cell.height // 22), max(7, cell.height // 28), False, (244, 238, 207, 255)),
+            (values[0], (box[0] + pad_x, box[1] + round(height * 0.05), box[2] - pad_x, box[1] + round(height * 0.29)), max(11, cell.height // 13), max(9, cell.height // 20), True, (255, 244, 190, 255)),
+            (values[1], (box[0] + pad_x, box[1] + round(height * 0.28), box[2] - pad_x, box[1] + round(height * 0.48)), max(9, cell.height // 18), max(8, cell.height // 24), False, (185, 210, 190, 255)),
+            (values[2], (box[0] + pad_x, box[1] + round(height * 0.47), box[2] - pad_x, box[1] + round(height * 0.67)), max(9, cell.height // 18), max(8, cell.height // 24), True, (232, 213, 151, 255)),
+            (values[3], (box[0] + pad_x, box[1] + round(height * 0.66), box[2] - pad_x, box[3] - round(height * 0.05)), max(8, cell.height // 22), max(7, cell.height // 28), False, (244, 238, 207, 255)),
         )
     for text, text_box, preferred_size, minimum_size, bold, color in rows:
         font = fitted_font(

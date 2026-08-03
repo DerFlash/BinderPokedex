@@ -135,6 +135,7 @@ def test_checked_in_pokedex_output_has_localized_section_overlay_values():
         "section_summary",
     ) == (
         "Génération I",
+        "Kanto",
         "151 cartes",
         "Pokédex #001 – #151",
     )
@@ -144,6 +145,7 @@ def test_checked_in_pokedex_output_has_localized_section_overlay_values():
         "section_summary",
     ) == (
         "1世代",
+        "カントー",
         "151 枚",
         "ポケモン図鑑 #001 – #151",
     )
@@ -170,6 +172,7 @@ def test_section_overlay_uses_localized_title_count_and_description():
 
     assert values == (
         "Generation I",
+        "カントー",
         "2 枚",
         "ポケモン図鑑 #001 – #151",
     )
@@ -230,6 +233,7 @@ def test_section_manifest_and_overlay_hide_internal_variant_tokens():
         "section_summary",
     ) == (
         "Mega-Pokémon ex",
+        "ex Series",
         "3 cards",
         "Mega Evolution with Tera ex and EX",
     )
