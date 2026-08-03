@@ -171,12 +171,13 @@ python -m scripts.poster_assets.poster_work_plan --all-configured
 
 Verified on 2026-08-03:
 
-- the full suite passes with `479 passed, 1 skipped`;
+- the full suite passes with `486 passed, 1 skipped`;
 - all 13 enabled poster bundles validate;
 - the planner reports 41 configured targets: 13 current and 28 needing assets;
 - every v7 production graph matches its reviewed candidate graph except for
   the output filename prefix;
-- German Pokédex and `SV03.5` PDFs build successfully with posters enabled;
+- a full German Pokédex PDF plus Japanese Pokédex and German ExGen3 smoke PDFs
+  build successfully with posters enabled;
 - rendered poster pages preserve the 3x3 card grid, overlays, card containment,
   and full-bleed scene continuity;
 - Python compilation and `git diff --check` pass.
