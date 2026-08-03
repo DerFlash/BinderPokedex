@@ -1,4 +1,4 @@
-"""Render a localized poster artwork as one physical image per binder card."""
+"""Render a localized poster as physical cards or one continuous page."""
 from __future__ import annotations
 
 import logging
@@ -7,7 +7,12 @@ import tempfile
 from pathlib import Path
 
 from reportlab.lib.utils import ImageReader
+from reportlab.lib.units import mm
 
+try:
+    from ..generation_options import validate_poster_page_mode
+except ImportError:  # Compatibility with legacy direct lib imports.
+    from generation_options import validate_poster_page_mode
 from .page_renderer import PageRenderer
 
 
@@ -21,6 +26,7 @@ if str(PROJECT_ROOT) not in sys.path:
 from scripts.poster_assets.finalize_comfyui_poster import finalize  # noqa: E402
 from scripts.poster_assets.layout import (  # noqa: E402
     DEFAULT_LAYOUT_NAME,
+    physical_layout_size_mm,
     pdf_page_hint,
     resolve_layout_name,
 )
@@ -42,7 +48,9 @@ class PosterPageRenderer:
         language: str,
         artwork_path: Path,
         layout_name: str = DEFAULT_LAYOUT_NAME,
+        page_mode: str = "cards",
     ):
+        validate_poster_page_mode(page_mode)
         self.bundle = bundle
         self.scope = bundle.asset_key
         self.section_id = bundle.section_id
@@ -51,7 +59,9 @@ class PosterPageRenderer:
         self.artwork_path = artwork_path
         self.insertion = bundle.insertion
         self.layout_name = layout_name
+        self.page_mode = page_mode
         self._temp_dir: tempfile.TemporaryDirectory[str] | None = None
+        self._localized_path: Path | None = None
         self._card_paths: list[Path] | None = None
 
     @classmethod
@@ -61,6 +71,7 @@ class PosterPageRenderer:
         language: str,
         *,
         include_poster: bool = True,
+        page_mode: str = "cards",
     ) -> "PosterPageRenderer | None":
         if not include_poster:
             return None
@@ -72,6 +83,7 @@ class PosterPageRenderer:
             variant_data,
             language,
             include_poster=include_poster,
+            page_mode=page_mode,
         )
         if len(collection.renderers) > 1:
             collection.cleanup()
@@ -86,6 +98,8 @@ class PosterPageRenderer:
         cls,
         bundle: PosterBundle,
         language: str,
+        *,
+        page_mode: str = "cards",
     ) -> "PosterPageRenderer":
         artwork_path = bundle.asset_dir / bundle.artwork_file
         if not artwork_path.is_file():
@@ -95,11 +109,17 @@ class PosterPageRenderer:
             DEFAULT_LAYOUT_NAME,
         )
         resolve_layout_name(layout_name)
-        return cls(bundle, language, artwork_path, layout_name)
+        return cls(
+            bundle,
+            language,
+            artwork_path,
+            layout_name,
+            page_mode=page_mode,
+        )
 
-    def _prepare_cards(self) -> list[Path]:
-        if self._card_paths is not None:
-            return self._card_paths
+    def _prepare_localized_poster(self) -> Path:
+        if self._localized_path is not None:
+            return self._localized_path
         if self._temp_dir is None:
             temp_root = PROJECT_ROOT / "tmp" / "pdfs"
             temp_root.mkdir(parents=True, exist_ok=True)
@@ -110,18 +130,32 @@ class PosterPageRenderer:
                 ),
                 dir=temp_root,
             )
-        temp_dir = Path(self._temp_dir.name)
-        localized_poster = (
-            temp_dir
+        self._localized_path = (
+            Path(self._temp_dir.name)
             / f"{poster_asset_slug(self.scope)}_{self.language}.png"
         )
-        finalize(self.scope, self.artwork_path, localized_poster, self.language)
+        finalize(
+            self.scope,
+            self.artwork_path,
+            self._localized_path,
+            self.language,
+        )
+        return self._localized_path
+
+    def _prepare_cards(self) -> list[Path]:
+        if self._card_paths is not None:
+            return self._card_paths
+        localized_poster = self._prepare_localized_poster()
+        temp_dir = localized_poster.parent
         self._card_paths = slice_poster(
             self.scope, localized_poster, temp_dir / "cards"
         )
         return self._card_paths
 
     def render_page(self, canvas_obj, page_renderer: PageRenderer) -> None:
+        if self.page_mode == "full-page":
+            self._render_full_page(canvas_obj, page_renderer)
+            return
         card_paths = self._prepare_cards()
         layout = resolve_layout_name(self.layout_name)
         poster_grid = (int(layout["columns"]), int(layout["rows"]))
@@ -156,10 +190,42 @@ class PosterPageRenderer:
             )
         page_renderer.draw_cutting_guides(canvas_obj)
 
+    def _render_full_page(
+        self,
+        canvas_obj,
+        page_renderer: PageRenderer,
+    ) -> None:
+        """Draw one continuous poster at its exact physical layout size."""
+        width_mm, height_mm = physical_layout_size_mm(self.layout_name)
+        width = width_mm * mm
+        height = height_mm * mm
+        if (
+            width > page_renderer.style.PAGE_WIDTH
+            or height > page_renderer.style.PAGE_HEIGHT
+        ):
+            paper, orientation = pdf_page_hint(self.layout_name)
+            raise ValueError(
+                f"Poster layout {self.layout_name} needs a {paper} "
+                f"{orientation} full-page renderer"
+            )
+        page_renderer.create_page(canvas_obj)
+        x = (page_renderer.style.PAGE_WIDTH - width) / 2
+        y = (page_renderer.style.PAGE_HEIGHT - height) / 2
+        canvas_obj.drawImage(
+            ImageReader(str(self._prepare_localized_poster())),
+            x,
+            y,
+            width=width,
+            height=height,
+            preserveAspectRatio=False,
+            mask="auto",
+        )
+
     def cleanup(self) -> None:
         if self._temp_dir is not None:
             self._temp_dir.cleanup()
             self._temp_dir = None
+        self._localized_path = None
         self._card_paths = None
 
 
@@ -177,7 +243,9 @@ class PosterPageCollection:
         language: str,
         *,
         include_poster: bool = True,
+        page_mode: str = "cards",
     ) -> "PosterPageCollection":
+        validate_poster_page_mode(page_mode)
         if not include_poster or not scope:
             return cls()
         bundles = poster_bundles_for_scope(
@@ -196,7 +264,11 @@ class PosterPageCollection:
                 )
                 if bundle.pdf_enabled:
                     renderers.append(
-                        PosterPageRenderer.from_bundle(bundle, language)
+                        PosterPageRenderer.from_bundle(
+                            bundle,
+                            language,
+                            page_mode=page_mode,
+                        )
                     )
         except Exception:
             for renderer in renderers:

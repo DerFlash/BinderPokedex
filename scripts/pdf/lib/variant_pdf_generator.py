@@ -51,6 +51,7 @@ class VariantPDFGenerator:
         include_poster: bool = True,
         scope_name: str = None,
         poster_source_data: dict = None,
+        poster_page_mode: str = "cards",
     ):
         """
         Initialize variant PDF generator.
@@ -69,6 +70,7 @@ class VariantPDFGenerator:
             include_poster: Include a manifest-enabled poster page
             scope_name: Explicit source filename scope for aggregate data
             poster_source_data: Complete unfiltered data used to validate routing
+            poster_page_mode: Render poster as cuttable cards or one full page
         """
         self.variant_data = variant_data
         self.language = language
@@ -123,6 +125,7 @@ class VariantPDFGenerator:
             ),
             language,
             include_poster=include_poster,
+            page_mode=poster_page_mode,
         )
     
     def generate(self) -> bool:

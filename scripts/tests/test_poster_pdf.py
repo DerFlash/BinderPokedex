@@ -5,6 +5,7 @@ from unittest.mock import MagicMock
 
 import pytest
 from PIL import Image
+from reportlab.lib.units import mm
 
 from scripts.pdf.lib.rendering.page_renderer import PageRenderer
 from scripts.pdf.lib.rendering.poster_page_renderer import (
@@ -32,6 +33,43 @@ def test_base1_poster_page_draws_all_nine_physical_cards():
     for call in canvas.drawImage.call_args_list:
         assert call.kwargs["width"] == page_renderer.style.CARD_WIDTH
         assert call.kwargs["height"] == page_renderer.style.CARD_HEIGHT
+
+
+def test_base1_full_page_draws_one_continuous_physical_poster():
+    renderer = PosterPageRenderer.from_variant_data(
+        {"set_id": "Base1"},
+        "de",
+        page_mode="full-page",
+    )
+    assert renderer is not None
+    localized_path = (
+        ROOT / "data" / "poster_assets" / "Base1" / "poster-flux2-artwork.png"
+    )
+    renderer._prepare_localized_poster = MagicMock(
+        return_value=localized_path,
+    )
+    canvas = MagicMock()
+    page_renderer = PageRenderer()
+    page_renderer.create_page = MagicMock()
+    page_renderer.draw_cutting_guides = MagicMock()
+
+    try:
+        renderer.render_page(canvas, page_renderer)
+    finally:
+        renderer.cleanup()
+
+    page_renderer.create_page.assert_called_once_with(canvas)
+    page_renderer.draw_cutting_guides.assert_not_called()
+    canvas.drawImage.assert_called_once()
+    call = canvas.drawImage.call_args
+    assert call.kwargs["width"] == pytest.approx(200.5 * mm)
+    assert call.kwargs["height"] == pytest.approx(276.7 * mm)
+    assert call.args[1] == pytest.approx(
+        (page_renderer.style.PAGE_WIDTH - 200.5 * mm) / 2
+    )
+    assert call.args[2] == pytest.approx(
+        (page_renderer.style.PAGE_HEIGHT - 276.7 * mm) / 2
+    )
 
 
 def test_scope_without_enabled_poster_has_no_poster_page():
@@ -212,6 +250,7 @@ def test_sv035_poster_source_is_text_free_artwork():
 def test_wide_poster_reports_the_matching_future_pdf_page_requirement():
     renderer = PosterPageRenderer.__new__(PosterPageRenderer)
     renderer.layout_name = "wide_4x3"
+    renderer.page_mode = "cards"
     renderer._prepare_cards = MagicMock(
         return_value=[Path(f"card-{index}.png") for index in range(12)]
     )
@@ -229,6 +268,7 @@ def test_wide_poster_renderer_accepts_a_matching_page_grid(tmp_path):
 
     renderer = PosterPageRenderer.__new__(PosterPageRenderer)
     renderer.layout_name = "wide_4x3"
+    renderer.page_mode = "cards"
     renderer._prepare_cards = MagicMock(return_value=card_paths)
     page_renderer = MagicMock()
     page_renderer.style = SimpleNamespace(
@@ -247,6 +287,18 @@ def test_wide_poster_renderer_accepts_a_matching_page_grid(tmp_path):
 
     assert canvas.drawImage.call_count == 12
     page_renderer.draw_cutting_guides.assert_called_once_with(canvas)
+
+
+def test_wide_full_page_reports_the_matching_pdf_page_requirement():
+    renderer = PosterPageRenderer.__new__(PosterPageRenderer)
+    renderer.layout_name = "wide_4x3"
+    renderer.page_mode = "full-page"
+    renderer._prepare_localized_poster = MagicMock()
+
+    with pytest.raises(ValueError, match="A3 landscape full-page renderer"):
+        renderer.render_page(MagicMock(), PageRenderer())
+
+    renderer._prepare_localized_poster.assert_not_called()
 
 
 def test_variant_generator_inserts_poster_only_after_first_section_cover():
@@ -272,6 +324,27 @@ def test_variant_generator_inserts_poster_only_after_first_section_cover():
         canvas, generator.page_renderer
     )
     assert canvas.showPage.call_count == 3
+
+
+def test_section_cover_remains_when_no_poster_is_enabled():
+    generator = VariantPDFGenerator.__new__(VariantPDFGenerator)
+    generator.pokemon_list = []
+    generator.language = "de"
+    generator.variant_data = {}
+    generator.page_renderer = MagicMock()
+    generator.poster_pages = PosterPageCollection()
+    generator._draw_section_cover = MagicMock()
+    generator._draw_cards_page = MagicMock()
+    canvas = MagicMock()
+    sections = [
+        {"section_id": "first", "section_order": 1, "cards": []},
+    ]
+
+    generator._generate_with_sections(canvas, sections)
+
+    generator._draw_section_cover.assert_called_once()
+    generator._draw_cards_page.assert_not_called()
+    canvas.showPage.assert_called_once_with()
 
 
 def test_variant_generator_inserts_matching_poster_after_each_section_cover():

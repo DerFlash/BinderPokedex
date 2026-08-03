@@ -1,9 +1,12 @@
 from unittest.mock import MagicMock
 
+import pytest
+
 from scripts.pdf import generate_pdf
 from scripts.pdf.lib.generation_options import (
     pdf_output_filename,
     prepare_variant_data,
+    validate_poster_page_mode,
 )
 from scripts.pdf.lib.variant_pdf_generator import VariantPDFGenerator
 
@@ -40,12 +43,28 @@ def test_pdf_output_filename_keeps_diagnostic_runs_separate():
         pdf_output_filename(
             "Base1",
             "de",
+            poster_page_mode="full-page",
+        )
+        == "Base1_DE_POSTER_FULL_PAGE.pdf"
+    )
+    assert (
+        pdf_output_filename(
+            "Base1",
+            "de",
             skip_images=True,
             skip_poster=True,
             test_mode=True,
         )
         == "Base1_DE_TEST_NO_IMAGES_NO_POSTER.pdf"
     )
+
+
+def test_poster_page_mode_validation_rejects_unknown_values():
+    with pytest.raises(
+        ValueError,
+        match="poster_page_mode must be one of cards, full-page",
+    ):
+        validate_poster_page_mode("spread")
 
 
 def test_test_mode_limits_cards_globally_in_render_order():
@@ -154,6 +173,7 @@ def test_variant_pdf_generation_applies_cli_options(monkeypatch, tmp_path):
         tmp_path / "Example_DE_TEST_NO_IMAGES_NO_POSTER.pdf"
     )
     assert generator_factory.call_args.kwargs["include_poster"] is False
+    assert generator_factory.call_args.kwargs["poster_page_mode"] == "cards"
     assert generator_factory.call_args.kwargs["scope_name"] == "Example"
     assert generator_factory.call_args.kwargs["poster_source_data"] is source
     assert len(prepared["sections"]["all"]["cards"]) == 9
@@ -162,6 +182,38 @@ def test_variant_pdf_generation_applies_cli_options(monkeypatch, tmp_path):
         for card in prepared["sections"]["all"]["cards"]
     )
     generator.generate.assert_called_once_with()
+
+
+def test_variant_pdf_generation_propagates_full_page_mode(
+    monkeypatch,
+    tmp_path,
+):
+    source = {
+        "set_id": "Example",
+        "sections": {"all": {"cards": [_card(1)]}},
+    }
+    generator = MagicMock()
+    generator.generate.return_value = True
+    generator_factory = MagicMock(return_value=generator)
+    monkeypatch.setattr(generate_pdf, "VariantPDFGenerator", generator_factory)
+
+    result = generate_pdf._generate_variant_pdf(
+        variant_data=source,
+        language="en",
+        output_dir=tmp_path,
+        script_dir=tmp_path,
+        poster_page_mode="full-page",
+        scope_name="Example",
+    )
+
+    assert result is True
+    assert generator_factory.call_args.kwargs["output_file"] == (
+        tmp_path / "Example_EN_POSTER_FULL_PAGE.pdf"
+    )
+    assert (
+        generator_factory.call_args.kwargs["poster_page_mode"]
+        == "full-page"
+    )
 
 
 def test_legacy_flat_variant_normalizes_pokemon_to_renderable_cards():

@@ -5,6 +5,16 @@ from typing import Any
 
 
 TEST_CARD_LIMIT = 9
+POSTER_PAGE_MODES = ("cards", "full-page")
+
+
+def validate_poster_page_mode(value: str) -> str:
+    """Return one supported poster PDF presentation mode."""
+    if value not in POSTER_PAGE_MODES:
+        raise ValueError(
+            f"poster_page_mode must be one of {', '.join(POSTER_PAGE_MODES)}"
+        )
+    return value
 
 
 def pdf_output_filename(
@@ -13,14 +23,18 @@ def pdf_output_filename(
     *,
     skip_images: bool = False,
     skip_poster: bool = False,
+    poster_page_mode: str = "cards",
     test_mode: bool = False,
 ) -> str:
     """Return a mode-specific filename that cannot replace a normal PDF."""
+    validate_poster_page_mode(poster_page_mode)
     parts = [filename_base, language.upper()]
     if test_mode:
         parts.append("TEST")
     if skip_images:
         parts.append("NO_IMAGES")
+    if poster_page_mode == "full-page" and not skip_poster:
+        parts.append("POSTER_FULL_PAGE")
     if skip_poster:
         parts.append("NO_POSTER")
     return "_".join(parts) + ".pdf"
