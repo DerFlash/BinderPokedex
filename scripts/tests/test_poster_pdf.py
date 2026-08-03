@@ -349,6 +349,42 @@ def test_section_cover_remains_when_no_poster_is_enabled():
     canvas.showPage.assert_called_once_with()
 
 
+def test_empty_section_cover_does_not_fall_back_to_scope_cards():
+    generator = VariantPDFGenerator.__new__(VariantPDFGenerator)
+    generator.variant_data = {
+        "title": {"en": "Scope title"},
+        "subtitle": {"en": "Scope subtitle"},
+        "description": {"en": "Scope description"},
+        "featured_elements": [{"pokemon_id": 25}],
+    }
+    generator.pokemon_list = [{"pokemon_id": 25}]
+    generator.variant_cover_renderer = MagicMock()
+    section = {
+        "title": {},
+        "subtitle": "",
+        "description": {},
+        "color_hex": "#123456",
+        "featured_elements": [],
+        "cards": [],
+    }
+    canvas = MagicMock()
+
+    generator._draw_section_cover(canvas, section)
+
+    generator.variant_cover_renderer.render_cover.assert_called_once_with(
+        canvas,
+        [],
+        cover_data={
+            **generator.variant_data,
+            "title": {},
+            "subtitle": "",
+            "description": {},
+            "featured_elements": [],
+        },
+        color="#123456",
+    )
+
+
 def test_variant_generator_inserts_matching_poster_after_each_section_cover():
     generator = VariantPDFGenerator.__new__(VariantPDFGenerator)
     generator.pokemon_list = []

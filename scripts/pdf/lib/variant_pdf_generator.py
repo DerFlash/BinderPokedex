@@ -13,24 +13,14 @@ Features:
 """
 
 import logging
-import json
 from pathlib import Path
 
 from reportlab.pdfgen import canvas
-from reportlab.lib.units import mm
-from reportlab.lib.colors import HexColor
 
-from .fonts import FontManager
-from .rendering import (
-    CardRenderer,
-    CoverRenderer,
-    CoverStyle,
-    PageRenderer,
-    PosterPageCollection,
-)
-from .utils import TranslationHelper, RendererInitializer
-from .constants import PAGE_WIDTH, PAGE_HEIGHT, PAGE_MARGIN, CARD_WIDTH, CARD_HEIGHT, CARDS_PER_ROW, CARDS_PER_COLUMN, GAP_X, GAP_Y
-from .log_formatter import PDFStatus, SectionHeader
+from .constants import PAGE_HEIGHT, PAGE_WIDTH
+from .log_formatter import PDFStatus
+from .rendering import PosterPageCollection
+from .utils import RendererInitializer
 
 logger = logging.getLogger(__name__)
 
@@ -101,9 +91,6 @@ class VariantPDFGenerator:
             self.pokemon_list = variant_data.get('pokemon', [])
         
         logger.info(f"Loaded {len(self.pokemon_list)} Pokémon from variant data")
-        
-        # Load translations
-        self.translations = TranslationHelper.load_translations(self.language)
         
         # Initialize rendering modules using shared utility
         self.card_renderer, self.page_renderer, self.variant_cover_renderer = \
@@ -227,31 +214,8 @@ class VariantPDFGenerator:
             
             logger.info(f"  Section: {section_id}, pokemon={len(section_pokemon)}")
             
-            # Get section title (multilingual)
-            section_title_data = section.get('title', {})
-            if isinstance(section_title_data, dict):
-                section_title = section_title_data.get(self.language, section_title_data.get('en', section_id))
-            else:
-                section_title = str(section_title_data)
-            
-            # Get section subtitle (multilingual)
-            section_subtitle_data = section.get('subtitle', {})
-            if isinstance(section_subtitle_data, dict):
-                section_subtitle = section_subtitle_data.get(self.language, section_subtitle_data.get('en', section_id))
-            else:
-                section_subtitle = str(section_subtitle_data)
-            
-            logger.info(f"    Title: {section_title}, Subtitle: {section_subtitle}")
-            
             # Draw cover page for this section
-            self._draw_section_cover(
-                c, section_title, section_subtitle, section.get('color_hex', '#7851A9'),
-                section_title_dict=section_title_data,
-                section_subtitle_dict=section_subtitle_data,
-                section_pokemon=section_pokemon,
-                section_description=section.get('description', {}),
-                section_data=section  # Pass full section data including featured_elements
-            )
+            self._draw_section_cover(c, section)
             c.showPage()
 
             for poster_page in self.poster_pages.for_section(
@@ -287,62 +251,24 @@ class VariantPDFGenerator:
                 self._draw_cards_page(c, page_pokemon, section_prefix, section_suffix, section_index_offset)
                 c.showPage()
     
-    def _draw_section_cover(self, c, section_title_str: str, section_subtitle_str: str, color: str, 
-                           section_title_dict: dict = None, section_subtitle_dict: dict = None, 
-                           section_pokemon: list = None,
-                           section_description: dict = None,
-                           section_data: dict = None):
-        """
-        Draw a cover page for a section.
-        
-        Args:
-            c: Canvas object
-            section_title_str: Section title string (localized)
-            section_subtitle_str: Section subtitle string (localized)
-            color: Hex color for the stripe
-            section_title_dict: Full multilingual title dict for override
-            section_subtitle_dict: Full multilingual subtitle dict for override
-            section_pokemon: The pokemon in this section (for featured pokemon lookup)
-            section_description: Section description dict
-            section_data: Full section data dict (including featured_elements)
-        """
-        # Create cover data with section-specific title and subtitle
+    def _draw_section_cover(self, c, section: dict) -> None:
+        """Draw one section cover from that section's canonical data."""
         cover_data = dict(self.variant_data)
-        
-        # Override title with section-specific title dict
-        if section_title_dict:
-            cover_data['title'] = section_title_dict
-        
-        # Override subtitle with section-specific subtitle dict
-        if section_subtitle_dict:
-            cover_data['subtitle'] = section_subtitle_dict
-        
-        # Override description with section-specific description
-        if section_description:
-            cover_data['description'] = section_description
-        
-        # Add featured_elements from section_data (check both old and new names)
-        if section_data and 'featured_elements' in section_data:
-            cover_data['featured_elements'] = section_data['featured_elements']
-        elif section_data and 'featured_cards' in section_data:  # Backward compatibility
-            cover_data['featured_elements'] = section_data['featured_cards']
-        
-        # Use unified renderer for section cover pages
-        # Pass section_pokemon to allow rendering featured pokemon correctly
-        if section_pokemon:
-            self.variant_cover_renderer.render_cover(
-                c,
-                section_pokemon,
-                cover_data=cover_data,
-                color=color
-            )
-        else:
-            self.variant_cover_renderer.render_cover(
-                c,
-                self.pokemon_list,
-                cover_data=cover_data,
-                color=color
-            )
+        for field in ('title', 'subtitle', 'description'):
+            if field in section:
+                cover_data[field] = section[field]
+
+        if 'featured_elements' in section:
+            cover_data['featured_elements'] = section['featured_elements']
+        elif 'featured_cards' in section:  # Legacy source-data compatibility
+            cover_data['featured_elements'] = section['featured_cards']
+
+        self.variant_cover_renderer.render_cover(
+            c,
+            section.get('cards', []),
+            cover_data=cover_data,
+            color=section.get('color_hex', '#7851A9'),
+        )
     
     def _draw_cards_page(self, c, pokemon_list, section_prefix: str = '', section_suffix: str = '', section_index_offset: int = 0):
         """Draw a page with cards (3x3 grid) with cutting guides and footer."""
