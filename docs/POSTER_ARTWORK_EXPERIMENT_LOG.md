@@ -1301,3 +1301,36 @@ failed hard gate. A domain or training adapter is tested only after the base
 graph demonstrates correct per-subject binding, and is retained only when a
 controlled A/B improves identity without introducing a new hard-gate
 regression.
+
+## Individual-spatial production promotion — 2026-08-03
+
+The user reviewed and approved the seven 1-MP individual-spatial candidates
+for Generations IV through IX and `SV03.5`. Before reusing the reviewed raw
+pixels, the production v7 builder regenerated every positioned reference and
+prompt and rebuilt every workflow. Reference and prompt hashes matched the
+isolated experiment exactly; each workflow graph was structurally identical
+apart from the non-semantic `SaveImage` filename prefix.
+
+| Scope | Seed | Reviewed raw SHA-256 | Promotion commit |
+| --- | ---: | --- | --- |
+| `Pokedex/sections/gen4` | `260734875` | `17ffc408f9dba4ec634e18b740620de305c95ecb9c1f8e0abccdbe3dbb56e63e` | `ae76dec` |
+| `Pokedex/sections/gen5` | `260735039` | `056184234c953e038ef23680e6a863fae5a4c5874c38f1afc6bf973da2afa720` | `3175e21` |
+| `Pokedex/sections/gen6` | `260758584` | `b16afecbc9a3cd45039ae4eea2a26279832f7121941e0d09a0cf76a31006d4f8` | `7ef8ff8` |
+| `Pokedex/sections/gen7` | `260726058` | `d9aa528feba024ca1db3f12c038da134e324a13dd07b3a71e4271ea579f54cbb` | `f317c39` |
+| `Pokedex/sections/gen8` | `260715405` | `cbee5de594939146490f58bb2cdd19118c3551c1f0fab421fc0c6f59a10b857c` | `5d165dc` |
+| `Pokedex/sections/gen9` | `260778637` | `3478f01ce419195dd563e60a8798b7c520f36ad9648f6e6b07a7a454b37131e5` | `2f333b8` |
+| `SV03.5` | `260726101` | `0cd3e8a3b391e652aa53e97e6bc2932b40c41abaf840837b8791a7a0fc9d0043` | `bf80977` |
+
+Each approved 848 × 1168 raw result was resized once with deterministic
+Lanczos to the 2368 × 3268 print raster and promoted with an explicit visual
+approval record. The final state has thirteen enabled `joint_scene` bundles:
+seven individual-v7, five accepted spatial-v5, and one Generation-III
+regional-v6. No promoted scope uses `identity_lock`; it remains an explicit
+fallback.
+
+All thirteen bundles pass promotion validation and report `current` in the
+read-only planner. German Pokédex and `SV03.5` PDF smoke builds confirm the
+3×3 cuts, deterministic overlays, and insertion path. The minimal explicit
+depth/occlusion guide remains documented but inactive; it is reserved for a
+future scope that cannot achieve either clean separation or coherent overlap
+within the bounded normal candidate rule.

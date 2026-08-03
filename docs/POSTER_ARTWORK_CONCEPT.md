@@ -48,9 +48,11 @@ data/poster_assets/<asset-key>/
     manifest.json
     ...
   comfyui_poster/                 # ignored local workspace
-    joint_scene_cast_reference.png # spatial_identity_joint only
-    identity_reference_*.png
-    joint_scene_prompt.generated.txt # spatial topology only
+    individual_spatial_reference_*.png # default v7 topology
+    individual_spatial_joint_prompt.generated.txt # default v7 topology
+    joint_scene_cast_reference.png # legacy spatial_identity_joint only
+    identity_reference_*.png       # legacy spatial/regional topologies
+    joint_scene_prompt.generated.txt # legacy spatial topology only
     joint_scene_regional_identity_prompt.generated.txt # regional only
     workflow_api_*.json
     output/
@@ -104,7 +106,7 @@ artwork:
     encoder: qwen_3_4b.safetensors
     vae: flux2-vae.safetensors
     mode: joint_scene
-    reference_mode: spatial_identity_joint
+    reference_mode: individual_spatial_joint
     seed: ...
     steps: 4
     generation_megapixels: 1.0
@@ -112,11 +114,11 @@ artwork:
     output_method: lanczos
 ```
 
-`joint_scene` also supports the deliberately selected
-`regional_identity_joint` reference topology. Existing promoted
-`spatial_identity_joint` manifests remain unchanged and reproducible; the
-reference topology is part of generation metadata and the fingerprint rather
-than a third generation mode.
+`joint_scene` also supports the accepted `spatial_identity_joint` legacy
+topology and the deliberately selected `regional_identity_joint` topology for
+Generation III. Existing promoted manifests remain unchanged and reproducible;
+the reference topology is part of generation metadata and the fingerprint
+rather than a separate generation mode.
 
 The fallback changes the active mode/output contract to:
 
@@ -131,8 +133,8 @@ upscale_model_sha256: <from the matching run metadata>
 
 The runner records the hashes for the FLUX model, encoder, VAE, and upscaler.
 Before IL promotion, its complete `generation` object becomes the active
-manifest contract; every hash is mandatory. Existing accepted IL manifests stay
-unchanged until their own one-shot replacement is reviewed.
+manifest contract; every hash is mandatory. No promoted scope currently uses
+IL, but the fallback remains reproducible and explicitly selectable.
 
 ## Prompt ownership
 
@@ -150,7 +152,31 @@ Full prompts are generated, not maintained per scope. They combine:
 Text and logos are deliberately absent from model output. They are localized
 and rendered after the text-free artwork has passed review.
 
-## Promoted spatial `joint_scene` graph
+## Default individual-spatial `joint_scene` graph
+
+Preparation writes one neutral poster-shaped reference per subject. Each
+reference contains only that reviewed subject, positioned at the final
+layout-derived scale, baseline, and card-safe coordinates. The generated
+prompt names each reference and repeats its normalized target bounds.
+
+The ComfyUI graph then:
+
+1. loads the FLUX.2 model, encoder, and VAE;
+2. appends the ordered positioned identity references to one conditioning;
+3. starts from one `EmptyFlux2LatentImage`;
+4. samples once;
+5. decodes once;
+6. saves the jointly generated scene directly.
+
+There is no shared cast, separate identity-detail view, input landscape,
+inpaint target, second sampler, post-decode character composite, mask repair,
+source restoration, or learned upscaler. The accepted raw image is resized
+with deterministic Lanczos to the exact 300-dpi physical raster.
+
+This topology is pipeline contract v7 and the default for new manifests. Its
+seven promoted scopes are Generations IV through IX and `SV03.5`.
+
+## Reproducible spatial `joint_scene` graph
 
 Preparation writes:
 
@@ -200,9 +226,10 @@ card areas. That mechanical coverage does not guarantee one continuous scene
 prediction across the lower row. There is no mask image, character composite,
 inpaint target, or post-decode repair.
 
-This topology is pipeline contract v6. Spatial v5 remains the default for new
-manifests. Regional v6 remains selectable so the reviewed Generation III
-promotion is reproducible, but it is not a general migration target.
+This topology is pipeline contract v6. Individual-spatial v7 remains the
+default for new manifests. Regional v6 remains selectable so the reviewed
+Generation III promotion is reproducible, but it is not a general migration
+target.
 
 The 2026-07-30 representative rerender audit closed that broader rollout.
 ComfyUI's default-combine semantics exclude the global landscape prediction
@@ -210,8 +237,8 @@ inside each complete card area, so a local branch can generate a second
 horizon or card-sized scene. Making the global condition additive removed the
 split but averaged away subject identity even after one bounded 2:1
 local/global test. Those experimental changes were reverted. Generation III
-remains the sole reviewed regional-v6 promotion; spatial v5 remains the
-production default, and further seed or prompt sweeps are not justified.
+remains the sole reviewed regional-v6 promotion; individual-spatial v7 remains
+the production default, and further seed or prompt sweeps are not justified.
 
 ## `identity_lock` fallback
 

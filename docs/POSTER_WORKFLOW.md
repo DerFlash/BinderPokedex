@@ -27,9 +27,11 @@ flowchart TD
         COMFY --> RUN["Run FLUX.2 poster pipeline"]
         RUN --> JOINT["Default · joint_scene"]
         JOINT --> TOPOLOGY{"Reference topology"}
-        TOPOLOGY --> SPATIAL["Default/promoted · spatial cast + identities"]
-        TOPOLOGY -. selectable candidate .-> REGIONAL["Regional identity per physical card"]
-        SPATIAL --> ONESHOT["Empty latent → one sampler → one decode"]
+        TOPOLOGY --> INDIVIDUAL["Default · one positioned identity per subject"]
+        TOPOLOGY -. reproducible legacy .-> SPATIAL["Shared spatial cast + identities"]
+        TOPOLOGY -. Generation III only .-> REGIONAL["Regional identity per physical card"]
+        INDIVIDUAL --> ONESHOT["Empty latent → one sampler → one decode"]
+        SPATIAL --> ONESHOT
         REGIONAL --> ONESHOT
         ONESHOT --> LANCZOS["Lanczos → exact 300-dpi text-free master"]
 
@@ -318,15 +320,16 @@ python scripts/poster_assets/run_comfyui_poster.py \
 
 The production runner reads the FLUX.2 model, reference topology, sampling
 contract, seed, generation size, and output contract from the scope's
-`poster.yaml`. The promoted `spatial_identity_joint` path:
+`poster.yaml`. The default `individual_spatial_joint` path:
 
 1. derives each target silhouette rectangle from the shared physical layout
    and cutout alpha bounds, then writes its normalized canvas coordinates into
    the one-shot prompt;
-2. supplies one neutral 0.5-MP poster-shaped cast as the sole authority for
-   count, pose, scale, baseline, and shared card-safe coordinates;
-3. supplies one neutral 512 px reference per subject with the original cutout
-   at source resolution as the sole identity and anatomy authority;
+2. supplies one neutral 0.5-MP poster-shaped reference per subject, containing
+   exactly that subject at its final pose, scale, baseline, and card-safe
+   coordinates;
+3. uses that same named reference as the subject's identity, anatomy,
+   silhouette, color, and marking authority;
 4. starts from one `EmptyFlux2LatentImage`, invents the complete landscape and
    all characters together, and samples exactly once;
 5. decodes and saves that result directly, with no character
@@ -334,16 +337,26 @@ contract, seed, generation size, and output contract from the scope's
 
 The scene brief controls camera, terrain, atmosphere, palette, and broad
 composition. The normalized rectangles request position, size, baseline,
-visible padding, and card-safe regions. The cast controls only the common
-spatial frame; the per-subject references control identity, anatomy,
-silhouette, colors, and markings. The model synthesizes landscape and Pokémon
-together and resolves z-order, shadows, reflected light, and physically
+visible padding, and card-safe regions. The model synthesizes landscape and
+Pokémon together and resolves z-order, shadows, reflected light, and physically
 plausible edge occlusion. A changed body part, face, marking, defining contour,
-scale, or placement remains a hard visual rejection. Joint-scene preparation
-produces `joint_scene_cast_reference.png` followed by
-`identity_reference_1.png` through the current subject count. It neither
-produces nor records `inpaint_reference.png`, scene references, identity-lock
-masks, or references for rejected experiments.
+scale, or placement remains a hard visual rejection. Preparation writes
+`individual_spatial_reference_1.png` through the current subject count and
+`individual_spatial_joint_prompt.generated.txt`. It does not produce a shared
+cast, unscaled identity detail views, inpaint references, masks, scene plates,
+or references for rejected experiments.
+
+The accepted `spatial_identity_joint` v5 topology remains reproducible for its
+five promoted scopes. It instead uses one shared 0.5-MP cast for placement plus
+one unscaled 512 px identity reference per subject. Select it only to reproduce
+or deliberately revise one of those existing contracts:
+
+```bash
+python scripts/poster_assets/run_comfyui_poster.py \
+  --scope <scope> \
+  --flux-mode joint_scene \
+  --flux-reference-mode spatial_identity_joint
+```
 
 The cast-free `regional_identity_joint` topology remains available to
 reproduce or diagnose the reviewed Generation III promotion:
@@ -380,7 +393,8 @@ representative audit rerendered all six spatial-v5 promotions and approved
 none of their regional-v6 candidates. Complete-card regional conditioning can
 replace the global landscape prediction inside the lower row and produce
 separate horizons or card scenes. Generation III is a reviewed scope-specific
-exception. New scopes use spatial v5 or the explicit identity-lock fallback.
+exception. New scopes use individual-spatial v7 or the explicit identity-lock
+fallback.
 Reopening regional work requires a materially different control mechanism and
 an explicit new decision; repeated seed, prompt, or regional-strength sweeps
 are outside the accepted stop rule.
@@ -391,13 +405,10 @@ Generation III result is reviewed. Wide layouts remain unapproved.
 Because `joint_scene` deliberately redraws all pixels, an opaque-source-pixel
 equality audit is not applicable. Its hard gates are a complete generation
 fingerprint and explicit human review of both the actual raw file and the
-deterministically scaled text-free print artwork. Generation VII candidate
-`00018` passed that gate and is the first promoted `joint_scene` poster; Base1
-candidate `00001` is the second, ExGen3 Mega `00001` is the third, and ExGen3
-Normal `00001` is the fourth, Generation I `00001` is the fifth, Generation II
-`00001` is the sixth, and Generation III regional-v6 `00001` is the seventh.
-Candidates `00019` and `00020` failed their bounded depth tests and their
-prompt changes were reverted.
+deterministically scaled text-free print artwork. All thirteen enabled poster
+bundles have passed that gate: seven individual-v7, five spatial-v5, and one
+regional-v6 promotion. Candidate-specific seeds, hashes, and rejected bounded
+depth tests remain recorded in the status and experiment log.
 
 `identity_lock` remains an explicit fallback when a scope cannot pass the
 one-shot identity or placement review:
@@ -412,8 +423,8 @@ The fallback still creates its own scene, places the exact reviewed source
 figures, verifies every fully opaque source pixel, and model-upscales to the
 same 300-dpi print geometry. A manifest describes one active generation
 contract at a time. Switch and promote a fallback deliberately; do not maintain
-two competing active promotions for one scope. Existing accepted IL scopes
-remain valid until each is migrated after review.
+two competing active promotions for one scope. No active promoted scope
+currently uses the fallback.
 
 The override above creates a fallback candidate but does not silently change
 the active manifest. The command prints the candidate and matching run-metadata
