@@ -69,7 +69,7 @@
         "width": 750
       },
       {
-        "bytes": 521035,
+        "bytes": 523693,
         "dpi": [
           299.9994,
           299.9994
@@ -77,8 +77,8 @@
         "file": "data/poster_assets/Pokedex/sections/gen3/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "d27e417571fc55b20f9a6a7e5faa42120586224848561f606218ded93f349141",
-        "sha256": "fdb9aeee980d5cbe1a526d9b621edff55f0ba4acd8268ece1babff8d98539b36",
+        "pixel_sha256": "aa9a4be10cca3e548fea70dba86a35c2c94e210fbf91f84617d8b8b3f69bd2b1",
+        "sha256": "8b350b8b9898f5b8bc340d302f7ffe872cac95d91dc205af59cf0d270cc8e028",
         "width": 750
       },
       {
@@ -135,7 +135,7 @@
       }
     ],
     "preview": {
-      "bytes": 8051381,
+      "bytes": 8054634,
       "dpi": [
         299.9994,
         299.9994
@@ -143,14 +143,14 @@
       "file": "data/poster_assets/Pokedex/sections/gen3/poster-flux2.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "37156f99235d0d8ae70021b8f777aeaf46718bb0df5366d90cb4ad287717bab4",
-      "sha256": "6364d9b057cb5ec8156be9b6e551da7d532d9e8dfd190bbbb76f4957240c614f",
+      "pixel_sha256": "e81c67000864e7ccc7704e02b2c0976d90f24ba4cdeda62903f337b9ce9330f2",
+      "sha256": "286dc4cfbfb3b8af52faca907d7f0856392ee978135fcf9234129bc6f696ad43",
       "width": 2368
     }
   },
   "poster_id": "gen3",
   "preview_language": "en",
-  "promoted_at": "2026-07-30T08:51:21.796193+00:00",
+  "promoted_at": "2026-08-03T13:31:09.172810+00:00",
   "run": {
     "created_at": "2026-07-29T23:07:34.535515+00:00",
     "generation": {
@@ -375,6 +375,7 @@
             "de": {
               "information": [
                 "Generation III",
+                "Hoenn",
                 "135 Karten",
                 "Pokédex #252 – #386"
               ],
@@ -386,6 +387,7 @@
             "en": {
               "information": [
                 "Generation III",
+                "Hoenn",
                 "135 cards",
                 "Pokédex #252 – #386"
               ],
@@ -397,6 +399,7 @@
             "es": {
               "information": [
                 "Generación III",
+                "Hoenn",
                 "135 cartas",
                 "Pokédex #252 – #386"
               ],
@@ -408,6 +411,7 @@
             "fr": {
               "information": [
                 "Génération III",
+                "Hoenn",
                 "135 cartes",
                 "Pokédex #252 – #386"
               ],
@@ -419,6 +423,7 @@
             "it": {
               "information": [
                 "Generazione III",
+                "Hoenn",
                 "135 carte",
                 "Pokédex #252 – #386"
               ],
@@ -430,6 +435,7 @@
             "ja": {
               "information": [
                 "3世代",
+                "ホウエン",
                 "135 枚",
                 "ポケモン図鑑 #252 – #386"
               ],
@@ -441,6 +447,7 @@
             "ko": {
               "information": [
                 "3세대",
+                "호연",
                 "135 장",
                 "포켓몬 도감 #252 – #386"
               ],
@@ -452,6 +459,7 @@
             "zh_hans": {
               "information": [
                 "第3世代",
+                "丰缘",
                 "135 张",
                 "宝可梦图鉴 #252 – #386"
               ],
@@ -463,6 +471,7 @@
             "zh_hant": {
               "information": [
                 "第3世代",
+                "豐緣",
                 "135 張",
                 "寶可夢圖鑑 #252 – #386"
               ],
@@ -476,7 +485,7 @@
           "logo_pixels": {},
           "pipeline_contract": {
             "name": "poster_overlay",
-            "version": 2
+            "version": 3
           },
           "text_cells": {
             "set_info": {
@@ -495,7 +504,7 @@
           }
         },
         "schema_version": 1,
-        "sha256": "5e6259a64533b9e674611e578d1f95d3d0f125222537e0923668a998fae6756a"
+        "sha256": "87e5c16b465835d75886934dc646b7a4101c5e810658dfbd758e7f7d27b38593"
       },
       "prompt": {
         "bytes": 4927,

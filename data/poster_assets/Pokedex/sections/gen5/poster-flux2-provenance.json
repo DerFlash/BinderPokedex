@@ -69,7 +69,7 @@
         "width": 750
       },
       {
-        "bytes": 317063,
+        "bytes": 321312,
         "dpi": [
           299.9994,
           299.9994
@@ -77,8 +77,8 @@
         "file": "data/poster_assets/Pokedex/sections/gen5/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "5058221e898d8db23647bbee35de35b52d21f401638c4d5821d8a2b893eee351",
-        "sha256": "b171cf8789fa453bdc8c9a446d3d194ebab9438a80a8f0f0c3077fbb7b05db3a",
+        "pixel_sha256": "70b7b64d0319948b748e486d2e580159337bb92fda5d3807e0e2c168905170a3",
+        "sha256": "5222085a886349b978ff42921bf1921f471b6f6ef099c13f47b5ab5b75d83a5e",
         "width": 750
       },
       {
@@ -135,7 +135,7 @@
       }
     ],
     "preview": {
-      "bytes": 3958853,
+      "bytes": 3963612,
       "dpi": [
         299.9994,
         299.9994
@@ -143,14 +143,14 @@
       "file": "data/poster_assets/Pokedex/sections/gen5/poster-flux2.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "3608a834e0adf18dd4f2231f28285ce25bb2e18ad0ac09f5be8d06cb4eca36d7",
-      "sha256": "75713a643be91e50b18cf4c8d57ed97c6f4554b669c40ef92b68168c6696fc04",
+      "pixel_sha256": "b5a7567bdf8ecf48d00295b183d520ee3df85db5f7f98548dd7bce28ff745ca9",
+      "sha256": "0fdcd4914c90ac4ea5eaccc7e862b8e180e84f93ccbed0b8fcc2f054bea74be5",
       "width": 2368
     }
   },
   "poster_id": "gen5",
   "preview_language": "en",
-  "promoted_at": "2026-08-03T12:35:46.850117+00:00",
+  "promoted_at": "2026-08-03T13:31:30.881268+00:00",
   "run": {
     "created_at": "2026-08-03T12:35:32.239050+00:00",
     "generation": {
@@ -375,6 +375,7 @@
             "de": {
               "information": [
                 "Generation V",
+                "Einall",
                 "156 Karten",
                 "Pokédex #494 – #649"
               ],
@@ -386,6 +387,7 @@
             "en": {
               "information": [
                 "Generation V",
+                "Unova",
                 "156 cards",
                 "Pokédex #494 – #649"
               ],
@@ -397,6 +399,7 @@
             "es": {
               "information": [
                 "Generación V",
+                "Teselia",
                 "156 cartas",
                 "Pokédex #494 – #649"
               ],
@@ -408,6 +411,7 @@
             "fr": {
               "information": [
                 "Génération V",
+                "Unys",
                 "156 cartes",
                 "Pokédex #494 – #649"
               ],
@@ -419,6 +423,7 @@
             "it": {
               "information": [
                 "Generazione V",
+                "Unima",
                 "156 carte",
                 "Pokédex #494 – #649"
               ],
@@ -430,6 +435,7 @@
             "ja": {
               "information": [
                 "5世代",
+                "イッシュ",
                 "156 枚",
                 "ポケモン図鑑 #494 – #649"
               ],
@@ -441,6 +447,7 @@
             "ko": {
               "information": [
                 "5세대",
+                "이슈",
                 "156 장",
                 "포켓몬 도감 #494 – #649"
               ],
@@ -452,6 +459,7 @@
             "zh_hans": {
               "information": [
                 "第5世代",
+                "合众",
                 "156 张",
                 "宝可梦图鉴 #494 – #649"
               ],
@@ -463,6 +471,7 @@
             "zh_hant": {
               "information": [
                 "第5世代",
+                "合眾",
                 "156 張",
                 "寶可夢圖鑑 #494 – #649"
               ],
@@ -476,7 +485,7 @@
           "logo_pixels": {},
           "pipeline_contract": {
             "name": "poster_overlay",
-            "version": 2
+            "version": 3
           },
           "text_cells": {
             "set_info": {
@@ -495,7 +504,7 @@
           }
         },
         "schema_version": 1,
-        "sha256": "8bc2e278af08641bd9a33530c64cd2fc4942dd507267a37e79ec236047bb348c"
+        "sha256": "8a48fc9df8506fca6962f7048d8c57628c0b287efc84f195e2f5842ccaa9c5c4"
       },
       "prompt": {
         "bytes": 5712,

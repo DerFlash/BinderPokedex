@@ -69,7 +69,7 @@
         "width": 750
       },
       {
-        "bytes": 270920,
+        "bytes": 277986,
         "dpi": [
           299.9994,
           299.9994
@@ -77,8 +77,8 @@
         "file": "data/poster_assets/ExGen3/sections/mega/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "d44e4803bef140629a6822c72916160e322b2a48b0a7afe85b88cc818d36e017",
-        "sha256": "8bffab4e96f26d110b41a4ced717e32f784d489c2c7871ec8fd9e7032c8f47cb",
+        "pixel_sha256": "c2afbceac953eb4f15e3c05293236c5d7cf7f16029a09b9e7d67ef79275eb315",
+        "sha256": "78719795215ab1e3cb1debf2dfa34e2ff1114f98eba64f2e109c57faff5b8a39",
         "width": 750
       },
       {
@@ -135,7 +135,7 @@
       }
     ],
     "preview": {
-      "bytes": 4465700,
+      "bytes": 4474277,
       "dpi": [
         299.9994,
         299.9994
@@ -143,14 +143,14 @@
       "file": "data/poster_assets/ExGen3/sections/mega/poster-flux2.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "a195d89f8acc6eaa959de0007d3104f44a0120254baab9821f2f75b812e7928f",
-      "sha256": "899eef7a7d9a4bd82a43723651512a45c7c2826ea148d14580e0860cf8691f31",
+      "pixel_sha256": "92b8cd31c5f0dcbb052b8ad03ecfd6ae0dfc36ca453fcb781b58023f8e321392",
+      "sha256": "a21416eb2f4f1e87878d09ab44e97d53195936128e87d0ba79ba883b389fb29b",
       "width": 2368
     }
   },
   "poster_id": "mega",
   "preview_language": "en",
-  "promoted_at": "2026-07-29T11:59:17.906425+00:00",
+  "promoted_at": "2026-08-03T13:30:32.000920+00:00",
   "run": {
     "created_at": "2026-07-29T11:57:10.409092+00:00",
     "generation": {
@@ -409,6 +409,7 @@
             "de": {
               "information": [
                 "Mega-Pokémon ex",
+                "Mega-Entwicklung",
                 "26 Karten",
                 "Mega-Entwicklungs-Serie (2025–heute) • Mega-Entwicklungen als Pokémon ex"
               ],
@@ -420,6 +421,7 @@
             "en": {
               "information": [
                 "Mega Pokémon ex",
+                "Mega Evolution",
                 "26 cards",
                 "Mega Evolution Series (2025–present) • Mega Evolutions as Pokémon ex"
               ],
@@ -431,6 +433,7 @@
             "es": {
               "information": [
                 "Mega-Pokémon ex",
+                "Megaevolución",
                 "26 cartas",
                 "Serie Megaevolución (2025–presente) • Megaevoluciones como Pokémon ex"
               ],
@@ -442,6 +445,7 @@
             "fr": {
               "information": [
                 "Méga-Pokémon ex",
+                "Méga-Évolution",
                 "26 cartes",
                 "Série Méga-Évolution (2025–présent) • Méga-Évolutions en Pokémon ex"
               ],
@@ -453,6 +457,7 @@
             "it": {
               "information": [
                 "Mega-Pokémon ex",
+                "Megaevoluzione",
                 "26 carte",
                 "Serie Megaevoluzione (2025–presente) • Megaevoluzioni come Pokémon ex"
               ],
@@ -464,6 +469,7 @@
             "ja": {
               "information": [
                 "メガポケモン ex",
+                "メガシンカ",
                 "26 枚",
                 "メガシンカシリーズ (2025–現在) • メガシンカポケモンex"
               ],
@@ -475,6 +481,7 @@
             "ko": {
               "information": [
                 "메가 포켓몬 ex",
+                "메가진화",
                 "26 장",
                 "메가진화 시리즈 (2025–현재) • 메가진화 포켓몬 ex"
               ],
@@ -486,6 +493,7 @@
             "zh_hans": {
               "information": [
                 "超级宝可梦 ex",
+                "超级进化",
                 "26 张",
                 "超级进化系列 (2025–至今) • 超级进化宝可梦ex"
               ],
@@ -497,6 +505,7 @@
             "zh_hant": {
               "information": [
                 "超級寶可夢 ex",
+                "超級進化",
                 "26 張",
                 "超級進化系列 (2025–至今) • 超級進化寶可夢ex"
               ],
@@ -510,7 +519,7 @@
           "logo_pixels": {},
           "pipeline_contract": {
             "name": "poster_overlay",
-            "version": 2
+            "version": 3
           },
           "text_cells": {
             "set_info": {
@@ -529,7 +538,7 @@
           }
         },
         "schema_version": 1,
-        "sha256": "e9cdd40df99e48e4faeade75b5b163e43c435cefacffdf33bd34357153985f34"
+        "sha256": "d3ca2ee2d9f9525d845f3327b4b0e29975c1ee51ca67b63aedea3a3b2eb15fc4"
       },
       "prompt": {
         "bytes": 6441,

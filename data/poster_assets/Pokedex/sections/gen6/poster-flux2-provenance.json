@@ -69,7 +69,7 @@
         "width": 750
       },
       {
-        "bytes": 376767,
+        "bytes": 379847,
         "dpi": [
           299.9994,
           299.9994
@@ -77,8 +77,8 @@
         "file": "data/poster_assets/Pokedex/sections/gen6/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "d7bebe5ddcd5422558a182f5b93bb412a11916c2ae476e663afe4a2fba6c527c",
-        "sha256": "3fa5a58406d3b02a90e53e95f6b11b640e55a42ead848e590f3f8c752820ce9a",
+        "pixel_sha256": "da35fbeca29de2dcdcd039ffe11fc6c7218ab381369ccd4640e17541abf963d3",
+        "sha256": "e3c3d8b0708e122ab9176c6b822656b248ecbeb697030f95923df791a93a96b8",
         "width": 750
       },
       {
@@ -135,7 +135,7 @@
       }
     ],
     "preview": {
-      "bytes": 5536487,
+      "bytes": 5540159,
       "dpi": [
         299.9994,
         299.9994
@@ -143,14 +143,14 @@
       "file": "data/poster_assets/Pokedex/sections/gen6/poster-flux2.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "1b555156d94e113cfe3dac5513c73c426cf1bfdb398ad4d204f72c236633f94b",
-      "sha256": "2181673d5db45862e52f13bd2e3f5520a01d29c300796a33fd2ad9c219ba77da",
+      "pixel_sha256": "bcacbe1ec32758e7b28c24272bb6258477cc03c2712dff36c20ea8ce97aab6a1",
+      "sha256": "639133ab4a51a6bf132edb7a4113312e36c43f470988a0c26202823b4fd125c2",
       "width": 2368
     }
   },
   "poster_id": "gen6",
   "preview_language": "en",
-  "promoted_at": "2026-08-03T12:36:41.359345+00:00",
+  "promoted_at": "2026-08-03T13:31:39.251090+00:00",
   "run": {
     "created_at": "2026-08-03T12:36:31.206527+00:00",
     "generation": {
@@ -375,6 +375,7 @@
             "de": {
               "information": [
                 "Generation VI",
+                "Kalos",
                 "72 Karten",
                 "Pokédex #650 – #721"
               ],
@@ -386,6 +387,7 @@
             "en": {
               "information": [
                 "Generation VI",
+                "Kalos",
                 "72 cards",
                 "Pokédex #650 – #721"
               ],
@@ -397,6 +399,7 @@
             "es": {
               "information": [
                 "Generación VI",
+                "Kalos",
                 "72 cartas",
                 "Pokédex #650 – #721"
               ],
@@ -408,6 +411,7 @@
             "fr": {
               "information": [
                 "Génération VI",
+                "Kalos",
                 "72 cartes",
                 "Pokédex #650 – #721"
               ],
@@ -419,6 +423,7 @@
             "it": {
               "information": [
                 "Generazione VI",
+                "Kalos",
                 "72 carte",
                 "Pokédex #650 – #721"
               ],
@@ -430,6 +435,7 @@
             "ja": {
               "information": [
                 "6世代",
+                "カロス",
                 "72 枚",
                 "ポケモン図鑑 #650 – #721"
               ],
@@ -441,6 +447,7 @@
             "ko": {
               "information": [
                 "6세대",
+                "칼로스",
                 "72 장",
                 "포켓몬 도감 #650 – #721"
               ],
@@ -452,6 +459,7 @@
             "zh_hans": {
               "information": [
                 "第6世代",
+                "卡洛斯",
                 "72 张",
                 "宝可梦图鉴 #650 – #721"
               ],
@@ -463,6 +471,7 @@
             "zh_hant": {
               "information": [
                 "第6世代",
+                "卡洛斯",
                 "72 張",
                 "寶可夢圖鑑 #650 – #721"
               ],
@@ -476,7 +485,7 @@
           "logo_pixels": {},
           "pipeline_contract": {
             "name": "poster_overlay",
-            "version": 2
+            "version": 3
           },
           "text_cells": {
             "set_info": {
@@ -495,7 +504,7 @@
           }
         },
         "schema_version": 1,
-        "sha256": "c417131d93f2b9dfab3d0a7aa6beb5100aa9dc772ae69c178dd83c8b05a023a1"
+        "sha256": "51d4baacce49b88e3903bb8167403b2c1fc86991ab3f4bf17711ae201246a1de"
       },
       "prompt": {
         "bytes": 5713,

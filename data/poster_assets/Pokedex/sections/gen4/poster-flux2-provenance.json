@@ -69,7 +69,7 @@
         "width": 750
       },
       {
-        "bytes": 352539,
+        "bytes": 356288,
         "dpi": [
           299.9994,
           299.9994
@@ -77,8 +77,8 @@
         "file": "data/poster_assets/Pokedex/sections/gen4/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "a99f3810cec03e5207f1c9ba802fe362704f668cf85f6ac1c378f09e4d2a5068",
-        "sha256": "4dc7ef2aa6238901b96fab3d00bd4d042c5e54e31b4041867557e228d72891fa",
+        "pixel_sha256": "95d55e5f0910b982d82050e3c0a3930e0b672526a3151bedf75abee8173567df",
+        "sha256": "68e821122765b13907e644ae60ec92f5d427879911a33e658b2f92bd2adb9f95",
         "width": 750
       },
       {
@@ -135,7 +135,7 @@
       }
     ],
     "preview": {
-      "bytes": 5256568,
+      "bytes": 5261951,
       "dpi": [
         299.9994,
         299.9994
@@ -143,14 +143,14 @@
       "file": "data/poster_assets/Pokedex/sections/gen4/poster-flux2.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "2edbe4bf5cbc41c330aacf20fe0c5fb25301b0b741a73f1ab6e6663250732a4e",
-      "sha256": "88e4ccf81f3c47d6863f3e7c2c1c2ef0b9186782b8ebc587a69aa80765717370",
+      "pixel_sha256": "294e97cd26e3561c8fa47e2180384c7ed1bab058d71b9eb55be1bab94fe3a233",
+      "sha256": "77519e8dd3112c3d6bc888d1986d6953c9be0c28b72ad7856f3477d67f575110",
       "width": 2368
     }
   },
   "poster_id": "gen4",
   "preview_language": "en",
-  "promoted_at": "2026-08-03T12:34:41.122078+00:00",
+  "promoted_at": "2026-08-03T13:31:19.367265+00:00",
   "run": {
     "created_at": "2026-08-03T12:34:27.546443+00:00",
     "generation": {
@@ -375,6 +375,7 @@
             "de": {
               "information": [
                 "Generation IV",
+                "Sinnoh",
                 "107 Karten",
                 "Pokédex #387 – #493"
               ],
@@ -386,6 +387,7 @@
             "en": {
               "information": [
                 "Generation IV",
+                "Sinnoh",
                 "107 cards",
                 "Pokédex #387 – #493"
               ],
@@ -397,6 +399,7 @@
             "es": {
               "information": [
                 "Generación IV",
+                "Sinnoh",
                 "107 cartas",
                 "Pokédex #387 – #493"
               ],
@@ -408,6 +411,7 @@
             "fr": {
               "information": [
                 "Génération IV",
+                "Sinnoh",
                 "107 cartes",
                 "Pokédex #387 – #493"
               ],
@@ -419,6 +423,7 @@
             "it": {
               "information": [
                 "Generazione IV",
+                "Sinnoh",
                 "107 carte",
                 "Pokédex #387 – #493"
               ],
@@ -430,6 +435,7 @@
             "ja": {
               "information": [
                 "4世代",
+                "シンオウ",
                 "107 枚",
                 "ポケモン図鑑 #387 – #493"
               ],
@@ -441,6 +447,7 @@
             "ko": {
               "information": [
                 "4세대",
+                "신오",
                 "107 장",
                 "포켓몬 도감 #387 – #493"
               ],
@@ -452,6 +459,7 @@
             "zh_hans": {
               "information": [
                 "第4世代",
+                "神奥",
                 "107 张",
                 "宝可梦图鉴 #387 – #493"
               ],
@@ -463,6 +471,7 @@
             "zh_hant": {
               "information": [
                 "第4世代",
+                "神奧",
                 "107 張",
                 "寶可夢圖鑑 #387 – #493"
               ],
@@ -476,7 +485,7 @@
           "logo_pixels": {},
           "pipeline_contract": {
             "name": "poster_overlay",
-            "version": 2
+            "version": 3
           },
           "text_cells": {
             "set_info": {
@@ -495,7 +504,7 @@
           }
         },
         "schema_version": 1,
-        "sha256": "e07b905388ca57ca6a4d87894ca7b78e22bf0c637f07a4e9260f4bb532f88c8a"
+        "sha256": "6f953a7c5cf30e88e5886564f33cc316b04f9975bca97d4826ec77a064659680"
       },
       "prompt": {
         "bytes": 5731,

@@ -69,7 +69,7 @@
         "width": 750
       },
       {
-        "bytes": 285195,
+        "bytes": 287665,
         "dpi": [
           299.9994,
           299.9994
@@ -77,8 +77,8 @@
         "file": "data/poster_assets/Pokedex/sections/gen2/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "b8e51defb7ce9db50a39dd1c3c76ddec04301b109f7901cff27589e9e39f75f7",
-        "sha256": "ed8ddf2939ccd84b07ed1368e5041a4e4f994d5b606dfa42d4f0691ae1f909ba",
+        "pixel_sha256": "85fb4ff45d2efb757586639226edd6250dfae0a5db6cbc59d03759635197af24",
+        "sha256": "a9b05cf3192a986f9d412ea4cb502f25d31b3f59731b25a3cc59d72cb94c5896",
         "width": 750
       },
       {
@@ -121,7 +121,7 @@
         "width": 750
       },
       {
-        "bytes": 823666,
+        "bytes": 823667,
         "dpi": [
           299.9994,
           299.9994
@@ -130,12 +130,12 @@
         "height": 1050,
         "mode": "RGBA",
         "pixel_sha256": "721aa9486e73627cae0061323399792fe1164f0ac7924ede11be5f128d912687",
-        "sha256": "9cf8d4493d30228dd3c72833ba73be4de2f207b1c17ec2fbbc6a4910b95d2c5e",
+        "sha256": "5deaef285ab8d0365c94cc9069ea9ecdd8ed71144d6634523e40f02fee49bc80",
         "width": 750
       }
     ],
     "preview": {
-      "bytes": 4458006,
+      "bytes": 4461226,
       "dpi": [
         299.9994,
         299.9994
@@ -143,14 +143,14 @@
       "file": "data/poster_assets/Pokedex/sections/gen2/poster-flux2.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "5d3fd89ff80ca46f1a07a3e4dd3b1c63ec2ccd47088a2b38ceecc5eb9372c402",
-      "sha256": "f4ea6181bd0751a5faaa2d9e91e8ef039452fdf78462e7a688b746fa1fb56c1e",
+      "pixel_sha256": "a6eb19cd03d5fe08a1f35b7d6d0502ffd89aac556a05affb651b7f91f24e1c64",
+      "sha256": "a8217c45358c80fad0023ed9a70f5cb4a25ec7bec1f33d4d1f5bce7cca194567",
       "width": 2368
     }
   },
   "poster_id": "gen2",
   "preview_language": "en",
-  "promoted_at": "2026-07-29T19:36:08.788233+00:00",
+  "promoted_at": "2026-08-03T13:30:54.637504+00:00",
   "run": {
     "created_at": "2026-07-29T19:33:53.826749+00:00",
     "generation": {
@@ -376,6 +376,7 @@
             "de": {
               "information": [
                 "Generation II",
+                "Johto",
                 "100 Karten",
                 "Pokédex #152 – #251"
               ],
@@ -387,6 +388,7 @@
             "en": {
               "information": [
                 "Generation II",
+                "Johto",
                 "100 cards",
                 "Pokédex #152 – #251"
               ],
@@ -398,6 +400,7 @@
             "es": {
               "information": [
                 "Generación II",
+                "Johto",
                 "100 cartas",
                 "Pokédex #152 – #251"
               ],
@@ -409,6 +412,7 @@
             "fr": {
               "information": [
                 "Génération II",
+                "Johto",
                 "100 cartes",
                 "Pokédex #152 – #251"
               ],
@@ -420,6 +424,7 @@
             "it": {
               "information": [
                 "Generazione II",
+                "Johto",
                 "100 carte",
                 "Pokédex #152 – #251"
               ],
@@ -431,6 +436,7 @@
             "ja": {
               "information": [
                 "2世代",
+                "ジョウト",
                 "100 枚",
                 "ポケモン図鑑 #152 – #251"
               ],
@@ -442,6 +448,7 @@
             "ko": {
               "information": [
                 "2세대",
+                "조토",
                 "100 장",
                 "포켓몬 도감 #152 – #251"
               ],
@@ -453,6 +460,7 @@
             "zh_hans": {
               "information": [
                 "第2世代",
+                "城都",
                 "100 张",
                 "宝可梦图鉴 #152 – #251"
               ],
@@ -464,6 +472,7 @@
             "zh_hant": {
               "information": [
                 "第2世代",
+                "城都",
                 "100 張",
                 "寶可夢圖鑑 #152 – #251"
               ],
@@ -477,7 +486,7 @@
           "logo_pixels": {},
           "pipeline_contract": {
             "name": "poster_overlay",
-            "version": 2
+            "version": 3
           },
           "text_cells": {
             "set_info": {
@@ -496,7 +505,7 @@
           }
         },
         "schema_version": 1,
-        "sha256": "ae9d6307d49d62c1fd22a84c20afe60fb79d84a694df0a2b5a44e3847b2c16b8"
+        "sha256": "f17a6ed60109b4819c3236bab24caeacfbec528f516170e0423218d49a5c07c9"
       },
       "prompt": {
         "bytes": 6100,

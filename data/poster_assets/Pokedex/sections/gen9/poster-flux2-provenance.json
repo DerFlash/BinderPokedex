@@ -69,7 +69,7 @@
         "width": 750
       },
       {
-        "bytes": 258563,
+        "bytes": 262330,
         "dpi": [
           299.9994,
           299.9994
@@ -77,8 +77,8 @@
         "file": "data/poster_assets/Pokedex/sections/gen9/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "14dbc2ed3d19d4f107f994d780bdad8492cf3be01f15daca81a5d7d0a5a9cab2",
-        "sha256": "27ae5baaf63448d3e35efcec2730eafcefe84880cd53603bd5bc409f80d7ac91",
+        "pixel_sha256": "5cfef90e208f8e11e1c19c5f10dd91d24fbcad77da34d8dbc69b7c90cfe063ca",
+        "sha256": "ff3b438332f6ac3e95eba1740f36b981671e995ff3353d6739f646e22f379e0b",
         "width": 750
       },
       {
@@ -135,7 +135,7 @@
       }
     ],
     "preview": {
-      "bytes": 3792673,
+      "bytes": 3796465,
       "dpi": [
         299.9994,
         299.9994
@@ -143,14 +143,14 @@
       "file": "data/poster_assets/Pokedex/sections/gen9/poster-flux2.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "bdf8216d91ba0680c6946e4c76ce50e8e5abe71313e62ececb4085a614815513",
-      "sha256": "11f39bf3ae86d4704638d59b4e73ac286f0cbe5952d15f795f1c5021c40fc343",
+      "pixel_sha256": "584e3e57acf1b090d7fb5f63bdbfef43fa607ca7c9def7a47d170a0b98ff9ebb",
+      "sha256": "1c59a033b7f78f9731c087aaf63cfd3ddba8d93e0fb9466227a0b1e562cd2583",
       "width": 2368
     }
   },
   "poster_id": "gen9",
   "preview_language": "en",
-  "promoted_at": "2026-08-03T12:39:43.660439+00:00",
+  "promoted_at": "2026-08-03T13:32:11.753776+00:00",
   "run": {
     "created_at": "2026-08-03T12:39:34.623136+00:00",
     "generation": {
@@ -375,6 +375,7 @@
             "de": {
               "information": [
                 "Generation IX",
+                "Paldea",
                 "120 Karten",
                 "Pokédex #906 – #1025"
               ],
@@ -386,6 +387,7 @@
             "en": {
               "information": [
                 "Generation IX",
+                "Paldea",
                 "120 cards",
                 "Pokédex #906 – #1025"
               ],
@@ -397,6 +399,7 @@
             "es": {
               "information": [
                 "Generación IX",
+                "Paldea",
                 "120 cartas",
                 "Pokédex #906 – #1025"
               ],
@@ -408,6 +411,7 @@
             "fr": {
               "information": [
                 "Génération IX",
+                "Paldea",
                 "120 cartes",
                 "Pokédex #906 – #1025"
               ],
@@ -419,6 +423,7 @@
             "it": {
               "information": [
                 "Generazione IX",
+                "Paldea",
                 "120 carte",
                 "Pokédex #906 – #1025"
               ],
@@ -430,6 +435,7 @@
             "ja": {
               "information": [
                 "9世代",
+                "パルデア",
                 "120 枚",
                 "ポケモン図鑑 #906 – #1025"
               ],
@@ -441,6 +447,7 @@
             "ko": {
               "information": [
                 "9세대",
+                "팔데아",
                 "120 장",
                 "포켓몬 도감 #906 – #1025"
               ],
@@ -452,6 +459,7 @@
             "zh_hans": {
               "information": [
                 "第9世代",
+                "帕底亚",
                 "120 张",
                 "宝可梦图鉴 #906 – #1025"
               ],
@@ -463,6 +471,7 @@
             "zh_hant": {
               "information": [
                 "第9世代",
+                "帕底亞",
                 "120 張",
                 "寶可夢圖鑑 #906 – #1025"
               ],
@@ -476,7 +485,7 @@
           "logo_pixels": {},
           "pipeline_contract": {
             "name": "poster_overlay",
-            "version": 2
+            "version": 3
           },
           "text_cells": {
             "set_info": {
@@ -495,7 +504,7 @@
           }
         },
         "schema_version": 1,
-        "sha256": "535380b1ef7c21df9d18cd5e898432eb8df4241784c598b961a5f1bf34d92326"
+        "sha256": "ecdfc36145c0685f1d8064c833bacaf2a03d812e00bc052a324af5dc2acdfce9"
       },
       "prompt": {
         "bytes": 5727,

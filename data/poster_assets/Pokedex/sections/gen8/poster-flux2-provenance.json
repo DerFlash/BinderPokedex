@@ -69,7 +69,7 @@
         "width": 750
       },
       {
-        "bytes": 411569,
+        "bytes": 415292,
         "dpi": [
           299.9994,
           299.9994
@@ -77,8 +77,8 @@
         "file": "data/poster_assets/Pokedex/sections/gen8/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "95d000f69bbb6ce83bf35b7332e75d234ce76c95cbb49d1d9ce478d4953b3591",
-        "sha256": "cd176b0a02a46fb993698f691db9185f09f561ccdcd9bc02a43c3009691b6854",
+        "pixel_sha256": "61ff8e969a67d33ccaaa69525509711188d1df6bfea4c0e764eed420755d2187",
+        "sha256": "9b97857615e98170caf5fdc44b2af9701ac23dfa01903d94655fbeca6e7081ea",
         "width": 750
       },
       {
@@ -135,7 +135,7 @@
       }
     ],
     "preview": {
-      "bytes": 4969189,
+      "bytes": 4973701,
       "dpi": [
         299.9994,
         299.9994
@@ -143,14 +143,14 @@
       "file": "data/poster_assets/Pokedex/sections/gen8/poster-flux2.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "77a61cd65e9a9abe5376d506c08cbe225c43a7bc38249e184fe35f9f8f85408b",
-      "sha256": "e2f228b0a74bddb89117950695dd94a24e8935dbdc46b2b012448e520705d621",
+      "pixel_sha256": "b9e94f2a2943341b41e141bc705454db880610124c6fab6f6318cbfa09a894e5",
+      "sha256": "e3a0c8ecf8b1583c639b6489e39b6df1b1f4a78c75a8f67185643a06750fe022",
       "width": 2368
     }
   },
   "poster_id": "gen8",
   "preview_language": "en",
-  "promoted_at": "2026-08-03T12:38:55.297333+00:00",
+  "promoted_at": "2026-08-03T13:32:03.514914+00:00",
   "run": {
     "created_at": "2026-08-03T12:38:40.779219+00:00",
     "generation": {
@@ -375,6 +375,7 @@
             "de": {
               "information": [
                 "Generation VIII",
+                "Galar",
                 "96 Karten",
                 "Pokédex #810 – #905"
               ],
@@ -386,6 +387,7 @@
             "en": {
               "information": [
                 "Generation VIII",
+                "Galar",
                 "96 cards",
                 "Pokédex #810 – #905"
               ],
@@ -397,6 +399,7 @@
             "es": {
               "information": [
                 "Generación VIII",
+                "Galar",
                 "96 cartas",
                 "Pokédex #810 – #905"
               ],
@@ -408,6 +411,7 @@
             "fr": {
               "information": [
                 "Génération VIII",
+                "Galar",
                 "96 cartes",
                 "Pokédex #810 – #905"
               ],
@@ -419,6 +423,7 @@
             "it": {
               "information": [
                 "Generazione VIII",
+                "Galar",
                 "96 carte",
                 "Pokédex #810 – #905"
               ],
@@ -430,6 +435,7 @@
             "ja": {
               "information": [
                 "8世代",
+                "ガラル",
                 "96 枚",
                 "ポケモン図鑑 #810 – #905"
               ],
@@ -441,6 +447,7 @@
             "ko": {
               "information": [
                 "8세대",
+                "가라르",
                 "96 장",
                 "포켓몬 도감 #810 – #905"
               ],
@@ -452,6 +459,7 @@
             "zh_hans": {
               "information": [
                 "第8世代",
+                "伽勒尔",
                 "96 张",
                 "宝可梦图鉴 #810 – #905"
               ],
@@ -463,6 +471,7 @@
             "zh_hant": {
               "information": [
                 "第8世代",
+                "伽勒爾",
                 "96 張",
                 "寶可夢圖鑑 #810 – #905"
               ],
@@ -476,7 +485,7 @@
           "logo_pixels": {},
           "pipeline_contract": {
             "name": "poster_overlay",
-            "version": 2
+            "version": 3
           },
           "text_cells": {
             "set_info": {
@@ -495,7 +504,7 @@
           }
         },
         "schema_version": 1,
-        "sha256": "14104b2f54bf6e01ed7c86b66a7bd5911bcdeeaceb05ff3945ac612a1a32c76d"
+        "sha256": "17899bd4e88766dfaecb171e15335422d216dd200140a6b2d16d688410b48138"
       },
       "prompt": {
         "bytes": 5746,
