@@ -1,10 +1,10 @@
 from PIL import Image, ImageChops
 
-from scripts.poster_assets.experiment_individual_spatial_joint import (
+from scripts.poster_assets.create_comfyui_poster_workflow import (
     build_individual_spatial_prompt,
     build_workflow,
+    output_dimensions,
 )
-from scripts.poster_assets.create_comfyui_poster_workflow import output_dimensions
 from scripts.poster_assets.prepare_comfyui_poster import (
     build_individual_spatial_joint_references,
 )
@@ -31,6 +31,8 @@ def test_individual_spatial_workflow_has_one_full_frame_sampler_without_regions(
         SCOPE,
         seed=260782266,
         megapixels=0.25,
+        generation_mode="joint_scene",
+        reference_mode="individual_spatial_joint",
     )
 
     assert [

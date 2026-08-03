@@ -8,13 +8,12 @@ TEST_CARD_LIMIT = 9
 POSTER_PAGE_MODES = ("cards", "full-page")
 
 
-def validate_poster_page_mode(value: str) -> str:
-    """Return one supported poster PDF presentation mode."""
+def validate_poster_page_mode(value: str) -> None:
+    """Reject unsupported poster PDF presentation modes."""
     if value not in POSTER_PAGE_MODES:
         raise ValueError(
             f"poster_page_mode must be one of {', '.join(POSTER_PAGE_MODES)}"
         )
-    return value
 
 
 def pdf_output_filename(

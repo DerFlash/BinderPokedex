@@ -162,7 +162,8 @@ texture, character pixels, or a post-decode composite.
 Generated references, workflows, candidates, run metadata, PDF smoke tests, and
 rendered QA pages are ignored local scratch. Promoted masters, previews, card
 slices, and provenance are versioned. Rejected implementations remain only in
-Git history and the experiment log.
+Git history and the experiment log. Production tests call the canonical
+workflow builders directly; retired experiment entry points are not retained.
 
 ## Verification
 

@@ -51,7 +51,6 @@ class PosterPageRenderer:
         page_mode: str = "cards",
     ):
         validate_poster_page_mode(page_mode)
-        self.bundle = bundle
         self.scope = bundle.asset_key
         self.section_id = bundle.section_id
         self.poster_id = bundle.poster_id
@@ -146,9 +145,10 @@ class PosterPageRenderer:
         if self._card_paths is not None:
             return self._card_paths
         localized_poster = self._prepare_localized_poster()
-        temp_dir = localized_poster.parent
         self._card_paths = slice_poster(
-            self.scope, localized_poster, temp_dir / "cards"
+            self.scope,
+            localized_poster,
+            localized_poster.parent / "cards",
         )
         return self._card_paths
 

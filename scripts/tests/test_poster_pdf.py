@@ -13,6 +13,7 @@ from scripts.pdf.lib.rendering.poster_page_renderer import (
     PosterPageRenderer,
 )
 from scripts.pdf.lib.variant_pdf_generator import VariantPDFGenerator
+from scripts.poster_assets.layout import physical_layout_size_mm
 from scripts.poster_assets.poster_io import PosterBundle
 
 
@@ -62,13 +63,14 @@ def test_base1_full_page_draws_one_continuous_physical_poster():
     page_renderer.draw_cutting_guides.assert_not_called()
     canvas.drawImage.assert_called_once()
     call = canvas.drawImage.call_args
-    assert call.kwargs["width"] == pytest.approx(200.5 * mm)
-    assert call.kwargs["height"] == pytest.approx(276.7 * mm)
+    width_mm, height_mm = physical_layout_size_mm("standard_3x3")
+    assert call.kwargs["width"] == pytest.approx(width_mm * mm)
+    assert call.kwargs["height"] == pytest.approx(height_mm * mm)
     assert call.args[1] == pytest.approx(
-        (page_renderer.style.PAGE_WIDTH - 200.5 * mm) / 2
+        (page_renderer.style.PAGE_WIDTH - width_mm * mm) / 2
     )
     assert call.args[2] == pytest.approx(
-        (page_renderer.style.PAGE_HEIGHT - 276.7 * mm) / 2
+        (page_renderer.style.PAGE_HEIGHT - height_mm * mm) / 2
     )
 
 
