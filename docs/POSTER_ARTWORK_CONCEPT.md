@@ -287,9 +287,17 @@ text-free master without ComfyUI.
 ## PDF and CI integration
 
 The PDF layer discovers only enabled, promoted bundles. For each language it
-applies the localized title/logo and information block, slices with the shared
-layout, and inserts the poster after the configured cover. `--skip-poster`
-bypasses discovery and keeps ordinary PDF generation available.
+applies the localized title/logo and information block, then either slices with
+the shared layout (`cards`, default) or draws the complete physical-grid image
+once (`full-page`). Both presentations insert the poster after the configured
+cover. `--skip-poster` bypasses discovery and keeps the established cover-based
+PDF path available.
+
+Presentation is not a second asset contract. Both modes consume the same
+promoted text-free master and deterministic overlay. For `standard_3x3`, the
+continuous image remains 200.5 × 276.7 mm and is centered on A4; it is not
+stretched to page edges and receives no cutting guides. A distinct filename
+prevents it from overwriting the normal cuttable build.
 
 Keeping the cover is currently deliberate. The poster now carries its semantic
 information, but removing covers changes pagination and the visual contract for

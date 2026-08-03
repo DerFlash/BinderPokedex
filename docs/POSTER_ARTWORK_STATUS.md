@@ -129,6 +129,11 @@ texture, character pixels, or a post-decode composite.
 - Local generation is an optional post-fetch, pre-PDF phase.
 - Only promoted, tracked artwork can enter a normal PDF.
 - `--skip-poster` remains an explicit build bypass.
+- A disabled or absent poster route leaves the existing section cover and card
+  pages intact.
+- Enabled A4 posters default to nine physical cards; `--poster-page-mode
+  full-page` emits the same localized poster once at 200.5 × 276.7 mm, centered
+  on A4 without cutting guides.
 - Aggregate scopes route independent section manifests and promotions through
   `posters.yaml`, then insert each poster after its matching section cover.
 - All 41 current individual and aggregate targets are configured; only the 13
@@ -171,7 +176,7 @@ python -m scripts.poster_assets.poster_work_plan --all-configured
 
 Verified on 2026-08-03:
 
-- the full suite passes with `486 passed, 1 skipped`;
+- the full suite passes with `491 passed, 1 skipped`;
 - all 13 enabled poster bundles validate;
 - the planner reports 41 configured targets: 13 current and 28 needing assets;
 - every v7 production graph matches its reviewed candidate graph except for
@@ -180,4 +185,7 @@ Verified on 2026-08-03:
   build successfully with posters enabled;
 - rendered poster pages preserve the 3x3 card grid, overlays, card containment,
   and full-bleed scene continuity;
+- rendered Base1 smoke PDFs verify both the default cuttable page and the
+  continuous full-page presentation; a Base2 smoke PDF verifies the unchanged
+  cover fallback when no poster is enabled;
 - Python compilation and `git diff --check` pass.

@@ -16,14 +16,15 @@ Last reviewed: 2026-08-03
 | Wide layouts | Keep `wide_4x3` and `wide_4x4` as artwork extension points; never squeeze them onto A4 |
 | Generation timing | Explicit optional post-fetch step, before PDF generation |
 | PDF behavior | Consume only promoted local artwork; never launch ComfyUI implicitly |
-| Cover transition | Keep the existing section cover before the poster until information parity and rendered-PDF review are complete; removal requires a separate explicit change |
+| Cover fallback | Keep the existing section cover whenever no promoted poster is enabled; currently it also remains before enabled posters until a separately reviewed replacement migration |
+| Poster presentation | Render enabled posters as cuttable physical cards by default; optionally render the same localized poster as one continuous physical-grid-sized image centered on its PDF page |
 | Generator | FLUX.2 `joint_scene` remains the mode for new candidates with `individual_spatial_joint` v7 as the default; spatial-v5 remains reproducible for its accepted scopes and regional-v6 only for Generation III |
 | Fallback | FLUX.2 `identity_lock` remains explicitly selectable when a one-shot cannot pass identity or placement review |
 | Prompt ownership | Set-specific creative briefs in one catalog plus one centrally generated identity, placement, depth, and safe-area contract |
 | Character identity | Supplied Official Artwork is the authority for form, stature, anatomy, silhouette, pose, color, and markings |
 | Form identity | Card/cover imagery and poster subjects are separate; Mega, Primal, X/Y, regional, and other forms keep their exact allowlisted Official Artwork identity |
 | Promotion | Human visual review plus deterministic validation is mandatory |
-| Missing poster | Normal PDF remains possible; enabled-but-missing promoted artwork is an error; `--skip-poster` is an explicit bypass |
+| Missing poster | A scope without an enabled promotion uses its normal cover path; enabled-but-missing promoted artwork is an error; `--skip-poster` explicitly forces the cover-based path |
 | CI boundary | Pull requests build and validate a complete release candidate without publishing; only `v*` tags may publish |
 | Rejected experiments | Anima, FLUX.1 Canny, Qwen, SDXL, DreamO, direct edit, and direct inpaint remain evidence in the log and Git history, not live production options |
 
@@ -108,6 +109,8 @@ is the accepted cost of exact identity preservation.
 | `PA-024` | Removing a preceding cover is an explicit gated migration | Open | Covers remain enabled; add an explicit renderer option only after every affected target is promoted and representative PDFs pass multilingual visual review |
 | `PA-025` | Every current set and subsection is represented in the poster work plan | Done | 41 checked-in manifests cover 26 individual sets and 15 aggregate sections; tests reject missing or stale scene and manifest coverage |
 | `PA-026` | A scope with fewer canonical subjects is not padded with duplicates or unrelated forms | Done | Section manifests accept one to the layout column count; two-subject `ExGen2/primal` uses the two outer bottom cards while the normal 3×3 default remains three subjects |
+| `PA-027` | The existing cover path remains available when no poster can be consumed | Done | Missing or disabled poster routes leave the section cover and normal card pages intact; `--skip-poster` bypasses poster discovery before asset loading |
+| `PA-028` | One promoted poster can be emitted either as physical cards or as a continuous page | Done for A4 3×3 | `cards` remains the default with nine 63.5 × 88.9 mm images and cutting guides; `--poster-page-mode full-page` draws one 200.5 × 276.7 mm image centered on A4 without cutting guides and writes a distinct filename |
 
 ## Current production boundary
 
@@ -133,6 +136,9 @@ is the accepted cost of exact identity preservation.
 - Existing section covers remain in the PDF immediately before enabled posters.
   Poster copy now has semantic cover parity, but cover removal is a separate
   gated roadmap item rather than an implicit side effect.
+- Enabled A4 posters use the cuttable `cards` presentation by default. The
+  explicit `full-page` presentation keeps the complete localized poster at its
+  200.5 × 276.7 mm physical grid size, centered on A4 without cutting guides.
 - Wide PDF formats and promotion of the remaining 28 configured targets are
   explicit roadmap items.
 

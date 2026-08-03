@@ -65,6 +65,21 @@ Scopes and bindings without that opt-in continue to generate normally. Poster
 generation itself is a separate reviewed workflow; the PDF command only
 consumes promoted local artwork and does not start ComfyUI.
 
+The default poster presentation remains nine cuttable physical cards. To keep
+the same localized 3×3 poster as one continuous 200.5 × 276.7 mm image centered
+on A4, without cutting guides:
+
+```bash
+python scripts/pdf/generate_pdf.py \
+  --scope Base1 \
+  --language de \
+  --poster-page-mode full-page
+```
+
+This writes a separate file such as
+`output/de/Base1_DE_POSTER_FULL_PAGE.pdf`. Scopes without an enabled promoted
+poster continue through the existing cover and card-page path.
+
 The current page order remains cover, poster, then card pages. Poster overlays
 already repeat the cover's semantic title/subtitle, count, description or
 release date, and project identity. Removing the cover is a separate future
@@ -84,6 +99,8 @@ The skipped build uses a separate filename such as
 `output/de/Base1_DE.pdf`. `--skip-poster` bypasses all poster-index, manifest,
 and artwork loading—including every section poster of an aggregate scope—and
 can be combined with `--test` and `--skip-images`.
+It is not combined with `--poster-page-mode full-page`, because no poster is
+loaded in a skipped build.
 
 Poster artwork is an explicit optional post-fetch workflow. See
 [Poster Artwork Workflow](POSTER_WORKFLOW.md) for initialization, the

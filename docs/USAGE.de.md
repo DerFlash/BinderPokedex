@@ -65,6 +65,22 @@ Scopes und Bindings ohne Freigabe werden unverändert erzeugt. Die
 Artwork-Generierung bleibt ein separater Review-Workflow; der PDF-Befehl
 verwendet nur das promotete lokale Artwork und startet ComfyUI nicht selbst.
 
+Standardmäßig wird das Poster weiterhin als neun zuschneidbare Karten in
+physischer Größe ausgegeben. Dasselbe lokalisierte 3×3-Poster kann alternativ
+als ein zusammenhängendes, 200,5 × 276,7 mm großes Bild mittig auf A4 und ohne
+Schnittlinien ausgegeben werden:
+
+```bash
+python scripts/pdf/generate_pdf.py \
+  --scope Base1 \
+  --language de \
+  --poster-page-mode full-page
+```
+
+Dabei entsteht eine separate Datei wie
+`output/de/Base1_DE_POSTER_FULL_PAGE.pdf`. Scopes ohne aktiviertes promotetes
+Poster verwenden weiterhin den bestehenden Cover- und Kartenseiten-Pfad.
+
 Die Seitenreihenfolge bleibt derzeit Cover, Poster und danach Kartenseiten.
 Das Poster wiederholt bereits die semantischen Cover-Informationen wie
 Titel/Untertitel, Anzahl, Beschreibung beziehungsweise Veröffentlichungsdatum
@@ -86,6 +102,8 @@ Der Build erhält einen eigenen Dateinamen wie
 `output/de/Base1_DE.pdf`. `--skip-poster` verhindert bereits das Laden aller
 Poster-Indizes, Manifeste und Artworks – bei Sammel-Scopes also sämtlicher
 Section-Poster – und lässt sich mit `--test` sowie `--skip-images` kombinieren.
+Die Option wird nicht mit `--poster-page-mode full-page` kombiniert, weil in
+einem übersprungenen Build kein Poster geladen wird.
 
 Die Artwork-Erzeugung ist ein expliziter optionaler Schritt nach dem
 Daten-Fetch. Die Anleitung

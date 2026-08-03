@@ -51,10 +51,15 @@ flowchart TD
 
     subgraph CONSUME["4 · Deterministic consumers"]
         TRACKED --> ROUTE{"PDF route enabled?"}
+        ROUTE -->|no| COVER["Existing section-cover path"]
         ROUTE -->|yes| PDF["PDF builder"]
         OUTPUT --> PDF
-        PDF --> OVERLAY["Localized logo/info overlay and temporary slicing"]
-        OVERLAY --> A4["A4 3×3 binder PDF"]
+        PDF --> OVERLAY["Localized logo/info overlay"]
+        OVERLAY --> MODE{"Poster page mode"}
+        MODE -->|cards · default| SLICE["Temporary physical card slicing + guides"]
+        MODE -->|full-page| WHOLE["One continuous physical-grid image"]
+        SLICE --> A4["A4 3×3 binder PDF"]
+        WHOLE --> A4
 
         TRACKED --> VALIDATE["CI validates every enabled promotion"]
         VALIDATE --> BUILD["Build PDFs, ZIPs, and release manifest"]
@@ -74,7 +79,8 @@ The current PDF order is intentionally `section cover → promoted poster → ca
 pages`. The poster already contains the cover's semantic copy, but cover
 removal is not automatic. It remains a separate future renderer change after
 the affected poster family is completely promoted and visually checked in
-representative languages.
+representative languages. A section without an enabled promoted poster simply
+keeps the established `section cover → card pages` path.
 
 CI uses the same boundary. Pull requests run a complete, read-only release
 rehearsal that validates promoted posters and builds every PDF, ZIP, and the
@@ -93,6 +99,7 @@ that candidate build and publish only after it succeeds. See
 | Promote candidate | no | yes | once per accepted revision |
 | Enable `pdf.enabled` | no | yes | configuration choice |
 | Build PDF | yes | yes | as needed |
+| `--poster-page-mode full-page` | no | optional continuous-page output | as needed |
 | `--skip-poster` | optional | bypasses poster use | as needed |
 
 ## 1. Fetch the scope
@@ -535,10 +542,11 @@ The ordinary PDF command then consumes the promoted local artwork:
 python scripts/pdf/generate_pdf.py --scope SV04 --language de
 ```
 
-The PDF step adds the exact localized logo/information, slices the result, and
-embeds it at physical card size. A legacy poster follows the first section
-cover; aggregate posters follow their respective configured section covers.
-The step does not contact ComfyUI or regenerate the background.
+The PDF step adds the exact localized logo/information. Its default `cards`
+mode slices the result and embeds all crops at physical card size. A legacy
+poster follows the first section cover; aggregate posters follow their
+respective configured section covers. The step does not contact ComfyUI or
+regenerate the background.
 
 The deterministic information block depends on the target type:
 
@@ -548,10 +556,25 @@ The deterministic information block depends on the target type:
 | Aggregate section | Collection title such as `Pokédex` or localized section title | Localized section title, subtitle/region, card count, description/range | `Binder Pokedex` |
 
 These rows mirror the semantic cover information. The representative Pokémon
-are already part of the jointly generated scene. The old cover remains present
-until a separate, explicitly reviewed PDF-renderer change replaces it. The
-cover's cutting hint and build timestamp are operational footer metadata and
-are not repeated inside the permanent artwork.
+are already part of the jointly generated scene. The existing cover remains
+present until a separate, explicitly reviewed PDF-renderer change replaces it.
+The cover's cutting hint and build timestamp are operational footer metadata
+and are not repeated inside the permanent artwork.
+
+To keep an enabled 3×3 poster whole, without card gaps or cutting guides:
+
+```bash
+python scripts/pdf/generate_pdf.py \
+  --scope SV04 \
+  --language de \
+  --poster-page-mode full-page
+```
+
+The localized poster is drawn once at its exact 200.5 × 276.7 mm physical grid
+size and centered on A4. The distinct output suffix is
+`_POSTER_FULL_PAGE.pdf`, so it cannot overwrite the default cuttable build.
+The mode changes only presentation: it uses the same promoted text-free master
+and the same deterministic localized overlay.
 
 To bypass the poster for one isolated build:
 
@@ -563,6 +586,10 @@ python scripts/pdf/generate_pdf.py \
 ```
 
 The output receives a `_NO_POSTER.pdf` suffix.
+
+`--skip-poster` and `--poster-page-mode full-page` are intentionally mutually
+exclusive: once poster discovery is bypassed, the section cover is the only
+introductory page and no poster presentation mode applies.
 
 ## Layout policy
 
