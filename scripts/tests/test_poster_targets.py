@@ -30,6 +30,35 @@ ROOT = Path(__file__).resolve().parents[2]
 POSTER_ASSETS = ROOT / "data" / "poster_assets"
 
 
+def test_every_current_poster_target_has_a_checked_in_manifest():
+    manifests = list(POSTER_ASSETS.glob("*/poster.yaml"))
+    manifests.extend(POSTER_ASSETS.glob("*/sections/*/poster.yaml"))
+
+    assert len(manifests) == 41
+
+
+def test_every_generated_pdf_language_has_complete_poster_copy():
+    checked = []
+    for path in sorted((ROOT / "data" / "output").glob("*.json")):
+        scope_data = json.loads(path.read_text(encoding="utf-8"))
+        if scope_data.get("type") == "tcg_set":
+            for language in scope_data.get("available_languages", []):
+                assert all(
+                    info_panel_values(scope_data, language, "set_summary")
+                )
+                checked.append(f"{path.stem}/{language}")
+            continue
+        for section_id, section in scope_data.get("sections", {}).items():
+            isolated = {"sections": {section_id: section}}
+            for language in SUPPORTED_LANGUAGES:
+                assert all(
+                    info_panel_values(isolated, language, "section_summary")
+                )
+                checked.append(f"{path.stem}/{section_id}/{language}")
+
+    assert len(checked) == 266
+
+
 def test_standalone_poster_manifests_remain_isolated_single_bundles():
     expected_hashes = {
         "Base1": "424ae822d7b7db3619379b9b910c68105aafaaaf42996bb58554ec1cb5ddd001",
