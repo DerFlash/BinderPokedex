@@ -70,6 +70,12 @@ generated once and then reused deterministically for every supported language.
 Aggregate indexes fan out to independent section manifests before generation
 and join again only when the PDF page collection is assembled.
 
+The current PDF order is intentionally `section cover → promoted poster → card
+pages`. The poster already contains the cover's semantic copy, but cover
+removal is not automatic. It remains a separate future renderer change after
+the affected poster family is completely promoted and visually checked in
+representative languages.
+
 CI uses the same boundary. Pull requests run a complete, read-only release
 rehearsal that validates promoted posters and builds every PDF, ZIP, and the
 release manifest without publishing a GitHub Release. Tagged releases reuse
@@ -190,7 +196,8 @@ python scripts/poster_assets/init_poster_scope.py \
 - creates the reviewed FLUX.2 `joint_scene` contract;
 - embeds the set-specific creative brief from `config/poster_scenes.yaml`;
 - derives a stable per-scope seed;
-- selects three featured Pokemon for the bottom row;
+- selects the canonical featured Pokémon for the bottom row (three for the
+  normal 3×3 case, or fewer only when the source section defines fewer);
 - keeps different visual forms of one species as distinct poster subjects;
 - configures available localized logos;
 - fetches exact transparent source cutouts and logos with `--fetch`;
@@ -224,7 +231,9 @@ reviewed bindings can then be enabled independently. Each has its own seed and
 provenance boundary and selects only that generation's three starter
 `featured_elements`. Adding or promoting one generation therefore does not
 invalidate another generation's generation fingerprint. Other aggregate scopes
-can use the same structure once their section scene briefs are reviewed.
+use the same structure: `ExGen1`, `ExGen2`, and `ExGen3` are checked in. All 15
+current aggregate sections have scene briefs and leaf manifests. Their PDF
+bindings remain disabled until each generated scene is reviewed and promoted.
 
 ExGen3 uses the same aggregate lifecycle for its `normal` and `mega` sections:
 
@@ -531,6 +540,19 @@ embeds it at physical card size. A legacy poster follows the first section
 cover; aggregate posters follow their respective configured section covers.
 The step does not contact ComfyUI or regenerate the background.
 
+The deterministic information block depends on the target type:
+
+| Target | Top cell | Middle information cell | Footer |
+| --- | --- | --- | --- |
+| Individual TCG set | Localized set logo, with configured text fallback | Localized set name, card count, localized release label, release date | `Binder Pokedex` |
+| Aggregate section | Collection title such as `Pokédex` or localized section title | Localized section title, subtitle/region, card count, description/range | `Binder Pokedex` |
+
+These rows mirror the semantic cover information. The representative Pokémon
+are already part of the jointly generated scene. The old cover remains present
+until a separate, explicitly reviewed PDF-renderer change replaces it. The
+cover's cutting hint and build timestamp are operational footer metadata and
+are not repeated inside the permanent artwork.
+
 To bypass the poster for one isolated build:
 
 ```bash
@@ -546,7 +568,7 @@ The output receives a `_NO_POSTER.pdf` suffix.
 
 | Layout | Subjects | Physical grid | Intended PDF family | Current PDF status |
 | --- | ---: | --- | --- | --- |
-| `standard_3x3` | 3 | 200.5 × 276.7 mm | A4 portrait | supported and default |
+| `standard_3x3` | 3 by default; 1–2 only when the source section has fewer canonical subjects | 200.5 × 276.7 mm | A4 portrait | supported and default |
 | `wide_4x3` | 4 | 269 × 276.7 mm | A3 landscape | artwork-ready; matching PDF renderer open |
 | `wide_4x4` | 4 | 269 × 370.6 mm | A3 portrait | artwork-ready; matching PDF renderer open |
 

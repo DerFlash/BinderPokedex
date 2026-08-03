@@ -16,6 +16,7 @@ Last reviewed: 2026-08-03
 | Wide layouts | Keep `wide_4x3` and `wide_4x4` as artwork extension points; never squeeze them onto A4 |
 | Generation timing | Explicit optional post-fetch step, before PDF generation |
 | PDF behavior | Consume only promoted local artwork; never launch ComfyUI implicitly |
+| Cover transition | Keep the existing section cover before the poster until information parity and rendered-PDF review are complete; removal requires a separate explicit change |
 | Generator | FLUX.2 `joint_scene` remains the mode for new candidates with `individual_spatial_joint` v7 as the default; spatial-v5 remains reproducible for its accepted scopes and regional-v6 only for Generation III |
 | Fallback | FLUX.2 `identity_lock` remains explicitly selectable when a one-shot cannot pass identity or placement review |
 | Prompt ownership | Set-specific creative briefs in one catalog plus one centrally generated identity, placement, depth, and safe-area contract |
@@ -94,7 +95,7 @@ is the accepted cost of exact identity preservation.
 | `PA-012` | Every promotion is reproducible and auditable | Done | Provenance records model, prompt, source, references, workflow, review/audit, and output hashes |
 | `PA-013` | Aggregate sections can own separate posters | Done | `posters.yaml` routes isolated leaf manifests and inserts each enabled poster after its matching cover |
 | `PA-014` | 4×3/4×4 PDFs use matching page renderers | Open | Add physical page styles, templates, cutting guides, memory checks, and rendered-PDF QA |
-| `PA-015` | Aggregate variants receive section-specific scenes and curated subject/reference sets | Ongoing | ExGen3 `normal` and `mega` are accepted; repeat only for reviewed future sections |
+| `PA-015` | Aggregate variants receive section-specific scenes and curated subject/reference sets | Prepared | All 15 current aggregate sections have exact catalog coverage and initializable leaf manifests; 11 are promoted and four await artwork review |
 | `PA-015A` | Variant subjects retain their exact form | Done | Selection, cutouts, planner, fingerprints, promotion, and validation bind exact Official Artwork identity |
 | `PA-016` | Post-fetch orchestration detects stale inputs | Done | Read-only planner separates expensive generation drift from cheap overlay/routing changes |
 | `PA-017` | Joint generation can provide natural grounding without losing identity or card safety | Done for all thirteen promoted scopes | Seven individual-v7, five spatial-v5, and one regional-v6 bundles pass their reviewed identity, card, and scene gates |
@@ -102,10 +103,18 @@ is the accepted cost of exact identity preservation.
 | `PA-019` | Pull requests prove a release can be built without publishing | Done | PRs validate promotions, build every PDF/archive/manifest, and upload only a temporary artifact |
 | `PA-020` | Raster card geometry closes exactly on every real canvas | Done | Cumulative physical endpoints drive preparation, finalization, slicing, promotion, and validation |
 | `PA-021` | Default and fallback cannot become ambiguous | Done | One manifest owns one active generation contract; fallback selection and promotion are explicit |
+| `PA-022` | Poster copy works in every language emitted for its scope | Done | Tests cover all 266 current target/language combinations; aggregate copy is complete in all nine PDF languages and TCG sets follow their advertised language inventory |
+| `PA-023` | A poster carries the semantic information of its preceding cover | Done | Set posters show localized set name, card count, release date, title/logo, and project identity; aggregate posters show section title, subtitle/region, card count, description/range, collection title, and project identity; the cover-only cutting hint/build timestamp remains operational metadata |
+| `PA-024` | Removing a preceding cover is an explicit gated migration | Open | Covers remain enabled; add an explicit renderer option only after every affected target is promoted and representative PDFs pass multilingual visual review |
+| `PA-025` | Every current set and subsection is represented in the poster work plan | Done | 41 checked-in manifests cover 26 individual sets and 15 aggregate sections; tests reject missing or stale scene and manifest coverage |
+| `PA-026` | A scope with fewer canonical subjects is not padded with duplicates or unrelated forms | Done | Section manifests accept one to the layout column count; two-subject `ExGen2/primal` uses the two outer bottom cards while the normal 3×3 default remains three subjects |
 
 ## Current production boundary
 
 - Thirteen promoted 3×3 bundles are enabled.
+- All 41 current poster targets are configured: 13 are promoted and enabled;
+  28 remain disabled until their source assets, generation, and human review
+  are complete.
 - All thirteen enabled bundles now use a reviewed `joint_scene` promotion:
   seven individual-v7, five spatial-v5, and one regional-v6.
 - `identity_lock` remains an explicit fallback but has no active promoted scope.
@@ -121,8 +130,11 @@ is the accepted cost of exact identity preservation.
 - The individual-v7 rollout is complete for the seven user-reviewed
   replacements. Spatial-v5 remains accepted for five scopes; regional-v6
   remains promoted only for its reviewed Generation III result.
-- Wide PDF formats and remaining aggregate variant sections are explicit
-  roadmap items.
+- Existing section covers remain in the PDF immediately before enabled posters.
+  Poster copy now has semantic cover parity, but cover removal is a separate
+  gated roadmap item rather than an implicit side effect.
+- Wide PDF formats and promotion of the remaining 28 configured targets are
+  explicit roadmap items.
 
 ## Change rule
 

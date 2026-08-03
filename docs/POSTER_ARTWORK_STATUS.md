@@ -53,6 +53,37 @@ Stable `poster-flux2*` filenames keep PDF routing unchanged. Logos, localized
 information panels, card slicing, and PDF placement remain deterministic and
 are not model-generated.
 
+## Configured target and language coverage
+
+Every current target has a checked-in manifest and a configured creative brief.
+Unreviewed targets remain disabled, so configuration coverage never implies
+visual approval.
+
+| Scope family | Configured | Promoted and enabled | Awaiting assets/generation/review |
+| --- | ---: | ---: | ---: |
+| Individual TCG sets | 26 | 2 | 24 |
+| Pokédex generations | 9 | 9 | 0 |
+| ExGen1 sections | 1 | 0 | 1 |
+| ExGen2 sections | 3 | 0 | 3 |
+| ExGen3 sections | 2 | 2 | 0 |
+| **Total** | **41** | **13** | **28** |
+
+The deterministic overlay contract is complete for all 266 language outputs
+currently implied by those targets. Aggregate sections contain title,
+subtitle/region, card count, and description/range in all nine PDF languages.
+Individual TCG sets define localized set copy and logo routes for every
+language advertised by their fetched source data. Missing TCG languages are
+not invented and are not PDF targets.
+
+The poster now contains all semantic cover information: collection/set title,
+section title where applicable, subtitle/region, card count, description or
+release date, representative Pokémon, and the `Binder Pokedex` project mark.
+The existing cover is nevertheless still rendered before the poster. Its
+build-time footer (cutting hint and build date) is operational metadata, not
+scope content, and is intentionally not duplicated on the artwork. Removing
+the cover is a separate future renderer migration after all affected posters
+are promoted and representative multilingual PDFs have been reviewed.
+
 ## Accepted default graph
 
 For each subject, `individual_spatial_joint`:
@@ -100,6 +131,8 @@ texture, character pixels, or a post-decode composite.
 - `--skip-poster` remains an explicit build bypass.
 - Aggregate scopes route independent section manifests and promotions through
   `posters.yaml`, then insert each poster after its matching section cover.
+- All 41 current individual and aggregate targets are configured; only the 13
+  promoted targets are enabled.
 - Pull requests validate every enabled promotion and build a complete release
   candidate as a temporary artifact only.
 - Only a successful `v*` tag job may publish a GitHub Release.
@@ -112,9 +145,11 @@ texture, character pixels, or a post-decode composite.
    product requirement justifies a reviewed replacement.
 3. Trigger the deferred minimal depth guide only under its documented failure
    condition, not merely to force visible foreground overlap.
-4. Apply the section workflow to future aggregate variants only after their
-   scene briefs and exact subject/form selections are reviewed.
-5. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
+4. Generate, review, promote, and then enable the remaining 28 configured
+   targets. The planner currently reports them as `needs_assets`.
+5. Decide on and implement explicit cover replacement only after the affected
+   target family is fully promoted and its multilingual PDFs pass visual QA.
+6. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
    matching physical page formats, memory tests, and visual QA exist.
 
 ## Cleanup boundary
@@ -138,7 +173,7 @@ Verified on 2026-08-03:
 
 - the full suite passes with `479 passed, 1 skipped`;
 - all 13 enabled poster bundles validate;
-- the planner reports all 13 configured targets as current;
+- the planner reports 41 configured targets: 13 current and 28 needing assets;
 - every v7 production graph matches its reviewed candidate graph except for
   the output filename prefix;
 - German Pokédex and `SV03.5` PDFs build successfully with posters enabled;

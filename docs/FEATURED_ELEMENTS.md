@@ -5,8 +5,10 @@
 Featured Elements is a visual enhancement system that displays 3 iconic Pokémon cards or artwork on each section cover page. The system automatically selects the most important/famous Pokémon and fetches appropriate visual content based on the scope type.
 
 For poster-page artwork, featured selection is reused but the layout rules are
-different: the number of Pokémon follows the poster column count, and cutouts
-are placed in the bottom row safe zones. See
+different: the normal number of Pokémon follows the poster column count, while
+an aggregate section with fewer canonical subjects keeps that smaller cast
+instead of duplicating or inventing one. Cutouts are distributed across the
+bottom-row print-safe cards. See
 [Poster Artwork Specification](POSTER_ARTWORK_CONCEPT.md).
 
 ## Visual Examples

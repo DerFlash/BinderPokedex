@@ -65,6 +65,12 @@ Scopes und Bindings ohne Freigabe werden unverändert erzeugt. Die
 Artwork-Generierung bleibt ein separater Review-Workflow; der PDF-Befehl
 verwendet nur das promotete lokale Artwork und startet ComfyUI nicht selbst.
 
+Die Seitenreihenfolge bleibt derzeit Cover, Poster und danach Kartenseiten.
+Das Poster wiederholt bereits die semantischen Cover-Informationen wie
+Titel/Untertitel, Anzahl, Beschreibung beziehungsweise Veröffentlichungsdatum
+und Projektname. Das Entfernen des Covers ist eine separate spätere Migration,
+nachdem die betroffenen Poster und mehrsprachigen PDF-Layouts geprüft sind.
+
 Für einen einzelnen Build kann das Poster ohne Manifeständerung übersprungen
 werden:
 

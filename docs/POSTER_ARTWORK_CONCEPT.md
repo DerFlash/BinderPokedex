@@ -88,6 +88,11 @@ cells.
 `wide_4x3` and `wide_4x4` remain modeled extension points. They must use matching
 physical page formats and must not be squeezed onto A4.
 
+The normal cast size equals the layout column count. Aggregate sections may
+declare fewer canonical subjects when that is the complete source set. Those
+subjects are distributed across the bottom row without duplication; for
+example, the two Primal Reversions occupy the outer cards of a 3×3 poster.
+
 ## Scope manifest
 
 The default generation contract for a new scope is:
@@ -151,6 +156,13 @@ Full prompts are generated, not maintained per scope. They combine:
 
 Text and logos are deliberately absent from model output. They are localized
 and rendered after the text-free artwork has passed review.
+
+The overlay has two semantic profiles. `set_summary` renders the localized set
+name, card count, release label/date, localized logo where available, and the
+project mark. `section_summary` renders collection/section title, localized
+subtitle or region, card count, description/range, and the project mark. Every
+current aggregate section provides all nine PDF translations; an individual
+TCG set follows only the languages advertised by its fetched set data.
 
 ## Default individual-spatial `joint_scene` graph
 
@@ -278,6 +290,12 @@ The PDF layer discovers only enabled, promoted bundles. For each language it
 applies the localized title/logo and information block, slices with the shared
 layout, and inserts the poster after the configured cover. `--skip-poster`
 bypasses discovery and keeps ordinary PDF generation available.
+
+Keeping the cover is currently deliberate. The poster now carries its semantic
+information, but removing covers changes pagination and the visual contract for
+every scope. That migration requires an explicit renderer option plus
+multilingual rendered-PDF review after the affected posters are promoted; it is
+not coupled to artwork generation or promotion.
 
 Pull requests run the same validator and PDF/release-candidate builders as a
 release, but upload only a temporary Actions artifact. A separate tag-only job

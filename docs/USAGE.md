@@ -65,6 +65,11 @@ Scopes and bindings without that opt-in continue to generate normally. Poster
 generation itself is a separate reviewed workflow; the PDF command only
 consumes promoted local artwork and does not start ComfyUI.
 
+The current page order remains cover, poster, then card pages. Poster overlays
+already repeat the cover's semantic title/subtitle, count, description or
+release date, and project identity. Removing the cover is a separate future
+migration after the affected posters and multilingual PDF layouts are reviewed.
+
 Skip the poster for one build without changing the scope manifest:
 
 ```bash
