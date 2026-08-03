@@ -1,6 +1,12 @@
+from PIL import Image, ImageChops
+
 from scripts.poster_assets.experiment_individual_spatial_joint import (
     build_individual_spatial_prompt,
     build_workflow,
+)
+from scripts.poster_assets.create_comfyui_poster_workflow import output_dimensions
+from scripts.poster_assets.prepare_comfyui_poster import (
+    build_individual_spatial_joint_references,
 )
 
 
@@ -64,3 +70,23 @@ def test_individual_spatial_workflow_has_one_full_frame_sampler_without_regions(
         }
         for node in workflow.values()
     )
+
+
+def test_production_reference_writer_emits_one_positioned_identity_per_subject(
+    tmp_path,
+):
+    paths = build_individual_spatial_joint_references(SCOPE, tmp_path)
+
+    assert [path.name for path in paths] == [
+        "individual_spatial_reference_1.png",
+        "individual_spatial_reference_2.png",
+        "individual_spatial_reference_3.png",
+    ]
+    expected_size = output_dimensions(SCOPE, 0.5)
+    neutral = Image.new("RGB", expected_size, (226, 224, 211))
+    for path in paths:
+        with Image.open(path) as loaded:
+            reference = loaded.convert("RGB")
+        assert reference.size == expected_size
+        assert reference.getpixel((0, 0)) == (226, 224, 211)
+        assert ImageChops.difference(reference, neutral).getbbox() is not None

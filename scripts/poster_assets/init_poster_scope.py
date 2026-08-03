@@ -19,6 +19,7 @@ try:
     )
     from .fetch_title_logos import fetch_title_logos
     from .finalize_comfyui_poster import readable_overlay_text
+    from .generation_contract import CANONICAL_REFERENCE_MODES
     from .layout import DEFAULT_LAYOUT_NAME, LAYOUTS, resolve_layout_name
     from .poster_io import POSTER_ASSETS, SCOPE_DATA, load_json, load_yaml
     from .scene_catalog import scene_for_scope, section_scenes_for_scope
@@ -30,6 +31,7 @@ except ImportError:
     )
     from fetch_title_logos import fetch_title_logos
     from finalize_comfyui_poster import readable_overlay_text
+    from generation_contract import CANONICAL_REFERENCE_MODES
     from layout import DEFAULT_LAYOUT_NAME, LAYOUTS, resolve_layout_name
     from poster_io import POSTER_ASSETS, SCOPE_DATA, load_json, load_yaml
     from scene_catalog import scene_for_scope, section_scenes_for_scope
@@ -66,7 +68,9 @@ def joint_scene_generation(
     generation.update(
         {
             "mode": "joint_scene",
-            "reference_mode": "spatial_identity_joint",
+            "reference_mode": CANONICAL_REFERENCE_MODES[
+                ("flux", "joint_scene")
+            ],
             "seed": seed,
             "steps": 4,
             "generation_megapixels": 1.0,

@@ -18,11 +18,14 @@ try:
     )
     from .poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
+        INDIVIDUAL_SPATIAL_JOINT_PROMPT_FILE,
         JOINT_SCENE_PROMPT_FILE,
         REGIONAL_JOINT_SCENE_PROMPT_FILE,
+        build_individual_spatial_joint_prompt,
         build_joint_scene_prompt,
         build_identity_lock_prompt,
         build_regional_joint_scene_prompts,
+        format_individual_spatial_joint_prompt_snapshot,
         format_regional_joint_prompt_snapshot,
         format_joint_prompt_snapshot,
         identity_lock_overscan,
@@ -49,11 +52,14 @@ except ImportError:
     )
     from poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
+        INDIVIDUAL_SPATIAL_JOINT_PROMPT_FILE,
         JOINT_SCENE_PROMPT_FILE,
         REGIONAL_JOINT_SCENE_PROMPT_FILE,
+        build_individual_spatial_joint_prompt,
         build_joint_scene_prompt,
         build_identity_lock_prompt,
         build_regional_joint_scene_prompts,
+        format_individual_spatial_joint_prompt_snapshot,
         format_regional_joint_prompt_snapshot,
         format_joint_prompt_snapshot,
         identity_lock_overscan,
@@ -107,43 +113,21 @@ def page_dimensions(scope: str, megapixels: float) -> tuple[int, int]:
     )
 
 
-def build_joint_scene_workflow(
-    scope: str,
-    seed: int,
-    megapixels: float,
+def _build_full_frame_reference_workflow(
     *,
+    prompt: str,
+    reference_names: tuple[str, ...],
+    width: int,
+    height: int,
+    seed: int,
     unet_name: str,
     clip_name: str,
     vae_name: str,
     steps: int,
+    filename_prefix: str,
 ) -> dict[str, object]:
-    """Build one whole-image pass from spatial and identity references."""
-    bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
-    manifest = bundle.manifest
-    scope_data = load_poster_scope_data(bundle)
-    items = load_cutout_items(POSTER_ASSETS / scope)
-    width, height = output_dimensions(scope, megapixels)
-    placement_contract = normalized_visible_placement_contract(
-        joint_scene_canvas_placements(
-            bundle.asset_dir,
-            layout_name=str(
-                manifest.get("layout", {}).get(
-                    "name",
-                    "standard_3x3",
-                )
-            ),
-            canvas_size=(width, height),
-        ),
-        canvas_size=(width, height),
-    )
-    final_prompt = build_joint_scene_prompt(
-        manifest,
-        scope_data,
-        items,
-        placement_contract=placement_contract,
-    )
-
-    workflow = {
+    """Build one empty-target sampler conditioned by ordered image references."""
+    workflow: dict[str, object] = {
         "1": node("UNETLoader", unet_name=unet_name, weight_dtype="default"),
         "2": node(
             "CLIPLoader",
@@ -152,9 +136,7 @@ def build_joint_scene_workflow(
             device="default",
         ),
         "3": node("VAELoader", vae_name=vae_name),
-        # One-shot prompt: landscape, subjects, lighting, depth, and occlusion
-        # are synthesized together from a genuinely empty target.
-        "4": node("CLIPTextEncode", text=final_prompt, clip=["2", 0]),
+        "4": node("CLIPTextEncode", text=prompt, clip=["2", 0]),
         "5": node("ConditioningZeroOut", conditioning=["4", 0]),
         "6": node(
             "EmptyFlux2LatentImage",
@@ -172,15 +154,8 @@ def build_joint_scene_workflow(
         "10": node("KSamplerSelect", sampler_name="euler"),
     }
 
-    reference_names = (
-        "joint_scene_cast_reference.png",
-        *(
-            f"identity_reference_{index}.png"
-            for index in range(1, len(items) + 1)
-        ),
-    )
-    positive_conditioning = ["4", 0]
-    negative_conditioning = ["5", 0]
+    positive_conditioning: list[object] = ["4", 0]
+    negative_conditioning: list[object] = ["5", 0]
     for index, reference_name in enumerate(reference_names):
         load_id = str(30 + index * 4)
         encode_id = str(31 + index * 4)
@@ -228,12 +203,136 @@ def build_joint_scene_workflow(
     workflow["73"] = node(
         "SaveImage",
         images=["72", 0],
+        filename_prefix=filename_prefix,
+    )
+    return workflow
+
+
+def build_joint_scene_workflow(
+    scope: str,
+    seed: int,
+    megapixels: float,
+    *,
+    unet_name: str,
+    clip_name: str,
+    vae_name: str,
+    steps: int,
+) -> dict[str, object]:
+    """Build one whole-image pass from spatial and identity references."""
+    bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
+    manifest = bundle.manifest
+    scope_data = load_poster_scope_data(bundle)
+    items = load_cutout_items(POSTER_ASSETS / scope)
+    width, height = output_dimensions(scope, megapixels)
+    placement_contract = normalized_visible_placement_contract(
+        joint_scene_canvas_placements(
+            bundle.asset_dir,
+            layout_name=str(
+                manifest.get("layout", {}).get(
+                    "name",
+                    "standard_3x3",
+                )
+            ),
+            canvas_size=(width, height),
+        ),
+        canvas_size=(width, height),
+    )
+    final_prompt = build_joint_scene_prompt(
+        manifest,
+        scope_data,
+        items,
+        placement_contract=placement_contract,
+    )
+
+    reference_names = (
+        "joint_scene_cast_reference.png",
+        *(
+            f"identity_reference_{index}.png"
+            for index in range(1, len(items) + 1)
+        ),
+    )
+    return _build_full_frame_reference_workflow(
+        prompt=final_prompt,
+        reference_names=reference_names,
+        width=width,
+        height=height,
+        seed=seed,
+        unet_name=unet_name,
+        clip_name=clip_name,
+        vae_name=vae_name,
+        steps=steps,
         filename_prefix=(
             f"{poster_asset_slug(scope)}_flux2_joint_scene_"
             f"{megapixel_marker(megapixels)}_seed_{seed}"
         ),
     )
-    return workflow
+
+
+def build_individual_spatial_prompt(
+    scope: str,
+    *,
+    megapixels: float,
+) -> str:
+    """Build the reviewed prompt for one positioned reference per subject."""
+    bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
+    manifest = bundle.manifest
+    items = load_cutout_items(bundle.asset_dir)
+    width, height = output_dimensions(scope, megapixels)
+    layout_name = str(
+        manifest.get("layout", {}).get("name", "standard_3x3")
+    )
+    placement_contract = normalized_visible_placement_contract(
+        joint_scene_canvas_placements(
+            bundle.asset_dir,
+            layout_name=layout_name,
+            canvas_size=(width, height),
+        ),
+        canvas_size=(width, height),
+    )
+    return build_individual_spatial_joint_prompt(
+        manifest,
+        load_poster_scope_data(bundle),
+        items,
+        placement_contract=placement_contract,
+    )
+
+
+def build_individual_spatial_joint_workflow(
+    scope: str,
+    seed: int,
+    megapixels: float,
+    *,
+    unet_name: str,
+    clip_name: str,
+    vae_name: str,
+    steps: int,
+) -> dict[str, object]:
+    """Build one full-frame sampler from one positioned identity per subject."""
+    bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
+    items = load_cutout_items(bundle.asset_dir)
+    width, height = output_dimensions(scope, megapixels)
+    reference_names = tuple(
+        f"individual_spatial_reference_{index}.png"
+        for index in range(1, len(items) + 1)
+    )
+    return _build_full_frame_reference_workflow(
+        prompt=build_individual_spatial_prompt(
+            scope,
+            megapixels=megapixels,
+        ),
+        reference_names=reference_names,
+        width=width,
+        height=height,
+        seed=seed,
+        unet_name=unet_name,
+        clip_name=clip_name,
+        vae_name=vae_name,
+        steps=steps,
+        filename_prefix=(
+            f"{poster_asset_slug(scope)}_flux2_joint_scene_"
+            f"individual_spatial_{megapixel_marker(megapixels)}_seed_{seed}"
+        ),
+    )
 
 
 def build_regional_joint_scene_workflow(
@@ -439,6 +538,16 @@ def build_workflow(
             f"{effective_reference_mode!r}; expected one of {expected}"
         )
     if generation_mode == "joint_scene":
+        if effective_reference_mode == "individual_spatial_joint":
+            return build_individual_spatial_joint_workflow(
+                scope,
+                seed,
+                megapixels,
+                unet_name=unet_name,
+                clip_name=clip_name,
+                vae_name=vae_name,
+                steps=steps,
+            )
         if effective_reference_mode == "regional_identity_joint":
             return build_regional_joint_scene_workflow(
                 scope,
@@ -608,8 +717,11 @@ def write_workflow(
         else CANONICAL_REFERENCE_MODES[key]
     )
     workflow_marker = generation_mode
-    if effective_reference_mode == "regional_identity_joint":
-        workflow_marker += "_regional_identity_joint"
+    if (
+        generation_mode == "joint_scene"
+        and effective_reference_mode != "spatial_identity_joint"
+    ):
+        workflow_marker += f"_{effective_reference_mode}"
     out_path = target_dir / (
         f"workflow_api_{workflow_marker}_"
         f"{megapixel_marker(megapixels)}_{seed}.json"
@@ -628,6 +740,17 @@ def write_workflow(
     if generation_mode == "identity_lock":
         (target_dir / IDENTITY_LOCK_PROMPT_FILE).write_text(
             str(workflow["4"]["inputs"]["text"]).strip() + "\n",
+            encoding="utf-8",
+        )
+    elif (
+        generation_mode == "joint_scene"
+        and effective_reference_mode == "individual_spatial_joint"
+    ):
+        snapshot = format_individual_spatial_joint_prompt_snapshot(
+            str(workflow["4"]["inputs"]["text"])
+        )
+        (target_dir / INDIVIDUAL_SPATIAL_JOINT_PROMPT_FILE).write_text(
+            snapshot.strip() + "\n",
             encoding="utf-8",
         )
     elif (
@@ -679,6 +802,7 @@ def main() -> int:
     parser.add_argument(
         "--reference-mode",
         choices=(
+            "individual_spatial_joint",
             "spatial_identity_joint",
             "regional_identity_joint",
             "two_pass_source_pixels",

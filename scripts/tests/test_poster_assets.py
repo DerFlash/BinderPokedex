@@ -62,6 +62,7 @@ from scripts.poster_assets.poster_subject import (
 )
 from scripts.poster_assets.poster_config import (
     IDENTITY_LOCK_PROMPT_FILE,
+    INDIVIDUAL_SPATIAL_JOINT_PROMPT_FILE,
     JOINT_SCENE_PROMPT_FILE,
     REGIONAL_JOINT_SCENE_PROMPT_FILE,
     build_identity_lock_prompt,
@@ -1030,7 +1031,7 @@ def test_new_tcg_set_manifest_bootstraps_the_joint_scene_flow():
     assert manifest["artwork"]["generation"]["mode"] == "joint_scene"
     assert (
         manifest["artwork"]["generation"]["reference_mode"]
-        == "spatial_identity_joint"
+            == "individual_spatial_joint"
     )
     assert manifest["artwork"]["generation"]["output_method"] == "lanczos"
     assert manifest["artwork"]["generation"]["output_dpi"] == 300
@@ -1309,6 +1310,7 @@ def test_joint_scene_synthesizes_landscape_and_subjects_in_one_shot():
         seed=123,
         megapixels=0.25,
         generation_mode="joint_scene",
+        reference_mode="spatial_identity_joint",
     )
 
     assert [
@@ -1633,13 +1635,15 @@ def test_joint_scene_workflow_writes_one_shot_prompt_snapshot(
         workflow_output_dir=tmp_path,
     )
 
-    snapshot = tmp_path / JOINT_SCENE_PROMPT_FILE
-    assert workflow_path.name == "workflow_api_joint_scene_0p25mp_123.json"
+    snapshot = tmp_path / INDIVIDUAL_SPATIAL_JOINT_PROMPT_FILE
+    assert workflow_path.name == (
+        "workflow_api_joint_scene_individual_spatial_joint_0p25mp_123.json"
+    )
     assert snapshot.is_file()
     workflow = json.loads(workflow_path.read_text(encoding="utf-8"))
     expected = "\n\n".join(
         (
-            "JOINT SCENE - ONE-SHOT FINAL SYNTHESIS",
+            "INDIVIDUAL SPATIAL JOINT - ISOLATED PREFLIGHT",
             workflow["4"]["inputs"]["text"],
         )
     )
@@ -1697,7 +1701,9 @@ def test_only_reviewed_flux_workflows_are_selectable(tmp_path: Path):
         workflow_output_dir=tmp_path,
     )
 
-    assert joint.name == "workflow_api_joint_scene_0p25mp_123.json"
+    assert joint.name == (
+        "workflow_api_joint_scene_individual_spatial_joint_0p25mp_123.json"
+    )
     assert locked.name == "workflow_api_identity_lock_0p25mp_123.json"
     with pytest.raises(ValueError, match="only 'flux' is supported"):
         write_engine_workflow(

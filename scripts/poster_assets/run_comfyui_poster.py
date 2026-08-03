@@ -501,6 +501,7 @@ def main() -> int:
     parser.add_argument(
         "--flux-reference-mode",
         choices=(
+            "individual_spatial_joint",
             "spatial_identity_joint",
             "regional_identity_joint",
             "two_pass_source_pixels",

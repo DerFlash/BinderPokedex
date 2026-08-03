@@ -63,7 +63,7 @@ def test_joint_scene_is_the_code_default():
         "vae": DEFAULT_FLUX_VAE,
         "mode": "joint_scene",
         "steps": 4,
-        "reference_mode": "spatial_identity_joint",
+        "reference_mode": "individual_spatial_joint",
     }
 
 
@@ -97,6 +97,23 @@ def test_regional_joint_scene_reference_mode_is_selectable():
         == "regional_identity_joint"
     )
     assert resolved.metadata["reference_mode"] == "regional_identity_joint"
+
+
+def test_individual_spatial_joint_reference_mode_is_selectable():
+    resolved = resolve_generation_options(
+        "flux",
+        {
+            "engine": "flux",
+            "mode": "joint_scene",
+            "reference_mode": "individual_spatial_joint",
+        },
+    )
+
+    assert (
+        resolved.workflow_options["flux_reference_mode"]
+        == "individual_spatial_joint"
+    )
+    assert resolved.metadata["reference_mode"] == "individual_spatial_joint"
 
 
 def test_reference_mode_override_can_select_regional_joint_scene():

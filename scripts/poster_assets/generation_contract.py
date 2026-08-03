@@ -7,12 +7,13 @@ from typing import Any
 
 CANONICAL_REFERENCE_MODES = {
     ("flux", "identity_lock"): "two_pass_source_pixels",
-    ("flux", "joint_scene"): "spatial_identity_joint",
+    ("flux", "joint_scene"): "individual_spatial_joint",
 }
 SUPPORTED_REFERENCE_MODES = {
     ("flux", "identity_lock"): frozenset({"two_pass_source_pixels"}),
     ("flux", "joint_scene"): frozenset(
         {
+            "individual_spatial_joint",
             "spatial_identity_joint",
             "regional_identity_joint",
         }
@@ -20,6 +21,7 @@ SUPPORTED_REFERENCE_MODES = {
 }
 JOINT_SCENE_CAST_MAX_MEGAPIXELS = 0.5
 JOINT_SCENE_IDENTITY_CANVAS_PX = 512
+INDIVIDUAL_SPATIAL_REFERENCE_MEGAPIXELS = 0.5
 
 
 def is_joint_scene_generation(

@@ -30,9 +30,11 @@ try:
     )
     from .poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
+        INDIVIDUAL_SPATIAL_JOINT_PROMPT_FILE,
         JOINT_SCENE_PROMPT_FILE,
         REGIONAL_JOINT_SCENE_PROMPT_FILE,
         build_identity_lock_prompt,
+        build_individual_spatial_joint_prompt_snapshot,
         build_joint_prompt_snapshot,
         build_regional_joint_prompt_snapshot,
         identity_lock_config,
@@ -70,9 +72,11 @@ except ImportError:
     )
     from poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
+        INDIVIDUAL_SPATIAL_JOINT_PROMPT_FILE,
         JOINT_SCENE_PROMPT_FILE,
         REGIONAL_JOINT_SCENE_PROMPT_FILE,
         build_identity_lock_prompt,
+        build_individual_spatial_joint_prompt_snapshot,
         build_joint_prompt_snapshot,
         build_regional_joint_prompt_snapshot,
         identity_lock_config,
@@ -108,6 +112,7 @@ CURRENT_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
     ): GENERATION_PIPELINE_CONTRACT_VERSION,
     ("flux", "joint_scene", "spatial_identity_joint"): 5,
     ("flux", "joint_scene", "regional_identity_joint"): 6,
+    ("flux", "joint_scene", "individual_spatial_joint"): 7,
 }
 SUPPORTED_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
     (
@@ -117,6 +122,7 @@ SUPPORTED_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
     ): frozenset({1, 2, 3}),
     ("flux", "joint_scene", "spatial_identity_joint"): frozenset({5}),
     ("flux", "joint_scene", "regional_identity_joint"): frozenset({6}),
+    ("flux", "joint_scene", "individual_spatial_joint"): frozenset({7}),
 }
 RASTER_GEOMETRY_PIPELINE_MINIMUM = {
     ("flux", "identity_lock"): 3,
@@ -1023,7 +1029,15 @@ def _effective_generation_prompt(
             ),
             canvas_size=(width, height),
         )
-        if generation.get("reference_mode") == "regional_identity_joint":
+        reference_mode = generation.get("reference_mode")
+        if reference_mode == "individual_spatial_joint":
+            return build_individual_spatial_joint_prompt_snapshot(
+                bundle.manifest,
+                scope_data,
+                cutout_items,
+                placement_contract=placement_contract,
+            )
+        if reference_mode == "regional_identity_joint":
             return build_regional_joint_prompt_snapshot(
                 bundle.manifest,
                 scope_data,
@@ -1240,7 +1254,10 @@ def prompt_path_for_generation(
         return prompt_dir / IDENTITY_LOCK_PROMPT_FILE
     if engine == "flux" and mode == "joint_scene":
         prompt_dir = workflow_path.parent if workflow_path is not None else work_dir
-        if generation.get("reference_mode") == "regional_identity_joint":
+        reference_mode = generation.get("reference_mode")
+        if reference_mode == "individual_spatial_joint":
+            return prompt_dir / INDIVIDUAL_SPATIAL_JOINT_PROMPT_FILE
+        if reference_mode == "regional_identity_joint":
             return prompt_dir / REGIONAL_JOINT_SCENE_PROMPT_FILE
         return prompt_dir / JOINT_SCENE_PROMPT_FILE
     raise ValueError(
@@ -1282,21 +1299,32 @@ def generation_input_records(
         generation.get("engine") == "flux"
         and generation.get("mode") == "joint_scene"
     ):
-        references = []
-        if generation.get("reference_mode") == "spatial_identity_joint":
+        reference_mode = generation.get("reference_mode")
+        if reference_mode == "individual_spatial_joint":
+            references = [
+                file_record(
+                    work_dir / f"individual_spatial_reference_{index}.png",
+                    image=True,
+                )
+                for index in range(1, len(cutouts) + 1)
+            ]
+        else:
+            references = []
+        if reference_mode == "spatial_identity_joint":
             references.append(
                 file_record(
                     work_dir / "joint_scene_cast_reference.png",
                     image=True,
                 )
             )
-        references.extend(
-            file_record(
-                work_dir / f"identity_reference_{index}.png",
-                image=True,
+        if reference_mode != "individual_spatial_joint":
+            references.extend(
+                file_record(
+                    work_dir / f"identity_reference_{index}.png",
+                    image=True,
+                )
+                for index in range(1, len(cutouts) + 1)
             )
-            for index in range(1, len(cutouts) + 1)
-        )
     else:
         raise ValueError(
             "Unsupported poster generation contract: "

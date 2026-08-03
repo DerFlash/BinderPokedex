@@ -440,7 +440,7 @@ def test_pipeline_contract_versions_are_family_specific_and_strict():
     assert current_generation_pipeline_contract_version(
         identity_generation
     ) == 3
-    assert current_generation_pipeline_contract_version(joint_generation) == 5
+    assert current_generation_pipeline_contract_version(joint_generation) == 7
     assert (
         current_generation_pipeline_contract_version(regional_generation)
         == 6
@@ -859,6 +859,7 @@ def test_joint_scene_cannot_promote_without_explicit_human_review():
         ("flux", "identity_lock", "two_pass_source_pixels", 3),
         ("flux", "joint_scene", "spatial_identity_joint", 5),
         ("flux", "joint_scene", "regional_identity_joint", 6),
+        ("flux", "joint_scene", "individual_spatial_joint", 7),
     ),
 )
 def test_every_engine_family_versions_the_shared_raster_contract(

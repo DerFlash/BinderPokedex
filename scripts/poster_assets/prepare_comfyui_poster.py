@@ -18,6 +18,7 @@ try:
     from .create_comfyui_poster_workflow import output_dimensions
     from .generation_contract import (
         CANONICAL_REFERENCE_MODES,
+        INDIVIDUAL_SPATIAL_REFERENCE_MEGAPIXELS,
         JOINT_SCENE_CAST_MAX_MEGAPIXELS,
         JOINT_SCENE_IDENTITY_CANVAS_PX,
         SUPPORTED_REFERENCE_MODES,
@@ -25,6 +26,7 @@ try:
     from .layout import build_source_layout
     from .poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
+        INDIVIDUAL_SPATIAL_JOINT_PROMPT_FILE,
         JOINT_SCENE_PROMPT_FILE,
         REGIONAL_JOINT_SCENE_PROMPT_FILE,
         build_identity_lock_prompt,
@@ -40,6 +42,7 @@ except ImportError:
     from create_comfyui_poster_workflow import output_dimensions
     from generation_contract import (
         CANONICAL_REFERENCE_MODES,
+        INDIVIDUAL_SPATIAL_REFERENCE_MEGAPIXELS,
         JOINT_SCENE_CAST_MAX_MEGAPIXELS,
         JOINT_SCENE_IDENTITY_CANVAS_PX,
         SUPPORTED_REFERENCE_MODES,
@@ -47,6 +50,7 @@ except ImportError:
     from layout import build_source_layout
     from poster_config import (
         IDENTITY_LOCK_PROMPT_FILE,
+        INDIVIDUAL_SPATIAL_JOINT_PROMPT_FILE,
         JOINT_SCENE_PROMPT_FILE,
         REGIONAL_JOINT_SCENE_PROMPT_FILE,
         build_identity_lock_prompt,
@@ -192,6 +196,28 @@ def build_identity_lock_references(
     return path
 
 
+def _joint_scene_neutral_rgb(manifest: dict[str, Any]) -> tuple[int, int, int]:
+    """Return the validated neutral reference-field color."""
+    defaults = manifest.get("conditioning", {}).get(
+        "identity_defaults",
+        {},
+    )
+    neutral = defaults.get("neutral_rgb", [226, 224, 211])
+    if (
+        not isinstance(neutral, list)
+        or len(neutral) != 3
+        or not all(
+            isinstance(value, int) and 0 <= value <= 255
+            for value in neutral
+        )
+    ):
+        raise ValueError(
+            "conditioning.identity_defaults.neutral_rgb must contain "
+            "3 RGB integers"
+        )
+    return tuple(neutral)
+
+
 def build_joint_scene_references(
     scope: str,
     output_dir: Path | None = None,
@@ -218,23 +244,7 @@ def build_joint_scene_references(
         ),
         canvas_size=(width, height),
     )
-    defaults = manifest.get("conditioning", {}).get(
-        "identity_defaults",
-        {},
-    )
-    neutral = defaults.get("neutral_rgb", [226, 224, 211])
-    if (
-        not isinstance(neutral, list)
-        or len(neutral) != 3
-        or not all(
-            isinstance(value, int) and 0 <= value <= 255
-            for value in neutral
-        )
-    ):
-        raise ValueError(
-            "conditioning.identity_defaults.neutral_rgb must contain "
-            "3 RGB integers"
-        )
+    neutral = _joint_scene_neutral_rgb(manifest)
     cast_path = reference_dir / "joint_scene_cast_reference.png"
     if include_cast:
         reference = Image.new(
@@ -258,8 +268,48 @@ def build_joint_scene_references(
         scope_dir,
         placements,
         reference_dir,
-        neutral=tuple(neutral),
+        neutral=neutral,
     )
+
+
+def build_individual_spatial_joint_references(
+    scope: str,
+    output_dir: Path | None = None,
+) -> list[Path]:
+    """Write one poster-shaped identity-and-position image per subject."""
+    bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
+    scope_dir = bundle.asset_dir
+    manifest = bundle.manifest
+    reference_dir = output_dir or scope_dir / "comfyui_poster"
+    reference_dir.mkdir(parents=True, exist_ok=True)
+    width, height = output_dimensions(
+        bundle.asset_key,
+        INDIVIDUAL_SPATIAL_REFERENCE_MEGAPIXELS,
+    )
+    placements = joint_scene_canvas_placements(
+        scope_dir,
+        layout_name=manifest.get("layout", {}).get(
+            "name",
+            "standard_3x3",
+        ),
+        canvas_size=(width, height),
+    )
+    neutral = _joint_scene_neutral_rgb(manifest)
+    outputs = []
+    for index, placement in enumerate(placements, start=1):
+        reference = Image.new(
+            "RGBA",
+            (width, height),
+            (*neutral, 255),
+        )
+        reference.alpha_composite(
+            placement["image"],
+            (int(placement["x"]), int(placement["y"])),
+        )
+        path = reference_dir / f"individual_spatial_reference_{index}.png"
+        reference.convert("RGB").save(path, format="PNG", optimize=True)
+        outputs.append(path)
+    return outputs
 
 
 def _write_unscaled_identity_references(
@@ -380,26 +430,33 @@ def prepare(
                 "upper_context_mask.png",
                 "upper_context_generation_mask.png",
                 "identity_reference_*.png",
+                "individual_spatial_reference_*.png",
                 "joint_scene_cast_reference.png",
                 IDENTITY_LOCK_PROMPT_FILE,
+                INDIVIDUAL_SPATIAL_JOINT_PROMPT_FILE,
                 JOINT_SCENE_PROMPT_FILE,
                 REGIONAL_JOINT_SCENE_PROMPT_FILE,
             ),
         )
-        build_joint_scene_references(
-            scope,
-            work_dir,
-            megapixels=megapixels,
-            include_cast=(
-                effective_reference_mode == "spatial_identity_joint"
-            ),
-        )
+        if effective_reference_mode == "individual_spatial_joint":
+            build_individual_spatial_joint_references(scope, work_dir)
+        else:
+            build_joint_scene_references(
+                scope,
+                work_dir,
+                megapixels=megapixels,
+                include_cast=(
+                    effective_reference_mode == "spatial_identity_joint"
+                ),
+            )
     else:
         _remove_stale(
             work_dir,
             (
                 "joint_scene_cast_reference.png",
                 "identity_reference_*.png",
+                "individual_spatial_reference_*.png",
+                INDIVIDUAL_SPATIAL_JOINT_PROMPT_FILE,
                 JOINT_SCENE_PROMPT_FILE,
                 REGIONAL_JOINT_SCENE_PROMPT_FILE,
             ),
@@ -420,6 +477,7 @@ def main() -> int:
     parser.add_argument(
         "--reference-mode",
         choices=(
+            "individual_spatial_joint",
             "spatial_identity_joint",
             "regional_identity_joint",
             "two_pass_source_pixels",

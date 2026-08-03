@@ -5,6 +5,7 @@ from typing import Any
 
 try:
     from .generation_contract import (
+        INDIVIDUAL_SPATIAL_REFERENCE_MEGAPIXELS,
         JOINT_SCENE_CAST_MAX_MEGAPIXELS,
         JOINT_SCENE_IDENTITY_CANVAS_PX,
     )
@@ -12,6 +13,7 @@ try:
     from .poster_subject import resolve_poster_subject
 except ImportError:
     from generation_contract import (
+        INDIVIDUAL_SPATIAL_REFERENCE_MEGAPIXELS,
         JOINT_SCENE_CAST_MAX_MEGAPIXELS,
         JOINT_SCENE_IDENTITY_CANVAS_PX,
     )
@@ -21,6 +23,9 @@ except ImportError:
 
 IDENTITY_LOCK_PROMPT_FILE = "identity_lock_prompt.generated.txt"
 JOINT_SCENE_PROMPT_FILE = "joint_scene_prompt.generated.txt"
+INDIVIDUAL_SPATIAL_JOINT_PROMPT_FILE = (
+    "individual_spatial_joint_prompt.generated.txt"
+)
 REGIONAL_JOINT_SCENE_PROMPT_FILE = (
     "joint_scene_regional_identity_prompt.generated.txt"
 )
@@ -716,6 +721,7 @@ def joint_scene_conditioning_contract(
     if not items:
         raise ValueError("Joint-scene conditioning needs at least one subject")
     if reference_mode not in {
+        "individual_spatial_joint",
         "spatial_identity_joint",
         "regional_identity_joint",
     }:
@@ -751,7 +757,16 @@ def joint_scene_conditioning_contract(
         "identity_canvas_px": JOINT_SCENE_IDENTITY_CANVAS_PX,
         "identity_source_resampling": "none",
     }
-    if reference_mode == "regional_identity_joint":
+    if reference_mode == "individual_spatial_joint":
+        contract = {
+            "reference_strategy": "individual_spatial_identity_per_subject",
+            "reference_neutral_rgb": neutral,
+            "reference_megapixels": (
+                INDIVIDUAL_SPATIAL_REFERENCE_MEGAPIXELS
+            ),
+            "identity_source_resampling": "canonical_card_fit",
+        }
+    elif reference_mode == "regional_identity_joint":
         contract = {
             "reference_strategy": "regional_identity_per_physical_card",
             "reference_neutral_rgb": neutral,
@@ -895,3 +910,167 @@ def build_spatial_identity_reference_prompt(
     if specific_notes:
         paragraphs.append(" ".join(specific_notes))
     return "\n\n".join(paragraphs)
+
+
+def build_individual_spatial_reference_prompt(
+    items: list[dict[str, Any]],
+    manifest: dict[str, Any],
+    *,
+    placement_contract: list[dict[str, int]],
+) -> str:
+    """Assign one combined identity-and-position reference per subject."""
+    if not items:
+        raise ValueError(
+            "Individual spatial joint generation needs at least one cutout"
+        )
+    if len(items) != len(placement_contract):
+        raise ValueError(
+            "Individual spatial placement contract must describe every subject"
+        )
+
+    def percentage(value: int) -> str:
+        if not isinstance(value, int) or not 0 <= value <= 1000:
+            raise ValueError(
+                "Individual spatial coordinates must be per-mille integers "
+                "between 0 and 1000"
+            )
+        return f"{value / 10:.1f}%"
+
+    roles = []
+    bounds = []
+    for image_index, (item, contract) in enumerate(
+        zip(items, placement_contract, strict=True),
+        start=1,
+    ):
+        name = str(
+            item.get("name_en")
+            or f"Pokemon #{item.get('pokemon_id', '?')}"
+        )
+        roles.append(
+            (
+                f"IMAGE {image_index} is the sole poster-shaped identity and "
+                f"position reference for {name}. It contains exactly one "
+                f"complete {name} at the required final pose, orientation, "
+                "scale, baseline, and poster position."
+            )
+        )
+        bounds.append(
+            (
+                f"{name}: x {percentage(contract['left_per_mille'])} to "
+                f"{percentage(contract['right_per_mille'])}, y "
+                f"{percentage(contract['top_per_mille'])} to "
+                f"{percentage(contract['bottom_per_mille'])}"
+            )
+        )
+
+    paragraphs = [
+        (
+            f"The {len(items)} supplied poster-shaped images describe the "
+            f"complete final cast. {' '.join(roles)} Across all images, render "
+            f"exactly these {len(items)} characters once each."
+        ),
+        (
+            "Each reference is authoritative only for its named character's "
+            "exact identity, silhouette, stature, anatomy, face, colors, "
+            "markings, appendages, pose, orientation, target scale, baseline, "
+            "poster coordinates, and outer placement bounds. The flat neutral "
+            "fields are empty coordinate space, not sky, terrain, separate "
+            "pictures, panels, cards, or a background plate. Do not paste any "
+            "reference as a foreground layer; redraw all scene and character "
+            "edges together from the empty target."
+        ),
+        (
+            "The mandatory normalized final silhouette bounds are "
+            f"{'; '.join(bounds)}. Match every complete silhouette, baseline, "
+            "and surrounding landscape clearance within two percent of the "
+            "full canvas. Keep every appendage inside its named bounds. The "
+            "coordinates and invisible regions must never be drawn."
+        ),
+    ]
+    specific_notes = subject_prompt_notes(items, manifest)
+    if specific_notes:
+        paragraphs.append(" ".join(specific_notes))
+    return "\n\n".join(paragraphs)
+
+
+def build_individual_spatial_joint_prompt(
+    manifest: dict[str, Any],
+    scope_data: dict[str, Any],
+    items: list[dict[str, Any]],
+    *,
+    placement_contract: list[dict[str, int]],
+) -> str:
+    """Reuse the reviewed scene prompt with individual spatial references."""
+    accepted_reference_prompt = build_spatial_identity_reference_prompt(
+        items,
+        manifest,
+        placement_contract=placement_contract,
+    )
+    replacement_reference_prompt = build_individual_spatial_reference_prompt(
+        items,
+        manifest,
+        placement_contract=placement_contract,
+    )
+    prompt = build_joint_scene_prompt(
+        manifest,
+        scope_data,
+        items,
+        placement_contract=placement_contract,
+    )
+    if accepted_reference_prompt not in prompt:
+        raise RuntimeError("Accepted reference paragraph was not found")
+    prompt = prompt.replace(
+        accepted_reference_prompt,
+        replacement_reference_prompt,
+        1,
+    )
+    accepted_authority = (
+        "IMAGE 1 is the strict authority for count, pose, orientation, "
+        "target scale, baseline, and poster position. The corresponding "
+        "individual identity image is the strict authority for each "
+        "character's exact silhouette shape, stature, anatomy, facial "
+        "features, colors, markings, and defining design details."
+    )
+    replacement_authority = (
+        "The ordered individual poster-shaped references jointly control cast "
+        "count. Each named reference controls only that character's pose, "
+        "orientation, target scale, baseline, poster position, exact "
+        "silhouette shape, stature, anatomy, facial features, colors, "
+        "markings, and defining design details."
+    )
+    if accepted_authority not in prompt:
+        raise RuntimeError("Accepted authority paragraph was not found")
+    prompt = prompt.replace(
+        accepted_authority,
+        replacement_authority,
+        1,
+    )
+    return prompt.replace(
+        "that character's individual identity reference",
+        "that character's named poster-shaped reference",
+    )
+
+
+def build_individual_spatial_joint_prompt_snapshot(
+    manifest: dict[str, Any],
+    scope_data: dict[str, Any],
+    items: list[dict[str, Any]],
+    *,
+    placement_contract: list[dict[str, int]],
+) -> str:
+    """Return the exact individual-spatial prompt with its stable heading."""
+    return format_individual_spatial_joint_prompt_snapshot(
+        build_individual_spatial_joint_prompt(
+            manifest,
+            scope_data,
+            items,
+            placement_contract=placement_contract,
+        )
+    )
+
+
+def format_individual_spatial_joint_prompt_snapshot(prompt: str) -> str:
+    """Add the stable heading used by individual-spatial provenance."""
+    return "\n\n".join(
+        ("INDIVIDUAL SPATIAL JOINT - ISOLATED PREFLIGHT", prompt.strip())
+    )
