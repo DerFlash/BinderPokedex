@@ -1401,3 +1401,16 @@ promotion: `normal` fails small hand anatomy, `mega` fails Mega Rayquaza body
 anatomy, and `primal` fails outer-card containment. The next bounded comparison
 uses only the already retained `identity_lock` fallback; the one-shot default,
 prompt, and production routing remain unchanged.
+
+The bounded `normal` fallback comparison keeps scope, cutouts, scene brief,
+seed `260737078`, 1-MP generation target, model, encoder, VAE, and four-step
+settings fixed, changing only the mode to the existing two-pass
+`identity_lock`. Its raw scene SHA-256 is
+`f7c8f6efafade7ee0084eebc6e69c4ec82db26ee1c28bc87cd9318559fbbb78d`;
+the deterministic print-size final SHA-256 is
+`c78566b4a6d43b4c7706ede15c30dbe8de65f85a0e71e862b2b5e7bfa2c29d71`.
+Source-pixel restoration preserves the missing hand details, but Mew has no
+convincing contact shadow and all three subjects read as a later foreground
+composite rather than members of the generated landscape. The fallback is
+rejected on the joint-scene integration gate. No artwork is promoted or PDF
+routing enabled.
