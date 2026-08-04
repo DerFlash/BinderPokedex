@@ -37,6 +37,11 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def executable_path(path: Path) -> Path:
+    """Return an absolute executable path without resolving a venv symlink."""
+    return Path(os.path.abspath(os.path.expanduser(str(path))))
+
+
 def safe_relative_path(value: str, *, field: str) -> Path:
     pure = PurePosixPath(value)
     if pure.is_absolute() or ".." in pure.parts or not pure.parts:
@@ -244,7 +249,9 @@ def run_job(
 ) -> Path:
     job_dir = job_dir.expanduser().resolve()
     comfyui_root = comfyui_root.expanduser().resolve()
-    python_bin = python_bin.expanduser().resolve()
+    python_bin = executable_path(python_bin)
+    if not python_bin.is_file():
+        raise FileNotFoundError(f"Python executable does not exist: {python_bin}")
     models_root = models_root.expanduser().resolve()
     expected_models_root = (comfyui_root / "models").resolve()
     if models_root != expected_models_root:

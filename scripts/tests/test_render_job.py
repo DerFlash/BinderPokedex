@@ -7,6 +7,7 @@ import pytest
 
 from scripts.poster_assets.render_job import (
     COMFYUI_COMMIT,
+    executable_path,
     prepare_job,
     sha256_file,
     validate_job,
@@ -15,6 +16,16 @@ from scripts.poster_assets.render_job import (
 
 def write_json(path: Path, value: object) -> None:
     path.write_text(json.dumps(value), encoding="utf-8")
+
+
+def test_executable_path_preserves_virtualenv_symlink(tmp_path: Path) -> None:
+    target = tmp_path / "python3.11"
+    target.write_bytes(b"")
+    virtualenv_python = tmp_path / "venv" / "bin" / "python"
+    virtualenv_python.parent.mkdir(parents=True)
+    virtualenv_python.symlink_to(target)
+
+    assert executable_path(virtualenv_python) == virtualenv_python.absolute()
 
 
 def test_prepare_and_validate_portable_render_job(tmp_path: Path) -> None:
