@@ -1644,3 +1644,48 @@ candidate, not a production promotion. Native 9B BF16 is the next clean
 precision isolation if access to its separately gated BFL checkpoint is
 confirmed. No production manifest, default, fallback, PDF route, or promoted
 artwork changes in this matrix.
+
+### ExGen2 FLUX.2 Dev capacity gate (2026-08-05)
+
+The next bounded capacity test replaces only the model profile of the original
+`ExGen2/sections/normal` one-shot. It retains seed `260737078`, the three
+poster-shaped spatial identity references, prompt, 848 x 1168 empty target,
+Euler sampler, subject bounds, and one-sampler/one-decode contract. The graph
+uses the official FLUX.2 Dev ComfyUI shape: guidance 4, a positive-only
+`ReferenceLatent` chain, `BasicGuider`, `Flux2Scheduler`, and 20 steps. This is
+the 32B FLUX.2 Dev model rather than another Klein seed or prompt variation.
+
+The run completes on the remote M4 Max with 128 GB unified memory using
+ComfyUI commit `87d23b81765161624889febfb3b81f19f3c8435b`. ComfyUI reports
+`Device: mps`, loads the 33-GB Mistral encoder on MPS as FP16, loads all
+33.8 GB of the Dev diffusion model on MPS with BF16 weights/manual casts, and
+finishes the prompt in 28 minutes 50 seconds. There is no CPU rendering
+fallback.
+
+| Artifact | SHA-256 |
+| --- | --- |
+| FLUX.2 Dev FP8-mixed diffusion model | `863a82e4ff950a42a6b0e80bea824828f129eb1a8fbbdbd9e8cb29859127b486` |
+| Mistral 3 Small FLUX.2 BF16 encoder | `7d79902f60b1aeb3a6de2cfad02f4367b5e300a1387de3d03ac717cfa3df117c` |
+| FLUX.2 VAE | `d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5` |
+| Mewtwo reference | `f799caa0f7aa65903e869dd6d226dfbd0ae0f2bbb58c6ea27b164e2642e7db9e` |
+| Mew reference | `7faf3993aad617c38917f187bb8e4f590437a3649e5dad8e10b923a3937cad43` |
+| Lugia reference | `f29b83f0ad5433561f5776cb8602a25079e44365fca9db520976ebdae19253fe` |
+| API workflow | `f5abbecbceb62455e38cfdb93fc45c6c70cf87bc9580a6f17867cf495b06bf07` |
+| 848 x 1168 output | `3c74f750ad400b946c5e74f38eed8fddb6ffed765ae9718301264af4972cec5d` |
+
+Dev improves Mewtwo's visible digit separation, preserves Lugia's coarse
+identity, respects the three card cells, and generates strong scene-consistent
+cast shadows. It still fails the non-negotiable small-anatomy gate: Mew's hands
+remain smooth stumps rather than the three pointed fingers visible in the
+identity reference. The characters also remain materially crisper and flatter
+than the painterly landscape. No foreground object intersects the silhouettes,
+so this candidate avoids but does not validate the difficult occlusion case.
+
+The Dev candidate is not promoted. Because the normal-section gate fails, the
+conditional Mega and Primal batch is deliberately not started. The retained
+FLUX.2 Klein one-shot remains the production default, `identity_lock` remains
+the fallback, and no manifest or PDF route changes. Further generic
+model/precision/seed escalation is paused: the evidence now points to a
+subject-specific identity-control or training experiment, or an explicit
+relaxation of the smallest anatomy requirement, rather than another broad
+render sweep.
