@@ -8,10 +8,17 @@ from PIL import Image
 
 try:
     from .layout import PageLayout, build_source_layout
-    from .poster_io import load_cutout_items
+    from .poster_io import load_cutout_items, load_yaml
 except ImportError:
     from layout import PageLayout, build_source_layout
-    from poster_io import load_cutout_items
+    from poster_io import load_cutout_items, load_yaml
+
+
+_PLACEMENT_OPTION_DEFAULTS = {
+    "max_width_ratio": 0.84,
+    "max_height_ratio": 0.68,
+    "baseline_ratio": 0.80,
+}
 
 
 def fit_image(image: Image.Image, max_width: int, max_height: int) -> Image.Image:
@@ -168,8 +175,25 @@ def joint_scene_cutout_placements(
     layout: PageLayout,
     scope_dir: Path,
 ) -> list[dict[str, Any]]:
-    """Reuse the proven card-safe placement contract for the joint scene."""
-    return cutout_placements(layout, scope_dir)
+    """Build the joint-scene placement contract with optional safe margins."""
+    options = dict(_PLACEMENT_OPTION_DEFAULTS)
+    manifest_path = scope_dir / "poster.yaml"
+    if manifest_path.is_file():
+        manifest = load_yaml(manifest_path)
+        configured = (
+            manifest.get("conditioning", {})
+            .get("spatial_placement", {})
+        )
+        if not isinstance(configured, dict):
+            raise ValueError("conditioning.spatial_placement must be a mapping")
+        unknown = set(configured) - set(options)
+        if unknown:
+            raise ValueError(
+                "Unknown conditioning.spatial_placement option(s): "
+                + ", ".join(sorted(unknown))
+            )
+        options.update(configured)
+    return cutout_placements(layout, scope_dir, **options)
 
 
 def joint_scene_canvas_placements(

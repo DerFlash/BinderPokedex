@@ -792,6 +792,34 @@ def test_joint_scene_placements_reuse_canonical_card_fit():
         ).getbbox() is None
 
 
+def test_joint_scene_placement_can_add_scope_safe_margin(tmp_path: Path):
+    scope_dir = tmp_path / "scope"
+    cutout_dir = scope_dir / "cutouts"
+    cutout_dir.mkdir(parents=True)
+    Image.new("RGBA", (400, 200), (20, 80, 140, 255)).save(
+        cutout_dir / "wide.png"
+    )
+    (cutout_dir / "manifest.json").write_text(
+        json.dumps({"items": [{"file": "wide.png", "pokemon_id": 1}]}),
+        encoding="utf-8",
+    )
+    (scope_dir / "poster.yaml").write_text(
+        "conditioning:\n"
+        "  spatial_placement:\n"
+        "    max_width_ratio: 0.70\n",
+        encoding="utf-8",
+    )
+    layout = build_page_layout("standard_3x3")
+
+    canonical = cutout_placements(layout, scope_dir)
+    joint = joint_scene_cutout_placements(layout, scope_dir)
+
+    assert joint[0]["image"].width < canonical[0]["image"].width
+    assert joint[0]["image"].width == round(
+        joint[0]["cell"].width * 0.70
+    )
+
+
 
 
 def test_inpaint_reference_uses_exact_final_placements(tmp_path: Path):
