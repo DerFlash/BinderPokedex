@@ -38,8 +38,9 @@ scripts/poster_assets/bootstrap_macos_renderer.sh \
 ```
 
 The command pins ComfyUI, creates an isolated Python 3.11 virtual environment,
-installs its requirements, and verifies native MPS availability. It does not
-install models or change global Python packages.
+installs its requirements, applies the repository's version-checked Apple-MPS
+quantization and text-encoder compatibility patch, and verifies native MPS
+availability. It does not install models or change global Python packages.
 
 Gated Hugging Face models require a one-time login performed by the host owner:
 

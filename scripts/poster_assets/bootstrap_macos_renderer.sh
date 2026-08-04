@@ -3,6 +3,7 @@ set -euo pipefail
 
 COMFYUI_COMMIT="87d23b81765161624889febfb3b81f19f3c8435b"
 PYTHON_BIN="${PYTHON_BIN:-/opt/homebrew/bin/python3.11}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 if (($# != 1)); then
   echo "Usage: $0 ABSOLUTE_RENDER_ROOT" >&2
@@ -37,6 +38,13 @@ if [[ ! -x "$VENV_ROOT/bin/python" ]]; then
 fi
 "$VENV_ROOT/bin/python" -m pip install --upgrade pip
 "$VENV_ROOT/bin/python" -m pip install -r "$COMFY_ROOT/requirements.txt"
+
+SITE_PACKAGES="$("$VENV_ROOT/bin/python" -c \
+  'import sysconfig; print(sysconfig.get_paths()["purelib"])')"
+"$VENV_ROOT/bin/python" "$SCRIPT_DIR/patch_comfyui_mps.py" \
+  "$SITE_PACKAGES/comfy_kitchen/backends/eager/quantization.py" \
+  --model-management-py "$COMFY_ROOT/comfy/model_management.py" \
+  --nvfp4-py "$SITE_PACKAGES/comfy_kitchen/tensor/nvfp4.py"
 
 actual_commit="$(git -C "$COMFY_ROOT" rev-parse HEAD)"
 if [[ "$actual_commit" != "$COMFYUI_COMMIT" ]]; then
