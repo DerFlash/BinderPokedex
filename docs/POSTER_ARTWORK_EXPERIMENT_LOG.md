@@ -1485,3 +1485,37 @@ No Q4 prompt, seed, or sampling retry is allowed. One same-job BF16 render on
 the 128-GB M4 Max remains justified solely to isolate weight precision. It must
 preserve all three coarse identities and correct the foreground depth ordering;
 otherwise FLUX.1 Kontext closes for this poster architecture.
+
+The controlled BF16 comparison ran on the remote M4 Max with 128 GB unified
+memory. It kept the input, prompt, seed `260737078`, 20 Euler/simple steps,
+guidance, dimensions, single edit sampler, and decode fixed. Only the GGUF
+loaders and quantized weights were replaced by the native loaders and original
+BF16 model. Reproducibility evidence:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| BF16 diffusion model | `843a26dc765d3105dba081c30bce7b14c65b0988f9e8d14e9fbc8856a6deebd5` |
+| CLIP-L | `660c6f5b1abae9dc498ac2d21e1347d2abdb0cf6c0c0c8576cd796491d9a6cdd` |
+| T5 XXL FP16 | `6e480b09fae049a72d2a8c5fbccb8d3e92febeb233bbe9dfe7256958a9167635` |
+| FLUX VAE | `afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38` |
+| Input scene | `f7c8f6efafade7ee0084eebc6e69c4ec82db26ee1c28bc87cd9318559fbbb78d` |
+| API workflow | `eab77cfce53ee8c636f05b3531c95a077f18802860c395637edb8a31bbba5d7c` |
+| 848 x 1168 output | `b12a1c71b7514485af77348a710f811839e05d5af0113d98b8bcf8fcd0863b98` |
+
+ComfyUI commit `87d23b81765161624889febfb3b81f19f3c8435b` reported
+`Device: mps`, loaded all 22.7 GB of diffusion weights as BF16, and completed
+the prompt in 318.11 seconds. The VAE loaded on MPS with CPU offload; the text
+encoder loaded on CPU as FP16. This is an MPS diffusion render, not evidence
+that every auxiliary stage used Metal.
+
+BF16 produces more coherent foreground framing than Q4 in this seed, but it
+still fails the non-negotiable identity gate. Lugia is replaced by a small
+blue-and-white dragon-like biped with a different silhouette, wings, head,
+limbs, markings, and proportions. Mew becomes an upright humanoid cat with a
+different pose and body anatomy. The supplied source designs, silhouettes,
+poses, and exact placement therefore do not survive the joint redraw.
+
+FLUX.1 Kontext is closed for this poster architecture. There is no BF16 seed,
+prompt, sampling, or precision follow-up, and no Kontext artifact is promoted.
+The retained FLUX.2 one-shot remains the default and `identity_lock` remains
+the fallback; both production paths are unchanged.

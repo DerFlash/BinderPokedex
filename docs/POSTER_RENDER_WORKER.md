@@ -22,6 +22,11 @@ all scene data or reference images consumed by `LoadImage` travel under the
 job's `input/` directory. Models stay cached on the render host and are named
 and hash-pinned by each job rather than copied for every run.
 
+`Device: mps` proves that ComfyUI selected Metal as its primary accelerator;
+it does not prove that every auxiliary model used MPS. For example, a text
+encoder may run once on CPU while the diffusion model samples on MPS. Keep and
+review `comfyui.log` whenever per-stage device placement matters.
+
 ## Bootstrap one Apple Silicon host
 
 Clone this repository on the render host, check out the desired feature branch,
