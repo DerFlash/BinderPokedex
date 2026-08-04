@@ -1519,3 +1519,36 @@ FLUX.1 Kontext is closed for this poster architecture. There is no BF16 seed,
 prompt, sampling, or precision follow-up, and no Kontext artifact is promoted.
 The retained FLUX.2 one-shot remains the default and `identity_lock` remains
 the fallback; both production paths are unchanged.
+
+### ExGen2 FLUX.2 return gate on the M4 Max
+
+Before broader rendering, the retained FLUX.2 one-shot received one bounded
+return gate for `ExGen2/sections/normal`. The original seed `260737078` already
+counts as the first attempt: it passed landscape, count, card fit, grounding,
+and coarse identity, but failed Mewtwo's and Mew's hand anatomy. Seeds
+`260737079` and `260737080` are the second and third attempts. They keep the
+prompt, three spatial identity references, model, encoder, VAE, physical-card
+geometry, four-step sampler, and 1-MP dimensions fixed.
+
+The first remote queue exposed an infrastructure-only failure before producing
+an image: the native worker had not applied the repository's existing Apple
+MPS FP8 dequantization patch and stopped at `Undefined type Float8_e4m3fn`.
+Commit `14330d8` moves that version-checked patch into the native bootstrap.
+After re-bootstrap, ComfyUI reports the VAE, Qwen text encoder, and FLUX.2
+diffusion model on MPS; both image attempts complete without CPU rendering.
+
+Prompt SHA-256 is
+`5aafaf9add02cb8d5555d7aa6b516438af235b4fcef33c3b2d490d2511845564`.
+The model hashes remain the reviewed production hashes recorded by each remote
+job. Results:
+
+| Seed | Prompt runtime | Workflow SHA-256 | Raw SHA-256 | Result |
+| ---: | ---: | --- | --- | --- |
+| `260737079` | `42.41 s` | `5cf9f3cdbb2d33aa8e1b866010b49701544edd00d205ace1a07e51ac332f9c33` | `c5d2a495ede3209e3134d3300e7fcbba879a25318577ca3fb59c0f8060aac3db` | Hard identity failure: Mew is anatomically stretched and Lugia becomes a small low four-limbed subject with redesigned wings, stance, and proportions |
+| `260737080` | `42.76 s` | `0480f570d518fae934a55df16158a3ef363578d9a65c4c3c4a5488817a167ed8` | `1fb6b02d0eea6cfc302adfc2ef5e67ab11eecab915b23846b3e7f435015b0175` | Repeats the same failure class: Mew loses its correct arms and hands while Lugia is again reduced and rebuilt as a low four-limbed figure |
+
+The three-attempt seed boundary is reached. Seed variation is closed for this
+ExGen2 one-shot gate, neither candidate is promoted, and the conditional Mega
+and Primal batch is not started. Rendering additional scopes with the same
+unresolved identity gate would create review debt rather than useful poster
+candidates.
