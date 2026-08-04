@@ -61,8 +61,6 @@ pokemon:
   cutout_source: pokeapi_official_artwork
   fallback_candidates: []
 conditioning:
-  spatial_placement:
-    max_width_ratio: 0.76
   identity_defaults:
     neutral_rgb:
     - 226

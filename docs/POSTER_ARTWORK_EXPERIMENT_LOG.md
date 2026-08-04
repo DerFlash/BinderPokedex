@@ -1380,20 +1380,11 @@ none is promoted or enabled by this record.
 | Section | Seed | Raw SHA-256 | Agent review |
 | --- | ---: | --- | --- |
 | `normal` | `260737078` | `d7f1aa42a121e58b3ec5ae6d5ae34ec23c21a67801701afe42ba7b168fe8ab30` | Exactly Mewtwo, Mew, and Lugia once in the three bottom cards; identity, padding, grounding, shadows, and continuous valley vegetation pass preflight; pending human review |
-| `mega` | `260736802` | `f12dd7053571fcd439265f11620140596a2c2ae906fbceb7e8f7e536abb66fea` | Exactly Mega Mewtwo X, Mega Rayquaza, and Mega Latios once, but Mega Rayquaza's long body is folded and reshaped beyond the accepted identity tolerance; rejected on anatomy |
+| `mega` | `260736802` | `f12dd7053571fcd439265f11620140596a2c2ae906fbceb7e8f7e536abb66fea` | Exactly Mega Mewtwo X, Mega Rayquaza, and Mega Latios once; the apparent hip forms on Mega Mewtwo X match its supplied Official Artwork reference; identity, card containment, and shared landscape pass preflight; pending human review |
 | `mega` diagnostic | `260736803` | `f0b1f1945222d7171a978726a27e34d9dc1f30368838f390f0034425bcaa7785` | Adds a second Mega Mewtwo X and Mega Rayquaza above the intended bottom cast; rejected on the exact-count gate, with no prompt or production change |
-| `mega` diagnostic | `260736804` | `f01f1d8d217267cf0f034e00f16554a968586c35488aab0b02dfae7c753a8cf4` | Returns to the correct count, but repeats the same material Mega Rayquaza body deformation; rejected and the seed-only retry series is closed |
-| `primal` | `260759901` | `c7a335d31a48a2804ef78f54304ddfb3d434e5b17712e063b6e62ea2267892d6` | Exactly Primal Kyogre and Primal Groudon once, but Kyogre's outer fin is clipped by the left poster edge; rejected on physical containment |
-| `primal` diagnostic | `260759902` | `d021fc85f20c7d04a05f848b1d4e57382f66d3f81aef33a3d79481b3b9a344ba` | Repeats the left-edge Kyogre clipping with a new seed; rejected and classified as a systematic placement-margin failure |
+| `primal` | `260759901` | `c7a335d31a48a2804ef78f54304ddfb3d434e5b17712e063b6e62ea2267892d6` | Exactly Primal Kyogre and Primal Groudon once in the outer bottom cards, with the center card retained as continuous terrain; anatomy, padding, rain, contact, and coastal depth pass preflight; pending human review |
 
-The bounded retries confirm that seed variation can regress exact subject
-count without resolving systematic anatomy or placement failures. No prompt
-branch, per-section workflow, or automatic seed sweep is added. Mega is now an
-explicit identity blocker for the retained fallback evaluation.
-
-The Primal reference placed Kyogre at `x 2.5%–29.1%`; the model's accepted
-placement tolerance therefore reached the real left edge. A generic optional
-`conditioning.spatial_placement` map now exposes the three existing canonical
-fit ratios without changing their defaults. Primal alone sets
-`max_width_ratio: 0.76`, producing safer `x 3.8%–27.8%` Kyogre bounds while
-preserving the same outer card, baseline, one-shot graph, prompt, and model.
+The bounded retry confirms that seed variation can regress exact subject count
+without improving the generation contract. The configured Mega seed remains
+the review candidate; no prompt branch, per-section workflow, or automatic
+seed sweep is added.
