@@ -1552,3 +1552,95 @@ ExGen2 one-shot gate, neither candidate is promoted, and the conditional Mega
 and Primal batch is not started. Rendering additional scopes with the same
 unresolved identity gate would create review debt rather than useful poster
 candidates.
+
+### FLUX.1 Kontext official-workflow re-audit (2026-08-04)
+
+The earlier Kontext close decision remains part of the history, but a workflow
+audit found that its graph omitted the official `FluxKontextImageScale` step
+and that its prompt asked the editor to reconstruct too many character details.
+That concrete discrepancy justified one bounded re-audit rather than a seed
+series. The corrected graph follows the current ComfyUI edit path, scales the
+848 x 1168 input to Kontext's nearest 1-MP bucket of 880 x 1184, and uses a
+short prompt that asks only for coherent ground contact, vegetation, lighting,
+and shadows while freezing the existing characters. See the official
+[Kontext workflow](https://docs.comfy.org/tutorials/flux/flux-1-kontext-dev)
+and [`FluxKontextImageScale` contract](https://docs.comfy.org/built-in-nodes/FluxKontextImageScale).
+
+Both corrected runs use the native 23.8-GB BF16 Kontext model with SHA-256
+`843a26dc765d3105dba081c30bce7b14c65b0988f9e8d14e9fbc8856a6deebd5`
+on ComfyUI commit `87d23b81765161624889febfb3b81f19f3c8435b`. ComfyUI reports
+the VAE, 9.3-GB text encoder, and 22.7-GB diffusion load on MPS; neither is a
+CPU render.
+
+| Variant | Prompt runtime | Workflow SHA-256 | Raw SHA-256 | Result |
+| --- | ---: | --- | --- | --- |
+| Official scale path, full denoise | `350.75 s` | `f4c32c43223e81f01bca8b3cc8565f84d7f51b9b5d1358dbe08469f6abd3dee5` | `0fe5db7ff3f488c892169c6e398b9fc483cfdcd94bbaa66c15448745bc8d3066` | Coarse identities and the common scene survive much better than in the original audit, but small anatomy is softly repainted, Mew's three pointed fingers are absent, and character-tied shadows remain weaker than the retained FLUX.2 one-shot |
+| Official scale path, denoise `0.40` | `370.66 s` | `47ff89acbef14c5c08b001a6cf833e1d37e86a7a1a130eda71463cb74e172844` | `758c7cc9250070e12275a3fed9f55cf89ae0e080280f06541064209a8c694cb6` | Visually preserves more source detail but returns the visibly overlaid contact and shadow tradeoff; rejected |
+
+The corrected audit refines the reason for rejection: the first Kontext graph
+was not a fair use of the official scaling path, but a correctly configured
+single-image edit still does not beat the FLUX.2 multi-reference one-shot for
+three small non-human identities. Kontext remains closed, and neither artifact
+is promoted.
+
+### ExGen2 precision, reference-resolution, and capacity matrix (2026-08-04)
+
+The M4 Max worker permits a controlled comparison that the 16-GB host could
+not run. Scope, seed `260737078`, scene prompt, target size 848 x 1168, physical
+card geometry, placement bounds, empty target, and one-sampler/one-decode
+contract remain fixed. The 848 x 1168 references are regenerated directly from
+the original cutouts rather than enlarged from the old 608 x 832 reference
+PNGs. This grows Mew inside its spatial reference from about 148 x 150 to
+207 x 209 pixels, roughly 40% per axis and almost twice the pixel area.
+
+| Variant | Prompt runtime | Workflow SHA-256 | Raw SHA-256 | Strict result |
+| --- | ---: | --- | --- | --- |
+| Native distilled 4B BF16, 608 x 832 spatial references | `40.68 s` | `4711cc87ec6b29f04b9dcfb280199466ec9f5d1b82cd98f2be736f03d9c96b87` | `a5fdf08f5d00043262c7ddb8fc2d712265e5f406db62edc1bafc564d7bfe8298` | Good complete scene, but Mew's hands remain blunt |
+| Native distilled 4B BF16, 848 x 1168 spatial references | `74.06 s` | `0670d722f9a964557548d065b8bae22085a1b63a6d66dd90b42b57d1f221358b` | `66381569d3bc32399829e50f980a331edb5cc18d04ecf77c1255fa7db2dc9c4b` | Small hand-tip hints become visible; still no three distinct Mew fingers |
+| Distilled 9B FP8 source weights plus Qwen 8B, 848 x 1168 spatial references | `156.81 s` | `028ccfa91a104c787584f1a9a613bee4920b567c918195a2760456ac7546384d` | `d8c647a604c816b1684f8a882a57f6758173425dd70f7e8653ec697147790253` | Best overall scene and identity result. Mewtwo's digits, Lugia, card fit, grounding, and shadows pass; Mew shows only incomplete finger hints and therefore still fails the hard anatomy gate |
+| Native Base 4B BF16, 848 x 1168 spatial references, 20 steps / CFG 5 | `850 s` | `c76530d032de5626f5434cc0702b6addd6cbd49800d1a0c4f0b8f552ebe7f2e5` | `b217b971787d0102c11fb86b854ba1a9fd9bcc7e67d17cad78c056fcc217b608` | Does not displace distilled 9B: Mew returns to smooth hand stumps, Mewtwo's face and planted foot regress, Lugia is flatter, and shadows weaken |
+| Distilled 9B FP8 source weights plus Qwen 8B, 1200 x 1664 (2-MP) spatial references | `394.58 s` | `8d9db2f58dfd808dc7d9ebf646da6bfd20e771ea9a03b31dd340074a5d8c2353` | `8f6fd99d9b980a62e1c4f2d82127662a72f284da7f59dfe23d150a622d6d4ee3` | Mewtwo is effectively tied, Mew still lacks three distinct fingers, Lugia is marginally softer, and Mew/Lugia fill their cards less well; higher reference resolution is closed as the sole fix |
+
+The native distilled 4B model SHA-256 is
+`ec3d4e733a771f61c052fb4856c48b336c55eaf2c65487c2a1faeb9bbda7a343`;
+the native Base 4B model is
+`9c5fed22b76baea749d88fc2abe3ad53245e7b21a0d353a762665eea00043b92`.
+The tested 9B source checkpoint is FP8 with SHA-256
+`865ba09f5b4c3cbd3468a4bd3acb9fcb2f8740c54317482f0bcd4ed1d3655cee`,
+paired with Qwen 8B SHA-256
+`f0ff9239d56269ca1d05e5f86da6a79fac111af464955681f11c7ab0ec5ef6c1`.
+All diffusion runs complete on Metal/MPS. The source FP8 checkpoint remains a
+quantized model even though the MPS compatibility path performs BF16 casts.
+
+The Base graph follows the official ComfyUI contract: a separate empty
+negative `CLIPTextEncode`, every `ReferenceLatent` attached to both positive
+and negative conditioning, `EmptyFlux2LatentImage`, Euler,
+`Flux2Scheduler`, 20 steps, and CFG 5. The full FLUX.2 VAE is retained and
+`ImageScaleToTotalPixels` is omitted because the controlled references already
+have exact poster geometry. BFL's reference implementation also exposes a
+50-step/guidance-4 Base default, but the 20-step official Comfy candidate is
+not a near-pass and earns no costlier retry. See the official
+[FLUX.2 Klein workflow](https://docs.comfy.org/tutorials/flux/flux-2-klein)
+and [Base 4B model card](https://huggingface.co/black-forest-labs/FLUX.2-klein-base-4B).
+
+One final layout/identity separation probe uses the 9B model with an abstract
+poster-shaped three-rectangle position guide and three 512 x 512 original
+identity crops. It remains one empty target, one sampler, and one decode. The
+94.48-second run has workflow SHA-256
+`11a651c44b14ace0c9eb828592bdccbe8742ab00746a390bc00be28b40df2a84`
+and raw SHA-256
+`46480c9924ef95ebd3ad8d634ff9fce07b0a236a1d5e02b1ef19ca4f92db90bf`.
+The model renders all three supposedly invisible rectangles into the final
+landscape and places the characters above them, so the box-guide hypothesis is
+rejected after this single run. A text-only placement retry is not repeated;
+earlier evidence already showed material repositioning without visual spatial
+conditioning.
+
+The evidence separates two effects. More source pixels plausibly explain the
+first tiny hand-tip hints, and greater model capacity improves the whole cast,
+but neither 2-MP references nor undistilled Base training produces Mew's three
+reliable pointed fingers. The 9B/1-MP result is the strongest unpromoted
+candidate, not a production promotion. Native 9B BF16 is the next clean
+precision isolation if access to its separately gated BFL checkpoint is
+confirmed. No production manifest, default, fallback, PDF route, or promoted
+artwork changes in this matrix.

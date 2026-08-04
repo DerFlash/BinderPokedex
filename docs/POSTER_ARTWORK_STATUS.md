@@ -6,7 +6,7 @@ live in [Poster Workflow](POSTER_WORKFLOW.md), durable product requirements in
 [Poster Architecture](POSTER_ARTWORK_CONCEPT.md), and rejected or superseded
 evidence in [Poster Experiment Log](POSTER_ARTWORK_EXPERIMENT_LOG.md).
 
-Last audited: 2026-08-03
+Last audited: 2026-08-04
 
 ## Current decision
 
@@ -25,9 +25,18 @@ describe exactly one active contract. Switching to a legacy topology or the
 fallback requires a deliberate manifest change, a new candidate, human review,
 and a new promotion; there is no automatic dual-active registry.
 
-Anima, FLUX.1 Canny, Qwen Edit/spatial, SDXL regional identity, DreamO, direct
-FLUX edit, and direct inpaint remain rejected for this feature. Their evidence
-is retained in the experiment log and Git history, not the production runner.
+ExGen2 remains at zero promoted sections. Its strongest current scratch
+candidate is a FLUX.2 Klein 9B one-shot with 1-MP individual spatial
+references. It passes cast count, physical-card containment, scene, grounding,
+and coarse identity, but Mew's three pointed fingers are not reliably retained.
+Native 4B BF16, Base 4B BF16, corrected Kontext BF16, 2-MP spatial references,
+and an abstract box guide were evaluated without clearing that hard anatomy
+gate. They are experiment evidence only and do not change the table above.
+
+Anima, FLUX.1 Canny, FLUX.1 Kontext, Qwen Edit/spatial, SDXL regional identity,
+DreamO, direct FLUX edit, and direct inpaint remain rejected for this feature.
+Their evidence is retained in the experiment log and Git history, not the
+production runner.
 
 ## Promoted scope state
 
@@ -157,11 +166,16 @@ texture, character pixels, or a post-decode composite.
    product requirement justifies a reviewed replacement.
 3. Trigger the deferred minimal depth guide only under its documented failure
    condition, not merely to force visible foreground overlap.
-4. Generate, review, promote, and then enable the remaining 28 configured
-   targets. The planner currently reports them as `needs_assets`.
-5. Decide on and implement explicit cover replacement only after the affected
+4. Resolve the ExGen2 identity gate with one material architecture or precision
+   hypothesis at a time. Native 9B BF16 requires confirmed access to its
+   separately gated BFL checkpoint; no ExGen2 section is enabled in the
+   meantime.
+5. Generate, review, promote, and then enable the remaining 28 configured
+   targets. The planner currently reports 25 as `needs_assets` and the three
+   ExGen2 sections as `ready_to_generate` but blocked on visual acceptance.
+6. Decide on and implement explicit cover replacement only after the affected
    target family is fully promoted and its multilingual PDFs pass visual QA.
-6. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
+7. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
    matching physical page formats, memory tests, and visual QA exist.
 
 ## Cleanup boundary
@@ -182,11 +196,16 @@ python -m scripts.poster_assets.validate_promoted_poster --all-enabled
 python -m scripts.poster_assets.poster_work_plan --all-configured
 ```
 
-Verified on 2026-08-03:
+Core branch verification rerun on 2026-08-04:
 
-- the full suite passes with `510 passed, 1 skipped`;
+- the full suite passes with `522 passed, 1 skipped`;
 - all 13 enabled poster bundles validate;
-- the planner reports 41 configured targets: 13 current and 28 needing assets;
+- the planner reports 41 configured targets: 13 current, 3 ready to generate,
+  and 25 needing assets;
+- Python compilation and `git diff --check` pass.
+
+The following production and visual checks remain current from 2026-08-03:
+
 - every v7 production graph matches its reviewed candidate graph except for
   the output filename prefix;
 - a full German Pokédex PDF plus Japanese Pokédex and German ExGen3 smoke PDFs
@@ -197,5 +216,4 @@ Verified on 2026-08-03:
   and full-bleed scene continuity;
 - rendered Base1 smoke PDFs verify both the default cuttable page and the
   continuous full-page presentation; a Base2 smoke PDF verifies the unchanged
-  cover fallback when no poster is enabled;
-- Python compilation and `git diff --check` pass.
+  cover fallback when no poster is enabled.
