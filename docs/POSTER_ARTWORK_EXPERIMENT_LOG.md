@@ -1414,3 +1414,31 @@ convincing contact shadow and all three subjects read as a later foreground
 composite rather than members of the generated landscape. The fallback is
 rejected on the joint-scene integration gate. No artwork is promoted or PDF
 routing enabled.
+
+### ExGen2 stronger identity-control follow-up
+
+Human review selects a materially stronger identity-control model as the next
+experiment instead of replacing Mewtwo or Mew with less anatomy-sensitive
+featured Pokemon. The existing Qwen-Image-Edit-2511 path is not repeated: its
+recorded 0.25-MP Metal/MPS preflight retained the neutral input field, produced
+one oversized subject, omitted two subjects, and generated no set landscape.
+A Pokemon domain LoRA is also not introduced before the base edit graph proves
+correct multi-subject preservation and spatial binding.
+
+The next isolated candidate is FLUX.1 Kontext dev. It receives one complete
+poster-shaped input containing the reviewed landscape and the three exact
+source cutouts at their physical bottom-card positions. One common Kontext
+edit, sampler, and decode may reinterpret terrain, lighting, contact shadows,
+and foreground intersections, but must keep every Pokemon's position, scale,
+pose, silhouette, markings, appendages, and small anatomy unchanged. There is
+no post-decode source composite, identity restoration, inpaint pass, or second
+generative stage.
+
+This remains a non-production experiment. The first run is limited to a
+0.25-MP Metal/MPS preflight with the ExGen2 normal seed and assets. It stops on
+CPU fallback, memory failure, wrong count or card assignment, missing set
+scenery, gross anatomy drift, or another visibly composited result. Only a
+preflight that passes those coarse gates earns one 1-MP candidate for direct
+finger, grounding, occlusion, and card-cut review. The candidate requires the
+FLUX.1 dev non-commercial model license; no model download or production
+configuration change is implied by this checkpoint.
