@@ -1379,7 +1379,7 @@ none is promoted or enabled by this record.
 
 | Section | Seed | Raw SHA-256 | Agent review |
 | --- | ---: | --- | --- |
-| `normal` | `260737078` | `d7f1aa42a121e58b3ec5ae6d5ae34ec23c21a67801701afe42ba7b168fe8ab30` | Exactly Mewtwo, Mew, and Lugia once in the three bottom cards; identity, padding, grounding, shadows, and continuous valley vegetation pass preflight; pending human review |
+| `normal` | `260737078` | `d7f1aa42a121e58b3ec5ae6d5ae34ec23c21a67801701afe42ba7b168fe8ab30` | Exactly Mewtwo, Mew, and Lugia once in the three bottom cards; scene, padding, grounding, shadows, and continuous valley vegetation pass, but human review found that Mewtwo has two instead of three visible fingers and Mew's three pointed fingers become blunt arm stumps; rejected on identity |
 | `mega` | `260736802` | `f12dd7053571fcd439265f11620140596a2c2ae906fbceb7e8f7e536abb66fea` | Exactly Mega Mewtwo X, Mega Rayquaza, and Mega Latios once, but Mega Rayquaza's long body is folded and reshaped beyond the accepted identity tolerance; rejected on anatomy |
 | `mega` diagnostic | `260736803` | `f0b1f1945222d7171a978726a27e34d9dc1f30368838f390f0034425bcaa7785` | Adds a second Mega Mewtwo X and Mega Rayquaza above the intended bottom cast; rejected on the exact-count gate, with no prompt or production change |
 | `mega` diagnostic | `260736804` | `f01f1d8d217267cf0f034e00f16554a968586c35488aab0b02dfae7c753a8cf4` | Returns to the correct count, but repeats the same material Mega Rayquaza body deformation; rejected and the seed-only retry series is closed |
@@ -1395,3 +1395,9 @@ safe-margin mechanism was recorded in commit `c1dd483` and removed again by
 `233b8e6` after both controlled Primal confirmations duplicated the cast. No
 prompt branch, per-section workflow, automatic seed sweep, promotion, or PDF
 enablement remains from these rejected diagnostics.
+
+Human review therefore closes all three initial ExGen2 candidates without a
+promotion: `normal` fails small hand anatomy, `mega` fails Mega Rayquaza body
+anatomy, and `primal` fails outer-card containment. The next bounded comparison
+uses only the already retained `identity_lock` fallback; the one-shot default,
+prompt, and production routing remain unchanged.
