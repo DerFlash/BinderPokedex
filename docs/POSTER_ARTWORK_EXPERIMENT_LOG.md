@@ -1442,3 +1442,46 @@ preflight that passes those coarse gates earns one 1-MP candidate for direct
 finger, grounding, occlusion, and card-cut review. The candidate requires the
 FLUX.1 dev non-commercial model license; no model download or production
 configuration change is implied by this checkpoint.
+
+Before execution, the native Kontext graph changes that resolution gate for a
+model-specific reason. Kontext edits the supplied scene latent directly; a
+0.25-MP input would discard the finger detail that this experiment must test,
+while the official ComfyUI path normally scales edit inputs to approximately
+1 MP. The cheapest valid identity preflight is therefore one 848 x 1168 edit,
+not a low-resolution proxy. It still has one input, one sampler, one decode,
+and no restoration stage.
+
+The 16-GB baseline uses `flux1-kontext-dev-Q4_K_S.gguf` with SHA-256
+`cc22ff7a2debb02e63765fa53af8c5ae0b6883b462d0601b9b55f51a15cdd6da`,
+the existing Q4 T5 encoder, CLIP-L, and FLUX VAE. Its input is the rejected
+identity-lock scene with SHA-256
+`f7c8f6efafade7ee0084eebc6e69c4ec82db26ee1c28bc87cd9318559fbbb78d`:
+that image is not a candidate, but it provides the exact reviewed landscape,
+positions, and source-pixel anatomy for a single joint redraw. The effective
+prompt SHA-256 is
+`0f4de627d0738b0430cc9d90cad27e22a18cce5524f6fc9d76981f5409a75e50`;
+the 12-node API graph SHA-256 is
+`eead0e69bf1c5021eddcf57bc6e0f83028dcc79332020d4df2be894573b4675f`.
+
+The Q4 run is a reproducible constrained-hardware baseline, not evidence
+against BF16. If a 128-GB Apple-Silicon host is available, the primary quality
+comparison uses the original 23.8-GB BF16 Kontext weights with the same input,
+prompt, seed, sampler, steps, and output dimensions. A Q4-only small-detail
+failure cannot close the architecture before that controlled BF16 comparison.
+
+The Q4 baseline completed all 20 Euler/simple steps on Metal/MPS in 36:25.
+ComfyUI reported the VAE and model in BF16, the Q4 model fully loaded, and no
+CPU fallback. The 848 x 1168 output SHA-256 is
+`211bbd1a5208caf7d937c563bd6c3388f2010d75533b0cf707349c2ff9af57ab`.
+It fails before any print-size processing or promotion. Mewtwo and Mew are
+materially redesigned, and Lugia becomes a small blue dragon-like character.
+The unified redraw does add scene-wide lighting and vegetation, but it also
+fails the intended depth fix: the three characters stand behind the nearest
+foreground grass while their feet and bodies are drawn over those same blades,
+leaving physically inconsistent crossings and interrupted stems. Human review
+rates the complete result below the retained FLUX.2 one-shot candidate.
+
+No Q4 prompt, seed, or sampling retry is allowed. One same-job BF16 render on
+the 128-GB M4 Max remains justified solely to isolate weight precision. It must
+preserve all three coarse identities and correct the foreground depth ordering;
+otherwise FLUX.1 Kontext closes for this poster architecture.

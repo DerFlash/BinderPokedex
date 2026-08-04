@@ -75,6 +75,7 @@ data/poster_assets/**/comfyui_poster/individual_spatial_joint_prompt.generated.t
 data/poster_assets/**/comfyui_poster/sdxl_identity_*_prompt.generated.txt
 data/poster_assets/**/comfyui_poster/dreamo_v1_1_prompt.generated.txt
 data/poster_assets/**/comfyui_poster/qwen_spatial_subjects_prompt.generated.txt
+data/poster_assets/**/comfyui_poster/kontext_identity_prompt.generated.txt
 
 # Generated files (keep data, ignore PDFs)
 output/**/*.pdf
