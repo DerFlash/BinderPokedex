@@ -2129,5 +2129,34 @@ The exact-source-aware compositor reports 62,563 fully opaque source pixels:
 `14e8053b229320f9671e26d0988d4e497fe60aec14c0c2e3ff2f26ae8b3e6ae8`;
 the target SHA-256 is
 `602aeaf0420cda199a06fa02b8f79e1ccca1c9efbac49347cd6eff86653c3d53`.
-The pair remains `candidate_pair_review`; no dataset or training run changes
-before human review of the full image and all three lower-card crops.
+Human review accepts the hard Generation-I augmentation as a training example.
+It is recorded as `gold`, `front`, and `train_candidate`; this approval does
+not promote the image as production poster artwork.
+
+### Positive-depth transfer holdout and overfit v2 (2026-08-05)
+
+A second hard foreground pair is held out completely to distinguish learning
+the depth rule from memorizing the Generation-I cast. Its subject-free Kalos
+woodland-glade background uses seed `260726518`, native FLUX.2 Klein 4B BF16,
+848 x 1168 output, four Euler steps, and the M4 Max MPS worker. The workflow
+SHA-256 is
+`1b69b9d14a51675fcd0b3845f0d6260b342bc5bcffcc3b5af0a8e682667ea90e`;
+the raw background SHA-256 is
+`90a805450fd5d6c5be1f38824c9c268e792497d17f584637a3a52cf7d5f8fc2a`.
+
+Chespin, Fennekin, and Froakie come from a freshly built exact canonical
+Generation-VI source reference. The rough input places that unchanged cast
+over the new scene. The target adds contact shadows and one explicit bottom
+foreground fringe after exact source restoration. Of 48,253 fully opaque
+source pixels, 2,910 are intentionally covered and all 45,343 uncovered pixels
+remain exact. The target SHA-256 is
+`258b4f8df852ec8211f6ce2fd0e8a85bc650950ed8a0a1344667f897389269f3`.
+This sample is `gold`, `front`, and `holdout`: it never enters training.
+
+The materialized v2 micro-dataset therefore contains five training pairs:
+four previously reviewed `avoid` examples plus the Generation-I `front`
+example. Evaluation contains the existing Base-Set `avoid` holdout and the new
+Generation-VI `front` holdout. The v2 training configuration changes only the
+dataset and output names; all model, rank, optimizer, precision, MPS, and
+100-loop settings remain identical to v1. This keeps the comparison bounded
+to the additional positive-depth supervision.

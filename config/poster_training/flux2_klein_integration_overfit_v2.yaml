@@ -1,0 +1,58 @@
+---
+job: extension
+config:
+  name: binder_pokedex_flux2_klein_integration_overfit_v2
+  process:
+    - type: sd_trainer
+      training_folder: output
+      performance_log_every: 10
+      device: mps
+      network:
+        type: lora
+        linear: 32
+        linear_alpha: 32
+      save:
+        dtype: bf16
+        save_every: 50
+        max_step_saves_to_keep: 3
+        push_to_hub: false
+      datasets:
+        - folder_path: datasets/binder-pokedex-overfit-v2/target
+          control_path: datasets/binder-pokedex-overfit-v2/reference
+          caption_ext: txt
+          caption_dropout_rate: 0.0
+          shuffle_tokens: false
+          cache_latents_to_disk: true
+          resolution: [1024]
+          buckets: true
+          flip_x: false
+          flip_y: false
+      train:
+        batch_size: 1
+        steps: 100
+        gradient_accumulation_steps: 2
+        train_unet: true
+        train_text_encoder: false
+        gradient_checkpointing: true
+        cache_text_embeddings: true
+        noise_scheduler: flowmatch
+        timestep_type: weighted
+        content_or_style: balanced
+        optimizer: adamw
+        lr: 0.0001
+        max_grad_norm: 1.0
+        disable_sampling: true
+        dtype: bf16
+      model:
+        name_or_path: black-forest-labs/FLUX.2-klein-base-4B
+        arch: flux2_klein_4b
+        quantize: false
+        quantize_te: false
+        low_vram: false
+        model_kwargs:
+          match_target_res: true
+meta:
+  name: "[name]"
+  version: overfit-v2
+  ai_toolkit_commit: 9065951da32c0014899e142766846705a18f1347
+  diffusers_commit: c943837899b16cbae2f619b8dd4f7bb6f07dd81a
