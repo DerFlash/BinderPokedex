@@ -359,7 +359,10 @@ def run(
         else megapixels
     )
     reference_mode = str(generation_metadata["reference_mode"])
-    if "9b" in flux_model.lower():
+    normalized_model = flux_model.lower().replace("-", "_").replace(".", "_")
+    if "flux2_dev" in normalized_model or "flux_2_dev" in normalized_model:
+        model_variant = "dev32b"
+    elif "9b" in flux_model.lower():
         model_variant = "distilled9b"
     elif "base-4b" in flux_model:
         model_variant = "base4b"

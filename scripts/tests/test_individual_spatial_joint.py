@@ -74,6 +74,37 @@ def test_individual_spatial_workflow_has_one_full_frame_sampler_without_regions(
     )
 
 
+def test_flux2_dev_uses_official_positive_reference_guider_profile():
+    workflow = build_workflow(
+        SCOPE,
+        seed=260782266,
+        megapixels=0.25,
+        generation_mode="joint_scene",
+        reference_mode="individual_spatial_joint",
+        unet_name="flux2_dev_fp8mixed.safetensors",
+        clip_name="mistral_3_small_flux2_bf16.safetensors",
+        steps=20,
+    )
+
+    assert workflow["7"]["inputs"]["steps"] == 20
+    assert workflow["60"] == {
+        "class_type": "FluxGuidance",
+        "inputs": {"conditioning": ["4", 0], "guidance": 4.0},
+    }
+    assert workflow["70"] == {
+        "class_type": "BasicGuider",
+        "inputs": {"model": ["1", 0], "conditioning": ["40", 0]},
+    }
+    assert sum(
+        node["class_type"] == "ReferenceLatent"
+        for node in workflow.values()
+    ) == 3
+    assert not any(
+        node["class_type"] in {"CFGGuider", "ConditioningZeroOut"}
+        for node in workflow.values()
+    )
+
+
 def test_production_reference_writer_emits_one_positioned_identity_per_subject(
     tmp_path,
 ):

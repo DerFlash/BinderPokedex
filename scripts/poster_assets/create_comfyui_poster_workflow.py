@@ -88,6 +88,12 @@ def megapixel_marker(megapixels: float) -> str:
     return f"{megapixels:g}mp".replace(".", "p")
 
 
+def is_flux2_dev_model(unet_name: str) -> bool:
+    """Select the official Dev guider graph from the configured model name."""
+    normalized = Path(unet_name).name.lower().replace("-", "_").replace(".", "_")
+    return "flux2_dev" in normalized or "flux_2_dev" in normalized
+
+
 def output_dimensions(scope: str, megapixels: float) -> tuple[int, int]:
     if megapixels <= 0:
         raise ValueError("megapixels must be positive")
@@ -127,6 +133,7 @@ def _build_full_frame_reference_workflow(
     filename_prefix: str,
 ) -> dict[str, object]:
     """Build one empty-target sampler conditioned by ordered image references."""
+    dev_profile = is_flux2_dev_model(unet_name)
     workflow: dict[str, object] = {
         "1": node("UNETLoader", unet_name=unet_name, weight_dtype="default"),
         "2": node(
@@ -137,7 +144,6 @@ def _build_full_frame_reference_workflow(
         ),
         "3": node("VAELoader", vae_name=vae_name),
         "4": node("CLIPTextEncode", text=prompt, clip=["2", 0]),
-        "5": node("ConditioningZeroOut", conditioning=["4", 0]),
         "6": node(
             "EmptyFlux2LatentImage",
             width=width,
@@ -154,8 +160,18 @@ def _build_full_frame_reference_workflow(
         "10": node("KSamplerSelect", sampler_name="euler"),
     }
 
-    positive_conditioning: list[object] = ["4", 0]
-    negative_conditioning: list[object] = ["5", 0]
+    if dev_profile:
+        workflow["60"] = node(
+            "FluxGuidance",
+            conditioning=["4", 0],
+            guidance=4.0,
+        )
+        positive_conditioning: list[object] = ["60", 0]
+        negative_conditioning: list[object] | None = None
+    else:
+        workflow["5"] = node("ConditioningZeroOut", conditioning=["4", 0])
+        positive_conditioning = ["4", 0]
+        negative_conditioning = ["5", 0]
     for index, reference_name in enumerate(reference_names):
         load_id = str(30 + index * 4)
         encode_id = str(31 + index * 4)
@@ -172,21 +188,29 @@ def _build_full_frame_reference_workflow(
             conditioning=positive_conditioning,
             latent=[encode_id, 0],
         )
-        workflow[negative_id] = node(
-            "ReferenceLatent",
-            conditioning=negative_conditioning,
-            latent=[encode_id, 0],
-        )
         positive_conditioning = [positive_id, 0]
-        negative_conditioning = [negative_id, 0]
+        if negative_conditioning is not None:
+            workflow[negative_id] = node(
+                "ReferenceLatent",
+                conditioning=negative_conditioning,
+                latent=[encode_id, 0],
+            )
+            negative_conditioning = [negative_id, 0]
 
-    workflow["70"] = node(
-        "CFGGuider",
-        model=["1", 0],
-        positive=positive_conditioning,
-        negative=negative_conditioning,
-        cfg=1.0,
-    )
+    if dev_profile:
+        workflow["70"] = node(
+            "BasicGuider",
+            model=["1", 0],
+            conditioning=positive_conditioning,
+        )
+    else:
+        workflow["70"] = node(
+            "CFGGuider",
+            model=["1", 0],
+            positive=positive_conditioning,
+            negative=negative_conditioning,
+            cfg=1.0,
+        )
     workflow["71"] = node(
         "SamplerCustomAdvanced",
         noise=["8", 0],

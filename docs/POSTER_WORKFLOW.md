@@ -336,7 +336,15 @@ python scripts/poster_assets/run_comfyui_poster.py \
 
 The production runner reads the FLUX.2 model, reference topology, sampling
 contract, seed, generation size, and output contract from the scope's
-`poster.yaml`. The default `individual_spatial_joint` path:
+`poster.yaml`.
+
+The configured model also selects its required guider graph without creating a
+second poster pipeline. Klein models retain the reviewed CFG-1 graph with
+positive and negative reference chains. A `flux2_dev` model uses the official
+Dev profile with guidance 4, positive references, and `BasicGuider`; its step
+count remains explicit in `artwork.generation.steps`.
+
+The default `individual_spatial_joint` path:
 
 1. derives each target silhouette rectangle from the shared physical layout
    and cutout alpha bounds, then writes its normalized canvas coordinates into
