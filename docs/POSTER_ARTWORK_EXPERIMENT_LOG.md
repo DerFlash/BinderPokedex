@@ -2013,3 +2013,34 @@ This passes only the plumbing and numerical gate. It does not promote the LoRA
 or prove visual quality. The next gate applies the adapter to the unseen Base1
 rough composite with the distilled FLUX.2 Klein 4B inference model, compares a
 small fixed strength sweep, and reviews the full poster plus physical crops.
+
+### Base1 holdout strength sweep (2026-08-05)
+
+The step-100 adapter is loaded through ComfyUI's native
+`LoraLoaderModelOnly` after the distilled FLUX.2 Klein 4B UNET. Three immutable
+worker jobs keep the Base1 sand rough composite, holdout prompt, seed
+`260726511`, 848x1168 output, four Euler steps, CFG 1.0, text encoder, VAE, and
+every graph edge fixed. Only LoRA strength changes. All jobs complete on MPS
+and validate the pinned model and adapter hashes.
+
+| Strength | Output SHA-256 | Full-image MAE to exact-restored holdout | Source-region MAE | Exact source pixels changed |
+| ---: | --- | ---: | ---: | ---: |
+| 0.0 baseline | `512d74ccd8b101bd84563aafffaeebdfa3460d43b26bfdf06892b2ec465b4ef3` | 0.7061 | 10.1318 | 52,298 / 52,343 |
+| 0.7 | `f71f54f796e6a058afc4040dc655c71ebe5c2e6f3b63382f097a65a5e73dae7d` | 2.1450 | 8.9677 | 52,275 / 52,343 |
+| 0.9 | `70ab368b0bc118888b1e8ffd0ece6c8f2f6c7d28758c160c1e71efae96f17143` | 2.8172 | 8.9965 | 52,269 / 52,343 |
+| 1.0 | `633838078ed7d0f329ef137689c119f559604578ec2850fb0f5506c3b686805a` | 3.5956 | 9.4934 | 52,271 / 52,343 |
+
+The baseline is expected to be closest over the complete image because the
+aligned holdout target is constructed from that teacher output before exact
+character restoration. The relevant preflight signal is the unseen source
+region: strength 0.7 reduces its mean absolute deviation from exact source
+pixels by 11.5 percent versus the no-LoRA renderer. Per physical card, 0.7 is
+best for Mewtwo and Charmander while 0.9 is narrowly best for Bulbasaur. Visual
+preflight finds all three characters complete, card-safe, grounded by coherent
+shadows, and anatomically intact, including Mewtwo's three-digit hands.
+
+Strength 0.7 is therefore the sole human-review candidate from this bounded
+sweep. It is not promoted: 52,275 fully opaque source pixels still change, so
+the LoRA improves average identity fidelity without guaranteeing exact source
+pixels. No longer training run starts before human review decides whether this
+tradeoff is materially useful.
