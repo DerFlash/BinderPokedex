@@ -2044,3 +2044,24 @@ sweep. It is not promoted: 52,275 fully opaque source pixels still change, so
 the LoRA improves average identity fidelity without guaranteeing exact source
 pixels. No longer training run starts before human review decides whether this
 tradeoff is materially useful.
+
+### Positive foreground-occlusion seed inventory (2026-08-05)
+
+The initial clear-surface overfit intentionally contains only `avoid` examples.
+Earlier one-shot renders are retained as complementary evidence rather than
+discarded: the Generation-I individual-spatial 1-MP render at seed `260782266`
+contains coherent small foreground crossings at Bulbasaur and Squirtle while
+separate meadow vegetation remains behind them. Its raw SHA-256 is
+`cf80fd3f0a2f909bb1d58ecc7f43c015431e074ff25adb86fdf4bdee785642ae`.
+The Generation-VI seed `260758584` is a second visual source in which dense
+flower-meadow vegetation stays clear or keeps one plausible depth layer.
+
+These images are useful positive depth references, but they are not copied
+directly into the paired-edit dataset. Their one-shot subjects satisfy the
+production tolerance rather than the stricter training requirement for exact
+canonical pixels, and exact subject restoration would draw over the very
+foreground crossings to be learned. A future `front` or `mixed` gold pair must
+therefore reuse only a separately reviewed foreground layer (or an equivalent
+explicit depth result) over exact canonical subjects. The first such pair is
+reviewed as a physical-card crop before any broader training run. No new model,
+prompt branch, or production renderer is introduced by this inventory.
