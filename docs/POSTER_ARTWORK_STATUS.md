@@ -57,8 +57,9 @@ augmentation on a natural sand beach is the first human-approved gold holdout:
 its
 surface has no upright occluder, all 52,343 opaque source pixels remain exact,
 and the teacher adds shared directional shadows. Three further clear-surface
-train candidates use Generation II on snow, Generation III on black sand, and
-Generation IV on pale stone; all await human pair review. A sterile
+gold train pairs use Generation II on snow, Generation III on black sand, and
+Generation IV on pale stone; the user approved all three complete targets and
+their physical card crops on 2026-08-05. A sterile
 smooth-earth control and the first wall-like Generation-IV stone background are
 rejected. The simple recipe is
 restricted to genuinely clean avoidance or entirely behind-subject landscape;

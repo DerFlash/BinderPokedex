@@ -1929,6 +1929,9 @@ The first Generation-IV background seed `260726514` is rejected before cast
 placement because it depicts a frontal masonry wall rather than walkable
 ground. Seed `260726515` corrects that failure with one continuous horizontal
 stone plane. Agent-side preflight finds all three replacement scenes card-safe,
-text-free, naturally grounded, and free of upright foreground occluders. They
-remain `candidate_pair_review` until the user reviews the complete images and
-all physical lower-card crops; none is silently marked gold.
+text-free, naturally grounded, and free of upright foreground occluders. The
+user approves every complete image and all three physical lower-card crops on
+2026-08-05. Generation II, III, and IV therefore become the first three gold
+`train_candidate` pairs. Together with the Base1 gold holdout, the audit now
+contains four gold samples, but the holdout is never training input. One more
+gold train pair is required before the bounded plumbing overfit starts.
