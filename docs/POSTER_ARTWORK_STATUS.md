@@ -195,9 +195,10 @@ texture, character pixels, or a post-decode composite.
 
 ## Remaining work
 
-1. Run the bounded 100-step BF16/MPS plumbing overfit on the four approved
-   Generation II-V train pairs. Base1 remains an unseen holdout. Inspect finite
-   loss and saved weights before any holdout render or longer LoRA run.
+1. Evaluate the successful 100-step BF16/MPS plumbing-overfit adapter on the
+   unseen Base1 holdout at the fixed 0.7/0.9/1.0 strength sweep. Review the full
+   scene, identity/anatomy, integration, and all physical card crops before any
+   longer LoRA run.
 2. Use `individual_spatial_joint` for new scopes, but keep human review and the
    bounded seed rule; a reviewed seed is not proof of universal stability.
 3. Leave accepted v5 and v6 promotions unchanged unless a concrete visual or

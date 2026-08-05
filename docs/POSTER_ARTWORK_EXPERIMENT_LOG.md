@@ -1988,3 +1988,28 @@ rank/alpha 32/32, BF16, native AdamW, batch 1, gradient accumulation 2,
 disables sampling during training so the preflight answers only whether the
 paired edit path loads, learns, and saves finite weights. Holdout rendering is
 a separate gate after that succeeds.
+
+The complete preflight succeeds on the M4 Max through MPS with process exit
+code zero. AI Toolkit keeps all four images in one native `848x1168` bucket,
+caches exactly four latents and four text embeddings, unloads the text encoder,
+and attaches the linear LoRA to 80 image-model modules. One hundred train loops
+with gradient accumulation two produce 50 native AdamW updates in 1:13:51.
+Observed per-sample losses remain finite throughout; the last reported loss is
+`0.1432`. A step-50 checkpoint and final step-100 adapter are both saved.
+
+The final adapter audit is:
+
+| Property | Value |
+| --- | --- |
+| File size | 92,426,896 bytes |
+| SHA-256 | `418816b51ad277f34f9ace555c78add0f4991f5ed14f567ab98602c67f402945` |
+| Tensor count | 160 |
+| Parameters | 46,202,880 |
+| Stored dtype | BF16 only |
+| Non-finite tensors | 0 |
+| Embedded training info | step 100, epoch 24 |
+
+This passes only the plumbing and numerical gate. It does not promote the LoRA
+or prove visual quality. The next gate applies the adapter to the unseen Base1
+rough composite with the distilled FLUX.2 Klein 4B inference model, compares a
+small fixed strength sweep, and reviews the full poster plus physical crops.
