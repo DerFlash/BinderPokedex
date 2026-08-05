@@ -2112,3 +2112,22 @@ future `front` candidate must provide an actual isolated foreground object with
 a continuous visible root and a human-readable crossing before the exact-pixel
 audit is considered. Numeric overlap remains a reject-only consistency check,
 never evidence of correct depth.
+
+### Generation-I hard foreground augmentation (2026-08-05)
+
+The next KISS candidate follows direct user guidance and is training-only. It
+keeps the accepted subject-free meadow, contact shadows, and exact canonical
+Generation-I cast, then places an intentionally obvious grass fringe as the
+last layer. The fringe is rooted at the complete lower image edge and visibly
+covers lower subject pixels in all three physical cards. It is not proposed as
+production artwork; its sole purpose is to provide an unambiguous positive
+depth example instead of asking a numeric mask intersection to imply depth.
+
+The exact-source-aware compositor reports 62,563 fully opaque source pixels:
+3,426 are intentionally covered by the hard foreground and all remaining
+59,137 are exact. The foreground-layer SHA-256 is
+`14e8053b229320f9671e26d0988d4e497fe60aec14c0c2e3ff2f26ae8b3e6ae8`;
+the target SHA-256 is
+`602aeaf0420cda199a06fa02b8f79e1ccca1c9efbac49347cd6eff86653c3d53`.
+The pair remains `candidate_pair_review`; no dataset or training run changes
+before human review of the full image and all three lower-card crops.
