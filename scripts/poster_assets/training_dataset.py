@@ -76,6 +76,56 @@ def immutable_image_record(path: Path, *, root: Path) -> dict[str, Any]:
     }
 
 
+def compose_aligned_teacher_target(
+    edited_scene_path: Path,
+    source_reference_path: Path,
+    output_path: Path,
+) -> dict[str, Any]:
+    """Restore exact positioned subjects over an AI-integrated teacher scene."""
+    edited_scene_path = edited_scene_path.resolve()
+    source_reference_path = source_reference_path.resolve()
+    output_path = output_path.resolve()
+    if output_path.exists():
+        raise FileExistsError(
+            f"Immutable teacher target already exists: {output_path}"
+        )
+
+    with Image.open(edited_scene_path) as opened_scene:
+        scene = opened_scene.convert("RGBA")
+    with Image.open(source_reference_path) as opened_reference:
+        if "A" not in opened_reference.getbands():
+            raise ValueError("Source reference must contain an alpha channel")
+        source = opened_reference.convert("RGBA")
+    if scene.size != source.size:
+        raise ValueError(
+            "Teacher scene and source reference dimensions differ: "
+            f"{scene.size} != {source.size}"
+        )
+    if source.getchannel("A").getbbox() is None:
+        raise ValueError("Source reference contains no visible subject pixels")
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    Image.alpha_composite(scene, source).convert("RGB").save(
+        output_path,
+        format="PNG",
+        optimize=True,
+    )
+    source_audit = audit_exact_source_pixels(
+        source_reference_path,
+        output_path,
+        require_match=True,
+    )
+    return {
+        "kind": "aligned_teacher_target",
+        "edited_scene_sha256": sha256_file(edited_scene_path),
+        "source_reference_sha256": sha256_file(source_reference_path),
+        "output_sha256": sha256_file(output_path),
+        "width": scene.width,
+        "height": scene.height,
+        "source_pixel_audit": source_audit,
+    }
+
+
 def validate_image_contract(
     record: dict[str, Any],
     config: dict[str, Any],
@@ -503,6 +553,14 @@ def main() -> int:
     materialize_parser.add_argument("--manifest", type=Path, required=True)
     materialize_parser.add_argument("--output", type=Path, required=True)
 
+    compose_parser = subparsers.add_parser(
+        "compose-target",
+        help="Restore exact subjects over an AI-integrated teacher scene",
+    )
+    compose_parser.add_argument("--edited-scene", type=Path, required=True)
+    compose_parser.add_argument("--source-reference", type=Path, required=True)
+    compose_parser.add_argument("--output", type=Path, required=True)
+
     args = parser.parse_args()
     if args.command == "audit":
         result = audit_promoted_pairs(args.config.resolve())
@@ -515,12 +573,19 @@ def main() -> int:
     elif args.command == "validate":
         result = validate_audit_manifest(args.manifest.resolve())
         print(json.dumps(result["summary"], indent=2, sort_keys=True))
-    else:
+    elif args.command == "materialize":
         output = materialize_gold_dataset(
             args.manifest.resolve(),
             args.output,
         )
         print(output)
+    else:
+        result = compose_aligned_teacher_target(
+            args.edited_scene,
+            args.source_reference,
+            args.output,
+        )
+        print(json.dumps(result, indent=2, sort_keys=True))
     return 0
 
 

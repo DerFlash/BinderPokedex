@@ -22,9 +22,10 @@ redesign more likely without solving placement or depth. Per-character LoRAs
 do not scale and can interfere when three are active. A full fine-tune adds
 cost and forgetting risk before paired edit data has proved the task learnable.
 
-The deterministic copy-based result is an **input**, never a target. A target
-must already pass the identity, layout, grounding, and depth gates. Training on
-an almost-correct target would teach the known error as desired behavior.
+The deterministic copy-based result by itself is an **input**, never a target.
+A target must already pass the identity, layout, grounding, and depth gates.
+Training on an almost-correct target would teach the known error as desired
+behavior.
 
 ## Architecture boundary
 
@@ -62,6 +63,30 @@ Inputs may have hard edges, weak shadows, or an obvious copied appearance. The
 target must keep the same composition and must not arbitrarily replace the
 whole background. Local or global reinterpretation is acceptable only where
 it produces one coherent scene without moving or redesigning a subject.
+
+### Aligned teacher-target recipe
+
+The first bounded target recipe uses the complete rough composite as the only
+FLUX.2 reference. The untrained model may reinterpret the environment, light,
+ground contact, and shadows, but its repainted character pixels are not trusted
+as target truth. The canonical positioned RGBA subjects are alpha-composited
+back over that teacher scene at their original pixels:
+
+```bash
+python -m scripts.poster_assets.training_dataset compose-target \
+  --edited-scene tmp/poster-training/v0/scene-edit.png \
+  --source-reference data/poster_assets/SCOPE/comfyui_poster/inpaint_reference.png \
+  --output tmp/poster-training/v0/aligned-target.png
+```
+
+This restoration is a dataset-construction step, not a production renderer.
+It gives the LoRA aligned examples of the desired operation: retain the input
+subjects while learning the teacher's revised terrain and contact shadows.
+`compose-target` refuses overwrite, requires matching dimensions and an RGBA
+source, and fails unless every fully opaque source pixel is exact afterward.
+The result remains `candidate_pair_review`; a human must reject halos, duplicate
+limbs outside the restored mask, inconsistent shadows, broken depth, or a
+globally replaced composition before marking it `gold`.
 
 For occlusion, the data must include all three valid outcomes:
 
@@ -135,7 +160,7 @@ and must be rendered or rebuilt again before human pair review.
 
 ### 1. Plumbing overfit
 
-Only after 4-8 pairs are marked `gold`, materialize an immutable dataset:
+Only after 4-8 aligned pairs are marked `gold`, materialize an immutable dataset:
 
 ```bash
 python -m scripts.poster_assets.training_dataset materialize \

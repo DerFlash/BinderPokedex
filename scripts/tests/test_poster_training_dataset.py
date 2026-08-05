@@ -8,6 +8,7 @@ import pytest
 
 from scripts.poster_assets.provenance import image_pixel_record, sha256_file
 from scripts.poster_assets.training_dataset import (
+    compose_aligned_teacher_target,
     immutable_image_record,
     materialize_gold_dataset,
     pair_status,
@@ -110,6 +111,48 @@ def test_pair_status_requires_a_fresh_exact_input() -> None:
         input_errors=[],
         source_pixel_match=False,
     ) == "needs_fresh_exact_input"
+
+
+def test_compose_aligned_teacher_target_restores_exact_subjects(
+    tmp_path: Path,
+) -> None:
+    scene_path = tmp_path / "scene.png"
+    reference_path = tmp_path / "source.png"
+    output_path = tmp_path / "target.png"
+    Image.new("RGB", (16, 16), (20, 30, 40)).save(scene_path)
+    source = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    for x in range(6, 10):
+        for y in range(5, 11):
+            source.putpixel((x, y), (200, 100, 50, 255))
+    source.save(reference_path)
+
+    result = compose_aligned_teacher_target(
+        scene_path,
+        reference_path,
+        output_path,
+    )
+
+    assert result["source_pixel_audit"]["passed"] is True
+    assert result["source_pixel_audit"]["changed_pixels"] == 0
+    with Image.open(output_path) as output:
+        assert output.getpixel((0, 0)) == (20, 30, 40)
+        assert output.getpixel((7, 7)) == (200, 100, 50)
+
+
+def test_compose_aligned_teacher_target_is_immutable(tmp_path: Path) -> None:
+    scene_path = tmp_path / "scene.png"
+    reference_path = tmp_path / "source.png"
+    output_path = tmp_path / "target.png"
+    Image.new("RGB", (16, 16), (20, 30, 40)).save(scene_path)
+    Image.new("RGBA", (16, 16), (200, 100, 50, 255)).save(reference_path)
+    Image.new("RGB", (16, 16), (0, 0, 0)).save(output_path)
+
+    with pytest.raises(FileExistsError, match="already exists"):
+        compose_aligned_teacher_target(
+            scene_path,
+            reference_path,
+            output_path,
+        )
 
 
 def test_materialize_gold_uses_ai_toolkit_pair_direction(tmp_path: Path) -> None:

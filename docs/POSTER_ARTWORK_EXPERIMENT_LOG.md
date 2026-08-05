@@ -1797,3 +1797,41 @@ instead of the requested integration operation. The fresh input remains a
 `candidate_pair_review`; the next data step is to create an aligned target that
 changes only terrain interaction, light, contact shadows, and coherent depth.
 No LoRA job is started before 4-8 such pairs exist.
+
+### Generation I aligned teacher-target probe (2026-08-05)
+
+One isolated probe tests the smallest data-construction change that can produce
+an aligned target. FLUX.2 Klein 4B receives the complete fresh 848 x 1168 rough
+composite as its only `ReferenceLatent`; there are no separate subject images,
+position boxes, masks, regional branches, or production-mode changes. The
+prompt asks it to preserve the full composition and revise only integration,
+lighting, contact shadows, ground contact, and coherent depth. The graph keeps
+the production distilled schedule: one empty target, Euler, four steps, one
+sampler, and one decode.
+
+The job runs on the M4 Max worker with `Device: mps` and completes the prompt
+in 28.12 seconds. It uses the same BF16 4B model, Qwen encoder, VAE, and ComfyUI
+commit recorded above.
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Complete rough input | `d8da5015647fee72b880d098dd8f174b70717cce3deccfdae98d61f09758b139` |
+| API workflow | `5c9204c7c4639b0124cfb598d07863dbf6acd23ee5592354bb4633f5bf5dca31` |
+| Raw full-composite edit | `502810178d79df661e596dbcf629fbbfdd767f4880ae87668bf6ab5d192d3d7e` |
+| Exact-restored aligned target candidate | `a6b3df27e97f395d68e9b4699e8f82e9738daf0da2cf88ebc3176fc7aae74aec` |
+
+The raw edit preserves the valley, river, tree line, all three card assignments,
+and approximate scale much better than pairing the input with the old promoted
+one-shot. It also introduces clear common-ground shadows. It is not target
+truth by itself: small feet, hands, facial lines, and body contours are softly
+repainted. The aligned teacher candidate therefore restores the canonical RGBA
+subjects at their original pixels over the integrated scene. Its hard audit
+passes with all 62,563 fully opaque source pixels unchanged.
+
+This is promising but not automatic approval. The candidate uses valid clean
+occlusion avoidance rather than a foreground crossing, and human review must
+still check antialiased edges, possible teacher remnants outside the restored
+silhouettes, shadow direction, visual integration, and every physical lower
+card. Until that review passes, the sample remains `candidate_pair_review` and
+training remains gated. The reusable `compose-target` command implements only
+this exact restoration and immutable audit; it does not add a renderer mode.
