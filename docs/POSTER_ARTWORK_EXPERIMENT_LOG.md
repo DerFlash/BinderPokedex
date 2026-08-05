@@ -1957,5 +1957,11 @@ the canonical cast.
 Both seed-`260726516` jobs report `Device: mps`. The source audit passes all
 52,025 fully opaque pixels with zero changes. Agent preflight passes count,
 identity, card containment, flat-ground depth, text-free safe areas, and the
-three lower-card crops. The sample remains `candidate_pair_review` until the
-user approves the complete target and crops; the overfit does not start early.
+three lower-card crops. The user approves the complete target and crops on
+2026-08-05, so Generation V becomes the fourth gold `train_candidate` pair.
+
+Before materialization, a final leakage audit finds that the original exporter
+would copy gold holdouts into the same root `target/` directory consumed by AI
+Toolkit. The exporter now keeps only train pairs in root `reference/` and
+`target/`; evaluation pairs live below `evaluation/<split>/`. The plumbing
+overfit cannot start until the corresponding regression test passes.
