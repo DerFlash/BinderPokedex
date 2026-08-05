@@ -100,6 +100,24 @@ subject: restoring the exact RGBA subject would reverse that depth order. Such
 samples require a separately reviewed foreground layer or another explicit
 depth-control method and are excluded from the plumbing overfit.
 
+For a reviewed foreground crossing, compose the exact subjects first and the
+explicit RGBA foreground layer last:
+
+```bash
+python -m scripts.poster_assets.training_dataset compose-occlusion-target \
+  --edited-scene tmp/poster-training/v0/SCENE/integrated-scene.png \
+  --source-reference data/poster_assets/SCOPE/comfyui_poster/inpaint_reference.png \
+  --foreground-layer tmp/poster-training/v0/SCENE/foreground-layer.png \
+  --output tmp/poster-training/v0/SCENE/front-target.png
+```
+
+The command requires a real overlap with at least one fully opaque source
+pixel. Covered source pixels are recorded as intentional occlusion; every
+uncovered fully opaque source pixel must remain exact. The layer must contain
+one continuous, physically rooted foreground object and still requires human
+review at physical-card size. This command does not extract, invent, or approve
+the layer.
+
 The plumbing overfit may use training-only synthetic landscapes whose lower
 surface is intrinsically non-occluding, such as natural sand, snow, or broad
 stone. They must still look like finished poster artwork; a flat gradient,

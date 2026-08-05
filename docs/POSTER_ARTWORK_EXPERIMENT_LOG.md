@@ -2065,3 +2065,37 @@ therefore reuse only a separately reviewed foreground layer (or an equivalent
 explicit depth result) over exact canonical subjects. The first such pair is
 reviewed as a physical-card crop before any broader training run. No new model,
 prompt branch, or production renderer is introduced by this inventory.
+
+### Generation-I explicit foreground-pair preflight (2026-08-05)
+
+The first bounded `front` candidate uses a fresh, subject-free Generation-I
+mountain-meadow background rather than trying to erase the cast from a prior
+one-shot. One deterministic erase/fill probe is rejected agent-side because it
+repeats landscape fragments inside the subject regions; it is not eligible as
+training truth and no prompt retry is spent on it.
+
+The replacement text-only background uses seed `260726517`, the unchanged
+native FLUX.2 Klein 4B BF16 stack, 848 x 1168 output, four Euler steps, and the
+M4 Max MPS worker. The workflow SHA-256 is
+`18e68abf442761a1a76aa2a298ea66a594c91e87225d5d180618c8fb8eba8005`;
+the raw background SHA-256 is
+`21a2a832417736f9de7494b9db1625234a0842d17d1b1ddec3784f2cb37c52d8`.
+It contains a calm lower meadow plus real bottom-edge grass clusters and no
+living subject, text, panel, path, or landing pad.
+
+The rough reference alpha-composites the canonical Generation-I cast over that
+background. The integrated scene adds only soft contact shadows. A tight RGBA
+foreground layer then reuses pixels from one continuous blade already rooted
+at the lower-left edge and is applied after exact subject restoration through
+`compose-occlusion-target`. The immutable audit reports 62,563 fully opaque
+source pixels: 130 are intentionally covered by the blade and all remaining
+62,433 are byte-exact. The foreground-layer SHA-256 is
+`194d1c0b6703e0af31c54ef36116fe5d4bf284c7dafaea2cceb4d651708c4d06`;
+the pixel-identical CLI target SHA-256 is
+`a10c881601fd0556f4ae1259385327a0a78dfdbd4792cbcf281d10e13eb928b6`.
+
+This remains `candidate_pair_review`. Human review must pass the complete
+artwork and all three physical lower-card crops, especially the continuity and
+scale of the single blade in front of Bulbasaur. No audit entry changes to
+`gold`, no dataset is rematerialized, and no training run starts before that
+review.
