@@ -1835,3 +1835,37 @@ silhouettes, shadow direction, visual integration, and every physical lower
 card. Until that review passes, the sample remains `candidate_pair_review` and
 training remains gated. The reusable `compose-target` command implements only
 this exact restoration and immutable audit; it does not add a renderer mode.
+
+### Base Set target candidate and Generation VII boundary (2026-08-05)
+
+The same frozen full-composite graph is next applied without prompt or model
+changes to one expected positive fixture and one difficult depth fixture. All
+jobs run on the same M4 Max MPS worker and use the BF16 4B model stack above.
+
+| Scope / seed | Rough input SHA-256 | Raw edit SHA-256 | Aligned target SHA-256 | Result |
+| --- | --- | --- | --- | --- |
+| `Base1` / `260726503` | `d52247827f47483c3ff3cd2198f0501f1ac0fffca040d4410c749ee12508722d` | `86be9c3ec6683be3e827782ccf1b10b0d92290ed9980731c6a45216f867a647b` | `c54fa3b36dac1c33f46828252e004a4ba7940176b4996c58a6498864347b4787` | Candidate review: exact Mewtwo three-digit hands and complete tail, three card-safe subjects, common ground shadows, and clean foreground avoidance |
+| `Pokedex/sections/gen7` / `260726058` | `ea8c0c9fa95fff17c7e57d782b685a6b1d32648eb1df4e77712474d642e39582` | `917574818d0dd2d272e447922f940792e04c60857f7a6c8d578452e07358c08d` | `a08ae9a5a444127bdce53aff27ae139fc3347fb0f2b3707b9d52a847ffbbd864` | Rejected: exact restoration puts the subjects back in front of foreground edge plants, so the original depth contradiction remains |
+| `Pokedex/sections/gen7` / `260726059` | `44dc633c974d3d3679b4a33a9b3efd3fa89b8bbd865e9734cc8e970096c3250c` | `860d9cf2f9b8acb5b1a8e56d4016ac7db445d7f1970203d3a7c30a51fd334196` | `a5d738bbb379533be67e2e748266d6ce413fba29b7698b9001af576122f437d8` | Rejected: the clearer meadow helps Rowlet and Litten, but the large bottom-right plant still starts in the foreground and runs behind Popplio |
+
+The Base Set source reference SHA-256 is
+`d14967b8ae340432c45159e115407d5e079dced961eba5173df0d57ed5c533e5`;
+all 52,343 fully opaque source pixels survive in its target candidate. The
+source and edit workflow hashes are respectively
+`3cdeaaf5991fe4b9c58db2ca7038f53e6aeedd5f50e1ca8359c7ce0b28502326`
+and `def90ff77d3275fb35af68043eca0ca3da9c7445502ea1e3125ab41f51916b3c`.
+
+Generation VII establishes an explicit limit of the simple recipe. Exact
+restoration can produce gold examples for clean avoidance or landscape that is
+entirely behind a subject. It cannot itself create a valid foreground crossing,
+because restoring the canonical subject necessarily draws over that crossing.
+The configured lower-band prompt already forbids tall plants and isolated
+foreground objects, so another prompt branch or broad seed sweep is not
+justified. Both tested seeds are closed. A future foreground-occlusion dataset
+needs a separately reviewed foreground layer or another explicit depth-control
+mechanism; it is not added to the first plumbing overfit.
+
+Generation I and Base Set are now two `candidate_pair_review` samples. Neither
+is marked `gold` before human inspection of the full image and three physical
+lower-card crops. Training therefore remains correctly blocked at two review
+candidates rather than silently treating exact pixels as visual approval.

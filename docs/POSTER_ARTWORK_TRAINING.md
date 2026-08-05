@@ -88,6 +88,12 @@ The result remains `candidate_pair_review`; a human must reject halos, duplicate
 limbs outside the restored mask, inconsistent shadows, broken depth, or a
 globally replaced composition before marking it `gold`.
 
+This recipe can directly create only clean-avoidance or behind-subject targets.
+It must not be used when an element rooted in the foreground should cover the
+subject: restoring the exact RGBA subject would reverse that depth order. Such
+samples require a separately reviewed foreground layer or another explicit
+depth-control method and are excluded from the plumbing overfit.
+
 For occlusion, the data must include all three valid outcomes:
 
 1. landscape elements avoid the subject;
