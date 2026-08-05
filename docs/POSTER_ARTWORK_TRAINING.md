@@ -238,6 +238,12 @@ Render the same fixtures in three columns:
 2. current `identity_lock` fallback;
 3. edit LoRA at a small fixed strength sweep, initially 0.7, 0.9, and 1.0.
 
+Create each LoRA variant from the same frozen ComfyUI API workflow with
+`scripts/poster_assets/create_lora_eval_workflow.py`. The helper inserts only
+one native `LoraLoaderModelOnly` node, redirects the existing `CFGGuider`, and
+changes the output prefix. Prompt, reference image, seed, sampler, resolution,
+and every other node remain identical across the strength sweep.
+
 No checkpoint is promoted by loss or a lucky seed. Review the raw poster and
 every physical card crop. Automatic similarity, silhouette, and bounds checks
 may reject a candidate, but anatomy and depth approval remains human.
