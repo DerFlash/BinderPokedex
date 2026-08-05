@@ -1742,3 +1742,58 @@ small seed-level anatomy variations, so the bounded rollout stops without a
 seed sweep or prompt branch. ExGen2 Normal remains the sole Dev promotion;
 Mega and Primal require a material placement/count-control change before a new
 generation attempt.
+
+## Paired integration LoRA dataset gate (2026-08-05)
+
+The next architecture is isolated from production and begins with data rather
+than a new sampler graph. It will train one FLUX.2 Klein 4B edit LoRA to turn a
+rough exact-position composite into a coherent scene while preserving count,
+card assignment, pose, silhouette, anatomy, face, colors, and markings. The
+copy-based image is the edit input; only a separately reviewed integrated image
+may be target truth. The full contract, fixed holdouts, baseline parameters,
+and stop rule are versioned in `POSTER_ARTWORK_TRAINING.md` and
+`config/poster_training/flux2_klein_integration_v1.json`.
+
+The first read-only audit covers all fourteen promoted raw targets and every
+locally retained identity-lock scene matching the historical filename contract.
+
+| Audit result | Count | Decision |
+| --- | ---: | --- |
+| Promoted target scenes | 14 | Seed inventory only; a promoted target is not automatically a gold pair |
+| Historical input files | 18 | Hash and pixel-audit each one |
+| Blank/constant historical inputs | 4 | Reject |
+| Nonblank historical inputs failing the current exact-source contract | 13 | Regenerate; do not reuse silently |
+| Exact historical inputs | 1 | ExGen2 Normal only; its known Mew/Mewtwo fine-hand deviations exclude the target from training truth |
+| Scopes with no retained identity-lock input | 2 | Base1 and SV03.5 require a fresh input if selected |
+
+The audit therefore produces zero automatic gold samples. This is intentional:
+automatic checks may reject, but `candidate_pair_review` cannot approve a pair.
+
+One fresh input for `Pokedex/sections/gen1` then reuses the current
+identity-lock workflow, seed `260782266`, and current card-safe cutouts. It runs
+on the M4 Max worker with ComfyUI commit
+`87d23b81765161624889febfb3b81f19f3c8435b`. The worker reports `Device: mps`;
+the 4B diffusion model and VAE use BF16, while the text encoder uses FP16 and
+may offload when idle.
+
+| Artifact | SHA-256 |
+| --- | --- |
+| FLUX.2 Klein 4B BF16 model | `ec3d4e733a771f61c052fb4856c48b336c55eaf2c65487c2a1faeb9bbda7a343` |
+| Qwen 3 4B encoder | `6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a` |
+| FLUX.2 VAE | `d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5` |
+| Exact source reference | `8380ba529255f0581dae6399b90fba69c15c624e4f02d0eca4c645f0588f9c97` |
+| API workflow | `58780c547402df5c1935c35e07007aa3c74c1634788e542f555eebaad515ed6e` |
+| Fresh 848 x 1168 input | `d8da5015647fee72b880d098dd8f174b70717cce3deccfdae98d61f09758b139` |
+
+The hard input gate passes: all 62,563 fully opaque source pixels are unchanged
+and no source pixel differs. The input is deliberately allowed to look copied.
+
+The existing reviewed Generation I one-shot is not promoted to gold pair truth
+for this input. Although both images depict the intended mountain meadow and
+the target remains a valid production poster, the target redraws the river,
+tree line, foreground, character scale, and vertical placement. Training on
+that pair would reward unnecessary global reconstruction and subject movement
+instead of the requested integration operation. The fresh input remains a
+`candidate_pair_review`; the next data step is to create an aligned target that
+changes only terrain interaction, light, contact shadows, and coherent depth.
+No LoRA job is started before 4-8 such pairs exist.

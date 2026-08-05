@@ -36,6 +36,18 @@ DreamO, direct FLUX edit, and direct inpaint remain rejected for this feature.
 Their evidence is retained in the experiment log and Git history, not the
 production runner.
 
+An isolated FLUX.2 Klein 4B paired edit-LoRA experiment is now in its dataset
+phase. Its versioned contract and audit tool do not add a production mode. The
+first inventory found fourteen promoted raw targets and eighteen historical
+`identity_lock` inputs: four inputs are blank, thirteen nonblank inputs no
+longer match the current exact-source placement/pixel contract, and the one
+historically exact input belongs to the deliberately excluded ExGen2 Normal
+target. A fresh Generation I MPS/BF16 identity-lock render passes all 62,563
+opaque source pixels, but remains only a pair-review candidate because its
+reviewed one-shot target changes background geometry and subject placement too
+much for aligned training truth. No gold dataset or training checkpoint exists
+yet. See [Poster Artwork Integration LoRA](POSTER_ARTWORK_TRAINING.md).
+
 ## Promoted scope state
 
 All thirteen enabled bundles and the additional disabled ExGen2 Normal
@@ -163,23 +175,26 @@ texture, character pixels, or a post-decode composite.
 
 ## Remaining work
 
-1. Use `individual_spatial_joint` for new scopes, but keep human review and the
+1. Build the first 4-8 aligned gold edit pairs. Fresh inputs must pass the
+   exact-source audit, targets must keep their geometry and identity, and the
+   plumbing overfit must pass before any longer LoRA run.
+2. Use `individual_spatial_joint` for new scopes, but keep human review and the
    bounded seed rule; a reviewed seed is not proof of universal stability.
-2. Leave accepted v5 and v6 promotions unchanged unless a concrete visual or
+3. Leave accepted v5 and v6 promotions unchanged unless a concrete visual or
    product requirement justifies a reviewed replacement.
-3. Trigger the deferred minimal depth guide only under its documented failure
+4. Trigger the deferred minimal depth guide only under its documented failure
    condition, not merely to force visible foreground overlap.
-4. Review the promoted ExGen2 Normal overlay, then enable it if the localized
+5. Review the promoted ExGen2 Normal overlay, then enable it if the localized
    composition passes. The first Dev candidates for Mega and Primal failed
    exact count/placement; retry only after a material control change, not with
    a seed sweep.
-5. Generate, review, promote, and then enable the remaining 27 unpromoted
+6. Generate, review, promote, and then enable the remaining 27 unpromoted
    targets. The planner reports 25 as `needs_assets`; ExGen2 Mega and Primal
    remain technically renderable but blocked on a new placement/count-control
    hypothesis.
-6. Decide on and implement explicit cover replacement only after the affected
+7. Decide on and implement explicit cover replacement only after the affected
    target family is fully promoted and its multilingual PDFs pass visual QA.
-7. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
+8. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
    matching physical page formats, memory tests, and visual QA exist.
 
 ## Cleanup boundary
