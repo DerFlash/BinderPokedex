@@ -1,0 +1,660 @@
+{
+  "asset_name": "flux2",
+  "kind": "promoted_poster",
+  "outputs": {
+    "artwork": {
+      "bytes": 7822013,
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "file": "data/poster_assets/ExGen2/sections/normal/poster-flux2-artwork.png",
+      "height": 3268,
+      "mode": "RGBA",
+      "pixel_sha256": "2bf75d312db92aef78d758510ec07d938193658030973decb9295fba68ca49e7",
+      "sha256": "2bde2dd7fc597b7021d86cee93d1cd0f81a8268986ad5489ea6c30d1aa0e10bc",
+      "width": 2368
+    },
+    "cards": [
+      {
+        "bytes": 405940,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/ExGen2/sections/normal/poster-flux2-cards/card_r1_c1.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "5e26b874b3ce8fa204a2d33dcbf2c28efe6c822cf7fb548d6cc1f918d15c86f6",
+        "sha256": "afff3c7ccff911977908c242b50b87de94ffb7aefafad24cab7a5a7f407834da",
+        "width": 750
+      },
+      {
+        "bytes": 410078,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/ExGen2/sections/normal/poster-flux2-cards/card_r1_c2.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "4eb5abc5c53625aff3bb6077387978f7e197994e5a5dded858018f4e4e5c382c",
+        "sha256": "9ba3d0d81b1bc9a70635faeb790366775d959f5b9a5ee6b0226098c2e77139a7",
+        "width": 750
+      },
+      {
+        "bytes": 447404,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/ExGen2/sections/normal/poster-flux2-cards/card_r1_c3.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "283adba4839691a8f251a7c7199813ad49fa38528f855b54fd77901cd2125262",
+        "sha256": "a11785bbc4ef9c1426926ab81aeed6efe06feccf3a6e1e8902f32b12d2d9b106",
+        "width": 750
+      },
+      {
+        "bytes": 946051,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/ExGen2/sections/normal/poster-flux2-cards/card_r2_c1.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "2cbee04afe073cbfab8aca85c1f06b3dd7df507b547a311b3693b1422941087a",
+        "sha256": "a68233a3e8901cae25576b57373ee38691d17f70c6fc98203289686850c38030",
+        "width": 750
+      },
+      {
+        "bytes": 480594,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/ExGen2/sections/normal/poster-flux2-cards/card_r2_c2.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "78e58e0061c2de6f916a897a413769bb5f6c6d0db015ede88f33aaeb32d7ac6c",
+        "sha256": "57242663ea909428c23840286ff19622c978d0db29982ce16c057cd74e92cff6",
+        "width": 750
+      },
+      {
+        "bytes": 1051882,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/ExGen2/sections/normal/poster-flux2-cards/card_r2_c3.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "2fbc08e28c87d3c0ce45251caecfafb0253aee7177dbdc77d91eae52054d70dc",
+        "sha256": "0dc231cca440d3929e5d0306ba6effd0a928b1d985532209755cd84a29144686",
+        "width": 750
+      },
+      {
+        "bytes": 1104657,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/ExGen2/sections/normal/poster-flux2-cards/card_r3_c1.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "5fb4de61134c0db998d1336a9b577bcf90e1e3adabac8fbe2c0a72721eae0039",
+        "sha256": "6007c4af9a7df1327af8e20ab757ddc6d4bb4c73128de8b826d84f4591cac294",
+        "width": 750
+      },
+      {
+        "bytes": 1102458,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/ExGen2/sections/normal/poster-flux2-cards/card_r3_c2.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "3db0818eb2d495b4a48043a43121e19fcee3374045f354a307708721db4c472b",
+        "sha256": "ea53171105192753dbc052d94ad04e942465a296af647ef9501d5d43685dde7d",
+        "width": 750
+      },
+      {
+        "bytes": 1012506,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/ExGen2/sections/normal/poster-flux2-cards/card_r3_c3.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "f42180bfb273bbc19a73bc22d312c45a4c1c07e02392503040544bcb1ff9daa9",
+        "sha256": "e6b9ca0023aa71f10ef6c17e171203dfb549d0fa0db6a11232d7b67525598705",
+        "width": 750
+      }
+    ],
+    "preview": {
+      "bytes": 7686277,
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "file": "data/poster_assets/ExGen2/sections/normal/poster-flux2.png",
+      "height": 3268,
+      "mode": "RGBA",
+      "pixel_sha256": "e559bb24befc66f1fa61185988ec1a6212e416835d23099189777d073e577533",
+      "sha256": "0fef029cafa4890d0f4b851faadf372dfc368034085c1b98946fb4ead0b4068e",
+      "width": 2368
+    }
+  },
+  "poster_id": "normal",
+  "preview_language": "en",
+  "promoted_at": "2026-08-05T06:02:17.199492+00:00",
+  "run": {
+    "created_at": "2026-08-05T06:01:53.491976+00:00",
+    "generation": {
+      "encoder": "mistral_3_small_flux2_bf16.safetensors",
+      "encoder_sha256": "7d79902f60b1aeb3a6de2cfad02f4367b5e300a1387de3d03ac717cfa3df117c",
+      "engine": "flux",
+      "generation_megapixels": 1.0,
+      "mode": "joint_scene",
+      "model": "flux2_dev_fp8mixed.safetensors",
+      "model_sha256": "863a82e4ff950a42a6b0e80bea824828f129eb1a8fbbdbd9e8cb29859127b486",
+      "output_dpi": 300,
+      "output_method": "lanczos",
+      "reference_mode": "individual_spatial_joint",
+      "seed": 260737078,
+      "steps": 20,
+      "vae": "flux2-vae.safetensors",
+      "vae_sha256": "d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5"
+    },
+    "inputs": {
+      "cutout_manifest": {
+        "bytes": 1727,
+        "file": "data/poster_assets/ExGen2/sections/normal/cutouts/manifest.json",
+        "sha256": "651c57c65525b72169752ab102cbc2566fc14b029bf2ccc58f475dbb2dab213f"
+      },
+      "cutouts": [
+        {
+          "bytes": 120336,
+          "file": "data/poster_assets/ExGen2/sections/normal/cutouts/pokemon_150_mewtwo.png",
+          "height": 475,
+          "mode": "RGBA",
+          "pixel_sha256": "ba8ef7c35c88cb509fa1617beab0041a3f8e8317041b1c97cc598fe1f936eefa",
+          "sha256": "b7c00037d7ba9fb5cebc2da42ca0da54c7b664f4d7b2348d60ade5c6dc9de256",
+          "width": 475
+        },
+        {
+          "bytes": 134189,
+          "file": "data/poster_assets/ExGen2/sections/normal/cutouts/pokemon_151_mew.png",
+          "height": 475,
+          "mode": "RGBA",
+          "pixel_sha256": "f1408e4b91b0b915d33b8b5f8b5a819bee2007d2e201739c0d48dd4460f26614",
+          "sha256": "3e7b29103dae09d0f8e8ff889b1991bdf387a2c6328aacb93fc34e8962584e33",
+          "width": 475
+        },
+        {
+          "bytes": 117611,
+          "file": "data/poster_assets/ExGen2/sections/normal/cutouts/pokemon_249_lugia.png",
+          "height": 475,
+          "mode": "RGBA",
+          "pixel_sha256": "6662c2d9cc9998ff0bb60c7d551bf5ed27beca009d828377692035d7ec370a90",
+          "sha256": "f0142e5542c2466782a3736e1fdedcbaa65778e6aa1786f8b896e019fcc00c30",
+          "width": 475
+        }
+      ],
+      "generation_fingerprint": {
+        "components": {
+          "cutouts": [
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "ba8ef7c35c88cb509fa1617beab0041a3f8e8317041b1c97cc598fe1f936eefa",
+              "pokemon_id": 150,
+              "width": 475
+            },
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "f1408e4b91b0b915d33b8b5f8b5a819bee2007d2e201739c0d48dd4460f26614",
+              "pokemon_id": 151,
+              "width": 475
+            },
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "6662c2d9cc9998ff0bb60c7d551bf5ed27beca009d828377692035d7ec370a90",
+              "pokemon_id": 249,
+              "width": 475
+            }
+          ],
+          "effective_prompt": {
+            "encoding": "utf-8",
+            "sha256": "ca5e46cf7a0938f8ce4e840c6c55aff7d54da14a1fea5799d852983633e2169a"
+          },
+          "generation": {
+            "encoder": "mistral_3_small_flux2_bf16.safetensors",
+            "encoder_sha256": "7d79902f60b1aeb3a6de2cfad02f4367b5e300a1387de3d03ac717cfa3df117c",
+            "engine": "flux",
+            "generation_megapixels": 1.0,
+            "mode": "joint_scene",
+            "model": "flux2_dev_fp8mixed.safetensors",
+            "model_sha256": "863a82e4ff950a42a6b0e80bea824828f129eb1a8fbbdbd9e8cb29859127b486",
+            "output_dpi": 300,
+            "output_method": "lanczos",
+            "reference_mode": "individual_spatial_joint",
+            "seed": 260737078,
+            "steps": 20,
+            "vae": "flux2-vae.safetensors",
+            "vae_sha256": "d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5"
+          },
+          "joint_scene_conditioning": {
+            "identity_source_resampling": "canonical_card_fit",
+            "reference_megapixels": 0.5,
+            "reference_neutral_rgb": [
+              226,
+              224,
+              211
+            ],
+            "reference_strategy": "individual_spatial_identity_per_subject"
+          },
+          "layout": {
+            "columns": 3,
+            "name": "standard_3x3",
+            "raster_geometry": {
+              "generation_canvas_px": [
+                848,
+                1168
+              ],
+              "generation_column_spans_px": [
+                [
+                  0,
+                  269
+                ],
+                [
+                  290,
+                  558
+                ],
+                [
+                  579,
+                  848
+                ]
+              ],
+              "generation_row_spans_px": [
+                [
+                  0,
+                  375
+                ],
+                [
+                  396,
+                  772
+                ],
+                [
+                  793,
+                  1168
+                ]
+              ],
+              "name": "cumulative_physical_endpoints",
+              "output_canvas_px": [
+                2368,
+                3268
+              ],
+              "output_column_spans_px": [
+                [
+                  0,
+                  750
+                ],
+                [
+                  809,
+                  1559
+                ],
+                [
+                  1618,
+                  2368
+                ]
+              ],
+              "output_row_spans_px": [
+                [
+                  0,
+                  1050
+                ],
+                [
+                  1109,
+                  2159
+                ],
+                [
+                  2218,
+                  3268
+                ]
+              ],
+              "version": 2
+            },
+            "rows": 3,
+            "safe_cells": {
+              "set_info": {
+                "column": 2,
+                "row": 2
+              },
+              "title": {
+                "column": 2,
+                "row": 1
+              }
+            }
+          },
+          "pipeline_contract": {
+            "name": "poster_generation",
+            "version": 7
+          },
+          "pokemon": {
+            "count": "auto_from_layout_columns",
+            "cutout_source": "pokeapi_official_artwork",
+            "fallback_candidates": [],
+            "row": "bottom",
+            "strategy": "featured_from_scope"
+          },
+          "scene": {
+            "concept": "the Black and White through XY Pokémon-EX era and its energetic journey",
+            "constraints": [
+              "Keep the bridge, skyline, cliffs, and other landmarks distant and away from the protected subject silhouettes."
+            ],
+            "ground_noun": "river grass",
+            "lighting": "Clear blue-gold afternoon light enters from the upper left.",
+            "rendering": "Use polished 2010s trading-card illustration, crisp cel-painted linework, controlled blue and gold accents, and deep readable perspective.",
+            "setting": "The artwork contains a broad Unova-to-Kalos-inspired river valley with open grass, layered woodland, pale distant cliffs, a graceful bridge, and a tiny modern skyline with completely blank facades low on the horizon."
+          },
+          "source_subject_ids": [
+            150,
+            151,
+            249
+          ]
+        },
+        "schema_version": 1,
+        "sha256": "3416cf9a6cd0b7f007ce8a5192cf2969a9636da71a19bf3f3e07d9c57cdc986a"
+      },
+      "overlay_fingerprint": {
+        "components": {
+          "languages": {
+            "de": {
+              "information": [
+                "Generation 2",
+                "96 Pokémon",
+                "EX Serie (BW & XY, 2012–2016) • Pokémon-EX Grundformen"
+              ],
+              "title": {
+                "kind": "inline_logo",
+                "pixel_sha256": "d610f4796aec9c722813a5d704ec3f9f459ec80c2d549f873db053679b29ff4c",
+                "token": "[EX]",
+                "value": "Pokémon [EX]"
+              }
+            },
+            "en": {
+              "information": [
+                "Generation 2",
+                "96 Pokémon",
+                "EX Series (BW & XY, 2012–2016) • Pokémon-EX base forms"
+              ],
+              "title": {
+                "kind": "inline_logo",
+                "pixel_sha256": "d610f4796aec9c722813a5d704ec3f9f459ec80c2d549f873db053679b29ff4c",
+                "token": "[EX]",
+                "value": "Pokémon [EX]"
+              }
+            },
+            "es": {
+              "information": [
+                "Generación 2",
+                "96 Pokémon",
+                "Serie EX (NB & XY, 2012–2016) • Formas base Pokémon-EX"
+              ],
+              "title": {
+                "kind": "inline_logo",
+                "pixel_sha256": "d610f4796aec9c722813a5d704ec3f9f459ec80c2d549f873db053679b29ff4c",
+                "token": "[EX]",
+                "value": "Pokémon [EX]"
+              }
+            },
+            "fr": {
+              "information": [
+                "Génération 2",
+                "96 Pokémon",
+                "Série EX (NB & XY, 2012–2016) • Formes de base Pokémon-EX"
+              ],
+              "title": {
+                "kind": "inline_logo",
+                "pixel_sha256": "d610f4796aec9c722813a5d704ec3f9f459ec80c2d549f873db053679b29ff4c",
+                "token": "[EX]",
+                "value": "Pokémon [EX]"
+              }
+            },
+            "it": {
+              "information": [
+                "Generazione 2",
+                "96 Pokémon",
+                "Serie EX (NB & XY, 2012–2016) • Forme base Pokémon-EX"
+              ],
+              "title": {
+                "kind": "inline_logo",
+                "pixel_sha256": "d610f4796aec9c722813a5d704ec3f9f459ec80c2d549f873db053679b29ff4c",
+                "token": "[EX]",
+                "value": "Pokémon [EX]"
+              }
+            },
+            "ja": {
+              "information": [
+                "ジェネレーション2",
+                "96 ポケモン",
+                "EX シリーズ (BW & XY, 2012–2016) • ポケモンEX基本形態"
+              ],
+              "title": {
+                "kind": "inline_logo",
+                "pixel_sha256": "d610f4796aec9c722813a5d704ec3f9f459ec80c2d549f873db053679b29ff4c",
+                "token": "[EX]",
+                "value": "ポケモン [EX]"
+              }
+            },
+            "ko": {
+              "information": [
+                "2세대",
+                "96 포켓몬",
+                "EX 시리즈 (BW & XY, 2012–2016) • 포켓몬 EX 기본 형태"
+              ],
+              "title": {
+                "kind": "inline_logo",
+                "pixel_sha256": "d610f4796aec9c722813a5d704ec3f9f459ec80c2d549f873db053679b29ff4c",
+                "token": "[EX]",
+                "value": "포켓몬 [EX]"
+              }
+            },
+            "zh_hans": {
+              "information": [
+                "第二代",
+                "96 宝可梦",
+                "EX 系列 (BW & XY, 2012–2016) • 宝可梦EX基本形态"
+              ],
+              "title": {
+                "kind": "inline_logo",
+                "pixel_sha256": "d610f4796aec9c722813a5d704ec3f9f459ec80c2d549f873db053679b29ff4c",
+                "token": "[EX]",
+                "value": "宝可梦 [EX]"
+              }
+            },
+            "zh_hant": {
+              "information": [
+                "第二代",
+                "96 寶可夢",
+                "EX 系列 (BW & XY, 2012–2016) • 寶可夢EX基本形態"
+              ],
+              "title": {
+                "kind": "inline_logo",
+                "pixel_sha256": "d610f4796aec9c722813a5d704ec3f9f459ec80c2d549f873db053679b29ff4c",
+                "token": "[EX]",
+                "value": "寶可夢 [EX]"
+              }
+            }
+          },
+          "layout_name": "standard_3x3",
+          "logo_pixels": {
+            "inline:[EX]": {
+              "height": 497,
+              "mode": "RGBA",
+              "pixel_sha256": "d610f4796aec9c722813a5d704ec3f9f459ec80c2d549f873db053679b29ff4c",
+              "width": 924
+            }
+          },
+          "pipeline_contract": {
+            "name": "poster_overlay",
+            "version": 3
+          },
+          "text_cells": {
+            "set_info": {
+              "column": 2,
+              "max_height_ratio": 0.68,
+              "max_width_ratio": 0.92,
+              "row": 2
+            },
+            "title": {
+              "column": 2,
+              "row": 1
+            }
+          },
+          "text_content": {
+            "mode": "section_summary"
+          }
+        },
+        "schema_version": 1,
+        "sha256": "13e225ef3fbd8bbc1998b37ae77c7571e5f1d1f5acadec85d56699da4041467c"
+      },
+      "prompt": {
+        "bytes": 5878,
+        "file": "data/poster_assets/ExGen2/sections/normal/comfyui_poster/individual_spatial_joint_prompt.generated.txt",
+        "sha256": "5aafaf9add02cb8d5555d7aa6b516438af235b4fcef33c3b2d490d2511845564"
+      },
+      "references": [
+        {
+          "bytes": 23635,
+          "file": "data/poster_assets/ExGen2/sections/normal/comfyui_poster/individual_spatial_reference_1.png",
+          "height": 832,
+          "mode": "RGBA",
+          "pixel_sha256": "09526076a01d7991751fdbbfaa9fefdf84fb735d5b164c7f9a24b55e1e674ef2",
+          "sha256": "f799caa0f7aa65903e869dd6d226dfbd0ae0f2bbb58c6ea27b164e2642e7db9e",
+          "width": 608
+        },
+        {
+          "bytes": 21522,
+          "file": "data/poster_assets/ExGen2/sections/normal/comfyui_poster/individual_spatial_reference_2.png",
+          "height": 832,
+          "mode": "RGBA",
+          "pixel_sha256": "d99ddd0e9e85b47cf173e953abb7b97c776879e31daf8d9f7834b779397e02d4",
+          "sha256": "7faf3993aad617c38917f187bb8e4f590437a3649e5dad8e10b923a3937cad43",
+          "width": 608
+        },
+        {
+          "bytes": 22041,
+          "file": "data/poster_assets/ExGen2/sections/normal/comfyui_poster/individual_spatial_reference_3.png",
+          "height": 832,
+          "mode": "RGBA",
+          "pixel_sha256": "5df95e96e4874ee907332405b5199fb2a9d2742c60ffb09aa979c488ccf2b0f7",
+          "sha256": "f29b83f0ad5433561f5776cb8602a25079e44365fca9db520976ebdae19253fe",
+          "width": 608
+        }
+      ],
+      "scope_manifest": {
+        "bytes": 2257,
+        "file": "data/poster_assets/ExGen2/sections/normal/poster.yaml",
+        "sha256": "d0e9c3d186bc3c7c3e3b8cfdea82fa9f5b10ab32c1cd2aaedc802461859b7e9f"
+      },
+      "workflow": {
+        "bytes": 9361,
+        "file": "data/poster_assets/ExGen2/sections/normal/comfyui_poster/workflow_api_joint_scene_individual_spatial_joint_flux2_dev_1mp_260737078.json",
+        "sha256": "f5abbecbceb62455e38cfdb93fc45c6c70cf87bc9580a6f17867cf495b06bf07"
+      }
+    },
+    "kind": "poster_generation_run",
+    "poster_id": "normal",
+    "raw_artwork": {
+      "bytes": 1709844,
+      "file": "tmp/render-jobs/exgen2-normal-flux2-dev-260737078/output/exgen2__sections__normal_flux2_dev_joint_scene_individual_spatial_1mp_seed_260737078_00001_.png",
+      "height": 1168,
+      "mode": "RGBA",
+      "pixel_sha256": "7490a27caa28fc8a5971344caa1bddf764d8d5fb75672c57d98184bbb6b9c6ed",
+      "sha256": "3c74f750ad400b946c5e74f38eed8fddb6ffed765ae9718301264af4972cec5d",
+      "width": 848
+    },
+    "schema_version": 1,
+    "scope": "ExGen2/sections/normal",
+    "section_id": "normal",
+    "source_artwork": {
+      "bytes": 7822013,
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "file": "data/poster_assets/ExGen2/sections/normal/comfyui_poster/temp/exgen2__sections__normal_flux2_dev_joint_scene_individual_spatial_1mp_seed_260737078_00001___to_300dpi.png",
+      "height": 3268,
+      "mode": "RGBA",
+      "pixel_sha256": "2bf75d312db92aef78d758510ec07d938193658030973decb9295fba68ca49e7",
+      "sha256": "2bde2dd7fc597b7021d86cee93d1cd0f81a8268986ad5489ea6c30d1aa0e10bc",
+      "width": 2368
+    },
+    "source_scope": "ExGen2",
+    "validation": {
+      "joint_scene_visual_review": {
+        "approval_source": "explicit_promotion_flag",
+        "criteria": [
+          "exact_cast_count",
+          "raw_generation_identity",
+          "text_free_output_identity",
+          "identity_and_form",
+          "silhouette_and_stature",
+          "anatomy_and_face",
+          "colors_and_markings",
+          "placement_and_card_safety",
+          "natural_scene_integration",
+          "coherent_landscape_occlusion"
+        ],
+        "generation_fingerprint_sha256": "3416cf9a6cd0b7f007ce8a5192cf2969a9636da71a19bf3f3e07d9c57cdc986a",
+        "method": "human_identity_and_scene_review",
+        "passed": true,
+        "raw_artwork_pixel_sha256": "7490a27caa28fc8a5971344caa1bddf764d8d5fb75672c57d98184bbb6b9c6ed",
+        "raw_artwork_sha256": "3c74f750ad400b946c5e74f38eed8fddb6ffed765ae9718301264af4972cec5d",
+        "reviewed_artwork_pixel_sha256": "2bf75d312db92aef78d758510ec07d938193658030973decb9295fba68ca49e7",
+        "reviewed_artwork_sha256": "2bde2dd7fc597b7021d86cee93d1cd0f81a8268986ad5489ea6c30d1aa0e10bc",
+        "reviewed_at": "2026-08-05T06:02:06.908519+00:00",
+        "source_cutout_pixel_sha256": [
+          "ba8ef7c35c88cb509fa1617beab0041a3f8e8317041b1c97cc598fe1f936eefa",
+          "f1408e4b91b0b915d33b8b5f8b5a819bee2007d2e201739c0d48dd4460f26614",
+          "6662c2d9cc9998ff0bb60c7d551bf5ed27beca009d828377692035d7ec370a90"
+        ],
+        "source_cutout_sha256": [
+          "b7c00037d7ba9fb5cebc2da42ca0da54c7b664f4d7b2348d60ade5c6dc9de256",
+          "3e7b29103dae09d0f8e8ff889b1991bdf387a2c6328aacb93fc34e8962584e33",
+          "f0142e5542c2466782a3736e1fdedcbaa65778e6aa1786f8b896e019fcc00c30"
+        ],
+        "source_subject_ids": [
+          150,
+          151,
+          249
+        ],
+        "stage": "raw_and_text_free_print_artwork"
+      },
+      "remote_render": {
+        "comfyui_commit": "87d23b81765161624889febfb3b81f19f3c8435b",
+        "device": "mps",
+        "hostname": "F46TJG72N9",
+        "outputs": [
+          {
+            "path": "exgen2__sections__normal_flux2_dev_joint_scene_individual_spatial_1mp_seed_260737078_00001_.png",
+            "sha256": "3c74f750ad400b946c5e74f38eed8fddb6ffed765ae9718301264af4972cec5d"
+          }
+        ],
+        "platform": "macOS-26.6-arm64-arm-64bit",
+        "workflow_sha256": "f5abbecbceb62455e38cfdb93fc45c6c70cf87bc9580a6f17867cf495b06bf07"
+      }
+    }
+  },
+  "schema_version": 1,
+  "scope": "ExGen2/sections/normal",
+  "section_id": "normal",
+  "source_scope": "ExGen2"
+}

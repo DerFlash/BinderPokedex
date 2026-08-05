@@ -6,7 +6,7 @@ live in [Poster Workflow](POSTER_WORKFLOW.md), durable product requirements in
 [Poster Architecture](POSTER_ARTWORK_CONCEPT.md), and rejected or superseded
 evidence in [Poster Experiment Log](POSTER_ARTWORK_EXPERIMENT_LOG.md).
 
-Last audited: 2026-08-04
+Last audited: 2026-08-05
 
 ## Current decision
 
@@ -25,13 +25,11 @@ describe exactly one active contract. Switching to a legacy topology or the
 fallback requires a deliberate manifest change, a new candidate, human review,
 and a new promotion; there is no automatic dual-active registry.
 
-ExGen2 remains at zero promoted sections. Its strongest current scratch
-candidate is a FLUX.2 Klein 9B one-shot with 1-MP individual spatial
-references. It passes cast count, physical-card containment, scene, grounding,
-and coarse identity, but Mew's three pointed fingers are not reliably retained.
-Native 4B BF16, Base 4B BF16, corrected Kontext BF16, 2-MP spatial references,
-and an abstract box guide were evaluated without clearing that hard anatomy
-gate. They are experiment evidence only and do not change the table above.
+ExGen2 Normal now has one explicitly reviewed FLUX.2 Dev 32B promotion using
+the same 1-MP `individual_spatial_joint` contract. It is kept PDF-disabled
+until its deterministic overlay is reviewed. Native Klein 4B/9B, Base 4B,
+corrected Kontext BF16, 2-MP spatial references, and an abstract box guide
+remain experiment evidence rather than competing active contracts.
 
 Anima, FLUX.1 Canny, FLUX.1 Kontext, Qwen Edit/spatial, SDXL regional identity,
 DreamO, direct FLUX edit, and direct inpaint remain rejected for this feature.
@@ -40,12 +38,14 @@ production runner.
 
 ## Promoted scope state
 
-All thirteen enabled bundles are current, 2368 x 3268 px, sliced into nine
-physical cards, and carry effective 299.99-dpi PNG metadata.
+All thirteen enabled bundles and the additional disabled ExGen2 Normal
+promotion are current, 2368 x 3268 px, sliced into nine physical cards, and
+carry effective 299.99-dpi PNG metadata.
 
 | Active contract | Promoted scopes |
 | --- | --- |
 | `joint_scene` / `individual_spatial_joint` v7 | `Pokedex/sections/gen4` seed `260734875`; `gen5` seed `260735039`; `gen6` seed `260758584`; `gen7` seed `260726058`; `gen8` seed `260715405`; `gen9` seed `260778637`; `SV03.5` seed `260726101` |
+| `joint_scene` / `individual_spatial_joint` Dev 32B | `ExGen2/sections/normal` seed `260737078` (promoted, PDF disabled pending overlay review) |
 | `joint_scene` / `spatial_identity_joint` v5 | `Base1`; `Pokedex/sections/gen1`; `Pokedex/sections/gen2`; `ExGen3/sections/normal`; `ExGen3/sections/mega` |
 | `joint_scene` / `regional_identity_joint` v6 | `Pokedex/sections/gen3` |
 | `identity_lock` | none |
@@ -68,7 +68,7 @@ Every current target has a checked-in manifest and a configured creative brief.
 Unreviewed targets remain disabled, so configuration coverage never implies
 visual approval.
 
-| Scope family | Configured | Promoted and enabled | Awaiting assets/generation/review |
+| Scope family | Configured | Promoted and enabled | Disabled / awaiting activation |
 | --- | ---: | ---: | ---: |
 | Individual TCG sets | 26 | 2 | 24 |
 | Pokédex generations | 9 | 9 | 0 |
@@ -76,6 +76,9 @@ visual approval.
 | ExGen2 sections | 3 | 0 | 3 |
 | ExGen3 sections | 2 | 2 | 0 |
 | **Total** | **41** | **13** | **28** |
+
+One of the 28 disabled targets is the promoted ExGen2 Normal poster; the other
+27 targets still require generation and review.
 
 The deterministic overlay contract is complete for all 266 language outputs
 currently implied by those targets. Aggregate sections contain title,
@@ -152,8 +155,8 @@ texture, character pixels, or a post-decode composite.
   on A4 without cutting guides.
 - Aggregate scopes route independent section manifests and promotions through
   `posters.yaml`, then insert each poster after its matching section cover.
-- All 41 current individual and aggregate targets are configured; only the 13
-  promoted targets are enabled.
+- All 41 current individual and aggregate targets are configured; 14 are
+  promoted and 13 of those are enabled.
 - Pull requests validate every enabled promotion and build a complete release
   candidate as a temporary artifact only.
 - Only a successful `v*` tag job may publish a GitHub Release.
@@ -166,13 +169,12 @@ texture, character pixels, or a post-decode composite.
    product requirement justifies a reviewed replacement.
 3. Trigger the deferred minimal depth guide only under its documented failure
    condition, not merely to force visible foreground overlap.
-4. Resolve the ExGen2 identity gate with one material architecture or precision
-   hypothesis at a time. Native 9B BF16 requires confirmed access to its
-   separately gated BFL checkpoint; no ExGen2 section is enabled in the
-   meantime.
-5. Generate, review, promote, and then enable the remaining 28 configured
-   targets. The planner currently reports 25 as `needs_assets` and the three
-   ExGen2 sections as `ready_to_generate` but blocked on visual acceptance.
+4. Review the promoted ExGen2 Normal overlay, then enable it if the localized
+   composition passes. Render and review the unlocked Dev candidates for Mega
+   and Primal independently.
+5. Generate, review, promote, and then enable the remaining 27 unpromoted
+   targets. The planner reports 25 as `needs_assets`; ExGen2 Mega and Primal
+   are the two immediately renderable candidates.
 6. Decide on and implement explicit cover replacement only after the affected
    target family is fully promoted and its multilingual PDFs pass visual QA.
 7. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until

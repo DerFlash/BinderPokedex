@@ -430,8 +430,9 @@ Because `joint_scene` deliberately redraws all pixels, an opaque-source-pixel
 equality audit is not applicable. Its hard gates are a complete generation
 fingerprint and explicit human review of both the actual raw file and the
 deterministically scaled text-free print artwork. All thirteen enabled poster
-bundles have passed that gate: seven individual-v7, five spatial-v5, and one
-regional-v6 promotion. Candidate-specific seeds, hashes, and rejected bounded
+bundles and the disabled ExGen2 Normal promotion have passed that gate: seven
+individual-v7, one individual-Dev, five spatial-v5, and one regional-v6
+promotion. Candidate-specific seeds, hashes, and rejected bounded
 depth tests remain recorded in the status and experiment log.
 
 `identity_lock` remains an explicit fallback when a scope cannot pass the

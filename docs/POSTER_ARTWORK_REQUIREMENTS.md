@@ -99,7 +99,7 @@ is the accepted cost of exact identity preservation.
 | `PA-015` | Aggregate variants receive section-specific scenes and curated subject/reference sets | Prepared | All 15 current aggregate sections have exact catalog coverage and initializable leaf manifests; 11 are promoted and four await artwork review |
 | `PA-015A` | Variant subjects retain their exact form | Done | Selection, cutouts, planner, fingerprints, promotion, and validation bind exact Official Artwork identity |
 | `PA-016` | Post-fetch orchestration detects stale inputs | Done | Read-only planner separates expensive generation drift from cheap overlay/routing changes |
-| `PA-017` | Joint generation can provide natural grounding without losing identity or card safety | Done for all thirteen promoted scopes | Seven individual-v7, five spatial-v5, and one regional-v6 bundles pass their reviewed identity, card, and scene gates |
+| `PA-017` | Joint generation can provide natural grounding without losing identity or card safety | Done for all fourteen promoted scopes | Seven individual-v7, one individual-Dev, five spatial-v5, and one regional-v6 bundle pass their reviewed identity, card, and scene gates |
 | `PA-018` | Runtime remains KISS after experiments | Done | Production exposes only FLUX.2 `joint_scene` and `identity_lock`; all three reference topologies use the canonical joint workflow builder and common empty-target sampler path, with no separate experiment entry point |
 | `PA-019` | Pull requests prove a release can be built without publishing | Done | PRs validate promotions, build every PDF/archive/manifest, and upload only a temporary artifact |
 | `PA-020` | Raster card geometry closes exactly on every real canvas | Done | Cumulative physical endpoints drive preparation, finalization, slicing, promotion, and validation |
@@ -114,12 +114,12 @@ is the accepted cost of exact identity preservation.
 
 ## Current production boundary
 
-- Thirteen promoted 3×3 bundles are enabled.
-- All 41 current poster targets are configured: 13 are promoted and enabled;
-  28 remain disabled until their source assets, generation, and human review
-  are complete.
-- All thirteen enabled bundles now use a reviewed `joint_scene` promotion:
-  seven individual-v7, five spatial-v5, and one regional-v6.
+- Thirteen promoted 3×3 bundles are enabled; ExGen2 Normal is additionally
+  promoted but disabled pending overlay review.
+- All 41 current poster targets are configured: 14 are promoted, 13 are
+  enabled, and 27 remain without a promotion.
+- All fourteen promoted bundles use a reviewed `joint_scene` promotion: seven
+  individual-v7, one individual-Dev, five spatial-v5, and one regional-v6.
 - `identity_lock` remains an explicit fallback but has no active promoted scope.
 - New manifests start with `joint_scene` / `individual_spatial_joint` v7.
   Accepted v5 and v6 manifests remain reproducible and are not mechanically
@@ -139,7 +139,7 @@ is the accepted cost of exact identity preservation.
 - Enabled A4 posters use the cuttable `cards` presentation by default. The
   explicit `full-page` presentation keeps the complete localized poster at its
   200.5 × 276.7 mm physical grid size, centered on A4 without cutting guides.
-- Wide PDF formats and promotion of the remaining 28 configured targets are
+- Wide PDF formats and promotion of the remaining 27 configured targets are
   explicit roadmap items.
 
 ## Change rule

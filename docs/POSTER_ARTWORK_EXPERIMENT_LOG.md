@@ -1710,3 +1710,15 @@ model/precision/seed escalation is paused: the evidence now points to a
 subject-specific identity-control or training experiment, or an explicit
 relaxation of the smallest anatomy requirement, rather than another broad
 render sweep.
+
+#### Human review resolution (2026-08-05)
+
+The user subsequently reviewed the actual Dev poster and explicitly accepted
+it as a strong result. That human decision supersedes the agent's stricter
+small-finger rejection: the visible character fidelity, complete card crops,
+shared scene, and grounding are accepted within the project's practical print
+tolerance. The exact candidate above is promoted for
+`ExGen2/sections/normal` at 2368 x 3268 with deterministic 300-dpi Lanczos
+output and remains PDF-disabled until its localized overlay is reviewed. This
+approval also unlocks one Dev candidate each for the configured Mega and
+Primal sections; neither is promoted without its own visual review.
