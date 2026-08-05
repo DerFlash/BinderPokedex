@@ -1899,14 +1899,36 @@ they never replace a scope's configured production background.
 | Surface / seed | Background SHA-256 | Rough input SHA-256 | Raw teacher SHA-256 | Aligned target SHA-256 | Result |
 | --- | --- | --- | --- | --- | --- |
 | Smooth compacted earth / `260726510` | `4a59ece8df562cb8f063bb5d87e36176c34074076173a11c05500cd888a20a05` | `d533e73c23025117fabf9e72d4baee8f3d7d5259ef2eb1efd612989a4eb2bdf7` | `69ff066b5bb59e80b788588ae46566e0d87f996e548ab0a2b9816eb9c36f28f2` | `2f8427326fa1cd530e075189040baabb573b4e20189cc53468a5cf1227536223` | Rejected: depth is unambiguous, but the flat lower plane and hard horizontal forest boundary are too sterile to represent desired poster quality |
-| Natural rippled sand / `260726511` | `05bd383b546d8d2d6fd3acc4b7c1da18dc6ae58fc030fa6a0d0b9214a2c036bc` | `71a8c555cca651e7e54ff51a45bdf4b8113a9e856d37b46e8dd2ff634a3fe7a4` | `512d74ccd8b101bd84563aafffaeebdfa3460d43b26bfdf06892b2ec465b4ef3` | `1ca81ee79afa155b07e9070dc843e0837d788c6d2fa72acfd48e2be288e41334` | Candidate review: natural continuous beach, flat surface ripples rather than foreground objects, exact cast and card placement, and coherent upper-left contact shadows |
+| Natural rippled sand / `260726511` | `05bd383b546d8d2d6fd3acc4b7c1da18dc6ae58fc030fa6a0d0b9214a2c036bc` | `71a8c555cca651e7e54ff51a45bdf4b8113a9e856d37b46e8dd2ff634a3fe7a4` | `512d74ccd8b101bd84563aafffaeebdfa3460d43b26bfdf06892b2ec465b4ef3` | `1ca81ee79afa155b07e9070dc843e0837d788c6d2fa72acfd48e2be288e41334` | Gold holdout after user review: natural continuous beach, flat surface ripples rather than foreground objects, exact cast and card placement, and coherent upper-left contact shadows |
 
 The sand background and teacher workflow SHA-256 values are respectively
 `639c99d626f427ac958637f5ce3ad23f94b5bee14057c1d12de95c5829929fb6`
 and `856450892420af8af546230945c5b0b0134d326806f501947252ce732c63d3d1`.
 Both jobs report `Device: mps`. The exact-restored target again passes all
 52,343 fully opaque Base Set source pixels, but that audit remains only the
-identity/registration gate. Human review of scene quality, shadows, flat
-surface semantics, and the three physical crops is still required. The dataset
-therefore contains one `candidate_pair_review` and zero gold pairs; training is
-still blocked.
+identity/registration gate. User review on 2026-08-05 passes scene quality,
+shadows, flat-surface semantics, and the three physical crops. Because Base1 is
+a fixed holdout scope, this becomes the first gold **holdout**, not a training
+pair. Training remains blocked until at least four gold train pairs exist.
+
+### Clear-surface train candidates for Generations II-IV (2026-08-05)
+
+The same KISS recipe next creates three distinct `train_candidate` scenes. The
+background is generated without characters, the exact current cast is placed
+once to form the rough input, the frozen one-reference teacher adds only scene
+integration, and `compose-target` restores every fully opaque source pixel.
+Every render uses the same BF16 FLUX.2 Klein 4B stack on the M4 Max MPS worker.
+
+| Scope / surface / seed | Background SHA-256 | Rough input SHA-256 | Raw teacher SHA-256 | Aligned target SHA-256 | Exact opaque pixels |
+| --- | --- | --- | --- | --- | ---: |
+| Generation II / natural snow / `260726512` | `ffcf5127465543d3898f305ace4769f1aa3983fcbe4cac5f81610ccd79df9af9` | `e313dc6d76df1e8d29cb5a15858261c27d6fbd6c9564d19d79925adac3f78a1b` | `402d0d0baceed8e966bf87722d9787e7bea6e03d0b779be7017750db9e9b10f0` | `23eafd60ba6c86fc9b78a009c0b970394e553f06f5f3742eb5c9f46dcb675106` | 39,446 |
+| Generation III / volcanic black sand / `260726513` | `f5597dfc674e0f12d92212d38ae2c0d92edd3965154690b5b92c402176480a21` | `0dbf1f1c92d9c2b9442df3e58f46c61f755fd997abe36c927635ec93ad0c393f` | `183f19c024f47daabad5f5cef24f90af2f7d27eaa8d02c0373a60d9c0649d8e1` | `3b73ef24163a9b13faf8b65320cdf3fd0fba948d1a0cbe2d3d9d240cf39f4de0` | 41,558 |
+| Generation IV / pale limestone / `260726515` | `243919f51879003f8599da54825e1ac0db52f4d0ad620da12e7f76e1faa74fa9` | `ae5797f424747bae76b7fd8c49078ac94b31640bd43a3f0ccdd6aac59b75c4c2` | `61c4e1d83e996c4b89231d8b5407d7fba362faf08f6eb8ace8ba2c66f7a15abb` | `0ed7147e99039d5b02c13c8b69f1b45f8528ca77d1be146fbe658c09c77dbc68` | 42,981 |
+
+The first Generation-IV background seed `260726514` is rejected before cast
+placement because it depicts a frontal masonry wall rather than walkable
+ground. Seed `260726515` corrects that failure with one continuous horizontal
+stone plane. Agent-side preflight finds all three replacement scenes card-safe,
+text-free, naturally grounded, and free of upright foreground occluders. They
+remain `candidate_pair_review` until the user reviews the complete images and
+all physical lower-card crops; none is silently marked gold.

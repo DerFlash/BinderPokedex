@@ -47,16 +47,20 @@ opaque source pixels. A bounded full-composite FLUX.2 teacher pass keeps the
 scene geometry and card placement substantially aligned and adds common contact
 shadows, but its raw character repaint still changes small anatomy. Restoring
 the canonical positioned RGBA subjects produces zero changed opaque source
-pixels, but human card-crop review rejects Generation I and Base Set as well as
+pixels, but human card-crop review rejects Generation I and the original Base
+Set scene as well as
 two bounded Generation-VII seeds: grass or leaves rooted in the foreground run
 behind one or more restored subjects. Exact pixels prove anatomy and placement,
 not depth. There are therefore zero surviving pair candidates from the original
-scope scenes, zero gold pairs overall, and no training checkpoint. One
-training-only Base Set augmentation on a natural sand beach is now a separate
-review candidate: its
+scope scenes and no training checkpoint. One training-only Base Set
+augmentation on a natural sand beach is the first human-approved gold holdout:
+its
 surface has no upright occluder, all 52,343 opaque source pixels remain exact,
-and the teacher adds shared directional shadows. It is not gold before human
-review. A sterile smooth-earth control is rejected. The simple recipe is
+and the teacher adds shared directional shadows. Three further clear-surface
+train candidates use Generation II on snow, Generation III on black sand, and
+Generation IV on pale stone; all await human pair review. A sterile
+smooth-earth control and the first wall-like Generation-IV stone background are
+rejected. The simple recipe is
 restricted to genuinely clean avoidance or entirely behind-subject landscape;
 foreground crossings need an explicit reviewed foreground layer. See
 [Poster Artwork Integration LoRA](POSTER_ARTWORK_TRAINING.md).

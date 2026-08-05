@@ -172,7 +172,9 @@ python -m scripts.poster_assets.training_dataset validate \
   --manifest tmp/poster-training/v0/audit.json
 ```
 
-`candidate_pair_review` is not approval. `needs_fresh_exact_input` means the
+`candidate_pair_review` is not approval. `rejected_pair` records a technically
+valid input/target pair that failed human anatomy, integration, card, or depth
+review and must never be materialized. `needs_fresh_exact_input` means the
 historical copy-based image cannot satisfy the current source-pixel contract
 and must be rendered or rebuilt again before human pair review.
 
