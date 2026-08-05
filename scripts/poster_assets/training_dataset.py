@@ -473,9 +473,18 @@ def materialize_gold_dataset(
         field="training config",
     )
     config = load_json_object(config_path)
-    gold = [sample for sample in manifest["samples"] if sample["review_status"] == "gold"]
-    if not gold:
-        raise ValueError("No gold samples are ready to materialize")
+    gold = [
+        sample
+        for sample in manifest["samples"]
+        if sample["review_status"] == "gold"
+    ]
+    training_gold = [
+        sample
+        for sample in gold
+        if sample["proposed_split"] == "train_candidate"
+    ]
+    if not training_gold:
+        raise ValueError("No gold training samples are ready to materialize")
     output_dir = output_dir.resolve()
     if output_dir.exists():
         raise FileExistsError(f"Immutable dataset output already exists: {output_dir}")
@@ -489,21 +498,35 @@ def materialize_gold_dataset(
         stem = sample["id"]
         input_path = safe_repo_path(sample["input"]["file"], root=root, field="input")
         target_path = safe_repo_path(sample["target"]["file"], root=root, field="target")
-        reference_output = reference_dir / f"{stem}.png"
-        target_output = target_dir / f"{stem}.png"
+        split = (
+            "train"
+            if sample["proposed_split"] == "train_candidate"
+            else sample["proposed_split"]
+        )
+        if split == "train":
+            split_reference_dir = reference_dir
+            split_target_dir = target_dir
+        else:
+            split_reference_dir = (
+                output_dir / "evaluation" / split / "reference"
+            )
+            split_target_dir = output_dir / "evaluation" / split / "target"
+            split_reference_dir.mkdir(parents=True, exist_ok=True)
+            split_target_dir.mkdir(parents=True, exist_ok=True)
+        reference_output = split_reference_dir / f"{stem}.png"
+        target_output = split_target_dir / f"{stem}.png"
         shutil.copy2(input_path, reference_output)
         shutil.copy2(target_path, target_output)
         caption = captions[index % len(captions)]
-        (target_dir / f"{stem}.txt").write_text(caption + "\n", encoding="utf-8")
+        (split_target_dir / f"{stem}.txt").write_text(
+            caption + "\n",
+            encoding="utf-8",
+        )
         materialized.append(
             {
                 "id": stem,
                 "scene_key": sample["scene_key"],
-                "split": (
-                    "train"
-                    if sample["proposed_split"] == "train_candidate"
-                    else sample["proposed_split"]
-                ),
+                "split": split,
                 "caption_variant": index % len(captions),
                 "reference_sha256": sha256_file(reference_output),
                 "target_sha256": sha256_file(target_output),
@@ -516,7 +539,7 @@ def materialize_gold_dataset(
         "source_audit_sha256": sha256_file(manifest_path),
         "ai_toolkit": {
             "folder_path": "target",
-            "control_path_1": "reference",
+            "control_path": "reference",
             "caption_ext": "txt",
             "match_target_res": True,
         },

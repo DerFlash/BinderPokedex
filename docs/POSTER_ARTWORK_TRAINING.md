@@ -48,8 +48,9 @@ Those paths never install a trainer, download a base model, or start a GPU job.
 
 | Property | Contract |
 | --- | --- |
-| Target directory | `target/`; this is AI Toolkit `folder_path` |
-| Control directory | `reference/`; this is `control_path_1` |
+| Target directory | `target/`; train pairs only, this is AI Toolkit `folder_path` |
+| Control directory | `reference/`; train pairs only, this is `control_path` |
+| Evaluation directory | `evaluation/<split>/{reference,target}/`; never visible to the trainer |
 | Pair binding | Identical filename stem in both directories |
 | Caption location | UTF-8 `.txt` beside the target image |
 | Raw dimensions | 848 x 1168 for `standard_3x3` v1 |
@@ -187,6 +188,10 @@ python -m scripts.poster_assets.training_dataset materialize \
   --manifest tmp/poster-training/v0/audit.json \
   --output tmp/poster-training/v0/overfit-dataset
 ```
+
+Only `train_candidate` gold pairs enter the root `reference/` and `target/`
+folders consumed by AI Toolkit. Gold validation and holdout pairs are copied
+below `evaluation/<split>/` and cannot leak into the training folder.
 
 Run 100-300 steps. The tiny set must visibly learn rough-composite to integrated
 scene. Failure here means target/control direction, pairing, model support, or

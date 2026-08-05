@@ -167,7 +167,7 @@ def test_materialize_gold_uses_ai_toolkit_pair_direction(tmp_path: Path) -> None
     value = json.loads(output_manifest.read_text(encoding="utf-8"))
     assert value["ai_toolkit"] == {
         "folder_path": "target",
-        "control_path_1": "reference",
+        "control_path": "reference",
         "caption_ext": "txt",
         "match_target_res": True,
     }
@@ -178,13 +178,48 @@ def test_materialize_gold_uses_ai_toolkit_pair_direction(tmp_path: Path) -> None
     ).startswith("Integrate")
 
 
+def test_materialize_keeps_holdout_out_of_training_folders(
+    tmp_path: Path,
+) -> None:
+    manifest_path = fixture_manifest(tmp_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    holdout = dict(manifest["samples"][0])
+    holdout["id"] = "holdout__input01"
+    holdout["scene_key"] = "holdout"
+    holdout["proposed_split"] = "holdout"
+    manifest["samples"].append(holdout)
+    write_json(manifest_path, manifest)
+
+    materialize_gold_dataset(
+        manifest_path,
+        tmp_path / "dataset",
+        root=tmp_path,
+    )
+
+    assert not (tmp_path / "dataset/reference/holdout__input01.png").exists()
+    assert not (tmp_path / "dataset/target/holdout__input01.png").exists()
+    assert not (tmp_path / "dataset/target/holdout__input01.txt").exists()
+    assert (
+        tmp_path
+        / "dataset/evaluation/holdout/reference/holdout__input01.png"
+    ).is_file()
+    assert (
+        tmp_path
+        / "dataset/evaluation/holdout/target/holdout__input01.png"
+    ).is_file()
+    assert (
+        tmp_path
+        / "dataset/evaluation/holdout/target/holdout__input01.txt"
+    ).is_file()
+
+
 def test_materialize_refuses_unreviewed_candidates(tmp_path: Path) -> None:
     manifest_path = fixture_manifest(
         tmp_path,
         status="candidate_pair_review",
     )
 
-    with pytest.raises(ValueError, match="No gold samples"):
+    with pytest.raises(ValueError, match="No gold training samples"):
         materialize_gold_dataset(
             manifest_path,
             tmp_path / "dataset",
