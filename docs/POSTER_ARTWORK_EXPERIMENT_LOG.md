@@ -2193,3 +2193,26 @@ them in the target. The only intended learned edit is then layer ordering.
 Because that difference occupies fewer than one percent of the full raster,
 the trainer's supported focus mask is limited to this pair and keeps a small
 global loss floor; no new inference node or production branch is introduced.
+
+### Layer-order focus overfit v3 (2026-08-06)
+
+V3 keeps the same five training scenes, base model, rank, optimizer, BF16 MPS
+path, and 100-loop budget. Its Generation-I rough reference now composites the
+same foreground fringe before the exact canonical cast; its target composites
+that fringe after the cast. The input SHA-256 is
+`bc2fe2d224d254ca53eb07caff90acb60a3b58087707f985d00caf0233e2db17`.
+All 62,563 fully opaque source pixels remain exact in the input. Input and
+target differ at only 3,971 raster pixels, 3,349 of them within fully opaque
+source pixels.
+
+The matching trainer focus mask is derived only from that deterministic pair
+difference, expanded to several latent cells, and softly feathered. Its
+SHA-256 is
+`56df1c301f7983f697a2c6f3bdeb1789f4ec6c2e8faa850b1bfb26a09b96996e`;
+55,463 pixels carry at least half strength and 95,930 carry any focus weight.
+Only this positive pair has a matching mask file. The trainer's
+`mask_min_value: 0.1` preserves a small global loss contribution; the four
+`avoid` pairs retain ordinary unmasked loss. The Generation-VI holdout receives
+the same behind-versus-front construction but remains outside training. Its
+corrected input SHA-256 is
+`599ba64e11da8afe87145027cae0d3e9fc934393d754af31cbd98cf5b8eca657`.
