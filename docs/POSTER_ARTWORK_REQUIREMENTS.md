@@ -4,9 +4,11 @@ This is the stable product and engineering contract for scope posters. Current
 accepted assets are listed in
 [Poster Status](POSTER_ARTWORK_STATUS.md), operator commands in
 [Poster Workflow](POSTER_WORKFLOW.md), and rejected candidate evidence in
-[Poster Experiment Log](POSTER_ARTWORK_EXPERIMENT_LOG.md).
+[Poster Experiment Log](POSTER_ARTWORK_EXPERIMENT_LOG.md). The isolated paired
+edit-training experiment is specified in
+[Poster Artwork Integration LoRA](POSTER_ARTWORK_TRAINING.md).
 
-Last reviewed: 2026-08-03
+Last reviewed: 2026-08-05
 
 ## Decisions
 
@@ -27,6 +29,7 @@ Last reviewed: 2026-08-03
 | Missing poster | A scope without an enabled promotion uses its normal cover path; enabled-but-missing promoted artwork is an error; `--skip-poster` explicitly forces the cover-based path |
 | CI boundary | Pull requests build and validate a complete release candidate without publishing; only `v*` tags may publish |
 | Rejected experiments | Anima, FLUX.1 Canny, Qwen, SDXL, DreamO, direct edit, and direct inpaint remain evidence in the log and Git history, not live production options |
+| Training experiment | A paired FLUX.2 Klein 4B integration LoRA may be evaluated outside production; copied exact-position artwork is input, only fully reviewed integrated scenes are targets, and routing cannot change before unseen holdout approval |
 
 ## One-shot acceptance gate
 
@@ -111,6 +114,7 @@ is the accepted cost of exact identity preservation.
 | `PA-026` | A scope with fewer canonical subjects is not padded with duplicates or unrelated forms | Done | Section manifests accept one to the layout column count; two-subject `ExGen2/primal` uses the two outer bottom cards while the normal 3×3 default remains three subjects |
 | `PA-027` | The existing cover path remains available when no poster can be consumed | Done | Missing or disabled poster routes leave the section cover and normal card pages intact; `--skip-poster` bypasses poster discovery before asset loading |
 | `PA-028` | One promoted poster can be emitted either as physical cards or as a continuous page | Done for A4 3×3 | `cards` remains the default with nine 63.5 × 88.9 mm images and cutting guides; `--poster-page-mode full-page` draws one 200.5 × 276.7 mm image centered on A4 without cutting guides and writes a distinct filename |
+| `PA-029` | A learned integration path cannot weaken current identity, layout, depth, or fallback guarantees | In progress | Versioned pair contract and audit tooling exist; only exact-input, human-reviewed targets may train, production stays unchanged, and promotion requires an unseen five-fixture comparison against both retained paths |
 
 ## Current production boundary
 

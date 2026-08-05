@@ -5,6 +5,8 @@ scope poster. The detailed implementation rationale lives in
 [POSTER_ARTWORK_CONCEPT.md](POSTER_ARTWORK_CONCEPT.md); tracked requirements and
 future work live in
 [POSTER_ARTWORK_REQUIREMENTS.md](POSTER_ARTWORK_REQUIREMENTS.md).
+The optional, non-production paired edit-training path is documented separately
+in [POSTER_ARTWORK_TRAINING.md](POSTER_ARTWORK_TRAINING.md).
 
 ## Lifecycle at a glance
 

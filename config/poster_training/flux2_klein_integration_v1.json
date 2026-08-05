@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "profile": "flux2_klein_integration_v1",
+  "state": "dataset_pilot",
+  "production_routing": "unchanged",
+  "base_model": {
+    "repository": "black-forest-labs/FLUX.2-klein-base-4B",
+    "revision": null,
+    "architecture": "flux2_klein_4b"
+  },
+  "image_contract": {
+    "width": 848,
+    "height": 1168,
+    "divisible_by": 16,
+    "minimum_channel_stddev": 1.0,
+    "text_free": true,
+    "upscaled_300_dpi": false
+  },
+  "dataset_contract": {
+    "pilot_unique_scenes_min": 30,
+    "pilot_pairs_min": 60,
+    "pilot_pairs_max": 80,
+    "v1_unique_scenes_min": 60,
+    "v1_unique_scenes_max": 100,
+    "v1_pairs_min": 80,
+    "v1_pairs_max": 150,
+    "required_review_gates": [
+      "exact_cast_count",
+      "identity_and_form",
+      "silhouette_and_stature",
+      "anatomy_and_face",
+      "colors_and_markings",
+      "placement_and_card_safety",
+      "natural_scene_integration",
+      "coherent_landscape_occlusion",
+      "text_free_safe_areas"
+    ]
+  },
+  "split_policy": {
+    "holdout_scopes": [
+      "Base1",
+      "Pokedex/sections/gen7",
+      "ExGen2/sections/normal",
+      "ExGen2/sections/mega",
+      "ExGen2/sections/primal"
+    ],
+    "excluded_training_targets": {
+      "ExGen2/sections/normal": "Known Mew and Mewtwo fine-hand anatomy deviations must not become training truth."
+    }
+  },
+  "caption_variants": [
+    "Integrate every supplied character into one coherent illustrated landscape while preserving their exact count, assigned position, scale, pose, silhouette, anatomy, face, colors and markings. Adapt only terrain, lighting, contact shadows and physically consistent foreground or background occlusion.",
+    "Turn the rough composite into one unified landscape scene. Keep every supplied character exactly in its assigned place with unchanged identity, body structure, pose, proportions, colors and markings; harmonize only the environment, light, ground contact, shadows and coherent depth.",
+    "Make the provided characters look as if they always belonged in this single illustrated scene. Preserve their number, placement, size, pose, silhouette, anatomy, face and design exactly, changing only surrounding terrain, lighting, contact shadows and continuous occlusion.",
+    "Blend all supplied characters into the landscape in one coherent edit without redesigning or moving them. Retain exact identity, form, anatomy, pose, scale, colors, markings and card assignment; adjust only scene context, lighting, shadows, grounding and physically valid depth.",
+    "Harmonize this positioned character composite as one natural illustration. Do not add, remove, move or alter any character or defining detail. Rework only the nearby landscape, illumination, contact shadows and uninterrupted front or behind relationships."
+  ],
+  "training_baseline": {
+    "precision": "bf16",
+    "linear_rank": 32,
+    "linear_alpha": 32,
+    "conv_rank": 16,
+    "conv_alpha": 16,
+    "batch_size": 1,
+    "gradient_accumulation": 2,
+    "learning_rate": 0.0001,
+    "retry_learning_rate": 0.00005,
+    "optimizer_cuda": "adamw8bit",
+    "noise_scheduler": "flowmatch",
+    "timestep_type": "weighted",
+    "content_or_style": "balanced",
+    "match_target_res": true,
+    "train_text_encoder": false,
+    "flip_x": false,
+    "flip_y": false,
+    "overfit_steps_min": 100,
+    "overfit_steps_max": 300,
+    "pilot_steps_max": 2000,
+    "save_every": 250
+  }
+}
