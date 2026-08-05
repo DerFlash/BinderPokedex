@@ -10,7 +10,7 @@ from collections import Counter
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-from PIL import Image, ImageStat
+from PIL import Image, ImageChops, ImageStat
 
 try:
     from .prepare_comfyui_poster import build_identity_lock_references
@@ -124,6 +124,91 @@ def compose_aligned_teacher_target(
         "width": scene.width,
         "height": scene.height,
         "source_pixel_audit": source_audit,
+    }
+
+
+def compose_foreground_occlusion_target(
+    edited_scene_path: Path,
+    source_reference_path: Path,
+    foreground_layer_path: Path,
+    output_path: Path,
+) -> dict[str, Any]:
+    """Restore exact subjects, then apply one explicit foreground layer."""
+    edited_scene_path = edited_scene_path.resolve()
+    source_reference_path = source_reference_path.resolve()
+    foreground_layer_path = foreground_layer_path.resolve()
+    output_path = output_path.resolve()
+    if output_path.exists():
+        raise FileExistsError(
+            f"Immutable occlusion target already exists: {output_path}"
+        )
+
+    with Image.open(edited_scene_path) as opened_scene:
+        scene = opened_scene.convert("RGBA")
+    with Image.open(source_reference_path) as opened_reference:
+        if "A" not in opened_reference.getbands():
+            raise ValueError("Source reference must contain an alpha channel")
+        source = opened_reference.convert("RGBA")
+    with Image.open(foreground_layer_path) as opened_foreground:
+        if "A" not in opened_foreground.getbands():
+            raise ValueError("Foreground layer must contain an alpha channel")
+        foreground = opened_foreground.convert("RGBA")
+    if len({scene.size, source.size, foreground.size}) != 1:
+        raise ValueError("Scene, source reference, and foreground dimensions differ")
+    if source.getchannel("A").getbbox() is None:
+        raise ValueError("Source reference contains no visible subject pixels")
+    if foreground.getchannel("A").getbbox() is None:
+        raise ValueError("Foreground layer contains no visible pixels")
+
+    restored = Image.alpha_composite(scene, source)
+    output = Image.alpha_composite(restored, foreground).convert("RGB")
+    source_rgb = source.convert("RGB")
+    difference = ImageChops.difference(output, source_rgb)
+    source_alpha = source.getchannel("A")
+    foreground_alpha = foreground.getchannel("A")
+    opaque_source_pixels = 0
+    intentionally_covered_pixels = 0
+    changed_uncovered_pixels = 0
+    source_alpha_bytes = source_alpha.tobytes()
+    foreground_alpha_bytes = foreground_alpha.tobytes()
+    difference_bytes = difference.tobytes()
+    for index, (source_a, foreground_a) in enumerate(
+        zip(source_alpha_bytes, foreground_alpha_bytes, strict=True)
+    ):
+        if source_a != 255:
+            continue
+        opaque_source_pixels += 1
+        if foreground_a:
+            intentionally_covered_pixels += 1
+        elif difference_bytes[index * 3 : index * 3 + 3] != b"\0\0\0":
+            changed_uncovered_pixels += 1
+    if intentionally_covered_pixels == 0:
+        raise ValueError("Foreground layer does not cover an opaque source pixel")
+    if changed_uncovered_pixels:
+        raise ValueError(
+            "Uncovered opaque source pixels changed: "
+            f"{changed_uncovered_pixels}"
+        )
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output.save(output_path, format="PNG", optimize=True)
+    uncovered_pixels = opaque_source_pixels - intentionally_covered_pixels
+    return {
+        "kind": "foreground_occlusion_target",
+        "edited_scene_sha256": sha256_file(edited_scene_path),
+        "source_reference_sha256": sha256_file(source_reference_path),
+        "foreground_layer_sha256": sha256_file(foreground_layer_path),
+        "output_sha256": sha256_file(output_path),
+        "width": scene.width,
+        "height": scene.height,
+        "source_pixel_audit": {
+            "passed": True,
+            "opaque_source_pixels": opaque_source_pixels,
+            "intentionally_covered_opaque_pixels": intentionally_covered_pixels,
+            "uncovered_opaque_pixels": uncovered_pixels,
+            "exact_uncovered_opaque_pixels": uncovered_pixels,
+            "changed_uncovered_opaque_pixels": 0,
+        },
     }
 
 
@@ -585,6 +670,15 @@ def main() -> int:
     compose_parser.add_argument("--source-reference", type=Path, required=True)
     compose_parser.add_argument("--output", type=Path, required=True)
 
+    occlusion_parser = subparsers.add_parser(
+        "compose-occlusion-target",
+        help="Restore exact subjects and apply a reviewed foreground layer",
+    )
+    occlusion_parser.add_argument("--edited-scene", type=Path, required=True)
+    occlusion_parser.add_argument("--source-reference", type=Path, required=True)
+    occlusion_parser.add_argument("--foreground-layer", type=Path, required=True)
+    occlusion_parser.add_argument("--output", type=Path, required=True)
+
     args = parser.parse_args()
     if args.command == "audit":
         result = audit_promoted_pairs(args.config.resolve())
@@ -603,10 +697,18 @@ def main() -> int:
             args.output,
         )
         print(output)
-    else:
+    elif args.command == "compose-target":
         result = compose_aligned_teacher_target(
             args.edited_scene,
             args.source_reference,
+            args.output,
+        )
+        print(json.dumps(result, indent=2, sort_keys=True))
+    else:
+        result = compose_foreground_occlusion_target(
+            args.edited_scene,
+            args.source_reference,
+            args.foreground_layer,
             args.output,
         )
         print(json.dumps(result, indent=2, sort_keys=True))

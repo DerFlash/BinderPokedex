@@ -9,6 +9,7 @@ import pytest
 from scripts.poster_assets.provenance import image_pixel_record, sha256_file
 from scripts.poster_assets.training_dataset import (
     compose_aligned_teacher_target,
+    compose_foreground_occlusion_target,
     immutable_image_record,
     materialize_gold_dataset,
     pair_status,
@@ -151,6 +152,64 @@ def test_compose_aligned_teacher_target_is_immutable(tmp_path: Path) -> None:
         compose_aligned_teacher_target(
             scene_path,
             reference_path,
+            output_path,
+        )
+
+
+def test_compose_foreground_occlusion_target_preserves_uncovered_source(
+    tmp_path: Path,
+) -> None:
+    scene_path = tmp_path / "scene.png"
+    reference_path = tmp_path / "source.png"
+    foreground_path = tmp_path / "foreground.png"
+    output_path = tmp_path / "target.png"
+    Image.new("RGB", (16, 16), (20, 30, 40)).save(scene_path)
+    source = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    for x in range(4, 12):
+        for y in range(4, 12):
+            source.putpixel((x, y), (200, 100, 50, 255))
+    source.save(reference_path)
+    foreground = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    for y in range(8, 16):
+        foreground.putpixel((7, y), (10, 80, 20, 255))
+    foreground.save(foreground_path)
+
+    result = compose_foreground_occlusion_target(
+        scene_path,
+        reference_path,
+        foreground_path,
+        output_path,
+    )
+
+    audit = result["source_pixel_audit"]
+    assert audit["passed"] is True
+    assert audit["intentionally_covered_opaque_pixels"] == 4
+    assert audit["changed_uncovered_opaque_pixels"] == 0
+    with Image.open(output_path) as output:
+        assert output.getpixel((6, 9)) == (200, 100, 50)
+        assert output.getpixel((7, 9)) == (10, 80, 20)
+
+
+def test_compose_foreground_occlusion_target_requires_real_overlap(
+    tmp_path: Path,
+) -> None:
+    scene_path = tmp_path / "scene.png"
+    reference_path = tmp_path / "source.png"
+    foreground_path = tmp_path / "foreground.png"
+    output_path = tmp_path / "target.png"
+    Image.new("RGB", (16, 16), (20, 30, 40)).save(scene_path)
+    source = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    source.putpixel((8, 8), (200, 100, 50, 255))
+    source.save(reference_path)
+    foreground = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    foreground.putpixel((1, 1), (10, 80, 20, 255))
+    foreground.save(foreground_path)
+
+    with pytest.raises(ValueError, match="does not cover"):
+        compose_foreground_occlusion_target(
+            scene_path,
+            reference_path,
+            foreground_path,
             output_path,
         )
 
