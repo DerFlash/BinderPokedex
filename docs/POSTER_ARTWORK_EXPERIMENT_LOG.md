@@ -2099,3 +2099,16 @@ artwork and all three physical lower-card crops, especially the continuity and
 scale of the single blade in front of Bulbasaur. No audit entry changes to
 `gold`, no dataset is rematerialized, and no training run starts before that
 review.
+
+Human review rejects this candidate. The 130-pixel intersection proves only
+that the foreground-layer alpha touches the canonical subject mask; it does
+not form a visibly continuous blade over the silhouette. The larger grass
+clusters that read as nearest foreground still pass behind Bulbasaur and
+Squirtle, so the target repeats the known depth contradiction. Its status is
+`rejected_pair`, and it is excluded from every dataset.
+
+This closes manual tight-polygon selection as the construction method. A
+future `front` candidate must provide an actual isolated foreground object with
+a continuous visible root and a human-readable crossing before the exact-pixel
+audit is considered. Numeric overlap remains a reject-only consistency check,
+never evidence of correct depth.
