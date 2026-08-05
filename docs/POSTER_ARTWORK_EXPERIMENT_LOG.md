@@ -1935,3 +1935,27 @@ user approves every complete image and all three physical lower-card crops on
 `train_candidate` pairs. Together with the Base1 gold holdout, the audit now
 contains four gold samples, but the holdout is never training input. One more
 gold train pair is required before the bounded plumbing overfit starts.
+
+### Generation V red-clay train candidate (2026-08-05)
+
+Generation V supplies the fourth distinct train scene. A text-only background
+uses distant layered badlands and one continuous red-clay pan whose darker
+mineral variation remains flat ground texture. The exact Snivy, Tepig, and
+Oshawott cast forms the rough input. The unchanged one-reference teacher graph
+adds late-afternoon contact light and shadows before `compose-target` restores
+the canonical cast.
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Background workflow | `35082d9db99af4b067a4d329f1482849efc93ddda8752dbc6dd0db886e21e8be` |
+| Text-only background | `0db4a796985014f01b44e33962395d2ac0343178dfd127db91942310491f2022` |
+| Exact rough input | `6fd9e11611d54d594a3c8625eb5ad25447d67cca033f59d36db0c220c10babb2` |
+| Teacher workflow | `a037aa63ba80f9d3b7f56ec283c37dc4f6687d8d9a62048b2263195f2639243e` |
+| Raw teacher edit | `6280c70590076bbf358a62c0aace7d2378da9c8ee14750f8ddc3a65f4c0b3b68` |
+| Exact-restored aligned target | `2dc2a577a03c53da7e2635ad5170c7dd27ffbb770484f778898ab36010287912` |
+
+Both seed-`260726516` jobs report `Device: mps`. The source audit passes all
+52,025 fully opaque pixels with zero changes. Agent preflight passes count,
+identity, card containment, flat-ground depth, text-free safe areas, and the
+three lower-card crops. The sample remains `candidate_pair_review` until the
+user approves the complete target and crops; the overfit does not start early.

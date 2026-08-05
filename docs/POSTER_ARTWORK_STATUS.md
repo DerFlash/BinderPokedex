@@ -59,7 +59,9 @@ surface has no upright occluder, all 52,343 opaque source pixels remain exact,
 and the teacher adds shared directional shadows. Three further clear-surface
 gold train pairs use Generation II on snow, Generation III on black sand, and
 Generation IV on pale stone; the user approved all three complete targets and
-their physical card crops on 2026-08-05. A sterile
+their physical card crops on 2026-08-05. A fourth train candidate places the
+Generation-V cast on a natural red-clay badlands floor and awaits user review.
+A sterile
 smooth-earth control and the first wall-like Generation-IV stone background are
 rejected. The simple recipe is
 restricted to genuinely clean avoidance or entirely behind-subject landscape;
