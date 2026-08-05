@@ -1722,3 +1722,23 @@ tolerance. The exact candidate above is promoted for
 output and remains PDF-disabled until its localized overlay is reviewed. This
 approval also unlocks one Dev candidate each for the configured Mega and
 Primal sections; neither is promoted without its own visual review.
+
+#### Dev follow-up sections (2026-08-05)
+
+The unlocked Mega and Primal candidates use the same Dev model, encoder, VAE,
+guidance-4/20-step graph, 848 x 1168 canvas, and M4 Max MPS worker as the
+accepted Normal poster. Only each leaf manifest's scene, subject references,
+subject count, and stable seed differ.
+
+| Target | Prompt runtime | Workflow SHA-256 | Raw SHA-256 | Result |
+| --- | ---: | --- | --- | --- |
+| `ExGen2/sections/mega`, seed `260736802` | `29:44` | `d53a39851acabaf7cfac153cbfe528a38dbdcb9bf57fcdebaefde1ff02c496ac` | `4d6d4fe55520f7b620440b7cec2b1525e4dd1e8570655339bee3a46d94636227` | Hard exact-count and placement failure: Mega Mewtwo X and Mega Rayquaza are each duplicated, the central lower card is empty, and the extra subjects occupy the row above. Mega Latios alone fits its intended lower card |
+| `ExGen2/sections/primal`, seed `260759901` | `24:03` | `2391a964798016f510ec3bac9d734f1b6ade666b21e4b871753bd6af60e45dc9` | `f7bceb3dc1172edafce5f38607b53729610c1aad13c5c61272099afd72ef3567` | Hard placement failure: both intended Primal forms are generated about one full card row above their target cells; the physical bottom-row crops contain only partial extremities and terrain |
+
+Both jobs report `Device: mps`, use ComfyUI commit
+`87d23b81765161624889febfb3b81f19f3c8435b`, and retain the model hashes from
+the accepted Normal run. Neither candidate is promoted. The failures are not
+small seed-level anatomy variations, so the bounded rollout stops without a
+seed sweep or prompt branch. ExGen2 Normal remains the sole Dev promotion;
+Mega and Primal require a material placement/count-control change before a new
+generation attempt.

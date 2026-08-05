@@ -170,11 +170,13 @@ texture, character pixels, or a post-decode composite.
 3. Trigger the deferred minimal depth guide only under its documented failure
    condition, not merely to force visible foreground overlap.
 4. Review the promoted ExGen2 Normal overlay, then enable it if the localized
-   composition passes. Render and review the unlocked Dev candidates for Mega
-   and Primal independently.
+   composition passes. The first Dev candidates for Mega and Primal failed
+   exact count/placement; retry only after a material control change, not with
+   a seed sweep.
 5. Generate, review, promote, and then enable the remaining 27 unpromoted
    targets. The planner reports 25 as `needs_assets`; ExGen2 Mega and Primal
-   are the two immediately renderable candidates.
+   remain technically renderable but blocked on a new placement/count-control
+   hypothesis.
 6. Decide on and implement explicit cover replacement only after the affected
    target family is fully promoted and its multilingual PDFs pass visual QA.
 7. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
