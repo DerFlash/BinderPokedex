@@ -46,13 +46,14 @@ target. A fresh Generation I MPS/BF16 identity-lock render passes all 62,563
 opaque source pixels. A bounded full-composite FLUX.2 teacher pass keeps the
 scene geometry and card placement substantially aligned and adds common contact
 shadows, but its raw character repaint still changes small anatomy. Restoring
-the canonical positioned RGBA subjects produces aligned target candidates for
-Generation I and Base Set with zero changed opaque source pixels. Both still
-require human halo, shadow, integration, and card-crop review before either can
-become `gold`. Two bounded Generation-VII seeds are rejected because exact
-restoration necessarily redraws Popplio over a plant rooted in the foreground;
-the simple recipe is therefore restricted to clean avoidance or entirely
-behind-subject landscape. No gold dataset or training checkpoint exists yet. See
+the canonical positioned RGBA subjects produces zero changed opaque source
+pixels, but human card-crop review rejects Generation I and Base Set as well as
+two bounded Generation-VII seeds: grass or leaves rooted in the foreground run
+behind one or more restored subjects. Exact pixels prove anatomy and placement,
+not depth. There are therefore zero surviving pair candidates, zero gold pairs,
+and no training checkpoint. The simple recipe is restricted to genuinely clean
+avoidance or entirely behind-subject landscape; foreground crossings need an
+explicit reviewed foreground layer. See
 [Poster Artwork Integration LoRA](POSTER_ARTWORK_TRAINING.md).
 
 ## Promoted scope state

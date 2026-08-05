@@ -88,6 +88,11 @@ The result remains `candidate_pair_review`; a human must reject halos, duplicate
 limbs outside the restored mask, inconsistent shadows, broken depth, or a
 globally replaced composition before marking it `gold`.
 
+The exact-source audit is an anatomy and registration gate, not a depth gate.
+A target with every source pixel intact is still invalid when a foreground
+plant or blade is drawn behind the restored subject. Such a pair would teach
+the wrong occlusion order directly and is rejected before materialization.
+
 This recipe can directly create only clean-avoidance or behind-subject targets.
 It must not be used when an element rooted in the foreground should cover the
 subject: restoring the exact RGBA subject would reverse that depth order. Such

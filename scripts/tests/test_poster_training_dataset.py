@@ -200,6 +200,23 @@ def test_validation_rejects_changed_training_pixels(tmp_path: Path) -> None:
         validate_audit_manifest(manifest_path, root=tmp_path)
 
 
+def test_validation_rejects_exact_pixels_with_wrong_occlusion(
+    tmp_path: Path,
+) -> None:
+    manifest_path = fixture_manifest(tmp_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    sample = manifest["samples"][0]
+    assert sample["source_pixel_audit"]["passed"] is True
+    sample["review"]["coherent_landscape_occlusion"] = False
+    write_json(manifest_path, manifest)
+
+    with pytest.raises(
+        ValueError,
+        match="coherent_landscape_occlusion",
+    ):
+        validate_audit_manifest(manifest_path, root=tmp_path)
+
+
 def test_validation_rejects_scene_leakage(tmp_path: Path) -> None:
     manifest_path = fixture_manifest(tmp_path)
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))

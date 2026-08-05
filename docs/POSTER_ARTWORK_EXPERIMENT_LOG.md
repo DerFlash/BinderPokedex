@@ -1844,7 +1844,7 @@ jobs run on the same M4 Max MPS worker and use the BF16 4B model stack above.
 
 | Scope / seed | Rough input SHA-256 | Raw edit SHA-256 | Aligned target SHA-256 | Result |
 | --- | --- | --- | --- | --- |
-| `Base1` / `260726503` | `d52247827f47483c3ff3cd2198f0501f1ac0fffca040d4410c749ee12508722d` | `86be9c3ec6683be3e827782ccf1b10b0d92290ed9980731c6a45216f867a647b` | `c54fa3b36dac1c33f46828252e004a4ba7940176b4996c58a6498864347b4787` | Candidate review: exact Mewtwo three-digit hands and complete tail, three card-safe subjects, common ground shadows, and clean foreground avoidance |
+| `Base1` / `260726503` | `d52247827f47483c3ff3cd2198f0501f1ac0fffca040d4410c749ee12508722d` | `86be9c3ec6683be3e827782ccf1b10b0d92290ed9980731c6a45216f867a647b` | `c54fa3b36dac1c33f46828252e004a4ba7940176b4996c58a6498864347b4787` | Rejected by human review: Mewtwo is drawn over a grass blade rooted closer to the viewer, so exact anatomy does not rescue the wrong depth order |
 | `Pokedex/sections/gen7` / `260726058` | `ea8c0c9fa95fff17c7e57d782b685a6b1d32648eb1df4e77712474d642e39582` | `917574818d0dd2d272e447922f940792e04c60857f7a6c8d578452e07358c08d` | `a08ae9a5a444127bdce53aff27ae139fc3347fb0f2b3707b9d52a847ffbbd864` | Rejected: exact restoration puts the subjects back in front of foreground edge plants, so the original depth contradiction remains |
 | `Pokedex/sections/gen7` / `260726059` | `44dc633c974d3d3679b4a33a9b3efd3fa89b8bbd865e9734cc8e970096c3250c` | `860d9cf2f9b8acb5b1a8e56d4016ac7db445d7f1970203d3a7c30a51fd334196` | `a5d738bbb379533be67e2e748266d6ce413fba29b7698b9001af576122f437d8` | Rejected: the clearer meadow helps Rowlet and Litten, but the large bottom-right plant still starts in the foreground and runs behind Popplio |
 
@@ -1865,7 +1865,17 @@ justified. Both tested seeds are closed. A future foreground-occlusion dataset
 needs a separately reviewed foreground layer or another explicit depth-control
 mechanism; it is not added to the first plumbing overfit.
 
-Generation I and Base Set are now two `candidate_pair_review` samples. Neither
-is marked `gold` before human inspection of the full image and three physical
-lower-card crops. Training therefore remains correctly blocked at two review
-candidates rather than silently treating exact pixels as visual approval.
+Human review also rejects the earlier Generation-I candidate: foreground grass
+blades run behind Bulbasaur and Squirtle although their roots place them closer
+to the viewer. Generation I, Base Set, and both Generation-VII seeds therefore
+share the same failure class. There are zero surviving pair candidates and zero
+gold samples. No training starts.
+
+This review exposes a necessary distinction in the gate. Exact opaque-source
+pixels prove anatomy and registration only; they say nothing about scene depth.
+Training on any of these targets would explicitly reward the wrong occlusion
+order, and a four-to-eight-pair overfit would amplify that error. Future target
+construction must either keep the expanded subject regions entirely free of
+foreground-rooted elements or provide a reviewed foreground layer that is
+composited after the exact subject restoration and recorded as intentional
+occlusion.
