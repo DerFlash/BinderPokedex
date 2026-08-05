@@ -1879,3 +1879,34 @@ construction must either keep the expanded subject regions entirely free of
 foreground-rooted elements or provide a reviewed foreground layer that is
 composited after the exact subject restoration and recorded as intentional
 occlusion.
+
+### Intrinsically clear-surface target probe (2026-08-05)
+
+One lower-band inpaint of the original Base Set scene is tested before changing
+the data source. Although the complete lower row is masked and the prompt
+explicitly forbids tall grass and foreground plants, the inpainted result again
+adds blades at the bottom corners and inside subject regions. This route is
+closed after one attempt; further mask shapes or prompt branches would not
+change the demonstrated semantic tendency.
+
+The next KISS probe changes the training scene rather than patching its depth.
+It generates a text-only background whose lower surface is intrinsically free
+of upright vegetation, composites the exact positioned Base Set cast to form
+the rough input, runs the frozen single-reference teacher graph, and restores
+the canonical RGBA cast. These synthetic scenes are training-only augmentation;
+they never replace a scope's configured production background.
+
+| Surface / seed | Background SHA-256 | Rough input SHA-256 | Raw teacher SHA-256 | Aligned target SHA-256 | Result |
+| --- | --- | --- | --- | --- | --- |
+| Smooth compacted earth / `260726510` | `4a59ece8df562cb8f063bb5d87e36176c34074076173a11c05500cd888a20a05` | `d533e73c23025117fabf9e72d4baee8f3d7d5259ef2eb1efd612989a4eb2bdf7` | `69ff066b5bb59e80b788588ae46566e0d87f996e548ab0a2b9816eb9c36f28f2` | `2f8427326fa1cd530e075189040baabb573b4e20189cc53468a5cf1227536223` | Rejected: depth is unambiguous, but the flat lower plane and hard horizontal forest boundary are too sterile to represent desired poster quality |
+| Natural rippled sand / `260726511` | `05bd383b546d8d2d6fd3acc4b7c1da18dc6ae58fc030fa6a0d0b9214a2c036bc` | `71a8c555cca651e7e54ff51a45bdf4b8113a9e856d37b46e8dd2ff634a3fe7a4` | `512d74ccd8b101bd84563aafffaeebdfa3460d43b26bfdf06892b2ec465b4ef3` | `1ca81ee79afa155b07e9070dc843e0837d788c6d2fa72acfd48e2be288e41334` | Candidate review: natural continuous beach, flat surface ripples rather than foreground objects, exact cast and card placement, and coherent upper-left contact shadows |
+
+The sand background and teacher workflow SHA-256 values are respectively
+`639c99d626f427ac958637f5ce3ad23f94b5bee14057c1d12de95c5829929fb6`
+and `856450892420af8af546230945c5b0b0134d326806f501947252ce732c63d3d1`.
+Both jobs report `Device: mps`. The exact-restored target again passes all
+52,343 fully opaque Base Set source pixels, but that audit remains only the
+identity/registration gate. Human review of scene quality, shadows, flat
+surface semantics, and the three physical crops is still required. The dataset
+therefore contains one `candidate_pair_review` and zero gold pairs; training is
+still blocked.

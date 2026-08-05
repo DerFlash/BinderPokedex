@@ -99,6 +99,13 @@ subject: restoring the exact RGBA subject would reverse that depth order. Such
 samples require a separately reviewed foreground layer or another explicit
 depth-control method and are excluded from the plumbing overfit.
 
+The plumbing overfit may use training-only synthetic landscapes whose lower
+surface is intrinsically non-occluding, such as natural sand, snow, or broad
+stone. They must still look like finished poster artwork; a flat gradient,
+visible horizontal seam, platform, or landing-pad appearance is rejected.
+Synthetic variants never replace a scope's configured production scene, and
+all variants of one cast remain in the same dataset split.
+
 For occlusion, the data must include all three valid outcomes:
 
 1. landscape elements avoid the subject;

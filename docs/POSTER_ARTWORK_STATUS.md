@@ -50,10 +50,15 @@ the canonical positioned RGBA subjects produces zero changed opaque source
 pixels, but human card-crop review rejects Generation I and Base Set as well as
 two bounded Generation-VII seeds: grass or leaves rooted in the foreground run
 behind one or more restored subjects. Exact pixels prove anatomy and placement,
-not depth. There are therefore zero surviving pair candidates, zero gold pairs,
-and no training checkpoint. The simple recipe is restricted to genuinely clean
-avoidance or entirely behind-subject landscape; foreground crossings need an
-explicit reviewed foreground layer. See
+not depth. There are therefore zero surviving pair candidates from the original
+scope scenes, zero gold pairs overall, and no training checkpoint. One
+training-only Base Set augmentation on a natural sand beach is now a separate
+review candidate: its
+surface has no upright occluder, all 52,343 opaque source pixels remain exact,
+and the teacher adds shared directional shadows. It is not gold before human
+review. A sterile smooth-earth control is rejected. The simple recipe is
+restricted to genuinely clean avoidance or entirely behind-subject landscape;
+foreground crossings need an explicit reviewed foreground layer. See
 [Poster Artwork Integration LoRA](POSTER_ARTWORK_TRAINING.md).
 
 ## Promoted scope state
