@@ -2160,3 +2160,36 @@ Generation-VI `front` holdout. The v2 training configuration changes only the
 dataset and output names; all model, rank, optimizer, precision, MPS, and
 100-loop settings remain identical to v1. This keeps the comparison bounded
 to the additional positive-depth supervision.
+
+The M4 Max completes v2 through MPS with exit code zero. One hundred loops and
+gradient accumulation two produce 50 AdamW updates in 1:16:05; the final
+reported loss is `0.1433`. The final 92,426,896-byte adapter has SHA-256
+`04297534ed1041ee2cdcfdc5d2d7619642f51cf7acbb65643ff208aee1e1ab4e`,
+160 BF16 tensors, 46,202,880 parameters, and zero non-finite values.
+
+The fixed Generation-VI transfer comparison uses the same rough input, prompt,
+seed `260726518`, four Euler steps, CFG 1.0, text encoder, VAE, and model stack.
+Only the adapter changes:
+
+| Candidate | Output SHA-256 | Uncovered-source MAE | Covered target advantage |
+| --- | --- | ---: | ---: |
+| Baseline | `2b8325727d97fd1cb5f5604749ca5e3976500506a0a5ce6217af8636b9ef31f2` | 48.9702 | +10.9532 |
+| v1 at 0.7 | `0122f8528860bd029410423e616082d0bff876d1c5b458a37a64c390e4717a6b` | 47.5499 | +9.7908 |
+| v2 at 0.7 | `0516d14386c9ea59482f9e839e17d06bd37038722a4894f9b4309b9818a968ac` | 31.7723 | -1.6245 |
+| v2 at 1.0 | `c44f4c5d76fa1cb61616e4cf9ed1f68302fe41ce6614bdda649fd4974494aa60` | 14.9176 | -26.2676 |
+
+Positive covered-target advantage means the output pixels in the intended
+subject/foreground intersection are closer to the hard foreground target than
+to the uncovered source. Visual review is decisive: neither v2 strength draws
+the required continuous plants in front. The stronger adapter instead copies
+the supplied characters much more faithfully. V2 therefore fails the depth
+transfer gate but supplies useful evidence for identity preservation; it is
+not promoted and production routing remains unchanged.
+
+The v2 pair asks the model to invent a foreground fringe that is absent from
+the rough input. The next isolated hypothesis removes that ambiguity: compose
+the identical fringe behind the exact subjects in the input and in front of
+them in the target. The only intended learned edit is then layer ordering.
+Because that difference occupies fewer than one percent of the full raster,
+the trainer's supported focus mask is limited to this pair and keeps a small
+global loss floor; no new inference node or production branch is introduced.
