@@ -1681,6 +1681,27 @@ identity reference. The characters also remain materially crisper and flatter
 than the painterly landscape. No foreground object intersects the silhouettes,
 so this candidate avoids but does not validate the difficult occlusion case.
 
+One final reference-resolution isolation keeps that exact workflow, prompt,
+seed, model stack, target canvas, and sampling schedule, but regenerates all
+three poster-shaped references directly from the original cutouts at 848 x
+1168 instead of 608 x 832. The higher-resolution input hashes are Mewtwo
+`254019a2d7acf67b37a60a1c75bf2e2b4b33758fcee8c958fcfcdbb850fe6069`,
+Mew `fcc7d547f451446bf1e5294331229f17f5315a3efe26a10b9360979f66883fe6`,
+and Lugia
+`f60c1aefe70b6c6cf25a129a2984ef730124a029bf01d967d3422e34acc680ad`.
+The workflow hash is unchanged. The MPS prompt runtime rises to 49 minutes 14
+seconds and the output SHA-256 is
+`839dfc35c33acf7c294a1231c35bb37f41492704bb4782309db846efd5436c9c`.
+
+The extra source pixels do not change the gate result. Mew still has smooth
+hand stumps without three distinct pointed fingers, Mewtwo's smaller hand does
+not gain more reliable digit separation, and Lugia remains effectively tied.
+Card placement and the coherent landscape still pass, but the characters
+remain visibly crisper than their surroundings and the cast shadows become
+heavier. A roughly 70% runtime increase therefore buys no material identity
+improvement. Higher Dev reference resolution is closed as a fix for this
+failure class.
+
 The Dev candidate is not promoted. Because the normal-section gate fails, the
 conditional Mega and Primal batch is deliberately not started. The retained
 FLUX.2 Klein one-shot remains the production default, `identity_lock` remains
