@@ -33,6 +33,7 @@ PAIR_STATUSES = frozenset(
         "blocked_missing_target",
         "excluded_target",
         "rejected_input",
+        "rejected_pair",
         "gold",
     }
 )

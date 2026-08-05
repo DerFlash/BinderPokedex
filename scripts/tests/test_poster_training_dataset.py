@@ -192,6 +192,14 @@ def test_materialize_refuses_unreviewed_candidates(tmp_path: Path) -> None:
         )
 
 
+def test_validation_accepts_an_explicitly_rejected_pair(tmp_path: Path) -> None:
+    manifest_path = fixture_manifest(tmp_path, status="rejected_pair")
+
+    result = validate_audit_manifest(manifest_path, root=tmp_path)
+
+    assert result["samples"][0]["review_status"] == "rejected_pair"
+
+
 def test_validation_rejects_changed_training_pixels(tmp_path: Path) -> None:
     manifest_path = fixture_manifest(tmp_path)
     Image.new("RGB", (16, 16), (200, 210, 220)).save(tmp_path / "input.png")

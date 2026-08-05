@@ -39,6 +39,7 @@
   "split_policy": {
     "holdout_scopes": [
       "Base1",
+      "Pokedex/sections/gen1",
       "Pokedex/sections/gen7",
       "ExGen2/sections/normal",
       "ExGen2/sections/mega",
