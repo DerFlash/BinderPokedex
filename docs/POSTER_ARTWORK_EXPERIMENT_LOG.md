@@ -1965,3 +1965,26 @@ would copy gold holdouts into the same root `target/` directory consumed by AI
 Toolkit. The exporter now keeps only train pairs in root `reference/` and
 `target/`; evaluation pairs live below `evaluation/<split>/`. The plumbing
 overfit cannot start until the corresponding regression test passes.
+
+The regression test subsequently passes. Dataset
+`tmp/poster-training/v0/overfit-dataset-v1` contains exactly four paired train
+images and captions at its root; Base1 exists only below
+`evaluation/holdout/`. Its materialized manifest binds audit SHA-256
+`b2d890f683e3149cbd0ec40769bcb1bcf13e9a58d4dd18fdc03a414ec8b755f1`.
+
+### FLUX.2 Klein MPS plumbing-overfit preflight (2026-08-05)
+
+The remote M4 Max worker installs AI Toolkit at exact commit
+`9065951da32c0014899e142766846705a18f1347`; its resolved Diffusers dependency
+is commit `c943837899b16cbae2f619b8dd4f7bb6f07dd81a`. The toolkit hardware doctor
+passes with Apple Silicon MPS, PyTorch 2.13.0, torchvision 0.28.0, and
+torchaudio 2.11.0.
+
+The first executable training configuration is
+`config/poster_training/flux2_klein_integration_overfit_v1.yaml`. It is
+deliberately a single bounded experiment: FLUX.2 Klein Base 4B, linear LoRA
+rank/alpha 32/32, BF16, native AdamW, batch 1, gradient accumulation 2,
+`match_target_res`, no model or text-encoder quantization, and 100 steps. It
+disables sampling during training so the preflight answers only whether the
+paired edit path loads, learns, and saves finite weights. Holdout rendering is
+a separate gate after that succeeds.

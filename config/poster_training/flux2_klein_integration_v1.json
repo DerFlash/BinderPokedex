@@ -6,7 +6,10 @@
   "base_model": {
     "repository": "black-forest-labs/FLUX.2-klein-base-4B",
     "revision": null,
-    "architecture": "flux2_klein_4b"
+    "architecture": "flux2_klein_4b",
+    "trainer_repository": "https://github.com/ostris/ai-toolkit",
+    "trainer_revision": "9065951da32c0014899e142766846705a18f1347",
+    "diffusers_revision": "c943837899b16cbae2f619b8dd4f7bb6f07dd81a"
   },
   "image_contract": {
     "width": 848,
@@ -60,13 +63,13 @@
     "precision": "bf16",
     "linear_rank": 32,
     "linear_alpha": 32,
-    "conv_rank": 16,
-    "conv_alpha": 16,
     "batch_size": 1,
     "gradient_accumulation": 2,
     "learning_rate": 0.0001,
     "retry_learning_rate": 0.00005,
+    "optimizer_mps": "adamw",
     "optimizer_cuda": "adamw8bit",
+    "quantize_mps": false,
     "noise_scheduler": "flowmatch",
     "timestep_type": "weighted",
     "content_or_style": "balanced",

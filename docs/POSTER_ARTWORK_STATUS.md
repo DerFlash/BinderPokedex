@@ -195,9 +195,9 @@ texture, character pixels, or a post-decode composite.
 
 ## Remaining work
 
-1. Build the first 4-8 aligned gold edit pairs. Fresh inputs must pass the
-   exact-source audit, targets must keep their geometry and identity, and the
-   plumbing overfit must pass before any longer LoRA run.
+1. Run the bounded 100-step BF16/MPS plumbing overfit on the four approved
+   Generation II-V train pairs. Base1 remains an unseen holdout. Inspect finite
+   loss and saved weights before any holdout render or longer LoRA run.
 2. Use `individual_spatial_joint` for new scopes, but keep human review and the
    bounded seed rule; a reviewed seed is not proof of universal stability.
 3. Leave accepted v5 and v6 promotions unchanged unless a concrete visual or

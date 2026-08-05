@@ -186,35 +186,49 @@ Only after 4-8 aligned pairs are marked `gold`, materialize an immutable dataset
 ```bash
 python -m scripts.poster_assets.training_dataset materialize \
   --manifest tmp/poster-training/v0/audit.json \
-  --output tmp/poster-training/v0/overfit-dataset
+  --output tmp/poster-training/v0/overfit-dataset-v1
 ```
 
 Only `train_candidate` gold pairs enter the root `reference/` and `target/`
 folders consumed by AI Toolkit. Gold validation and holdout pairs are copied
 below `evaluation/<split>/` and cannot leak into the training folder.
 
-Run 100-300 steps. The tiny set must visibly learn rough-composite to integrated
-scene. Failure here means target/control direction, pairing, model support, or
-configuration is wrong; do not compensate with a longer job.
+The first MPS preflight is pinned in
+`config/poster_training/flux2_klein_integration_overfit_v1.yaml`. Copy the
+materialized dataset to AI Toolkit as
+`datasets/binder-pokedex-overfit-v1`, then run that configuration from the AI
+Toolkit root. It uses four approved training pairs, BF16, native AdamW, no
+quantization, and exactly 100 steps. Base1 remains below
+`evaluation/holdout/` and is not visible to training.
+
+The tiny set must visibly learn rough-composite to integrated scene. Failure
+here means target/control direction, pairing, model support, or configuration
+is wrong; do not compensate with a longer job.
 
 ### 2. 4B pilot
 
 Train `black-forest-labs/FLUX.2-klein-base-4B`, LoRA only, without text-encoder
-training. Baseline settings are rank/alpha 32/32 for linear layers, 16/16 for
-convolutional layers, BF16, batch 1, gradient accumulation 2, flowmatch with
-weighted/balanced timesteps, and learning rate `1e-4`. Save every 250 steps and
-visually compare 750, 1000, 1250, 1500, and 1750. Stop by 2000 unless new
-evidence justifies more. If validation oscillates or identity degrades, make
-one isolated `5e-5` retry.
+training. Baseline settings are rank/alpha 32/32 for linear layers, BF16, batch
+1, gradient accumulation 2, flowmatch with weighted/balanced timesteps, and
+learning rate `1e-4`. FLUX.2 Klein does not expose convolutional LoRA targets in
+the pinned trainer. Save every 250 steps and visually compare 750, 1000, 1250,
+1500, and 1750. Stop by 2000 unless new evidence justifies more. If validation
+oscillates or identity degrades, make one isolated `5e-5` retry.
 
 Use `match_target_res: true`. Keep `flip_x`, `flip_y`, random crops, and text
 encoder training disabled. Masked loss and a 9B model are later isolated
 experiments, not baseline complexity.
 
-AI Toolkit must be pinned to an exact commit after its 4-8-pair preflight. In
-its edit dataset configuration, `folder_path` is the target and
-`control_path_1` is the rough input. Reversing these paths trains the opposite
-operation.
+AI Toolkit is pinned to commit
+`9065951da32c0014899e142766846705a18f1347`; its installed Diffusers dependency
+is pinned to `c943837899b16cbae2f619b8dd4f7bb6f07dd81a`. In the edit dataset
+configuration, `folder_path` is the target and `control_path` is the rough
+input. Reversing these paths trains the opposite operation.
+
+On the 128 GB Apple Silicon worker, use BF16 with native AdamW and leave model
+and text-encoder quantization disabled. The memory saving is unnecessary for
+this 4B preflight and would add a second numerical variable to an already
+experimental MPS path.
 
 ### 3. Holdout comparison
 
