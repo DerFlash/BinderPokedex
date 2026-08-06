@@ -30,6 +30,11 @@ pipeline:
     max_cards: 3
     force: false
     cache_dir: data/section_artwork
+    section_featured_card_ids:
+      all:
+      - base3-9
+      - base3-10
+      - base3-5
 - step: save_output
   params:
     output_file: data/output/Base3.json
