@@ -2216,3 +2216,29 @@ Only this positive pair has a matching mask file. The trainer's
 the same behind-versus-front construction but remains outside training. Its
 corrected input SHA-256 is
 `599ba64e11da8afe87145027cae0d3e9fc934393d754af31cbd98cf5b8eca657`.
+
+The M4 Max completes v3 through MPS with exit code zero in 1:13:38. Trainer
+timers repeatedly report `get_mask_multiplier`, confirming that the focus mask
+participates in loss calculation. The final 92,426,896-byte adapter has
+SHA-256
+`3b719fc4a82d85e864c860b5fbf568ddb5ab5b4a08cf169fbb24f7b0b114fa58`,
+160 BF16 tensors, 46,202,880 parameters, and zero non-finite values.
+
+The corrected Generation-VI holdout compares the same input, prompt, seed,
+sampler, and four-step MPS graph. V3 strength is the only swept value:
+
+| Candidate | Output SHA-256 | Uncovered-source MAE | Covered target advantage |
+| --- | --- | ---: | ---: |
+| Baseline | `bbd081a38bc5e8e39f8b62ca5766ef3f7c6893d5c5d21501f0632ef6a5d682f0` | 46.1445 | +12.9656 |
+| v3 at 0.3 | `2f125005ddb80d739c96bea2bdb244fb8f7cde7c03663113e51666cdeef80937` | 31.6755 | +1.7947 |
+| v3 at 0.5 | `7e60128709eacd9c2ab479270c714c2adba6676bc1208c297310d6097c896581` | 13.4591 | -28.6236 |
+| v3 at 0.7 | `f08d926aca66b03882e9a3939e41b5b8910e4a3ee08d2ba54ece06778833a17c` | 8.8791 | -46.3654 |
+| v3 at 1.0 | `856a377d8b0fc432dc4594c48a05db4e5548224efb1351192baab2f80fb7a6c5` | 7.6872 | -59.8846 |
+
+The focus pair teaches a measurable transition but does not remove the core
+tradeoff. Strength 0.3 retains some generative foreground behavior while
+improving identity over baseline. Strength 0.5 and above increasingly preserves
+the supplied source pixels and therefore also preserves the incorrect
+behind-subject layer order. No v3 strength is promoted automatically. The 0.3
+candidate is the only bounded human-review candidate; deciding whether its
+remaining character changes are acceptable requires visual review.
