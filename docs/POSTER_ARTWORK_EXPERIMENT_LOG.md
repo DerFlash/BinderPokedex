@@ -2262,3 +2262,35 @@ global mask floor, and holdout remain unchanged. This isolates supervision
 balance and task wording without adding inference complexity. Success means a
 higher adapter strength retains visible front crossings on the unseen
 Generation-VI holdout while improving identity over v3 strength 0.3.
+
+The M4 Max completes v4 through MPS with exit code zero in 1:12:54. The
+trainer again reports `get_mask_multiplier` throughout the run. The final
+92,426,896-byte adapter has SHA-256
+`5ff2a81c2ffa8b7442662d5de03d7fadd2f1b28da26a9b9be42a47e6a2cfd7ea`,
+160 BF16 tensors, 46,202,880 parameters, and zero non-finite values.
+
+The unchanged Generation-VI holdout produces the following fixed-seed result:
+
+| Candidate | Output SHA-256 | Uncovered-source MAE | Covered target advantage |
+| --- | --- | ---: | ---: |
+| Baseline | `bbd081a38bc5e8e39f8b62ca5766ef3f7c6893d5c5d21501f0632ef6a5d682f0` | 46.1445 | +12.9656 |
+| v3 at 0.3 | `2f125005ddb80d739c96bea2bdb244fb8f7cde7c03663113e51666cdeef80937` | 31.6755 | +1.7947 |
+| v4 at 0.3 | `624acdc79c81c08ac545534e20a50c1acbede97177756b51886c0f41aaedf432` | 42.0955 | +10.8172 |
+| v4 at 0.5 | `266e19f80b0708efd2f9d5a7789bc7b135a8dac1914604f43b5b20da8ccc1425` | 36.5707 | +9.2090 |
+| v4 at 0.7 | `fa15d8d09f69423dfb9781af96c9b9b3635437cfa1b10659819c848ac6a463e3` | 30.7003 | +6.5175 |
+| v4 at 1.0 | `9a17a1031eee564a007e104632e4b23fbd3a60da42e070aeb6ffd170d04d538d` | 27.2228 | +7.7565 |
+
+Balancing the positive pair changes the learned behavior: unlike v3, every v4
+strength keeps a positive foreground-target advantage. Visual card review also
+shows continuous foreground blades rather than abrupt generated fragments.
+However, v4 does not meet the combined gate. Its figure colors, shading, and
+line treatment remain visibly farther from the supplied source than strong v3,
+and increasing strength does not recover v3's identity fidelity. V4 is not
+promoted and production routing remains unchanged.
+
+Repeating one Generation-I pair has therefore exhausted its useful evidence.
+The next bounded hypothesis replaces repetition with several deterministic
+positive layer-order pairs covering different characters and environments,
+while retaining ordinary `avoid` pairs and the untouched Generation-VI
+holdout. This changes training diversity only; it adds no production node or
+inference branch.
