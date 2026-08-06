@@ -34,7 +34,7 @@ pipeline:
       all:
       - sv07-143
       - sv07-148
-      - sv07-26
+      - sv07-026
 - step: save_output
   params:
     output_file: data/output/SV07.json

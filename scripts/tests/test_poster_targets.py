@@ -41,8 +41,15 @@ def test_every_current_poster_target_has_a_checked_in_manifest():
     assert len(manifests) == 41
 
 
-def test_fossil_poster_uses_three_card_safe_grounded_subjects():
-    bundle = poster_bundle("Base3")
+@pytest.mark.parametrize(
+    ("scope", "expected_ids"),
+    [
+        ("Base3", [141, 131, 94]),
+        ("SV07", [1, 7, 813]),
+    ],
+)
+def test_curated_posters_use_three_card_safe_subjects(scope, expected_ids):
+    bundle = poster_bundle(scope)
     source = load_poster_scope_data(bundle)
     featured = source["sections"]["all"]["featured_elements"]
     cutouts = json.loads(
@@ -51,8 +58,8 @@ def test_fossil_poster_uses_three_card_safe_grounded_subjects():
         )
     )["items"]
 
-    assert [item["pokemon_id"] for item in featured] == [141, 131, 94]
-    assert [item["pokemon_id"] for item in cutouts] == [141, 131, 94]
+    assert [item["pokemon_id"] for item in featured] == expected_ids
+    assert [item["pokemon_id"] for item in cutouts] == expected_ids
 
 
 def test_every_generated_pdf_language_has_complete_poster_copy():
