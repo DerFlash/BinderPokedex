@@ -439,10 +439,10 @@ def test_pipeline_contract_versions_are_family_specific_and_strict():
     assert current_generation_pipeline_contract_version(
         identity_generation
     ) == 3
-    assert current_generation_pipeline_contract_version(joint_generation) == 7
+    assert current_generation_pipeline_contract_version(joint_generation) == 8
     assert (
         current_generation_pipeline_contract_version(regional_generation)
-        == 6
+        == 7
     )
     accepted_legacy = provenance.fingerprint_record(
         {
@@ -585,7 +585,7 @@ def test_joint_scene_rejects_a_learned_post_generation_upscaler(tmp_path):
         )
 
 
-def test_regional_joint_scene_fingerprint_uses_v6_without_cast_contract(
+def test_regional_joint_scene_fingerprint_uses_v7_without_cast_contract(
     tmp_path,
 ):
     _repository, assets, output, _scope_dir, bundle = _write_fixture(
@@ -610,7 +610,7 @@ def test_regional_joint_scene_fingerprint_uses_v6_without_cast_contract(
 
     assert (
         fingerprint["components"]["pipeline_contract"]["version"]
-        == 6
+        == 7
     )
     conditioning = fingerprint["components"][
         "joint_scene_conditioning"
@@ -856,9 +856,9 @@ def test_joint_scene_cannot_promote_without_explicit_human_review():
     ("engine", "mode", "reference_mode", "current_version"),
     (
         ("flux", "identity_lock", "two_pass_source_pixels", 3),
-        ("flux", "joint_scene", "spatial_identity_joint", 5),
-        ("flux", "joint_scene", "regional_identity_joint", 6),
-        ("flux", "joint_scene", "individual_spatial_joint", 7),
+        ("flux", "joint_scene", "spatial_identity_joint", 6),
+        ("flux", "joint_scene", "regional_identity_joint", 7),
+        ("flux", "joint_scene", "individual_spatial_joint", 8),
     ),
 )
 def test_every_engine_family_versions_the_shared_raster_contract(

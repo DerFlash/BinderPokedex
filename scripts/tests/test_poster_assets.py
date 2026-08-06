@@ -1758,6 +1758,13 @@ def test_joint_scene_prompt_separates_spatial_and_identity_roles():
         items,
         placement_contract=placement_contract,
     )
+    legacy = build_joint_scene_prompt(
+        bundle.manifest,
+        scope_data,
+        items,
+        placement_contract=placement_contract,
+        prefer_natural_separation=False,
+    )
     snapshot = build_joint_prompt_snapshot(
         bundle.manifest,
         scope_data,
@@ -1774,6 +1781,9 @@ def test_joint_scene_prompt_separates_spatial_and_identity_roles():
     assert "mandatory placement and scale contract" in final
     assert "not additional subjects" in final
     assert "small physically plausible edge occlusions" in final
+    assert "Prefer clean natural separation" in final
+    assert "never through halos, artificial gaps" in final
+    assert "Prefer clean natural separation" not in legacy
     assert "JOINT SCENE - ONE-SHOT FINAL SYNTHESIS" in snapshot
     assert "SUBJECT-FREE LANDSCAPE DRAFT" not in snapshot
 
@@ -1852,6 +1862,11 @@ def test_regional_joint_scene_writes_distinct_workflow_and_prompt_snapshot(
     )
     assert snapshot.is_file()
     workflow = json.loads(workflow_path.read_text(encoding="utf-8"))
+    assert "Prefer natural placement" in workflow["20"]["inputs"]["text"]
+    assert (
+        "without halos, artificial gaps"
+        in workflow["20"]["inputs"]["text"]
+    )
     expected = "\n\n".join(
         (
             "REGIONAL JOINT SCENE - ONE-SHOT FINAL SYNTHESIS",

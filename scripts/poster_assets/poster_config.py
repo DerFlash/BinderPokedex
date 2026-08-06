@@ -345,6 +345,7 @@ def build_joint_scene_prompt(
     items: list[dict[str, Any]],
     *,
     placement_contract: list[dict[str, int]],
+    prefer_natural_separation: bool = True,
 ) -> str:
     """Build one final-scene prompt from spatial and identity references."""
     if not items:
@@ -400,6 +401,15 @@ def build_joint_scene_prompt(
         cast = cast_names[0]
     else:
         cast = ", ".join(cast_names[:-1]) + f", and {cast_names[-1]}"
+    separation_guidance = (
+        "Prefer clean natural separation: arrange nearer landscape "
+        "elements around, rather than across, every character silhouette. "
+        "Achieve this through ordinary composition and spacing, never "
+        "through halos, artificial gaps, isolated clearings, or "
+        "character-shaped empty areas. "
+        if prefer_natural_separation
+        else ""
+    )
 
     return "\n\n".join(
         (
@@ -452,6 +462,7 @@ def build_joint_scene_prompt(
                 f"Create one cohesive full-bleed scene for {concept}. "
                 f"{final_scene_description} The characters and the {ground_noun} "
                 "share one camera space and one globally coherent depth order. "
+                f"{separation_guidance}"
                 "Resolve depth ordering explicitly at every "
                 "landscape-character intersection. A blade, leaf, branch, rock, "
                 "water edge, or other landscape element that is genuinely "
@@ -489,6 +500,7 @@ def build_joint_prompt_snapshot(
     items: list[dict[str, Any]],
     *,
     placement_contract: list[dict[str, int]],
+    prefer_natural_separation: bool = True,
 ) -> str:
     """Return the one-shot prompt as a stable provenance snapshot."""
     return format_joint_prompt_snapshot(
@@ -497,6 +509,7 @@ def build_joint_prompt_snapshot(
             scope_data,
             items,
             placement_contract=placement_contract,
+            prefer_natural_separation=prefer_natural_separation,
         )
     )
 
@@ -507,6 +520,7 @@ def build_regional_joint_scene_prompts(
     items: list[dict[str, Any]],
     *,
     placement_contract: list[dict[str, int]],
+    prefer_natural_separation: bool = True,
 ) -> tuple[str, list[str]]:
     """Build one global landscape prompt and one regional prompt per subject."""
     if not items:
@@ -555,6 +569,14 @@ def build_regional_joint_scene_prompts(
         part.strip()
         for part in (setting, lighting, rendering, *additional)
         if part.strip()
+    )
+    separation_guidance = (
+        "Prefer natural placement that routes nearer landscape elements "
+        "around the complete character silhouette without halos, artificial "
+        "gaps, or character-shaped clearings. Resolve every remaining "
+        "intersection "
+        if prefer_natural_separation
+        else "Resolve every intersection "
     )
     global_prompt = (
         "Generate one cohesive full-bleed scene for "
@@ -610,7 +632,7 @@ def build_regional_joint_scene_prompts(
             "remove, enlarge, or reshape any body part. Generate the "
             f"character, local {ground_noun}, contact shadow, nearby "
             "vegetation, reflected light, and scene edges together in the "
-            "shared unified denoising pass. Resolve every intersection "
+            f"shared unified denoising pass. {separation_guidance}"
             "physically: a connected landscape element closer to the camera "
             "may continue naturally in front of a small exterior part, while "
             "farther elements stay behind; never truncate vegetation at the "
@@ -633,6 +655,7 @@ def build_regional_joint_prompt_snapshot(
     items: list[dict[str, Any]],
     *,
     placement_contract: list[dict[str, int]],
+    prefer_natural_separation: bool = True,
 ) -> str:
     """Return regional joint-scene prompts as a stable provenance snapshot."""
     global_prompt, local_prompts = build_regional_joint_scene_prompts(
@@ -640,6 +663,7 @@ def build_regional_joint_prompt_snapshot(
         scope_data,
         items,
         placement_contract=placement_contract,
+        prefer_natural_separation=prefer_natural_separation,
     )
     return format_regional_joint_prompt_snapshot(
         global_prompt,
@@ -999,6 +1023,7 @@ def build_individual_spatial_joint_prompt(
     items: list[dict[str, Any]],
     *,
     placement_contract: list[dict[str, int]],
+    prefer_natural_separation: bool = True,
 ) -> str:
     """Reuse the reviewed scene prompt with individual spatial references."""
     accepted_reference_prompt = build_spatial_identity_reference_prompt(
@@ -1016,6 +1041,7 @@ def build_individual_spatial_joint_prompt(
         scope_data,
         items,
         placement_contract=placement_contract,
+        prefer_natural_separation=prefer_natural_separation,
     )
     if accepted_reference_prompt not in prompt:
         raise RuntimeError("Accepted reference paragraph was not found")
@@ -1057,6 +1083,7 @@ def build_individual_spatial_joint_prompt_snapshot(
     items: list[dict[str, Any]],
     *,
     placement_contract: list[dict[str, int]],
+    prefer_natural_separation: bool = True,
 ) -> str:
     """Return the exact individual-spatial prompt with its stable heading."""
     return format_individual_spatial_joint_prompt_snapshot(
@@ -1065,6 +1092,7 @@ def build_individual_spatial_joint_prompt_snapshot(
             scope_data,
             items,
             placement_contract=placement_contract,
+            prefer_natural_separation=prefer_natural_separation,
         )
     )
 

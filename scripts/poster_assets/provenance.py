@@ -110,9 +110,9 @@ CURRENT_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
         "identity_lock",
         "two_pass_source_pixels",
     ): GENERATION_PIPELINE_CONTRACT_VERSION,
-    ("flux", "joint_scene", "spatial_identity_joint"): 5,
-    ("flux", "joint_scene", "regional_identity_joint"): 6,
-    ("flux", "joint_scene", "individual_spatial_joint"): 7,
+    ("flux", "joint_scene", "spatial_identity_joint"): 6,
+    ("flux", "joint_scene", "regional_identity_joint"): 7,
+    ("flux", "joint_scene", "individual_spatial_joint"): 8,
 }
 SUPPORTED_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
     (
@@ -120,9 +120,14 @@ SUPPORTED_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
         "identity_lock",
         "two_pass_source_pixels",
     ): frozenset({1, 2, 3}),
-    ("flux", "joint_scene", "spatial_identity_joint"): frozenset({5}),
-    ("flux", "joint_scene", "regional_identity_joint"): frozenset({6}),
-    ("flux", "joint_scene", "individual_spatial_joint"): frozenset({7}),
+    ("flux", "joint_scene", "spatial_identity_joint"): frozenset({5, 6}),
+    ("flux", "joint_scene", "regional_identity_joint"): frozenset({6, 7}),
+    ("flux", "joint_scene", "individual_spatial_joint"): frozenset({7, 8}),
+}
+NATURAL_SEPARATION_PIPELINE_MINIMUM = {
+    ("flux", "joint_scene", "spatial_identity_joint"): 6,
+    ("flux", "joint_scene", "regional_identity_joint"): 7,
+    ("flux", "joint_scene", "individual_spatial_joint"): 8,
 }
 RASTER_GEOMETRY_PIPELINE_MINIMUM = {
     ("flux", "identity_lock"): 3,
@@ -996,6 +1001,7 @@ def _effective_generation_prompt(
     scope_data: dict[str, Any],
     generation: dict[str, Any],
     cutout_items: list[dict[str, Any]],
+    pipeline_contract_version: int,
 ) -> str:
     engine = str(generation.get("engine", ""))
     mode = str(generation.get("mode", ""))
@@ -1030,12 +1036,19 @@ def _effective_generation_prompt(
             canvas_size=(width, height),
         )
         reference_mode = generation.get("reference_mode")
+        family = _generation_pipeline_family(generation)
+        separation_minimum = NATURAL_SEPARATION_PIPELINE_MINIMUM.get(family)
+        prefer_natural_separation = (
+            separation_minimum is not None
+            and pipeline_contract_version >= separation_minimum
+        )
         if reference_mode == "individual_spatial_joint":
             return build_individual_spatial_joint_prompt_snapshot(
                 bundle.manifest,
                 scope_data,
                 cutout_items,
                 placement_contract=placement_contract,
+                prefer_natural_separation=prefer_natural_separation,
             )
         if reference_mode == "regional_identity_joint":
             return build_regional_joint_prompt_snapshot(
@@ -1043,12 +1056,14 @@ def _effective_generation_prompt(
                 scope_data,
                 cutout_items,
                 placement_contract=placement_contract,
+                prefer_natural_separation=prefer_natural_separation,
             )
         return build_joint_prompt_snapshot(
             bundle.manifest,
             scope_data,
             cutout_items,
             placement_contract=placement_contract,
+            prefer_natural_separation=prefer_natural_separation,
         )
 
     raise ValueError(
@@ -1110,6 +1125,7 @@ def build_generation_fingerprint(
         scope_data,
         effective_generation,
         raw_cutout_items,
+        contract_version,
     )
     components = {
         "pipeline_contract": {
