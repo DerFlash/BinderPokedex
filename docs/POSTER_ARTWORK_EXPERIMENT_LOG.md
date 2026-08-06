@@ -2512,3 +2512,41 @@ produce a visible foreground crossing.
 All 41 configured poster targets now have their required local Official Artwork
 cutouts and title logos. The next batch creates fresh v9 review candidates; no
 candidate becomes a promotion or enters PDF routing before human review.
+
+### Complete avoidance-first candidate batch (2026-08-06)
+
+All 41 configured targets were rendered from scratch on the remote M4 Max with
+128 GB unified memory. Every ComfyUI process reported MPS, used the unquantized
+BF16 FLUX.2 Klein 4B model, the `individual_spatial_joint` v9 prompt, four
+sampling steps, one decode, and deterministic Lanczos resampling to the exact
+2368 x 3268 print raster. No character composite, inpainting pass, vegetation
+repair, or learned upscale was added.
+
+The technical audit accepts all 41 selected candidates: every poster has
+effective 300-dpi metadata, a unique SHA-256, non-blank pixels, and nine exact
+physical card crops. The visual pre-screen retains 30 configured-seed renders
+unchanged and replaces eleven bounded failures:
+
+- ExGen3 Mega, ME02, ME03, MEP, Pokédex Generation VIII, SV06, SV06.5, and SVP
+  use one `configured seed + 1` retry after the first render produced a clipped
+  subject, wrong identity, or an extra subject.
+- SV09 uses seed `260747621`; Reshiram is again white and anatomically faithful
+  instead of the first candidate's red dragon-like reinterpretation.
+- Base3 keeps seed `260755492` but now deliberately features the in-set,
+  card-safe Kabutops, Lapras, and Gengar. Two bounded bird-seed retries are
+  rejected because the three flying reference poses moved into the title area,
+  disappeared from a card, or lost identity.
+- SV07 keeps seed `260726008` but now deliberately features the in-set,
+  card-safe Bulbasaur, Squirtle, and Scorbunny. Its Celebi/Reshiram/Scorbunny
+  candidate and one seed retry are rejected for edge clipping and duplication.
+
+The two curated selections are stored in the ordinary fetch configuration and
+scope JSON, with official cutouts and regression coverage. They are not
+renderer exceptions. This establishes a useful general boundary: when a valid
+set offers several representative subjects, input curation is simpler and more
+reliable than adding generation nodes or sweeping seeds for an inherently
+card-hostile pose.
+
+The selected 41-poster batch remains review-only. It does not replace the
+current promotions or enter PDF routing until the contact sheets and relevant
+full-resolution candidates receive explicit human approval.

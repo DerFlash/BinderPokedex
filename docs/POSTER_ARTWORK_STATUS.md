@@ -109,8 +109,11 @@ visual approval.
 | ExGen3 sections | 2 | 2 | 0 |
 | **Total** | **41** | **13** | **28** |
 
-One of the 28 disabled targets is the promoted ExGen2 Normal poster; the other
-27 targets still require generation and review.
+One of the 28 disabled targets is the promoted ExGen2 Normal poster. A complete
+fresh v9 batch now supplies technically validated review candidates for all 41
+targets, including every disabled target. These candidates remain outside
+stable artwork paths and PDF routing until explicit visual approval and
+promotion; the current 13 enabled posters therefore remain unchanged.
 
 The deterministic overlay contract is complete for all 266 language outputs
 currently implied by those targets. Aggregate sections contain title,
