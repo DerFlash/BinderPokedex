@@ -2242,3 +2242,23 @@ the supplied source pixels and therefore also preserves the incorrect
 behind-subject layer order. No v3 strength is promoted automatically. The 0.3
 candidate is the only bounded human-review candidate; deciding whether its
 remaining character changes are acceptable requires visual review.
+
+### Balanced layer-order overfit v4 (2026-08-06)
+
+V4 tests one remaining KISS hypothesis before requiring a product tradeoff. It
+reuses every v3 pixel and mask, but splits the four `avoid` scenes and the one
+`front` scene into separate trainer datasets. The front dataset uses
+`num_repeats: 4`, so positive layer-order supervision is balanced against the
+four ordinary integration examples instead of appearing once in five samples.
+Its caption now explicitly requests reordering the already-present nearest
+plants in front of lower feet or legs while preserving exact character design.
+The caption SHA-256 is
+`3a681de8d906c5841778d2e0fa3a5dee1dabfabfa42ecae0aae4ec2fa02a4581`.
+
+The immutable scratch manifest SHA-256 is
+`bc34844e8e672e0e668cfb413ff2137a71bd16449a9fc48f90079ece1324c49a`.
+Model, rank, precision, optimizer, learning rate, 100-loop budget, focus mask,
+global mask floor, and holdout remain unchanged. This isolates supervision
+balance and task wording without adding inference complexity. Success means a
+higher adapter strength retains visible front crossings on the unseen
+Generation-VI holdout while improving identity over v3 strength 0.3.
