@@ -2374,8 +2374,29 @@ are rendered on MPS; no adapter is merged or promoted.
 Stacking supplies the first candidates that pass both numeric directions in
 one render. Strengths v3 0.6/v5 1.0 give the best foreground advantage while
 v3 0.7/v5 1.0 gives the best source MAE among positive-depth candidates; v3
-0.65/v5 1.0 lies between them. Enlarged physical-card review shows recognizable
-anatomy and continuous front crossings, but small color, shading, toe, and
-edge-treatment differences remain. Numeric success cannot approve those
-details. These three candidates require human visual review before any broader
-validation, merge experiment, or production-node decision.
+0.65/v5 1.0 lies between them. These values qualify the three candidates for
+human review only; they do not establish correct layer order.
+
+Human review rejects all three stacked candidates. On Chespin, Fennekin, and
+Froakie, supposedly nearer rooted blades partly merge with feet or legs, stop
+at a silhouette, or continue behind the character. The result reads as grass
+passing through the figures rather than one continuous foreground object
+remaining in front. No stacked adapter is promoted and the production graph
+remains unchanged.
+
+This review exposes a false-positive evaluation path. `Covered target
+advantage` compares colors inside the intended overlap mask, so recolored or
+darkened character pixels can improve it without forming a coherent foreground
+contour. From this experiment onward it is diagnostic and reject-only: a
+positive value can nominate a crop for visual inspection, but cannot approve
+occlusion. Approval requires every connected foreground object to preserve one
+plausible depth relationship across the complete intersection, without
+disappearing into a character, reappearing on its other side, blending into an
+appendage, or leaving a foot visibly on top of an object that should be nearer.
+
+Further seed or scalar-strength sweeps are stopped. The next bounded hypothesis
+is a minimal explicit occlusion guide evaluated in the same generative pass.
+It may describe a small connected foreground crossing, but must not become a
+post-generation character or vegetation composite. If that guide does not
+produce a clean continuous crossing while retaining identity, the safe
+production behavior remains avoiding character/foreground intersections.
