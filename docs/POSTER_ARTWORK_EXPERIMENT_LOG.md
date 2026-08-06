@@ -2354,3 +2354,28 @@ training run, one bounded inference-only check may stack the existing adapters
 at fixed strengths. This is evidence gathering only. A stacked result must
 improve both metrics and visual card crops; otherwise the added runtime node is
 discarded rather than becoming production complexity.
+
+### Stacked identity/depth adapter check (2026-08-06)
+
+The bounded inference-only check chains the unchanged v3 adapter before the v5
+adapter in ComfyUI. The base model, input, prompt, seed, sampler, and four-step
+graph remain fixed. Four broad combinations and two interpolated v3 strengths
+are rendered on MPS; no adapter is merged or promoted.
+
+| V3 strength | V5 strength | Output SHA-256 | Uncovered-source MAE | Covered target advantage |
+| ---: | ---: | --- | ---: | ---: |
+| 0.5 | 0.7 | `431ed88798a20783425ff6ba5a240108a982416c7f81c097b8c20edee2d6e159` | 14.1285 | -0.6643 |
+| 0.5 | 1.0 | `33c2a2f8b74efff27912cb29808bd08e119f2bb2c1a653181316f6f58cb99919` | 14.3280 | +3.1365 |
+| 0.6 | 1.0 | `a6cd3e08132ec39730d932076f7b5aa94cae21f80b364fd2193e94d1eb44b9ac` | 13.7707 | +3.4633 |
+| 0.65 | 1.0 | `629170535a76194d4c4bf57b99c9dd41006e9f4da821ca469413bac062a90f80` | 13.1623 | +0.4577 |
+| 0.7 | 0.7 | `efecbbec12790178ae0a5386f9365834a194a7207193410df71098fcebf24307` | 11.0740 | -9.0765 |
+| 0.7 | 1.0 | `3c6729e2889ae39070160e472ac33a1db346e7b9bb0533ef9b0aacc5b6db4fbe` | 13.0083 | +0.9537 |
+
+Stacking supplies the first candidates that pass both numeric directions in
+one render. Strengths v3 0.6/v5 1.0 give the best foreground advantage while
+v3 0.7/v5 1.0 gives the best source MAE among positive-depth candidates; v3
+0.65/v5 1.0 lies between them. Enlarged physical-card review shows recognizable
+anatomy and continuous front crossings, but small color, shading, toe, and
+edge-treatment differences remain. Numeric success cannot approve those
+details. These three candidates require human visual review before any broader
+validation, merge experiment, or production-node decision.
