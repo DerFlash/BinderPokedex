@@ -41,6 +41,20 @@ def test_every_current_poster_target_has_a_checked_in_manifest():
     assert len(manifests) == 41
 
 
+def test_fossil_poster_uses_three_card_safe_grounded_subjects():
+    bundle = poster_bundle("Base3")
+    source = load_poster_scope_data(bundle)
+    featured = source["sections"]["all"]["featured_elements"]
+    cutouts = json.loads(
+        (bundle.asset_dir / "cutouts" / "manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )["items"]
+
+    assert [item["pokemon_id"] for item in featured] == [141, 131, 94]
+    assert [item["pokemon_id"] for item in cutouts] == [141, 131, 94]
+
+
 def test_every_generated_pdf_language_has_complete_poster_copy():
     checked = []
     configured_scopes = {
