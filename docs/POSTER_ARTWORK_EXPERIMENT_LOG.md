@@ -2294,3 +2294,32 @@ positive layer-order pairs covering different characters and environments,
 while retaining ordinary `avoid` pairs and the untouched Generation-VI
 holdout. This changes training diversity only; it adds no production node or
 inference branch.
+
+### Diverse layer-order overfit v5 (2026-08-06)
+
+V5 replaces v4's four repeats of one positive scene with five distinct
+positive scenes spanning Generations I through V. The four existing ordinary
+`avoid` pairs remain unchanged, so the materialized micro-dataset contains
+four avoid samples and five front samples with no repetition. Generation VI
+remains the untouched transfer holdout.
+
+The four new training-only pairs are deterministic composites over the already
+reviewed Generation-II through Generation-V scenes. Each reference contains
+the same rooted foreground layer behind the exact canonical characters; each
+target moves only that layer in front. Every target keeps all opaque canonical
+pixels exact outside the intentional intersections. Per-card intersection
+audits reject any pair with fewer than 100 covered opaque source pixels. The
+accepted new pairs cover between 749 and 2,138 opaque source pixels per lower
+card and between 2,998 and 4,143 per full scene.
+
+The v5 manifest SHA-256 is
+`d88c41007e9eadc730f8d8c8c68ccc6bcb5488117973254d6fd5a0aed1fa7e2f`;
+the shared front caption SHA-256 is
+`2ed8aebca4c76cc7b08116c73c685d9881d0e1a2b38bd19db71a30d82da239dc`.
+The trainer configuration SHA-256 is
+`badb2a0e67afb2b2e70a19a508b7b4f036203dd0bde64fdcbed922aea39f1919`.
+Model, MPS/BF16 path, rank, optimizer, learning rate, focus-mask floor, and
+100-loop budget remain identical to v4. Success requires both positive
+foreground transfer and materially better source identity on the fixed
+Generation-VI holdout; the adapter must satisfy both gates at the same useful
+strength.
