@@ -2443,3 +2443,52 @@ The wording explicitly forbids halos, artificial gaps, and character-shaped
 clearings. This policy is a new versioned generation contract: historical
 promotions continue to validate against their exact old prompt, while freshly
 prepared workflows use the new avoidance-first wording.
+
+### Masked occlusion-control check (2026-08-06)
+
+The supplied layered-inpainting proposal is tested on the same Generation-VI
+fixture without SAM, ControlNet, another model, or a global rewrite. The exact
+rough composite is the immutable destination. A registered foreground mask is
+the only region that may be sampled, and `ImageCompositeMasked` restores every
+pixel outside it from the exact input after VAE decoding.
+
+The initial `VAEEncodeForInpaint` mask includes the rooted lower foreground
+strip. At denoise 0.55 the neutral mask fill remains visible; at 1.0 the model
+adds plants but leaves large pale gaps. `InpaintModelConditioning` at 1.0 does
+not improve those gaps with the standard FLUX.2 Klein checkpoint. Narrowing the
+mask to rooted plant silhouettes removes the broad gap but retains visibly
+mask-shaped light regions. These paths are rejected.
+
+Normal `VAEEncode` followed by `SetLatentNoiseMask` avoids the neutral fill.
+At denoise 0.7 it produces natural vegetation and preserves every pixel outside
+the mask exactly. The audit finds zero changed pixels among 883,127 pixels
+outside the mask and zero changed fully opaque subject pixels outside it;
+13,948 fully opaque subject pixels lie inside the intentional mask. Visual
+review still rejects the result because partial denoise blends some original
+feet and legs into the generated vegetation instead of establishing an opaque
+front layer. Full denoise 1.0 removes that translucency but replaces the
+crossings with ground-colored smears rather than connected plants. Its final
+output SHA-256 is
+`08f22035e02c7c8ff4d9b83fa87ba14bc55d3c70c9899396b133166d5e18117f`.
+
+A final deterministic probe selects dark vegetation from the clean landscape,
+restores those original pixels in front, and confirms a separate limitation:
+plant segmentation alone does not encode depth or protected anatomy. The
+selection places tall vegetation over Chespin's and Froakie's faces. SAM could
+improve the silhouette selection but would not by itself decide whether that
+plant belongs in front, behind, or outside a protected subject region.
+
+The useful result is therefore narrower than the generic recipe. A noise mask
+can guarantee the mutation boundary and preserve exact identity outside it. It
+is suitable for a manually or structurally approved contact-shadow mask and
+for a verified natural foreground object whose depth is already known. It does
+not infer correct z-order from a plant label and is not promoted as automatic
+occlusion repair. Production remains avoidance-first; ambiguous intersections
+are rejected rather than repaired through a larger automatic mask stack.
+
+All successful render processes in this check report `Device: mps`. The first
+submission also exposes a worker-safety issue: another user's ComfyUI Desktop
+was listening on the default port, so the job reached the wrong input directory.
+The queue client now includes ComfyUI's HTTP validation body in failures, and
+the render worker verifies the server's reported input directory before
+submitting any workflow.
