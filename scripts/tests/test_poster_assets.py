@@ -1563,9 +1563,9 @@ def test_joint_scene_synthesizes_landscape_and_subjects_in_one_shot():
     assert "IMAGE 2 is the exact identity and anatomy reference" in prompt
     assert "not additional subjects" in prompt
     assert "mandatory placement and scale contract" in prompt
-    assert "never paint the character as a flat top layer" in prompt
-    assert "must continue naturally in front" in prompt
-    assert "same physically plausible depth relationship" in prompt
+    assert "invisible no-crossing volume" in prompt
+    assert "Avoid landscape-character intersections" in prompt
+    assert "Do not conceal any character part" in prompt
     assert "Mewtwo" in prompt
     assert "Bulbasaur" in prompt
     assert "Charmander" in prompt
@@ -1765,6 +1765,7 @@ def test_joint_scene_prompt_separates_spatial_and_identity_roles():
         items,
         placement_contract=placement_contract,
         prefer_natural_separation=False,
+        avoid_foreground_intersections=False,
     )
     snapshot = build_joint_prompt_snapshot(
         bundle.manifest,
@@ -1781,10 +1782,11 @@ def test_joint_scene_prompt_separates_spatial_and_identity_roles():
     assert "neutral field is empty reference space" in final
     assert "mandatory placement and scale contract" in final
     assert "not additional subjects" in final
-    assert "small physically plausible edge occlusions" in final
-    assert "Prefer clean natural separation" in final
-    assert "never through halos, artificial gaps" in final
-    assert "Prefer clean natural separation" not in legacy
+    assert "small physically plausible edge occlusions" not in final
+    assert "invisible no-crossing volume" in final
+    assert "Avoid landscape-character intersections" in final
+    assert "Do not conceal any character part" in final
+    assert "invisible no-crossing volume" not in legacy
     assert "JOINT SCENE - ONE-SHOT FINAL SYNTHESIS" in snapshot
     assert "SUBJECT-FREE LANDSCAPE DRAFT" not in snapshot
 

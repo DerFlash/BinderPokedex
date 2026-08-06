@@ -110,9 +110,9 @@ CURRENT_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
         "identity_lock",
         "two_pass_source_pixels",
     ): GENERATION_PIPELINE_CONTRACT_VERSION,
-    ("flux", "joint_scene", "spatial_identity_joint"): 6,
+    ("flux", "joint_scene", "spatial_identity_joint"): 7,
     ("flux", "joint_scene", "regional_identity_joint"): 7,
-    ("flux", "joint_scene", "individual_spatial_joint"): 8,
+    ("flux", "joint_scene", "individual_spatial_joint"): 9,
 }
 SUPPORTED_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
     (
@@ -120,14 +120,18 @@ SUPPORTED_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
         "identity_lock",
         "two_pass_source_pixels",
     ): frozenset({1, 2, 3}),
-    ("flux", "joint_scene", "spatial_identity_joint"): frozenset({5, 6}),
+    ("flux", "joint_scene", "spatial_identity_joint"): frozenset({5, 6, 7}),
     ("flux", "joint_scene", "regional_identity_joint"): frozenset({6, 7}),
-    ("flux", "joint_scene", "individual_spatial_joint"): frozenset({7, 8}),
+    ("flux", "joint_scene", "individual_spatial_joint"): frozenset({7, 8, 9}),
 }
 NATURAL_SEPARATION_PIPELINE_MINIMUM = {
     ("flux", "joint_scene", "spatial_identity_joint"): 6,
     ("flux", "joint_scene", "regional_identity_joint"): 7,
     ("flux", "joint_scene", "individual_spatial_joint"): 8,
+}
+FOREGROUND_AVOIDANCE_PIPELINE_MINIMUM = {
+    ("flux", "joint_scene", "spatial_identity_joint"): 7,
+    ("flux", "joint_scene", "individual_spatial_joint"): 9,
 }
 RASTER_GEOMETRY_PIPELINE_MINIMUM = {
     ("flux", "identity_lock"): 3,
@@ -1042,6 +1046,11 @@ def _effective_generation_prompt(
             separation_minimum is not None
             and pipeline_contract_version >= separation_minimum
         )
+        avoidance_minimum = FOREGROUND_AVOIDANCE_PIPELINE_MINIMUM.get(family)
+        avoid_foreground_intersections = (
+            avoidance_minimum is not None
+            and pipeline_contract_version >= avoidance_minimum
+        )
         if reference_mode == "individual_spatial_joint":
             return build_individual_spatial_joint_prompt_snapshot(
                 bundle.manifest,
@@ -1049,6 +1058,7 @@ def _effective_generation_prompt(
                 cutout_items,
                 placement_contract=placement_contract,
                 prefer_natural_separation=prefer_natural_separation,
+                avoid_foreground_intersections=avoid_foreground_intersections,
             )
         if reference_mode == "regional_identity_joint":
             return build_regional_joint_prompt_snapshot(
@@ -1064,6 +1074,7 @@ def _effective_generation_prompt(
             cutout_items,
             placement_contract=placement_contract,
             prefer_natural_separation=prefer_natural_separation,
+            avoid_foreground_intersections=avoid_foreground_intersections,
         )
 
     raise ValueError(

@@ -8,7 +8,7 @@ accepted assets are listed in
 edit-training experiment is specified in
 [Poster Artwork Integration LoRA](POSTER_ARTWORK_TRAINING.md).
 
-Last reviewed: 2026-08-05
+Last reviewed: 2026-08-06
 
 ## Decisions
 
@@ -20,7 +20,7 @@ Last reviewed: 2026-08-05
 | PDF behavior | Consume only promoted local artwork; never launch ComfyUI implicitly |
 | Cover fallback | Keep the existing section cover whenever no promoted poster is enabled; currently it also remains before enabled posters until a separately reviewed replacement migration |
 | Poster presentation | Render enabled posters as cuttable physical cards by default; optionally render the same localized poster as one continuous physical-grid-sized image centered on its PDF page |
-| Generator | FLUX.2 `joint_scene` remains the mode for new candidates with `individual_spatial_joint` v7 as the default; spatial-v5 remains reproducible for its accepted scopes and regional-v6 only for Generation III |
+| Generator | FLUX.2 `joint_scene` remains the mode for new candidates with avoidance-first `individual_spatial_joint` v9 as the default; earlier reviewed contracts remain reproducible |
 | Fallback | FLUX.2 `identity_lock` remains explicitly selectable when a one-shot cannot pass identity or placement review |
 | Prompt ownership | Set-specific creative briefs in one catalog plus one centrally generated identity, placement, depth, and safe-area contract |
 | Character identity | Supplied Official Artwork is the authority for form, stature, anatomy, silhouette, pose, color, and markings |
@@ -44,7 +44,7 @@ gates at the same time:
 | Coherent scene depth | Hard | Shadows and ground contact agree. A connected landscape element either stays clear of a character or keeps one physically plausible front/behind relationship for its entire visible intersection; ending at a silhouette or switching depth around it fails |
 | Deterministic print output | Hard | Text-free output reaches the exact configured 300-dpi dimensions through deterministic resampling; typography, logo, slicing, and PDF use remain deterministic |
 | Set-specific scene quality | Preferred | The result is attractive, recognizable for the scope, and preserves the requested text-safe regions |
-| Visible foreground overlap | Preferred | Natural foreground overlap may occur, but is not required. Clean separation and one coherent overlap are equally valid; both are preferable to a forced contradictory overlap |
+| Foreground intersections | Avoid by default | The one-shot plans the known character bounds as naturally low, continuous ground without camera-near scenery crossing a silhouette. A visible crossing is no longer requested; an accidental crossing still fails unless its depth is coherent |
 
 Minor print-scale simplification of a non-defining line may be accepted only
 after direct comparison at final card size. A changed body-part count, facial
@@ -71,7 +71,7 @@ is the accepted cost of exact identity preservation.
 
 | Architecture | Final scene jointly generated | Identity | Card containment | Scene integration | Role |
 | --- | --- | --- | --- | --- | --- |
-| FLUX.2 Individual Spatial v7 `joint_scene` | Yes | One positioned identity reference per subject passes the accepted print-detail tolerance for Generations IV-IX and `SV03.5` | All seven promotions pass their physical crops with useful padding | Joint landscape generation, coherent grounding, shadows, and either clean separation or consistent overlap pass review | Default; seven scopes promoted |
+| FLUX.2 Individual Spatial v9 `joint_scene` | Yes | One positioned identity reference per subject remains the identity authority; existing v7 promotions define the accepted print-detail tolerance | Existing promotions pass their physical crops with useful padding; new v9 candidates retain the same geometry | The one-shot now keeps camera-near scenery outside the known character volumes while preserving one continuous ground plane | Default for new candidates; existing v7 promotions remain reproducible |
 | FLUX.2 Spatial+Identity v5 `joint_scene` | Yes | Gen I `00001`, Gen II `00001`, Base1 `00001`, ExGen3 Mega `00001`, and ExGen3 Normal `00001` pass the accepted print-detail tolerance | All five promotions pass their physical crops with preferred fill | Coherent grounding and shadows; retained as an accepted reproducible topology | Reproducible legacy; five scopes promoted |
 | FLUX.2 Regional Identity v6 `joint_scene` | Yes | The promoted Generation III candidate keeps all three supplied identities within normal one-shot tolerance | All three complete subjects pass their physical bottom-card crops | The reviewed promotion passes, but the six-scope audit exposes independent lower-card scene predictions and fails to generalize | Generation III reproduction only; broader rollout stopped |
 | Two-pass `identity_lock` | No | Exact source pixels | Reliable | Protected lower band can read as a layer | Explicit fallback; no active promoted scope |
@@ -125,7 +125,7 @@ is the accepted cost of exact identity preservation.
 - All fourteen promoted bundles use a reviewed `joint_scene` promotion: seven
   individual-v7, one individual-Dev, five spatial-v5, and one regional-v6.
 - `identity_lock` remains an explicit fallback but has no active promoted scope.
-- New manifests start with `joint_scene` / `individual_spatial_joint` v7.
+- New manifests start with `joint_scene` / `individual_spatial_joint` v9.
   Accepted v5 and v6 manifests remain reproducible and are not mechanically
   migrated merely to make topology labels uniform.
 - `regional_identity_joint` remains an explicit v6 option only to reproduce

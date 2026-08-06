@@ -346,6 +346,7 @@ def build_joint_scene_prompt(
     *,
     placement_contract: list[dict[str, int]],
     prefer_natural_separation: bool = True,
+    avoid_foreground_intersections: bool = True,
 ) -> str:
     """Build one final-scene prompt from spatial and identity references."""
     if not items:
@@ -401,15 +402,65 @@ def build_joint_scene_prompt(
         cast = cast_names[0]
     else:
         cast = ", ".join(cast_names[:-1]) + f", and {cast_names[-1]}"
-    separation_guidance = (
-        "Prefer clean natural separation: arrange nearer landscape "
-        "elements around, rather than across, every character silhouette. "
-        "Achieve this through ordinary composition and spacing, never "
-        "through halos, artificial gaps, isolated clearings, or "
-        "character-shaped empty areas. "
-        if prefer_natural_separation
-        else ""
-    )
+    if avoid_foreground_intersections:
+        separation_guidance = (
+            "Treat every mandatory character silhouette bound and its "
+            "surrounding two-percent clearance as an invisible no-crossing "
+            "volume for camera-near landscape elements. Inside these volumes, "
+            "continue only the same low ground plane and unobtrusive ground "
+            "texture beneath the feet. Place foreground and midground grass "
+            "tufts, tall blades, leaves, flowers, branches, rocks, water "
+            "edges, and other scenery outside the volumes or clearly behind "
+            "the characters. This is ordinary natural spacing, never a "
+            "visible clearing, halo, platform, path, circle, landing pad, or "
+            "character-shaped gap. "
+        )
+        intersection_guidance = (
+            "Avoid landscape-character intersections instead of trying to "
+            "repair their depth order. If any nearer landscape element would "
+            "cross a character silhouette, relocate, bend, shorten, or lower "
+            "that landscape element during the unified synthesis. Keep the "
+            "continuous landscape naturally detailed around the protected "
+            "volumes and keep every complete print-safe silhouette readable."
+        )
+        permitted_adjustments = (
+            "Permitted changes are limited to scene lighting, reflected color, "
+            "and cast shadow. Do not conceal any character part with landscape "
+            "occlusion. Do "
+        )
+    else:
+        separation_guidance = (
+            "Prefer clean natural separation: arrange nearer landscape "
+            "elements around, rather than across, every character silhouette. "
+            "Achieve this through ordinary composition and spacing, never "
+            "through halos, artificial gaps, isolated clearings, or "
+            "character-shaped empty areas. "
+            if prefer_natural_separation
+            else ""
+        )
+        intersection_guidance = (
+            "Resolve depth ordering explicitly at every "
+            "landscape-character intersection. A blade, leaf, branch, rock, "
+            "water edge, or other landscape element that is genuinely "
+            "closer to the camera must continue naturally in front of the "
+            "corresponding small exterior part of the character; never "
+            "truncate that element exactly at the character silhouette and "
+            "never paint the character as a flat top layer. A connected "
+            "plant, leaf cluster, stem, branch, or other continuous object "
+            "must keep the same physically plausible depth relationship "
+            "along its visible length instead of arbitrarily switching from "
+            "behind a character to in front of it. Landscape elements that "
+            "are farther away remain naturally behind. If a closer element "
+            "would hide an identity-critical body part, marking, facial "
+            "feature, or silhouette detail, bend, move, shorten, lower, or "
+            "regenerate that landscape element instead of placing the "
+            "character over it. Keep defining anatomy and the print-safe "
+            "silhouette readable."
+        )
+        permitted_adjustments = (
+            "Permitted changes are limited to scene lighting, reflected color, "
+            "cast shadow, and small physically plausible edge occlusions. Do "
+        )
 
     return "\n\n".join(
         (
@@ -436,9 +487,7 @@ def build_joint_scene_prompt(
                 "individual identity image is the strict authority for each "
                 "character's exact silhouette shape, stature, anatomy, facial "
                 "features, colors, markings, and defining design details. "
-                "Permitted "
-                "changes are limited to scene lighting, reflected color, cast "
-                "shadow, and small physically plausible edge occlusions. Do "
+                f"{permitted_adjustments}"
                 "not redesign, restyle, humanize, merge, duplicate, simplify, "
                 "add, remove, enlarge, or reshape any referenced body part, "
                 "appendage, marking, eye, or facial feature. Never invent a "
@@ -463,23 +512,7 @@ def build_joint_scene_prompt(
                 f"{final_scene_description} The characters and the {ground_noun} "
                 "share one camera space and one globally coherent depth order. "
                 f"{separation_guidance}"
-                "Resolve depth ordering explicitly at every "
-                "landscape-character intersection. A blade, leaf, branch, rock, "
-                "water edge, or other landscape element that is genuinely "
-                "closer to the camera must continue naturally in front of the "
-                "corresponding small exterior part of the character; never "
-                "truncate that element exactly at the character silhouette and "
-                "never paint the character as a flat top layer. A connected "
-                "plant, leaf cluster, stem, branch, or other continuous object "
-                "must keep the same physically plausible depth relationship "
-                "along its visible length instead of arbitrarily switching from "
-                "behind a character to in front of it. Landscape elements that "
-                "are farther away remain naturally behind. If a closer element "
-                "would hide an identity-critical body part, marking, facial "
-                "feature, or silhouette detail, bend, move, shorten, lower, or "
-                "regenerate that "
-                "landscape element instead of placing the character over it. "
-                "Keep defining anatomy and the print-safe silhouette readable."
+                f"{intersection_guidance}"
             ),
             (
                 f"{safe_areas} Keep one continuous natural {ground_noun} plane "
@@ -501,6 +534,7 @@ def build_joint_prompt_snapshot(
     *,
     placement_contract: list[dict[str, int]],
     prefer_natural_separation: bool = True,
+    avoid_foreground_intersections: bool = True,
 ) -> str:
     """Return the one-shot prompt as a stable provenance snapshot."""
     return format_joint_prompt_snapshot(
@@ -510,6 +544,7 @@ def build_joint_prompt_snapshot(
             items,
             placement_contract=placement_contract,
             prefer_natural_separation=prefer_natural_separation,
+            avoid_foreground_intersections=avoid_foreground_intersections,
         )
     )
 
@@ -1024,6 +1059,7 @@ def build_individual_spatial_joint_prompt(
     *,
     placement_contract: list[dict[str, int]],
     prefer_natural_separation: bool = True,
+    avoid_foreground_intersections: bool = True,
 ) -> str:
     """Reuse the reviewed scene prompt with individual spatial references."""
     accepted_reference_prompt = build_spatial_identity_reference_prompt(
@@ -1042,6 +1078,7 @@ def build_individual_spatial_joint_prompt(
         items,
         placement_contract=placement_contract,
         prefer_natural_separation=prefer_natural_separation,
+        avoid_foreground_intersections=avoid_foreground_intersections,
     )
     if accepted_reference_prompt not in prompt:
         raise RuntimeError("Accepted reference paragraph was not found")
@@ -1084,6 +1121,7 @@ def build_individual_spatial_joint_prompt_snapshot(
     *,
     placement_contract: list[dict[str, int]],
     prefer_natural_separation: bool = True,
+    avoid_foreground_intersections: bool = True,
 ) -> str:
     """Return the exact individual-spatial prompt with its stable heading."""
     return format_individual_spatial_joint_prompt_snapshot(
@@ -1093,6 +1131,7 @@ def build_individual_spatial_joint_prompt_snapshot(
             items,
             placement_contract=placement_contract,
             prefer_natural_separation=prefer_natural_separation,
+            avoid_foreground_intersections=avoid_foreground_intersections,
         )
     )
 

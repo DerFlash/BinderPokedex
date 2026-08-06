@@ -48,8 +48,8 @@ data/poster_assets/<asset-key>/
     manifest.json
     ...
   comfyui_poster/                 # ignored local workspace
-    individual_spatial_reference_*.png # default v7 topology
-    individual_spatial_joint_prompt.generated.txt # default v7 topology
+    individual_spatial_reference_*.png # default v9 topology
+    individual_spatial_joint_prompt.generated.txt # default v9 topology
     joint_scene_cast_reference.png # legacy spatial_identity_joint only
     identity_reference_*.png       # legacy spatial/regional topologies
     joint_scene_prompt.generated.txt # legacy spatial topology only
@@ -246,8 +246,9 @@ card areas. That mechanical coverage does not guarantee one continuous scene
 prediction across the lower row. There is no mask image, character composite,
 inpaint target, or post-decode repair.
 
-This topology is pipeline contract v6. Individual-spatial v7 remains the
-default for new manifests. Regional v6 remains selectable so the reviewed
+This topology is pipeline contract v6. Avoidance-first individual-spatial v9 is
+the default for new manifests; existing v7 promotions remain reproducible.
+Regional v6 remains selectable so the reviewed
 Generation III promotion is reproducible, but it is not a general migration
 target.
 
@@ -257,7 +258,7 @@ inside each complete card area, so a local branch can generate a second
 horizon or card-sized scene. Making the global condition additive removed the
 split but averaged away subject identity even after one bounded 2:1
 local/global test. Those experimental changes were reverted. Generation III
-remains the sole reviewed regional-v6 promotion; individual-spatial v7 remains
+remains the sole reviewed regional-v6 promotion; individual-spatial v9 remains
 the production default, and further seed or prompt sweeps are not justified.
 
 ## `identity_lock` fallback

@@ -358,14 +358,19 @@ The default `individual_spatial_joint` path:
    silhouette, color, and marking authority;
 4. starts from one `EmptyFlux2LatentImage`, invents the complete landscape and
    all characters together, and samples exactly once;
-5. decodes and saves that result directly, with no character
+5. treats every known subject bound plus clearance as an invisible no-crossing
+   volume for camera-near scenery, while continuing the same natural low ground
+   plane through it;
+6. decodes and saves that result directly, with no character
    composite, mask repair, or source-pixel restoration afterwards.
 
 The scene brief controls camera, terrain, atmosphere, palette, and broad
 composition. The normalized rectangles request position, size, baseline,
 visible padding, and card-safe regions. The model synthesizes landscape and
-Pokémon together and resolves z-order, shadows, reflected light, and physically
-plausible edge occlusion. A changed body part, face, marking, defining contour,
+Pokémon together. It is instructed to keep tall or camera-near scenery outside
+the character volumes instead of solving a foreground crossing, while still
+generating coherent ground contact, shadows, reflected light, and depth. A
+visible clearing or a changed body part, face, marking, defining contour,
 scale, or placement remains a hard visual rejection. Preparation writes
 `individual_spatial_reference_1.png` through the current subject count and
 `individual_spatial_joint_prompt.generated.txt`. It does not produce a shared
@@ -419,8 +424,8 @@ representative audit rerendered all six spatial-v5 promotions and approved
 none of their regional-v6 candidates. Complete-card regional conditioning can
 replace the global landscape prediction inside the lower row and produce
 separate horizons or card scenes. Generation III is a reviewed scope-specific
-exception. New scopes use individual-spatial v7 or the explicit identity-lock
-fallback.
+exception. New scopes use avoidance-first individual-spatial v9 or the explicit
+identity-lock fallback.
 Reopening regional work requires a materially different control mechanism and
 an explicit new decision; repeated seed, prompt, or regional-strength sweeps
 are outside the accepted stop rule.

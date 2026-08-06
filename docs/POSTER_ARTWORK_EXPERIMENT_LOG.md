@@ -2492,3 +2492,23 @@ was listening on the default port, so the job reached the wrong input directory.
 The queue client now includes ComfyUI's HTTP validation body in failures, and
 the render worker verifies the server's reported input directory before
 submitting any workflow.
+
+### Avoidance-first rollout contract (2026-08-06)
+
+The guide, adapter-stack, and masked-inpainting branches are closed after their
+bounded failures. Production remains the same KISS one-shot graph: positioned
+identity references, one empty target, one FLUX.2 sampler, one decode, and
+deterministic print resampling. Only the central prompt policy changes.
+
+Pipeline v9 treats each mandatory character silhouette bound plus two-percent
+clearance as an invisible no-crossing volume for camera-near landscape
+elements. The landscape must continue as ordinary low ground and subtle texture
+beneath the character, while tall grass, leaves, flowers, branches, rocks,
+water edges, and comparable scenery are moved outside the volume or clearly
+behind it. Halos, isolated clearings, paths, platforms, landing pads, and
+character-shaped gaps remain forbidden. The prompt no longer asks the model to
+produce a visible foreground crossing.
+
+All 41 configured poster targets now have their required local Official Artwork
+cutouts and title logos. The next batch creates fresh v9 review candidates; no
+candidate becomes a promotion or enters PDF routing before human review.

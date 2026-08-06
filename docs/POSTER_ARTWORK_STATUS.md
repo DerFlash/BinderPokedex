@@ -6,7 +6,7 @@ live in [Poster Workflow](POSTER_WORKFLOW.md), durable product requirements in
 [Poster Architecture](POSTER_ARTWORK_CONCEPT.md), and rejected or superseded
 evidence in [Poster Experiment Log](POSTER_ARTWORK_EXPERIMENT_LOG.md).
 
-Last audited: 2026-08-05
+Last audited: 2026-08-06
 
 ## Current decision
 
@@ -15,7 +15,7 @@ The production generator supports one model family and two generation modes.
 
 | Role | Contract | Current use |
 | --- | --- | --- |
-| Default | FLUX.2 `joint_scene` / `individual_spatial_joint` pipeline v7 | One poster-shaped identity-and-position reference per subject, empty target, one sampler, one decode, deterministic 300-dpi Lanczos output |
+| Default | FLUX.2 `joint_scene` / avoidance-first `individual_spatial_joint` pipeline v9 | One poster-shaped identity-and-position reference per subject, invisible no-crossing character volumes, empty target, one sampler, one decode, deterministic 300-dpi Lanczos output |
 | Reproducible legacy | FLUX.2 `joint_scene` / `spatial_identity_joint` pipeline v5 | One shared spatial cast plus unscaled identity references; retained for its accepted promotions |
 | Scope-specific legacy | FLUX.2 `joint_scene` / `regional_identity_joint` pipeline v6 | One regional identity branch per physical card; retained only for Generation III |
 | Explicit fallback | FLUX.2 `identity_lock` | Two-pass scene, immutable source figures, exact opaque-pixel audit, and 300-dpi model upscale; currently no active scope uses it |
@@ -159,11 +159,14 @@ pixel equality. Review covers exact cast count and form, anatomy, face,
 markings, silhouette, pose, card fit, padding, grounding, shadows, coherent
 depth, safe text cells, and every physical card crop.
 
-Natural foreground overlap is allowed but not forced. A connected landscape
-object must either stay clear of a subject or maintain one physically plausible
-front/behind relationship for its complete visible intersection. Abrupt
-termination at a silhouette or a front/back switch along the same object is a
-hard failure.
+New candidates use avoidance-first pipeline v9. Every known character bound
+plus its two-percent clearance is an invisible no-crossing volume for
+camera-near scenery. The same low ground plane and subtle ground texture
+continue beneath the characters, while tall grass, leaves, flowers, branches,
+rocks, and water edges are composed outside those volumes or clearly behind
+them. The volumes must not become visible clearings, halos, platforms, paths,
+or character-shaped gaps. An accidental intersection still fails if an object
+terminates at a silhouette or switches depth along its visible length.
 
 ## Deferred depth guide
 
@@ -195,27 +198,20 @@ texture, character pixels, or a post-decode composite.
 
 ## Remaining work
 
-1. Human-review the Base1 holdout at LoRA strength 0.7. It improves mean source
-   fidelity over the no-LoRA render and passes agent visual preflight, but it
-   still redraws almost every opaque source pixel. Decide whether this is a
-   useful direction before any longer LoRA run.
-2. Use `individual_spatial_joint` for new scopes, but keep human review and the
-   bounded seed rule; a reviewed seed is not proof of universal stability.
-3. Leave accepted v5 and v6 promotions unchanged unless a concrete visual or
-   product requirement justifies a reviewed replacement.
-4. Trigger the deferred minimal depth guide only under its documented failure
-   condition, not merely to force visible foreground overlap.
-5. Review the promoted ExGen2 Normal overlay, then enable it if the localized
+1. Generate one fresh avoidance-first candidate for every configured target,
+   but keep human review and the bounded seed rule; a reviewed seed is not
+   proof of universal stability.
+2. Leave prior promotions available until their v9 replacements pass identity,
+   card containment, scene quality, and deterministic output review.
+3. Review the promoted ExGen2 Normal overlay, then enable it if the localized
    composition passes. The first Dev candidates for Mega and Primal failed
-   exact count/placement; retry only after a material control change, not with
-   a seed sweep.
-6. Generate, review, promote, and then enable the remaining 27 unpromoted
-   targets. The planner reports 25 as `needs_assets`; ExGen2 Mega and Primal
-   remain technically renderable but blocked on a new placement/count-control
-   hypothesis.
-7. Decide on and implement explicit cover replacement only after the affected
+   exact count/placement; v9 is the material composition change for their next
+   bounded attempt.
+4. Generate, review, promote, and then enable the remaining 27 unpromoted
+   targets. All 41 targets now have complete local source assets.
+5. Decide on and implement explicit cover replacement only after the affected
    target family is fully promoted and its multilingual PDFs pass visual QA.
-8. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
+6. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
    matching physical page formats, memory tests, and visual QA exist.
 
 ## Cleanup boundary
