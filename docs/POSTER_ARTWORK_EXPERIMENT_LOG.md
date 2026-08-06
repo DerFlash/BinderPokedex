@@ -2323,3 +2323,34 @@ Model, MPS/BF16 path, rank, optimizer, learning rate, focus-mask floor, and
 foreground transfer and materially better source identity on the fixed
 Generation-VI holdout; the adapter must satisfy both gates at the same useful
 strength.
+
+The M4 Max completes v5 through MPS with exit code zero in 1:12:21. The final
+92,426,896-byte adapter has SHA-256
+`239fa9519b8ebea50ecbf04c25ec0430a6ed2a879ca34eda3e5ec844d1bceccf`,
+160 BF16 tensors, 46,202,880 parameters, and zero non-finite values. Trainer
+timings report `get_mask_multiplier` in every ten-loop block.
+
+The unchanged Generation-VI holdout produces:
+
+| Candidate | Output SHA-256 | Uncovered-source MAE | Covered target advantage |
+| --- | --- | ---: | ---: |
+| v3 at 0.7 | `f08d926aca66b03882e9a3939e41b5b8910e4a3ee08d2ba54ece06778833a17c` | 8.8791 | -46.3654 |
+| v4 at 0.5 | `266e19f80b0708efd2f9d5a7789bc7b135a8dac1914604f43b5b20da8ccc1425` | 36.5707 | +9.2090 |
+| v5 at 0.3 | `42e2c9d472bcc583a3480bb81062b3a11c545e16415292abf896f3f0ed8a9cab` | 46.0644 | +14.2391 |
+| v5 at 0.5 | `7ef3e353b8cf7661c984108bc5cd888d51d84a82239a98ae9c460ae8f38c9bf9` | 45.0478 | +15.6403 |
+| v5 at 0.7 | `e264a5aa4cd483593c178aaf0c862de6d49a44c83bee2380cc645b3a2fad372b` | 43.8690 | +21.7622 |
+| v5 at 1.0 | `ddf6daa9fedf885bd57da6f0053f1844508e777216463cc028e1c12c45a549a0` | 37.9999 | +24.8648 |
+
+V5 generalizes the requested foreground ordering more strongly than v4: every
+strength keeps continuous front crossings, and target advantage increases with
+adapter strength. It does not recover source identity. The supplied characters
+retain recognizable anatomy but acquire substantial color, brightness, and
+line-treatment changes at every strength. V5 therefore fails the combined gate
+and is not promoted.
+
+V3 and v5 now isolate complementary behavior: v3 strongly preserves identity
+while v5 strongly transfers layer ordering. Before creating another dataset or
+training run, one bounded inference-only check may stack the existing adapters
+at fixed strengths. This is evidence gathering only. A stacked result must
+improve both metrics and visual card crops; otherwise the added runtime node is
+discarded rather than becoming production complexity.
