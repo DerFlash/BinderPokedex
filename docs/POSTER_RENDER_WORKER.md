@@ -14,6 +14,9 @@ and does not expose the macOS Metal/MPS backend required by this workflow.
    available model files before starting ComfyUI.
 4. ComfyUI listens on remote loopback only. The worker requires the startup log
    to report `Device: mps`, queues the workflow, and stops ComfyUI afterwards.
+   Before queueing, it also verifies that the server reports this job's exact
+   input directory; a different ComfyUI process already using the port is
+   rejected instead of receiving the workflow.
 5. `run.json`, `comfyui.log`, and the generated images are copied back for
    visual review. Nothing is promoted automatically.
 

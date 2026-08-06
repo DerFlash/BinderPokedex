@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 from uuid import uuid4
@@ -13,8 +14,15 @@ from uuid import uuid4
 def request_json(url: str, payload: dict[str, object] | None = None) -> dict[str, object]:
     data = json.dumps(payload).encode("utf-8") if payload is not None else None
     headers = {"Content-Type": "application/json"} if data is not None else {}
-    with urllib.request.urlopen(urllib.request.Request(url, data=data, headers=headers), timeout=30) as response:
-        return json.loads(response.read().decode("utf-8"))
+    request = urllib.request.Request(url, data=data, headers=headers)
+    try:
+        with urllib.request.urlopen(request, timeout=30) as response:
+            return json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as error:
+        body = error.read().decode("utf-8", errors="replace")
+        raise RuntimeError(
+            f"ComfyUI HTTP {error.code} for {url}: {body}"
+        ) from error
 
 
 def server_process_arguments(server: str) -> list[str]:

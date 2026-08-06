@@ -79,6 +79,7 @@ from scripts.poster_assets.provenance import (
     sha256_file,
 )
 from scripts.poster_assets.queue_comfyui_workflow import (
+    request_json,
     server_comfyui_root,
     server_input_directory,
     validate_server_input_directory,
@@ -1970,6 +1971,27 @@ def test_comfyui_server_scope_is_read_from_input_directory(monkeypatch, tmp_path
     assert server_input_directory("http://example.test") == expected.resolve()
     assert server_comfyui_root("http://example.test") == main_path.parent.resolve()
     validate_server_input_directory("http://example.test", expected)
+
+
+def test_comfyui_http_error_includes_validation_body(monkeypatch):
+    import io
+    import urllib.error
+
+    error = urllib.error.HTTPError(
+        "http://example.test/prompt",
+        400,
+        "Bad Request",
+        {},
+        io.BytesIO(b'{"error":"bad node"}'),
+    )
+
+    def reject(*_args, **_kwargs):
+        raise error
+
+    monkeypatch.setattr("urllib.request.urlopen", reject)
+
+    with pytest.raises(RuntimeError, match='bad node'):
+        request_json("http://example.test/prompt", {"prompt": {}})
 
 
 def test_comfyui_server_rejects_another_scope(monkeypatch, tmp_path):

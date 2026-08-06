@@ -18,9 +18,15 @@ from pathlib import Path, PurePosixPath
 from typing import Any
 
 try:
-    from .queue_comfyui_workflow import queue_workflow
+    from .queue_comfyui_workflow import (
+        queue_workflow,
+        validate_server_input_directory,
+    )
 except ImportError:
-    from queue_comfyui_workflow import queue_workflow
+    from queue_comfyui_workflow import (
+        queue_workflow,
+        validate_server_input_directory,
+    )
 
 
 FORMAT_VERSION = 1
@@ -301,6 +307,7 @@ def run_job(
         )
         try:
             wait_for_server(server, log_path, process)
+            validate_server_input_directory(server, job_dir / "input")
             outputs = queue_workflow(
                 job_dir / manifest["workflow"]["path"],
                 server=server,
