@@ -2400,3 +2400,46 @@ It may describe a small connected foreground crossing, but must not become a
 post-generation character or vegetation composite. If that guide does not
 produce a clean continuous crossing while retaining identity, the safe
 production behavior remains avoiding character/foreground intersections.
+
+### Explicit occlusion-guide check (2026-08-06)
+
+The minimal guide check uses the same Generation-VI holdout, seed, 848 x 1168
+canvas, four-step FLUX.2 Klein graph, and M4 Max MPS worker. It changes only
+how the required foreground order is supplied.
+
+The first variant uses the reviewed hard-front image itself as the sole edit
+reference. The baseline workflow SHA-256 is
+`76dc59c697b5a3b7dd2b6ff8a64e53f4f4e47a4a8f9ce5fb5974f73a74307095`;
+its output SHA-256 is
+`2c63022d314ddcaf847b1463a98cbb6a38eba28f15a81af004f82045ec680750`.
+V3 at strength 0.7 uses workflow SHA-256
+`21ed9aba7a10bedb8c378817eb844d9989e905958c173c54dc59bc35bf1862ab`
+and produces
+`0334cb482e61e2a7c2a7d93c2efb6ce4a6db673c99ee2d4b542e22672329ca8c`.
+Both preserve the requested front order, but also preserve the hard polygonal
+guide shapes. They therefore solve topology by retaining a visibly artificial
+input layer rather than integrating natural vegetation and are rejected.
+
+The second variant restores the clean rough scene as IMAGE 1 and supplies a
+registered black-and-white occlusion diagram as IMAGE 2. The baseline workflow
+SHA-256 is
+`026443e13ff1ad3f0d3e1d14c9cf36cb9236d25b37a32bf255be401c02c50eca`;
+its output SHA-256 is
+`de01bee0669569b3f445e0b2e8b70e2cbc8d6d47ea837024a8f0101b4e581334`.
+V3 at 0.7 uses workflow SHA-256
+`9d1c97c29365e10f2e534655d8d55cf47174ae1c3db18a5349c9f32dcd7a7e14`
+and produces
+`6b4f48d3ccdd33cb8254050207a1004bd161dbd2b7525ea7de045ea776b5b4f2`.
+Both largely ignore the diagram and generate no reliable foreground crossing.
+Adding another ordinary `ReferenceLatent` therefore does not provide structural
+occlusion control and is rejected.
+
+The bounded guide series stops here. No guide, adapter stack, or extra
+production node is promoted. The simple production policy is instead to prefer
+natural separation between landscape elements and character silhouettes. A
+remaining intersection must still be coherent, but prompts should arrange
+nearer objects around a character before asking the model to solve a crossing.
+The wording explicitly forbids halos, artificial gaps, and character-shaped
+clearings. This policy is a new versioned generation contract: historical
+promotions continue to validate against their exact old prompt, while freshly
+prepared workflows use the new avoidance-first wording.
