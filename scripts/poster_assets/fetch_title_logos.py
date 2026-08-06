@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
+from urllib.parse import urlparse
 
 from PIL import Image
 
@@ -88,11 +89,23 @@ def fetch_title_logos(scope: str, force: bool = False) -> list[Path]:
             written.append(destination)
             continue
 
-        print(f"  - {language}: downloading {url}")
-        try:
-            image_bytes = download_bytes(url)
-        except (HTTPError, URLError, TimeoutError) as exc:
-            raise RuntimeError(f"Failed to download {url}: {exc}") from exc
+        parsed = urlparse(url)
+        if parsed.scheme in {"http", "https"}:
+            print(f"  - {language}: downloading {url}")
+            try:
+                image_bytes = download_bytes(url)
+            except (HTTPError, URLError, TimeoutError) as exc:
+                raise RuntimeError(f"Failed to download {url}: {exc}") from exc
+        elif not parsed.scheme:
+            source = (ROOT / url).resolve()
+            if not source.is_relative_to(ROOT.resolve()):
+                raise ValueError(f"Title-logo source escapes the repository: {url}")
+            if not source.is_file():
+                raise FileNotFoundError(f"Local title-logo source does not exist: {url}")
+            print(f"  - {language}: copying {url}")
+            image_bytes = source.read_bytes()
+        else:
+            raise ValueError(f"Unsupported title-logo source: {url}")
 
         destination.parent.mkdir(parents=True, exist_ok=True)
         temporary = destination.with_suffix(".tmp.png")
