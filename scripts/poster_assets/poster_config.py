@@ -558,6 +558,7 @@ def build_regional_joint_scene_prompts(
     prefer_natural_separation: bool = True,
     global_scene_everywhere: bool = True,
     repeat_global_scene_in_regions: bool = True,
+    local_scene_continuity: bool = True,
 ) -> tuple[str, list[str]]:
     """Build one global landscape prompt and one regional prompt per subject."""
     if not items:
@@ -672,18 +673,32 @@ def build_regional_joint_scene_prompts(
             f"{percentage(contract['top_per_mille'])} to "
             f"{percentage(contract['bottom_per_mille'])}"
         )
-        regional_scene_context = (
-            f"{global_prompt} Within this same shared scene, "
-            if repeat_global_scene_in_regions
-            else ""
-        )
+        if local_scene_continuity:
+            regional_scene_context = (
+                "The enclosing poster uses this exact environment and "
+                f"appearance: {scene_description} Treat that description "
+                "only as shared terrain material, palette, weather, "
+                "illumination, camera, and rendering context for this local "
+                f"region. Continue only the nearby {ground_noun} beneath "
+                "the subject; do not compose another horizon, sky panel, "
+                "distant vista, framed scene, or separate landscape here. "
+            )
+        elif repeat_global_scene_in_regions:
+            regional_scene_context = (
+                f"{global_prompt} Within this same shared scene, "
+            )
+        else:
+            regional_scene_context = ""
         prompt = (
             f"{regional_scene_context}IMAGE 1 is the sole exact identity and anatomy reference for "
             f"{name}. Generate exactly one complete {name}, once, in the "
             f"{physical_region} of the globally conditioned full-canvas "
             "scene. Its complete "
             f"visible silhouette must stay inside normalized poster bounds "
-            f"{bounds}, with natural padding and ground contact. Preserve the "
+            f"{bounds}, with natural padding and ground contact. Make the "
+            "character the clear dominant subject of this protected region, "
+            "closely approaching the relevant target bounds instead of "
+            "shrinking into a distant figure. Preserve the "
             "reference's exact silhouette, stature, anatomy, face, colors, "
             "markings, limbs, appendages, and defining details; do not "
             "redesign, restyle, humanize, merge, duplicate, simplify, add, "
@@ -733,6 +748,7 @@ def build_regional_joint_prompt_snapshot(
     prefer_natural_separation: bool = True,
     global_scene_everywhere: bool = True,
     repeat_global_scene_in_regions: bool = True,
+    local_scene_continuity: bool = True,
 ) -> str:
     """Return regional joint-scene prompts as a stable provenance snapshot."""
     global_prompt, local_prompts = build_regional_joint_scene_prompts(
@@ -743,6 +759,7 @@ def build_regional_joint_prompt_snapshot(
         prefer_natural_separation=prefer_natural_separation,
         global_scene_everywhere=global_scene_everywhere,
         repeat_global_scene_in_regions=repeat_global_scene_in_regions,
+        local_scene_continuity=local_scene_continuity,
     )
     return format_regional_joint_prompt_snapshot(
         global_prompt,
