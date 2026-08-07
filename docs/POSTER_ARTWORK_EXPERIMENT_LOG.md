@@ -2612,3 +2612,22 @@ single pair (but failed edge containment), while seed `260759902` produced the
 duplicate. This makes the failure stochastic and amplified by the sparse
 two-subject composition, not a deterministic “two Pokémon means duplicate”
 rule. No production graph change is promoted from this diagnosis.
+
+### ExGen1 Normal approval revocation (2026-08-07)
+
+Human re-review applies the same hard identity gate to the previously enabled
+`ExGen1/sections/normal` poster as to the rejected `SV04.5` candidate. In both
+images Mew's canonical three pointed hand fingers are replaced by smooth blunt
+ends. ExGen1 Normal is therefore PDF-disabled again and returns to the normal
+cover fallback. Its exact tracked promotion remains available only as review
+evidence until a replacement is approved; the artwork is not treated as a
+passing production result.
+
+The accumulated controlled tests close generic prompt, seed, reference-size,
+Klein-9B, and FLUX.2-Dev escalation as a reliable Mew-finger fix. The practical
+bounded replacement path is scope-valid subject curation for sets with several
+representative Pokemon. Primal cannot use that escape hatch because its two
+canonical forms define the section; its next isolated test uses the already
+supported joint cast-layout reference so both forms enter the model as one
+count-and-position composition, while separate identity references retain
+their exact form details.
