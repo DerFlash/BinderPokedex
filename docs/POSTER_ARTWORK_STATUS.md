@@ -69,13 +69,13 @@ foreground crossings need an explicit reviewed foreground layer. See
 
 ## Promoted scope state
 
-Thirty-eight enabled bundles use the reviewed avoidance-first v9 contract.
+Thirty-nine enabled bundles use the reviewed avoidance-first v9 contract.
 Every bundle is 2368 x 3268 px, is sliced into nine physical cards, carries
 effective 299.99-dpi PNG metadata, and binds its approval to the exact raw and
 print pixels plus the exact Official Artwork identities.
 
-The only unpromoted and disabled targets are `ExGen2/sections/primal`,
-`SV04.5`, and `SV08`. Primal Kyogre and Primal Groudon were materially
+The only unpromoted and disabled targets are `ExGen2/sections/primal` and
+`SV04.5`. Primal Kyogre and Primal Groudon were materially
 redesigned; SV04.5 contains anatomical deviations; SV08 duplicates Ho-Oh and
 changes Kyurem too strongly. Their normal cover path remains the active
 fallback until a replacement candidate passes the same gate.
@@ -92,14 +92,14 @@ visual approval.
 
 | Scope family | Configured | Promoted and enabled | Disabled / awaiting activation |
 | --- | ---: | ---: | ---: |
-| Individual TCG sets | 26 | 24 | 2 |
+| Individual TCG sets | 26 | 25 | 1 |
 | Pokédex generations | 9 | 9 | 0 |
 | ExGen1 sections | 1 | 1 | 0 |
 | ExGen2 sections | 3 | 2 | 1 |
 | ExGen3 sections | 2 | 2 | 0 |
-| **Total** | **41** | **38** | **3** |
+| **Total** | **41** | **39** | **2** |
 
-The remaining three targets retain technically valid but visually rejected v9
+The remaining two targets retain technically valid but visually rejected v9
 candidates only in local review scratch. They do not enter stable artwork paths
 or PDF routing.
 
@@ -181,17 +181,17 @@ texture, character pixels, or a post-decode composite.
   on A4 without cutting guides.
 - Aggregate scopes route independent section manifests and promotions through
   `posters.yaml`, then insert each poster after its matching section cover.
-- All 41 current individual and aggregate targets are configured; 38 are
-  promoted and enabled, while three remain disabled behind the cover fallback.
+- All 41 current individual and aggregate targets are configured; 39 are
+  promoted and enabled, while two remain disabled behind the cover fallback.
 - Pull requests validate every enabled promotion and build a complete release
   candidate as a temporary artifact only.
 - Only a successful `v*` tag job may publish a GitHub Release.
 
 ## Remaining work
 
-1. Produce bounded replacement candidates for `ExGen2/sections/primal`,
-   `SV04.5`, and `SV08`; do not weaken the identity or exact-count gate.
-2. Run representative multilingual PDF QA across the 38 enabled promotions.
+1. Produce bounded replacement candidates for `ExGen2/sections/primal` and
+   `SV04.5`; do not weaken the identity or exact-count gate.
+2. Run representative multilingual PDF QA across the 39 enabled promotions.
 3. Decide on and implement explicit cover replacement only after the affected
    target family is fully promoted and its multilingual PDFs pass visual QA.
 4. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
@@ -218,8 +218,8 @@ python -m scripts.poster_assets.poster_work_plan --all-configured
 Core branch verification rerun on 2026-08-07:
 
 - the project suite passes with `544 passed, 1 skipped`;
-- all 38 enabled poster bundles validate;
-- the planner reports 41 configured targets: 38 current and exactly the three
+- all 39 enabled poster bundles validate;
+- the planner reports 41 configured targets: 39 current and exactly the two
   visually rejected targets ready to generate;
 - Python compilation and `git diff --check` pass.
 

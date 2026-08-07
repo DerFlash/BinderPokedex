@@ -2561,14 +2561,32 @@ avoidance-first landscape boundary. Their exact BF16 raw and 2368 x 3268 print
 pixels are promoted and PDF-enabled; the promotion validator accepts all 38
 bundles and all 342 physical card slices at effective 299.99 dpi.
 
-Three candidates fail closed and remain disabled:
+Two candidates fail closed and remain disabled:
 
 - `ExGen2/sections/primal` materially redesigns both Primal forms rather than
   preserving Primal Kyogre and Primal Groudon.
 - `SV04.5` changes defining character anatomy in the lower row.
-- `SV08` renders Ho-Oh twice and changes Kyurem too strongly.
-
 These are visual failures, not print or metadata failures. Their technically
 valid review files remain local scratch only, and the existing cover route is
-the production fallback. The next bounded render work is limited to those
-three scopes; no prompt or graph complexity is added to the 38 passing paths.
+the production fallback. The next bounded render work is limited to those two
+scopes; no prompt or graph complexity is added to the 39 passing paths.
+
+The first retry for `SV08` (seed `260751064`) was separately reviewed and
+passes: Ho-Oh appears exactly once, Kyurem and Fuecoco retain their defining
+forms, and all three subjects remain complete inside the lower card row. It is
+promoted and enabled with the same v9 contract.
+
+### Targeted v9 replacement rerender (2026-08-07)
+
+The next bounded seed attempt was run on the M4 Max through MPS with the
+unchanged BF16 Klein 4B / `individual_spatial_joint` v9 contract:
+
+| Scope | Seed | Result |
+| --- | ---: | --- |
+| `ExGen2/sections/primal` | `260759902` | Rejected: Kyogre is duplicated and Groudon is still materially redesigned |
+| `SV04.5` | `260789456` | Rejected: Mew again loses its three pointed hand fingers |
+| `SV08` | `260751064` | Accepted and promoted: one Ho-Oh, faithful Kyurem/Fuecoco, complete lower-row containment |
+
+The two rejected targets remain on the cover fallback. Seed variation is not
+silently treated as a universal fix; further work stays scoped to those two
+targets and must preserve the same hard identity gate.

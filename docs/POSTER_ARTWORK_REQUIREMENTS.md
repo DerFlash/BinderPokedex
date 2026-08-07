@@ -102,7 +102,7 @@ is the accepted cost of exact identity preservation.
 | `PA-015` | Aggregate variants receive section-specific scenes and curated subject/reference sets | Done with one visual holdout | All 15 current aggregate sections have exact catalog coverage; 14 are promoted and enabled while `ExGen2/sections/primal` remains disabled after visual rejection |
 | `PA-015A` | Variant subjects retain their exact form | Done | Selection, cutouts, planner, fingerprints, promotion, and validation bind exact Official Artwork identity |
 | `PA-016` | Post-fetch orchestration detects stale inputs | Done | Read-only planner separates expensive generation drift from cheap overlay/routing changes |
-| `PA-017` | Joint generation can provide natural grounding without losing identity or card safety | Done for 38 promoted scopes | Thirty-eight avoidance-first v9 bundles pass their reviewed identity, card, scene, exact-count, and deterministic-output gates; three rejected scopes remain on the cover fallback |
+| `PA-017` | Joint generation can provide natural grounding without losing identity or card safety | Done for 39 promoted scopes | Thirty-nine avoidance-first v9 bundles pass their reviewed identity, card, scene, exact-count, and deterministic-output gates; two rejected scopes remain on the cover fallback |
 | `PA-018` | Runtime remains KISS after experiments | Done | Production exposes only FLUX.2 `joint_scene` and `identity_lock`; all three reference topologies use the canonical joint workflow builder and common empty-target sampler path, with no separate experiment entry point |
 | `PA-019` | Pull requests prove a release can be built without publishing | Done | PRs validate promotions, build every PDF/archive/manifest, and upload only a temporary artifact |
 | `PA-020` | Raster card geometry closes exactly on every real canvas | Done | Cumulative physical endpoints drive preparation, finalization, slicing, promotion, and validation |
@@ -118,11 +118,11 @@ is the accepted cost of exact identity preservation.
 
 ## Current production boundary
 
-- Thirty-eight promoted 3×3 bundles are enabled. `ExGen2/sections/primal`,
-  `SV04.5`, and `SV08` are the three disabled visual holdouts.
-- All 41 current poster targets are configured: 38 are promoted and enabled,
-  and three remain without a promotion.
-- All 38 promoted bundles use the reviewed avoidance-first
+- Thirty-nine promoted 3×3 bundles are enabled. `ExGen2/sections/primal` and
+  `SV04.5` are the two disabled visual holdouts.
+- All 41 current poster targets are configured: 39 are promoted and enabled,
+  and two remain without a promotion.
+- All 39 promoted bundles use the reviewed avoidance-first
   `joint_scene` / `individual_spatial_joint` v9 contract with unquantized BF16
   FLUX.2 Klein 4B generation and deterministic Lanczos print resampling.
 - `identity_lock` remains an explicit fallback but has no active promoted scope.
