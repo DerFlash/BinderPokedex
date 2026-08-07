@@ -2631,3 +2631,37 @@ canonical forms define the section; its next isolated test uses the already
 supported joint cast-layout reference so both forms enter the model as one
 count-and-position composition, while separate identity references retain
 their exact form details.
+
+### Sparse regional Primal cast (2026-08-07)
+
+The joint cast-layout probe removes the duplicate but generates both Primal
+forms too large and about one card row too high. Its lower physical-card crops
+therefore remain incomplete. This rejects the joint cast reference as the
+placement mechanism, not the useful diagnosis that the duplicate came from
+globally applied per-subject spatial references.
+
+The next bounded run reuses the existing `regional_identity_joint` graph. A
+small generalization removes its unnecessary exactly-three-subject guard and
+derives regional cells from the canonical placement contract already used by
+the other workflows. Two subjects consequently occupy the outer bottom cards;
+three and four subjects retain their existing behavior. There is still one
+empty target, one sampler, one decode, and no pixel composite or repair pass.
+
+The M4 Max MPS run keeps scope, seed `260759901`, BF16 FLUX.2 Klein 4B, Qwen
+4B encoder, VAE, 848 x 1168 canvas, four Euler steps, scene brief, and exact
+official artwork inputs fixed. Only the conditioning strategy changes.
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Workflow | `078fe8232ebdbd0c34d56034a175b7f2be5e499d4d6bd400d4a85f2ec895b44f` |
+| Raw 848 x 1168 artwork | `cfb61fb299b631ab7096b9879ced1cf57b818336a54007d55f9ca3a43744e6b3` |
+| 2368 x 3268 text-free artwork | `47105cae0b5131a7c181e2b8f51c214ef31d1dafb374925943baa96cf4c33223` |
+| English review poster | `632d81b40da156c33ec94de47f09771caa4a98c7aed9bf2ebedf31bcfaeb75ac` |
+
+The candidate contains exactly one Primal Kyogre in the left card and exactly
+one Primal Groudon in the right card. Both silhouettes, appendages, markings,
+poses, and shadows remain close to the official references; both are complete
+with useful card-edge padding and coherent contact with the generated coastal
+stone. No landscape element crosses either silhouette inconsistently. Agent
+review therefore advances this render to human review. It remains disabled
+and unpromoted until that approval.
