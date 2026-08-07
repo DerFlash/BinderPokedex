@@ -127,6 +127,45 @@ def regional_conditioning_area(
     }
 
 
+def regional_conditioning_mask(
+    area: dict[str, float],
+    *,
+    canvas_size: tuple[int, int],
+) -> dict[str, int]:
+    """Return a broad subject mask with soft internal scene transitions."""
+    canvas_width, canvas_height = canvas_size
+    x = round(area["x"] * canvas_width)
+    y = round(area["y"] * canvas_height)
+    width = min(
+        canvas_width - x,
+        max(1, round(area["width"] * canvas_width)),
+    )
+    height = min(
+        canvas_height - y,
+        max(1, round(area["height"] * canvas_height)),
+    )
+    horizontal_feather = round(width * 0.25)
+    vertical_feather = round(height * 0.25)
+    return {
+        "x": x,
+        "y": y,
+        "width": width,
+        "height": height,
+        "left": 0 if x == 0 else horizontal_feather,
+        "top": 0 if y == 0 else vertical_feather,
+        "right": (
+            0
+            if x + width >= canvas_width
+            else horizontal_feather
+        ),
+        "bottom": (
+            0
+            if y + height >= canvas_height
+            else vertical_feather
+        ),
+    }
+
+
 def page_dimensions(scope: str, megapixels: float) -> tuple[int, int]:
     """Return an exact physical card-grid ratio using the latent-aligned width."""
     manifest = poster_bundle(
@@ -452,6 +491,7 @@ def build_regional_joint_scene_workflow(
             strength=0.2,
         ),
         "10": node("KSamplerSelect", sampler_name="euler"),
+        "11": node("SolidMask", value=0.0, width=width, height=height),
     }
 
     regional_conditioning: list[list[object]] = []
@@ -464,8 +504,15 @@ def build_regional_joint_scene_workflow(
         load_id = str(base + 1)
         encode_id = str(base + 2)
         reference_id = str(base + 3)
-        area_id = str(base + 4)
+        solid_mask_id = str(base + 4)
+        feather_mask_id = str(base + 5)
+        composite_mask_id = str(base + 6)
+        masked_conditioning_id = str(base + 7)
         area = regional_conditioning_area(contract)
+        mask = regional_conditioning_mask(
+            area,
+            canvas_size=(width, height),
+        )
         workflow[prompt_id] = node(
             "CLIPTextEncode",
             text=prompt,
@@ -485,13 +532,36 @@ def build_regional_joint_scene_workflow(
             conditioning=[prompt_id, 0],
             latent=[encode_id, 0],
         )
-        workflow[area_id] = node(
-            "ConditioningSetAreaPercentage",
+        workflow[solid_mask_id] = node(
+            "SolidMask",
+            value=1.0,
+            width=mask["width"],
+            height=mask["height"],
+        )
+        workflow[feather_mask_id] = node(
+            "FeatherMask",
+            mask=[solid_mask_id, 0],
+            left=mask["left"],
+            top=mask["top"],
+            right=mask["right"],
+            bottom=mask["bottom"],
+        )
+        workflow[composite_mask_id] = node(
+            "MaskComposite",
+            destination=["11", 0],
+            source=[feather_mask_id, 0],
+            x=mask["x"],
+            y=mask["y"],
+            operation="add",
+        )
+        workflow[masked_conditioning_id] = node(
+            "ConditioningSetMask",
             conditioning=[reference_id, 0],
-            **area,
+            mask=[composite_mask_id, 0],
+            set_cond_area="mask bounds",
             strength=1.0,
         )
-        regional_conditioning.append([area_id, 0])
+        regional_conditioning.append([masked_conditioning_id, 0])
 
     combine_start = max(60, 20 + len(placement_contract) * 10)
     combined = regional_conditioning[0]

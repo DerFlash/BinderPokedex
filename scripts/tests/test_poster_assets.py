@@ -1599,7 +1599,19 @@ def test_regional_joint_scene_binds_each_identity_to_its_physical_card():
         for node in workflow.values()
     ) == 3
     assert sum(
-        node["class_type"] == "ConditioningSetAreaPercentage"
+        node["class_type"] == "ConditioningSetMask"
+        for node in workflow.values()
+    ) == 3
+    assert sum(
+        node["class_type"] == "SolidMask"
+        for node in workflow.values()
+    ) == 4
+    assert sum(
+        node["class_type"] == "FeatherMask"
+        for node in workflow.values()
+    ) == 3
+    assert sum(
+        node["class_type"] == "MaskComposite"
         for node in workflow.values()
     ) == 3
     assert sum(
@@ -1634,13 +1646,37 @@ def test_regional_joint_scene_binds_each_identity_to_its_physical_card():
     for index, contract in enumerate(contracts, start=1):
         base = 20 + (index - 1) * 10
         area = poster_workflow.regional_conditioning_area(contract)
+        mask = poster_workflow.regional_conditioning_mask(
+            area,
+            canvas_size=(width, height),
+        )
         assert workflow[str(base + 3)]["inputs"] == {
             "conditioning": [str(base), 0],
             "latent": [str(base + 2), 0],
         }
         assert workflow[str(base + 4)]["inputs"] == {
+            "value": 1.0,
+            "width": mask["width"],
+            "height": mask["height"],
+        }
+        assert workflow[str(base + 5)]["inputs"] == {
+            "mask": [str(base + 4), 0],
+            "left": mask["left"],
+            "top": mask["top"],
+            "right": mask["right"],
+            "bottom": mask["bottom"],
+        }
+        assert workflow[str(base + 6)]["inputs"] == {
+            "destination": ["11", 0],
+            "source": [str(base + 5), 0],
+            "x": mask["x"],
+            "y": mask["y"],
+            "operation": "add",
+        }
+        assert workflow[str(base + 7)]["inputs"] == {
             "conditioning": [str(base + 3), 0],
-            **area,
+            "mask": [str(base + 6), 0],
+            "set_cond_area": "mask bounds",
             "strength": 1.0,
         }
 
@@ -1675,7 +1711,6 @@ def test_regional_joint_scene_binds_each_identity_to_its_physical_card():
     assert not any(
         node["class_type"]
         in {
-            "ConditioningSetMask",
             "ImageCompositeMasked",
             "VAEEncodeForInpaint",
         }
@@ -1705,7 +1740,7 @@ def test_regional_joint_scene_places_two_subjects_in_outer_cards():
         for node in workflow.values()
     ) == 2
     assert sum(
-        node["class_type"] == "ConditioningSetAreaPercentage"
+        node["class_type"] == "ConditioningSetMask"
         for node in workflow.values()
     ) == 2
 
@@ -1721,11 +1756,21 @@ def test_regional_joint_scene_places_two_subjects_in_outer_cards():
         canvas_size=(width, height),
     )
     for index, contract in enumerate(contracts, start=1):
-        area = workflow[str(24 + (index - 1) * 10)]["inputs"]
-        expected_area = poster_workflow.regional_conditioning_area(contract)
-        assert area == {
-            "conditioning": [str(23 + (index - 1) * 10), 0],
-            **expected_area,
+        base = 20 + (index - 1) * 10
+        area = poster_workflow.regional_conditioning_area(contract)
+        mask = poster_workflow.regional_conditioning_mask(
+            area,
+            canvas_size=(width, height),
+        )
+        masked_conditioning = workflow[str(base + 7)]["inputs"]
+        assert workflow[str(base + 4)]["inputs"]["width"] == mask["width"]
+        assert workflow[str(base + 4)]["inputs"]["height"] == mask["height"]
+        assert workflow[str(base + 6)]["inputs"]["x"] == mask["x"]
+        assert workflow[str(base + 6)]["inputs"]["y"] == mask["y"]
+        assert masked_conditioning == {
+            "conditioning": [str(base + 3), 0],
+            "mask": [str(base + 6), 0],
+            "set_cond_area": "mask bounds",
             "strength": 1.0,
         }
 
@@ -1802,10 +1847,14 @@ def test_regional_joint_scene_supports_four_physical_card_regions(
         "identity_reference_4.png",
     ]
     assert all(
-        workflow[str(24 + index * 10)]["class_type"]
-        == "ConditioningSetAreaPercentage"
+        workflow[str(27 + index * 10)]["class_type"]
+        == "ConditioningSetMask"
         for index in range(4)
     )
+    assert sum(
+        node["class_type"] == "FeatherMask"
+        for node in workflow.values()
+    ) == 4
     assert sum(
         node["class_type"] == "ConditioningCombine"
         for node in workflow.values()
