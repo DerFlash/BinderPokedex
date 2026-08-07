@@ -2590,3 +2590,25 @@ unchanged BF16 Klein 4B / `individual_spatial_joint` v9 contract:
 The two rejected targets remain on the cover fallback. Seed variation is not
 silently treated as a universal fix; further work stays scoped to those two
 targets and must preserve the same hard identity gate.
+
+### Primal duplicate-cast diagnosis (2026-08-07)
+
+The Primal retry was traced before any deterministic print processing. The
+ComfyUI raw output already contains the extra Kyogre; the 300-dpi resize,
+poster text overlay, and nine-card slicing only carry that error forward. The
+run uses one `EmptyFlux2LatentImage` with `batch_size: 1`, two official cutouts,
+two positioned reference images, and one sampler. There is no character
+composite or second post-generation render path that could create a duplicate.
+
+The two-subject count is therefore a contributing model risk, not a renderer
+bug or an unsupported configuration. `individual_spatial_joint` chains one
+full-canvas `ReferenceLatent` pair per subject globally into the same positive
+and negative conditioning; it does not assign each reference to a local
+conditioning region. With only two subjects and a deliberately open center,
+FLUX.2 can resolve the two global references plus the textual pair description
+as more than one scene/cast, despite the explicit `render exactly these 2
+characters once` instruction. The same graph with seed `260759901` produced a
+single pair (but failed edge containment), while seed `260759902` produced the
+duplicate. This makes the failure stochastic and amplified by the sparse
+two-subject composition, not a deterministic “two Pokémon means duplicate”
+rule. No production graph change is promoted from this diagnosis.
