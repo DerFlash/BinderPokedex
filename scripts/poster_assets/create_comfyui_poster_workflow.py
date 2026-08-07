@@ -78,7 +78,7 @@ except ImportError:
 
 ROOT = Path(__file__).resolve().parents[2]
 POSTER_ASSETS = ROOT / "data" / "poster_assets"
-REGIONAL_GLOBAL_SCENE_STRENGTH = 0.35
+REGIONAL_GLOBAL_SCENE_STRENGTH = 0.2
 
 
 def node(class_type: str, **inputs: object) -> dict[str, object]:
