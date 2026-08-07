@@ -2722,3 +2722,58 @@ review together. All three scopes remain PDF-disabled and no review pixels are
 promoted before approval. On approval, ExGen1 retains the normal
 `individual_spatial_joint` default; SV04.5 and Primal record
 `regional_identity_joint` and their reviewed seeds in their manifests.
+
+### Regional scene discontinuity audit (2026-08-07)
+
+Human review correctly rejected the claim that the regional candidates form a
+fully continuous landscape. Their lower subject zones can be anticipated as
+future physical cards because terrain, horizon, atmosphere, or lighting changes
+inside each zone.
+
+The cause is structural. Each regional branch attaches a complete 512 x 512 RGB
+identity reference to its own masked conditioning. The reference contains the
+subject on a flat neutral field, and `ReferenceLatent` passes the complete VAE
+latent rather than an alpha-isolated subject. FLUX therefore predicts some
+local scene content independently for each identity branch. Hard physical-card
+areas made this explicit; non-card-aligned feathered masks soften the seam but
+cannot make independent regional predictions share one geography.
+
+The bounded audit changed one factor at a time:
+
+| Probe | Result | Decision |
+| --- | --- | --- |
+| Keep the global landscape additive throughout every region | Restores terrain globally, but the subjects disappear at equal strength | Retain only as diagnosis |
+| Global strength `0.20` to `0.35` | The local fields remain while Charmander and the other identities weaken | Reverted in commit `7a998de`; no more strength sweep |
+| Remove all scenery, lighting, and rendering descriptions from local prompts | Eliminates repeated prompt-driven moons and rainbows, but latent-driven local terrain remains | Retained as regional pipeline v19 because it is a strict improvement |
+| Give every local branch the same generated full-frame landscape reference | Each mask redraws that full scene as a miniature local vista, including repeated horizons and moons | Rejected |
+| Give only the global branch that landscape reference | The common scene survives better, but local identity branches still create visible side vistas | Rejected; a two-pass scene plate does not solve regional conditioning |
+
+The existing mask-free `spatial_identity_joint` topology is therefore the
+correct KISS solution whenever its cast is stable. A same-seed rerun of the
+curated `SV04.5` Charmander/Pikachu/Lapras cast produces one continuous
+moonlit meadow, exactly three complete subjects in the lower cards, and no
+regional landscape fields. Raw SHA-256:
+`6dbecdfeafd8f9bb1888fbfc61f0e2eeeb3c782f52db199af99480669826ac88`.
+It advances to human review but is not promoted or PDF-enabled yet.
+
+Primal reaches a real constraint boundary rather than the same easy switch:
+
+- the global two-reference workflow can keep one pair, but enlarges both broad
+  forms beyond their individual cards;
+- shrinking those two independent references duplicates both forms;
+- a shared cast plus detail references duplicates Groudon when the cast is
+  reduced;
+- a single high-resolution cast duplicates both forms and materially changes
+  Kyogre;
+- regional conditioning preserves exactly one recognizable Primal Kyogre and
+  one recognizable Primal Groudon inside their cards, but larger regions create
+  the landscape discontinuity under review.
+
+One final moderate-mask probe uses soft regions 1.15 times the target width and
+1.35 times its height. It keeps the single pair and greatly reduces the visible
+side panoramas, but the subjects become deliberately small. Raw SHA-256:
+`23510f58d2d0d6afdad8af1460a309b7d37be34aad7548dc951637c601450448`.
+It is review-only. No Primal option is promoted until human review chooses
+between smaller card-safe subjects with better continuity and the larger
+regional composition with more visible local scene variation. The mutually
+incompatible requirements are not hidden behind another prompt or seed sweep.
