@@ -107,6 +107,26 @@ def output_dimensions(scope: str, megapixels: float) -> tuple[int, int]:
     )
 
 
+def regional_conditioning_area(
+    contract: dict[str, int],
+) -> dict[str, float]:
+    """Expand a subject target without aligning conditioning to card edges."""
+    left = contract["left_per_mille"]
+    right = contract["right_per_mille"]
+    top = contract["top_per_mille"]
+    bottom = contract["bottom_per_mille"]
+    width = min(1000.0, (right - left) * 1.35)
+    height = min(1000.0, (bottom - top) * 2.0)
+    x = min(max((left + right - width) / 2, 0.0), 1000.0 - width)
+    y = min(max((top + bottom - height) / 2, 0.0), 1000.0 - height)
+    return {
+        "width": width / 1000,
+        "height": height / 1000,
+        "x": x / 1000,
+        "y": y / 1000,
+    }
+
+
 def page_dimensions(scope: str, megapixels: float) -> tuple[int, int]:
     """Return an exact physical card-grid ratio using the latent-aligned width."""
     manifest = poster_bundle(
@@ -445,6 +465,7 @@ def build_regional_joint_scene_workflow(
         encode_id = str(base + 2)
         reference_id = str(base + 3)
         area_id = str(base + 4)
+        area = regional_conditioning_area(contract)
         workflow[prompt_id] = node(
             "CLIPTextEncode",
             text=prompt,
@@ -467,18 +488,7 @@ def build_regional_joint_scene_workflow(
         workflow[area_id] = node(
             "ConditioningSetAreaPercentage",
             conditioning=[reference_id, 0],
-            width=(
-                contract["right_per_mille"]
-                - contract["left_per_mille"]
-            )
-            / 1000,
-            height=(
-                contract["bottom_per_mille"]
-                - contract["top_per_mille"]
-            )
-            / 1000,
-            x=contract["left_per_mille"] / 1000,
-            y=contract["top_per_mille"] / 1000,
+            **area,
             strength=1.0,
         )
         regional_conditioning.append([area_id, 0])

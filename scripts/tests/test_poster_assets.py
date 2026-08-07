@@ -1633,24 +1633,14 @@ def test_regional_joint_scene_binds_each_identity_to_its_physical_card():
     )
     for index, contract in enumerate(contracts, start=1):
         base = 20 + (index - 1) * 10
+        area = poster_workflow.regional_conditioning_area(contract)
         assert workflow[str(base + 3)]["inputs"] == {
             "conditioning": [str(base), 0],
             "latent": [str(base + 2), 0],
         }
         assert workflow[str(base + 4)]["inputs"] == {
             "conditioning": [str(base + 3), 0],
-            "width": (
-                contract["right_per_mille"]
-                - contract["left_per_mille"]
-            )
-            / 1000,
-            "height": (
-                contract["bottom_per_mille"]
-                - contract["top_per_mille"]
-            )
-            / 1000,
-            "x": contract["left_per_mille"] / 1000,
-            "y": contract["top_per_mille"] / 1000,
+            **area,
             "strength": 1.0,
         }
 
@@ -1732,20 +1722,10 @@ def test_regional_joint_scene_places_two_subjects_in_outer_cards():
     )
     for index, contract in enumerate(contracts, start=1):
         area = workflow[str(24 + (index - 1) * 10)]["inputs"]
+        expected_area = poster_workflow.regional_conditioning_area(contract)
         assert area == {
             "conditioning": [str(23 + (index - 1) * 10), 0],
-            "width": (
-                contract["right_per_mille"]
-                - contract["left_per_mille"]
-            )
-            / 1000,
-            "height": (
-                contract["bottom_per_mille"]
-                - contract["top_per_mille"]
-            )
-            / 1000,
-            "x": contract["left_per_mille"] / 1000,
-            "y": contract["top_per_mille"] / 1000,
+            **expected_area,
             "strength": 1.0,
         }
 
