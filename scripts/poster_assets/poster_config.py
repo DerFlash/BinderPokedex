@@ -557,6 +557,7 @@ def build_regional_joint_scene_prompts(
     placement_contract: list[dict[str, int]],
     prefer_natural_separation: bool = True,
     global_scene_everywhere: bool = True,
+    repeat_global_scene_in_regions: bool = True,
 ) -> tuple[str, list[str]]:
     """Build one global landscape prompt and one regional prompt per subject."""
     if not items:
@@ -671,8 +672,13 @@ def build_regional_joint_scene_prompts(
             f"{percentage(contract['top_per_mille'])} to "
             f"{percentage(contract['bottom_per_mille'])}"
         )
+        regional_scene_context = (
+            f"{global_prompt} Within this same shared scene, "
+            if repeat_global_scene_in_regions
+            else ""
+        )
         prompt = (
-            "IMAGE 1 is the sole exact identity and anatomy reference for "
+            f"{regional_scene_context}IMAGE 1 is the sole exact identity and anatomy reference for "
             f"{name}. Generate exactly one complete {name}, once, in the "
             f"{physical_region} of the globally conditioned full-canvas "
             "scene. Its complete "
@@ -726,6 +732,7 @@ def build_regional_joint_prompt_snapshot(
     placement_contract: list[dict[str, int]],
     prefer_natural_separation: bool = True,
     global_scene_everywhere: bool = True,
+    repeat_global_scene_in_regions: bool = True,
 ) -> str:
     """Return regional joint-scene prompts as a stable provenance snapshot."""
     global_prompt, local_prompts = build_regional_joint_scene_prompts(
@@ -735,6 +742,7 @@ def build_regional_joint_prompt_snapshot(
         placement_contract=placement_contract,
         prefer_natural_separation=prefer_natural_separation,
         global_scene_everywhere=global_scene_everywhere,
+        repeat_global_scene_in_regions=repeat_global_scene_in_regions,
     )
     return format_regional_joint_prompt_snapshot(
         global_prompt,

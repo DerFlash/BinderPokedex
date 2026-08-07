@@ -1660,6 +1660,9 @@ def test_regional_joint_scene_binds_each_identity_to_its_physical_card():
     assert "global landscape conditioning remains active" in workflow["20"][
         "inputs"
     ]["text"]
+    assert workflow["20"]["inputs"]["text"].startswith(
+        workflow["4"]["inputs"]["text"]
+    )
     assert "local meadow" not in workflow["20"]["inputs"]["text"]
     assert not any(
         node["class_type"]
@@ -1945,6 +1948,9 @@ def test_regional_joint_scene_writes_distinct_workflow_and_prompt_snapshot(
     assert (
         "without halos, artificial gaps"
         in workflow["20"]["inputs"]["text"]
+    )
+    assert workflow["20"]["inputs"]["text"].startswith(
+        workflow["4"]["inputs"]["text"]
     )
     expected = "\n\n".join(
         (
