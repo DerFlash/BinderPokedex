@@ -386,18 +386,14 @@ def build_regional_joint_scene_workflow(
         width_px=width,
         height_px=height,
     )
-    cells = layout.bottom_row_cells()
-    if len(items) != len(cells):
-        raise ValueError(
-            f"Layout {layout_name!r} needs {len(cells)} subjects, "
-            f"but {scope!r} contains {len(items)}"
-        )
+    placements = joint_scene_canvas_placements(
+        bundle.asset_dir,
+        layout_name=layout_name,
+        canvas_size=(width, height),
+    )
+    cells = [placement["cell"] for placement in placements]
     placement_contract = normalized_visible_placement_contract(
-        joint_scene_canvas_placements(
-            bundle.asset_dir,
-            layout_name=layout_name,
-            canvas_size=(width, height),
-        ),
+        placements,
         canvas_size=(width, height),
     )
     global_prompt, subject_prompts = build_regional_joint_scene_prompts(

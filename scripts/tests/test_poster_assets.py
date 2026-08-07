@@ -1655,6 +1655,65 @@ def test_regional_joint_scene_binds_each_identity_to_its_physical_card():
     )
 
 
+def test_regional_joint_scene_places_two_subjects_in_outer_cards():
+    workflow = build_workflow(
+        "ExGen2/sections/primal",
+        seed=123,
+        megapixels=0.25,
+        generation_mode="joint_scene",
+        reference_mode="regional_identity_joint",
+    )
+
+    assert [
+        node["inputs"]["image"]
+        for node in workflow.values()
+        if node["class_type"] == "LoadImage"
+    ] == [
+        "identity_reference_1.png",
+        "identity_reference_2.png",
+    ]
+    assert sum(
+        node["class_type"] == "ReferenceLatent"
+        for node in workflow.values()
+    ) == 2
+    assert sum(
+        node["class_type"] == "ConditioningSetAreaPercentage"
+        for node in workflow.values()
+    ) == 2
+
+    width = workflow["6"]["inputs"]["width"]
+    height = workflow["6"]["inputs"]["height"]
+    bottom_cells = build_source_layout(
+        "standard_3x3",
+        width_px=width,
+        height_px=height,
+    ).bottom_row_cells()
+    for index, cell in enumerate(
+        (bottom_cells[0], bottom_cells[-1]),
+        start=1,
+    ):
+        area = workflow[str(24 + (index - 1) * 10)]["inputs"]
+        assert area == {
+            "conditioning": [str(23 + (index - 1) * 10), 0],
+            "width": cell.width / width,
+            "height": cell.height / height,
+            "x": cell.x / width,
+            "y": cell.y / height,
+            "strength": 1.0,
+        }
+
+    assert "Primal Kyogre" in workflow["20"]["inputs"]["text"]
+    assert "Primal Groudon" in workflow["30"]["inputs"]["text"]
+    assert sum(
+        node["class_type"] == "ConditioningCombine"
+        for node in workflow.values()
+    ) == 1
+    assert sum(
+        node["class_type"] == "SamplerCustomAdvanced"
+        for node in workflow.values()
+    ) == 1
+
+
 def test_regional_joint_scene_supports_four_physical_card_regions(
     tmp_path: Path,
     monkeypatch,
