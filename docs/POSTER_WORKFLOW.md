@@ -436,11 +436,11 @@ Generation III result is reviewed. Wide layouts remain unapproved.
 Because `joint_scene` deliberately redraws all pixels, an opaque-source-pixel
 equality audit is not applicable. Its hard gates are a complete generation
 fingerprint and explicit human review of both the actual raw file and the
-deterministically scaled text-free print artwork. All thirteen enabled poster
-bundles and the disabled ExGen2 Normal promotion have passed that gate: seven
-individual-v7, one individual-Dev, five spatial-v5, and one regional-v6
-promotion. Candidate-specific seeds, hashes, and rejected bounded
-depth tests remain recorded in the status and experiment log.
+deterministically scaled text-free print artwork. Thirty-eight enabled poster
+bundles have passed that gate with the avoidance-first individual-spatial v9
+contract. `ExGen2/sections/primal`, `SV04.5`, and `SV08` remain disabled after
+visual rejection. Candidate-specific seeds, hashes, and rejected bounded tests
+remain recorded in the status and experiment log.
 
 `identity_lock` remains an explicit fallback when a scope cannot pass the
 one-shot identity or placement review:

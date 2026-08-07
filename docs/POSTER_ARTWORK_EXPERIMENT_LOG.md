@@ -2550,3 +2550,25 @@ card-hostile pose.
 The selected 41-poster batch remains review-only. It does not replace the
 current promotions or enter PDF routing until the contact sheets and relevant
 full-resolution candidates receive explicit human approval.
+
+### Avoidance-first visual promotion gate (2026-08-07)
+
+The complete v9 contact sheets, full-resolution posters, and physical lower
+card row were reviewed again after the user identified three suspect scopes.
+Thirty-eight candidates pass cast count, Official Artwork identity, defining
+anatomy, complete card containment, grounding, scene continuity, and the
+avoidance-first landscape boundary. Their exact BF16 raw and 2368 x 3268 print
+pixels are promoted and PDF-enabled; the promotion validator accepts all 38
+bundles and all 342 physical card slices at effective 299.99 dpi.
+
+Three candidates fail closed and remain disabled:
+
+- `ExGen2/sections/primal` materially redesigns both Primal forms rather than
+  preserving Primal Kyogre and Primal Groudon.
+- `SV04.5` changes defining character anatomy in the lower row.
+- `SV08` renders Ho-Oh twice and changes Kyurem too strongly.
+
+These are visual failures, not print or metadata failures. Their technically
+valid review files remain local scratch only, and the existing cover route is
+the production fallback. The next bounded render work is limited to those
+three scopes; no prompt or graph complexity is added to the 38 passing paths.
