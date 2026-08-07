@@ -614,15 +614,30 @@ def build_regional_joint_scene_prompts(
         if prefer_natural_separation
         else "Resolve every intersection "
     )
+    if global_scene_everywhere:
+        global_role = (
+            "This full-canvas branch establishes the shared landscape around "
+            "and beneath the locally conditioned subjects. Keep every local "
+            "subject region part of the same continuous terrain, perspective, "
+            "light, atmosphere, and depth. Do not introduce any additional "
+            "creatures, people, or trainers beyond those locally conditioned; "
+            "do not draw text, logos, signs, boxes, panels, cards, borders, "
+            "watermarks, paths, platforms, landing pads, character-shaped "
+            "clearings, or crop marks."
+        )
+    else:
+        global_role = (
+            "This global branch contains landscape only: no creatures, "
+            "people, trainers, text, logos, signs, boxes, panels, cards, "
+            "borders, watermarks, paths, platforms, landing pads, "
+            "character-shaped clearings, or crop marks."
+        )
     global_prompt = (
         "Generate one cohesive full-bleed scene for "
         f"{concept} from an empty target in the shared unified denoising "
         f"pass. {scene_description} Use one continuous natural {ground_noun} "
         f"plane, globally coherent perspective, light, shadows, and depth. "
-        f"{safe_areas} This global branch contains landscape only: no "
-        "creatures, people, trainers, text, logos, signs, boxes, panels, "
-        "cards, borders, watermarks, paths, platforms, landing pads, "
-        "character-shaped clearings, or crop marks."
+        f"{safe_areas} {global_role}"
     )
 
     def percentage(value: int) -> str:

@@ -1645,7 +1645,8 @@ def test_regional_joint_scene_binds_each_identity_to_its_physical_card():
     }
     assert workflow["70"]["inputs"]["positive"] == ["69", 0]
     assert workflow["70"]["inputs"]["negative"] == ["5", 0]
-    assert "landscape only" in workflow["4"]["inputs"]["text"]
+    assert "locally conditioned subjects" in workflow["4"]["inputs"]["text"]
+    assert "landscape only" not in workflow["4"]["inputs"]["text"]
     assert "Mewtwo" in workflow["20"]["inputs"]["text"]
     assert "Bulbasaur" in workflow["30"]["inputs"]["text"]
     assert "Charmander" in workflow["40"]["inputs"]["text"]
