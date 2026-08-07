@@ -488,20 +488,20 @@ def build_regional_joint_scene_workflow(
         69,
         combine_start + len(regional_conditioning) - 1,
     )
-    default_id = str(final_start)
+    positive_id = str(final_start)
     guider_id = str(final_start + 1)
     sampler_id = str(final_start + 2)
     decode_id = str(final_start + 3)
     save_id = str(final_start + 4)
-    workflow[default_id] = node(
-        "ConditioningSetDefaultCombine",
-        cond=combined,
-        cond_DEFAULT=["4", 0],
+    workflow[positive_id] = node(
+        "ConditioningCombine",
+        conditioning_1=combined,
+        conditioning_2=["4", 0],
     )
     workflow[guider_id] = node(
         "CFGGuider",
         model=["1", 0],
-        positive=[default_id, 0],
+        positive=[positive_id, 0],
         negative=["5", 0],
         cfg=1.0,
     )

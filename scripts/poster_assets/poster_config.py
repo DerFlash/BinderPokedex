@@ -556,6 +556,7 @@ def build_regional_joint_scene_prompts(
     *,
     placement_contract: list[dict[str, int]],
     prefer_natural_separation: bool = True,
+    global_scene_everywhere: bool = True,
 ) -> tuple[str, list[str]]:
     """Build one global landscape prompt and one regional prompt per subject."""
     if not items:
@@ -658,16 +659,34 @@ def build_regional_joint_scene_prompts(
         prompt = (
             "IMAGE 1 is the sole exact identity and anatomy reference for "
             f"{name}. Generate exactly one complete {name}, once, in the "
-            f"{physical_region} of the same {concept}. Its complete "
+            f"{physical_region} of the globally conditioned full-canvas "
+            "scene. Its complete "
             f"visible silhouette must stay inside normalized poster bounds "
             f"{bounds}, with natural padding and ground contact. Preserve the "
             "reference's exact silhouette, stature, anatomy, face, colors, "
             "markings, limbs, appendages, and defining details; do not "
             "redesign, restyle, humanize, merge, duplicate, simplify, add, "
-            "remove, enlarge, or reshape any body part. Generate the "
-            f"character, local {ground_noun}, contact shadow, nearby "
-            "vegetation, reflected light, and scene edges together in the "
-            f"shared unified denoising pass. {separation_guidance}"
+            "remove, enlarge, or reshape any body part. "
+        )
+        if global_scene_everywhere:
+            prompt += (
+                "The full-canvas global landscape conditioning remains active "
+                "inside this region. Inherit its terrain, camera, horizon, "
+                "palette, lighting, atmosphere, perspective, and depth without "
+                "creating or restyling a separate background patch, clearing, "
+                "platform, card-shaped zone, or lighting field. Add only the "
+                "character, its coherent ground contact, contact shadow, and "
+                "reflected light in the shared unified denoising pass. "
+            )
+        else:
+            prompt += (
+                "Generate the "
+                f"character, local {ground_noun}, contact shadow, nearby "
+                "vegetation, reflected light, and scene edges together in the "
+                "shared unified denoising pass. "
+            )
+        prompt += (
+            f"{separation_guidance}"
             "physically: a connected landscape element closer to the camera "
             "may continue naturally in front of a small exterior part, while "
             "farther elements stay behind; never truncate vegetation at the "
@@ -691,6 +710,7 @@ def build_regional_joint_prompt_snapshot(
     *,
     placement_contract: list[dict[str, int]],
     prefer_natural_separation: bool = True,
+    global_scene_everywhere: bool = True,
 ) -> str:
     """Return regional joint-scene prompts as a stable provenance snapshot."""
     global_prompt, local_prompts = build_regional_joint_scene_prompts(
@@ -699,6 +719,7 @@ def build_regional_joint_prompt_snapshot(
         items,
         placement_contract=placement_contract,
         prefer_natural_separation=prefer_natural_separation,
+        global_scene_everywhere=global_scene_everywhere,
     )
     return format_regional_joint_prompt_snapshot(
         global_prompt,

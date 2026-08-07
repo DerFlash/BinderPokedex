@@ -1636,14 +1636,23 @@ def test_regional_joint_scene_binds_each_identity_to_its_physical_card():
             "strength": 1.0,
         }
 
-    assert workflow["69"]["class_type"] == "ConditioningSetDefaultCombine"
-    assert workflow["69"]["inputs"]["cond_DEFAULT"] == ["4", 0]
+    assert workflow["69"] == {
+        "class_type": "ConditioningCombine",
+        "inputs": {
+            "conditioning_1": ["61", 0],
+            "conditioning_2": ["4", 0],
+        },
+    }
     assert workflow["70"]["inputs"]["positive"] == ["69", 0]
     assert workflow["70"]["inputs"]["negative"] == ["5", 0]
     assert "landscape only" in workflow["4"]["inputs"]["text"]
     assert "Mewtwo" in workflow["20"]["inputs"]["text"]
     assert "Bulbasaur" in workflow["30"]["inputs"]["text"]
     assert "Charmander" in workflow["40"]["inputs"]["text"]
+    assert "global landscape conditioning remains active" in workflow["20"][
+        "inputs"
+    ]["text"]
+    assert "local meadow" not in workflow["20"]["inputs"]["text"]
     assert not any(
         node["class_type"]
         in {
@@ -1707,7 +1716,7 @@ def test_regional_joint_scene_places_two_subjects_in_outer_cards():
     assert sum(
         node["class_type"] == "ConditioningCombine"
         for node in workflow.values()
-    ) == 1
+    ) == 2
     assert sum(
         node["class_type"] == "SamplerCustomAdvanced"
         for node in workflow.values()
@@ -1782,11 +1791,11 @@ def test_regional_joint_scene_supports_four_physical_card_regions(
     assert sum(
         node["class_type"] == "ConditioningCombine"
         for node in workflow.values()
-    ) == 3
-    assert sum(
+    ) == 4
+    assert not any(
         node["class_type"] == "ConditioningSetDefaultCombine"
         for node in workflow.values()
-    ) == 1
+    )
     assert sum(
         node["class_type"] == "SamplerCustomAdvanced"
         for node in workflow.values()
