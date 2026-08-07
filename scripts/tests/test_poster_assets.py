@@ -91,6 +91,7 @@ from scripts.poster_assets.prepare_comfyui_poster import (
 )
 from scripts.poster_assets.composition import cutout_placements
 from scripts.poster_assets.composition import (
+    joint_scene_canvas_placements,
     joint_scene_cutout_placements,
     normalized_visible_placement_contract,
 )
@@ -1621,7 +1622,16 @@ def test_regional_joint_scene_binds_each_identity_to_its_physical_card():
         width_px=width,
         height_px=height,
     )
-    for index, cell in enumerate(layout.bottom_row_cells(), start=1):
+    placements = joint_scene_canvas_placements(
+        poster_workflow.POSTER_ASSETS / "Base1",
+        layout_name="standard_3x3",
+        canvas_size=(width, height),
+    )
+    contracts = normalized_visible_placement_contract(
+        placements,
+        canvas_size=(width, height),
+    )
+    for index, contract in enumerate(contracts, start=1):
         base = 20 + (index - 1) * 10
         assert workflow[str(base + 3)]["inputs"] == {
             "conditioning": [str(base), 0],
@@ -1629,10 +1639,18 @@ def test_regional_joint_scene_binds_each_identity_to_its_physical_card():
         }
         assert workflow[str(base + 4)]["inputs"] == {
             "conditioning": [str(base + 3), 0],
-            "width": cell.width / width,
-            "height": cell.height / height,
-            "x": cell.x / width,
-            "y": cell.y / height,
+            "width": (
+                contract["right_per_mille"]
+                - contract["left_per_mille"]
+            )
+            / 1000,
+            "height": (
+                contract["bottom_per_mille"]
+                - contract["top_per_mille"]
+            )
+            / 1000,
+            "x": contract["left_per_mille"] / 1000,
+            "y": contract["top_per_mille"] / 1000,
             "strength": 1.0,
         }
 
@@ -1703,22 +1721,31 @@ def test_regional_joint_scene_places_two_subjects_in_outer_cards():
 
     width = workflow["6"]["inputs"]["width"]
     height = workflow["6"]["inputs"]["height"]
-    bottom_cells = build_source_layout(
-        "standard_3x3",
-        width_px=width,
-        height_px=height,
-    ).bottom_row_cells()
-    for index, cell in enumerate(
-        (bottom_cells[0], bottom_cells[-1]),
-        start=1,
-    ):
+    placements = joint_scene_canvas_placements(
+        poster_workflow.POSTER_ASSETS / "ExGen2/sections/primal",
+        layout_name="standard_3x3",
+        canvas_size=(width, height),
+    )
+    contracts = normalized_visible_placement_contract(
+        placements,
+        canvas_size=(width, height),
+    )
+    for index, contract in enumerate(contracts, start=1):
         area = workflow[str(24 + (index - 1) * 10)]["inputs"]
         assert area == {
             "conditioning": [str(23 + (index - 1) * 10), 0],
-            "width": cell.width / width,
-            "height": cell.height / height,
-            "x": cell.x / width,
-            "y": cell.y / height,
+            "width": (
+                contract["right_per_mille"]
+                - contract["left_per_mille"]
+            )
+            / 1000,
+            "height": (
+                contract["bottom_per_mille"]
+                - contract["top_per_mille"]
+            )
+            / 1000,
+            "x": contract["left_per_mille"] / 1000,
+            "y": contract["top_per_mille"] / 1000,
             "strength": 1.0,
         }
 

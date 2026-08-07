@@ -442,7 +442,7 @@ def test_pipeline_contract_versions_are_family_specific_and_strict():
     assert current_generation_pipeline_contract_version(joint_generation) == 9
     assert (
         current_generation_pipeline_contract_version(regional_generation)
-        == 10
+        == 11
     )
     accepted_legacy = provenance.fingerprint_record(
         {
@@ -585,7 +585,7 @@ def test_joint_scene_rejects_a_learned_post_generation_upscaler(tmp_path):
         )
 
 
-def test_regional_joint_scene_fingerprint_uses_v10_without_cast_contract(
+def test_regional_joint_scene_fingerprint_uses_v11_without_cast_contract(
     tmp_path,
 ):
     _repository, assets, output, _scope_dir, bundle = _write_fixture(
@@ -610,7 +610,7 @@ def test_regional_joint_scene_fingerprint_uses_v10_without_cast_contract(
 
     assert (
         fingerprint["components"]["pipeline_contract"]["version"]
-            == 10
+            == 11
     )
     conditioning = fingerprint["components"][
         "joint_scene_conditioning"
@@ -857,7 +857,7 @@ def test_joint_scene_cannot_promote_without_explicit_human_review():
     (
         ("flux", "identity_lock", "two_pass_source_pixels", 3),
         ("flux", "joint_scene", "spatial_identity_joint", 7),
-        ("flux", "joint_scene", "regional_identity_joint", 10),
+        ("flux", "joint_scene", "regional_identity_joint", 11),
         ("flux", "joint_scene", "individual_spatial_joint", 9),
     ),
 )

@@ -369,7 +369,7 @@ def build_regional_joint_scene_workflow(
     vae_name: str,
     steps: int,
 ) -> dict[str, object]:
-    """Build one cast-free pass with one identity-bound physical-card branch."""
+    """Build one cast-free pass with one identity-bound subject-safe region."""
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
     manifest = bundle.manifest
     scope_data = load_poster_scope_data(bundle)
@@ -391,7 +391,6 @@ def build_regional_joint_scene_workflow(
         layout_name=layout_name,
         canvas_size=(width, height),
     )
-    cells = [placement["cell"] for placement in placements]
     placement_contract = normalized_visible_placement_contract(
         placements,
         canvas_size=(width, height),
@@ -436,8 +435,8 @@ def build_regional_joint_scene_workflow(
     }
 
     regional_conditioning: list[list[object]] = []
-    for index, (cell, prompt) in enumerate(
-        zip(cells, subject_prompts, strict=True),
+    for index, (contract, prompt) in enumerate(
+        zip(placement_contract, subject_prompts, strict=True),
         start=1,
     ):
         base = 20 + (index - 1) * 10
@@ -468,15 +467,23 @@ def build_regional_joint_scene_workflow(
         workflow[area_id] = node(
             "ConditioningSetAreaPercentage",
             conditioning=[reference_id, 0],
-            width=cell.width / width,
-            height=cell.height / height,
-            x=cell.x / width,
-            y=cell.y / height,
+            width=(
+                contract["right_per_mille"]
+                - contract["left_per_mille"]
+            )
+            / 1000,
+            height=(
+                contract["bottom_per_mille"]
+                - contract["top_per_mille"]
+            )
+            / 1000,
+            x=contract["left_per_mille"] / 1000,
+            y=contract["top_per_mille"] / 1000,
             strength=1.0,
         )
         regional_conditioning.append([area_id, 0])
 
-    combine_start = max(60, 20 + len(cells) * 10)
+    combine_start = max(60, 20 + len(placement_contract) * 10)
     combined = regional_conditioning[0]
     for offset, current in enumerate(
         regional_conditioning[1:],
