@@ -559,6 +559,7 @@ def build_regional_joint_scene_prompts(
     global_scene_everywhere: bool = True,
     repeat_global_scene_in_regions: bool = True,
     local_scene_continuity: bool = True,
+    abstract_region_language: bool = True,
 ) -> tuple[str, list[str]]:
     """Build one global landscape prompt and one regional prompt per subject."""
     if not items:
@@ -663,10 +664,16 @@ def build_regional_joint_scene_prompts(
             or f"Pokemon #{item.get('pokemon_id', '?')}"
         )
         region = reference_region_label(index, len(items))
-        if region in {"left", "center", "right"}:
-            physical_region = f"lower-{region} physical card region"
+        if abstract_region_language:
+            spatial_region = (
+                f"lower-{region} foreground area"
+                if region in {"left", "center", "right"}
+                else f"bottom foreground area in {region}"
+            )
+        elif region in {"left", "center", "right"}:
+            spatial_region = f"lower-{region} physical card region"
         else:
-            physical_region = f"bottom physical card region in {region}"
+            spatial_region = f"bottom physical card region in {region}"
         bounds = (
             f"x {percentage(contract['left_per_mille'])} to "
             f"{percentage(contract['right_per_mille'])}, y "
@@ -692,12 +699,12 @@ def build_regional_joint_scene_prompts(
         prompt = (
             f"{regional_scene_context}IMAGE 1 is the sole exact identity and anatomy reference for "
             f"{name}. Generate exactly one complete {name}, once, in the "
-            f"{physical_region} of the globally conditioned full-canvas "
-            "scene. Its complete "
-            f"visible silhouette must stay inside normalized poster bounds "
-            f"{bounds}, with natural padding and ground contact. Make the "
-            "character the clear dominant subject of this protected region, "
-            "closely approaching the relevant target bounds instead of "
+            f"{spatial_region} of the globally conditioned full-canvas "
+            "scene. Place its complete visible silhouette between "
+            f"{bounds} of the overall composition, with natural padding and "
+            "ground contact. Make the character the clear dominant subject "
+            "of this local foreground area, closely approaching those target "
+            "coordinates instead of "
             "shrinking into a distant figure. Preserve the "
             "reference's exact silhouette, stature, anatomy, face, colors, "
             "markings, limbs, appendages, and defining details; do not "
@@ -705,15 +712,26 @@ def build_regional_joint_scene_prompts(
             "remove, enlarge, or reshape any body part. "
         )
         if global_scene_everywhere:
-            prompt += (
-                "The full-canvas global landscape conditioning remains active "
-                "inside this region. Inherit its terrain, camera, horizon, "
-                "palette, lighting, atmosphere, perspective, and depth without "
-                "creating or restyling a separate background patch, clearing, "
-                "platform, card-shaped zone, or lighting field. Add only the "
-                "character, its coherent ground contact, contact shadow, and "
-                "reflected light in the shared unified denoising pass. "
-            )
+            if abstract_region_language:
+                prompt += (
+                    "The full-canvas global landscape conditioning remains "
+                    "active here. Continue its terrain, camera, horizon, "
+                    "palette, lighting, atmosphere, perspective, and depth "
+                    "seamlessly. Add only the character, its coherent ground "
+                    "contact, contact shadow, and reflected light in the "
+                    "shared unified denoising pass. Keep the landscape "
+                    "uninterrupted and unframed. "
+                )
+            else:
+                prompt += (
+                    "The full-canvas global landscape conditioning remains active "
+                    "inside this region. Inherit its terrain, camera, horizon, "
+                    "palette, lighting, atmosphere, perspective, and depth without "
+                    "creating or restyling a separate background patch, clearing, "
+                    "platform, card-shaped zone, or lighting field. Add only the "
+                    "character, its coherent ground contact, contact shadow, and "
+                    "reflected light in the shared unified denoising pass. "
+                )
         else:
             prompt += (
                 "Generate the "
@@ -749,6 +767,7 @@ def build_regional_joint_prompt_snapshot(
     global_scene_everywhere: bool = True,
     repeat_global_scene_in_regions: bool = True,
     local_scene_continuity: bool = True,
+    abstract_region_language: bool = True,
 ) -> str:
     """Return regional joint-scene prompts as a stable provenance snapshot."""
     global_prompt, local_prompts = build_regional_joint_scene_prompts(
@@ -760,6 +779,7 @@ def build_regional_joint_prompt_snapshot(
         global_scene_everywhere=global_scene_everywhere,
         repeat_global_scene_in_regions=repeat_global_scene_in_regions,
         local_scene_continuity=local_scene_continuity,
+        abstract_region_language=abstract_region_language,
     )
     return format_regional_joint_prompt_snapshot(
         global_prompt,

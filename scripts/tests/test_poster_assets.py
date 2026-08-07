@@ -1707,6 +1707,10 @@ def test_regional_joint_scene_binds_each_identity_to_its_physical_card():
     assert "Treat that description only" in workflow["20"]["inputs"]["text"]
     assert "do not compose another horizon" in workflow["20"]["inputs"]["text"]
     assert "shrinking into a distant figure" in workflow["20"]["inputs"]["text"]
+    assert "physical card region" not in workflow["20"]["inputs"]["text"]
+    assert "protected region" not in workflow["20"]["inputs"]["text"]
+    assert "card-shaped zone" not in workflow["20"]["inputs"]["text"]
+    assert "uninterrupted and unframed" in workflow["20"]["inputs"]["text"]
     assert "local meadow" not in workflow["20"]["inputs"]["text"]
     assert not any(
         node["class_type"]

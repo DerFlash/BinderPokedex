@@ -111,7 +111,7 @@ CURRENT_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
         "two_pass_source_pixels",
     ): GENERATION_PIPELINE_CONTRACT_VERSION,
     ("flux", "joint_scene", "spatial_identity_joint"): 7,
-    ("flux", "joint_scene", "regional_identity_joint"): 14,
+    ("flux", "joint_scene", "regional_identity_joint"): 15,
     ("flux", "joint_scene", "individual_spatial_joint"): 9,
 }
 SUPPORTED_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
@@ -122,7 +122,7 @@ SUPPORTED_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
     ): frozenset({1, 2, 3}),
     ("flux", "joint_scene", "spatial_identity_joint"): frozenset({5, 6, 7}),
     ("flux", "joint_scene", "regional_identity_joint"): frozenset(
-        {6, 7, 8, 9, 10, 11, 12, 13, 14}
+        {6, 7, 8, 9, 10, 11, 12, 13, 14, 15}
     ),
     ("flux", "joint_scene", "individual_spatial_joint"): frozenset({7, 8, 9}),
 }
@@ -1074,6 +1074,7 @@ def _effective_generation_prompt(
                     pipeline_contract_version >= 10
                 ),
                 local_scene_continuity=pipeline_contract_version >= 12,
+                abstract_region_language=pipeline_contract_version >= 15,
             )
         return build_joint_prompt_snapshot(
             bundle.manifest,
