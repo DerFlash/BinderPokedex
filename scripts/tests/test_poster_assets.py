@@ -1704,8 +1704,9 @@ def test_regional_joint_scene_binds_each_identity_to_its_physical_card():
     assert "global landscape conditioning remains active" in workflow["20"][
         "inputs"
     ]["text"]
-    assert "Treat that description only" in workflow["20"]["inputs"]["text"]
-    assert "do not compose another horizon" in workflow["20"]["inputs"]["text"]
+    assert "Match this lighting:" in workflow["20"]["inputs"]["text"]
+    assert "Do not compose another horizon" in workflow["20"]["inputs"]["text"]
+    assert "celestial body, rainbow, landmark" in workflow["20"]["inputs"]["text"]
     assert "shrinking into a distant figure" in workflow["20"]["inputs"]["text"]
     assert "physical card region" not in workflow["20"]["inputs"]["text"]
     assert "protected region" not in workflow["20"]["inputs"]["text"]
@@ -2009,7 +2010,7 @@ def test_regional_joint_scene_writes_distinct_workflow_and_prompt_snapshot(
         "without halos, artificial gaps"
         in workflow["20"]["inputs"]["text"]
     )
-    assert "Treat that description only" in workflow["20"]["inputs"]["text"]
+    assert "Match this lighting:" in workflow["20"]["inputs"]["text"]
     expected = "\n\n".join(
         (
             "REGIONAL JOINT SCENE - ONE-SHOT FINAL SYNTHESIS",

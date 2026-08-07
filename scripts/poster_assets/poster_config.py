@@ -560,6 +560,7 @@ def build_regional_joint_scene_prompts(
     repeat_global_scene_in_regions: bool = True,
     local_scene_continuity: bool = True,
     abstract_region_language: bool = True,
+    minimal_local_scene_context: bool = True,
 ) -> tuple[str, list[str]]:
     """Build one global landscape prompt and one regional prompt per subject."""
     if not items:
@@ -681,15 +682,25 @@ def build_regional_joint_scene_prompts(
             f"{percentage(contract['bottom_per_mille'])}"
         )
         if local_scene_continuity:
-            regional_scene_context = (
-                "The enclosing poster uses this exact environment and "
-                f"appearance: {scene_description} Treat that description "
-                "only as shared terrain material, palette, weather, "
-                "illumination, camera, and rendering context for this local "
-                f"region. Continue only the nearby {ground_noun} beneath "
-                "the subject; do not compose another horizon, sky panel, "
-                "distant vista, framed scene, or separate landscape here. "
-            )
+            if minimal_local_scene_context:
+                regional_scene_context = (
+                    "This is a local foreground part of one continuous scene "
+                    f"for {concept}. Continue only the nearby {ground_noun} "
+                    f"beneath the subject. Match this lighting: {lighting} "
+                    f"Match this rendering: {rendering} Do not compose another "
+                    "horizon, sky, celestial body, rainbow, landmark, distant "
+                    "vista, framed scene, or separate landscape here. "
+                )
+            else:
+                regional_scene_context = (
+                    "The enclosing poster uses this exact environment and "
+                    f"appearance: {scene_description} Treat that description "
+                    "only as shared terrain material, palette, weather, "
+                    "illumination, camera, and rendering context for this local "
+                    f"region. Continue only the nearby {ground_noun} beneath "
+                    "the subject; do not compose another horizon, sky panel, "
+                    "distant vista, framed scene, or separate landscape here. "
+                )
         elif repeat_global_scene_in_regions:
             regional_scene_context = (
                 f"{global_prompt} Within this same shared scene, "
@@ -768,6 +779,7 @@ def build_regional_joint_prompt_snapshot(
     repeat_global_scene_in_regions: bool = True,
     local_scene_continuity: bool = True,
     abstract_region_language: bool = True,
+    minimal_local_scene_context: bool = True,
 ) -> str:
     """Return regional joint-scene prompts as a stable provenance snapshot."""
     global_prompt, local_prompts = build_regional_joint_scene_prompts(
@@ -780,6 +792,7 @@ def build_regional_joint_prompt_snapshot(
         repeat_global_scene_in_regions=repeat_global_scene_in_regions,
         local_scene_continuity=local_scene_continuity,
         abstract_region_language=abstract_region_language,
+        minimal_local_scene_context=minimal_local_scene_context,
     )
     return format_regional_joint_prompt_snapshot(
         global_prompt,
