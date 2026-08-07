@@ -3,7 +3,7 @@
   "kind": "promoted_poster",
   "outputs": {
     "artwork": {
-      "bytes": 5363325,
+      "bytes": 6082771,
       "dpi": [
         299.9994,
         299.9994
@@ -11,13 +11,13 @@
       "file": "data/poster_assets/Pokedex/sections/gen4/poster-flux2-artwork.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "99925b9cfa454481c49c987bb7ff83312cf2125c3c7834ac8c602eb5221f011a",
-      "sha256": "109a674b3b5267159de33e74b7c378b0c9ce556c839c55b902c41809c9de0fcf",
+      "pixel_sha256": "1c83865d06587a3e5bd75c3b172db6a885c02acfcc70bbea9b9fbcd1cc3a79bd",
+      "sha256": "1421252b2f09e23e1fc06260181769dbc9775c6bdc2f1422e23bd1309a79d61d",
       "width": 2368
     },
     "cards": [
       {
-        "bytes": 357384,
+        "bytes": 366966,
         "dpi": [
           299.9994,
           299.9994
@@ -25,12 +25,12 @@
         "file": "data/poster_assets/Pokedex/sections/gen4/poster-flux2-cards/card_r1_c1.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "a3892817d15f18debcf9edcac606edef513ca2e2e7abfd0714d3a9b119de4da6",
-        "sha256": "081c6aee293624141d4d67a78d6165d0bb16f746eb1fdf0654744375cd73d19f",
+        "pixel_sha256": "b4ae0a902066c603ab3eabbe0c418f3dbc307331bd3ebaf83a392f2d096d8ce1",
+        "sha256": "1a8979857844d0bc58e252468d31f5b38e0100667a74e86a185e6ab7fb5ac770",
         "width": 750
       },
       {
-        "bytes": 310476,
+        "bytes": 311588,
         "dpi": [
           299.9994,
           299.9994
@@ -38,12 +38,12 @@
         "file": "data/poster_assets/Pokedex/sections/gen4/poster-flux2-cards/card_r1_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "0dedee3c4eb11bf1f51848bd084492520b0d166d49d0c80fa30916beacc1b0fb",
-        "sha256": "6146bd912caa7859e65cfb9bc3841e209c0005bfde9518a30def8ea17c472a84",
+        "pixel_sha256": "260e676a2d63b2c06926ca250d7059922cdf35c5a8ca53551316105e4424bfbd",
+        "sha256": "f890618756f5865b8f413c9aceee19d9a31c1cd0944241dd04c228e703879c43",
         "width": 750
       },
       {
-        "bytes": 165285,
+        "bytes": 184278,
         "dpi": [
           299.9994,
           299.9994
@@ -51,12 +51,12 @@
         "file": "data/poster_assets/Pokedex/sections/gen4/poster-flux2-cards/card_r1_c3.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "50770c2268c0ffa4959d0aa1556698b9631b8280bccb0db787a2cf55f8ac8910",
-        "sha256": "492ece37f2f433584b3909a94b77b5900acfd484e2e6bc399d362260572f88aa",
+        "pixel_sha256": "bb5e21191f23ea63e007e0f70e7c87e41c6790053f1d6b1c5597d1c26da81d05",
+        "sha256": "108955f0d06dc97251b69f450f23df5b48a557ba02d24749edc1139fea57ed72",
         "width": 750
       },
       {
-        "bytes": 480036,
+        "bytes": 557188,
         "dpi": [
           299.9994,
           299.9994
@@ -64,12 +64,12 @@
         "file": "data/poster_assets/Pokedex/sections/gen4/poster-flux2-cards/card_r2_c1.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "2db7f3d1c37115f2b42d0ec5c8e7c393ca3195aea0b3390fc7a25148ea18ed9f",
-        "sha256": "c4b9dea84090c0f4e366af08a1fd9b0c0b350b536fb7d513771f4034771e3c39",
+        "pixel_sha256": "a3de7df9c821ff1af0d9fe275bd57a91f5cf842b7fe98ea0744aa3e745b9f350",
+        "sha256": "8ae6ea2445246e205b107dcdc4b438b1f43db5316c7ae27126660a1d8c4bc7cb",
         "width": 750
       },
       {
-        "bytes": 356913,
+        "bytes": 387750,
         "dpi": [
           299.9994,
           299.9994
@@ -77,12 +77,12 @@
         "file": "data/poster_assets/Pokedex/sections/gen4/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "8df9fa619bd15cd948dba270c91ca1c0a558cc8e33afe8d2fdc77fc15146923d",
-        "sha256": "56760bda4a614ab80d338892e1dd317066af55ca02ea6fcbc9c48bd0a1631f05",
+        "pixel_sha256": "cb469e2b22bd2a55ff599b3280b7e9d171f31f84087ba560b93e61581ebfb66e",
+        "sha256": "25f93e196ccd5e7e79a96e306e327209ac153a4045b4442eca3f63730b430741",
         "width": 750
       },
       {
-        "bytes": 719438,
+        "bytes": 794082,
         "dpi": [
           299.9994,
           299.9994
@@ -90,12 +90,12 @@
         "file": "data/poster_assets/Pokedex/sections/gen4/poster-flux2-cards/card_r2_c3.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "9f640d6e8477985d7baa81be7aef0499c08d2e60d437831005d1bbda9c1ef1a9",
-        "sha256": "6c1997709bf59133dbb2f87972c56ec16ca6f871c982f1883604c6242603db0f",
+        "pixel_sha256": "8cfa4a5a2a2a906e03ae16b24fb636cdc3f72e2f808a41bac1838bd5dd75fcde",
+        "sha256": "83da324b2037d0bdfe9a7b88bb2f457379e0d7a63b3e42d0604ba934457740bb",
         "width": 750
       },
       {
-        "bytes": 812698,
+        "bytes": 919291,
         "dpi": [
           299.9994,
           299.9994
@@ -103,12 +103,12 @@
         "file": "data/poster_assets/Pokedex/sections/gen4/poster-flux2-cards/card_r3_c1.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "167cc9e0b68bf12a9151666a3c3981f79e34768a9649e36dde567ce37c2b20bb",
-        "sha256": "9e026ac0b4a77ae59fcbbe55371601af6236709566a9cefdfc1b29f6a171726c",
+        "pixel_sha256": "eb2ecbdbc92c6611496eeab6928df2ccbc965d855b8ffba5717d928e524fc436",
+        "sha256": "ac85bb33bbfde2ce7a5ecd3e176c66295a22c5600996f7c25df7295485b3a0fa",
         "width": 750
       },
       {
-        "bytes": 714105,
+        "bytes": 864144,
         "dpi": [
           299.9994,
           299.9994
@@ -116,12 +116,12 @@
         "file": "data/poster_assets/Pokedex/sections/gen4/poster-flux2-cards/card_r3_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "83636bb1c5129bd9e5338eba9b77d435ea53951ea81abec371e69a983882df1f",
-        "sha256": "cdc5de4fdde5465d624c35b43a3c3263eb3965bd5f6de1c3d920358d87116e4e",
+        "pixel_sha256": "53e8dab5183043814fab3c38543938e36f348a1e134de4561c877210c63363e7",
+        "sha256": "a3c6b13415f471dad03333ef941e1fde2404ceb64b99102a1723aba023a97e2e",
         "width": 750
       },
       {
-        "bytes": 797047,
+        "bytes": 959074,
         "dpi": [
           299.9994,
           299.9994
@@ -129,13 +129,13 @@
         "file": "data/poster_assets/Pokedex/sections/gen4/poster-flux2-cards/card_r3_c3.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "f4ba3ef5c286786897f9b62480ec026245e577b4ab527719f71f490e08ed4828",
-        "sha256": "c40913b081052aebef88f45e728dddc43ce64e88422c9efd7d4565763426b431",
+        "pixel_sha256": "9c42898c12fbd855daea03d9813434ec95e5d503da3394bcc28fbe0a8a3cd861",
+        "sha256": "2afe1d30f449d0e8fb43b832124b6281a6cd740909607aa98e17aac693f3f6d7",
         "width": 750
       }
     ],
     "preview": {
-      "bytes": 5303138,
+      "bytes": 6008304,
       "dpi": [
         299.9994,
         299.9994
@@ -143,24 +143,24 @@
       "file": "data/poster_assets/Pokedex/sections/gen4/poster-flux2.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "671a0906fe30dd9b3989fc4ab079db90eb7285e388c64f70416d905ee4f53d9c",
-      "sha256": "f5c7e6b34362483982b1e43f1988bd8fab8844a846b676025090853aebaafa74",
+      "pixel_sha256": "f38f296083405265126c5ea9ec85b0350b907a5304c09a497bc06ca9f3d0dac3",
+      "sha256": "240ff639397daa1210f160cba9fba02e74f39c57cc4d0320b6759bd3ffc51bfa",
       "width": 2368
     }
   },
   "poster_id": "gen4",
   "preview_language": "en",
-  "promoted_at": "2026-08-03T19:11:17.225244+00:00",
+  "promoted_at": "2026-08-06T23:51:47.889026+00:00",
   "run": {
-    "created_at": "2026-08-03T12:34:27.546443+00:00",
+    "created_at": "2026-08-06T18:37:49.448101+00:00",
     "generation": {
       "encoder": "qwen_3_4b.safetensors",
       "encoder_sha256": "6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a",
       "engine": "flux",
       "generation_megapixels": 1.0,
       "mode": "joint_scene",
-      "model": "flux-2-klein-4b-fp8.safetensors",
-      "model_sha256": "97ed34fe0567e436200f2faee3939b88f2b5d99f8af2a4dc16532c4245c0ccb6",
+      "model": "flux-2-klein-4b.safetensors",
+      "model_sha256": "ec3d4e733a771f61c052fb4856c48b336c55eaf2c65487c2a1faeb9bbda7a343",
       "output_dpi": 300,
       "output_method": "lanczos",
       "reference_mode": "individual_spatial_joint",
@@ -231,7 +231,7 @@
           ],
           "effective_prompt": {
             "encoding": "utf-8",
-            "sha256": "8ef822bfbb7324855addce1375ad4326aace59b42ac9ddde3a559e7b15de17b6"
+            "sha256": "fbf0d51394e97a09f29b640ce9886499782ff30fa6eaa5c148029accdbfc1329"
           },
           "generation": {
             "encoder": "qwen_3_4b.safetensors",
@@ -239,8 +239,8 @@
             "engine": "flux",
             "generation_megapixels": 1.0,
             "mode": "joint_scene",
-            "model": "flux-2-klein-4b-fp8.safetensors",
-            "model_sha256": "97ed34fe0567e436200f2faee3939b88f2b5d99f8af2a4dc16532c4245c0ccb6",
+            "model": "flux-2-klein-4b.safetensors",
+            "model_sha256": "ec3d4e733a771f61c052fb4856c48b336c55eaf2c65487c2a1faeb9bbda7a343",
             "output_dpi": 300,
             "output_method": "lanczos",
             "reference_mode": "individual_spatial_joint",
@@ -344,7 +344,7 @@
           },
           "pipeline_contract": {
             "name": "poster_generation",
-            "version": 7
+            "version": 9
           },
           "pokemon": {
             "count": "auto_from_layout_columns",
@@ -367,7 +367,7 @@
           ]
         },
         "schema_version": 1,
-        "sha256": "1700c7b1ea4a01532bc943a995ccf2d21f7f71313aec4aafe82bdffab202a65b"
+        "sha256": "970c628150993c8f90e2a1eee92f7e6bbc7c1799c420663a48a630dd4ee84604"
       },
       "overlay_fingerprint": {
         "components": {
@@ -516,9 +516,9 @@
         "sha256": "e29e87106379e8b48c9a7568cb04f997a1e7ffda1a613aa1124c5444fbe92f16"
       },
       "prompt": {
-        "bytes": 5731,
+        "bytes": 5730,
         "file": "data/poster_assets/Pokedex/sections/gen4/comfyui_poster/individual_spatial_joint_prompt.generated.txt",
-        "sha256": "6b4861ab5ee79dd406d1f695213cb34df1f09bb211467306c73d722b562b5fa9"
+        "sha256": "9a1b706d9282131b3398e30cc80dd8d850f23fd732602bc8e3d37aab01fac3e6"
       },
       "references": [
         {
@@ -550,41 +550,41 @@
         }
       ],
       "scope_manifest": {
-        "bytes": 2063,
+        "bytes": 2042,
         "file": "data/poster_assets/Pokedex/sections/gen4/poster.yaml",
-        "sha256": "e156637f1b1ae24e70bbb9b68ca074a4883053258a5e1d5c4aea2d3db48dde71"
+        "sha256": "ae8affd87b910adc3e86ed2bb8cbcd3b124b137cf81e6c4146b08db7447f6f56"
       },
       "workflow": {
-        "bytes": 9777,
+        "bytes": 9772,
         "file": "data/poster_assets/Pokedex/sections/gen4/comfyui_poster/workflow_api_joint_scene_individual_spatial_joint_1mp_260734875.json",
-        "sha256": "16659abb404c7e854497904ca1392fc9cf96791150a2e5a12d8f4045d30a5e25"
+        "sha256": "2f72edc064a00e6721dd404fa5ace246fe249aadbe82ccdd0419d1cfffda76a2"
       }
     },
     "kind": "poster_generation_run",
     "poster_id": "gen4",
     "raw_artwork": {
-      "bytes": 1352607,
-      "file": "data/poster_assets/Pokedex/sections/gen4/comfyui_poster/output/pokedex__sections__gen4_flux2_experiment_individual_spatial_joint_1mp_seed_260734875_00001_.png",
+      "bytes": 1458631,
+      "file": "data/poster_assets/Pokedex/sections/gen4/comfyui_poster/output/pokedex__sections__gen4_flux2_joint_scene_individual_spatial_1mp_seed_260734875_00001_.png",
       "height": 1168,
       "mode": "RGBA",
-      "pixel_sha256": "24d2d3303f0f6f5fd6f787541726c104bce4c9b747badc0802dbb7c0f8fae151",
-      "sha256": "17ffc408f9dba4ec634e18b740620de305c95ecb9c1f8e0abccdbe3dbb56e63e",
+      "pixel_sha256": "e843865f0090b2c3198489a30efdabd95271ab4d95242636135d9ad5c4308214",
+      "sha256": "d106884aef1b4aeec8ff15e1d4dbf1936d7f704ea48619a1a3f4b3f17585596b",
       "width": 848
     },
     "schema_version": 1,
     "scope": "Pokedex/sections/gen4",
     "section_id": "gen4",
     "source_artwork": {
-      "bytes": 5363325,
+      "bytes": 6082771,
       "dpi": [
         299.9994,
         299.9994
       ],
-      "file": "data/poster_assets/Pokedex/sections/gen4/comfyui_poster/temp/pokedex__sections__gen4_flux2_experiment_individual_spatial_joint_1mp_seed_260734875_00001__to_300dpi.png",
+      "file": "data/poster_assets/Pokedex/sections/gen4/comfyui_poster/temp/pokedex__sections__gen4_flux2_joint_scene_individual_spatial_1mp_seed_260734875_00001__to_300dpi.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "99925b9cfa454481c49c987bb7ff83312cf2125c3c7834ac8c602eb5221f011a",
-      "sha256": "109a674b3b5267159de33e74b7c378b0c9ce556c839c55b902c41809c9de0fcf",
+      "pixel_sha256": "1c83865d06587a3e5bd75c3b172db6a885c02acfcc70bbea9b9fbcd1cc3a79bd",
+      "sha256": "1421252b2f09e23e1fc06260181769dbc9775c6bdc2f1422e23bd1309a79d61d",
       "width": 2368
     },
     "source_scope": "Pokedex",
@@ -603,14 +603,14 @@
           "natural_scene_integration",
           "coherent_landscape_occlusion"
         ],
-        "generation_fingerprint_sha256": "1700c7b1ea4a01532bc943a995ccf2d21f7f71313aec4aafe82bdffab202a65b",
+        "generation_fingerprint_sha256": "970c628150993c8f90e2a1eee92f7e6bbc7c1799c420663a48a630dd4ee84604",
         "method": "human_identity_and_scene_review",
         "passed": true,
-        "raw_artwork_pixel_sha256": "24d2d3303f0f6f5fd6f787541726c104bce4c9b747badc0802dbb7c0f8fae151",
-        "raw_artwork_sha256": "17ffc408f9dba4ec634e18b740620de305c95ecb9c1f8e0abccdbe3dbb56e63e",
-        "reviewed_artwork_pixel_sha256": "99925b9cfa454481c49c987bb7ff83312cf2125c3c7834ac8c602eb5221f011a",
-        "reviewed_artwork_sha256": "109a674b3b5267159de33e74b7c378b0c9ce556c839c55b902c41809c9de0fcf",
-        "reviewed_at": "2026-08-03T12:34:28.483053+00:00",
+        "raw_artwork_pixel_sha256": "e843865f0090b2c3198489a30efdabd95271ab4d95242636135d9ad5c4308214",
+        "raw_artwork_sha256": "d106884aef1b4aeec8ff15e1d4dbf1936d7f704ea48619a1a3f4b3f17585596b",
+        "reviewed_artwork_pixel_sha256": "1c83865d06587a3e5bd75c3b172db6a885c02acfcc70bbea9b9fbcd1cc3a79bd",
+        "reviewed_artwork_sha256": "1421252b2f09e23e1fc06260181769dbc9775c6bdc2f1422e23bd1309a79d61d",
+        "reviewed_at": "2026-08-06T23:51:39.218901+00:00",
         "source_cutout_pixel_sha256": [
           "a863b05ce702ed5f50a451563484b2f596230810e582d52e0eb12fd9b2218cf7",
           "016b06764dd680b0d6fc80bbb89635dc05de59b972ae40a6ce0515baac8cfc11",

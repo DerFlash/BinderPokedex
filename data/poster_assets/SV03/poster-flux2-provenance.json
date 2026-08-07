@@ -1,0 +1,700 @@
+{
+  "asset_name": "flux2",
+  "kind": "promoted_poster",
+  "outputs": {
+    "artwork": {
+      "bytes": 4724722,
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "file": "data/poster_assets/SV03/poster-flux2-artwork.png",
+      "height": 3268,
+      "mode": "RGBA",
+      "pixel_sha256": "a6984d446700f7c8133ae06caf13920bc57703d3f8c76be234630289874f0967",
+      "sha256": "96edafdfdbdf95e8873c9cc72c5e4c9f6fde2d7aeda1512802147b6123391770",
+      "width": 2368
+    },
+    "cards": [
+      {
+        "bytes": 231180,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SV03/poster-flux2-cards/card_r1_c1.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "38b1413408efadf8358146cdd364428d557cf1fbef388c754501ec7247b6631e",
+        "sha256": "6470d6b27561d202b42ed62908ad85fe8a745a98fa099c91d9d0f9ecdb58b9b1",
+        "width": 750
+      },
+      {
+        "bytes": 311740,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SV03/poster-flux2-cards/card_r1_c2.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "9f17f959138dbe45249b64ad4d717bb98f6951f9ffa8bab57b6bff5f3a814d9f",
+        "sha256": "c951e9e21e00ec2e7431eadd72a3e1e1222c8ba2003004d0310a5cdb78cd41d7",
+        "width": 750
+      },
+      {
+        "bytes": 187479,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SV03/poster-flux2-cards/card_r1_c3.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "24069c8121b0646491e8c0856d5298ab898f11f5ea312ff78c8b19daf673d259",
+        "sha256": "9d132b3819bd8d24ab29edbc3bef1894c1cf5845bc8267cfdd2b1014dcc7fc76",
+        "width": 750
+      },
+      {
+        "bytes": 515063,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SV03/poster-flux2-cards/card_r2_c1.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "fc018a2abd5351b0c50ae0374dc4cbb529093f4bb8b93fa2d9d5ebafe3970699",
+        "sha256": "60a6c096ba5f4affb0686cbf86df6ba26bb341ae571891d02fe2e8955576fe7f",
+        "width": 750
+      },
+      {
+        "bytes": 323526,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SV03/poster-flux2-cards/card_r2_c2.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "a7f008c996c2e3bdc9fda0a7fc16e42c25af69b5f338c69fada328941a9c04df",
+        "sha256": "8dc66d06a1915cceb1246294dd993b357a9dedd97c0578e5d63810c205ffd228",
+        "width": 750
+      },
+      {
+        "bytes": 533606,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SV03/poster-flux2-cards/card_r2_c3.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "f95e9f7197b372d43b4ce883a325cdc83884aeb50a5f6b862081ba579117d95a",
+        "sha256": "b6623bd4a6c7ab8eea436cd42449f62a0deae7b24344ea4f4d4f6de97a47be31",
+        "width": 750
+      },
+      {
+        "bytes": 708840,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SV03/poster-flux2-cards/card_r3_c1.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "a7853f918830620651e8bcb335ff2ced255a7616031984aad0842a627c02bc1b",
+        "sha256": "31375c83d38191269e25cbaf2b1a1d1c85bdfbefd4470c0a99f5398b2c6f87e8",
+        "width": 750
+      },
+      {
+        "bytes": 703624,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SV03/poster-flux2-cards/card_r3_c2.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "1d7f54a4eab34c46bfbc9d707461cd3b222a07f1e5c68ae735c2532a5e7c005e",
+        "sha256": "b0c1fb22066895a3c62f8316f931a8416d03e84fae444ca4bfb18c878ea9cf93",
+        "width": 750
+      },
+      {
+        "bytes": 788907,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SV03/poster-flux2-cards/card_r3_c3.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "23903b88e1fdcd19bfaefed5280491ae1e66dfb594e3624b48b0d9dc8408dcf2",
+        "sha256": "086dd49260adfd37a014324f91998972752b79d35340c41ff6ac40bd2a2ef8d9",
+        "width": 750
+      }
+    ],
+    "preview": {
+      "bytes": 4771150,
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "file": "data/poster_assets/SV03/poster-flux2.png",
+      "height": 3268,
+      "mode": "RGBA",
+      "pixel_sha256": "6e27cf9dfacd9cf2766febca9a8c208a74f129365db82de15c74f0e0c87573f8",
+      "sha256": "d685a4c52702be8665f638030cc7e434b0fe7305597758e7cd452c7fdbe747b1",
+      "width": 2368
+    }
+  },
+  "poster_id": "SV03",
+  "preview_language": "en",
+  "promoted_at": "2026-08-06T23:53:04.391744+00:00",
+  "run": {
+    "created_at": "2026-08-06T18:47:36.806358+00:00",
+    "generation": {
+      "encoder": "qwen_3_4b.safetensors",
+      "encoder_sha256": "6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a",
+      "engine": "flux",
+      "generation_megapixels": 1.0,
+      "mode": "joint_scene",
+      "model": "flux-2-klein-4b.safetensors",
+      "model_sha256": "ec3d4e733a771f61c052fb4856c48b336c55eaf2c65487c2a1faeb9bbda7a343",
+      "output_dpi": 300,
+      "output_method": "lanczos",
+      "reference_mode": "individual_spatial_joint",
+      "seed": 260718248,
+      "steps": 4,
+      "vae": "flux2-vae.safetensors",
+      "vae_sha256": "d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5"
+    },
+    "inputs": {
+      "cutout_manifest": {
+        "bytes": 1720,
+        "file": "data/poster_assets/SV03/cutouts/manifest.json",
+        "sha256": "8c80d899e5f4e04311613fa303b905b331facb997345234f2081c25dda22acb5"
+      },
+      "cutouts": [
+        {
+          "bytes": 140222,
+          "file": "data/poster_assets/SV03/cutouts/pokemon_722_rowlet.png",
+          "height": 475,
+          "mode": "RGBA",
+          "pixel_sha256": "2e6530175cdf2ef2877c923dd19fe4ff967c72eba9d7ef2c495684acc59e425b",
+          "sha256": "5456dc8d55b3fd305bb7ddd4b1f94f07b51e3691414abaf4d60c7a7745f09c36",
+          "width": 475
+        },
+        {
+          "bytes": 139307,
+          "file": "data/poster_assets/SV03/cutouts/pokemon_004_charmander.png",
+          "height": 475,
+          "mode": "RGBA",
+          "pixel_sha256": "84b721fa96a4480ee20afd28765c279e15d45b0f73c13f74c7988cf06a3b68df",
+          "sha256": "a1ece1866497c8b11df3853190781c45f724a33a839cb5525597466d03deafd8",
+          "width": 475
+        },
+        {
+          "bytes": 191956,
+          "file": "data/poster_assets/SV03/cutouts/pokemon_656_froakie.png",
+          "height": 475,
+          "mode": "RGBA",
+          "pixel_sha256": "e9003e7398727fc9af1c4e6802623b4395c0663b1edbd299a53d96a24b474ce2",
+          "sha256": "cbb47c38d234eb7dea4b1d90f8c97ec990f41b6e61f26e7efba90d80a3d1d632",
+          "width": 475
+        }
+      ],
+      "generation_fingerprint": {
+        "components": {
+          "cutouts": [
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "2e6530175cdf2ef2877c923dd19fe4ff967c72eba9d7ef2c495684acc59e425b",
+              "pokemon_id": 722,
+              "width": 475
+            },
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "84b721fa96a4480ee20afd28765c279e15d45b0f73c13f74c7988cf06a3b68df",
+              "pokemon_id": 4,
+              "width": 475
+            },
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "e9003e7398727fc9af1c4e6802623b4395c0663b1edbd299a53d96a24b474ce2",
+              "pokemon_id": 656,
+              "width": 475
+            }
+          ],
+          "effective_prompt": {
+            "encoding": "utf-8",
+            "sha256": "d15490b4610c861b225b72cdc1ad22059355c66b25eb8e09a230499291d8b270"
+          },
+          "generation": {
+            "encoder": "qwen_3_4b.safetensors",
+            "encoder_sha256": "6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a",
+            "engine": "flux",
+            "generation_megapixels": 1.0,
+            "mode": "joint_scene",
+            "model": "flux-2-klein-4b.safetensors",
+            "model_sha256": "ec3d4e733a771f61c052fb4856c48b336c55eaf2c65487c2a1faeb9bbda7a343",
+            "output_dpi": 300,
+            "output_method": "lanczos",
+            "reference_mode": "individual_spatial_joint",
+            "seed": 260718248,
+            "steps": 4,
+            "vae": "flux2-vae.safetensors",
+            "vae_sha256": "d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5"
+          },
+          "joint_scene_conditioning": {
+            "identity_source_resampling": "canonical_card_fit",
+            "reference_megapixels": 0.5,
+            "reference_neutral_rgb": [
+              226,
+              224,
+              211
+            ],
+            "reference_strategy": "individual_spatial_identity_per_subject"
+          },
+          "layout": {
+            "columns": 3,
+            "name": "standard_3x3",
+            "raster_geometry": {
+              "generation_canvas_px": [
+                848,
+                1168
+              ],
+              "generation_column_spans_px": [
+                [
+                  0,
+                  269
+                ],
+                [
+                  290,
+                  558
+                ],
+                [
+                  579,
+                  848
+                ]
+              ],
+              "generation_row_spans_px": [
+                [
+                  0,
+                  375
+                ],
+                [
+                  396,
+                  772
+                ],
+                [
+                  793,
+                  1168
+                ]
+              ],
+              "name": "cumulative_physical_endpoints",
+              "output_canvas_px": [
+                2368,
+                3268
+              ],
+              "output_column_spans_px": [
+                [
+                  0,
+                  750
+                ],
+                [
+                  809,
+                  1559
+                ],
+                [
+                  1618,
+                  2368
+                ]
+              ],
+              "output_row_spans_px": [
+                [
+                  0,
+                  1050
+                ],
+                [
+                  1109,
+                  2159
+                ],
+                [
+                  2218,
+                  3268
+                ]
+              ],
+              "version": 2
+            },
+            "rows": 3,
+            "safe_cells": {
+              "set_info": {
+                "column": 2,
+                "row": 2
+              },
+              "title": {
+                "column": 2,
+                "row": 1
+              }
+            }
+          },
+          "pipeline_contract": {
+            "name": "poster_generation",
+            "version": 9
+          },
+          "pokemon": {
+            "count": "auto_from_layout_columns",
+            "cutout_source": "pokeapi_official_artwork",
+            "fallback_candidates": [
+              {
+                "pokemon_id": 25
+              },
+              {
+                "pokemon_id": 1
+              },
+              {
+                "pokemon_id": 4
+              },
+              {
+                "pokemon_id": 7
+              },
+              {
+                "pokemon_id": 133
+              },
+              {
+                "pokemon_id": 6
+              }
+            ],
+            "row": "bottom",
+            "strategy": "featured_from_scope"
+          },
+          "scene": {
+            "concept": "the Obsidian Flames expansion",
+            "ground_noun": "dark grass",
+            "lighting": "Low orange sunlight cuts through cool charcoal cloud layers.",
+            "rendering": "Use bold trading-card linework, restrained firelight accents, deep charcoal greens, and clear atmospheric separation.",
+            "setting": "The artwork contains a black-rock woodland at the edge of an ancient volcanic valley, glassy obsidian outcrops, warm distant vents, and high ember-colored clouds."
+          },
+          "source_subject_ids": [
+            722,
+            4,
+            656
+          ]
+        },
+        "schema_version": 1,
+        "sha256": "e2730e9e89680e610e24403dd9786206db3d08d645cb74ebf782d51b98be3506"
+      },
+      "overlay_fingerprint": {
+        "components": {
+          "languages": {
+            "de": {
+              "information": [
+                "Obsidian Flammen",
+                "230 Karten",
+                "Veröffentlicht",
+                "11. August 2023"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "a9d976e4e819bec0231dece6ad98a54b5de105192cf878c944810cb04353412e"
+              }
+            },
+            "en": {
+              "information": [
+                "Obsidian Flames",
+                "230 cards",
+                "Released",
+                "August 11, 2023"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "d1c75d86758f44973dbdb1e55a9e7557c4425d6f886de2f59a494ae9fb1df41f"
+              }
+            },
+            "es": {
+              "information": [
+                "Llamas Obsidianas",
+                "230 cartas",
+                "Publicado",
+                "11 agosto 2023"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "ad070faf8e68233842f77db3ebf6109d918723863c75102f5af0f4590bef499b"
+              }
+            },
+            "fr": {
+              "information": [
+                "Flammes Obsidiennes",
+                "230 cartes",
+                "Sortie",
+                "11 août 2023"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "40ba52a2e0ebb8e8034640609a252b48f30e6a70dd99168307b201b09f655dd1"
+              }
+            },
+            "it": {
+              "information": [
+                "Ossidiana Infuocata",
+                "230 carte",
+                "Pubblicato",
+                "11 agosto 2023"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "35c71d31369f9eb6960fbc83e63691bf681184a0be961faf672e2d0cf7d4180e"
+              }
+            },
+            "ja": {
+              "information": [
+                "Obsidian Flames",
+                "230 枚",
+                "発売日",
+                "2023年8月11日"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "d1c75d86758f44973dbdb1e55a9e7557c4425d6f886de2f59a494ae9fb1df41f"
+              }
+            },
+            "ko": {
+              "information": [
+                "Obsidian Flames",
+                "230 장",
+                "출시일",
+                "2023년 8월 11일"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "d1c75d86758f44973dbdb1e55a9e7557c4425d6f886de2f59a494ae9fb1df41f"
+              }
+            },
+            "zh_hans": {
+              "information": [
+                "Obsidian Flames",
+                "230 张",
+                "发行日期",
+                "2023年8月11日"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "d1c75d86758f44973dbdb1e55a9e7557c4425d6f886de2f59a494ae9fb1df41f"
+              }
+            },
+            "zh_hant": {
+              "information": [
+                "Obsidian Flames",
+                "230 張",
+                "發行日期",
+                "2023年8月11日"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "d1c75d86758f44973dbdb1e55a9e7557c4425d6f886de2f59a494ae9fb1df41f"
+              }
+            }
+          },
+          "layout_name": "standard_3x3",
+          "logo_pixels": {
+            "de": {
+              "height": 167,
+              "mode": "RGBA",
+              "pixel_sha256": "a9d976e4e819bec0231dece6ad98a54b5de105192cf878c944810cb04353412e",
+              "width": 451
+            },
+            "en": {
+              "height": 167,
+              "mode": "RGBA",
+              "pixel_sha256": "d1c75d86758f44973dbdb1e55a9e7557c4425d6f886de2f59a494ae9fb1df41f",
+              "width": 451
+            },
+            "es": {
+              "height": 167,
+              "mode": "RGBA",
+              "pixel_sha256": "ad070faf8e68233842f77db3ebf6109d918723863c75102f5af0f4590bef499b",
+              "width": 451
+            },
+            "fr": {
+              "height": 167,
+              "mode": "RGBA",
+              "pixel_sha256": "40ba52a2e0ebb8e8034640609a252b48f30e6a70dd99168307b201b09f655dd1",
+              "width": 451
+            },
+            "it": {
+              "height": 167,
+              "mode": "RGBA",
+              "pixel_sha256": "35c71d31369f9eb6960fbc83e63691bf681184a0be961faf672e2d0cf7d4180e",
+              "width": 451
+            },
+            "ja": {
+              "height": 167,
+              "mode": "RGBA",
+              "pixel_sha256": "d1c75d86758f44973dbdb1e55a9e7557c4425d6f886de2f59a494ae9fb1df41f",
+              "width": 451
+            },
+            "ko": {
+              "height": 167,
+              "mode": "RGBA",
+              "pixel_sha256": "d1c75d86758f44973dbdb1e55a9e7557c4425d6f886de2f59a494ae9fb1df41f",
+              "width": 451
+            },
+            "zh_hans": {
+              "height": 167,
+              "mode": "RGBA",
+              "pixel_sha256": "d1c75d86758f44973dbdb1e55a9e7557c4425d6f886de2f59a494ae9fb1df41f",
+              "width": 451
+            },
+            "zh_hant": {
+              "height": 167,
+              "mode": "RGBA",
+              "pixel_sha256": "d1c75d86758f44973dbdb1e55a9e7557c4425d6f886de2f59a494ae9fb1df41f",
+              "width": 451
+            }
+          },
+          "pipeline_contract": {
+            "name": "poster_overlay",
+            "version": 3
+          },
+          "text_cells": {
+            "set_info": {
+              "column": 2,
+              "max_height_ratio": 0.68,
+              "max_width_ratio": 0.92,
+              "row": 2
+            },
+            "title": {
+              "column": 2,
+              "row": 1
+            }
+          },
+          "text_content": {}
+        },
+        "schema_version": 1,
+        "sha256": "5268f43bc249d5d170bfd46b1bb89fceabf0457650ec152b32a40d33f7dd6a47"
+      },
+      "prompt": {
+        "bytes": 5683,
+        "file": "data/poster_assets/SV03/comfyui_poster/individual_spatial_joint_prompt.generated.txt",
+        "sha256": "5d3b279d99b5f47cfa3285d5c4df4bf47f132a3797800f46be92dbe49c8d4d39"
+      },
+      "references": [
+        {
+          "bytes": 25827,
+          "file": "data/poster_assets/SV03/comfyui_poster/individual_spatial_reference_1.png",
+          "height": 832,
+          "mode": "RGBA",
+          "pixel_sha256": "079904c2f253fbec95a9bcc94f2a5daa2138a16f575688ced7e788bb3d71a15d",
+          "sha256": "1dca9b44a80f977c44aae6da73af13d10e2110646c6a8bd2e3801febc84cddf3",
+          "width": 608
+        },
+        {
+          "bytes": 26736,
+          "file": "data/poster_assets/SV03/comfyui_poster/individual_spatial_reference_2.png",
+          "height": 832,
+          "mode": "RGBA",
+          "pixel_sha256": "98f0485b3df5cd532261b1ce354caf061bcfffa7d1a44f554006f1a9e949dee4",
+          "sha256": "ebef71bdc22632759f9e5752e30d43d5850522b544a25b5372b9eeec25e4a921",
+          "width": 608
+        },
+        {
+          "bytes": 34901,
+          "file": "data/poster_assets/SV03/comfyui_poster/individual_spatial_reference_3.png",
+          "height": 832,
+          "mode": "RGBA",
+          "pixel_sha256": "86dbd75f4473c6af178cc1e34deb05cff0e9646a406110c572fc6def6a5e0001",
+          "sha256": "4fe8995e00067ccfafe55a38cfaf87308521ffbb6bd9c0d5890dc6cb02b3ceee",
+          "width": 608
+        }
+      ],
+      "scope_manifest": {
+        "bytes": 2182,
+        "file": "data/poster_assets/SV03/poster.yaml",
+        "sha256": "85e9da74bf64ebcfb940d6e351050216a58bccc947b8f2ef7ea178fa24d5d71d"
+      },
+      "workflow": {
+        "bytes": 9706,
+        "file": "data/poster_assets/SV03/comfyui_poster/workflow_api_joint_scene_individual_spatial_joint_1mp_260718248.json",
+        "sha256": "8651b04936291aa73026924f53d5f5d3e372bf16e7f548c2eab024b05a9da77c"
+      }
+    },
+    "kind": "poster_generation_run",
+    "poster_id": "SV03",
+    "raw_artwork": {
+      "bytes": 1268338,
+      "file": "data/poster_assets/SV03/comfyui_poster/output/sv03_flux2_joint_scene_individual_spatial_1mp_seed_260718248_00001_.png",
+      "height": 1168,
+      "mode": "RGBA",
+      "pixel_sha256": "2a13c4bc5983c15ecd04f8be803ade81447f6519bfc22631ec3bf265322e3e18",
+      "sha256": "c23e4cfde1a0ccbc74de642ec3ef8e7f85f97db661b875169d5b6efcf7fdd768",
+      "width": 848
+    },
+    "schema_version": 1,
+    "scope": "SV03",
+    "section_id": null,
+    "source_artwork": {
+      "bytes": 4724722,
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "file": "data/poster_assets/SV03/comfyui_poster/temp/sv03_flux2_joint_scene_individual_spatial_1mp_seed_260718248_00001__to_300dpi.png",
+      "height": 3268,
+      "mode": "RGBA",
+      "pixel_sha256": "a6984d446700f7c8133ae06caf13920bc57703d3f8c76be234630289874f0967",
+      "sha256": "96edafdfdbdf95e8873c9cc72c5e4c9f6fde2d7aeda1512802147b6123391770",
+      "width": 2368
+    },
+    "source_scope": "SV03",
+    "validation": {
+      "joint_scene_visual_review": {
+        "approval_source": "explicit_promotion_flag",
+        "criteria": [
+          "exact_cast_count",
+          "raw_generation_identity",
+          "text_free_output_identity",
+          "identity_and_form",
+          "silhouette_and_stature",
+          "anatomy_and_face",
+          "colors_and_markings",
+          "placement_and_card_safety",
+          "natural_scene_integration",
+          "coherent_landscape_occlusion"
+        ],
+        "generation_fingerprint_sha256": "e2730e9e89680e610e24403dd9786206db3d08d645cb74ebf782d51b98be3506",
+        "method": "human_identity_and_scene_review",
+        "passed": true,
+        "raw_artwork_pixel_sha256": "2a13c4bc5983c15ecd04f8be803ade81447f6519bfc22631ec3bf265322e3e18",
+        "raw_artwork_sha256": "c23e4cfde1a0ccbc74de642ec3ef8e7f85f97db661b875169d5b6efcf7fdd768",
+        "reviewed_artwork_pixel_sha256": "a6984d446700f7c8133ae06caf13920bc57703d3f8c76be234630289874f0967",
+        "reviewed_artwork_sha256": "96edafdfdbdf95e8873c9cc72c5e4c9f6fde2d7aeda1512802147b6123391770",
+        "reviewed_at": "2026-08-06T23:52:54.815423+00:00",
+        "source_cutout_pixel_sha256": [
+          "2e6530175cdf2ef2877c923dd19fe4ff967c72eba9d7ef2c495684acc59e425b",
+          "84b721fa96a4480ee20afd28765c279e15d45b0f73c13f74c7988cf06a3b68df",
+          "e9003e7398727fc9af1c4e6802623b4395c0663b1edbd299a53d96a24b474ce2"
+        ],
+        "source_cutout_sha256": [
+          "5456dc8d55b3fd305bb7ddd4b1f94f07b51e3691414abaf4d60c7a7745f09c36",
+          "a1ece1866497c8b11df3853190781c45f724a33a839cb5525597466d03deafd8",
+          "cbb47c38d234eb7dea4b1d90f8c97ec990f41b6e61f26e7efba90d80a3d1d632"
+        ],
+        "source_subject_ids": [
+          722,
+          4,
+          656
+        ],
+        "stage": "raw_and_text_free_print_artwork"
+      }
+    }
+  },
+  "schema_version": 1,
+  "scope": "SV03",
+  "section_id": null,
+  "source_scope": "SV03"
+}

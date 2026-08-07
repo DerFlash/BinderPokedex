@@ -1,0 +1,700 @@
+{
+  "asset_name": "flux2",
+  "kind": "promoted_poster",
+  "outputs": {
+    "artwork": {
+      "bytes": 4711766,
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "file": "data/poster_assets/SVP/poster-flux2-artwork.png",
+      "height": 3268,
+      "mode": "RGBA",
+      "pixel_sha256": "3005872a24177b50bb7d7b51d19a2875cdecfac95b769c0d6847275e80092046",
+      "sha256": "6527600191306285021b3ae373b915e51568dcf15e4349418864e44866e85426",
+      "width": 2368
+    },
+    "cards": [
+      {
+        "bytes": 224851,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SVP/poster-flux2-cards/card_r1_c1.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "850a937fc18d06f9520d0179f86acee7cc2a5ffa977ec4b0ee3864147ebcb603",
+        "sha256": "cb6865a1035844555593a2b23f5aea3d93cc8ee76633ad5114df487fe8c41e97",
+        "width": 750
+      },
+      {
+        "bytes": 226936,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SVP/poster-flux2-cards/card_r1_c2.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "10830ad1f62e0bce31424245db566859dbe02086c466ef76c16215a33dc983aa",
+        "sha256": "68a99451f2e1b74aa4bfc50754d19b7f12e43eb69c6346661590ce004dc22b37",
+        "width": 750
+      },
+      {
+        "bytes": 235663,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SVP/poster-flux2-cards/card_r1_c3.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "e970cbf72714c112111a263bfa273deb8eb93cb79218e8a493b64933c76bd0a2",
+        "sha256": "e2470ee7e50da3c2cc1401e5610fae17380f9569205bb3bb0113bb7c539df09f",
+        "width": 750
+      },
+      {
+        "bytes": 507764,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SVP/poster-flux2-cards/card_r2_c1.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "ced02d2cbea27b83849ffcf18329c083d3380635a8bad6668f7821f148a2c0a4",
+        "sha256": "6f4c113bb01ccea2c2505073d6e3a484a7b84e0a9e7be0f5b2e9104ea5a79867",
+        "width": 750
+      },
+      {
+        "bytes": 261562,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SVP/poster-flux2-cards/card_r2_c2.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "7cddde2154a80e5c401de11ef9beb7eb05dd56a44506bcfbf6acb5c51cc0f9f8",
+        "sha256": "3bf42494a3377423032554ca02c3c9c03abe64ae6f5972a158c936f170edff12",
+        "width": 750
+      },
+      {
+        "bytes": 554254,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SVP/poster-flux2-cards/card_r2_c3.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "f32295c7665acac95059001fa1735cf2e93da71f82824af9469b1f6d2a3326d8",
+        "sha256": "75834dc1f5cae214657bd447c4da378156d1c674f85a5556e7294fb351372389",
+        "width": 750
+      },
+      {
+        "bytes": 912201,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SVP/poster-flux2-cards/card_r3_c1.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "b7e8b212e9b6ed5a5e7c11028c3df27b311f800df5f3d17f46fed87a20383f16",
+        "sha256": "bc563133c21ec2fd16100ca40c4da9e6edcc1969af45912c8ee24cfc697bb318",
+        "width": 750
+      },
+      {
+        "bytes": 517746,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SVP/poster-flux2-cards/card_r3_c2.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "ece6c25e2b56af97d7be773e9b1b4c157d2a41f387f058aa55eef480939e8b41",
+        "sha256": "a335550be3d540cbe22ed4060a0548ed2edb7b77d48dd727c85fa3ff6123b791",
+        "width": 750
+      },
+      {
+        "bytes": 862593,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SVP/poster-flux2-cards/card_r3_c3.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "3052c254b6655625785266a438458164f60f5f810b877c7a17090b82ab9c4d6f",
+        "sha256": "f0bbd767dd4472e2ad56324edcb29a8b283e308d730c9c97f38ce25993e280a3",
+        "width": 750
+      }
+    ],
+    "preview": {
+      "bytes": 4686198,
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "file": "data/poster_assets/SVP/poster-flux2.png",
+      "height": 3268,
+      "mode": "RGBA",
+      "pixel_sha256": "ee440758321f085f82bd729d7d8171d0ffe47f7da9805cbb132ca57e7e80f95b",
+      "sha256": "676c413f30309ba433a60897d63ff339d7e00ec0cff680ffa180828c6cc7ab68",
+      "width": 2368
+    }
+  },
+  "poster_id": "SVP",
+  "preview_language": "en",
+  "promoted_at": "2026-08-06T23:55:18.045516+00:00",
+  "run": {
+    "created_at": "2026-08-06T19:24:26.662777+00:00",
+    "generation": {
+      "encoder": "qwen_3_4b.safetensors",
+      "encoder_sha256": "6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a",
+      "engine": "flux",
+      "generation_megapixels": 1.0,
+      "mode": "joint_scene",
+      "model": "flux-2-klein-4b.safetensors",
+      "model_sha256": "ec3d4e733a771f61c052fb4856c48b336c55eaf2c65487c2a1faeb9bbda7a343",
+      "output_dpi": 300,
+      "output_method": "lanczos",
+      "reference_mode": "individual_spatial_joint",
+      "seed": 260766630,
+      "steps": 4,
+      "vae": "flux2-vae.safetensors",
+      "vae_sha256": "d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5"
+    },
+    "inputs": {
+      "cutout_manifest": {
+        "bytes": 1720,
+        "file": "data/poster_assets/SVP/cutouts/manifest.json",
+        "sha256": "201e70e02af69c4d84c312ca8c689ce83cf98302da59bf8822daa3778f95c8d7"
+      },
+      "cutouts": [
+        {
+          "bytes": 114350,
+          "file": "data/poster_assets/SVP/cutouts/pokemon_906_sprigatito.png",
+          "height": 475,
+          "mode": "RGBA",
+          "pixel_sha256": "bbb27600106084f27dc56d019f37f6c1c17bba9a3ea8138fd79e7d03b5200b81",
+          "sha256": "cb9053d02cc7ef92a721eb13c77610649ff419c2c8885efb0851ecc377a71e6a",
+          "width": 475
+        },
+        {
+          "bytes": 115180,
+          "file": "data/poster_assets/SVP/cutouts/pokemon_909_fuecoco.png",
+          "height": 475,
+          "mode": "RGBA",
+          "pixel_sha256": "6f87f462a8639a983688199cd116cbbe580a356acf62ca1f46a4eb805a268d1e",
+          "sha256": "0308edd6c21008f2260916bdb4f2579ec11e89f2dac4196cf818105507f1dd0b",
+          "width": 475
+        },
+        {
+          "bytes": 91302,
+          "file": "data/poster_assets/SVP/cutouts/pokemon_912_quaxly.png",
+          "height": 475,
+          "mode": "RGBA",
+          "pixel_sha256": "0c34c412b2dffca8c3d88946d77a3547e03ae7ba7488c9368fadb53b07b3a6f9",
+          "sha256": "5003d8ca8f90402039214d2ed1e8531b7e7687211ad2cbec7113ba9f43c2622f",
+          "width": 475
+        }
+      ],
+      "generation_fingerprint": {
+        "components": {
+          "cutouts": [
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "bbb27600106084f27dc56d019f37f6c1c17bba9a3ea8138fd79e7d03b5200b81",
+              "pokemon_id": 906,
+              "width": 475
+            },
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "6f87f462a8639a983688199cd116cbbe580a356acf62ca1f46a4eb805a268d1e",
+              "pokemon_id": 909,
+              "width": 475
+            },
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "0c34c412b2dffca8c3d88946d77a3547e03ae7ba7488c9368fadb53b07b3a6f9",
+              "pokemon_id": 912,
+              "width": 475
+            }
+          ],
+          "effective_prompt": {
+            "encoding": "utf-8",
+            "sha256": "fc086f79c015378e7a6cbbbc12b570e71ba3440badc099dd5fff8d56a9a76c5d"
+          },
+          "generation": {
+            "encoder": "qwen_3_4b.safetensors",
+            "encoder_sha256": "6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a",
+            "engine": "flux",
+            "generation_megapixels": 1.0,
+            "mode": "joint_scene",
+            "model": "flux-2-klein-4b.safetensors",
+            "model_sha256": "ec3d4e733a771f61c052fb4856c48b336c55eaf2c65487c2a1faeb9bbda7a343",
+            "output_dpi": 300,
+            "output_method": "lanczos",
+            "reference_mode": "individual_spatial_joint",
+            "seed": 260766630,
+            "steps": 4,
+            "vae": "flux2-vae.safetensors",
+            "vae_sha256": "d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5"
+          },
+          "joint_scene_conditioning": {
+            "identity_source_resampling": "canonical_card_fit",
+            "reference_megapixels": 0.5,
+            "reference_neutral_rgb": [
+              226,
+              224,
+              211
+            ],
+            "reference_strategy": "individual_spatial_identity_per_subject"
+          },
+          "layout": {
+            "columns": 3,
+            "name": "standard_3x3",
+            "raster_geometry": {
+              "generation_canvas_px": [
+                848,
+                1168
+              ],
+              "generation_column_spans_px": [
+                [
+                  0,
+                  269
+                ],
+                [
+                  290,
+                  558
+                ],
+                [
+                  579,
+                  848
+                ]
+              ],
+              "generation_row_spans_px": [
+                [
+                  0,
+                  375
+                ],
+                [
+                  396,
+                  772
+                ],
+                [
+                  793,
+                  1168
+                ]
+              ],
+              "name": "cumulative_physical_endpoints",
+              "output_canvas_px": [
+                2368,
+                3268
+              ],
+              "output_column_spans_px": [
+                [
+                  0,
+                  750
+                ],
+                [
+                  809,
+                  1559
+                ],
+                [
+                  1618,
+                  2368
+                ]
+              ],
+              "output_row_spans_px": [
+                [
+                  0,
+                  1050
+                ],
+                [
+                  1109,
+                  2159
+                ],
+                [
+                  2218,
+                  3268
+                ]
+              ],
+              "version": 2
+            },
+            "rows": 3,
+            "safe_cells": {
+              "set_info": {
+                "column": 2,
+                "row": 2
+              },
+              "title": {
+                "column": 2,
+                "row": 1
+              }
+            }
+          },
+          "pipeline_contract": {
+            "name": "poster_generation",
+            "version": 9
+          },
+          "pokemon": {
+            "count": "auto_from_layout_columns",
+            "cutout_source": "pokeapi_official_artwork",
+            "fallback_candidates": [
+              {
+                "pokemon_id": 25
+              },
+              {
+                "pokemon_id": 1
+              },
+              {
+                "pokemon_id": 4
+              },
+              {
+                "pokemon_id": 7
+              },
+              {
+                "pokemon_id": 133
+              },
+              {
+                "pokemon_id": 6
+              }
+            ],
+            "row": "bottom",
+            "strategy": "featured_from_scope"
+          },
+          "scene": {
+            "concept": "the Scarlet and Violet Black Star Promo collection",
+            "ground_noun": "meadow",
+            "lighting": "Clear optimistic daylight enters from the upper left.",
+            "rendering": "Use premium promotional-card illustration, clean modern linework, restrained bright colors, and spacious atmospheric depth.",
+            "setting": "The artwork contains a broad celebratory Paldean panorama combining rolling grassland, distant coast, olive woodland, and a blank-facade academy silhouette beneath sweeping red and violet clouds."
+          },
+          "source_subject_ids": [
+            906,
+            909,
+            912
+          ]
+        },
+        "schema_version": 1,
+        "sha256": "b58909c962544a8a990dcd3fd97e39ad8f4fdff11a823aed7f566e38e5d482d6"
+      },
+      "overlay_fingerprint": {
+        "components": {
+          "languages": {
+            "de": {
+              "information": [
+                "SVP Black Star Promos",
+                "219 Karten",
+                "Veröffentlicht",
+                "31. März 2023"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff"
+              }
+            },
+            "en": {
+              "information": [
+                "SVP Black Star Promos",
+                "219 cards",
+                "Released",
+                "March 31, 2023"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff"
+              }
+            },
+            "es": {
+              "information": [
+                "SVP Black Star Promos",
+                "219 cartas",
+                "Publicado",
+                "31 marzo 2023"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff"
+              }
+            },
+            "fr": {
+              "information": [
+                "SVP Black Star Promos",
+                "219 cartes",
+                "Sortie",
+                "31 mars 2023"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff"
+              }
+            },
+            "it": {
+              "information": [
+                "SVP Black Star Promos",
+                "219 carte",
+                "Pubblicato",
+                "31 marzo 2023"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff"
+              }
+            },
+            "ja": {
+              "information": [
+                "SVP Black Star Promos",
+                "219 枚",
+                "発売日",
+                "2023年3月31日"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff"
+              }
+            },
+            "ko": {
+              "information": [
+                "SVP Black Star Promos",
+                "219 장",
+                "출시일",
+                "2023년 3월 31일"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff"
+              }
+            },
+            "zh_hans": {
+              "information": [
+                "SVP Black Star Promos",
+                "219 张",
+                "发行日期",
+                "2023年3月31日"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff"
+              }
+            },
+            "zh_hant": {
+              "information": [
+                "SVP Black Star Promos",
+                "219 張",
+                "發行日期",
+                "2023年3月31日"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff"
+              }
+            }
+          },
+          "layout_name": "standard_3x3",
+          "logo_pixels": {
+            "de": {
+              "height": 466,
+              "mode": "RGBA",
+              "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff",
+              "width": 514
+            },
+            "en": {
+              "height": 466,
+              "mode": "RGBA",
+              "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff",
+              "width": 514
+            },
+            "es": {
+              "height": 466,
+              "mode": "RGBA",
+              "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff",
+              "width": 514
+            },
+            "fr": {
+              "height": 466,
+              "mode": "RGBA",
+              "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff",
+              "width": 514
+            },
+            "it": {
+              "height": 466,
+              "mode": "RGBA",
+              "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff",
+              "width": 514
+            },
+            "ja": {
+              "height": 466,
+              "mode": "RGBA",
+              "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff",
+              "width": 514
+            },
+            "ko": {
+              "height": 466,
+              "mode": "RGBA",
+              "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff",
+              "width": 514
+            },
+            "zh_hans": {
+              "height": 466,
+              "mode": "RGBA",
+              "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff",
+              "width": 514
+            },
+            "zh_hant": {
+              "height": 466,
+              "mode": "RGBA",
+              "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff",
+              "width": 514
+            }
+          },
+          "pipeline_contract": {
+            "name": "poster_overlay",
+            "version": 3
+          },
+          "text_cells": {
+            "set_info": {
+              "column": 2,
+              "max_height_ratio": 0.68,
+              "max_width_ratio": 0.92,
+              "row": 2
+            },
+            "title": {
+              "column": 2,
+              "row": 1
+            }
+          },
+          "text_content": {}
+        },
+        "schema_version": 1,
+        "sha256": "06502aea3383c9dd8da41b56d44e167d51283b7194b343bfd72e3ac6ba213d1a"
+      },
+      "prompt": {
+        "bytes": 5728,
+        "file": "data/poster_assets/SVP/comfyui_poster/individual_spatial_joint_prompt.generated.txt",
+        "sha256": "d68e0548648208ce78f7dae7de29e194270c5dc8ad245acf376fd2a7e164185f"
+      },
+      "references": [
+        {
+          "bytes": 25564,
+          "file": "data/poster_assets/SVP/comfyui_poster/individual_spatial_reference_1.png",
+          "height": 832,
+          "mode": "RGBA",
+          "pixel_sha256": "3759bb818d49f425e051c340a0f6476e0bbf3b492fdf2ebe09a73e3917fb7d24",
+          "sha256": "2da64541d18b9dfce71b708f5f97c90f353bbe31b3ebea02887a1bd852aa254b",
+          "width": 608
+        },
+        {
+          "bytes": 23343,
+          "file": "data/poster_assets/SVP/comfyui_poster/individual_spatial_reference_2.png",
+          "height": 832,
+          "mode": "RGBA",
+          "pixel_sha256": "a068dfd83d41359259eeccdc80e6f9010617dc6bc1942ea97b012846148c4804",
+          "sha256": "1cac440a48341c3433e124312f84716a514e23267eb52dfb07bf5a60a5b4f843",
+          "width": 608
+        },
+        {
+          "bytes": 21374,
+          "file": "data/poster_assets/SVP/comfyui_poster/individual_spatial_reference_3.png",
+          "height": 832,
+          "mode": "RGBA",
+          "pixel_sha256": "e294a340627a8d4de649d513ce006e2d8c0525f206289f0b26732d94b72a22b1",
+          "sha256": "e64935797e02d0c3619ab41908f020dde288715d18523883a19b7b463f2399dd",
+          "width": 608
+        }
+      ],
+      "scope_manifest": {
+        "bytes": 2236,
+        "file": "data/poster_assets/SVP/poster.yaml",
+        "sha256": "1cd25b6f7219c48de1cc6673c38bbdb134291167dc1a63bdd6ffc72c364a190c"
+      },
+      "workflow": {
+        "bytes": 9750,
+        "file": "data/poster_assets/SVP/comfyui_poster/workflow_api_joint_scene_individual_spatial_joint_1mp_260766630.json",
+        "sha256": "f6ad1d3a85d9ef43778c294439781731de12b757e48050ed3a9943162c6ace7d"
+      }
+    },
+    "kind": "poster_generation_run",
+    "poster_id": "SVP",
+    "raw_artwork": {
+      "bytes": 1254907,
+      "file": "data/poster_assets/SVP/comfyui_poster/output/svp_flux2_joint_scene_individual_spatial_1mp_seed_260766630_00001_.png",
+      "height": 1168,
+      "mode": "RGBA",
+      "pixel_sha256": "584e48c8f81e92f9cd865d7295d21ad9b943e2df6ff16063392e70b311d0dd8f",
+      "sha256": "46c86b93728c3b3698bd6c0bf8f41725d643ac1093543cc4120733514f60a5ad",
+      "width": 848
+    },
+    "schema_version": 1,
+    "scope": "SVP",
+    "section_id": null,
+    "source_artwork": {
+      "bytes": 4711766,
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "file": "data/poster_assets/SVP/comfyui_poster/temp/svp_flux2_joint_scene_individual_spatial_1mp_seed_260766630_00001__to_300dpi.png",
+      "height": 3268,
+      "mode": "RGBA",
+      "pixel_sha256": "3005872a24177b50bb7d7b51d19a2875cdecfac95b769c0d6847275e80092046",
+      "sha256": "6527600191306285021b3ae373b915e51568dcf15e4349418864e44866e85426",
+      "width": 2368
+    },
+    "source_scope": "SVP",
+    "validation": {
+      "joint_scene_visual_review": {
+        "approval_source": "explicit_promotion_flag",
+        "criteria": [
+          "exact_cast_count",
+          "raw_generation_identity",
+          "text_free_output_identity",
+          "identity_and_form",
+          "silhouette_and_stature",
+          "anatomy_and_face",
+          "colors_and_markings",
+          "placement_and_card_safety",
+          "natural_scene_integration",
+          "coherent_landscape_occlusion"
+        ],
+        "generation_fingerprint_sha256": "b58909c962544a8a990dcd3fd97e39ad8f4fdff11a823aed7f566e38e5d482d6",
+        "method": "human_identity_and_scene_review",
+        "passed": true,
+        "raw_artwork_pixel_sha256": "584e48c8f81e92f9cd865d7295d21ad9b943e2df6ff16063392e70b311d0dd8f",
+        "raw_artwork_sha256": "46c86b93728c3b3698bd6c0bf8f41725d643ac1093543cc4120733514f60a5ad",
+        "reviewed_artwork_pixel_sha256": "3005872a24177b50bb7d7b51d19a2875cdecfac95b769c0d6847275e80092046",
+        "reviewed_artwork_sha256": "6527600191306285021b3ae373b915e51568dcf15e4349418864e44866e85426",
+        "reviewed_at": "2026-08-06T23:55:09.223467+00:00",
+        "source_cutout_pixel_sha256": [
+          "bbb27600106084f27dc56d019f37f6c1c17bba9a3ea8138fd79e7d03b5200b81",
+          "6f87f462a8639a983688199cd116cbbe580a356acf62ca1f46a4eb805a268d1e",
+          "0c34c412b2dffca8c3d88946d77a3547e03ae7ba7488c9368fadb53b07b3a6f9"
+        ],
+        "source_cutout_sha256": [
+          "cb9053d02cc7ef92a721eb13c77610649ff419c2c8885efb0851ecc377a71e6a",
+          "0308edd6c21008f2260916bdb4f2579ec11e89f2dac4196cf818105507f1dd0b",
+          "5003d8ca8f90402039214d2ed1e8531b7e7687211ad2cbec7113ba9f43c2622f"
+        ],
+        "source_subject_ids": [
+          906,
+          909,
+          912
+        ],
+        "stage": "raw_and_text_free_print_artwork"
+      }
+    }
+  },
+  "schema_version": 1,
+  "scope": "SVP",
+  "section_id": null,
+  "source_scope": "SVP"
+}

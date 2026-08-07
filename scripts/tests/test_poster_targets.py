@@ -119,8 +119,8 @@ def test_every_generated_pdf_language_has_complete_poster_copy():
 
 def test_standalone_poster_manifests_remain_isolated_single_bundles():
     expected_hashes = {
-        "Base1": "424ae822d7b7db3619379b9b910c68105aafaaaf42996bb58554ec1cb5ddd001",
-        "SV03.5": "64fca77c722fbb454c3ec17eacf58bf0ab0ae6fee29f3e9e1e4c4a295f3c40a7",
+        "Base1": "31f000f6dc70660616a7f32b2479e9c6e35dc473a126f2653a6b066f284f2856",
+        "SV03.5": "eb43270bbea4be0cba17e42d02796d36777bb0536e1fd61966fa53794b2f4dd6",
     }
 
     for scope, expected_hash in expected_hashes.items():

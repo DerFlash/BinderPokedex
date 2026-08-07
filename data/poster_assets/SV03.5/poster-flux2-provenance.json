@@ -3,7 +3,7 @@
   "kind": "promoted_poster",
   "outputs": {
     "artwork": {
-      "bytes": 5660786,
+      "bytes": 6136172,
       "dpi": [
         299.9994,
         299.9994
@@ -11,13 +11,13 @@
       "file": "data/poster_assets/SV03.5/poster-flux2-artwork.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "e5d976244a5097910004599d3c1a43128d622f0cb424497fb60a5ff0424c2dc9",
-      "sha256": "77891e39e1906932ebeb0af99966ff04f1e23f9d474785bce75ccf24b2f11634",
+      "pixel_sha256": "5ab8a5d5714f86e1c120693d42812db15954d01a2c2b2729e68d4c4deca3f650",
+      "sha256": "727efeda4772538dc294fe0e458600a371e8fef643cd75c8fc603a1ab126acd8",
       "width": 2368
     },
     "cards": [
       {
-        "bytes": 125252,
+        "bytes": 118898,
         "dpi": [
           299.9994,
           299.9994
@@ -25,12 +25,12 @@
         "file": "data/poster_assets/SV03.5/poster-flux2-cards/card_r1_c1.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "4806ff4480874eb23eb1208102b6f2582395a63dd9627e7427bf31238d10fa6b",
-        "sha256": "e5ed89089cade17bd2d8d363e7d3388e56a44ba228bd12a36f1bdf93eb847615",
+        "pixel_sha256": "3fa5b37638e3e211f6a8bfc97a3642127d322f7caf89b2c8aab150f166970415",
+        "sha256": "c94c6dcdda9e56bd725fd8fec6f577fd6c8a0b1ae7af98e282673849a0645609",
         "width": 750
       },
       {
-        "bytes": 349683,
+        "bytes": 343309,
         "dpi": [
           299.9994,
           299.9994
@@ -38,12 +38,12 @@
         "file": "data/poster_assets/SV03.5/poster-flux2-cards/card_r1_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "31faccb5da94b18413fc9554391c61333eb859701a0d6aefa714846823eb5017",
-        "sha256": "679d35ba07a58d0f50e36e5b196edbf471e0b9cd4bd3abd4fb3b737fff2d0826",
+        "pixel_sha256": "7972dbcece1a3045b1cf3ed17716a0f5cfaebfd2787330de6da2665b97afec7a",
+        "sha256": "ede5cb1b62f478a92f028c50c3f4815daf5cfc27c4e21c745c8eec9ac909415e",
         "width": 750
       },
       {
-        "bytes": 161755,
+        "bytes": 152045,
         "dpi": [
           299.9994,
           299.9994
@@ -51,12 +51,12 @@
         "file": "data/poster_assets/SV03.5/poster-flux2-cards/card_r1_c3.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "8f1a8c9d617ea6ff24d067cc2c6a5861a6e04eb4beb718d906dca43d1a6b398f",
-        "sha256": "bd538727b4c0494f878e94bb58856edea835f4af9ce071d741c1957ad39c207c",
+        "pixel_sha256": "bc05cfbfee88d21eacb88ed733ab6a16a5aee70fe9dd994b779daffff2d89dda",
+        "sha256": "92e2809e9ad73e55b7082e0380471e9c126631744382fb6e4ec35580532745ac",
         "width": 750
       },
       {
-        "bytes": 752306,
+        "bytes": 827734,
         "dpi": [
           299.9994,
           299.9994
@@ -64,12 +64,12 @@
         "file": "data/poster_assets/SV03.5/poster-flux2-cards/card_r2_c1.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "e2f2031a8abf005b916048efeabf5dcd85d6d7bdb2ff573e01a2ab745dbad0f0",
-        "sha256": "8ce4b065325afb30e4ab28ac1ad49a86cc08859fba12673b8c1e0f4076538442",
+        "pixel_sha256": "05bcff6892bee9921584037d64661272367bd594b91a53d82d5fb1297f04a2e9",
+        "sha256": "b6dd3101cb7661e5ee5221a75dd2abe59ecf1505ec68b3dc85ead236e84146ea",
         "width": 750
       },
       {
-        "bytes": 338435,
+        "bytes": 343035,
         "dpi": [
           299.9994,
           299.9994
@@ -77,12 +77,12 @@
         "file": "data/poster_assets/SV03.5/poster-flux2-cards/card_r2_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "b9655973c5af2e869e548075e5cf1417ef12302e6e3d4b2d912f8aa429c3409c",
-        "sha256": "f989347b5dfcd026656b709d13778d6bd4215b8acd7237abac3cf87802702bf8",
+        "pixel_sha256": "1caa0eb34a0a239f901afa22735e30534ea0d097add75ee27ed2636ace034906",
+        "sha256": "edda5a1aca8d416bf5c4ad24415e6e4d0bb886d73a3dd1bee3b64ea710ba943b",
         "width": 750
       },
       {
-        "bytes": 831321,
+        "bytes": 870812,
         "dpi": [
           299.9994,
           299.9994
@@ -90,12 +90,12 @@
         "file": "data/poster_assets/SV03.5/poster-flux2-cards/card_r2_c3.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "61eb8b09eac9680d0391e7fe8f57b01000f55ee8f2df44306596bfd3c873d841",
-        "sha256": "29abd0cb9fbedfaea47fb77bb51472a9b5d63ae9ed240b7616fb5aafaead1314",
+        "pixel_sha256": "823b506ae1bcc8001fdc6850b95ebd0e90ebecf017c4955bd54cbbfccb557c5a",
+        "sha256": "f49d38f9af0833dfcdb90702edf9f6ea911eabfb6d67287eefb01220b0207fa3",
         "width": 750
       },
       {
-        "bytes": 915181,
+        "bytes": 1040317,
         "dpi": [
           299.9994,
           299.9994
@@ -103,12 +103,12 @@
         "file": "data/poster_assets/SV03.5/poster-flux2-cards/card_r3_c1.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "033d00d1840c03328891dcfb1866756e2c71c29eaedb389b8fa167ede8fdd3f2",
-        "sha256": "44078a4474bf208850853e7f81a7dd00292440ac9e399275076998be00031e7a",
+        "pixel_sha256": "e59a6c1aea5c789f5342cc0ac092fc820ac161037cb0fe0cd31a4ccf5a1c6fc1",
+        "sha256": "56dd916dd041303d68e93037cbe3ee0cdef831bf7a8694ad2dc7a545b9de18bf",
         "width": 750
       },
       {
-        "bytes": 834971,
+        "bytes": 888906,
         "dpi": [
           299.9994,
           299.9994
@@ -116,12 +116,12 @@
         "file": "data/poster_assets/SV03.5/poster-flux2-cards/card_r3_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "ac2521a0f422f0d750c32e5948d354b5971d322d4a0d9afcd2c6e98dfea4326d",
-        "sha256": "accdd72e5c39b9e174806fdd3da6000d01564065ae0cca819afcee3a44303203",
+        "pixel_sha256": "9e2520897da700d2946cd787d56451ffec5596b02a2e64709525bb7bba2b5bd3",
+        "sha256": "0e5e0691a6a256e8965ff66d33104c1258ee8688f0f3f05b1409a818e2d01399",
         "width": 750
       },
       {
-        "bytes": 940841,
+        "bytes": 1075195,
         "dpi": [
           299.9994,
           299.9994
@@ -129,13 +129,13 @@
         "file": "data/poster_assets/SV03.5/poster-flux2-cards/card_r3_c3.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "99f4cd31299191f25e3720324444c722cf0cd0f9e5264270c62846931c57b1b8",
-        "sha256": "b8226e73ecbdcbdc203f07a0dae0aba84643e9d4dd29d8b7eed28c110c3418af",
+        "pixel_sha256": "5732c9a83cf440dc32b4bdf929f201d566ba806a5c2dd67e72025cf20a46cbfa",
+        "sha256": "ba3172c7dd60a02657ed039c5e7cec38982672a3083534a68ec4fe6d6790a429",
         "width": 750
       }
     ],
     "preview": {
-      "bytes": 5746795,
+      "bytes": 6220462,
       "dpi": [
         299.9994,
         299.9994
@@ -143,24 +143,24 @@
       "file": "data/poster_assets/SV03.5/poster-flux2.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "a83903d3d877878d6bf62033c07161eee7c37827dcd1187f15100d4a339d0d62",
-      "sha256": "df8f7ecc238666d64dd46e3b320d8744b718034629ba3618667b4a3df0629726",
+      "pixel_sha256": "3f66820244832d426e54d2c890049bb087275e4907f587d81c35c996932785ce",
+      "sha256": "a5b3a13fc036eece43ac77f09b4877ae6589029e4d8fad7b5b03656b43850e82",
       "width": 2368
     }
   },
   "poster_id": "SV03.5",
   "preview_language": "en",
-  "promoted_at": "2026-08-03T13:30:10.992913+00:00",
+  "promoted_at": "2026-08-06T23:53:13.699396+00:00",
   "run": {
-    "created_at": "2026-08-03T12:40:40.902837+00:00",
+    "created_at": "2026-08-06T18:48:49.380516+00:00",
     "generation": {
       "encoder": "qwen_3_4b.safetensors",
       "encoder_sha256": "6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a",
       "engine": "flux",
       "generation_megapixels": 1.0,
       "mode": "joint_scene",
-      "model": "flux-2-klein-4b-fp8.safetensors",
-      "model_sha256": "97ed34fe0567e436200f2faee3939b88f2b5d99f8af2a4dc16532c4245c0ccb6",
+      "model": "flux-2-klein-4b.safetensors",
+      "model_sha256": "ec3d4e733a771f61c052fb4856c48b336c55eaf2c65487c2a1faeb9bbda7a343",
       "output_dpi": 300,
       "output_method": "lanczos",
       "reference_mode": "individual_spatial_joint",
@@ -231,7 +231,7 @@
           ],
           "effective_prompt": {
             "encoding": "utf-8",
-            "sha256": "a8651d56295f84bcee23aec478fa0d74223f7f8aa5efd93da7e95d3a3cac6dca"
+            "sha256": "15bc2fb3efc78283285614faf80c5a65722de4eae6fec7e4511e4fa2f9fbd94f"
           },
           "generation": {
             "encoder": "qwen_3_4b.safetensors",
@@ -239,8 +239,8 @@
             "engine": "flux",
             "generation_megapixels": 1.0,
             "mode": "joint_scene",
-            "model": "flux-2-klein-4b-fp8.safetensors",
-            "model_sha256": "97ed34fe0567e436200f2faee3939b88f2b5d99f8af2a4dc16532c4245c0ccb6",
+            "model": "flux-2-klein-4b.safetensors",
+            "model_sha256": "ec3d4e733a771f61c052fb4856c48b336c55eaf2c65487c2a1faeb9bbda7a343",
             "output_dpi": 300,
             "output_method": "lanczos",
             "reference_mode": "individual_spatial_joint",
@@ -344,7 +344,7 @@
           },
           "pipeline_contract": {
             "name": "poster_generation",
-            "version": 7
+            "version": 9
           },
           "pokemon": {
             "count": "auto_from_layout_columns",
@@ -378,7 +378,7 @@
           ]
         },
         "schema_version": 1,
-        "sha256": "7d15d14a14c8167b06de0ad07f03f1d096bad1de657597550d7aef01702d6470"
+        "sha256": "1d29f215bac6169481d4b26f2a1d199a13ca613120bba1a946af962f1566ebb1"
       },
       "overlay_fingerprint": {
         "components": {
@@ -571,9 +571,9 @@
         "sha256": "5d43ee865edb918f9fe811aae8b47d2e5b7a6b58c08d1ada08ee2ba5d2d5b434"
       },
       "prompt": {
-        "bytes": 5488,
+        "bytes": 5487,
         "file": "data/poster_assets/SV03.5/comfyui_poster/individual_spatial_joint_prompt.generated.txt",
-        "sha256": "4010fe005f42e0401221e79c9ea5c60cc0489e77a3be1779ef5941f9068f379f"
+        "sha256": "94f79af3877f6fd20f1e77fbfe7d9bc098c5f1e2bdeafcf7ea780b42ff6222ea"
       },
       "references": [
         {
@@ -610,36 +610,36 @@
         "sha256": "64fca77c722fbb454c3ec17eacf58bf0ab0ae6fee29f3e9e1e4c4a295f3c40a7"
       },
       "workflow": {
-        "bytes": 9517,
+        "bytes": 9512,
         "file": "data/poster_assets/SV03.5/comfyui_poster/workflow_api_joint_scene_individual_spatial_joint_1mp_260726101.json",
-        "sha256": "a5b574275c207c34199b23c2b0e0d3f8518e0dd409ea0946a0ebd743cd37e7f3"
+        "sha256": "186baaa65aa5c8989899e7e5f03ef2b50845048125bc4ecd67212644b2b4d32a"
       }
     },
     "kind": "poster_generation_run",
     "poster_id": "SV03.5",
     "raw_artwork": {
-      "bytes": 1367863,
-      "file": "data/poster_assets/SV03.5/comfyui_poster/output/sv03.5_flux2_experiment_individual_spatial_joint_1mp_seed_260726101_00001_.png",
+      "bytes": 1431262,
+      "file": "data/poster_assets/SV03.5/comfyui_poster/output/sv03.5_flux2_joint_scene_individual_spatial_1mp_seed_260726101_00001_.png",
       "height": 1168,
       "mode": "RGBA",
-      "pixel_sha256": "2915e6c50ed61d1cd9520a9e60a5cf4ddcee6bb4634847069c5e1921e8c96813",
-      "sha256": "0cd3e8a3b391e652aa53e97e6bc2932b40c41abaf840837b8791a7a0fc9d0043",
+      "pixel_sha256": "c1bc251cf3f57d11d33d62076063c6960cce57f29448104d2d28bb32ab739d4f",
+      "sha256": "38a7d4bead061daed8001bbf53e75d01cf97dbdf2387cc2fed6e336585dea8e0",
       "width": 848
     },
     "schema_version": 1,
     "scope": "SV03.5",
     "section_id": null,
     "source_artwork": {
-      "bytes": 5660786,
+      "bytes": 6136172,
       "dpi": [
         299.9994,
         299.9994
       ],
-      "file": "data/poster_assets/SV03.5/comfyui_poster/temp/sv03.5_flux2_experiment_individual_spatial_joint_1mp_seed_260726101_00001__to_300dpi.png",
+      "file": "data/poster_assets/SV03.5/comfyui_poster/temp/sv03.5_flux2_joint_scene_individual_spatial_1mp_seed_260726101_00001__to_300dpi.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "e5d976244a5097910004599d3c1a43128d622f0cb424497fb60a5ff0424c2dc9",
-      "sha256": "77891e39e1906932ebeb0af99966ff04f1e23f9d474785bce75ccf24b2f11634",
+      "pixel_sha256": "5ab8a5d5714f86e1c120693d42812db15954d01a2c2b2729e68d4c4deca3f650",
+      "sha256": "727efeda4772538dc294fe0e458600a371e8fef643cd75c8fc603a1ab126acd8",
       "width": 2368
     },
     "source_scope": "SV03.5",
@@ -658,14 +658,14 @@
           "natural_scene_integration",
           "coherent_landscape_occlusion"
         ],
-        "generation_fingerprint_sha256": "7d15d14a14c8167b06de0ad07f03f1d096bad1de657597550d7aef01702d6470",
+        "generation_fingerprint_sha256": "1d29f215bac6169481d4b26f2a1d199a13ca613120bba1a946af962f1566ebb1",
         "method": "human_identity_and_scene_review",
         "passed": true,
-        "raw_artwork_pixel_sha256": "2915e6c50ed61d1cd9520a9e60a5cf4ddcee6bb4634847069c5e1921e8c96813",
-        "raw_artwork_sha256": "0cd3e8a3b391e652aa53e97e6bc2932b40c41abaf840837b8791a7a0fc9d0043",
-        "reviewed_artwork_pixel_sha256": "e5d976244a5097910004599d3c1a43128d622f0cb424497fb60a5ff0424c2dc9",
-        "reviewed_artwork_sha256": "77891e39e1906932ebeb0af99966ff04f1e23f9d474785bce75ccf24b2f11634",
-        "reviewed_at": "2026-08-03T12:40:41.638305+00:00",
+        "raw_artwork_pixel_sha256": "c1bc251cf3f57d11d33d62076063c6960cce57f29448104d2d28bb32ab739d4f",
+        "raw_artwork_sha256": "38a7d4bead061daed8001bbf53e75d01cf97dbdf2387cc2fed6e336585dea8e0",
+        "reviewed_artwork_pixel_sha256": "5ab8a5d5714f86e1c120693d42812db15954d01a2c2b2729e68d4c4deca3f650",
+        "reviewed_artwork_sha256": "727efeda4772538dc294fe0e458600a371e8fef643cd75c8fc603a1ab126acd8",
+        "reviewed_at": "2026-08-06T23:53:05.689598+00:00",
         "source_cutout_pixel_sha256": [
           "f96cfeddc294c4efbbdf1b35cd816341d950e3051dec2128c03f652448b04d10",
           "84b721fa96a4480ee20afd28765c279e15d45b0f73c13f74c7988cf06a3b68df",
