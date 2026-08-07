@@ -2665,3 +2665,60 @@ with useful card-edge padding and coherent contact with the generated coastal
 stone. No landscape element crosses either silhouette inconsistently. Agent
 review therefore advances this render to human review. It remains disabled
 and unpromoted until that approval.
+
+### Mew holdout closure and curated replacements (2026-08-07)
+
+One final `SV04.5` isolation applies `regional_identity_joint` to the original
+Charmander, Pikachu, and Mew cast at seed `260789455`. It removes reference
+competition and keeps Mew's overall pose, silhouette, face, tail, and body
+close, but the left hand is again a smooth stump and the right hand still does
+not retain three distinct pointed fingers. The raw SHA-256 is
+`baf2379c011d26e69cffed9c4a5c0b5c2e38ccdce07438271d8dd03f756e4472`.
+This closes regional binding as a fine-anatomy fix for Mew; the failed render
+is not promoted.
+
+Both affected scopes now use ordinary, reproducible input curation rather than
+a prompt or renderer exception:
+
+- `SV04.5`: Charmander (`sv04.5-007`), Pikachu (`sv04.5-018`), and Lapras
+  (`sv04.5-016`).
+- `ExGen1/sections/normal`: Venusaur (`ex6-112`), Blastoise (`ex6-104`), and
+  Lugia (`ex10-105`).
+
+The card IDs live in `section_featured_card_ids`; regenerated scope JSON,
+official artwork cutouts, and regression tests make the choice survive future
+fetches. Obsolete Mew and Mewtwo bundle cutouts are removed. This is a change
+of featured poster cast only, not a change to either scope's card content.
+
+The first curated renders deliberately reuse the production
+`individual_spatial_joint` mode. `ExGen1/sections/normal` passes agent review:
+all three official reference poses and defining anatomy remain recognizable,
+the cast appears exactly once, and every silhouette fits its lower card. Its
+raw SHA-256 is
+`ba95338bdb97ade1bd82d46eb01bdb776bf2f470bcaee24cdc73e6c596e9a778`;
+the English review poster SHA-256 is
+`2ce1a666643245a44c6c4e28552df00fd79c1670691f1283cdba411b2fe43894`.
+Blastoise's rear three-quarter pose is not generated pose drift: it matches the
+official artwork input.
+
+The same global-reference mode fails `SV04.5` by producing two Pikachu and two
+overlapping Lapras. The curated cast is therefore tested once with the already
+retained regional graph rather than with more prompt text. Seed `260789455`
+has the correct count and identities but places Pikachu's extended left hand
+on the physical-card edge. One bounded regional retry at seed `260789456`
+moves all three complete silhouettes inside their cards while keeping their
+official poses and anatomy close, coherent ground contact, shadows, and one
+continuous moonlit scene. Reproducibility evidence:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Regional workflow | `b1a64f5aeba86a879de51937e1dccecc30cad2dfba660955c366173c755601a8` |
+| Raw 848 x 1168 artwork | `719ed39874fff61a3bfe85d04bd49b367809527ed1de465818e7c7b87419ce75` |
+| 2368 x 3268 text-free artwork | `938663ef85b0b0e18c1a39e2098ad13a3473f44c4e80ec571b05d1ab5aad8a22` |
+| English review poster | `d719f8ef6d84772c4d050e5f34987cdf356092b7d780e06d92821518c9fd35ec` |
+
+The `SV04.5`, `ExGen1/sections/normal`, and Primal candidates advance to human
+review together. All three scopes remain PDF-disabled and no review pixels are
+promoted before approval. On approval, ExGen1 retains the normal
+`individual_spatial_joint` default; SV04.5 and Primal record
+`regional_identity_joint` and their reviewed seeds in their manifests.
