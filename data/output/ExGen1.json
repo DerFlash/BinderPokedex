@@ -2957,24 +2957,38 @@
       },
       "featured_elements": [
         {
-          "pokemon_id": 150,
-          "pokemon_name": "Mewtwo",
-          "card_id": "ex1-101",
-          "set_name": "Ruby & Sapphire",
-          "image_url": "https://assets.tcgdex.net/en/ex/ex1/101/high.png",
-          "local_image_path": "data/section_artwork/pokemon_150_ex1-101.png",
+          "pokemon_id": 3,
+          "pokemon_name": "Venusaur",
+          "card_id": "ex6-112",
+          "set_name": "FireRed & LeafGreen",
+          "image_url": "https://assets.tcgdex.net/en/ex/ex6/112/high.png",
+          "local_image_path": "data/section_artwork/pokemon_3_ex6-112.png",
           "rarity": null,
-          "hp": 100
+          "hp": 150,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 3,
+            "official_artwork_id": 3,
+            "subject_key": "pokeapi:official-artwork:3",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png"
+          }
         },
         {
-          "pokemon_id": 151,
-          "pokemon_name": "Mew",
-          "card_id": "ex13-100",
-          "set_name": "Holon Phantoms",
-          "image_url": "https://assets.tcgdex.net/en/ex/ex13/100/high.png",
-          "local_image_path": "data/section_artwork/pokemon_151_ex13-100.png",
+          "pokemon_id": 9,
+          "pokemon_name": "Blastoise",
+          "card_id": "ex6-104",
+          "set_name": "FireRed & LeafGreen",
+          "image_url": "https://assets.tcgdex.net/en/ex/ex6/104/high.png",
+          "local_image_path": "data/section_artwork/pokemon_9_ex6-104.png",
           "rarity": null,
-          "hp": 90
+          "hp": 150,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 9,
+            "official_artwork_id": 9,
+            "subject_key": "pokeapi:official-artwork:9",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png"
+          }
         },
         {
           "pokemon_id": 249,
@@ -2984,7 +2998,14 @@
           "image_url": "https://assets.tcgdex.net/en/ex/ex10/105/high.png",
           "local_image_path": "data/section_artwork/pokemon_249_ex10-105.png",
           "rarity": null,
-          "hp": 100
+          "hp": 100,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 249,
+            "official_artwork_id": 249,
+            "subject_key": "pokeapi:official-artwork:249",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/249.png"
+          }
         }
       ]
     }

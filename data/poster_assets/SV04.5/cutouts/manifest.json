@@ -4,7 +4,7 @@
   "poster_id": "SV04.5",
   "section_id": null,
   "source": "pokeapi_official_artwork",
-  "generated_at": "2026-08-06T17:44:06.513141+00:00",
+  "generated_at": "2026-08-07T07:04:09.993965+00:00",
   "layout": {
     "name": "standard_3x3",
     "columns": 3,
@@ -44,18 +44,18 @@
       "errors": []
     },
     {
-      "pokemon_id": 151,
-      "name_en": "Mew",
-      "name_de": "Mew",
-      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/151.png",
-      "file": "pokemon_151_mew.png",
+      "pokemon_id": 131,
+      "name_en": "Lapras",
+      "name_de": "Lapras",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/131.png",
+      "file": "pokemon_131_lapras.png",
       "mode": "RGBA",
       "width": 475,
       "height": 475,
       "alpha_min": 0,
       "alpha_max": 255,
-      "transparent_pixels": 177319,
-      "opaque_pixels": 52782,
+      "transparent_pixels": 157456,
+      "opaque_pixels": 71000,
       "validated_alpha": true,
       "errors": []
     }

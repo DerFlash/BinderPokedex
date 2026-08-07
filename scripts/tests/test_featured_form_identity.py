@@ -240,6 +240,34 @@ def test_exgen2_scope_pins_its_curated_mega_cast():
     }
 
 
+@pytest.mark.parametrize(
+    ("scope", "expected"),
+    [
+        (
+            "SV04.5",
+            {"all": ["sv04.5-007", "sv04.5-018", "sv04.5-016"]},
+        ),
+        (
+            "ExGen1",
+            {"normal": ["ex6-112", "ex6-104", "ex10-105"]},
+        ),
+    ],
+)
+def test_mew_holdouts_pin_card_safe_scope_casts(scope, expected):
+    config = yaml.safe_load(
+        (REPO_ROOT / "config" / "scopes" / f"{scope}.yaml").read_text(
+            encoding="utf-8"
+        )
+    )
+    featured_step = next(
+        step
+        for step in config["pipeline"]
+        if step["step"] == "enrich_featured_elements"
+    )
+
+    assert featured_step["params"]["section_featured_card_ids"] == expected
+
+
 def test_featured_enrichment_rejects_artwork_species_mismatch(
     tmp_path: Path,
 ):
