@@ -1640,7 +1640,14 @@ def test_regional_joint_scene_binds_each_identity_to_its_physical_card():
         "class_type": "ConditioningCombine",
         "inputs": {
             "conditioning_1": ["61", 0],
-            "conditioning_2": ["4", 0],
+            "conditioning_2": ["9", 0],
+        },
+    }
+    assert workflow["9"] == {
+        "class_type": "ConditioningSetAreaStrength",
+        "inputs": {
+            "conditioning": ["4", 0],
+            "strength": 0.2,
         },
     }
     assert workflow["70"]["inputs"]["positive"] == ["69", 0]

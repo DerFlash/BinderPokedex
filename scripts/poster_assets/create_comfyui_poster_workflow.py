@@ -427,6 +427,11 @@ def build_regional_joint_scene_workflow(
             height=height,
         ),
         "8": node("RandomNoise", noise_seed=seed),
+        "9": node(
+            "ConditioningSetAreaStrength",
+            conditioning=["4", 0],
+            strength=0.2,
+        ),
         "10": node("KSamplerSelect", sampler_name="euler"),
     }
 
@@ -496,7 +501,7 @@ def build_regional_joint_scene_workflow(
     workflow[positive_id] = node(
         "ConditioningCombine",
         conditioning_1=combined,
-        conditioning_2=["4", 0],
+        conditioning_2=["9", 0],
     )
     workflow[guider_id] = node(
         "CFGGuider",

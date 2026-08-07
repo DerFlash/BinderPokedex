@@ -111,7 +111,7 @@ CURRENT_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
         "two_pass_source_pixels",
     ): GENERATION_PIPELINE_CONTRACT_VERSION,
     ("flux", "joint_scene", "spatial_identity_joint"): 7,
-    ("flux", "joint_scene", "regional_identity_joint"): 8,
+    ("flux", "joint_scene", "regional_identity_joint"): 9,
     ("flux", "joint_scene", "individual_spatial_joint"): 9,
 }
 SUPPORTED_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
@@ -121,7 +121,9 @@ SUPPORTED_GENERATION_PIPELINE_CONTRACT_VERSIONS = {
         "two_pass_source_pixels",
     ): frozenset({1, 2, 3}),
     ("flux", "joint_scene", "spatial_identity_joint"): frozenset({5, 6, 7}),
-    ("flux", "joint_scene", "regional_identity_joint"): frozenset({6, 7, 8}),
+    ("flux", "joint_scene", "regional_identity_joint"): frozenset(
+        {6, 7, 8, 9}
+    ),
     ("flux", "joint_scene", "individual_spatial_joint"): frozenset({7, 8, 9}),
 }
 NATURAL_SEPARATION_PIPELINE_MINIMUM = {
