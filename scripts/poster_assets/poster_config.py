@@ -561,6 +561,7 @@ def build_regional_joint_scene_prompts(
     local_scene_continuity: bool = True,
     abstract_region_language: bool = True,
     minimal_local_scene_context: bool = True,
+    identity_only_local_context: bool = True,
 ) -> tuple[str, list[str]]:
     """Build one global landscape prompt and one regional prompt per subject."""
     if not items:
@@ -682,7 +683,15 @@ def build_regional_joint_scene_prompts(
             f"{percentage(contract['bottom_per_mille'])}"
         )
         if local_scene_continuity:
-            if minimal_local_scene_context:
+            if identity_only_local_context:
+                regional_scene_context = (
+                    "This is only a local subject-identity condition inside "
+                    "the enclosing full-canvas scene. Do not invent, repeat, "
+                    "describe, or restyle any environment here; inherit all "
+                    "landscape, terrain, horizon, sky, weather, lighting, "
+                    "atmosphere, depth, and rendering from the global branch. "
+                )
+            elif minimal_local_scene_context:
                 regional_scene_context = (
                     "This is a local foreground part of one continuous scene "
                     f"for {concept}. Continue only the nearby {ground_noun} "
@@ -780,6 +789,7 @@ def build_regional_joint_prompt_snapshot(
     local_scene_continuity: bool = True,
     abstract_region_language: bool = True,
     minimal_local_scene_context: bool = True,
+    identity_only_local_context: bool = True,
 ) -> str:
     """Return regional joint-scene prompts as a stable provenance snapshot."""
     global_prompt, local_prompts = build_regional_joint_scene_prompts(
@@ -793,6 +803,7 @@ def build_regional_joint_prompt_snapshot(
         local_scene_continuity=local_scene_continuity,
         abstract_region_language=abstract_region_language,
         minimal_local_scene_context=minimal_local_scene_context,
+        identity_only_local_context=identity_only_local_context,
     )
     return format_regional_joint_prompt_snapshot(
         global_prompt,
