@@ -78,6 +78,7 @@ except ImportError:
 
 ROOT = Path(__file__).resolve().parents[2]
 POSTER_ASSETS = ROOT / "data" / "poster_assets"
+REGIONAL_GLOBAL_SCENE_STRENGTH = 0.35
 
 
 def node(class_type: str, **inputs: object) -> dict[str, object]:
@@ -488,7 +489,7 @@ def build_regional_joint_scene_workflow(
         "9": node(
             "ConditioningSetAreaStrength",
             conditioning=["4", 0],
-            strength=0.2,
+            strength=REGIONAL_GLOBAL_SCENE_STRENGTH,
         ),
         "10": node("KSamplerSelect", sampler_name="euler"),
         "11": node("SolidMask", value=0.0, width=width, height=height),
