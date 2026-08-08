@@ -196,10 +196,11 @@ class VariantPDFGenerator:
         ]
     
     def _generate_with_sections(self, c, sections: list, status: PDFStatus = None):
-        """
-        Generate PDF with section cover pages and card pages.
-        
-        Each section now contains its pokemon directly (hierarchical structure).
+        """Generate each section with one start page followed by card pages.
+
+        A reviewed, enabled poster replaces the ordinary section cover. The
+        canonical cover remains the automatic fallback when no poster can be
+        consumed, including explicit ``--skip-poster`` builds.
         """
         logger.info(f"Generating with {len(sections)} sections")
         
@@ -214,15 +215,16 @@ class VariantPDFGenerator:
             
             logger.info(f"  Section: {section_id}, pokemon={len(section_pokemon)}")
             
-            # Draw cover page for this section
-            self._draw_section_cover(c, section)
-            c.showPage()
-
-            for poster_page in self.poster_pages.for_section(
+            poster_pages = self.poster_pages.for_section(
                 section_id,
                 section_index,
-            ):
-                poster_page.render_page(c, self.page_renderer)
+            )
+            if poster_pages:
+                for poster_page in poster_pages:
+                    poster_page.render_page(c, self.page_renderer)
+                    c.showPage()
+            else:
+                self._draw_section_cover(c, section)
                 c.showPage()
             
             # Draw cards for this section

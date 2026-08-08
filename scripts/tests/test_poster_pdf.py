@@ -303,7 +303,7 @@ def test_wide_full_page_reports_the_matching_pdf_page_requirement():
     renderer._prepare_localized_poster.assert_not_called()
 
 
-def test_variant_generator_inserts_poster_only_after_first_section_cover():
+def test_variant_generator_replaces_only_matching_first_section_cover():
     generator = VariantPDFGenerator.__new__(VariantPDFGenerator)
     generator.pokemon_list = []
     generator.language = "de"
@@ -325,7 +325,8 @@ def test_variant_generator_inserts_poster_only_after_first_section_cover():
     poster_page.render_page.assert_called_once_with(
         canvas, generator.page_renderer
     )
-    assert canvas.showPage.call_count == 3
+    generator._draw_section_cover.assert_called_once_with(canvas, sections[1])
+    assert canvas.showPage.call_count == 2
 
 
 def test_section_cover_remains_when_no_poster_is_enabled():
@@ -385,7 +386,7 @@ def test_empty_section_cover_does_not_fall_back_to_scope_cards():
     )
 
 
-def test_variant_generator_inserts_matching_poster_after_each_section_cover():
+def test_variant_generator_replaces_each_matching_section_cover():
     generator = VariantPDFGenerator.__new__(VariantPDFGenerator)
     generator.pokemon_list = []
     generator.language = "de"
@@ -414,10 +415,11 @@ def test_variant_generator_inserts_matching_poster_after_each_section_cover():
 
     first.render_page.assert_called_once_with(canvas, generator.page_renderer)
     second.render_page.assert_called_once_with(canvas, generator.page_renderer)
-    assert canvas.showPage.call_count == 4
+    generator._draw_section_cover.assert_not_called()
+    assert canvas.showPage.call_count == 2
 
 
-def test_aggregate_posters_render_into_a_real_four_page_pdf(tmp_path):
+def test_aggregate_posters_render_into_a_real_two_page_pdf(tmp_path):
     card_paths = []
     for index in range(9):
         card_path = tmp_path / f"card-{index}.png"
@@ -467,7 +469,7 @@ def test_aggregate_posters_render_into_a_real_four_page_pdf(tmp_path):
     generator._draw_cards_page = MagicMock()
 
     assert generator.generate() is True
-    assert output_path.read_bytes().count(b"/Type /Page\n") == 4
+    assert output_path.read_bytes().count(b"/Type /Page\n") == 2
     assert all(
         renderer._prepare_cards.call_count == 1
         for renderer in renderers
