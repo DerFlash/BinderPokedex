@@ -298,9 +298,9 @@ text-free master without ComfyUI.
 The PDF layer discovers only enabled, promoted bundles. For each language it
 applies the localized title/logo and information block, then either slices with
 the shared layout (`cards`, default) or draws the complete physical-grid image
-once (`full-page`). Both presentations insert the poster after the configured
-cover. `--skip-poster` bypasses discovery and keeps the established cover-based
-PDF path available.
+once (`full-page`). Both presentations replace the configured section cover.
+`--skip-poster` bypasses discovery and keeps the established cover-based PDF
+path available.
 
 Presentation is not a second asset contract. Both modes consume the same
 promoted text-free master and deterministic overlay. For `standard_3x3`, the
@@ -308,11 +308,10 @@ continuous image remains 200.5 × 276.7 mm and is centered on A4; it is not
 stretched to page edges and receives no cutting guides. A distinct filename
 prevents it from overwriting the normal cuttable build.
 
-Keeping the cover is currently deliberate. The poster now carries its semantic
-information, but removing covers changes pagination and the visual contract for
-every scope. That migration requires an explicit renderer option plus
-multilingual rendered-PDF review after the affected posters are promoted; it is
-not coupled to artwork generation or promotion.
+The renderer chooses exactly one introductory page per section. An enabled
+promotion uses the poster; a missing, disabled, or explicitly skipped poster
+uses the canonical cover. Artwork generation and promotion remain independent
+of that deterministic PDF choice.
 
 Pull requests run the same validator and PDF/release-candidate builders as a
 release, but upload only a temporary Actions artifact. A separate tag-only job

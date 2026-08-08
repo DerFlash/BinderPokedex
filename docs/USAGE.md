@@ -60,8 +60,8 @@ The normal PDF command automatically includes accepted local poster artwork.
 Individual scopes opt in with `pdf.enabled: true` in
 `data/poster_assets/<scope>/poster.yaml`. Aggregate scopes use
 `data/poster_assets/<scope>/posters.yaml` to bind isolated leaf manifests to
-section IDs; each enabled page is inserted after its matching section cover.
-Scopes and bindings without that opt-in continue to generate normally. Poster
+section IDs; each enabled page replaces its matching section cover. Scopes and
+bindings without that opt-in continue through the ordinary cover path. Poster
 generation itself is a separate reviewed workflow; the PDF command only
 consumes promoted local artwork and does not start ComfyUI.
 
@@ -80,10 +80,10 @@ This writes a separate file such as
 `output/de/Base1_DE_POSTER_FULL_PAGE.pdf`. Scopes without an enabled promoted
 poster continue through the existing cover and card-page path.
 
-The current page order remains cover, poster, then card pages. Poster overlays
-already repeat the cover's semantic title/subtitle, count, description or
-release date, and project identity. Removing the cover is a separate future
-migration after the affected posters and multilingual PDF layouts are reviewed.
+The normal page order is poster, then card pages. The poster carries the
+section's semantic title/subtitle, count, description or release date, and
+project identity. If no enabled promoted poster exists, the page order remains
+cover, then card pages.
 
 Skip the poster for one build without changing the scope manifest:
 

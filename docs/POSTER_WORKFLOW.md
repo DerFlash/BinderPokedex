@@ -77,12 +77,10 @@ generated once and then reused deterministically for every supported language.
 Aggregate indexes fan out to independent section manifests before generation
 and join again only when the PDF page collection is assembled.
 
-The current PDF order is intentionally `section cover → promoted poster → card
-pages`. The poster already contains the cover's semantic copy, but cover
-removal is not automatic. It remains a separate future renderer change after
-the affected poster family is completely promoted and visually checked in
-representative languages. A section without an enabled promoted poster simply
-keeps the established `section cover → card pages` path.
+The normal PDF order is `promoted poster → card pages`. The poster contains the
+cover's semantic copy and replaces that cover. A section without an enabled
+promoted poster keeps the established `section cover → card pages` path. The
+same fallback is selected explicitly by `--skip-poster`.
 
 CI uses the same boundary. Pull requests run a complete, read-only release
 rehearsal that validates promoted posters and builds every PDF, ZIP, and the
@@ -555,6 +553,10 @@ provenance boundary:
     insertion: after_section_cover
 ```
 
+The persisted `insertion` values identify the first or matching section for
+backward-compatible routing. Once selected, the enabled poster replaces that
+section's cover; it is no longer emitted as an additional page after it.
+
 The ordinary PDF command then consumes the promoted local artwork:
 
 ```bash
@@ -562,8 +564,8 @@ python scripts/pdf/generate_pdf.py --scope SV04 --language de
 ```
 
 The PDF step adds the exact localized logo/information. Its default `cards`
-mode slices the result and embeds all crops at physical card size. A legacy
-poster follows the first section cover; aggregate posters follow their
+mode slices the result and embeds all crops at physical card size. A single
+scope poster replaces the first section cover; aggregate posters replace their
 respective configured section covers. The step does not contact ComfyUI or
 regenerate the background.
 
@@ -578,11 +580,10 @@ depends on the target type:
 | Other aggregate section | Localized source section title, including one inferred trailing token logo when supported | Subtitle, representative Pokémon count, description/date range | `Binder Pokedex` |
 
 These rows mirror the semantic cover information. The representative Pokémon
-are already part of the jointly generated scene. The existing cover remains
-present until a separate, explicitly reviewed PDF-renderer change replaces it.
-The cover's cutting hint and build timestamp are operational footer metadata
-and are not repeated inside the permanent artwork. Covers use the same scope
-type to label TCG-set totals as cards and Pokédex/variant totals as Pokémon.
+are already part of the jointly generated scene. The cover's cutting hint and
+build timestamp are operational footer metadata and are intentionally absent
+from poster-first PDFs. Fallback covers use the same scope type to label TCG-set
+totals as cards and Pokédex/variant totals as Pokémon.
 
 To keep an enabled 3×3 poster whole, without card gaps or cutting guides:
 

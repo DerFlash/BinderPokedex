@@ -2803,3 +2803,24 @@ gates. The normal Primal section cover is therefore the sole production
 fallback. This closes the current rollout at 40 of 41 configured targets
 without weakening a hard visual requirement or adding another production
 workflow.
+
+### Poster-first PDF migration and clean German rebuild (2026-08-08)
+
+Human review confirms that a promoted poster is the section's start page rather
+than an additional page after the canonical cover. The PDF generator now makes
+that choice at one boundary: an enabled, consumable poster replaces the cover;
+otherwise the existing cover is rendered. This keeps `--skip-poster` and the
+disabled `ExGen2/sections/primal` route as automatic cover fallbacks without a
+second PDF mode or scope-specific branch.
+
+The German output directory was cleared and rebuilt from an empty state with
+the normal production command for all 30 scopes. The run completed with 30
+successes and no failures. Every resulting PDF is readable and every first page
+is a rasterized poster page. Final visual QA covers representative Base Set,
+Pokédex, EX-generation, and Scarlet/Violet pages. The aggregate ExGen2 PDF was
+also checked at every section boundary: Normal and Mega begin with their
+approved posters, while Primal begins with the canonical cover on page 18.
+
+The focused PDF tests, all 40 promoted-bundle validations, and the full project
+suite pass after the migration. No `TEST`, `NO_IMAGES`, or `NO_POSTER` artifact
+remains in `output/de`.

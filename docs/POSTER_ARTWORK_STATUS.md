@@ -119,14 +119,12 @@ draws plain text directly without a title panel. It removes an identical title
 row automatically. Cover count labels use the scope
 type, so TCG-set totals are cards while Pokédex and variant totals are Pokémon.
 
-The poster now contains all semantic cover information: collection/set title,
-section title where applicable, subtitle/region, collection count, description or
-release date, representative Pokémon, and the `Binder Pokedex` project mark.
-The existing cover is nevertheless still rendered before the poster. Its
-build-time footer (cutting hint and build date) is operational metadata, not
-scope content, and is intentionally not duplicated on the artwork. Removing
-the cover is a separate future renderer migration after all affected posters
-are promoted and representative multilingual PDFs have been reviewed.
+The poster contains all semantic cover information: collection/set title,
+section title where applicable, subtitle/region, collection count, description
+or release date, representative Pokémon, and the `Binder Pokedex` project mark.
+It therefore replaces the ordinary cover whenever an enabled promotion exists.
+The cover's build-time footer (cutting hint and build date) is operational
+metadata and remains available only on fallback and `--skip-poster` builds.
 
 ## Accepted default graph
 
@@ -182,7 +180,7 @@ texture, character pixels, or a post-decode composite.
   full-page` emits the same localized poster once at 200.5 × 276.7 mm, centered
   on A4 without cutting guides.
 - Aggregate scopes route independent section manifests and promotions through
-  `posters.yaml`, then insert each poster after its matching section cover.
+  `posters.yaml`, then replace each matching section cover with its poster.
 - All 41 current individual and aggregate targets are configured; 40 are
   promoted and enabled, while Primal remains disabled behind the cover
   fallback.
@@ -196,9 +194,7 @@ texture, character pixels, or a post-decode composite.
    different bounded approach can satisfy identity, exact-count, card-fit, and
    scene-continuity gates together.
 2. Run representative multilingual PDF QA across the 40 enabled promotions.
-3. Decide on and implement explicit cover replacement only after the affected
-   target family is fully promoted and its multilingual PDFs pass visual QA.
-4. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
+3. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
    matching physical page formats, memory tests, and visual QA exist.
 
 ## Cleanup boundary
@@ -221,10 +217,14 @@ python -m scripts.poster_assets.poster_work_plan --all-configured
 
 Core branch verification rerun on 2026-08-08:
 
-- the project suite passes with `544 passed, 1 skipped`;
+- the project suite passes with `547 passed, 1 skipped`;
 - all 40 enabled poster bundles validate;
 - the planner reports 41 configured targets with only Primal awaiting a new
   candidate behind the cover fallback;
+- a clean normal German build produces exactly 30 production PDFs from an
+  empty `output/de` directory, with no test or bypass variants;
+- every scope starts with a poster, and ExGen2 visual QA confirms its Normal and
+  Mega posters plus the sole Primal cover fallback on page 18;
 - Python compilation and `git diff --check` pass.
 
 The following production and visual checks remain current from 2026-08-03:
@@ -236,9 +236,9 @@ The following production and visual checks remain current from 2026-08-03:
 - fresh German Base1, Pokédex, and ExGen3 smoke PDFs confirm the shared title,
   count-unit, description, and poster-insertion data flow;
 - fresh German ExGen1 and `SV04.5` PDFs confirm the two replacement promotions,
-  localized overlays, section-cover-to-poster order, and first card page;
+  localized overlays, poster-first order, and first card page;
 - rendered poster pages preserve the 3x3 card grid, overlays, card containment,
   and full-bleed scene continuity;
 - rendered Base1 smoke PDFs verify both the default cuttable page and the
-  continuous full-page presentation; a Base2 smoke PDF verifies the unchanged
-  cover fallback when no poster is enabled.
+  continuous full-page presentation; an explicit `--skip-poster` smoke verifies
+  the unchanged cover fallback independently of a scope's normal poster route.

@@ -18,7 +18,7 @@ Last reviewed: 2026-08-07
 | Wide layouts | Keep `wide_4x3` and `wide_4x4` as artwork extension points; never squeeze them onto A4 |
 | Generation timing | Explicit optional post-fetch step, before PDF generation |
 | PDF behavior | Consume only promoted local artwork; never launch ComfyUI implicitly |
-| Cover fallback | Keep the existing section cover whenever no promoted poster is enabled; currently it also remains before enabled posters until a separately reviewed replacement migration |
+| Cover fallback | Use the promoted poster as the section start page; keep the existing section cover only when no promoted poster is enabled or the build explicitly skips posters |
 | Poster presentation | Render enabled posters as cuttable physical cards by default; optionally render the same localized poster as one continuous physical-grid-sized image centered on its PDF page |
 | Generator | FLUX.2 `joint_scene` remains the mode for new candidates with avoidance-first `individual_spatial_joint` v9 as the default; earlier reviewed contracts remain reproducible |
 | Fallback | FLUX.2 `identity_lock` remains explicitly selectable when a one-shot cannot pass identity or placement review |
@@ -97,7 +97,7 @@ is the accepted cost of exact identity preservation.
 | `PA-010` | Only promoted artwork enters a normal PDF | Done | `pdf.enabled` plus a local tracked promoted file gates inclusion |
 | `PA-011` | Poster use is optional per build | Done | `--skip-poster` bypasses poster discovery and writes a separate build |
 | `PA-012` | Every promotion is reproducible and auditable | Done | Provenance records model, prompt, source, references, workflow, review/audit, and output hashes |
-| `PA-013` | Aggregate sections can own separate posters | Done | `posters.yaml` routes isolated leaf manifests and inserts each enabled poster after its matching cover |
+| `PA-013` | Aggregate sections can own separate posters | Done | `posters.yaml` routes isolated leaf manifests and replaces each matching cover with its enabled poster |
 | `PA-014` | 4×3/4×4 PDFs use matching page renderers | Open | Add physical page styles, templates, cutting guides, memory checks, and rendered-PDF QA |
 | `PA-015` | Aggregate variants receive section-specific scenes and curated subject/reference sets | Done with one visual holdout | All 15 current aggregate sections have exact catalog coverage; 14 are enabled while `ExGen2/sections/primal` remains disabled after visual rejection |
 | `PA-015A` | Variant subjects retain their exact form | Done | Selection, cutouts, planner, fingerprints, promotion, and validation bind exact Official Artwork identity |
@@ -109,7 +109,7 @@ is the accepted cost of exact identity preservation.
 | `PA-021` | Default and fallback cannot become ambiguous | Done | One manifest owns one active generation contract; fallback selection and promotion are explicit |
 | `PA-022` | Poster copy works in every language emitted for its scope | Done | Tests cover all 266 current target/language combinations; aggregate copy is complete in all nine PDF languages and TCG sets follow their advertised language inventory |
 | `PA-023` | A poster carries the semantic information of its preceding cover | Done | Scope JSON is the only semantic copy source. Set posters show localized set name, card count, release date, title/logo, and project identity; aggregate posters show section title, subtitle/region, Pokémon count, description/range, collection title, and project identity. The renderer automatically removes an identical upper/info title, infers supported inline logo tokens, and keeps the cover-only cutting hint/build timestamp as operational metadata |
-| `PA-024` | Removing a preceding cover is an explicit gated migration | Open | Covers remain enabled; add an explicit renderer option only after every affected target is promoted and representative PDFs pass multilingual visual review |
+| `PA-024` | An enabled poster replaces its preceding cover without removing the fallback path | Done | The renderer emits exactly one section start page: promoted poster when enabled, otherwise the canonical cover; `--skip-poster` explicitly selects covers |
 | `PA-025` | Every current set and subsection is represented in the poster work plan | Done | 41 checked-in manifests cover 26 individual sets and 15 aggregate sections; tests reject missing or stale scene and manifest coverage |
 | `PA-026` | A scope with fewer canonical subjects is not padded with duplicates or unrelated forms | Done | Section manifests accept one to the layout column count; two-subject `ExGen2/primal` uses the two outer bottom cards while the normal 3×3 default remains three subjects |
 | `PA-027` | The existing cover path remains available when no poster can be consumed | Done | Missing or disabled poster routes leave the section cover and normal card pages intact; `--skip-poster` bypasses poster discovery before asset loading |
@@ -135,9 +135,9 @@ is the accepted cost of exact identity preservation.
   for deterministic PDF and release jobs.
 - The rollout is complete for 40 user-reviewed promotions; Primal remains
   isolated behind the normal cover fallback.
-- Existing section covers remain in the PDF immediately before enabled posters.
-  Poster copy now has semantic cover parity, but cover removal is a separate
-  gated roadmap item rather than an implicit side effect.
+- Each section has exactly one start page. Enabled promotions replace their
+  section covers; Primal and explicit `--skip-poster` builds retain the
+  canonical cover fallback.
 - Enabled A4 posters use the cuttable `cards` presentation by default. The
   explicit `full-page` presentation keeps the complete localized poster at its
   200.5 × 276.7 mm physical grid size, centered on A4 without cutting guides.
