@@ -6,7 +6,7 @@ live in [Poster Workflow](POSTER_WORKFLOW.md), durable product requirements in
 [Poster Architecture](POSTER_ARTWORK_CONCEPT.md), and rejected or superseded
 evidence in [Poster Experiment Log](POSTER_ARTWORK_EXPERIMENT_LOG.md).
 
-Last audited: 2026-08-07
+Last audited: 2026-08-08
 
 ## Current decision
 
@@ -15,9 +15,9 @@ The production generator supports one model family and two generation modes.
 
 | Role | Contract | Current use |
 | --- | --- | --- |
-| Default | FLUX.2 `joint_scene` / avoidance-first `individual_spatial_joint` pipeline v9 | One poster-shaped identity-and-position reference per subject, invisible no-crossing character volumes, empty target, one sampler, one decode, deterministic 300-dpi Lanczos output |
-| Reproducible legacy | FLUX.2 `joint_scene` / `spatial_identity_joint` pipeline v5 | One shared spatial cast plus unscaled identity references; retained for its accepted promotions |
-| Scope-specific legacy | FLUX.2 `joint_scene` / `regional_identity_joint` pipeline v6 | One regional identity branch per physical card; retained only for Generation III |
+| Default | FLUX.2 `joint_scene` / avoidance-first `individual_spatial_joint` pipeline v9 | One poster-shaped identity-and-position reference per subject, invisible no-crossing character volumes, empty target, one sampler, one decode, deterministic 300-dpi Lanczos output; 39 active promotions |
+| Reproducible legacy | FLUX.2 `joint_scene` / `spatial_identity_joint` pipeline v7 | One shared spatial cast plus unscaled identity references; retained by the approved `SV04.5` promotion |
+| Scope-specific legacy | FLUX.2 `joint_scene` / `regional_identity_joint` pipeline v6 | One regional identity branch per physical card; retained for historical reproduction and bounded diagnostics, with no active promotion |
 | Explicit fallback | FLUX.2 `identity_lock` | Two-pass scene, immutable source figures, exact opaque-pixel audit, and 300-dpi model upscale; currently no active scope uses it |
 
 New manifests default to `individual_spatial_joint`. A manifest and provenance
@@ -69,16 +69,19 @@ foreground crossings need an explicit reviewed foreground layer. See
 
 ## Promoted scope state
 
-Thirty-eight enabled bundles use the reviewed avoidance-first v9 contract.
-Every bundle is 2368 x 3268 px, is sliced into nine physical cards, carries
-effective 299.99-dpi PNG metadata, and binds its approval to the exact raw and
-print pixels plus the exact Official Artwork identities.
+Forty bundles are promoted and enabled. Thirty-nine use the reviewed
+avoidance-first individual-spatial v9 contract; `SV04.5` deliberately uses its
+reviewed mask-free spatial-identity v7 contract. Every bundle is 2368 x 3268
+px, is sliced into nine physical cards, carries effective 299.99-dpi PNG
+metadata, and binds its approval to the exact raw and print pixels plus the
+exact Official Artwork identities.
 
-The disabled visual holdouts are `ExGen1/sections/normal`,
-`ExGen2/sections/primal`, and `SV04.5`. ExGen1 Normal and SV04.5 both change
-Mew's defining three-pointed hand anatomy; the Primal candidate duplicates
-Kyogre and materially redesigns Groudon. Their normal cover path remains the
-active fallback until a replacement candidate passes the same gate.
+`ExGen1/sections/normal` is active with the reviewed Venusaur, Blastoise, and
+Lugia replacement cast. `SV04.5` is active with Charmander, Pikachu, and
+Lapras in one continuous moonlit scene. The sole disabled holdout is
+`ExGen2/sections/primal`: no tested candidate simultaneously preserves both
+Primal forms, exact count, card containment, and one coherent landscape. Its
+normal section cover remains the production fallback.
 
 Stable `poster-flux2*` filenames keep PDF routing unchanged. Logos, localized
 information panels, card slicing, and PDF placement remain deterministic and
@@ -92,16 +95,15 @@ visual approval.
 
 | Scope family | Configured | Promoted and enabled | Disabled / awaiting activation |
 | --- | ---: | ---: | ---: |
-| Individual TCG sets | 26 | 25 | 1 |
+| Individual TCG sets | 26 | 26 | 0 |
 | Pokédex generations | 9 | 9 | 0 |
-| ExGen1 sections | 1 | 0 | 1 |
+| ExGen1 sections | 1 | 1 | 0 |
 | ExGen2 sections | 3 | 2 | 1 |
 | ExGen3 sections | 2 | 2 | 0 |
-| **Total** | **41** | **38** | **3** |
+| **Total** | **41** | **40** | **1** |
 
-The three disabled targets retain reproducible review evidence, but none enters
-PDF routing. The previously promoted ExGen1 Normal files stay available for
-comparison while its routing approval is revoked.
+The disabled Primal target retains reproducible review evidence, but no rejected
+candidate enters PDF routing.
 
 The deterministic overlay contract is complete for all 266 language outputs
 currently implied by those targets. Aggregate sections contain title,
@@ -181,18 +183,19 @@ texture, character pixels, or a post-decode composite.
   on A4 without cutting guides.
 - Aggregate scopes route independent section manifests and promotions through
   `posters.yaml`, then insert each poster after its matching section cover.
-- All 41 current individual and aggregate targets are configured; 38 are
-  promoted and enabled, while three remain disabled behind the cover fallback.
+- All 41 current individual and aggregate targets are configured; 40 are
+  promoted and enabled, while Primal remains disabled behind the cover
+  fallback.
 - Pull requests validate every enabled promotion and build a complete release
   candidate as a temporary artifact only.
 - Only a successful `v*` tag job may publish a GitHub Release.
 
 ## Remaining work
 
-1. Produce bounded replacement candidates for `ExGen1/sections/normal`,
-   `ExGen2/sections/primal`, and `SV04.5`; do not weaken the identity or
-   exact-count gate.
-2. Run representative multilingual PDF QA across the 38 enabled promotions.
+1. Keep `ExGen2/sections/primal` on the normal cover fallback until a materially
+   different bounded approach can satisfy identity, exact-count, card-fit, and
+   scene-continuity gates together.
+2. Run representative multilingual PDF QA across the 40 enabled promotions.
 3. Decide on and implement explicit cover replacement only after the affected
    target family is fully promoted and its multilingual PDFs pass visual QA.
 4. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
@@ -211,17 +214,17 @@ workflow builders directly; retired experiment entry points are not retained.
 The branch gate is:
 
 ```bash
-python -m pytest -q
+python -m pytest scripts/tests -q
 python -m scripts.poster_assets.validate_promoted_poster --all-enabled
 python -m scripts.poster_assets.poster_work_plan --all-configured
 ```
 
-Core branch verification rerun on 2026-08-07:
+Core branch verification rerun on 2026-08-08:
 
 - the project suite passes with `544 passed, 1 skipped`;
-- all 38 enabled poster bundles validate;
-- the planner reports 41 configured targets with three visually rejected
-  targets disabled behind the cover fallback;
+- all 40 enabled poster bundles validate;
+- the planner reports 41 configured targets with only Primal awaiting a new
+  candidate behind the cover fallback;
 - Python compilation and `git diff --check` pass.
 
 The following production and visual checks remain current from 2026-08-03:
@@ -232,6 +235,8 @@ The following production and visual checks remain current from 2026-08-03:
   build successfully with posters enabled;
 - fresh German Base1, Pokédex, and ExGen3 smoke PDFs confirm the shared title,
   count-unit, description, and poster-insertion data flow;
+- fresh German ExGen1 and `SV04.5` PDFs confirm the two replacement promotions,
+  localized overlays, section-cover-to-poster order, and first card page;
 - rendered poster pages preserve the 3x3 card grid, overlays, card containment,
   and full-bleed scene continuity;
 - rendered Base1 smoke PDFs verify both the default cuttable page and the

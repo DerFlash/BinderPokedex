@@ -423,24 +423,27 @@ Do not use this override for a new promotion or mechanical migration. The 2026-0
 representative audit rerendered all six spatial-v5 promotions and approved
 none of their regional-v6 candidates. Complete-card regional conditioning can
 replace the global landscape prediction inside the lower row and produce
-separate horizons or card scenes. Generation III is a reviewed scope-specific
-exception. New scopes use avoidance-first individual-spatial v9 or the explicit
-identity-lock fallback.
+separate horizons or card scenes. Generation III was a reviewed historical
+exception before its v9 replacement; no active promotion now uses regional
+conditioning. New scopes use avoidance-first individual-spatial v9 or the
+explicit identity-lock fallback.
 Reopening regional work requires a materially different control mechanism and
 an explicit new decision; repeated seed, prompt, or regional-strength sweeps
 are outside the accepted stop rule.
 
-The retained graph has no hard three-subject limit, but only the standard-3x3
-Generation III result is reviewed. Wide layouts remain unapproved.
+The retained graph has no hard three-subject limit, but only its historical
+standard-3x3 Generation III result was reviewed. Wide layouts remain
+unapproved.
 
 Because `joint_scene` deliberately redraws all pixels, an opaque-source-pixel
 equality audit is not applicable. Its hard gates are a complete generation
 fingerprint and explicit human review of both the actual raw file and the
-deterministically scaled text-free print artwork. Thirty-eight enabled poster
-bundles have passed that gate with the avoidance-first individual-spatial v9
-contract. `ExGen2/sections/primal`, `SV04.5`, and `SV08` remain disabled after
-visual rejection. Candidate-specific seeds, hashes, and rejected bounded tests
-remain recorded in the status and experiment log.
+deterministically scaled text-free print artwork. Forty enabled poster bundles
+have passed that gate: 39 with avoidance-first individual-spatial v9 and
+`SV04.5` with its reviewed mask-free spatial-identity v7 contract.
+`ExGen2/sections/primal` remains disabled after visual rejection.
+Candidate-specific seeds, hashes, and rejected bounded tests remain recorded
+in the status and experiment log.
 
 `identity_lock` remains an explicit fallback when a scope cannot pass the
 one-shot identity or placement review:

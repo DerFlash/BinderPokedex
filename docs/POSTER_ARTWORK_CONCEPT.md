@@ -120,10 +120,10 @@ artwork:
 ```
 
 `joint_scene` also supports the accepted `spatial_identity_joint` legacy
-topology and the deliberately selected `regional_identity_joint` topology for
-Generation III. Existing promoted manifests remain unchanged and reproducible;
-the reference topology is part of generation metadata and the fingerprint
-rather than a separate generation mode.
+topology used by `SV04.5` and the historically reviewed
+`regional_identity_joint` topology. No active promotion uses the regional
+topology. The reference topology is part of generation metadata and the
+fingerprint rather than a separate generation mode.
 
 The fallback changes the active mode/output contract to:
 

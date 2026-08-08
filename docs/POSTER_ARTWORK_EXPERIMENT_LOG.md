@@ -2777,3 +2777,29 @@ It is review-only. No Primal option is promoted until human review chooses
 between smaller card-safe subjects with better continuity and the larger
 regional composition with more visible local scene variation. The mutually
 incompatible requirements are not hidden behind another prompt or seed sweep.
+
+### Curated holdout promotion and bounded close (2026-08-08)
+
+Human review accepts the continuous mask-free `SV04.5` candidate and confirms
+that the curated ExGen1 Normal replacement should be activated. Promotion uses
+the already reviewed pixels; no rerender, compositing, repair pass, or learned
+upscale is introduced.
+
+| Target | Active contract | Seed | Raw SHA-256 | 300-dpi text-free SHA-256 | Decision |
+| --- | --- | ---: | --- | --- | --- |
+| `ExGen1/sections/normal` | individual-spatial v9 | `260737078` | `ba95338bdb97ade1bd82d46eb01bdb776bf2f470bcaee24cdc73e6c596e9a778` | `80457937f2507257f9ff45a82e6826e567c86186f0de379b109374d249a860ea` | Venusaur, Blastoise, and Lugia promoted and PDF-enabled |
+| `SV04.5` | spatial-identity v7 | `260789456` | `6dbecdfeafd8f9bb1888fbfc61f0e2eeeb3c782f52db199af99480669826ac88` | `05a519ec108167e8eec28f50410252c8be294d90100aedf99a7d215cb15d8c6b` | Charmander, Pikachu, and Lapras promoted and PDF-enabled |
+
+Both promotions produce the stable text-free master, localized preview, nine
+physical-card slices, and complete provenance. The validator accepts all 40
+enabled bundles at 2368 x 3268 px and effective 299.99 dpi. Fresh German
+no-card-image PDFs confirm cover, poster, and first-card-page ordering plus the
+localized overlays for both targets.
+
+`ExGen2/sections/primal` is deliberately not promoted. The visually reviewed
+regional option contains an impossible second horizon/water layer, while the
+other bounded options fail identity, count, containment, or continuous-scene
+gates. The normal Primal section cover is therefore the sole production
+fallback. This closes the current rollout at 40 of 41 configured targets
+without weakening a hard visual requirement or adding another production
+workflow.
