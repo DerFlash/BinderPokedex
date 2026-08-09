@@ -251,9 +251,13 @@ def test_exgen2_scope_pins_its_curated_mega_cast():
             "ExGen1",
             {"normal": ["ex6-112", "ex6-104", "ex10-105"]},
         ),
+        (
+            "MEP",
+            {"all": ["mep-015", "mep-037", "mep-038"]},
+        ),
     ],
 )
-def test_mew_holdouts_pin_card_safe_scope_casts(scope, expected):
+def test_curated_poster_casts_pin_card_safe_scope_cards(scope, expected):
     config = yaml.safe_load(
         (REPO_ROOT / "config" / "scopes" / f"{scope}.yaml").read_text(
             encoding="utf-8"
