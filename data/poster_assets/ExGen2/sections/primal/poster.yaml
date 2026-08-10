@@ -22,6 +22,7 @@ artwork:
   promoted_file: poster-flux2-artwork.png
   preview_file: poster-flux2.png
   provenance_file: poster-flux2-provenance.json
+  prompt_profile: landscape_first_v1
   identity_lock:
     overscan_ratio: 0.04
     max_protected_start_ratio: 0.7
@@ -29,12 +30,12 @@ artwork:
     subject_clearance_ratio: 0.02
   scene:
     concept: the ancient Hoenn Primal Reversion conflict between ocean and land
-    setting: The artwork contains a vast ancient Hoenn coastal basin where dark volcanic stone
-      and a calm deep ocean meet beneath distant storm layers, with restrained magma glow
-      on one outer horizon and cold rain light on the other.
+    setting: a vast ancient Hoenn coastal basin where dark volcanic stone and calm deep
+      ocean meet beneath distant storm layers, with restrained magma glow on one outer
+      horizon and cold rain light on the other
     lighting: Copper volcanic light and cool oceanic light meet in the distant sky.
-    rendering: Use dramatic premium trading-card illustration, crisp cel-painted linework,
-      controlled red and blue contrast, and monumental atmospheric depth.
+    rendering: Use crisp cel-painted linework, controlled red and blue contrast, coherent
+      perspective, natural ground contact, and atmospheric depth.
     ground_noun: coastal stone
     constraints:
     - Keep lava, spray, rocks, and other prominent effects distant or at the outer edges,
@@ -49,7 +50,7 @@ artwork:
     vae_sha256: d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5
     mode: joint_scene
     reference_mode: individual_spatial_joint
-    seed: 260759901
+    seed: 647668836648946
     steps: 4
     generation_megapixels: 1.0
     output_dpi: 300

@@ -389,15 +389,13 @@ section_scopes:
       concept: >-
         the ancient Hoenn Primal Reversion conflict between ocean and land
       setting: >-
-        The artwork contains a vast ancient Hoenn coastal basin where dark
-        volcanic stone and a calm deep ocean meet beneath distant storm layers,
-        with restrained magma glow on one outer horizon and cold rain light on
-        the other.
+        a vast ancient Hoenn coastal basin where dark volcanic stone and calm
+        deep ocean meet beneath distant storm layers, with restrained magma
+        glow on one outer horizon and cold rain light on the other
       lighting: Copper volcanic light and cool oceanic light meet in the distant sky.
       rendering: >-
-        Use dramatic premium trading-card illustration, crisp cel-painted
-        linework, controlled red and blue contrast, and monumental atmospheric
-        depth.
+        Use crisp cel-painted linework, controlled red and blue contrast,
+        coherent perspective, natural ground contact, and atmospheric depth.
       ground_noun: coastal stone
       constraints:
         - >-

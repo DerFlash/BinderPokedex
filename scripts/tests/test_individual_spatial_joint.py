@@ -1,3 +1,5 @@
+import hashlib
+
 from PIL import Image, ImageChops
 
 from scripts.poster_assets.create_comfyui_poster_workflow import (
@@ -11,6 +13,7 @@ from scripts.poster_assets.prepare_comfyui_poster import (
 
 
 SCOPE = "Pokedex/sections/gen1"
+PRIMAL_SCOPE = "ExGen2/sections/primal"
 
 
 def test_individual_spatial_prompt_assigns_one_identity_position_image_per_subject():
@@ -24,6 +27,18 @@ def test_individual_spatial_prompt_assigns_one_identity_position_image_per_subje
     assert "sole spatial cast-layout reference" not in prompt
     assert "No supplied landscape image" not in prompt
     assert "There is no supplied landscape image" in prompt
+
+
+def test_primal_landscape_first_prompt_matches_approved_hybrid():
+    prompt = build_individual_spatial_prompt(PRIMAL_SCOPE, megapixels=1.0)
+
+    assert len(prompt.split()) == 419
+    assert hashlib.sha256(prompt.encode()).hexdigest() == (
+        "3f19fef6842d031f1f0578ffd160f967facef9405418ea9086c41702a9847e17"
+    )
+    assert prompt.startswith("COMPOSITION IS THE HIGHEST PRIORITY.")
+    assert "poster-shaped" not in prompt
+    assert "monumental scale belongs to the environment" in prompt.lower()
 
 
 def test_individual_spatial_workflow_has_one_full_frame_sampler_without_regions():

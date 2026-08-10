@@ -1,6 +1,7 @@
 """Configuration helpers shared by local poster-generation engines."""
 from __future__ import annotations
 
+import math
 from typing import Any
 
 try:
@@ -1157,6 +1158,160 @@ def build_individual_spatial_reference_prompt(
     return "\n\n".join(paragraphs)
 
 
+def build_landscape_first_individual_spatial_prompt(
+    manifest: dict[str, Any],
+    items: list[dict[str, Any]],
+    *,
+    placement_contract: list[dict[str, int]],
+) -> str:
+    """Build the reviewed two-subject landscape-first prompt profile."""
+    if len(items) != 2 or len(placement_contract) != 2:
+        raise ValueError(
+            "landscape_first_v1 is reviewed for exactly two subjects"
+        )
+    layout_name = str(
+        manifest.get("layout", {}).get("name", "standard_3x3")
+    )
+    if layout_name != "standard_3x3":
+        raise ValueError(
+            "landscape_first_v1 is reviewed only for standard_3x3"
+        )
+
+    names = [
+        str(item.get("name_en") or f"Pokemon #{item.get('pokemon_id', '?')}")
+        for item in items
+    ]
+    if names != ["Primal Kyogre", "Primal Groudon"]:
+        raise ValueError(
+            "landscape_first_v1 is reviewed only for Primal Kyogre and "
+            "Primal Groudon"
+        )
+    centers = [
+        (contract["left_per_mille"] + contract["right_per_mille"]) / 2
+        for contract in placement_contract
+    ]
+    if not centers[0] < 500 < centers[1]:
+        raise ValueError(
+            "landscape_first_v1 needs ordered lower-left and lower-right subjects"
+        )
+
+    def percentage(value: int) -> str:
+        if not isinstance(value, int) or not 0 <= value <= 1000:
+            raise ValueError(
+                "Landscape-first coordinates must be per-mille integers "
+                "between 0 and 1000"
+            )
+        return f"{value / 10:.1f}%"
+
+    bounds = "; ".join(
+        (
+            f"{name} x={percentage(contract['left_per_mille'])[:-1]}-"
+            f"{percentage(contract['right_per_mille'])}, y="
+            f"{percentage(contract['top_per_mille'])[:-1]}-"
+            f"{percentage(contract['bottom_per_mille'])}"
+        )
+        for name, contract in zip(names, placement_contract, strict=True)
+    )
+    minimum_top = min(
+        contract["top_per_mille"] for contract in placement_contract
+    )
+    upper_empty_percent = (minimum_top // 50) * 5
+    highest_point_percent = minimum_top // 10
+    areas = [
+        (
+            (contract["right_per_mille"] - contract["left_per_mille"])
+            * (contract["bottom_per_mille"] - contract["top_per_mille"])
+            / 10_000
+        )
+        for contract in placement_contract
+    ]
+    maximum_area_percent = math.ceil(max(areas))
+    pokemon_free_percent = math.floor((100 - sum(areas)) / 5) * 5
+
+    common_prefix = ""
+    first_words = [name.split(maxsplit=1)[0] for name in names]
+    if len(set(first_words)) == 1 and all(" " in name for name in names):
+        common_prefix = f"{first_words[0]} "
+
+    artwork = _mapping(manifest.get("artwork"), "artwork")
+    scene = _mapping(artwork.get("scene"), "artwork.scene")
+    setting = _text(scene.get("setting"), "artwork.scene.setting")
+    rendering = _text(scene.get("rendering"), "artwork.scene.rendering")
+    ground_noun = _text(
+        scene.get("ground_noun"),
+        "artwork.scene.ground_noun",
+        default="ground",
+    )
+    compound_ground = ground_noun.replace(" ", "-")
+
+    return "\n\n".join(
+        (
+            "COMPOSITION IS THE HIGHEST PRIORITY.",
+            (
+                "This is primarily a vast landscape artwork, not a character "
+                "close-up or character poster. Both Pokemon must appear SMALL "
+                "and LOW in the composition. Approximately the upper "
+                f"{upper_empty_percent}% of the entire canvas contains NO "
+                f"Pokemon. More than {pokemon_free_percent}% of the canvas "
+                "remains Pokemon-free."
+            ),
+            (
+                f"{names[0]} occupies only the extreme LOWER-LEFT edge of the "
+                f"artwork. {names[1]} occupies only the extreme LOWER-RIGHT "
+                "edge. Neither Pokemon may approach the vertical center. Their "
+                "highest visible points remain below approximately "
+                f"{highest_point_percent}% of total canvas height measured from "
+                f"the top. Each Pokemon occupies less than "
+                f"{maximum_area_percent}% of the total canvas area. Do not "
+                "enlarge either Pokemon for facial readability, detail "
+                "visibility, dramatic impact, symmetry, confrontation, or "
+                "trading-card composition. Do not vertically center them, move "
+                "them upward, make them fill their side, or create a "
+                "conventional face-off composition."
+            ),
+            (
+                "The visual hierarchy is: first, the vast ancient Hoenn "
+                "environment and sky; second, enormous open atmospheric central "
+                f"space; third, two small {common_prefix}Pokemon embedded near "
+                "the bottom outer corners."
+            ),
+            (
+                "Mandatory OUTER EXTENTS of the final silhouettes: "
+                f"{bounds}. No part may extend outside its rectangle. Visible "
+                "landscape remains beneath both Pokemon down to the bottom edge."
+            ),
+            (
+                "IMAGE 1 is the sole identity, anatomy, pose, orientation, and "
+                f"placement reference for {names[0]}. IMAGE 2 has the same role "
+                f"for {names[1]}. Render exactly these two Pokemon once each. "
+                "Preserve their referenced silhouette, anatomy, face, colors, "
+                "markings, appendages, pose, and orientation. Permitted changes "
+                "are limited to coherent scene lighting, reflected color, "
+                "ground contact, and cast shadow. Never duplicate, merge, "
+                "redesign, simplify, add, remove, enlarge, or reshape a "
+                "referenced body part or marking."
+            ),
+            (
+                "Generate one cohesive full-bleed image in a single unified "
+                f"denoising pass. Invent {setting}. Monumental scale belongs to "
+                f"the environment, never to the Pokemon. {rendering}"
+            ),
+            (
+                f"Continue one low {compound_ground} ground plane through both "
+                "subject regions. Keep tall grass, leaves, flowers, branches, "
+                "rocks, spray, lava, and water edges outside the silhouette "
+                "rectangles or clearly behind the Pokemon. Avoid "
+                "landscape-character intersections without creating halos, "
+                "platforms, paths, circles, landing pads, or character-shaped "
+                "clearings. Keep the upper-center and middle-center cells open "
+                "and low-detail. Do not draw extra creatures, people, text, "
+                "letters, numbers, logos, boxes, panels, cards, borders, UI, "
+                "watermarks, or crop marks."
+            ),
+        )
+    )
+
+
 def build_individual_spatial_joint_prompt(
     manifest: dict[str, Any],
     scope_data: dict[str, Any],
@@ -1167,6 +1322,18 @@ def build_individual_spatial_joint_prompt(
     avoid_foreground_intersections: bool = True,
 ) -> str:
     """Reuse the reviewed scene prompt with individual spatial references."""
+    artwork = _mapping(manifest.get("artwork"), "artwork")
+    prompt_profile = str(
+        artwork.get("prompt_profile", "identity_first_v9")
+    )
+    if prompt_profile == "landscape_first_v1":
+        return build_landscape_first_individual_spatial_prompt(
+            manifest,
+            items,
+            placement_contract=placement_contract,
+        )
+    if prompt_profile != "identity_first_v9":
+        raise ValueError(f"Unknown artwork.prompt_profile: {prompt_profile}")
     accepted_reference_prompt = build_spatial_identity_reference_prompt(
         items,
         manifest,
