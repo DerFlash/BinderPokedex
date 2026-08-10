@@ -12,7 +12,33 @@ Drucke 1.025+ Pokémon über 9 Generationen in 9 Sprachen. Alle Varianten, alle 
 
 ## 🎨 Vorschau
 
-![BinderPokedex Preview](docs/images/binderdex-preview.png)
+![Ein geöffneter BinderPokedex mit zusammenhängendem Base-Set-Poster und passenden gesammelten Karten](docs/images/binder-pokedex-v9-key-visual.png)
+
+*Links sind die exakten promoteten Base-Set-Poster-Cuts zu sehen. Rechts stehen
+die ersten neun BinderPokedex-Positionen; #002, #004, #006 und #008 sind bereits
+mit ihrer jeweils passenden echten Karte gefüllt.*
+
+### Echte v9.0-PDF-Ausgabe
+
+<p align="center">
+  <img src="docs/images/binder-pokedex-primal-poster-page.png" width="430" alt="Echte lokalisierte Primal-3x3-Posterseite aus BinderPokedex">
+</p>
+
+Diese echte lokalisierte Primal-Startseite wird von BinderPokedex erzeugt und
+kann als neun physische Karten gedruckt werden.
+
+### Neu in v9.0: Poster-Artwork für jeden Binder
+
+- **41 geprüfte Poster-Startseiten** decken alle aktuellen Sets,
+  Pokédex-Generationen und EX-Unterabschnitte ab.
+- Jede zusammenhängende Szene ist für die physischen **3×3-Kartenschnitte**
+  komponiert.
+- Lokalisierte Logos und Informationen werden für jede unterstützte PDF-Sprache
+  reproduzierbar ergänzt.
+- Zur Wahl stehen die schneidbare Standardseite und dasselbe Artwork als
+  zusammenhängender Vollseitendruck.
+- Das kanonische Cover bleibt bei fehlendem Poster und über den expliziten
+  `--skip-poster`-Fallback verfügbar.
 
 ---
 
@@ -22,7 +48,8 @@ Drucke 1.025+ Pokémon über 9 Generationen in 9 Sprachen. Alle Varianten, alle 
 - **1.025+ Pokémon** über alle 9 Generationen (Kanto → Paldea) im National Pokédex
 - **Offizielle Artwork** von PokéAPI und TCGdex - authentische Bilder aus Spielen und TCG
 - **3×3 Kartenlayout** (9 pro Seite) - perfekt für Standard-Binderblätter
-- **Generations- und Varianten-Cover** mit wunderschönem mehrsprachigem Design und lokalisierten Logos
+- **Geprüfte Poster-Startseiten** für alle 41 aktuellen Set- und Section-Ziele,
+  mit lokalisierten Overlays und verlässlichem Cover-Fallback
 - **Komplette TCG-Unterstützung** 🎴
   - **3 EX-Generationen:** ExGen1 (2003-2007), ExGen2 (2012-2016), ExGen3 (2023+)
   - **17 Karmesin-&-Purpur-Sets:** Komplette Karmesin & Purpur-Ära (SV01-SV10 + Spezial-Sets)

@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### ✨ Major Feature: Poster Artwork for Every Binder
+
+- Added 41 reviewed and PDF-enabled poster openings covering every current TCG
+  set, all nine Pokédex generations, and every EX subsection.
+- Designed the continuous scenes around the physical 3×3 card grid, subject
+  safe areas, localized title/logo space, and deterministic print geometry.
+- Replaced a section's normal start page with its promoted poster while keeping
+  the canonical cover as the missing/disabled and `--skip-poster` fallback.
+- Added a continuous `full-page` poster mode alongside the default cuttable
+  nine-card page.
+- Completed localized poster copy for all 266 current target/language
+  combinations.
+- Kept local ComfyUI/Metal authoring separate from release consumption: CI and
+  end users require only the reviewed, versioned repository assets.
+
+### 🔧 Release and Quality
+
+- Pull requests and tags share one release-candidate build that fetches every
+  scope, validates all promoted posters, generates all PDFs, and verifies all
+  nine language archives.
+- GitHub Release descriptions are now rendered and verified from the versioned
+  release-note configuration instead of a hard-coded historical announcement.
+- Added bilingual v9.0 feature news, an approved key visual with exact
+  BinderPokedex content and matching card scans, and an actual PDF poster
+  screenshot.
+- Current project verification: 554 passed, 1 skipped; 41/41 promotions at
+  2368 × 3268 px and effective 300 dpi.
+
 ## [8.4.0] - 2026-07-15
 
 ### ✨ New Features
