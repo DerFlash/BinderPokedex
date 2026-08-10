@@ -436,10 +436,11 @@ unapproved.
 Because `joint_scene` deliberately redraws all pixels, an opaque-source-pixel
 equality audit is not applicable. Its hard gates are a complete generation
 fingerprint and explicit human review of both the actual raw file and the
-deterministically scaled text-free print artwork. Forty enabled poster bundles
-have passed that gate: 39 with avoidance-first individual-spatial v9 and
-`SV04.5` with its reviewed mask-free spatial-identity v7 contract.
-`ExGen2/sections/primal` remains disabled after visual rejection.
+deterministically scaled text-free print artwork. All 41 enabled poster bundles
+have passed that gate: 39 with avoidance-first individual-spatial v9,
+`ExGen2/sections/primal` with its reviewed `landscape_first_v1` prompt profile
+on the same individual-spatial graph, and `SV04.5` with its reviewed mask-free
+spatial-identity v7 contract.
 Candidate-specific seeds, hashes, and rejected bounded tests remain recorded
 in the status and experiment log.
 

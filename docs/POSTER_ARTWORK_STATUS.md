@@ -6,7 +6,7 @@ live in [Poster Workflow](POSTER_WORKFLOW.md), durable product requirements in
 [Poster Architecture](POSTER_ARTWORK_CONCEPT.md), and rejected or superseded
 evidence in [Poster Experiment Log](POSTER_ARTWORK_EXPERIMENT_LOG.md).
 
-Last audited: 2026-08-08
+Last audited: 2026-08-10
 
 ## Current decision
 
@@ -16,6 +16,7 @@ The production generator supports one model family and two generation modes.
 | Role | Contract | Current use |
 | --- | --- | --- |
 | Default | FLUX.2 `joint_scene` / avoidance-first `individual_spatial_joint` pipeline v9 | One poster-shaped identity-and-position reference per subject, invisible no-crossing character volumes, empty target, one sampler, one decode, deterministic 300-dpi Lanczos output; 39 active promotions |
+| Scope-specific accepted profile | FLUX.2 `joint_scene` / `individual_spatial_joint` with `landscape_first_v1` | The two-subject Primal target uses the same references and graph, but a reviewed compact landscape-first prompt that makes the canvas hierarchy and outer silhouette extents primary; one active promotion |
 | Reproducible legacy | FLUX.2 `joint_scene` / `spatial_identity_joint` pipeline v7 | One shared spatial cast plus unscaled identity references; retained by the approved `SV04.5` promotion |
 | Scope-specific legacy | FLUX.2 `joint_scene` / `regional_identity_joint` pipeline v6 | One regional identity branch per physical card; retained for historical reproduction and bounded diagnostics, with no active promotion |
 | Explicit fallback | FLUX.2 `identity_lock` | Two-pass scene, immutable source figures, exact opaque-pixel audit, and 300-dpi model upscale; currently no active scope uses it |
@@ -69,19 +70,21 @@ foreground crossings need an explicit reviewed foreground layer. See
 
 ## Promoted scope state
 
-Forty bundles are promoted and enabled. Thirty-nine use the reviewed
-avoidance-first individual-spatial v9 contract; `SV04.5` deliberately uses its
-reviewed mask-free spatial-identity v7 contract. Every bundle is 2368 x 3268
-px, is sliced into nine physical cards, carries effective 299.99-dpi PNG
-metadata, and binds its approval to the exact raw and print pixels plus the
-exact Official Artwork identities.
+All 41 bundles are promoted and enabled. Thirty-nine use the reviewed
+avoidance-first individual-spatial v9 contract, `ExGen2/sections/primal` uses
+the accepted landscape-first individual-spatial profile, and `SV04.5`
+deliberately uses its reviewed mask-free spatial-identity v7 contract. Every
+bundle is 2368 x 3268 px, is sliced into nine physical cards, carries effective
+299.99-dpi PNG metadata, and binds its approval to the exact raw and print
+pixels plus the exact Official Artwork identities.
 
 `ExGen1/sections/normal` is active with the reviewed Venusaur, Blastoise, and
 Lugia replacement cast. `SV04.5` is active with Charmander, Pikachu, and
-Lapras in one continuous moonlit scene. The sole disabled holdout is
-`ExGen2/sections/primal`: no tested candidate simultaneously preserves both
-Primal forms, exact count, card containment, and one coherent landscape. Its
-normal section cover remains the production fallback.
+Lapras in one continuous moonlit scene. `ExGen2/sections/primal` is active with
+the accepted small outer-bottom Kyogre/Groudon composition and continuous
+coastal-basin landscape. The tiny lower-right grass-blade anomaly is an
+explicitly accepted residual for these exact reviewed pixels, not a relaxed
+general depth requirement.
 
 Stable `poster-flux2*` filenames keep PDF routing unchanged. Logos, localized
 information panels, card slicing, and PDF placement remain deterministic and
@@ -98,12 +101,12 @@ visual approval.
 | Individual TCG sets | 26 | 26 | 0 |
 | Pokédex generations | 9 | 9 | 0 |
 | ExGen1 sections | 1 | 1 | 0 |
-| ExGen2 sections | 3 | 2 | 1 |
+| ExGen2 sections | 3 | 3 | 0 |
 | ExGen3 sections | 2 | 2 | 0 |
-| **Total** | **41** | **40** | **1** |
+| **Total** | **41** | **41** | **0** |
 
-The disabled Primal target retains reproducible review evidence, but no rejected
-candidate enters PDF routing.
+Every configured target now has one reviewed promotion. Rejected candidates
+remain experiment evidence and never enter PDF routing.
 
 The deterministic overlay contract is complete for all 266 language outputs
 currently implied by those targets. Aggregate sections contain title,
@@ -181,20 +184,16 @@ texture, character pixels, or a post-decode composite.
   on A4 without cutting guides.
 - Aggregate scopes route independent section manifests and promotions through
   `posters.yaml`, then replace each matching section cover with its poster.
-- All 41 current individual and aggregate targets are configured; 40 are
-  promoted and enabled, while Primal remains disabled behind the cover
-  fallback.
+- All 41 current individual and aggregate targets are configured, promoted,
+  enabled, and provenance-validated.
 - Pull requests validate every enabled promotion and build a complete release
   candidate as a temporary artifact only.
 - Only a successful `v*` tag job may publish a GitHub Release.
 
 ## Remaining work
 
-1. Keep `ExGen2/sections/primal` on the normal cover fallback until a materially
-   different bounded approach can satisfy identity, exact-count, card-fit, and
-   scene-continuity gates together.
-2. Run representative multilingual PDF QA across the 40 enabled promotions.
-3. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
+1. Run representative multilingual PDF QA across the 41 enabled promotions.
+2. Keep `wide_4x3` and `wide_4x4` modeled but disabled for PDF production until
    matching physical page formats, memory tests, and visual QA exist.
 
 ## Cleanup boundary
@@ -215,16 +214,16 @@ python -m scripts.poster_assets.validate_promoted_poster --all-enabled
 python -m scripts.poster_assets.poster_work_plan --all-configured
 ```
 
-Core branch verification rerun on 2026-08-08:
+Core branch verification rerun on 2026-08-10:
 
-- the project suite passes with `547 passed, 1 skipped`;
-- all 40 enabled poster bundles validate;
-- the planner reports 41 configured targets with only Primal awaiting a new
-  candidate behind the cover fallback;
-- a clean normal German build produces exactly 30 production PDFs from an
-  empty `output/de` directory, with no test or bypass variants;
-- every scope starts with a poster, and ExGen2 visual QA confirms its Normal and
-  Mega posters plus the sole Primal cover fallback on page 18;
+- the project suite passes with `550 passed, 1 skipped`;
+- all 41 enabled poster bundles validate;
+- the planner reports all 41 configured targets as current and PDF-enabled;
+- a fresh German ExGen2 build with remote card images disabled succeeds with
+  127 entries and 19 pages;
+- rendered page 18 confirms that the localized nine-card Primal poster now
+  replaces the section cover and keeps both Primal forms inside their outer
+  bottom cards;
 - Python compilation and `git diff --check` pass.
 
 The following production and visual checks remain current from 2026-08-03:

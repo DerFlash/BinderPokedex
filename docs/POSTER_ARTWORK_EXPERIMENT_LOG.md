@@ -2824,3 +2824,39 @@ approved posters, while Primal begins with the canonical cover on page 18.
 The focused PDF tests, all 40 promoted-bundle validations, and the full project
 suite pass after the migration. No `TEST`, `NO_IMAGES`, or `NO_POSTER` artifact
 remains in `output/de`.
+
+### Primal landscape-first hybrid promotion (2026-08-10)
+
+Manual ComfyUI editing isolated the Primal placement failure to prompt
+hierarchy rather than reference count. A compact 230-word prompt made the vast
+landscape, empty upper canvas, small lower-corner subjects, and absolute outer
+extents primary. At fixed seed `647668836648946`, it placed exactly one Primal
+Kyogre and one Primal Groudon correctly but produced an overly generic valley.
+The previous long prompt at that same seed enlarged and redesigned both forms.
+
+The accepted hybrid retains the compact composition hierarchy and adds only
+the minimum Hoenn coastal-basin scene direction, identity restrictions, one
+continuous low ground plane, and output exclusions. It is 419 words; the exact
+model prompt SHA-256 is
+`3f19fef6842d031f1f0578ffd160f967facef9405418ea9086c41702a9847e17`.
+It uses the existing `individual_spatial_joint` graph, two already positioned
+identity references, one empty latent, one sampler, one decode, FLUX.2 Klein
+4B BF16, four steps, and deterministic Lanczos conversion to the 300-dpi print
+raster. No composite, restoration, repair pass, or generated text is added.
+
+| Target | Prompt profile | Seed | Raw SHA-256 | 300-dpi text-free SHA-256 | Decision |
+| --- | --- | ---: | --- | --- | --- |
+| `ExGen2/sections/primal` | `landscape_first_v1` | `647668836648946` | `35ca6dcd97f77301980e003e6eaecc1cb7bb0fc46a397b12a41f8426213713df` | `74c828b35bbf41bd745c80b088179ac41aba9e560a2cfff824504f0c2c85b836` | Approved, promoted, and PDF-enabled |
+
+Human review accepts the exact full artwork and both outer lower card crops.
+The small grass-blade anomaly at the lower-right edge is explicitly accepted
+for these pixels. This exception does not weaken the normal occlusion gate for
+future candidates. A hash regression test protects the reviewed prompt, and
+the profile fails closed unless the scope has exactly two ordered outer
+subjects in `standard_3x3`. It is opt-in only; the other 40 promotions and
+their prompt paths remain unchanged.
+
+This closes the configured rollout at 41 of 41 reviewed and enabled targets.
+The cover implementation remains available for missing/disabled assets and
+explicit `--skip-poster` builds, but no current configured target needs that
+fallback in the normal build.

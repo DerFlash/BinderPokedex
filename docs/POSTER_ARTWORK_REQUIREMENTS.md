@@ -99,10 +99,10 @@ is the accepted cost of exact identity preservation.
 | `PA-012` | Every promotion is reproducible and auditable | Done | Provenance records model, prompt, source, references, workflow, review/audit, and output hashes |
 | `PA-013` | Aggregate sections can own separate posters | Done | `posters.yaml` routes isolated leaf manifests and replaces each matching cover with its enabled poster |
 | `PA-014` | 4×3/4×4 PDFs use matching page renderers | Open | Add physical page styles, templates, cutting guides, memory checks, and rendered-PDF QA |
-| `PA-015` | Aggregate variants receive section-specific scenes and curated subject/reference sets | Done with one visual holdout | All 15 current aggregate sections have exact catalog coverage; 14 are enabled while `ExGen2/sections/primal` remains disabled after visual rejection |
+| `PA-015` | Aggregate variants receive section-specific scenes and curated subject/reference sets | Done | All 15 current aggregate sections have exact catalog coverage and reviewed enabled promotions |
 | `PA-015A` | Variant subjects retain their exact form | Done | Selection, cutouts, planner, fingerprints, promotion, and validation bind exact Official Artwork identity |
 | `PA-016` | Post-fetch orchestration detects stale inputs | Done | Read-only planner separates expensive generation drift from cheap overlay/routing changes |
-| `PA-017` | Joint generation can provide natural grounding without losing identity or card safety | Done for 40 promoted scopes | Thirty-nine avoidance-first v9 bundles and the reviewed mask-free `SV04.5` spatial-v7 bundle pass identity, card, scene, exact-count, and deterministic-output gates; Primal remains on the cover fallback |
+| `PA-017` | Joint generation can provide natural grounding without losing identity or card safety | Done for 41 promoted scopes | Thirty-nine avoidance-first v9 bundles, the reviewed Primal landscape-first individual-spatial bundle, and the reviewed mask-free `SV04.5` spatial-v7 bundle pass identity, card, scene, exact-count, and deterministic-output gates |
 | `PA-018` | Runtime remains KISS after experiments | Done | Production exposes only FLUX.2 `joint_scene` and `identity_lock`; all three reference topologies use the canonical joint workflow builder and common empty-target sampler path, with no separate experiment entry point |
 | `PA-019` | Pull requests prove a release can be built without publishing | Done | PRs validate promotions, build every PDF/archive/manifest, and upload only a temporary artifact |
 | `PA-020` | Raster card geometry closes exactly on every real canvas | Done | Cumulative physical endpoints drive preparation, finalization, slicing, promotion, and validation |
@@ -118,31 +118,30 @@ is the accepted cost of exact identity preservation.
 
 ## Current production boundary
 
-- Forty promoted 3×3 bundles are enabled. `ExGen2/sections/primal` is the sole
-  disabled visual holdout.
-- All 41 current poster targets are configured: 40 are promoted and enabled,
-  and one remains disabled.
+- All 41 promoted 3×3 bundles are enabled.
+- All 41 current poster targets are configured, promoted, and enabled.
 - Thirty-nine enabled bundles use the reviewed avoidance-first `joint_scene` /
-  `individual_spatial_joint` v9 contract. `SV04.5` uses its explicitly reviewed
-  mask-free `spatial_identity_joint` v7 contract. Both use unquantized BF16
-  FLUX.2 Klein 4B generation and deterministic Lanczos print resampling.
+  `individual_spatial_joint` v9 contract. Primal uses the same graph with its
+  explicitly reviewed `landscape_first_v1` prompt profile. `SV04.5` uses its
+  explicitly reviewed mask-free `spatial_identity_joint` v7 contract. All use
+  unquantized BF16 FLUX.2 Klein 4B generation and deterministic Lanczos print
+  resampling.
 - `identity_lock` remains an explicit fallback but has no active promoted scope.
-- Current manifests use `joint_scene`; 39 select `individual_spatial_joint` v9
-  and `SV04.5` selects `spatial_identity_joint` v7. Earlier v5/v6 and Dev
-  promotions remain reproducible through Git history but are not active.
+- Current manifests use `joint_scene`; 40 select `individual_spatial_joint`
+  (39 with v9 and Primal with `landscape_first_v1`) and `SV04.5` selects
+  `spatial_identity_joint` v7. Earlier v5/v6 and Dev promotions remain
+  reproducible through Git history but are not active.
 - Fetching, planning, PDF building, and CI do not start ComfyUI.
 - Generated candidates are local scratch; only promotion creates tracked input
   for deterministic PDF and release jobs.
-- The rollout is complete for 40 user-reviewed promotions; Primal remains
-  isolated behind the normal cover fallback.
+- The rollout is complete for 41 user-reviewed promotions.
 - Each section has exactly one start page. Enabled promotions replace their
-  section covers; Primal and explicit `--skip-poster` builds retain the
-  canonical cover fallback.
+  section covers; missing/disabled assets and explicit `--skip-poster` builds
+  retain the canonical cover fallback.
 - Enabled A4 posters use the cuttable `cards` presentation by default. The
   explicit `full-page` presentation keeps the complete localized poster at its
   200.5 × 276.7 mm physical grid size, centered on A4 without cutting guides.
-- Wide PDF formats and a materially different future Primal approach are
-  explicit roadmap items.
+- Wide PDF formats remain an explicit roadmap item.
 
 ## Change rule
 
