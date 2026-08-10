@@ -14,31 +14,35 @@ Drucke 1.025+ Pokémon über 9 Generationen in 9 Sprachen. Alle Varianten, alle 
 
 ![Ein geöffneter BinderPokedex mit zusammenhängendem Base-Set-Poster und passenden gesammelten Karten](docs/images/binder-pokedex-v9-key-visual.png)
 
-*Links sind die exakten promoteten Base-Set-Poster-Cuts zu sehen. Rechts stehen
-die ersten neun BinderPokedex-Positionen; #002, #004, #006 und #008 sind bereits
-mit ihrer jeweils passenden echten Karte gefüllt.*
+*Ein Motiv, neun Karten: Links entfaltet sich das vollständige Base-Set-Panorama,
+rechts sind die ersten Sammelplätze bereits teilweise mit den passenden Karten
+gefüllt.*
 
 ### Echte v9.0-PDF-Ausgabe
 
 <p align="center">
-  <img src="docs/images/binder-pokedex-primal-poster-page.png" width="430" alt="Echte lokalisierte Primal-3x3-Posterseite aus BinderPokedex">
+  <img src="docs/images/binder-pokedex-primal-poster-page.png" width="430" alt="Ein Primal-Panorama für neun BinderPokedex-Kartenfächer">
 </p>
 
-Diese echte lokalisierte Primal-Startseite wird von BinderPokedex erzeugt und
-kann als neun physische Karten gedruckt werden.
+Diese Primal-Startseite stammt direkt aus BinderPokedex und kann als neun
+physische Karten gedruckt werden.
 
-### Neu in v9.0: Poster-Artwork für jeden Binder
+<!-- release-news:start -->
+### Bald in v9.0: Ein Motiv. Neun Karten. Dein Binder.
 
-- **41 geprüfte Poster-Startseiten** decken alle aktuellen Sets,
-  Pokédex-Generationen und EX-Unterabschnitte ab.
-- Jede zusammenhängende Szene ist für die physischen **3×3-Kartenschnitte**
-  komponiert.
-- Lokalisierte Logos und Informationen werden für jede unterstützte PDF-Sprache
-  reproduzierbar ergänzt.
-- Zur Wahl stehen die schneidbare Standardseite und dasselbe Artwork als
-  zusammenhängender Vollseitendruck.
-- Das kanonische Cover bleibt bei fehlendem Poster und über den expliziten
-  `--skip-poster`-Fallback verfügbar.
+Mach deinen Binder zum Blickfang: Jede Sammlung beginnt jetzt mit einem
+einzigartigen Pokémon-Panorama, das sich über neun Kartenfächer erstreckt.
+
+- Eine zusammenhängende Szene macht schon die erste Seite zum Blickfang.
+- Jedes Set, jede Pokédex-Generation und jedes EX-Kapitel öffnet sich in seiner
+  eigenen Welt.
+- Jede Karte wirkt für sich; zusammen zeigen alle neun das vollständige Panorama.
+- Setlogo und die wichtigsten Informationen erscheinen in deiner gewählten Sprache.
+- Schneide das Motiv für neun Kartenfächer zu oder bewahre es als Vollseitendruck.
+
+Die technischen Details stehen im [Changelog](CHANGELOG.md); hier geht es um
+das Erlebnis, das Sammler später in ihrem Binder sehen.
+<!-- release-news:end -->
 
 ---
 
@@ -48,8 +52,8 @@ kann als neun physische Karten gedruckt werden.
 - **1.025+ Pokémon** über alle 9 Generationen (Kanto → Paldea) im National Pokédex
 - **Offizielle Artwork** von PokéAPI und TCGdex - authentische Bilder aus Spielen und TCG
 - **3×3 Kartenlayout** (9 pro Seite) - perfekt für Standard-Binderblätter
-- **Geprüfte Poster-Startseiten** für alle 41 aktuellen Set- und Section-Ziele,
-  mit lokalisierten Overlays und verlässlichem Cover-Fallback
+- **Poster-Panoramen aus neun Karten** für jedes aktuelle Set, jede
+  Pokédex-Generation und jedes EX-Kapitel
 - **Komplette TCG-Unterstützung** 🎴
   - **3 EX-Generationen:** ExGen1 (2003-2007), ExGen2 (2012-2016), ExGen3 (2023+)
   - **17 Karmesin-&-Purpur-Sets:** Komplette Karmesin & Purpur-Ära (SV01-SV10 + Spezial-Sets)
@@ -72,56 +76,10 @@ kann als neun physische Karten gedruckt werden.
 **Nach Sprache (v8.4):** 🇩🇪 [DE](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-de.zip) | 🇬🇧 [EN](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-en.zip) | 🇫🇷 [FR](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-fr.zip) | 🇪🇸 [ES](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-es.zip) | 🇮🇹 [IT](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-it.zip) | 🇯🇵 [JA](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-ja.zip) | 🇰🇷 [KO](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-ko.zip) | 🇨🇳 [ZH](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-zh_hans.zip) | 🇹🇼 [ZH-T](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-zh_hant.zip)
 ---
 
-## 📝 Was ist neu
+## 📝 Release-Verlauf
 
-### v8.4 (Juli 2026)
-
-**Pokémon Dschungel und Fossil** 🎴
-
-- Dschungel (base2, 1999) mit 64 Karten ergänzt: 63 Pokémon, 1 Trainer
-- Fossil (base3, 1999) mit 62 Karten ergänzt: 57 Pokémon, 5 Trainer
-- Verfügbar in de, en, fr, es, it (ja/ko/zh für diese Sets nicht erschienen)
-- Fehlende Bilder bei klassischen Trainerkarten ohne TCGdex-Untertyp behoben
-
-### v8.2 (Juli 2026)
-
-**Mega-Evolution-Set-Erweiterung** 🎴
-
-- ME03 Perfect Order und ME04 Chaos Rising mit Quelldaten, Scope-Konfigurationen, angereicherten Ausgabedaten und Featured-Section-Artwork ergänzt
-- Release-Builds erkennen Scopes jetzt automatisch aus config/scopes/*.yaml
-
-### v8.1 (Juli 2026)
-
-**CJK-Font-Fallback & TCG-Typübersetzungen** 🐛
-
-🔧 **CJK-Fix (Koreanisch & Traditionelles Chinesisch):**
-- Koreanische und traditionell-chinesische PDFs waren auf Linux/CI leer, da die macOS-exklusiven Fonts `AppleGothic` und `STHeitiMedium` fehlten
-- `FontManager` fällt nun automatisch auf WenQuanYi/Noto zurück — alle 9 Sprachen erzeugen vollständige PDFs
-
-🌍 **TCG-Energietyp-Übersetzungen:**
-- `Colorless`, `Darkness`, `Lightning` und `Metal` sind TCG-exklusive Bezeichnungen ohne PokéAPI-Äquivalent — wurden bislang immer auf Englisch angezeigt
-- Jetzt vollständig in allen 9 Sprachen übersetzt (z. B. `Darkness` → `Unlicht` / `あく` / `Ténèbres`)
-
-### v8.0 (Juli 2026)
-
-**SVG WYSIWYG Template-System & MEP-Erweiterung** ✨
-
-🎨 **SVG-Template-System:**
-- Vollständige SVG-basierte Karten-, Seiten- und Cover-Templates — live bearbeitbar in jedem SVG-Editor
-- Templates unterstützen eingebettete Logos und automatische Bildplatzierung
-- Neue CLI-Parameter: `--card-template`, `--page-template`, `--cover-template`, `--list-templates`
-- Rückwärtskompatibel: bestehende Renders bleiben unverändert ohne Template-Flags
-
-📦 **MEP Bulbapedia-Ergänzung:**
-- MEP-Set von 10 auf 55 Karten erweitert via Bulbapedia-Daten
-- Enthält alle Karten, die bei TCGdex fehlen
-
-🔧 **Technisch:**
-- CI: Upgrade auf Python 3.12 + pip-Caching für schnellere Builds
-- PNG-Transparenz in Image-Cache und allen generierten PDFs erhalten
-- TCG-mehrsprachige Kartenbezeichnungen korrigiert
-
-📄 **[Vollständige Release Notes & Changelog](CHANGELOG.md)**
+- [Release-News und Downloads](https://github.com/DerFlash/BinderPokedex/releases)
+- [Vollständiges technisches Changelog](CHANGELOG.md)
 
 ---
 

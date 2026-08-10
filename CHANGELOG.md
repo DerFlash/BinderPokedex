@@ -31,10 +31,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   nine language archives.
 - GitHub Release descriptions are now rendered and verified from the versioned
   release-note configuration instead of a hard-coded historical announcement.
+- Separated collector-facing README and GitHub Release news from the technical
+  changelog. Release automation now replaces one dedicated README news block
+  instead of growing a second version history on the project start page.
 - Added bilingual v9.0 feature news, an approved key visual with exact
   BinderPokedex content and matching card scans, and an actual PDF poster
   screenshot.
-- Current project verification: 554 passed, 1 skipped; 41/41 promotions at
+- Last complete project verification: 554 passed, 1 skipped; the focused
+  release communication suite passes 8/8 checks; 41/41 promotions remain at
   2368 × 3268 px and effective 300 dpi.
 
 ## [8.4.0] - 2026-07-15

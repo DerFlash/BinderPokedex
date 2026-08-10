@@ -31,6 +31,25 @@ permission. Only the `publish` job in `Create Release` has `contents: write`.
 The PR workflow cannot create tags, releases, commits, announcement changes, or
 repository pull requests.
 
+## Release communication
+
+Release communication has three deliberately separate roles:
+
+- `CHANGELOG.md` is the complete technical history for maintainers and
+  contributors. It records implementation, compatibility, verification, and
+  fallback details.
+- `config/release_notes/<tag>.yaml` contains collector-facing feature news. It
+  supplies the concise, benefit-led copy for the GitHub Release and must avoid
+  internal review, CI, model, or repository terminology unless users need it.
+- the marker-delimited `release-news` block near the top of both READMEs is the
+  current storefront. Before publication it previews the next major feature;
+  after publication the announcement workflow replaces that single block with
+  the published release news and download link.
+
+The README links to the changelog instead of duplicating technical release
+history. This keeps the project record complete without turning the start page
+into a maintainer log.
+
 ## Poster behavior
 
 ComfyUI and agent-assisted authoring are not CI dependencies. Poster candidates

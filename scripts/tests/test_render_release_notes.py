@@ -82,3 +82,32 @@ def test_build_manifest_can_exercise_planned_news_for_a_pr(tmp_path: Path, monke
     assert manifest["tag"] == "pr-7-deadbeef"
     assert manifest["release_notes_tag"] == "v9.0"
     assert manifest["release_notes"]["summary"]["en"] == "Poster artwork"
+
+
+def test_v9_release_news_uses_collector_language_not_project_language():
+    project_dir = Path(__file__).resolve().parents[2]
+    notes = yaml.safe_load(
+        (project_dir / "config/release_notes/v9.0.yaml").read_text(encoding="utf-8")
+    )
+    copy = json.dumps(notes, ensure_ascii=False).lower()
+
+    for internal_term in (
+        "reviewed",
+        "geprüft",
+        "comfyui",
+        "repository",
+        "deterministic",
+        "reproduzierbar",
+        "fallback",
+        "skip-poster",
+    ):
+        assert internal_term not in copy
+
+    assert (
+        notes["whats_new"]["en"]["title"]
+        == "One Artwork. Nine Cards. Your Binder."
+    )
+    assert (
+        notes["whats_new"]["de"]["title"]
+        == "Ein Motiv. Neun Karten. Dein Binder."
+    )

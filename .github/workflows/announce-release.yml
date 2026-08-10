@@ -22,7 +22,7 @@ permissions:
 
 jobs:
   announce:
-    name: Update README release pointers
+    name: Update README release news and downloads
     runs-on: ubuntu-latest
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     steps:
@@ -76,7 +76,7 @@ jobs:
             --dir "$(dirname "$RELEASE_MANIFEST")"
           test -s "$RELEASE_MANIFEST"
 
-      - name: Update READMEs from manifest
+      - name: Update README news and downloads from manifest
         env:
           RELEASE_MANIFEST: ${{ runner.temp }}/release-manifest.json
         run: |
@@ -140,9 +140,10 @@ jobs:
           commit-message: "docs: announce ${{ steps.release.outputs.tag_name }}"
           title: "docs: announce ${{ steps.release.outputs.tag_name }}"
           body: |
-            Automated README announcement for `${{ steps.release.outputs.tag_name }}`.
+            Automated collector-facing README announcement for `${{ steps.release.outputs.tag_name }}`.
 
             This PR was generated from `release-manifest.json` attached to the published release.
+            It replaces the single release-news block and updates download pointers; technical history remains in `CHANGELOG.md`.
             The workflow already verified that only `README.md` and `README.de.md` changed and that both files reference the published release URL.
           labels: |
             automated

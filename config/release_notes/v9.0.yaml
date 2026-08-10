@@ -2,30 +2,30 @@ display_date:
   en: "August 2026"
   de: "August 2026"
 summary:
-  en: "Every current binder now opens with reviewed, localized poster artwork designed for the physical 3×3 card grid."
-  de: "Jeder aktuelle Binder beginnt jetzt mit geprüftem, lokalisiertem Poster-Artwork für das physische 3×3-Kartenraster."
+  en: "Turn your binder into a showcase: every collection now opens with a unique Pokémon panorama spanning nine card pockets."
+  de: "Mach deinen Binder zum Blickfang: Jede Sammlung beginnt jetzt mit einem einzigartigen Pokémon-Panorama, das sich über neun Kartenfächer erstreckt."
 hero:
   path: "docs/images/binder-pokedex-v9-key-visual.png"
   alt: "An open BinderPokedex with a continuous Base Set poster and matching collected cards"
 preview:
   path: "docs/images/binder-pokedex-primal-poster-page.png"
-  alt: "Actual localized Primal poster page from the generated PDF"
+  alt: "A Primal panorama ready for nine BinderPokedex card pockets"
 whats_new:
   en:
-    title: "Poster Artwork for Every Binder"
+    title: "One Artwork. Nine Cards. Your Binder."
     body:
-      - "41 reviewed poster openings cover every current set, Pokédex generation, and EX subsection."
-      - "Each continuous scene is composed around the real 3×3 card cuts so featured Pokémon stay inside their intended pockets."
-      - "Titles, logos, card or Pokémon counts, dates, regions, and ranges are rendered deterministically in every supported PDF language."
-      - "The poster replaces the former section start page when available; the canonical cover and --skip-poster remain reliable fallbacks."
-      - "Choose the default cuttable nine-card page or preserve the same artwork as one continuous full-page print."
-      - "Release builds use only reviewed repository assets: ComfyUI, AI models, and authoring prompts are not CI or end-user dependencies."
+      - "A continuous scene unfolds across nine card pockets and turns the first page into a true centerpiece."
+      - "Every set, Pokédex generation, and EX chapter opens with artwork created for its own world and featured Pokémon."
+      - "Each card works on its own; together, all nine reveal the complete panorama."
+      - "Set logos and key collection facts appear in your selected language."
+      - "Cut and sleeve the nine cards, or keep the same artwork as a full-page print."
+      - "Download, print, and slide it into your binder — nothing else required."
   de:
-    title: "Poster-Artwork für jeden Binder"
+    title: "Ein Motiv. Neun Karten. Dein Binder."
     body:
-      - "41 geprüfte Poster-Startseiten decken alle aktuellen Sets, Pokédex-Generationen und EX-Unterabschnitte ab."
-      - "Jede zusammenhängende Szene ist für die realen 3×3-Kartenschnitte komponiert, damit die hervorgehobenen Pokémon in ihren vorgesehenen Taschen bleiben."
-      - "Titel, Logos, Karten- oder Pokémon-Anzahl, Datum, Region und Bereiche werden reproduzierbar in jeder unterstützten PDF-Sprache gerendert."
-      - "Das Poster ersetzt die bisherige Section-Startseite, wenn eine Freigabe vorhanden ist; das kanonische Cover und --skip-poster bleiben verlässliche Fallbacks."
-      - "Zur Wahl stehen die standardmäßig schneidbare Neun-Karten-Seite oder dasselbe Artwork als zusammenhängender Vollseitendruck."
-      - "Release-Builds verwenden ausschließlich geprüfte Repository-Assets: ComfyUI, KI-Modelle und Authoring-Prompts sind keine CI- oder Nutzer-Abhängigkeiten."
+      - "Eine zusammenhängende Szene entfaltet sich über neun Kartenfächer und macht schon die erste Seite zum Blickfang."
+      - "Jedes Set, jede Pokédex-Generation und jedes EX-Kapitel beginnt mit einem Motiv aus seiner eigenen Welt."
+      - "Jede Karte wirkt für sich; zusammen zeigen alle neun das vollständige Panorama."
+      - "Setlogo und die wichtigsten Informationen erscheinen in deiner gewählten Sprache."
+      - "Schneide das Motiv für neun Kartenfächer zu oder bewahre es als zusammenhängenden Vollseitendruck."
+      - "Herunterladen, drucken und einsortieren — mehr brauchst du nicht."

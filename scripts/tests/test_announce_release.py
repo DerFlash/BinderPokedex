@@ -38,8 +38,14 @@ def test_announcement_updates_current_readmes_once(tmp_path, monkeypatch):
 
     readme_en = (tmp_path / "README.md").read_text(encoding="utf-8")
     readme_de = (tmp_path / "README.de.md").read_text(encoding="utf-8")
-    assert readme_en.count("### v9.0 (August 2026)") == 1
-    assert readme_de.count("### v9.0 (August 2026)") == 1
+    assert readme_en.count("<!-- release-news:start -->") == 1
+    assert readme_en.count("<!-- release-news:end -->") == 1
+    assert readme_de.count("<!-- release-news:start -->") == 1
+    assert readme_de.count("<!-- release-news:end -->") == 1
+    assert "### New in v9.0: Poster Artwork for Every Binder" in readme_en
+    assert "### Neu in v9.0: Poster-Artwork für jeden Binder" in readme_de
+    assert "Technical details: [full changelog](CHANGELOG.md)." in readme_en
+    assert "Technische Details: [vollständiges Changelog](CHANGELOG.md)." in readme_de
     assert "**Latest (v9.0):** [All 167 PDFs]" in readme_en
     assert "**Aktuelle Version (v9.0):** [Alle 167 PDFs]" in readme_de
     assert "**30 Scarlet & Violet Sets:**" not in readme_en
