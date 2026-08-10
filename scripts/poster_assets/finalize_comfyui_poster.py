@@ -283,6 +283,7 @@ def fitted_font(
     minimum_size: int,
     bold: bool,
     language: str | None = None,
+    avoid_short_last_line: bool = False,
 ):
     """Choose the largest font whose wrapped text stays inside ``box``."""
     max_width = box[2] - box[0]
@@ -290,6 +291,13 @@ def fitted_font(
     for size in range(preferred_size, minimum_size - 1, -1):
         font = load_font(size, bold=bold, language=language)
         lines = wrap_text(text, font, max_width)
+        if (
+            avoid_short_last_line
+            and len(lines) > 1
+            and len(lines[-1].split()) == 1
+            and len(lines[-1]) <= 3
+        ):
+            continue
         line_heights = [
             bounds[3] - bounds[1]
             for bounds in (font.getbbox(line) for line in lines)
@@ -414,6 +422,7 @@ def draw_title_text(
         minimum_size=max(10, title_cell.height // 24),
         bold=True,
         language=language,
+        avoid_short_last_line=True,
     )
     stroke_width = max(1, round(font.size / 28))
     draw_text_centered(

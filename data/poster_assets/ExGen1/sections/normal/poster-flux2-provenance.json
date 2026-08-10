@@ -30,7 +30,7 @@
         "width": 750
       },
       {
-        "bytes": 171807,
+        "bytes": 168920,
         "dpi": [
           299.9994,
           299.9994
@@ -38,8 +38,8 @@
         "file": "data/poster_assets/ExGen1/sections/normal/poster-flux2-cards/card_r1_c2.png",
         "height": 1050,
         "mode": "RGBA",
-        "pixel_sha256": "9cd002e44d342fc7741fac74bac22a73418388be978e3241d3f3555249716ea5",
-        "sha256": "cd7b7360a1eae181d4a8d6e184dca14b2202eb3fb33afae9cb84d7b64b45511b",
+        "pixel_sha256": "fa1ebe006f752ac97145e918512de734dddfa45aa2f1353321519d43a61d276a",
+        "sha256": "044899037dce324924ee3549668becebe959c807484aefce79e4177dac61e57b",
         "width": 750
       },
       {
@@ -78,7 +78,7 @@
         "height": 1050,
         "mode": "RGBA",
         "pixel_sha256": "4dc4468f2ff5485daa5c39bc7a522e970ff734244c6a23c997fa0cecc68286a3",
-        "sha256": "d4f04e6233ff0b70244d655311f5efe1bad5d466f3d674bc2729d335b60e94fa",
+        "sha256": "fbf87d02c713cbeba64e3d1bb57bbbf480e282451c815d5c01e06d90363f161f",
         "width": 750
       },
       {
@@ -135,7 +135,7 @@
       }
     ],
     "preview": {
-      "bytes": 7054246,
+      "bytes": 7048734,
       "dpi": [
         299.9994,
         299.9994
@@ -143,14 +143,14 @@
       "file": "data/poster_assets/ExGen1/sections/normal/poster-flux2.png",
       "height": 3268,
       "mode": "RGBA",
-      "pixel_sha256": "373d5b100dfb6aff32d1fc865dead5d5f9b39b40a871e179cf3a87015019c124",
-      "sha256": "2ce1a666643245a44c6c4e28552df00fd79c1670691f1283cdba411b2fe43894",
+      "pixel_sha256": "c0f4f7420b8ae0b529576053e3044d37fab971b05d82b63c4a9df60521b75fca",
+      "sha256": "352ad88b214ac242fc1703972522ec204d1a142e8c209cc2ecbb32d07beb40b7",
       "width": 2368
     }
   },
   "poster_id": "normal",
   "preview_language": "en",
-  "promoted_at": "2026-08-08T08:07:45.886783+00:00",
+  "promoted_at": "2026-08-10T08:21:09.729140+00:00",
   "run": {
     "created_at": "2026-08-07T07:09:35.647504+00:00",
     "generation": {
@@ -384,7 +384,7 @@
               "title": {
                 "kind": "text",
                 "renderer": "direct_outlined_v1",
-                "value": "Pokémon EX - Generation 1"
+                "value": "Pokémon ex - Generation 1"
               }
             },
             "en": {
@@ -396,7 +396,7 @@
               "title": {
                 "kind": "text",
                 "renderer": "direct_outlined_v1",
-                "value": "Pokémon EX - Generation 1"
+                "value": "Pokémon ex - Generation 1"
               }
             },
             "es": {
@@ -408,7 +408,7 @@
               "title": {
                 "kind": "text",
                 "renderer": "direct_outlined_v1",
-                "value": "Pokémon EX - Generación 1"
+                "value": "Pokémon ex - Generación 1"
               }
             },
             "fr": {
@@ -420,7 +420,7 @@
               "title": {
                 "kind": "text",
                 "renderer": "direct_outlined_v1",
-                "value": "Pokémon EX - Génération 1"
+                "value": "Pokémon ex - Génération 1"
               }
             },
             "it": {
@@ -432,7 +432,7 @@
               "title": {
                 "kind": "text",
                 "renderer": "direct_outlined_v1",
-                "value": "Pokémon EX - Generazione 1"
+                "value": "Pokémon ex - Generazione 1"
               }
             },
             "ja": {
@@ -444,7 +444,7 @@
               "title": {
                 "kind": "text",
                 "renderer": "direct_outlined_v1",
-                "value": "ポケモンEX - ジェネレーション1"
+                "value": "ポケモンex - ジェネレーション1"
               }
             },
             "ko": {
@@ -456,7 +456,7 @@
               "title": {
                 "kind": "text",
                 "renderer": "direct_outlined_v1",
-                "value": "포켓몬 EX - 세대 1"
+                "value": "포켓몬 ex - 세대 1"
               }
             },
             "zh_hans": {
@@ -468,7 +468,7 @@
               "title": {
                 "kind": "text",
                 "renderer": "direct_outlined_v1",
-                "value": "宝可梦EX - 第一代"
+                "value": "宝可梦ex - 第一代"
               }
             },
             "zh_hant": {
@@ -480,7 +480,7 @@
               "title": {
                 "kind": "text",
                 "renderer": "direct_outlined_v1",
-                "value": "寶可夢EX - 第一代"
+                "value": "寶可夢ex - 第一代"
               }
             }
           },
@@ -507,7 +507,7 @@
           }
         },
         "schema_version": 1,
-        "sha256": "d9ba0d3c7d41d9eb28156832d612085163cab81ef728c5e9a63674932eb05276"
+        "sha256": "ff0fa718af0e23fbdfabb07a9946985a6e2c57de67993dba7f4964c243879702"
       },
       "prompt": {
         "bytes": 5945,

@@ -1,20 +1,20 @@
 {
   "type": "variant",
-  "name": "Pokémon EX - Generation 1",
+  "name": "Pokémon ex - Generation 1",
   "sections": {
     "normal": {
       "section_id": "normal",
       "color_hex": "#1F51BA",
       "title": {
-        "de": "Pokémon EX - Generation 1",
-        "en": "Pokémon EX - Generation 1",
-        "fr": "Pokémon EX - Génération 1",
-        "es": "Pokémon EX - Generación 1",
-        "it": "Pokémon EX - Generazione 1",
-        "ja": "ポケモンEX - ジェネレーション1",
-        "ko": "포켓몬 EX - 세대 1",
-        "zh_hans": "宝可梦EX - 第一代",
-        "zh_hant": "寶可夢EX - 第一代"
+        "de": "Pokémon ex - Generation 1",
+        "en": "Pokémon ex - Generation 1",
+        "fr": "Pokémon ex - Génération 1",
+        "es": "Pokémon ex - Generación 1",
+        "it": "Pokémon ex - Generazione 1",
+        "ja": "ポケモンex - ジェネレーション1",
+        "ko": "포켓몬 ex - 세대 1",
+        "zh_hans": "宝可梦ex - 第一代",
+        "zh_hant": "寶可夢ex - 第一代"
       },
       "subtitle": {
         "de": "Klassische ex Serie",

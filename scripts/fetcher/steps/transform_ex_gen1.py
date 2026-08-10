@@ -186,7 +186,7 @@ class TransformClassicExStep(BaseStep):
         
         variant_data = {
             'type': 'variant',
-            'name': 'Pokémon EX - Generation 1',
+            'name': 'Pokémon ex - Generation 1',
             'sections': {
                 'normal': {
                     'section_id': 'normal',

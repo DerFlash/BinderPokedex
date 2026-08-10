@@ -1395,6 +1395,31 @@ def test_long_localized_title_stays_inside_its_cell_without_panel():
     )
 
 
+def test_title_font_avoids_short_orphan_line():
+    canvas = Image.new("RGBA", (2368, 3268), (74, 151, 211, 255))
+    title_cell = build_page_layout(
+        "standard_3x3",
+        width_px=canvas.width,
+    ).cell(1, 2)
+    text_box = title_cell.inset(0.05, 0.31)
+    title = "Pokémon ex - Generation 1"
+
+    font = fitted_font(
+        title,
+        text_box,
+        preferred_size=max(14, title_cell.height // 7),
+        minimum_size=max(10, title_cell.height // 24),
+        bold=True,
+        language="de",
+        avoid_short_last_line=True,
+    )
+
+    assert wrap_text(title, font, text_box[2] - text_box[0]) == [
+        "Pokémon ex -",
+        "Generation 1",
+    ]
+
+
 @pytest.mark.parametrize(
     ("language", "title"),
     (
