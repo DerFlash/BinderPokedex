@@ -50,7 +50,24 @@ def _asset_records(payload: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return by_language
 
 
-def verify(manifest_path: Path) -> dict[str, int]:
+def _verify_release_notes(payload: dict[str, Any], release_notes_path: Path) -> None:
+    text = release_notes_path.read_text(encoding="utf-8")
+    tag = str(payload["tag"])
+    if not text.strip() or f"# Binder Pokédex {tag}" not in text:
+        raise ValueError("Release notes are empty or do not match the release tag")
+    notes = payload.get("release_notes", {}).get("whats_new", {})
+    for language in ("en", "de"):
+        title = notes.get(language, {}).get("title")
+        if not title or title not in text:
+            raise ValueError(f"Release notes do not contain the {language} title")
+    for info in LANGUAGES.values():
+        if str(info["zip"]) not in text:
+            raise ValueError("Release notes do not link every language archive")
+
+
+def verify(
+    manifest_path: Path, release_notes_path: Path | None = None
+) -> dict[str, int]:
     """Validate manifest counts, local PDFs, and all language ZIP archives."""
     manifest_path = manifest_path.resolve()
     project_dir = manifest_path.parent
@@ -108,15 +125,19 @@ def verify(manifest_path: Path) -> dict[str, int]:
             )
         verified_counts[language] = expected_count
 
+    if release_notes_path is not None:
+        _verify_release_notes(payload, release_notes_path.resolve())
     return verified_counts
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", default="release-manifest.json")
+    parser.add_argument("--release-notes", default=None)
     args = parser.parse_args()
 
-    counts = verify(Path(args.manifest))
+    notes_path = Path(args.release_notes) if args.release_notes else None
+    counts = verify(Path(args.manifest), notes_path)
     print(
         f"Verified {sum(counts.values())} PDFs across "
         f"{len(counts)} release archives."

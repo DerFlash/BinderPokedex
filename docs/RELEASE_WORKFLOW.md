@@ -13,6 +13,7 @@ Build Release Candidate (reusable, read-only)
   -> generate every scope in every supported language
   -> create all language ZIP archives
   -> build and verify release-manifest.json
+  -> render and verify versioned GitHub release notes
   -> upload one temporary Actions artifact
 
 Verify Release Build (pull request or manual)
@@ -62,6 +63,11 @@ therefore builds:
 - the release manifest;
 - the exact file set consumed by the publish job.
 
+The temporary manifest keeps its `pr-<number>-<sha>` build label while loading
+the explicitly configured upcoming release-news contract (`v9.0` for the
+current feature branch). A tagged release instead uses its own tag for both
+fields. This makes missing or malformed major-release news fail before merge.
+
 The resulting `release-candidate` is an ordinary short-lived Actions artifact,
 not a GitHub Release. Its purpose is inspection and proof that publication
 could succeed from that commit.
@@ -70,7 +76,10 @@ could succeed from that commit.
 
 `.github/workflows/release.yml` remains restricted to `v*` tags. Its publish
 job cannot start until the shared candidate build succeeds. It publishes the
-already verified artifact without rebuilding PDFs or archives.
+already verified artifact without rebuilding PDFs or archives and uses the
+candidate's `release-notes.md` as the GitHub Release body. The announcement is
+rendered from `config/release_notes/<tag>.yaml` and tagged repository images;
+it is not hard-coded in the workflow.
 
 After publication, `.github/workflows/announce-release.yml` consumes the
 release manifest and prepares the separate README announcement pull request.
@@ -84,6 +93,8 @@ release manifest and prepares the separate README announcement pull request.
 - total and per-language PDF counts agree;
 - all nine expected ZIP files exist and match their manifest sizes;
 - every ZIP is readable and contains the expected number of PDFs.
+- the rendered release notes match the tag, contain English and German feature
+  titles, and link all nine language archives.
 
 `--skip-poster` remains a local diagnostic option. Official PR rehearsals and
 tagged releases do not use it; an invalid enabled poster must fail the build

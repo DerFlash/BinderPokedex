@@ -13,6 +13,7 @@ jobs:
     uses: ./.github/workflows/build-release.yml
     with:
       release_tag: ${{ github.ref_name }}
+      release_notes_tag: ${{ github.ref_name }}
       artifact_retention_days: 7
 
   publish:
@@ -44,54 +45,7 @@ jobs:
             release-candidate/binder-pokedex-zh_hans.zip
             release-candidate/binder-pokedex-zh_hant.zip
             release-candidate/release-manifest.json
-          body: |
-            ## Binder Pokédex ${{ github.ref_name }}
-
-            **What's New in ${{ github.ref_name }}:**
-
-            🎴 **Classic Set Expansion:**
-            - Added **Jungle** (base2) with 64 cards
-            - Added **Fossil** (base3) with 62 cards
-            - Fixed missing artwork for classic Trainer cards without a TCGdex subtype
-            - Release builds discover scopes from `config/scopes/*.yaml`
-
-            ---
-
-            ### 📥 Downloads (by Language)
-            Each ZIP contains all available PDFs for that language:
-
-            - 🇩🇪 **binder-pokedex-de.zip** - Deutsch
-            - 🇬🇧 **binder-pokedex-en.zip** - English
-            - 🇫🇷 **binder-pokedex-fr.zip** - Français
-            - 🇪🇸 **binder-pokedex-es.zip** - Español
-            - 🇮🇹 **binder-pokedex-it.zip** - Italiano
-            - 🇯🇵 **binder-pokedex-ja.zip** - 日本語
-            - 🇰🇷 **binder-pokedex-ko.zip** - 한국어
-            - 🇨🇳 **binder-pokedex-zh_hans.zip** - 简体中文
-            - 🇹🇼 **binder-pokedex-zh_hant.zip** - 繁體中文
-
-            ### 📋 Content Overview
-            **30 Total Scopes:**
-            - **Pokédex:** Complete National Pokédex (1,025 Pokémon across 9 generations)
-            - **Base1-Base3:** Base Set, Jungle, and Fossil
-            - **ExGen1-3:** TCG EX collections (94/324/366 cards)
-            - **ME01-MEP:** Pokémon TCG Mega Evolution era (6 sets)
-            - **SV01-SV10 + SVP:** Scarlet & Violet era (17 sets)
-
-            ### 📊 Stats
-            - **Total Scopes:** 30 (1 Pokédex + 3 Base + 3 ExGen + 6 Mega + 17 Scarlet & Violet)
-            - **Languages:** 9 (DE, EN, FR, ES, IT, JA, KO, ZH-Hans, ZH-Hant)
-            - **Cards/Pokémon:** 1,025+ Pokémon + 4,000+ TCG cards
-            - **Featured Elements:** 75+ iconic Pokémon showcased across all covers
-
-            ### 🔧 Technical Details
-            - Featured elements with automatic format detection
-            - Cross-platform font support (macOS Songti + Linux Noto Sans CJK)
-            - Scope-based modular architecture
-            - PokeAPI fallback for universal coverage
-            - Proper CJK character rendering
-
-            📚 **[Full Changelog & Documentation](https://github.com/DerFlash/BinderPokedex)**
+          body_path: release-candidate/release-notes.md
           draft: false
           prerelease: false
         env:

@@ -1,0 +1,31 @@
+display_date:
+  en: "August 2026"
+  de: "August 2026"
+summary:
+  en: "Every current binder now opens with reviewed, localized poster artwork designed for the physical 3×3 card grid."
+  de: "Jeder aktuelle Binder beginnt jetzt mit geprüftem, lokalisiertem Poster-Artwork für das physische 3×3-Kartenraster."
+hero:
+  path: "docs/images/binder-pokedex-v9-key-visual.png"
+  alt: "An open BinderPokedex with a continuous Base Set poster and matching collected cards"
+preview:
+  path: "docs/images/binder-pokedex-primal-poster-page.png"
+  alt: "Actual localized Primal poster page from the generated PDF"
+whats_new:
+  en:
+    title: "Poster Artwork for Every Binder"
+    body:
+      - "41 reviewed poster openings cover every current set, Pokédex generation, and EX subsection."
+      - "Each continuous scene is composed around the real 3×3 card cuts so featured Pokémon stay inside their intended pockets."
+      - "Titles, logos, card or Pokémon counts, dates, regions, and ranges are rendered deterministically in every supported PDF language."
+      - "The poster replaces the former section start page when available; the canonical cover and --skip-poster remain reliable fallbacks."
+      - "Choose the default cuttable nine-card page or preserve the same artwork as one continuous full-page print."
+      - "Release builds use only reviewed repository assets: ComfyUI, AI models, and authoring prompts are not CI or end-user dependencies."
+  de:
+    title: "Poster-Artwork für jeden Binder"
+    body:
+      - "41 geprüfte Poster-Startseiten decken alle aktuellen Sets, Pokédex-Generationen und EX-Unterabschnitte ab."
+      - "Jede zusammenhängende Szene ist für die realen 3×3-Kartenschnitte komponiert, damit die hervorgehobenen Pokémon in ihren vorgesehenen Taschen bleiben."
+      - "Titel, Logos, Karten- oder Pokémon-Anzahl, Datum, Region und Bereiche werden reproduzierbar in jeder unterstützten PDF-Sprache gerendert."
+      - "Das Poster ersetzt die bisherige Section-Startseite, wenn eine Freigabe vorhanden ist; das kanonische Cover und --skip-poster bleiben verlässliche Fallbacks."
+      - "Zur Wahl stehen die standardmäßig schneidbare Neun-Karten-Seite oder dasselbe Artwork als zusammenhängender Vollseitendruck."
+      - "Release-Builds verwenden ausschließlich geprüfte Repository-Assets: ComfyUI, KI-Modelle und Authoring-Prompts sind keine CI- oder Nutzer-Abhängigkeiten."

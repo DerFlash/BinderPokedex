@@ -66,3 +66,35 @@ def test_verify_release_candidate_rejects_missing_archive(
 
     with pytest.raises(ValueError, match="Missing or invalid release archive"):
         verify(manifest_path)
+
+
+def test_verify_release_candidate_checks_rendered_release_notes(tmp_path: Path):
+    manifest_path = _release_candidate(tmp_path)
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    payload["release_notes"] = {
+        "whats_new": {
+            "en": {"title": "Poster Artwork for Every Binder"},
+            "de": {"title": "Poster-Artwork für jeden Binder"},
+        }
+    }
+    manifest_path.write_text(json.dumps(payload), encoding="utf-8")
+    archive_names = "\n".join(info["zip"] for info in LANGUAGES.values())
+    release_notes_path = tmp_path / "release-notes.md"
+    release_notes_path.write_text(
+        "# Binder Pokédex pr-42-deadbeef\n"
+        "Poster Artwork for Every Binder\n"
+        "Poster-Artwork für jeden Binder\n"
+        f"{archive_names}\n",
+        encoding="utf-8",
+    )
+
+    assert verify(manifest_path, release_notes_path)
+
+
+def test_verify_release_candidate_rejects_notes_for_another_tag(tmp_path: Path):
+    manifest_path = _release_candidate(tmp_path)
+    release_notes_path = tmp_path / "release-notes.md"
+    release_notes_path.write_text("# Binder Pokédex v0.0\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="do not match the release tag"):
+        verify(manifest_path, release_notes_path)

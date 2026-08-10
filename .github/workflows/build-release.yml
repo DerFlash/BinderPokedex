@@ -7,6 +7,10 @@ on:
         description: Version label recorded in the release manifest
         required: true
         type: string
+      release_notes_tag:
+        description: Versioned release-news configuration exercised by the build
+        required: true
+        type: string
       artifact_retention_days:
         description: Retention period for the assembled release candidate
         required: false
@@ -61,12 +65,20 @@ jobs:
         run: |
           python scripts/release/build_manifest.py \
             --tag "${{ inputs.release_tag }}" \
+            --release-notes-tag "${{ inputs.release_notes_tag }}" \
             --output release-manifest.json
+
+      - name: Render release notes
+        run: |
+          python scripts/release/render_release_notes.py \
+            --manifest release-manifest.json \
+            --output release-notes.md
 
       - name: Verify release candidate
         run: |
           python scripts/release/verify_release_candidate.py \
-            --manifest release-manifest.json
+            --manifest release-manifest.json \
+            --release-notes release-notes.md
 
       - name: Upload release candidate
         uses: actions/upload-artifact@v4
@@ -75,6 +87,7 @@ jobs:
           path: |
             binder-pokedex-*.zip
             release-manifest.json
+            release-notes.md
           if-no-files-found: error
           retention-days: ${{ inputs.artifact_retention_days }}
           compression-level: 0

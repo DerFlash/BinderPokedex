@@ -86,8 +86,10 @@ def release_note(markdown_language: str, manifest: dict[str, Any]) -> str:
     notes = manifest.get("release_notes", {}).get("whats_new", {}).get(markdown_language, {})
     title = notes.get("title", manifest["tag"])
     body = notes.get("body", [])
-    month = "July 2026" if markdown_language == "en" else "Juli 2026"
-    heading = f"### {manifest['tag']} ({month})\n\n**{title}** 🎴"
+    dates = manifest.get("release_notes", {}).get("display_date", {})
+    fallback_date = "July 2026" if markdown_language == "en" else "Juli 2026"
+    display_date = dates.get(markdown_language, fallback_date)
+    heading = f"### {manifest['tag']} ({display_date})\n\n**{title}** 🎴"
     if body:
         heading += "\n\n" + "\n".join(f"- {item}" for item in body)
     return heading
