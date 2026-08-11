@@ -131,6 +131,10 @@ def summary(markdown_language: str, manifest: dict[str, Any]) -> str:
     return manifest.get("release_notes", {}).get("summary", {}).get(markdown_language, fallback)
 
 
+def inline_summary(markdown_language: str, manifest: dict[str, Any]) -> str:
+    return summary(markdown_language, manifest).rstrip().rstrip(".!?")
+
+
 def update_readme_en(path: Path, manifest: dict[str, Any], explicit_url: str | None) -> None:
     tag = manifest["tag"]
     pdf_count = manifest["pdfs"]["total"]
@@ -147,7 +151,7 @@ def update_readme_en(path: Path, manifest: dict[str, Any], explicit_url: str | N
     text = replace_one(
         text,
         r"\*\*Latest \(v[^)]+\):\*\* \[All \d+ PDFs\]\([^)]+\) ✨ \*New: [^*]+\*",
-        f"**Latest ({tag}):** [All {pdf_count} PDFs]({release_url(manifest, explicit_url)}) ✨ *New: {summary('en', manifest)}!*",
+        f"**Latest ({tag}):** [All {pdf_count} PDFs]({release_url(manifest, explicit_url)}) ✨ *New: {inline_summary('en', manifest)}!*",
         path,
     )
     text = replace_one(
@@ -182,7 +186,7 @@ def update_readme_de(path: Path, manifest: dict[str, Any], explicit_url: str | N
     text = replace_one(
         text,
         r"\*\*Aktuelle Version \(v[^)]+\):\*\* \[Alle \d+ PDFs\]\([^)]+\) ✨ \*Neu: [^*]+\*",
-        f"**Aktuelle Version ({tag}):** [Alle {pdf_count} PDFs]({release_url(manifest, explicit_url)}) ✨ *Neu: {summary('de', manifest)}!*",
+        f"**Aktuelle Version ({tag}):** [Alle {pdf_count} PDFs]({release_url(manifest, explicit_url)}) ✨ *Neu: {inline_summary('de', manifest)}!*",
         path,
     )
     text = replace_one(
