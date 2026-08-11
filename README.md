@@ -6,7 +6,7 @@ Print 1,025+ Pokémon across 9 generations in 9 languages. All variants, all for
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-![v8.4](https://img.shields.io/badge/version-v8.4-green.svg)
+![v9.0](https://img.shields.io/badge/version-v9.0-green.svg)
 
 ---
 
@@ -28,19 +28,20 @@ This Primal start page comes straight from BinderPokedex and is ready to print
 as nine physical cards.
 
 <!-- release-news:start -->
-### Coming in v9.0: One Artwork. Nine Cards. Your Binder.
+### New in v9.0: One Artwork. Nine Cards. Your Binder.
 
-Turn your binder into a showcase: every collection now opens with a unique
-Pokémon panorama spanning nine card pockets.
+Turn your binder into a showcase: every collection now opens with a unique Pokémon panorama spanning nine card pockets.
 
-- A continuous scene turns the first page into a true centerpiece.
-- Every set, Pokédex generation, and EX chapter opens in its own world.
+- A continuous scene unfolds across nine card pockets and turns the first page into a true centerpiece.
+- Every set, Pokédex generation, and EX chapter opens with artwork created for its own world and featured Pokémon.
 - Each card works on its own; together, all nine reveal the complete panorama.
 - Set logos and key collection facts appear in your selected language.
-- Cut and sleeve the nine cards, or keep the artwork as a full-page print.
+- Cut and sleeve the nine cards, or keep the same artwork as a full-page print.
+- Download, print, and slide it into your binder — nothing else required.
 
-Technical details belong in the [changelog](CHANGELOG.md); this space is for
-the experience collectors will see in their binders.
+**[Explore v9.0 and download the PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v9.0)**
+
+Technical details: [full changelog](CHANGELOG.md).
 <!-- release-news:end -->
 
 ---
@@ -70,18 +71,18 @@ the experience collectors will see in their binders.
 ### For End Users - Just Download & Print!
 
 
-**Latest (v8.4):** [All 167 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v8.4) ✨ *New: Pokemon Jungle and Fossil!*
+**Latest (v9.0):** [All 167 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v9.0) ✨ *New: Turn your binder into a showcase: every collection now opens with a unique Pokémon panorama spanning nine card pockets.!*
 
-**By Language (v8.4):**
-🇩🇪 [Deutsch](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-de.zip) |
-🇬🇧 [English](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-en.zip) |
-🇫🇷 [Français](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-fr.zip) |
-🇪🇸 [Español](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-es.zip) |
-🇮🇹 [Italiano](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-it.zip) |
-🇯🇵 [日本語](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-ja.zip) |
-🇰🇷 [한국어](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-ko.zip) |
-🇨🇳 [简体中文](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-zh_hans.zip) |
-🇹🇼 [繁體中文](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-zh_hant.zip)
+**By Language (v9.0):**
+🇩🇪 [Deutsch](https://github.com/DerFlash/BinderPokedex/releases/download/v9.0/binder-pokedex-de.zip) |
+🇬🇧 [English](https://github.com/DerFlash/BinderPokedex/releases/download/v9.0/binder-pokedex-en.zip) |
+🇫🇷 [Français](https://github.com/DerFlash/BinderPokedex/releases/download/v9.0/binder-pokedex-fr.zip) |
+🇪🇸 [Español](https://github.com/DerFlash/BinderPokedex/releases/download/v9.0/binder-pokedex-es.zip) |
+🇮🇹 [Italiano](https://github.com/DerFlash/BinderPokedex/releases/download/v9.0/binder-pokedex-it.zip) |
+🇯🇵 [日本語](https://github.com/DerFlash/BinderPokedex/releases/download/v9.0/binder-pokedex-ja.zip) |
+🇰🇷 [한국어](https://github.com/DerFlash/BinderPokedex/releases/download/v9.0/binder-pokedex-ko.zip) |
+🇨🇳 [简体中文](https://github.com/DerFlash/BinderPokedex/releases/download/v9.0/binder-pokedex-zh_hans.zip) |
+🇹🇼 [繁體中文](https://github.com/DerFlash/BinderPokedex/releases/download/v9.0/binder-pokedex-zh_hant.zip)
 ---
 
 ## 📝 Release History
