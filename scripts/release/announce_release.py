@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update README release pointers from a published release manifest."""
+"""Update README downloads and user-facing news from a release manifest."""
 
 from __future__ import annotations
 
@@ -34,6 +34,9 @@ LANGUAGE_LINKS_DE = [
     ("zh_hant", "🇹🇼", "ZH-T"),
 ]
 
+NEWS_START = "<!-- release-news:start -->"
+NEWS_END = "<!-- release-news:end -->"
+
 
 def read_manifest(path: Path) -> dict[str, Any]:
     with path.open("r", encoding="utf-8") as handle:
@@ -45,22 +48,6 @@ def replace_one(text: str, pattern: str, replacement: str, path: Path) -> str:
     if count != 1:
         raise ValueError(f"Expected exactly one match for {pattern!r} in {path}")
     return new_text
-
-
-def upsert_release_note(
-    text: str, path: Path, markdown_language: str, manifest: dict[str, Any]
-) -> str:
-    """Insert the current release note once, preserving older release notes."""
-    tag = re.escape(manifest["tag"])
-    section_title = "What's New" if markdown_language == "en" else "Was ist neu"
-    if re.search(rf"^### {tag} \(", text, flags=re.MULTILINE):
-        return text
-    return replace_one(
-        text,
-        rf"## 📝 {re.escape(section_title)}\n\n",
-        f"## 📝 {section_title}\n\n" + release_note(markdown_language, manifest) + "\n\n",
-        path,
-    )
 
 
 def release_url(manifest: dict[str, Any], explicit_url: str | None) -> str:
@@ -82,15 +69,61 @@ def language_links(tag: str, links: list[tuple[str, str, str]], separator: str) 
     return separator.join(parts)
 
 
-def release_note(markdown_language: str, manifest: dict[str, Any]) -> str:
-    notes = manifest.get("release_notes", {}).get("whats_new", {}).get(markdown_language, {})
+def release_news(
+    markdown_language: str,
+    manifest: dict[str, Any],
+    explicit_url: str | None,
+) -> str:
+    """Render the compact, collector-facing news block for the README."""
+    notes = (
+        manifest.get("release_notes", {})
+        .get("whats_new", {})
+        .get(markdown_language, {})
+    )
     title = notes.get("title", manifest["tag"])
     body = notes.get("body", [])
-    month = "July 2026" if markdown_language == "en" else "Juli 2026"
-    heading = f"### {manifest['tag']} ({month})\n\n**{title}** 🎴"
+    intro = summary(markdown_language, manifest)
+    if markdown_language == "en":
+        heading = f"### New in {manifest['tag']}: {title}"
+        cta = (
+            f"**[Explore {manifest['tag']} and download the PDFs]"
+            f"({release_url(manifest, explicit_url)})**"
+        )
+        details = "Technical details: [full changelog](CHANGELOG.md)."
+    else:
+        heading = f"### Neu in {manifest['tag']}: {title}"
+        cta = (
+            f"**[{manifest['tag']} ansehen und PDFs herunterladen]"
+            f"({release_url(manifest, explicit_url)})**"
+        )
+        details = "Technische Details: [vollständiges Changelog](CHANGELOG.md)."
+
+    lines = [heading, "", intro]
     if body:
-        heading += "\n\n" + "\n".join(f"- {item}" for item in body)
-    return heading
+        lines.extend(["", *(f"- {item}" for item in body)])
+    lines.extend(["", cta, "", details])
+    return "\n".join(lines)
+
+
+def replace_release_news(
+    text: str,
+    path: Path,
+    markdown_language: str,
+    manifest: dict[str, Any],
+    explicit_url: str | None,
+) -> str:
+    """Replace the single README news slot without growing a second changelog."""
+    replacement = (
+        f"{NEWS_START}\n"
+        f"{release_news(markdown_language, manifest, explicit_url)}\n"
+        f"{NEWS_END}"
+    )
+    return replace_one(
+        text,
+        rf"{re.escape(NEWS_START)}[\s\S]*?{re.escape(NEWS_END)}",
+        replacement,
+        path,
+    )
 
 
 def summary(markdown_language: str, manifest: dict[str, Any]) -> str:
@@ -104,6 +137,7 @@ def update_readme_en(path: Path, manifest: dict[str, Any], explicit_url: str | N
     scope_count = manifest["scope_count"]
     mega_scopes = ", ".join(manifest["scope_groups"]["mega"])
     sv_count = len(manifest["scope_groups"]["scarlet_violet"])
+    language_separator = " |\n"
     text = path.read_text(encoding="utf-8")
 
     text = replace_one(text, r"!\[v[^\]]+\]\(https://img\.shields\.io/badge/version-v[^)]+-green\.svg\)", f"![{tag}](https://img.shields.io/badge/version-{tag}-green.svg)", path)
@@ -119,10 +153,10 @@ def update_readme_en(path: Path, manifest: dict[str, Any], explicit_url: str | N
     text = replace_one(
         text,
         r"\*\*By Language \(v[^)]+\):\*\*\n(?:.+\n){8}.+",
-        f"**By Language ({tag}):**\n{language_links(tag, LANGUAGE_LINKS_EN, ' |\n')}",
+        f"**By Language ({tag}):**\n{language_links(tag, LANGUAGE_LINKS_EN, language_separator)}",
         path,
     )
-    text = upsert_release_note(text, path, "en", manifest)
+    text = replace_release_news(text, path, "en", manifest, explicit_url)
     text = replace_one(
         text,
         r"# List available scopes \(\d+ total: 1 Pokedex \+ 3 ExGen \+ \d+ TCG sets\)",
@@ -157,7 +191,7 @@ def update_readme_de(path: Path, manifest: dict[str, Any], explicit_url: str | N
         f"**Nach Sprache ({tag}):** {language_links(tag, LANGUAGE_LINKS_DE, ' | ')}",
         path,
     )
-    text = upsert_release_note(text, path, "de", manifest)
+    text = replace_release_news(text, path, "de", manifest, explicit_url)
     text = replace_one(
         text,
         r"# Verfügbare Scopes anzeigen \(\d+ gesamt: 1 Pokedex \+ 3 ExGen \+ \d+ TCG Sets\)",

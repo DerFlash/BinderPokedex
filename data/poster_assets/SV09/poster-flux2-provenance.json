@@ -1,0 +1,700 @@
+{
+  "asset_name": "flux2",
+  "kind": "promoted_poster",
+  "outputs": {
+    "artwork": {
+      "bytes": 4897223,
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "file": "data/poster_assets/SV09/poster-flux2-artwork.png",
+      "height": 3268,
+      "mode": "RGBA",
+      "pixel_sha256": "90c15a3b443158c168030626b365e0a7839d3dd8956f8e6f1468083dff0c2009",
+      "sha256": "fea5eaa24c1d7d1f584b9beeef7064a42e0fb56b6e4c74090080c743330059bf",
+      "width": 2368
+    },
+    "cards": [
+      {
+        "bytes": 96889,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SV09/poster-flux2-cards/card_r1_c1.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "6d953c0c3cbc5aa2bbdc345eab8f747a1597751dba59281b5cbbcf870383b80d",
+        "sha256": "95623e20b840d77b1012d4fec3363e25e8bbc4f0e51b2ce8b6891e711b0f3127",
+        "width": 750
+      },
+      {
+        "bytes": 271921,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SV09/poster-flux2-cards/card_r1_c2.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "54c80b879d11f165673e12eb2509c0071ac2ec8fd2b2227fe816bf0e511dcf7c",
+        "sha256": "e3cc1b04c37188e3742d37399081a96da013e388941a5033a696bf8b427a7184",
+        "width": 750
+      },
+      {
+        "bytes": 95820,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SV09/poster-flux2-cards/card_r1_c3.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "3158690cf02fcfa50611b111803a138f80901f74286054ab7659ab680a332070",
+        "sha256": "1e39a9c998244c0dda3ab7cced7f84e2c1da6cc6f93e3e8b975698c3615bf010",
+        "width": 750
+      },
+      {
+        "bytes": 540720,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SV09/poster-flux2-cards/card_r2_c1.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "6579d6cedb192ff6c01c6c03f6a93d0ea0b5342add6301f87535abf6855ded21",
+        "sha256": "3192a95bbd232e8df8640fb877c3106ed024190c230953b9345675a824b4e287",
+        "width": 750
+      },
+      {
+        "bytes": 315564,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SV09/poster-flux2-cards/card_r2_c2.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "b450219e9839746034467df1cbc769fe0b12c3ee1c217b3d42d03a7a34b9f58c",
+        "sha256": "995778a7e2e86b4e312f37c796d53f33360ba62f93dc0b52cc882a7542158d5a",
+        "width": 750
+      },
+      {
+        "bytes": 604806,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SV09/poster-flux2-cards/card_r2_c3.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "83408dce588d8c9b5c2d92e6602854b9d851936242c6faab1e4799705a5d2082",
+        "sha256": "947ad2dd7dab73d879828f3a7471d76a492670c3ce05ebbf36991d181796fe8c",
+        "width": 750
+      },
+      {
+        "bytes": 996320,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SV09/poster-flux2-cards/card_r3_c1.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "8818f16d9c8e77719af553d92a91d29b806e52d549d9a10d88c7f007b2b7fdad",
+        "sha256": "e7d0f1fdb53a225fec04e04d03f00e489eef6929d2e1868ba36e26b961c4cadb",
+        "width": 750
+      },
+      {
+        "bytes": 609538,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SV09/poster-flux2-cards/card_r3_c2.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "4040cad0b00461bab3ed1440ead588e413180e39bfdbe008cd0b19b51dace18e",
+        "sha256": "037e2f0bfe663c6d10e0247f90e3151303101a14d5eddea75b46b77e38253cd2",
+        "width": 750
+      },
+      {
+        "bytes": 1020383,
+        "dpi": [
+          299.9994,
+          299.9994
+        ],
+        "file": "data/poster_assets/SV09/poster-flux2-cards/card_r3_c3.png",
+        "height": 1050,
+        "mode": "RGBA",
+        "pixel_sha256": "29ebbf18316565e09e8c8a43d337418260929afc1101712fc010b0a5f75c6e19",
+        "sha256": "631a1b127488f3ce43c6a87f20f2d15328cd570483da2420ee31434bb640e143",
+        "width": 750
+      }
+    ],
+    "preview": {
+      "bytes": 4977977,
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "file": "data/poster_assets/SV09/poster-flux2.png",
+      "height": 3268,
+      "mode": "RGBA",
+      "pixel_sha256": "49b382c305d33a35be9591f12e3cd41dde79bd63014fa508c325d3f415d1fb27",
+      "sha256": "2be7e5c2567694d3d47afab8d9b4bffd22ad6170904fd8ec10a14c349f9b6af1",
+      "width": 2368
+    }
+  },
+  "poster_id": "SV09",
+  "preview_language": "en",
+  "promoted_at": "2026-08-06T23:54:32.064340+00:00",
+  "run": {
+    "created_at": "2026-08-06T19:47:46.363937+00:00",
+    "generation": {
+      "encoder": "qwen_3_4b.safetensors",
+      "encoder_sha256": "6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a",
+      "engine": "flux",
+      "generation_megapixels": 1.0,
+      "mode": "joint_scene",
+      "model": "flux-2-klein-4b.safetensors",
+      "model_sha256": "ec3d4e733a771f61c052fb4856c48b336c55eaf2c65487c2a1faeb9bbda7a343",
+      "output_dpi": 300,
+      "output_method": "lanczos",
+      "reference_mode": "individual_spatial_joint",
+      "seed": 260747621,
+      "steps": 4,
+      "vae": "flux2-vae.safetensors",
+      "vae_sha256": "d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5"
+    },
+    "inputs": {
+      "cutout_manifest": {
+        "bytes": 1731,
+        "file": "data/poster_assets/SV09/cutouts/manifest.json",
+        "sha256": "d8b177966d8e728a43fb86cfbb38dd6199c5ee088b3a06fd98e81604270e37d6"
+      },
+      "cutouts": [
+        {
+          "bytes": 114350,
+          "file": "data/poster_assets/SV09/cutouts/pokemon_906_sprigatito.png",
+          "height": 475,
+          "mode": "RGBA",
+          "pixel_sha256": "bbb27600106084f27dc56d019f37f6c1c17bba9a3ea8138fd79e7d03b5200b81",
+          "sha256": "cb9053d02cc7ef92a721eb13c77610649ff419c2c8885efb0851ecc377a71e6a",
+          "width": 475
+        },
+        {
+          "bytes": 87212,
+          "file": "data/poster_assets/SV09/cutouts/pokemon_255_torchic.png",
+          "height": 475,
+          "mode": "RGBA",
+          "pixel_sha256": "671e8746fd27fa08b1fc031d94ed88e5d0538116c15c0872ed51e0789254699d",
+          "sha256": "d234db13f46ac30452288fee011df2857d93bac22f7d038d6b472ef14a651950",
+          "width": 475
+        },
+        {
+          "bytes": 164867,
+          "file": "data/poster_assets/SV09/cutouts/pokemon_643_reshiram.png",
+          "height": 475,
+          "mode": "RGBA",
+          "pixel_sha256": "670636862ff3fad6116dc4ae9a9955e34b0b5d6167dd2c7d6cf74ced1b021cf1",
+          "sha256": "da64fe6f0285ea0837a5fd06b150abee0eb5598c47050314ac1ece006d61c135",
+          "width": 475
+        }
+      ],
+      "generation_fingerprint": {
+        "components": {
+          "cutouts": [
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "bbb27600106084f27dc56d019f37f6c1c17bba9a3ea8138fd79e7d03b5200b81",
+              "pokemon_id": 906,
+              "width": 475
+            },
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "671e8746fd27fa08b1fc031d94ed88e5d0538116c15c0872ed51e0789254699d",
+              "pokemon_id": 255,
+              "width": 475
+            },
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "670636862ff3fad6116dc4ae9a9955e34b0b5d6167dd2c7d6cf74ced1b021cf1",
+              "pokemon_id": 643,
+              "width": 475
+            }
+          ],
+          "effective_prompt": {
+            "encoding": "utf-8",
+            "sha256": "7c836295b672f2a2b3cd6de83d9e219d3237637a353c85bad6d5bef8ba3622e7"
+          },
+          "generation": {
+            "encoder": "qwen_3_4b.safetensors",
+            "encoder_sha256": "6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a",
+            "engine": "flux",
+            "generation_megapixels": 1.0,
+            "mode": "joint_scene",
+            "model": "flux-2-klein-4b.safetensors",
+            "model_sha256": "ec3d4e733a771f61c052fb4856c48b336c55eaf2c65487c2a1faeb9bbda7a343",
+            "output_dpi": 300,
+            "output_method": "lanczos",
+            "reference_mode": "individual_spatial_joint",
+            "seed": 260747621,
+            "steps": 4,
+            "vae": "flux2-vae.safetensors",
+            "vae_sha256": "d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5"
+          },
+          "joint_scene_conditioning": {
+            "identity_source_resampling": "canonical_card_fit",
+            "reference_megapixels": 0.5,
+            "reference_neutral_rgb": [
+              226,
+              224,
+              211
+            ],
+            "reference_strategy": "individual_spatial_identity_per_subject"
+          },
+          "layout": {
+            "columns": 3,
+            "name": "standard_3x3",
+            "raster_geometry": {
+              "generation_canvas_px": [
+                848,
+                1168
+              ],
+              "generation_column_spans_px": [
+                [
+                  0,
+                  269
+                ],
+                [
+                  290,
+                  558
+                ],
+                [
+                  579,
+                  848
+                ]
+              ],
+              "generation_row_spans_px": [
+                [
+                  0,
+                  375
+                ],
+                [
+                  396,
+                  772
+                ],
+                [
+                  793,
+                  1168
+                ]
+              ],
+              "name": "cumulative_physical_endpoints",
+              "output_canvas_px": [
+                2368,
+                3268
+              ],
+              "output_column_spans_px": [
+                [
+                  0,
+                  750
+                ],
+                [
+                  809,
+                  1559
+                ],
+                [
+                  1618,
+                  2368
+                ]
+              ],
+              "output_row_spans_px": [
+                [
+                  0,
+                  1050
+                ],
+                [
+                  1109,
+                  2159
+                ],
+                [
+                  2218,
+                  3268
+                ]
+              ],
+              "version": 2
+            },
+            "rows": 3,
+            "safe_cells": {
+              "set_info": {
+                "column": 2,
+                "row": 2
+              },
+              "title": {
+                "column": 2,
+                "row": 1
+              }
+            }
+          },
+          "pipeline_contract": {
+            "name": "poster_generation",
+            "version": 9
+          },
+          "pokemon": {
+            "count": "auto_from_layout_columns",
+            "cutout_source": "pokeapi_official_artwork",
+            "fallback_candidates": [
+              {
+                "pokemon_id": 25
+              },
+              {
+                "pokemon_id": 1
+              },
+              {
+                "pokemon_id": 4
+              },
+              {
+                "pokemon_id": 7
+              },
+              {
+                "pokemon_id": 133
+              },
+              {
+                "pokemon_id": 6
+              }
+            ],
+            "row": "bottom",
+            "strategy": "featured_from_scope"
+          },
+          "scene": {
+            "concept": "the Journey Together expansion",
+            "ground_noun": "meadow",
+            "lighting": "Warm companionable morning light enters from the upper left.",
+            "rendering": "Use friendly modern cel-painted linework, balanced natural colors, and layered postcard-like depth.",
+            "setting": "The artwork contains a welcoming travel panorama of connected Paldean hills, woodland, distant coast, and a tiny unoccupied camp beneath a broad open route-free landscape."
+          },
+          "source_subject_ids": [
+            906,
+            255,
+            643
+          ]
+        },
+        "schema_version": 1,
+        "sha256": "f8809614694eb356325b0520e731382ddba2fa997fb890e893923f5b4defb409"
+      },
+      "overlay_fingerprint": {
+        "components": {
+          "languages": {
+            "de": {
+              "information": [
+                "Reisegefährten",
+                "190 Karten",
+                "Veröffentlicht",
+                "28. März 2025"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "fb5ba4568a78020321ba6307f7a22c20bc916befeca4b3225accbdc4d0e0a82b"
+              }
+            },
+            "en": {
+              "information": [
+                "Journey Together",
+                "190 cards",
+                "Released",
+                "March 28, 2025"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "b53106468956bf3da2531fab560b43ee13dc0849377a2882ddfd1eeaebc991b3"
+              }
+            },
+            "es": {
+              "information": [
+                "Juntos de Aventuras",
+                "190 cartas",
+                "Publicado",
+                "28 marzo 2025"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "acadadfbff051d9dbd2e76f2cb936a8127cb7120125dff240affb74791bf3cff"
+              }
+            },
+            "fr": {
+              "information": [
+                "Aventures Ensemble",
+                "190 cartes",
+                "Sortie",
+                "28 mars 2025"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "e45717bddd59346d46c6eae88d75518e22e850f10e3886039a427ccab7086935"
+              }
+            },
+            "it": {
+              "information": [
+                "Avventure Insieme",
+                "190 carte",
+                "Pubblicato",
+                "28 marzo 2025"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "f7d3572a6853dbfae2aa7d74e1b96663a18b6becde52f64091b92e8673664ce9"
+              }
+            },
+            "ja": {
+              "information": [
+                "Journey Together",
+                "190 枚",
+                "発売日",
+                "2025年3月28日"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "b53106468956bf3da2531fab560b43ee13dc0849377a2882ddfd1eeaebc991b3"
+              }
+            },
+            "ko": {
+              "information": [
+                "Journey Together",
+                "190 장",
+                "출시일",
+                "2025년 3월 28일"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "b53106468956bf3da2531fab560b43ee13dc0849377a2882ddfd1eeaebc991b3"
+              }
+            },
+            "zh_hans": {
+              "information": [
+                "Journey Together",
+                "190 张",
+                "发行日期",
+                "2025年3月28日"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "b53106468956bf3da2531fab560b43ee13dc0849377a2882ddfd1eeaebc991b3"
+              }
+            },
+            "zh_hant": {
+              "information": [
+                "Journey Together",
+                "190 張",
+                "發行日期",
+                "2025年3月28日"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "b53106468956bf3da2531fab560b43ee13dc0849377a2882ddfd1eeaebc991b3"
+              }
+            }
+          },
+          "layout_name": "standard_3x3",
+          "logo_pixels": {
+            "de": {
+              "height": 180,
+              "mode": "RGBA",
+              "pixel_sha256": "fb5ba4568a78020321ba6307f7a22c20bc916befeca4b3225accbdc4d0e0a82b",
+              "width": 445
+            },
+            "en": {
+              "height": 180,
+              "mode": "RGBA",
+              "pixel_sha256": "b53106468956bf3da2531fab560b43ee13dc0849377a2882ddfd1eeaebc991b3",
+              "width": 445
+            },
+            "es": {
+              "height": 180,
+              "mode": "RGBA",
+              "pixel_sha256": "acadadfbff051d9dbd2e76f2cb936a8127cb7120125dff240affb74791bf3cff",
+              "width": 445
+            },
+            "fr": {
+              "height": 180,
+              "mode": "RGBA",
+              "pixel_sha256": "e45717bddd59346d46c6eae88d75518e22e850f10e3886039a427ccab7086935",
+              "width": 445
+            },
+            "it": {
+              "height": 180,
+              "mode": "RGBA",
+              "pixel_sha256": "f7d3572a6853dbfae2aa7d74e1b96663a18b6becde52f64091b92e8673664ce9",
+              "width": 445
+            },
+            "ja": {
+              "height": 180,
+              "mode": "RGBA",
+              "pixel_sha256": "b53106468956bf3da2531fab560b43ee13dc0849377a2882ddfd1eeaebc991b3",
+              "width": 445
+            },
+            "ko": {
+              "height": 180,
+              "mode": "RGBA",
+              "pixel_sha256": "b53106468956bf3da2531fab560b43ee13dc0849377a2882ddfd1eeaebc991b3",
+              "width": 445
+            },
+            "zh_hans": {
+              "height": 180,
+              "mode": "RGBA",
+              "pixel_sha256": "b53106468956bf3da2531fab560b43ee13dc0849377a2882ddfd1eeaebc991b3",
+              "width": 445
+            },
+            "zh_hant": {
+              "height": 180,
+              "mode": "RGBA",
+              "pixel_sha256": "b53106468956bf3da2531fab560b43ee13dc0849377a2882ddfd1eeaebc991b3",
+              "width": 445
+            }
+          },
+          "pipeline_contract": {
+            "name": "poster_overlay",
+            "version": 3
+          },
+          "text_cells": {
+            "set_info": {
+              "column": 2,
+              "max_height_ratio": 0.68,
+              "max_width_ratio": 0.92,
+              "row": 2
+            },
+            "title": {
+              "column": 2,
+              "row": 1
+            }
+          },
+          "text_content": {}
+        },
+        "schema_version": 1,
+        "sha256": "9ca30e1d06c25899d388fb809b75ea9ca3f8ef27ce4d8b63e097042fd43c96d9"
+      },
+      "prompt": {
+        "bytes": 5675,
+        "file": "data/poster_assets/SV09/comfyui_poster/individual_spatial_joint_prompt.generated.txt",
+        "sha256": "ba49b3a449c07c388e9225fc34818ae7f60aecbd7226efd81bf5f935c7240052"
+      },
+      "references": [
+        {
+          "bytes": 25564,
+          "file": "data/poster_assets/SV09/comfyui_poster/individual_spatial_reference_1.png",
+          "height": 832,
+          "mode": "RGBA",
+          "pixel_sha256": "3759bb818d49f425e051c340a0f6476e0bbf3b492fdf2ebe09a73e3917fb7d24",
+          "sha256": "2da64541d18b9dfce71b708f5f97c90f353bbe31b3ebea02887a1bd852aa254b",
+          "width": 608
+        },
+        {
+          "bytes": 18522,
+          "file": "data/poster_assets/SV09/comfyui_poster/individual_spatial_reference_2.png",
+          "height": 832,
+          "mode": "RGBA",
+          "pixel_sha256": "32622aa15dc3f397047395d20154015929e20257c275949dea2598cdfcb46860",
+          "sha256": "d6c4862f4b37679904bcb54ac4f6f0ad7e6842f69983972c61a1cfd7851bb3dc",
+          "width": 608
+        },
+        {
+          "bytes": 31013,
+          "file": "data/poster_assets/SV09/comfyui_poster/individual_spatial_reference_3.png",
+          "height": 832,
+          "mode": "RGBA",
+          "pixel_sha256": "ff866a3e099ad4ee45527df6a2f2477542e1456c47c11557fecac035391ee9c8",
+          "sha256": "76a57ff0560434097c97831bfca43401ab195dc434a274cad18c5c48df9d6b1a",
+          "width": 608
+        }
+      ],
+      "scope_manifest": {
+        "bytes": 2176,
+        "file": "data/poster_assets/SV09/poster.yaml",
+        "sha256": "7ae159c47a3ab071164a26d11a37539bf4c589667d4a7ac238232e51984d919c"
+      },
+      "workflow": {
+        "bytes": 9698,
+        "file": "data/poster_assets/SV09/comfyui_poster/workflow_api_joint_scene_individual_spatial_joint_1mp_260747621.json",
+        "sha256": "43487c9f0385c58b1e8b2fa965e4f51ba41e5b358431fe80cf1faada25edaafe"
+      }
+    },
+    "kind": "poster_generation_run",
+    "poster_id": "SV09",
+    "raw_artwork": {
+      "bytes": 1215545,
+      "file": "data/poster_assets/SV09/comfyui_poster/output/sv09_flux2_joint_scene_individual_spatial_1mp_seed_260747621_00001_.png",
+      "height": 1168,
+      "mode": "RGBA",
+      "pixel_sha256": "73d9b8bb9c9451073ff1808c828f9ff34fb23bc57d29248302c388a13bc30539",
+      "sha256": "c4e83e168742935622aaca1934ba1639e35fe8e68026be9e0759439f0377190f",
+      "width": 848
+    },
+    "schema_version": 1,
+    "scope": "SV09",
+    "section_id": null,
+    "source_artwork": {
+      "bytes": 4897223,
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "file": "data/poster_assets/SV09/comfyui_poster/temp/sv09_flux2_joint_scene_individual_spatial_1mp_seed_260747621_00001__to_300dpi.png",
+      "height": 3268,
+      "mode": "RGBA",
+      "pixel_sha256": "90c15a3b443158c168030626b365e0a7839d3dd8956f8e6f1468083dff0c2009",
+      "sha256": "fea5eaa24c1d7d1f584b9beeef7064a42e0fb56b6e4c74090080c743330059bf",
+      "width": 2368
+    },
+    "source_scope": "SV09",
+    "validation": {
+      "joint_scene_visual_review": {
+        "approval_source": "explicit_promotion_flag",
+        "criteria": [
+          "exact_cast_count",
+          "raw_generation_identity",
+          "text_free_output_identity",
+          "identity_and_form",
+          "silhouette_and_stature",
+          "anatomy_and_face",
+          "colors_and_markings",
+          "placement_and_card_safety",
+          "natural_scene_integration",
+          "coherent_landscape_occlusion"
+        ],
+        "generation_fingerprint_sha256": "f8809614694eb356325b0520e731382ddba2fa997fb890e893923f5b4defb409",
+        "method": "human_identity_and_scene_review",
+        "passed": true,
+        "raw_artwork_pixel_sha256": "73d9b8bb9c9451073ff1808c828f9ff34fb23bc57d29248302c388a13bc30539",
+        "raw_artwork_sha256": "c4e83e168742935622aaca1934ba1639e35fe8e68026be9e0759439f0377190f",
+        "reviewed_artwork_pixel_sha256": "90c15a3b443158c168030626b365e0a7839d3dd8956f8e6f1468083dff0c2009",
+        "reviewed_artwork_sha256": "fea5eaa24c1d7d1f584b9beeef7064a42e0fb56b6e4c74090080c743330059bf",
+        "reviewed_at": "2026-08-06T23:54:25.139092+00:00",
+        "source_cutout_pixel_sha256": [
+          "bbb27600106084f27dc56d019f37f6c1c17bba9a3ea8138fd79e7d03b5200b81",
+          "671e8746fd27fa08b1fc031d94ed88e5d0538116c15c0872ed51e0789254699d",
+          "670636862ff3fad6116dc4ae9a9955e34b0b5d6167dd2c7d6cf74ced1b021cf1"
+        ],
+        "source_cutout_sha256": [
+          "cb9053d02cc7ef92a721eb13c77610649ff419c2c8885efb0851ecc377a71e6a",
+          "d234db13f46ac30452288fee011df2857d93bac22f7d038d6b472ef14a651950",
+          "da64fe6f0285ea0837a5fd06b150abee0eb5598c47050314ac1ece006d61c135"
+        ],
+        "source_subject_ids": [
+          906,
+          255,
+          643
+        ],
+        "stage": "raw_and_text_free_print_artwork"
+      }
+    }
+  },
+  "schema_version": 1,
+  "scope": "SV09",
+  "section_id": null,
+  "source_scope": "SV09"
+}

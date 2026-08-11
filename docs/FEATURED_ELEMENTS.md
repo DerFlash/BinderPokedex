@@ -4,6 +4,13 @@
 
 Featured Elements is a visual enhancement system that displays 3 iconic Pokémon cards or artwork on each section cover page. The system automatically selects the most important/famous Pokémon and fetches appropriate visual content based on the scope type.
 
+For poster-page artwork, featured selection is reused but the layout rules are
+different: the normal number of Pokémon follows the poster column count, while
+an aggregate section with fewer canonical subjects keeps that smaller cast
+instead of duplicating or inventing one. Cutouts are distributed across the
+bottom-row print-safe cards. See
+[Poster Artwork Specification](POSTER_ARTWORK_CONCEPT.md).
+
 ## Visual Examples
 
 ### TCG Sets
@@ -132,27 +139,29 @@ pipeline:
 
 ## Scope Coverage
 
-### ✅ Fully Supported (24/25 scopes)
+### ✅ Supported scope families
 
 | Scope | Featured Elements | Source |
 |-------|-------------------|--------|
 | **Pokédex** | 9 generations × 3 starters | PokeAPI artwork |
+| **Base1-Base3** | Set-specific featured Pokémon | TCGdex |
 | **ExGen1** | Mewtwo, Mew, Lugia | TCGdex (ex series) |
-| **ExGen2** | Dialga, Palkia, Giratina | TCGdex (bw/xy) |
-| **ExGen3** | Rayquaza, Groudon, Kyogre | TCGdex (sv ex) |
-| **ME01** | Bulbasaur, Chikorita, Celebi | TCGdex |
-| **ME02** | Charizard, Blastoise, Venusaur | TCGdex |
-| **ME02.5** | Alakazam, Gengar, Machamp | TCGdex |
+| **ExGen2** | Normal: Mewtwo, Mew, Lugia; Mega: Mewtwo X, Rayquaza, Latios; Primal: Kyogre, Groudon | TCGdex (bw/xy) |
+| **ExGen3** | Normal: Koraidon, Pikachu, Miraidon; Mega: Mega Latias, Mega Diancie, Mega Lucario | TCGdex (sv/me ex) |
+| **ME01-ME04** | Set-specific featured Pokémon | TCGdex |
 | **MEP** | Riolu, Meganium, Inteleon | PokeAPI fallback |
-| **SV01-SV10** | Gen 9 starters + legendaries | TCGdex |
+| **SV01-SV10.5** | Gen 9 starters, legendaries, and set-specific Pokémon | TCGdex |
 | **SVP** | Sprigatito, Fuecoco, Quaxly | TCGdex |
-| **Special Sets** | Varies by set | TCGdex |
 
-### ⚠️ Limited Support (1/25 scopes)
+All 30 current scopes have featured-element data. The exact scope inventory is
+discovered from `config/scopes/*.yaml`; tests enforce that every current
+individual TCG scope can select the required poster cast.
 
-| Scope | Status | Reason |
-|-------|--------|--------|
-| **MEP** | PokeAPI fallback | TCGdex has no images for this set |
+### Source fallback
+
+`MEP` uses the documented PokeAPI artwork fallback because TCGdex has no card
+images for that set. This is a supported source path, not partial scope
+coverage.
 
 ## Technical Architecture
 
@@ -200,7 +209,8 @@ For TCG-Set cards:
 **Cache Size:**
 - TCG cards: ~800KB-1MB per image
 - Pokédex artwork: ~400-600KB per image
-- Total for 25 scopes: ~50-100MB
+- Total size depends on the current scope inventory, selected cards, and
+  fallback artwork; inspect `data/section_artwork/` after fetching
 
 ## CLI Usage
 

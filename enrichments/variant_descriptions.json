@@ -49,26 +49,26 @@
   },
   "ExGen3": {
     "normal": {
-      "de": "Scarlet & Violet Serie (2023–heute) • Pokémon-ex Grundformen",
-      "en": "Scarlet & Violet Series (2023–present) • Pokémon-ex base forms",
-      "fr": "Série Écarlate & Violet (2023–présent) • Formes de base Pokémon-ex",
-      "es": "Serie Escarlata & Púrpura (2023–presente) • Formas base Pokémon-ex",
-      "it": "Serie Rosso & Viola (2023–presente) • Forme base Pokémon-ex",
-      "ja": "スカーレット&バイオレット シリーズ (2023–現在) • ポケモンex基本形態",
-      "ko": "스칼렛 & 바이올렛 시리즈 (2023–현재) • 포켓몬 ex 기본 형태",
-      "zh_hans": "朱&紫系列 (2023–至今) • 宝可梦ex基本形态",
-      "zh_hant": "朱&紫系列 (2023–至今) • 寶可夢ex基本形態"
+      "de": "2023–heute • Pokémon ex ohne Mega-Entwicklung",
+      "en": "2023–present • non-Mega Pokémon ex",
+      "fr": "2023–aujourd’hui • Pokémon ex hors Méga-Évolution",
+      "es": "2023–presente • Pokémon ex sin Megaevolución",
+      "it": "2023–presente • Pokémon ex non megaevoluti",
+      "ja": "2023年～ • メガシンカ以外のポケモンex",
+      "ko": "2023년~ • 메가진화가 아닌 포켓몬 ex",
+      "zh_hans": "2023年至今 • 非超级进化宝可梦ex",
+      "zh_hant": "2023年至今 • 非超級進化寶可夢ex"
     },
     "mega": {
-      "de": "Scarlet & Violet Serie (2024–heute) • Mega-Entwicklungen als Pokémon-ex",
-      "en": "Scarlet & Violet Series (2024–present) • Mega Evolutions as Pokémon-ex",
-      "fr": "Série Écarlate & Violet (2024–présent) • Méga-Évolutions en Pokémon-ex",
-      "es": "Serie Escarlata & Púrpura (2024–presente) • Megaevoluciones como Pokémon-ex",
-      "it": "Serie Rosso & Viola (2024–presente) • Megaevoluzioni come Pokémon-ex",
-      "ja": "スカーレット&バイオレット シリーズ (2024–現在) • メガシンカポケモンex",
-      "ko": "스칼렛 & 바이올렛 시리즈 (2024–현재) • 메가진화 포켓몬 ex",
-      "zh_hans": "朱&紫系列 (2024–至今) • 超级进化宝可梦ex",
-      "zh_hant": "朱&紫系列 (2024–至今) • 超級進化寶可夢ex"
+      "de": "2025–heute • Mega-Entwicklungen als Pokémon ex",
+      "en": "2025–present • Mega Evolutions as Pokémon ex",
+      "fr": "2025–présent • Méga-Évolutions en Pokémon ex",
+      "es": "2025–presente • Megaevoluciones como Pokémon ex",
+      "it": "2025–presente • Megaevoluzioni come Pokémon ex",
+      "ja": "2025年～ • メガシンカしたポケモンex",
+      "ko": "2025년~ • 메가진화 포켓몬 ex",
+      "zh_hans": "2025年至今 • 超级进化宝可梦ex",
+      "zh_hant": "2025年至今 • 超級進化寶可夢ex"
     }
   }
 }

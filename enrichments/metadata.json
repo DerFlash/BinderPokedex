@@ -60,15 +60,15 @@
     "ExGen1": {
       "color": "#1F51BA",
       "title": {
-        "de": "Pokémon EX - Generation 1",
-        "en": "Pokémon EX - Generation 1",
-        "fr": "Pokémon EX - Génération 1",
-        "es": "Pokémon EX - Generación 1",
-        "it": "Pokémon EX - Generazione 1",
-        "ja": "ポケモンEX - ジェネレーション1",
-        "ko": "포켓몬 EX - 세대 1",
-        "zh_hans": "宝可梦EX - 第一代",
-        "zh_hant": "寶可夢EX - 第一代"
+        "de": "Pokémon ex - Generation 1",
+        "en": "Pokémon ex - Generation 1",
+        "fr": "Pokémon ex - Génération 1",
+        "es": "Pokémon ex - Generación 1",
+        "it": "Pokémon ex - Generazione 1",
+        "ja": "ポケモンex - ジェネレーション1",
+        "ko": "포켓몬 ex - 세대 1",
+        "zh_hans": "宝可梦ex - 第一代",
+        "zh_hant": "寶可夢ex - 第一代"
       },
       "subtitle": {
         "de": "Klassische ex Serie",
@@ -85,26 +85,26 @@
     "ExGen2": {
       "color": "#3D5A80",
       "title": {
-        "de": "Pokémon EX - Generation 2",
-        "en": "Pokémon EX - Generation 2",
-        "fr": "Pokémon EX - Génération 2",
-        "es": "Pokémon EX - Generación 2",
-        "it": "Pokémon EX - Generazione 2",
-        "ja": "ポケモンEX - ジェネレーション2",
-        "ko": "포켓몬 EX - 세대 2",
-        "zh_hans": "宝可梦EX - 第二代",
-        "zh_hant": "寶可夢EX - 第二代"
+        "de": "Pokémon [EX]",
+        "en": "Pokémon [EX]",
+        "fr": "Pokémon [EX]",
+        "es": "Pokémon [EX]",
+        "it": "Pokémon [EX]",
+        "ja": "ポケモン [EX]",
+        "ko": "포켓몬 [EX]",
+        "zh_hans": "宝可梦 [EX]",
+        "zh_hant": "寶可夢 [EX]"
       },
       "subtitle": {
-        "de": "[EX] Serie (ab Next Destinies)",
-        "en": "[EX] Series (from Next Destinies)",
-        "fr": "Série [EX] (à partir de Next Destinies)",
-        "es": "Serie [EX] (de Next Destinies)",
-        "it": "Serie [EX] (da Next Destinies)",
-        "ja": "[EX]シリーズ（ネクスト・デスティニーズより）",
-        "ko": "[EX] 시리즈 (넥스트 데스티니즈부터)",
-        "zh_hans": "[EX]系列（来自下一个命运）",
-        "zh_hant": "[EX]系列（來自下一個命運）"
+        "de": "Generation 2",
+        "en": "Generation 2",
+        "fr": "Génération 2",
+        "es": "Generación 2",
+        "it": "Generazione 2",
+        "ja": "ジェネレーション2",
+        "ko": "2세대",
+        "zh_hans": "第二代",
+        "zh_hant": "第二代"
       }
     },
     "ExGen3": {
@@ -121,15 +121,15 @@
         "zh_hant": "寶可夢EX - 第三代"
       },
       "subtitle": {
-        "de": "[EX_NEW] Serie (ab Karmesin & Purpur)",
-        "en": "[EX_NEW] Series (from Scarlet & Violet)",
-        "fr": "Série [EX_NEW] (à partir d'Écarlate & Violet)",
-        "es": "Serie [EX_NEW] (de Escarlata & Púrpura)",
-        "it": "Serie [EX_NEW] (da Rosso & Viola)",
-        "ja": "[EX_NEW]シリーズ（スカーレット&バイオレットより）",
-        "ko": "[EX_NEW] 시리즈 (스칼렛&바이올렛부터)",
-        "zh_hans": "[EX_NEW]系列（来自朱&紫）",
-        "zh_hant": "[EX_NEW]系列（來自朱&紫）"
+        "de": "Moderne Pokémon-[EX_NEW]-Ära (seit 2023)",
+        "en": "Modern Pokémon [EX_NEW] era (since 2023)",
+        "fr": "Ère moderne des Pokémon [EX_NEW] (depuis 2023)",
+        "es": "Era moderna de Pokémon [EX_NEW] (desde 2023)",
+        "it": "Era moderna dei Pokémon [EX_NEW] (dal 2023)",
+        "ja": "現代のポケモン [EX_NEW] 時代（2023年～）",
+        "ko": "현대 포켓몬 [EX_NEW] 시대 (2023년~)",
+        "zh_hans": "现代宝可梦 [EX_NEW] 时代（2023年至今）",
+        "zh_hant": "現代寶可夢 [EX_NEW] 時代（2023年至今）"
       }
     }
   }

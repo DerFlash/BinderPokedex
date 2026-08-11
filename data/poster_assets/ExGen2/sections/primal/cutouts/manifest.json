@@ -1,0 +1,61 @@
+{
+  "scope": "ExGen2/sections/primal",
+  "source_scope": "ExGen2",
+  "poster_id": "primal",
+  "section_id": "primal",
+  "source": "pokeapi_official_artwork",
+  "generated_at": "2026-08-03T19:55:19.937366+00:00",
+  "layout": {
+    "name": "standard_3x3",
+    "columns": 3,
+    "rows": 3
+  },
+  "items": [
+    {
+      "pokemon_id": 382,
+      "name_en": "Primal Kyogre",
+      "name_de": "Kyogre",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10077.png",
+      "file": "pokemon_382_artwork_10077_primal_kyogre.png",
+      "poster_subject": {
+        "source": "pokeapi_official_artwork",
+        "species_id": 382,
+        "official_artwork_id": 10077,
+        "subject_key": "pokeapi:official-artwork:10077",
+        "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10077.png"
+      },
+      "mode": "RGBA",
+      "width": 475,
+      "height": 475,
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "transparent_pixels": 166927,
+      "opaque_pixels": 62136,
+      "validated_alpha": true,
+      "errors": []
+    },
+    {
+      "pokemon_id": 383,
+      "name_en": "Primal Groudon",
+      "name_de": "Groudon",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10078.png",
+      "file": "pokemon_383_artwork_10078_primal_groudon.png",
+      "poster_subject": {
+        "source": "pokeapi_official_artwork",
+        "species_id": 383,
+        "official_artwork_id": 10078,
+        "subject_key": "pokeapi:official-artwork:10078",
+        "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10078.png"
+      },
+      "mode": "RGBA",
+      "width": 475,
+      "height": 475,
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "transparent_pixels": 161051,
+      "opaque_pixels": 67591,
+      "validated_alpha": true,
+      "errors": []
+    }
+  ]
+}

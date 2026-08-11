@@ -1,0 +1,31 @@
+display_date:
+  en: "August 2026"
+  de: "August 2026"
+summary:
+  en: "Turn your binder into a showcase: every collection now opens with a unique Pokémon panorama spanning nine card pockets."
+  de: "Mach deinen Binder zum Blickfang: Jede Sammlung beginnt jetzt mit einem einzigartigen Pokémon-Panorama, das sich über neun Kartenfächer erstreckt."
+hero:
+  path: "docs/images/binder-pokedex-v9-key-visual.png"
+  alt: "An open BinderPokedex with a continuous Base Set poster and matching collected cards"
+preview:
+  path: "docs/images/binder-pokedex-primal-poster-page.png"
+  alt: "A Primal panorama ready for nine BinderPokedex card pockets"
+whats_new:
+  en:
+    title: "One Artwork. Nine Cards. Your Binder."
+    body:
+      - "A continuous scene unfolds across nine card pockets and turns the first page into a true centerpiece."
+      - "Every set, Pokédex generation, and EX chapter opens with artwork created for its own world and featured Pokémon."
+      - "Each card works on its own; together, all nine reveal the complete panorama."
+      - "Set logos and key collection facts appear in your selected language."
+      - "Cut and sleeve the nine cards, or keep the same artwork as a full-page print."
+      - "Download, print, and slide it into your binder — nothing else required."
+  de:
+    title: "Ein Motiv. Neun Karten. Dein Binder."
+    body:
+      - "Eine zusammenhängende Szene entfaltet sich über neun Kartenfächer und macht schon die erste Seite zum Blickfang."
+      - "Jedes Set, jede Pokédex-Generation und jedes EX-Kapitel beginnt mit einem Motiv aus seiner eigenen Welt."
+      - "Jede Karte wirkt für sich; zusammen zeigen alle neun das vollständige Panorama."
+      - "Setlogo und die wichtigsten Informationen erscheinen in deiner gewählten Sprache."
+      - "Schneide das Motiv für neun Kartenfächer zu oder bewahre es als zusammenhängenden Vollseitendruck."
+      - "Herunterladen, drucken und einsortieren — mehr brauchst du nicht."

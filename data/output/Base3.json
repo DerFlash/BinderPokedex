@@ -1251,34 +1251,55 @@
       ],
       "featured_elements": [
         {
-          "pokemon_id": 144,
-          "pokemon_name": "Articuno",
-          "card_id": "base3-2",
+          "pokemon_id": 141,
+          "pokemon_name": "Kabutops",
+          "card_id": "base3-9",
           "set_name": "Fossil",
-          "image_url": "https://assets.tcgdex.net/en/base/base3/2/high.png",
-          "local_image_path": "data/section_artwork/pokemon_144_base3-2.png",
+          "image_url": "https://assets.tcgdex.net/en/base/base3/9/high.png",
+          "local_image_path": "data/section_artwork/pokemon_141_base3-9.png",
           "rarity": null,
-          "hp": null
+          "hp": null,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 141,
+            "official_artwork_id": 141,
+            "subject_key": "pokeapi:official-artwork:141",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/141.png"
+          }
         },
         {
-          "pokemon_id": 146,
-          "pokemon_name": "Moltres",
-          "card_id": "base3-12",
+          "pokemon_id": 131,
+          "pokemon_name": "Lapras",
+          "card_id": "base3-10",
           "set_name": "Fossil",
-          "image_url": "https://assets.tcgdex.net/en/base/base3/12/high.png",
-          "local_image_path": "data/section_artwork/pokemon_146_base3-12.png",
+          "image_url": "https://assets.tcgdex.net/en/base/base3/10/high.png",
+          "local_image_path": "data/section_artwork/pokemon_131_base3-10.png",
           "rarity": null,
-          "hp": null
+          "hp": null,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 131,
+            "official_artwork_id": 131,
+            "subject_key": "pokeapi:official-artwork:131",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/131.png"
+          }
         },
         {
-          "pokemon_id": 145,
-          "pokemon_name": "Zapdos",
-          "card_id": "base3-15",
+          "pokemon_id": 94,
+          "pokemon_name": "Gengar",
+          "card_id": "base3-5",
           "set_name": "Fossil",
-          "image_url": "https://assets.tcgdex.net/en/base/base3/15/high.png",
-          "local_image_path": "data/section_artwork/pokemon_145_base3-15.png",
+          "image_url": "https://assets.tcgdex.net/en/base/base3/5/high.png",
+          "local_image_path": "data/section_artwork/pokemon_94_base3-5.png",
           "rarity": null,
-          "hp": null
+          "hp": null,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 94,
+            "official_artwork_id": 94,
+            "subject_key": "pokeapi:official-artwork:94",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/94.png"
+          }
         }
       ]
     }

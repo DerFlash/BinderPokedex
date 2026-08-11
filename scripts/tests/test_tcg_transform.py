@@ -7,6 +7,7 @@ Tests the transformation of TCG cards to target format, including:
 - Pokemon vs Trainer card handling
 """
 
+import json
 import sys
 import pytest
 from pathlib import Path
@@ -15,6 +16,17 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / 'fetcher'))
 
 from steps.transform_tcg_set import TransformTCGSetStep
+from steps import transform_tcg_set as transform_tcg_set_module
+from steps.base import PipelineContext
+from steps.enrich_names_from_pokedex import EnrichNamesFromPokedexStep
+from steps.transform_ex_gen3 import TransformScarletVioletEXStep
+from scripts.poster_assets.poster_subject import (
+    PosterSubject,
+    official_artwork_id_for_card_name,
+    poster_subject_from_card,
+)
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 class TestVariantSuffixPrefixDetection:
@@ -166,8 +178,16 @@ class TestCardTransformation:
         assert 'suffix' not in card  # No suffix for base card
         assert 'prefix' not in card
     
-    def test_transform_variant_pokemon_card(self):
+    def test_transform_variant_pokemon_card(self, monkeypatch):
         """Test transformation of variant Pokemon card."""
+        monkeypatch.setattr(
+            transform_tcg_set_module,
+            "get_mega_artwork_url",
+            lambda **_kwargs: (
+                "https://raw.githubusercontent.com/PokeAPI/sprites/master/"
+                "sprites/pokemon/other/official-artwork/10033.png"
+            ),
+        )
         cards = [{
             'localId': '003',
             'name': 'Mega Venusaur ex',  # Original TCGdex name
@@ -193,6 +213,48 @@ class TestCardTransformation:
         # Variants as separate fields
         assert card['suffix'] == '[EX_NEW]'
         assert card['prefix'] == 'Mega'
+
+    def test_transform_corrected_mega_absol_never_requests_castform_mega(
+        self,
+        monkeypatch,
+    ):
+        """Regression for TCGdex's incorrect ME01 #086 Castform dexId."""
+        artwork_calls = []
+
+        def fake_mega_artwork_url(**kwargs):
+            artwork_calls.append(kwargs)
+            return (
+                "https://raw.githubusercontent.com/PokeAPI/sprites/master/"
+                "sprites/pokemon/other/official-artwork/10057.png"
+            )
+
+        monkeypatch.setattr(
+            transform_tcg_set_module,
+            "get_mega_artwork_url",
+            fake_mega_artwork_url,
+        )
+        cards = [{
+            'localId': '086',
+            'name': 'Mega Absol ex',
+            'card_type': 'pokemon',
+            'pokemon_id': 359,
+            'types': ['Darkness'],
+            'name_de': 'Absol',
+            'name_en': 'Absol',
+            'name_fr': 'Absol',
+        }]
+
+        [card] = self.step._transform_cards(cards)
+
+        assert card['pokemon_id'] == 359
+        assert card['name']['en'] == 'Absol'
+        assert card['prefix'] == 'Mega'
+        assert card['suffix'] == '[EX_NEW]'
+        assert artwork_calls == [{
+            'pokemon_name': 'Absol',
+            'base_id': 359,
+            'original_card_name': 'Mega Absol ex',
+        }]
     
     def test_transform_trainer_card(self):
         """Test transformation of trainer card."""
@@ -259,8 +321,16 @@ class TestCardTransformation:
         assert result[1]['suffix'] == '[EX_NEW]'
         assert result[2]['type'] == 'trainer'
     
-    def test_transform_all_variant_types(self):
+    def test_transform_all_variant_types(self, monkeypatch):
         """Test transformation of all variant types."""
+        monkeypatch.setattr(
+            transform_tcg_set_module,
+            "get_mega_artwork_url",
+            lambda **_kwargs: (
+                "https://raw.githubusercontent.com/PokeAPI/sprites/master/"
+                "sprites/pokemon/other/official-artwork/10034.png"
+            ),
+        )
         variant_cards = [
             {'name': 'Pikachu ex', 'expected_suffix': '[EX_NEW]'},
             {'name': 'Charizard GX', 'expected_suffix': 'GX'},
@@ -293,6 +363,194 @@ class TestCardTransformation:
             if 'expected_prefix' in variant:
                 assert card.get('prefix') == variant['expected_prefix'], \
                     f"Expected prefix {variant['expected_prefix']} for {variant['name']}"
+
+
+def test_exgen3_corrects_inconsistent_tcgdex_dex_id_from_card_name(
+    monkeypatch,
+):
+    step = TransformScarletVioletEXStep("test_exgen3_identity")
+    monkeypatch.setattr(
+        step,
+        "_load_pokedex_lookup",
+        lambda: {"absol": 359},
+    )
+    source = {
+        "id": "me01-086",
+        "name": "Mega Absol ex",
+        "dexId": [351],
+    }
+
+    normalized = step._normalize_card_dex_ids([source])
+
+    assert source["dexId"] == [351]
+    assert normalized[0]["dexId"] == [359]
+
+
+@pytest.mark.parametrize(
+    ("species_id", "card_name", "artwork_id"),
+    [
+        (103, "Alolan Exeggutor ex", 10114),
+        (646, "Black Kyurem ex", 10022),
+        (901, "Bloodmoon Ursaluna ex", 10272),
+        (6, "Charizard X", 10034),
+        (6, "Charizard Y", 10035),
+        (150, "Mewtwo X", 10043),
+        (150, "Mewtwo Y", 10044),
+        (1017, "Teal Mask Ogerpon ex", 1017),
+        (1017, "Wellspring Mask Ogerpon ex", 10273),
+        (1017, "Hearthflame Mask Ogerpon ex", 10274),
+        (1017, "Cornerstone Mask Ogerpon ex", 10275),
+    ],
+)
+def test_exgen3_resolves_named_forms_from_pinned_registry(
+    species_id,
+    card_name,
+    artwork_id,
+):
+    assert official_artwork_id_for_card_name(
+        species_id,
+        card_name,
+    ) == artwork_id
+
+
+def test_exgen3_named_form_cannot_fall_back_to_base_artwork():
+    with pytest.raises(ValueError, match="requires official artwork #10114"):
+        poster_subject_from_card(
+            {
+                "pokemon_id": 103,
+                "name": {"en": "Alolan Exeggutor"},
+                "image_url": PosterSubject(103, 103).image_url,
+            }
+        )
+
+
+def test_exgen3_named_base_id_form_rejects_another_registered_form():
+    with pytest.raises(ValueError, match="requires official artwork #1017"):
+        poster_subject_from_card(
+            {
+                "pokemon_id": 1017,
+                "name": {"en": "Teal Mask Ogerpon"},
+                "image_url": PosterSubject(1017, 10273).image_url,
+            }
+        )
+
+
+def test_named_mega_xy_form_rejects_the_sibling_artwork():
+    with pytest.raises(ValueError, match="requires official artwork #10034"):
+        poster_subject_from_card(
+            {
+                "pokemon_id": 6,
+                "name": {"en": "Charizard X"},
+                "prefix": "Mega",
+                "image_url": PosterSubject(6, 10035).image_url,
+            }
+        )
+
+
+def test_exgen3_named_forms_keep_distinct_localized_labels(tmp_path):
+    languages = {
+        "de": "Ogerpon",
+        "en": "Ogerpon",
+        "fr": "Ogerpon",
+        "es": "Ogerpon",
+        "it": "Ogerpon",
+        "ja": "オーガポン",
+        "ko": "오거폰",
+        "zh_hans": "厄诡椪",
+        "zh_hant": "厄鬼椪",
+    }
+    pokedex_file = tmp_path / "Pokedex.json"
+    pokedex_file.write_text(
+        json.dumps(
+            {
+                "sections": {
+                    "gen9": {
+                        "cards": [
+                            {"pokemon_id": 1017, "name": languages}
+                        ]
+                    }
+                }
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    context = PipelineContext({})
+    context.set_data(
+        {
+            "sections": {
+                "normal": {
+                    "cards": [
+                        {
+                            "pokemon_id": 1017,
+                            "name": {"en": form_name},
+                        }
+                        for form_name in (
+                            "Teal Mask Ogerpon",
+                            "Wellspring Mask Ogerpon",
+                            "Hearthflame Mask Ogerpon",
+                            "Cornerstone Mask Ogerpon",
+                        )
+                    ]
+                }
+            }
+        }
+    )
+
+    result = EnrichNamesFromPokedexStep("form_names").execute(
+        context,
+        {
+            "pokedex_file": str(pokedex_file),
+            "form_names_file": str(
+                REPO_ROOT / "enrichments" / "card_form_names.json"
+            ),
+        },
+    )
+    names = [
+        card["name"]
+        for card in result.get_data()["sections"]["normal"]["cards"]
+    ]
+
+    for language in languages:
+        assert len({name[language] for name in names}) == 4
+    assert names[0]["de"] == "Türkisgrüne-Maske-Ogerpon"
+    assert names[3]["ja"] == "オーガポン（いしずえのめん）"
+
+
+def test_exgen3_prefers_actual_sv01_base_set_identifier():
+    step = TransformScarletVioletEXStep("test_exgen3_sv01_priority")
+    sv03 = {
+        "id": "sv03-001",
+        "set": {"id": "sv03", "name": "A Earlier Alphabetically"},
+    }
+    sv01 = {
+        "id": "sv01-001",
+        "set": {"id": "sv01", "name": "Z Scarlet & Violet"},
+    }
+
+    selected = step._select_best_cards({(25, 25): [sv03, sv01]})
+
+    assert selected == [sv01]
+
+
+def test_exgen3_card_selection_is_stable_within_the_same_set():
+    step = TransformScarletVioletEXStep("test_exgen3_stable_card_order")
+    later = {
+        "id": "me01-163",
+        "localId": "163",
+        "set": {"id": "me01", "name": "Mega Evolution"},
+    }
+    desired = {
+        "id": "me01-100",
+        "localId": "100",
+        "set": {"id": "me01", "name": "Mega Evolution"},
+    }
+
+    selected = step._select_best_cards(
+        {(380, ""): [later, desired]}
+    )
+
+    assert selected == [desired]
 
 
 if __name__ == '__main__':

@@ -1,0 +1,66 @@
+schema_version: 1
+scope: Pokedex
+posters:
+  - id: gen1
+    section_id: gen1
+    manifest: sections/gen1/poster.yaml
+    pdf:
+      enabled: true
+      artwork_file: poster-flux2-artwork.png
+      insertion: after_section_cover
+  - id: gen2
+    section_id: gen2
+    manifest: sections/gen2/poster.yaml
+    pdf:
+      enabled: true
+      artwork_file: poster-flux2-artwork.png
+      insertion: after_section_cover
+  - id: gen3
+    section_id: gen3
+    manifest: sections/gen3/poster.yaml
+    pdf:
+      enabled: true
+      artwork_file: poster-flux2-artwork.png
+      insertion: after_section_cover
+  - id: gen4
+    section_id: gen4
+    manifest: sections/gen4/poster.yaml
+    pdf:
+      enabled: true
+      artwork_file: poster-flux2-artwork.png
+      insertion: after_section_cover
+  - id: gen5
+    section_id: gen5
+    manifest: sections/gen5/poster.yaml
+    pdf:
+      enabled: true
+      artwork_file: poster-flux2-artwork.png
+      insertion: after_section_cover
+  - id: gen6
+    section_id: gen6
+    manifest: sections/gen6/poster.yaml
+    pdf:
+      enabled: true
+      artwork_file: poster-flux2-artwork.png
+      insertion: after_section_cover
+  - id: gen7
+    section_id: gen7
+    manifest: sections/gen7/poster.yaml
+    pdf:
+      enabled: true
+      artwork_file: poster-flux2-artwork.png
+      insertion: after_section_cover
+  - id: gen8
+    section_id: gen8
+    manifest: sections/gen8/poster.yaml
+    pdf:
+      enabled: true
+      artwork_file: poster-flux2-artwork.png
+      insertion: after_section_cover
+  - id: gen9
+    section_id: gen9
+    manifest: sections/gen9/poster.yaml
+    pdf:
+      enabled: true
+      artwork_file: poster-flux2-artwork.png
+      insertion: after_section_cover

@@ -1,0 +1,20 @@
+name: Verify Release Build
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-release-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-release-candidate:
+    uses: ./.github/workflows/build-release.yml
+    with:
+      release_tag: pr-${{ github.event.pull_request.number || 'manual' }}-${{ github.sha }}
+      release_notes_tag: v9.0
+      artifact_retention_days: 3

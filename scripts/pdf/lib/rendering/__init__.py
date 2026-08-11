@@ -18,6 +18,8 @@ from .cover_renderer import CoverRenderer, CoverStyle
 from .title_renderer import TitleRenderer
 from .footer_renderer import FooterRenderer
 from .page_renderer import PageRenderer, PageStyle
+from .poster_page_renderer import PosterPageCollection, PosterPageRenderer
 
 __all__ = ['TranslationLoader', 'CardRenderer', 'CardStyle', 'CoverRenderer', 'CoverStyle',
-           'TitleRenderer', 'FooterRenderer', 'PageRenderer', 'PageStyle']
+           'TitleRenderer', 'FooterRenderer', 'PageRenderer', 'PageStyle',
+           'PosterPageCollection', 'PosterPageRenderer']

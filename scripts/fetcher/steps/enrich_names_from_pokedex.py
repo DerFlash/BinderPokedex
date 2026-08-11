@@ -10,7 +10,7 @@ proper multilingual names for PDF generation.
 
 import logging
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Dict, Any
 import sys
 import json
 
@@ -20,6 +20,18 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from steps.base import BaseStep, PipelineContext
 
 logger = logging.getLogger(__name__)
+
+SUPPORTED_LANGUAGES = {
+    'de',
+    'en',
+    'fr',
+    'es',
+    'it',
+    'ja',
+    'ko',
+    'zh_hans',
+    'zh_hant',
+}
 
 
 class EnrichNamesFromPokedexStep(BaseStep):
@@ -74,13 +86,17 @@ class EnrichNamesFromPokedexStep(BaseStep):
         # Step 2: Build lookup table
         name_lookup = self._build_name_lookup(pokedex_data)
         logger.info(f"Built lookup table for {len(name_lookup)} Pokemon")
+        form_name_lookup = self._load_form_name_lookup(
+            project_root,
+            params.get('form_names_file'),
+        )
         
         # Step 3: Load target data (from context or file)
         target_data = context.get_data()
         
         if not target_data:
             # Fallback: try to load from file if not in context
-            if not target_file.exists():
+            if target_file is None or not target_file.exists():
                 raise FileNotFoundError(f"Target file not found: {target_file}")
             
             with open(target_file, 'r', encoding='utf-8') as f:
@@ -112,6 +128,19 @@ class EnrichNamesFromPokedexStep(BaseStep):
                     english_new = new_name.get('en', '')
                     
                     if english_old and english_old != english_new:
+                        explicit_form_name = form_name_lookup.get(
+                            self._normalize_form_name(english_old)
+                        )
+                        if explicit_form_name is not None:
+                            pokemon['name'] = dict(explicit_form_name)
+                            pokemon['base_name'] = new_name
+                            enriched_count += 1
+                            logger.debug(
+                                f"Enriched exact form #{dex_id:03d}: "
+                                f"{pokemon['name'].get('en')}"
+                            )
+                            continue
+
                         # It's a variant name - extract the form suffix (X, Y, etc.)
                         # For example: "Charizard X" -> base="Charizard", suffix=" X"
                         form_suffix = ""
@@ -123,10 +152,16 @@ class EnrichNamesFromPokedexStep(BaseStep):
                         for lang, base_name in new_name.items():
                             pokemon['name'][lang] = base_name + form_suffix
                         
-                        # Special case: Keep full English variant if it doesn't start with base
-                        # (e.g., "Rocket's Mewtwo" or other special names)
+                        # Fail closed for named forms/owners that cannot be
+                        # reconstructed as a suffix. Keeping their exact
+                        # English source name in every locale is less polished
+                        # than a translation, but never collapses distinct
+                        # subjects into the same visible base-species label.
                         if not english_old.startswith(english_new):
-                            pokemon['name']['en'] = english_old
+                            pokemon['name'] = {
+                                lang: english_old
+                                for lang in new_name
+                            }
                         
                         pokemon['base_name'] = new_name  # Store base name separately
                     else:
@@ -151,6 +186,69 @@ class EnrichNamesFromPokedexStep(BaseStep):
             logger.info(f"💾 Saved enriched data to {target_file}")
         
         return context
+
+    @staticmethod
+    def _normalize_form_name(value: object) -> str:
+        if not isinstance(value, str):
+            return ''
+        return ' '.join(value.casefold().split())
+
+    def _load_form_name_lookup(
+        self,
+        project_root: Path,
+        configured_path: object,
+    ) -> Dict[str, Dict[str, str]]:
+        """Load optional pinned, fully localized named-form labels."""
+        if configured_path is None:
+            return {}
+        if not isinstance(configured_path, str) or not configured_path:
+            raise ValueError("form_names_file must be a non-empty path")
+
+        path = Path(configured_path)
+        if not path.is_absolute():
+            path = project_root / path
+        try:
+            payload = json.loads(path.read_text(encoding='utf-8'))
+        except (OSError, json.JSONDecodeError) as error:
+            raise ValueError(
+                f"Could not load form name enrichments: {path}"
+            ) from error
+        if (
+            not isinstance(payload, dict)
+            or payload.get('schema_version') != 1
+            or not isinstance(payload.get('forms'), dict)
+        ):
+            raise ValueError("Unsupported form name enrichment schema")
+
+        lookup: Dict[str, Dict[str, str]] = {}
+        for raw_name, translations in payload['forms'].items():
+            normalized_name = self._normalize_form_name(raw_name)
+            if not normalized_name or normalized_name != raw_name:
+                raise ValueError(
+                    "Form name enrichment keys must be normalized"
+                )
+            if (
+                not isinstance(translations, dict)
+                or set(translations) != SUPPORTED_LANGUAGES
+                or any(
+                    not isinstance(value, str) or not value.strip()
+                    for value in translations.values()
+                )
+            ):
+                raise ValueError(
+                    f"Form name enrichment {raw_name!r} must define every "
+                    "supported language"
+                )
+            if (
+                self._normalize_form_name(translations['en'])
+                != normalized_name
+            ):
+                raise ValueError(
+                    f"Form name enrichment {raw_name!r} has a mismatched "
+                    "English name"
+                )
+            lookup[normalized_name] = dict(translations)
+        return lookup
     
     def _build_name_lookup(self, pokedex_data: Dict[str, Any]) -> Dict[int, Dict[str, str]]:
         """

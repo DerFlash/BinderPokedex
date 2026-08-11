@@ -2,12 +2,13 @@
 Enrich TCG Cards from Pokedex
 
 Enriches TCG card data by:
-1. Mapping dexId from TCGdex to pokemon_id in Pokedex
+1. Resolving canonical card identity from the English name with dexId fallback
 2. Adding multilingual names (DE, FR, ES, IT, JA, KO, ZH) from Pokedex
 3. Adding missing types from Pokedex if not in TCG data
 4. Classifying cards as pokemon/trainer/energy
 
-This uses dexId as the primary key - much more reliable than name matching!
+An exactly resolved name corrects inconsistent upstream IDs; otherwise a valid
+TCGdex dexId remains authoritative.
 """
 
 import logging
@@ -21,6 +22,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from steps.base import BaseStep, PipelineContext
+from steps.dex_id_utils import resolve_card_dex_id
 
 logger = logging.getLogger(__name__)
 
@@ -81,8 +83,9 @@ class EnrichTCGCardsFromPokedexStep(BaseStep):
         cards = tcg_data.get('cards', [])
         logger.info(f"📋 Processing {len(cards)} cards")
         
-        # Build Pokemon ID index (by dexId, not name!)
+        # Build canonical ID and English-name indexes from the Pokédex.
         pokemon_by_id = self._build_pokemon_id_index(pokedex)
+        pokemon_by_name = self._build_pokemon_name_index(pokemon_by_id)
         logger.info(f"📚 Indexed {len(pokemon_by_id)} Pokemon by National Dex ID")
         
         # Enrich cards
@@ -91,7 +94,11 @@ class EnrichTCGCardsFromPokedexStep(BaseStep):
         trainer_count = 0
         
         for card in cards:
-            enriched_card = self._enrich_card(card, pokemon_by_id)
+            enriched_card = self._enrich_card(
+                card,
+                pokemon_by_id,
+                pokemon_by_name,
+            )
             enriched_cards.append(enriched_card)
             
             if enriched_card.get('pokemon_id'):
@@ -112,8 +119,7 @@ class EnrichTCGCardsFromPokedexStep(BaseStep):
     def _build_pokemon_id_index(self, pokedex: Dict[str, Any]) -> Dict[int, Dict[str, Any]]:
         """
         Build index of Pokemon by National Dex ID.
-        
-        This is much more reliable than name matching!
+
         Maps dexId -> Pokemon data with multilingual names and types.
         """
         index = {}
@@ -153,6 +159,28 @@ class EnrichTCGCardsFromPokedexStep(BaseStep):
                         'pokemon': pokemon
                     }
         
+        return index
+
+    def _build_pokemon_name_index(
+        self,
+        pokemon_by_id: Dict[int, Dict[str, Any]],
+    ) -> Dict[str, int]:
+        """Build a case-insensitive English-name identity lookup."""
+        index = {}
+        for pokemon_id, pokemon_data in pokemon_by_id.items():
+            names = pokemon_data.get('names', {})
+            english_name = (
+                names.get('en')
+                if isinstance(names, dict)
+                else None
+            )
+            if (
+                type(pokemon_id) is int
+                and pokemon_id > 0
+                and isinstance(english_name, str)
+                and english_name.strip()
+            ):
+                index[english_name.strip().casefold()] = pokemon_id
         return index
     
     def _normalize_name(self, name: str) -> str:
@@ -227,11 +255,17 @@ class EnrichTCGCardsFromPokedexStep(BaseStep):
         
         return result
     
-    def _enrich_card(self, card: Dict[str, Any], pokemon_by_id: Dict[int, Dict[str, Any]]) -> Dict[str, Any]:
+    def _enrich_card(
+        self,
+        card: Dict[str, Any],
+        pokemon_by_id: Dict[int, Dict[str, Any]],
+        pokemon_by_name: Optional[Dict[str, int]] = None,
+    ) -> Dict[str, Any]:
         """
-        Enrich a single card with Pokemon data using dexId.
-        
-        This is much simpler and more reliable than name matching!
+        Enrich a card with canonical Pokédex identity and localized names.
+
+        The card name validates the upstream dexId when it resolves exactly;
+        otherwise a valid upstream ID remains the fallback.
         """
         enriched = card.copy()
         
@@ -271,14 +305,37 @@ class EnrichTCGCardsFromPokedexStep(BaseStep):
             
             return enriched
         
-        # Try to map using dexId from TCGdex
+        # Resolve the name first so a plausible but inconsistent API ID cannot
+        # bind a card to the wrong species.
         dex_ids = card.get('dexId', [])
-        
-        if dex_ids and len(dex_ids) > 0:
-            # Use first dexId (most cards have only one)
-            dex_id = dex_ids[0]
-            
+        if pokemon_by_name is None:
+            pokemon_by_name = self._build_pokemon_name_index(pokemon_by_id)
+        resolved_dex_id = resolve_card_dex_id(
+            card.get('name', ''),
+            dex_ids,
+            pokemon_by_name,
+        )
+
+        if resolved_dex_id is not None:
+            dex_id = resolved_dex_id
             if dex_id in pokemon_by_id:
+                supplied_dex_id = (
+                    dex_ids[0]
+                    if isinstance(dex_ids, list) and dex_ids
+                    else None
+                )
+                if supplied_dex_id != dex_id:
+                    enriched['dexId'] = [dex_id]
+                    logger.warning(
+                        "Corrected inconsistent TCGdex dexId for %r: #%s -> #%s",
+                        card.get('name', ''),
+                        (
+                            supplied_dex_id
+                            if supplied_dex_id is not None
+                            else "none"
+                        ),
+                        dex_id,
+                    )
                 pokemon_data = pokemon_by_id[dex_id]
                 
                 enriched['pokemon_id'] = pokemon_data['pokemon_id']

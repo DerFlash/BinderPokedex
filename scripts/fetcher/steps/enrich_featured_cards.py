@@ -20,16 +20,26 @@ This enrichment:
 The step can be skipped if featured elements already exist, unless forced.
 """
 
-import logging
 import json
-import requests
+import logging
+import sys
+from collections import Counter
 from pathlib import Path
 from typing import Dict, Any, List, Optional
-import sys
+
+import requests
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
+REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from steps.base import BaseStep, PipelineContext
+from scripts.poster_assets.poster_subject import (
+    poster_display_name_from_card,
+    poster_subject_from_card,
+    resolve_poster_subject,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -216,6 +226,9 @@ class EnrichFeaturedElementsStep(BaseStep):
                 - force: Force regeneration even if elements exist (default: False)
                 - cache_dir: Directory to cache images (default: data/section_artwork)
                 - target_file: Load data from file if not in context
+                - section_featured_card_ids: Optional mapping of section IDs to
+                  ordered TCG card IDs. Configured sections are regenerated
+                  deterministically even when featured elements already exist.
         
         Returns:
             Updated context with featured elements added to sections
@@ -248,14 +261,26 @@ class EnrichFeaturedElementsStep(BaseStep):
         cache_dir.mkdir(parents=True, exist_ok=True)
         
         sections = data['sections']
+        section_featured_card_ids = self._validate_section_featured_card_ids(
+            params.get('section_featured_card_ids'),
+            sections,
+            max_cards,
+        )
         total_sections = len(sections)
         processed = 0
         skipped = 0
         added = 0
         
         for section_id, section_data in sections.items():
+            configured_card_ids = section_featured_card_ids.get(section_id)
+
             # Check if featured elements already exist (unless forced)
-            if not force and 'featured_elements' in section_data and section_data['featured_elements']:
+            if (
+                configured_card_ids is None
+                and not force
+                and 'featured_elements' in section_data
+                and section_data['featured_elements']
+            ):
                 print(f"       ⏭️  Section '{section_id}': Featured elements already exist (use force=True to regenerate)")
                 skipped += 1
                 continue
@@ -281,8 +306,23 @@ class EnrichFeaturedElementsStep(BaseStep):
                     'serie': data.get('serie'),
                 }
             
-            # Identify featured Pokemon and their visual elements from the section
-            featured_elements = self._identify_and_fetch_featured_elements(cards, max_cards, cache_dir, set_info)
+            # Identify featured Pokemon and their visual elements from the section.
+            # An explicit card list is authoritative and preserves its order.
+            if configured_card_ids is not None:
+                featured_elements = self._fetch_configured_featured_elements(
+                    cards,
+                    configured_card_ids,
+                    cache_dir,
+                    set_info,
+                    section_id,
+                )
+            else:
+                featured_elements = self._identify_and_fetch_featured_elements(
+                    cards,
+                    max_cards,
+                    cache_dir,
+                    set_info,
+                )
             
             if not featured_elements:
                 print(f"       ⚠️  Section '{section_id}': No featured elements identified")
@@ -301,6 +341,152 @@ class EnrichFeaturedElementsStep(BaseStep):
             processed += 1
         
         return context
+
+    @staticmethod
+    def _validate_section_featured_card_ids(
+        configured_sections: Any,
+        sections: Dict[str, Any],
+        max_cards: int,
+    ) -> Dict[str, List[str]]:
+        """Validate an optional section-to-card-ID selection."""
+        if configured_sections is None:
+            return {}
+        if not isinstance(configured_sections, dict):
+            raise ValueError(
+                "section_featured_card_ids must be a mapping of section IDs "
+                "to ordered card ID lists"
+            )
+
+        unknown_sections = sorted(set(configured_sections) - set(sections))
+        if unknown_sections:
+            raise ValueError(
+                "section_featured_card_ids references unknown sections: "
+                + ", ".join(unknown_sections)
+            )
+
+        validated = {}
+        for section_id, card_ids in configured_sections.items():
+            if not isinstance(card_ids, list) or not card_ids:
+                raise ValueError(
+                    f"section_featured_card_ids.{section_id} must be a "
+                    "non-empty ordered list"
+                )
+            if any(
+                not isinstance(card_id, str) or not card_id
+                for card_id in card_ids
+            ):
+                raise ValueError(
+                    f"section_featured_card_ids.{section_id} contains an "
+                    "invalid card ID"
+                )
+            duplicates = sorted(
+                card_id
+                for card_id, count in Counter(card_ids).items()
+                if count > 1
+            )
+            if duplicates:
+                raise ValueError(
+                    f"section_featured_card_ids.{section_id} contains "
+                    f"duplicate card IDs: {', '.join(duplicates)}"
+                )
+            if len(card_ids) > max_cards:
+                raise ValueError(
+                    f"section_featured_card_ids.{section_id} configures "
+                    f"{len(card_ids)} cards, exceeding max_cards={max_cards}"
+                )
+            validated[section_id] = list(card_ids)
+
+        return validated
+
+    @staticmethod
+    def _card_identifier(
+        card: Dict[str, Any],
+        set_info: Optional[Dict[str, Any]] = None,
+    ) -> Optional[str]:
+        """Return the stable full TCG card ID for supported card formats."""
+        tcg_card = card.get('tcg_card')
+        if isinstance(tcg_card, dict) and isinstance(tcg_card.get('id'), str):
+            return tcg_card['id']
+
+        if isinstance(card.get('id'), str):
+            return card['id']
+
+        local_id = card.get('localId')
+        set_id = set_info.get('id') if set_info else None
+        if local_id is not None and set_id:
+            return f"{set_id}-{local_id}"
+
+        return None
+
+    def _fetch_configured_featured_elements(
+        self,
+        cards: List[Dict[str, Any]],
+        configured_card_ids: List[str],
+        cache_dir: Path,
+        set_info: Optional[Dict[str, Any]],
+        section_id: str,
+    ) -> List[Dict[str, Any]]:
+        """Fetch a section's explicitly configured cards in exact order."""
+        matches = {card_id: [] for card_id in configured_card_ids}
+        for card in cards:
+            card_id = self._card_identifier(card, set_info)
+            if card_id in matches:
+                matches[card_id].append(card)
+
+        missing = [
+            card_id
+            for card_id, matched_cards in matches.items()
+            if not matched_cards
+        ]
+        if missing:
+            raise ValueError(
+                f"Section '{section_id}' is missing configured featured card "
+                f"IDs: {', '.join(missing)}"
+            )
+
+        ambiguous = [
+            card_id
+            for card_id, matched_cards in matches.items()
+            if len(matched_cards) > 1
+        ]
+        if ambiguous:
+            raise ValueError(
+                f"Section '{section_id}' contains configured featured card "
+                f"IDs more than once: {', '.join(ambiguous)}"
+            )
+
+        featured_elements = []
+        for card_id in configured_card_ids:
+            card = matches[card_id][0]
+            pokemon_id = card.get('pokemon_id')
+            if not pokemon_id:
+                raise ValueError(
+                    f"Configured featured card '{card_id}' in section "
+                    f"'{section_id}' has no pokemon_id"
+                )
+
+            poster_subject = poster_subject_from_card(card)
+            # Resolve once here so invalid species/form mappings fail before a
+            # cover image is accepted into the generated aggregate.
+            resolve_poster_subject({
+                'pokemon_id': pokemon_id,
+                'poster_subject': poster_subject,
+            })
+            element_data = self._build_featured_element(
+                pokemon_id,
+                card,
+                poster_subject,
+                cache_dir,
+                set_info,
+            )
+            if element_data is None:
+                raise RuntimeError(
+                    f"Could not resolve featured card '{card_id}' in section "
+                    f"'{section_id}'"
+                )
+            featured_elements.append(element_data)
+
+        return featured_elements
     
     def _identify_and_fetch_featured_elements(self, cards: List[Dict], max_cards: int, cache_dir: Path, set_info: Optional[Dict] = None) -> List[Dict]:
         """
@@ -315,19 +501,38 @@ class EnrichFeaturedElementsStep(BaseStep):
         Returns:
             List of featured element data dicts
         """
-        # Extract unique Pokemon with their cards, sorted by priority
+        # Extract unique visual subjects with their cards, sorted by species
+        # priority.  Base and special forms of the same species may coexist.
         pokemon_cards = {}
+        conflicting_subjects: set[tuple[str, int]] = set()
         for card in cards:
             pokemon_id = card.get('pokemon_id')
             if not pokemon_id:
                 continue
-            
-            # Only keep the first (best) card for each Pokemon
-            if pokemon_id not in pokemon_cards:
+
+            poster_subject = poster_subject_from_card(card)
+            subject = resolve_poster_subject({
+                'pokemon_id': pokemon_id,
+                'poster_subject': poster_subject,
+            })
+            subject_key = subject.artwork_key()
+
+            # Only keep the first (best) card for each exact artwork subject.
+            # Flag inconsistent upstream mappings if such a subject would be
+            # selected instead of silently binding it to the wrong species.
+            existing = pokemon_cards.get(subject_key)
+            if existing is not None:
+                if existing['pokemon_id'] != pokemon_id:
+                    conflicting_subjects.add(subject_key)
+                continue
+
+            if subject_key not in pokemon_cards:
                 priority = FEATURED_POKEMON_PRIORITY.get(pokemon_id, 0)
-                pokemon_cards[pokemon_id] = {
+                pokemon_cards[subject_key] = {
                     'priority': priority,
-                    'card': card
+                    'pokemon_id': pokemon_id,
+                    'card': card,
+                    'poster_subject': poster_subject,
                 }
         
         # Sort by priority (highest first)
@@ -339,55 +544,50 @@ class EnrichFeaturedElementsStep(BaseStep):
         
         # Take top N and fetch their images
         featured_elements = []
-        for pokemon_id, data in sorted_pokemon[:max_cards]:
+        for subject_key, data in sorted_pokemon[:max_cards]:
+            if subject_key in conflicting_subjects:
+                raise ValueError(
+                    f"Poster subject {subject_key!r} is assigned to more than "
+                    "one Pokemon species in the source data"
+                )
+            pokemon_id = data['pokemon_id']
             card = data['card']
-            element_data = self._fetch_card_image_from_any_card(pokemon_id, card, cache_dir, set_info)
+            element_data = self._build_featured_element(
+                pokemon_id,
+                card,
+                data['poster_subject'],
+                cache_dir,
+                set_info,
+            )
             if element_data:
                 featured_elements.append(element_data)
         
         return featured_elements
-    
-    def _download_and_cache_image(self, image_url: str, cache_file: Path) -> bool:
-        """
-        Download and cache a card image.
-        
-        Args:
-            image_url: URL to download from
-            cache_file: Path to save the image
-        
-        Returns:
-            True if successful, False otherwise
-        """
-        try:
-            if cache_file.exists():
-                return True
-            
-            img_response = requests.get(image_url, timeout=10)
-            img_response.raise_for_status()
-            cache_file.write_bytes(img_response.content)
-            logger.info(f"Cached card image: {cache_file}")
-            return True
-        except Exception as e:
-            logger.error(f"Failed to download image from {image_url}: {e}")
-            return False
-    
-    def _get_series_from_set_id(self, set_id: str) -> str:
-        """
-        Determine series identifier from set_id.
-        
-        Args:
-            set_id: TCG set identifier (e.g., 'sv05', 'me01', 'ex1')
-        
-        Returns:
-            Series identifier for TCGdex URLs
-        """
-        # Check for known prefixes
-        for prefix, series in SERIES_MAPPING.items():
-            if set_id.startswith(prefix):
-                return series
-        
-        # Fallback
-        return 'base'
+
+    def _build_featured_element(
+        self,
+        pokemon_id: int,
+        card: Dict[str, Any],
+        poster_subject: Dict[str, Any],
+        cache_dir: Path,
+        set_info: Optional[Dict[str, Any]],
+    ) -> Optional[Dict[str, Any]]:
+        """Build the common featured-element shape for auto and curated cards."""
+        element_data = self._fetch_card_image_from_any_card(
+            pokemon_id,
+            card,
+            cache_dir,
+            set_info,
+        )
+        if element_data is None:
+            return None
+
+        element_data['poster_subject'] = poster_subject
+        element_data['pokemon_name'] = poster_display_name_from_card(
+            card,
+            element_data.get('pokemon_name'),
+        )
+        return element_data
     
     def _download_and_cache_image(self, image_url: str, cache_file: Path) -> bool:
         """
@@ -580,9 +780,15 @@ class EnrichFeaturedElementsStep(BaseStep):
             cache_file = cache_dir / f"pokemon_{pokemon_id}_{card_id.replace('/', '_')}.png"
             if not self._download_and_cache_image(image_url, cache_file):
                 logger.warning(f"Failed to cache TCG-Set card image for Pokemon {pokemon_id}, trying PokeAPI fallback")
-                # Fallback to PokeAPI artwork if TCG image not available
-                fallback_url = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokemon_id}.png"
-                fallback_cache = cache_dir / f"pokemon_{pokemon_id}_{card_id.replace('/', '_')}_fallback.png"
+                # Cover fallback uses the exact poster subject.  A special form
+                # must never be replaced with base-species artwork.
+                fallback_subject = poster_subject_from_card(card)
+                fallback_url = fallback_subject['image_url']
+                artwork_id = fallback_subject['official_artwork_id']
+                fallback_cache = cache_dir / (
+                    f"pokemon_{pokemon_id}_artwork_{artwork_id}_"
+                    f"{card_id.replace('/', '_')}_fallback.png"
+                )
                 if self._download_and_cache_image(fallback_url, fallback_cache):
                     cache_file = fallback_cache
                     image_url = fallback_url

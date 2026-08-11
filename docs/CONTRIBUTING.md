@@ -113,6 +113,18 @@ git push origin feature/description-of-your-changes
 ### 5. Wait for Review
 Comments and improvement suggestions are part of the process. Accept them constructively!
 
+### Automated Release Rehearsal
+
+Every pull request runs the complete release build: all scope data is fetched,
+all enabled promoted posters are validated, every PDF and language ZIP is
+generated, and the release manifest is checked. The workflow has read-only
+repository permissions and stops after uploading a short-lived Actions
+artifact. It never creates a tag or GitHub Release.
+
+The tagged release uses the same candidate build, so a successful PR check
+proves that the commit can produce the complete release payload. See
+[Release Workflow](RELEASE_WORKFLOW.md).
+
 ---
 
 ## 📋 PR Description Template

@@ -200,6 +200,24 @@ class TestCardEnrichment:
                     'fr': 'Florizarre'
                 },
                 'types': ['Grass']
+            },
+            351: {
+                'pokemon_id': 351,
+                'names': {
+                    'de': 'Formeo',
+                    'en': 'Castform',
+                    'fr': 'Morphéo'
+                },
+                'types': ['Normal']
+            },
+            359: {
+                'pokemon_id': 359,
+                'names': {
+                    'de': 'Absol',
+                    'en': 'Absol',
+                    'fr': 'Absol'
+                },
+                'types': ['Darkness']
             }
         }
     
@@ -242,6 +260,41 @@ class TestCardEnrichment:
         assert enriched['name_de'] == 'Bisaflor'
         assert enriched['name_en'] == 'Venusaur'
         assert enriched['name_fr'] == 'Florizarre'
+        assert enriched['dexId'] == [3]
+
+    def test_enrich_card_corrects_inconsistent_tcgdex_dexid_from_name(self):
+        """The ME01 Absol card must not inherit Castform's identity."""
+        card = {
+            'id': 'me01-086',
+            'localId': '086',
+            'name': 'Mega Absol ex',
+            'category': 'Pokemon',
+            'dexId': [351],
+            'types': ['Darkness']
+        }
+
+        enriched = self.step._enrich_card(card, self.pokemon_by_id)
+
+        assert card['dexId'] == [351]
+        assert enriched['dexId'] == [359]
+        assert enriched['pokemon_id'] == 359
+        assert enriched['name_en'] == 'Absol'
+        assert enriched['name_de'] == 'Absol'
+
+    def test_enrich_card_keeps_valid_dexid_when_name_is_not_canonical(self):
+        card = {
+            'id': 'promo-001',
+            'name': 'Bulbasaur with Grey Felt Hat',
+            'category': 'Pokemon',
+            'dexId': [1],
+            'types': ['Grass'],
+        }
+
+        enriched = self.step._enrich_card(card, self.pokemon_by_id)
+
+        assert enriched['dexId'] == [1]
+        assert enriched['pokemon_id'] == 1
+        assert enriched['name_en'] == 'Bulbasaur'
     
     def test_enrich_trainer_card(self):
         """Test enrichment of trainer card."""

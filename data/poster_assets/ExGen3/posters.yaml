@@ -1,0 +1,17 @@
+schema_version: 1
+scope: ExGen3
+posters:
+- id: normal
+  section_id: normal
+  manifest: sections/normal/poster.yaml
+  pdf:
+    enabled: true
+    artwork_file: poster-flux2-artwork.png
+    insertion: after_section_cover
+- id: mega
+  section_id: mega
+  manifest: sections/mega/poster.yaml
+  pdf:
+    enabled: true
+    artwork_file: poster-flux2-artwork.png
+    insertion: after_section_cover

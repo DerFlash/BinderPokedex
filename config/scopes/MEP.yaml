@@ -33,6 +33,11 @@ pipeline:
     max_cards: 3
     force: false
     cache_dir: data/section_artwork
+    section_featured_card_ids:
+      all:
+      - mep-015
+      - mep-037
+      - mep-038
 - step: save_output
   params:
     output_file: data/output/MEP.json

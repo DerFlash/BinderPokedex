@@ -1,0 +1,10 @@
+schema_version: 1
+scope: ExGen1
+posters:
+- id: normal
+  section_id: normal
+  manifest: sections/normal/poster.yaml
+  pdf:
+    enabled: true
+    artwork_file: poster-flux2-artwork.png
+    insertion: after_section_cover

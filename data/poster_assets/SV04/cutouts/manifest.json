@@ -1,0 +1,63 @@
+{
+  "scope": "SV04",
+  "source_scope": "SV04",
+  "poster_id": "SV04",
+  "section_id": null,
+  "source": "pokeapi_official_artwork",
+  "generated_at": "2026-08-06T17:44:03.872591+00:00",
+  "layout": {
+    "name": "standard_3x3",
+    "columns": 3,
+    "rows": 3
+  },
+  "items": [
+    {
+      "pokemon_id": 909,
+      "name_en": "Fuecoco",
+      "name_de": "Krokel",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/909.png",
+      "file": "pokemon_909_fuecoco.png",
+      "mode": "RGBA",
+      "width": 475,
+      "height": 475,
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "transparent_pixels": 143718,
+      "opaque_pixels": 83663,
+      "validated_alpha": true,
+      "errors": []
+    },
+    {
+      "pokemon_id": 484,
+      "name_en": "Palkia",
+      "name_de": "Palkia",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/484.png",
+      "file": "pokemon_484_palkia.png",
+      "mode": "RGBA",
+      "width": 475,
+      "height": 475,
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "transparent_pixels": 137238,
+      "opaque_pixels": 92458,
+      "validated_alpha": true,
+      "errors": []
+    },
+    {
+      "pokemon_id": 150,
+      "name_en": "Mewtwo",
+      "name_de": "Mewtu",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png",
+      "file": "pokemon_150_mewtwo.png",
+      "mode": "RGBA",
+      "width": 475,
+      "height": 475,
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "transparent_pixels": 173683,
+      "opaque_pixels": 56414,
+      "validated_alpha": true,
+      "errors": []
+    }
+  ]
+}

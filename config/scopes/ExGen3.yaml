@@ -1,5 +1,5 @@
 scope: ExGen3
-description: Scarlet & Violet ex series from TCGdex API - one card per Pokemon
+description: Modern Pokémon ex cards from TCGdex - one representative per exact visual form
 pipeline:
 - step: enrich_metadata
   params:
@@ -19,6 +19,7 @@ pipeline:
 - step: enrich_names_from_pokedex
   params:
     pokedex_file: data/output/Pokedex.json
+    form_names_file: enrichments/card_form_names.json
 - step: enrich_section_descriptions
   params:
     mode: variant
@@ -29,6 +30,15 @@ pipeline:
     max_cards: 3
     force: false
     cache_dir: data/section_artwork
+    section_featured_card_ids:
+      normal:
+        - sv01-125
+        - me02.5-057
+        - sv01-081
+      mega:
+        - me01-100
+        - me02.5-267
+        - me02.5-113
 - step: save_output
   params:
     output_file: data/output/ExGen3.json

@@ -4,10 +4,11 @@ Quick reference for generating BinderPokedex PDFs using the scope-based system.
 
 ## 📦 Available Scopes
 
-**25 Total Scopes:**
+**30 Total Scopes:**
 - **Pokedex**: Complete National Pokédex (1025 Pokémon)
-- **ExGen1-3**: TCG EX variant collections (94/324/366 cards)
-- **ME01-MEP**: Pokémon TCG Scarlet & Violet - Mew series (4 sets)
+- **Base1-Base3**: Base Set, Jungle, and Fossil (3 sets)
+- **ExGen1-3**: TCG EX variant collections generated from their current source snapshots
+- **ME01-MEP**: Pokémon TCG Mega Evolution era (6 sets)
 - **SV01-SVP**: Pokémon TCG Scarlet & Violet main series (17 sets)
 
 List all available scopes:
@@ -44,13 +45,67 @@ python scripts/pdf/generate_pdf.py --scope SV01
 Use `--scope all` to generate everything:
 
 ```bash
-# Generate all 25 scopes in all 9 languages
+# Generate all 30 scopes in every available language
 python scripts/pdf/generate_pdf.py --scope all
 ```
 
-**Output:** ~225 PDFs (25 scopes × 9 languages, where available)
-**Duration:** 10-20 minutes (with cached data)
-**Size:** ~377 MB total
+The current release inventory produces 167 PDFs across nine language archives;
+the exact count, duration, and size depend on each scope's available languages
+and the fetched source data. `release-manifest.json` is authoritative for a
+completed release-candidate build.
+
+### Optional poster pages
+
+The normal PDF command automatically includes accepted local poster artwork.
+Individual scopes opt in with `pdf.enabled: true` in
+`data/poster_assets/<scope>/poster.yaml`. Aggregate scopes use
+`data/poster_assets/<scope>/posters.yaml` to bind isolated leaf manifests to
+section IDs; each enabled page replaces its matching section cover. Scopes and
+bindings without that opt-in continue through the ordinary cover path. Poster
+generation itself is a separate reviewed workflow; the PDF command only
+consumes promoted local artwork and does not start ComfyUI.
+
+The default poster presentation remains nine cuttable physical cards. To keep
+the same localized 3×3 poster as one continuous 200.5 × 276.7 mm image centered
+on A4, without cutting guides:
+
+```bash
+python scripts/pdf/generate_pdf.py \
+  --scope Base1 \
+  --language de \
+  --poster-page-mode full-page
+```
+
+This writes a separate file such as
+`output/de/Base1_DE_POSTER_FULL_PAGE.pdf`. Scopes without an enabled promoted
+poster continue through the existing cover and card-page path.
+
+The normal page order is poster, then card pages. The poster carries the
+section's semantic title/subtitle, count, description or release date, and
+project identity. If no enabled promoted poster exists, the page order remains
+cover, then card pages.
+
+Skip the poster for one build without changing the scope manifest:
+
+```bash
+python scripts/pdf/generate_pdf.py \
+  --scope Base1 \
+  --language de \
+  --skip-poster
+```
+
+The skipped build uses a separate filename such as
+`output/de/Base1_DE_NO_POSTER.pdf`, so it cannot overwrite
+`output/de/Base1_DE.pdf`. `--skip-poster` bypasses all poster-index, manifest,
+and artwork loading—including every section poster of an aggregate scope—and
+can be combined with `--test` and `--skip-images`.
+It is not combined with `--poster-page-mode full-page`, because no poster is
+loaded in a skipped build.
+
+Poster artwork is an explicit optional post-fetch workflow. See
+[Poster Artwork Workflow](POSTER_WORKFLOW.md) for initialization, the
+set-specific scene catalog, local ComfyUI generation, review, promotion, and
+PDF activation.
 
 ## Supported Languages
 
@@ -107,7 +162,7 @@ output/
 | Pokedex | Pokédex | 1025 | ~60 MB |
 | ExGen1 | TCG | 94 | ~2 MB |
 | ExGen2 | TCG | 324 | ~5 MB |
-| ExGen3 | TCG | 366 | ~6 MB |
+| ExGen3 | TCG | Dynamic, exact forms | ~6 MB |
 | ME01 | TCG | 165 | ~2 MB |
 | SV01 | TCG | 198 | ~2.5 MB |
 
@@ -250,4 +305,3 @@ python --version
 ---
 
 **[← Back to README](../README.md)** | **[Scripts Documentation](../scripts/README.md)**
-

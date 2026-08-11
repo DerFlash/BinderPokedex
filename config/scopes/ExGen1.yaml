@@ -29,6 +29,11 @@ pipeline:
     max_cards: 3
     force: false
     cache_dir: data/section_artwork
+    section_featured_card_ids:
+      normal:
+      - ex6-112
+      - ex6-104
+      - ex10-105
 - step: save_output
   params:
     output_file: data/output/ExGen1.json

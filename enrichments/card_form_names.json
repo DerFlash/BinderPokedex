@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "forms": {
+    "alolan exeggutor": {
+      "de": "Alola-Kokowei",
+      "en": "Alolan Exeggutor",
+      "fr": "Noadkoko d’Alola",
+      "es": "Exeggutor de Alola",
+      "it": "Exeggutor di Alola",
+      "ja": "ナッシー（アローラのすがた）",
+      "ko": "나시(알로라의 모습)",
+      "zh_hans": "椰蛋树（阿罗拉的样子）",
+      "zh_hant": "椰蛋樹（阿羅拉的樣子）"
+    },
+    "black kyurem": {
+      "de": "Schwarzes Kyurem",
+      "en": "Black Kyurem",
+      "fr": "Kyurem Noir",
+      "es": "Kyurem Negro",
+      "it": "Kyurem Nero",
+      "ja": "ブラックキュレム",
+      "ko": "블랙큐레무",
+      "zh_hans": "暗黑酋雷姆",
+      "zh_hant": "闇黑酋雷姆"
+    },
+    "bloodmoon ursaluna": {
+      "de": "Blutmond-Ursaluna",
+      "en": "Bloodmoon Ursaluna",
+      "fr": "Ursaking Lune Vermeille",
+      "es": "Ursaluna Luna Carmesí",
+      "it": "Ursaluna Luna Cremisi",
+      "ja": "ガチグマ（アカツキ）",
+      "ko": "다투곰(붉은 달)",
+      "zh_hans": "月月熊（赫月）",
+      "zh_hant": "月月熊（赫月）"
+    },
+    "cornerstone mask ogerpon": {
+      "de": "Fundamentmaske-Ogerpon",
+      "en": "Cornerstone Mask Ogerpon",
+      "fr": "Ogerpon Masque de la Pierre",
+      "es": "Ogerpon Máscara Cimiento",
+      "it": "Ogerpon Maschera Fondamenta",
+      "ja": "オーガポン（いしずえのめん）",
+      "ko": "오거폰(주춧돌의 가면)",
+      "zh_hans": "厄诡椪（础石面具）",
+      "zh_hant": "厄鬼椪（礎石面具）"
+    },
+    "hearthflame mask ogerpon": {
+      "de": "Ofenmaske-Ogerpon",
+      "en": "Hearthflame Mask Ogerpon",
+      "fr": "Ogerpon Masque du Fourneau",
+      "es": "Ogerpon Máscara Horno",
+      "it": "Ogerpon Maschera Focolare",
+      "ja": "オーガポン（かまどのめん）",
+      "ko": "오거폰(화덕의 가면)",
+      "zh_hans": "厄诡椪（火灶面具）",
+      "zh_hant": "厄鬼椪（火灶面具）"
+    },
+    "teal mask ogerpon": {
+      "de": "Türkisgrüne-Maske-Ogerpon",
+      "en": "Teal Mask Ogerpon",
+      "fr": "Ogerpon Masque Turquoise",
+      "es": "Ogerpon Máscara Turquesa",
+      "it": "Ogerpon Maschera Turchese",
+      "ja": "オーガポン（みどりのめん）",
+      "ko": "오거폰(벽록의 가면)",
+      "zh_hans": "厄诡椪（碧草面具）",
+      "zh_hant": "厄鬼椪（碧草面具）"
+    },
+    "wellspring mask ogerpon": {
+      "de": "Brunnenmaske-Ogerpon",
+      "en": "Wellspring Mask Ogerpon",
+      "fr": "Ogerpon Masque du Puits",
+      "es": "Ogerpon Máscara Fuente",
+      "it": "Ogerpon Maschera Pozzo",
+      "ja": "オーガポン（いどのめん）",
+      "ko": "오거폰(우물의 가면)",
+      "zh_hans": "厄诡椪（水井面具）",
+      "zh_hant": "厄鬼椪（水井面具）"
+    }
+  }
+}

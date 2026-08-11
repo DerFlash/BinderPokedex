@@ -1,0 +1,93 @@
+name: Build Release Candidate
+
+on:
+  workflow_call:
+    inputs:
+      release_tag:
+        description: Version label recorded in the release manifest
+        required: true
+        type: string
+      release_notes_tag:
+        description: Versioned release-news configuration exercised by the build
+        required: true
+        type: string
+      artifact_retention_days:
+        description: Retention period for the assembled release candidate
+        required: false
+        default: 3
+        type: number
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build all release assets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install Noto Sans CJK fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-noto-cjk fonts-wqy-zenhei fonts-wqy-microhei
+          fc-cache -fv
+
+      - name: Fetch all scope data
+        run: python scripts/fetcher/fetch.py --scope all
+
+      - name: Validate promoted posters
+        run: python scripts/poster_assets/validate_promoted_poster.py --all-enabled
+
+      - name: Generate all PDFs
+        run: python scripts/pdf/generate_pdf.py --scope all
+
+      - name: Create language-specific PDF archives
+        working-directory: output
+        run: |
+          for lang in de en fr es it ja ko zh_hans zh_hant; do
+            test -d "$lang"
+            zip -r "../binder-pokedex-${lang}.zip" "$lang" -x ".*"
+          done
+
+      - name: Build release manifest
+        run: |
+          python scripts/release/build_manifest.py \
+            --tag "${{ inputs.release_tag }}" \
+            --release-notes-tag "${{ inputs.release_notes_tag }}" \
+            --output release-manifest.json
+
+      - name: Render release notes
+        run: |
+          python scripts/release/render_release_notes.py \
+            --manifest release-manifest.json \
+            --output release-notes.md
+
+      - name: Verify release candidate
+        run: |
+          python scripts/release/verify_release_candidate.py \
+            --manifest release-manifest.json \
+            --release-notes release-notes.md
+
+      - name: Upload release candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-candidate
+          path: |
+            binder-pokedex-*.zip
+            release-manifest.json
+            release-notes.md
+          if-no-files-found: error
+          retention-days: ${{ inputs.artifact_retention_days }}
+          compression-level: 0

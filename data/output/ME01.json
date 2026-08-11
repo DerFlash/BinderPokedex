@@ -1758,22 +1758,22 @@
         {
           "localId": "086",
           "name": {
-            "de": "Formeo",
-            "en": "Castform",
-            "fr": "Morphéo",
-            "es": "Castform",
-            "it": "Castform",
-            "ja": "ポワルン",
-            "ko": "캐스퐁",
-            "zh_hans": "飘浮泡泡",
-            "zh_hant": "飄浮泡泡"
+            "de": "Absol",
+            "en": "Absol",
+            "fr": "Absol",
+            "es": "Absol",
+            "it": "Absol",
+            "ja": "アブソル",
+            "ko": "앱솔",
+            "zh_hans": "阿勃梭鲁",
+            "zh_hant": "阿勃梭魯"
           },
           "type": "pokemon",
-          "pokemon_id": 351,
+          "pokemon_id": 359,
           "types": [
             "Darkness"
           ],
-          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/351.png",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10057.png",
           "suffix": "[EX_NEW]",
           "prefix": "Mega"
         },
@@ -3689,7 +3689,14 @@
           "image_url": "https://assets.tcgdex.net/en/me/me01/001/high.png",
           "local_image_path": "data/section_artwork/pokemon_1_me01-001.png",
           "rarity": null,
-          "hp": null
+          "hp": null,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 1,
+            "official_artwork_id": 1,
+            "subject_key": "pokeapi:official-artwork:1",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
+          }
         },
         {
           "pokemon_id": 152,
@@ -3699,7 +3706,14 @@
           "image_url": "https://assets.tcgdex.net/en/me/me01/008/high.png",
           "local_image_path": "data/section_artwork/pokemon_152_me01-008.png",
           "rarity": null,
-          "hp": null
+          "hp": null,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 152,
+            "official_artwork_id": 152,
+            "subject_key": "pokeapi:official-artwork:152",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/152.png"
+          }
         },
         {
           "pokemon_id": 251,
@@ -3709,7 +3723,14 @@
           "image_url": "https://assets.tcgdex.net/en/me/me01/012/high.png",
           "local_image_path": "data/section_artwork/pokemon_251_me01-012.png",
           "rarity": null,
-          "hp": null
+          "hp": null,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 251,
+            "official_artwork_id": 251,
+            "subject_key": "pokeapi:official-artwork:251",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/251.png"
+          }
         }
       ]
     }

@@ -88,6 +88,30 @@ class TestCoverRenderer:
         assert renderer.style is not None
         assert isinstance(renderer.style, CoverStyle)
 
+    def test_collection_count_uses_scope_unit(self):
+        renderer = CoverRenderer(language='de')
+
+        assert renderer._collection_count_text(102, {'type': 'tcg_set'}) == (
+            '102 Karten in dieser Sammlung'
+        )
+        assert renderer._collection_count_text(151, {'type': 'pokedex'}) == (
+            '151 Pokémon in dieser Sammlung'
+        )
+
+    @pytest.mark.parametrize(
+        'language',
+        ('de', 'en', 'fr', 'es', 'it', 'ja', 'ko', 'zh_hans', 'zh_hant'),
+    )
+    def test_card_collection_count_exists_in_every_pdf_language(self, language):
+        text = CoverRenderer(language=language)._collection_count_text(
+            7,
+            {'type': 'tcg_set'},
+        )
+
+        assert '7' in text
+        assert '{{count}}' not in text
+        assert text != 'card_count_text'
+
 
 class TestPageStyle:
     """Test PageStyle constants."""

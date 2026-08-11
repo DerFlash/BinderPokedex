@@ -13,7 +13,7 @@ The TCGdex API returns empty dexId[] arrays for certain card types:
 """
 
 import re
-from typing import Optional
+from typing import Any, Mapping, Optional
 
 
 def extract_base_pokemon_name(card_name: str) -> Optional[str]:
@@ -66,6 +66,58 @@ def extract_base_pokemon_name(card_name: str) -> Optional[str]:
     
     # Pattern 5: Regular Pokemon - return as is
     return re.sub(r'\s+[XY]$', '', name).strip()
+
+
+def build_pokedex_name_lookup(
+    pokedex_data: Mapping[str, Any],
+) -> dict[str, int]:
+    """Build one case-insensitive English-name to National-Dex lookup."""
+    lookup: dict[str, int] = {}
+    sections = pokedex_data.get("sections", {})
+    if not isinstance(sections, Mapping):
+        return lookup
+    for section in sections.values():
+        if not isinstance(section, Mapping):
+            continue
+        cards = section.get("cards", [])
+        if not isinstance(cards, list):
+            continue
+        for pokemon in cards:
+            if not isinstance(pokemon, Mapping):
+                continue
+            pokemon_id = pokemon.get("pokemon_id")
+            names = pokemon.get("name")
+            english_name = (
+                names.get("en")
+                if isinstance(names, Mapping)
+                else None
+            )
+            if (
+                type(pokemon_id) is int
+                and pokemon_id > 0
+                and isinstance(english_name, str)
+                and english_name.strip()
+            ):
+                lookup[english_name.strip().casefold()] = pokemon_id
+    return lookup
+
+
+def resolve_card_dex_id(
+    card_name: str,
+    dex_ids: object,
+    name_lookup: Mapping[str, int],
+) -> Optional[int]:
+    """Prefer the card-name identity over a missing or inconsistent API ID."""
+    base_name = extract_base_pokemon_name(card_name)
+    if base_name:
+        resolved = name_lookup.get(base_name.casefold())
+        if type(resolved) is int and resolved > 0:
+            return resolved
+    if isinstance(dex_ids, list) and dex_ids:
+        provided = dex_ids[0]
+        if type(provided) is int and provided > 0:
+            return provided
+    return None
 
 
 def identify_card_pattern(card_name: str) -> str:

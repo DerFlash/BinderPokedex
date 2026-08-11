@@ -6,26 +6,26 @@
       "section_id": "normal",
       "color_hex": "#3D5A80",
       "title": {
-        "de": "Pokémon EX - Generation 2",
-        "en": "Pokémon EX - Generation 2",
-        "fr": "Pokémon EX - Génération 2",
-        "es": "Pokémon EX - Generación 2",
-        "it": "Pokémon EX - Generazione 2",
-        "ja": "ポケモンEX - ジェネレーション2",
-        "ko": "포켓몬 EX - 세대 2",
-        "zh_hans": "宝可梦EX - 第二代",
-        "zh_hant": "寶可夢EX - 第二代"
+        "de": "Pokémon [EX]",
+        "en": "Pokémon [EX]",
+        "fr": "Pokémon [EX]",
+        "es": "Pokémon [EX]",
+        "it": "Pokémon [EX]",
+        "ja": "ポケモン [EX]",
+        "ko": "포켓몬 [EX]",
+        "zh_hans": "宝可梦 [EX]",
+        "zh_hant": "寶可夢 [EX]"
       },
       "subtitle": {
-        "de": "[EX] Serie (ab Next Destinies)",
-        "en": "[EX] Series (from Next Destinies)",
-        "fr": "Série [EX] (à partir de Next Destinies)",
-        "es": "Serie [EX] (de Next Destinies)",
-        "it": "Serie [EX] (da Next Destinies)",
-        "ja": "[EX]シリーズ（ネクスト・デスティニーズより）",
-        "ko": "[EX] 시리즈 (넥스트 데스티니즈부터)",
-        "zh_hans": "[EX]系列（来自下一个命运）",
-        "zh_hant": "[EX]系列（來自下一個命運）"
+        "de": "Generation 2",
+        "en": "Generation 2",
+        "fr": "Génération 2",
+        "es": "Generación 2",
+        "it": "Generazione 2",
+        "ja": "ジェネレーション2",
+        "ko": "2세대",
+        "zh_hans": "第二代",
+        "zh_hant": "第二代"
       },
       "suffix": "",
       "cards": [
@@ -3603,7 +3603,14 @@
           "image_url": "https://assets.tcgdex.net/en/bw/bw4/54/high.png",
           "local_image_path": "data/section_artwork/pokemon_150_bw4-54.png",
           "rarity": "Rare",
-          "hp": 170
+          "hp": 170,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 150,
+            "official_artwork_id": 150,
+            "subject_key": "pokeapi:official-artwork:150",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png"
+          }
         },
         {
           "pokemon_id": 151,
@@ -3613,7 +3620,14 @@
           "image_url": "https://assets.tcgdex.net/en/bw/bw6/46/high.png",
           "local_image_path": "data/section_artwork/pokemon_151_bw6-46.png",
           "rarity": "Rare",
-          "hp": 120
+          "hp": 120,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 151,
+            "official_artwork_id": 151,
+            "subject_key": "pokeapi:official-artwork:151",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/151.png"
+          }
         },
         {
           "pokemon_id": 249,
@@ -3623,7 +3637,14 @@
           "image_url": "https://assets.tcgdex.net/en/xy/xy7/68/high.png",
           "local_image_path": "data/section_artwork/pokemon_249_xy7-68.png",
           "rarity": "Ultra Rare",
-          "hp": 170
+          "hp": 170,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 249,
+            "official_artwork_id": 249,
+            "subject_key": "pokeapi:official-artwork:249",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/249.png"
+          }
         }
       ]
     },
@@ -3631,15 +3652,15 @@
       "section_id": "mega",
       "color_hex": "#7B2CBF",
       "title": {
-        "de": "[M] Pokémon [EX]",
-        "en": "[M] Pokémon [EX]",
-        "fr": "[M] Pokémon [EX]",
-        "es": "[M] Pokémon [EX]",
-        "it": "[M] Pokémon [EX]",
-        "ja": "[M] ポケモン [EX]",
-        "ko": "[M] 포켓몬 [EX]",
-        "zh_hans": "[M] 宝可梦 [EX]",
-        "zh_hant": "[M] 寶可夢 [EX]"
+        "de": "Mega-Pokémon [EX]",
+        "en": "Mega Pokémon [EX]",
+        "fr": "Méga-Pokémon [EX]",
+        "es": "Mega-Pokémon [EX]",
+        "it": "Mega-Pokémon [EX]",
+        "ja": "メガポケモン [EX]",
+        "ko": "메가 포켓몬 [EX]",
+        "zh_hans": "超级宝可梦 [EX]",
+        "zh_hant": "超級寶可夢 [EX]"
       },
       "subtitle": {
         "de": "Mega-Entwicklung",
@@ -3694,7 +3715,7 @@
         {
           "pokemon_id": 6,
           "types": [
-            "Fire"
+            "Dragon"
           ],
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10034.png",
           "name": {
@@ -3710,7 +3731,45 @@
           },
           "prefix": "[M]",
           "suffix": "[EX]",
-          "form_code": "#006_EX2_MEG",
+          "form_code": "#006_EX2_MEG_X",
+          "tcg_card": {
+            "id": "xy2-69",
+            "localId": "69",
+            "set": {
+              "cardCount": {
+                "official": 106,
+                "total": 110
+              },
+              "id": "xy2",
+              "logo": "https://assets.tcgdex.net/en/xy/xy2/logo",
+              "name": "Flashfire",
+              "symbol": "https://assets.tcgdex.net/univ/xy/xy2/symbol"
+            },
+            "hp": 230,
+            "rarity": "Ultra Rare"
+          },
+          "variant_form": "x"
+        },
+        {
+          "pokemon_id": 6,
+          "types": [
+            "Fire"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10035.png",
+          "name": {
+            "ko": "리자몽",
+            "zh_hant": "噴火龍",
+            "fr": "Dracaufeu",
+            "de": "Glurak",
+            "es": "Charizard",
+            "it": "Charizard",
+            "en": "Charizard",
+            "ja": "リザードン",
+            "zh_hans": "喷火龙"
+          },
+          "prefix": "[M]",
+          "suffix": "[EX]",
+          "form_code": "#006_EX2_MEG_Y",
           "tcg_card": {
             "id": "xy12-13",
             "localId": "13",
@@ -3726,7 +3785,8 @@
             },
             "hp": 220,
             "rarity": "Ultra Rare"
-          }
+          },
+          "variant_form": "y"
         },
         {
           "pokemon_id": 9,
@@ -4006,7 +4066,7 @@
           },
           "prefix": "[M]",
           "suffix": "[EX]",
-          "form_code": "#150_EX2_MEG",
+          "form_code": "#150_EX2_MEG_X",
           "tcg_card": {
             "id": "xy8-63",
             "localId": "63",
@@ -4022,7 +4082,46 @@
             },
             "hp": 230,
             "rarity": "Ultra Rare"
-          }
+          },
+          "variant_form": "x"
+        },
+        {
+          "pokemon_id": 150,
+          "types": [
+            "Psychic"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10044.png",
+          "name": {
+            "ko": "뮤츠",
+            "zh_hant": "超夢",
+            "fr": "Mewtwo",
+            "de": "Mewtu",
+            "es": "Mewtwo",
+            "it": "Mewtwo",
+            "en": "Mewtwo",
+            "ja": "ミュウツー",
+            "zh_hans": "超梦"
+          },
+          "prefix": "[M]",
+          "suffix": "[EX]",
+          "form_code": "#150_EX2_MEG_Y",
+          "tcg_card": {
+            "id": "xy8-64",
+            "localId": "64",
+            "set": {
+              "cardCount": {
+                "official": 162,
+                "total": 165
+              },
+              "id": "xy8",
+              "logo": "https://assets.tcgdex.net/en/xy/xy8/logo",
+              "name": "BREAKthrough",
+              "symbol": "https://assets.tcgdex.net/univ/xy/xy8/symbol"
+            },
+            "hp": 210,
+            "rarity": "Ultra Rare"
+          },
+          "variant_form": "y"
         },
         {
           "pokemon_id": 181,
@@ -4669,33 +4768,54 @@
       "featured_elements": [
         {
           "pokemon_id": 150,
-          "pokemon_name": "Mewtwo",
+          "pokemon_name": "Mega Mewtwo X",
           "card_id": "xy8-63",
           "set_name": "BREAKthrough",
           "image_url": "https://assets.tcgdex.net/en/xy/xy8/63/high.png",
           "local_image_path": "data/section_artwork/pokemon_150_xy8-63.png",
           "rarity": "Ultra Rare",
-          "hp": 230
+          "hp": 230,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 150,
+            "official_artwork_id": 10043,
+            "subject_key": "pokeapi:official-artwork:10043",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10043.png"
+          }
         },
         {
           "pokemon_id": 384,
-          "pokemon_name": "Rayquaza",
+          "pokemon_name": "Mega Rayquaza",
           "card_id": "xy7-98",
           "set_name": "Ancient Origins",
           "image_url": "https://assets.tcgdex.net/en/xy/xy7/98/high.png",
           "local_image_path": "data/section_artwork/pokemon_384_xy7-98.png",
           "rarity": "Secret Rare",
-          "hp": 220
+          "hp": 220,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 384,
+            "official_artwork_id": 10079,
+            "subject_key": "pokeapi:official-artwork:10079",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10079.png"
+          }
         },
         {
           "pokemon_id": 381,
-          "pokemon_name": "Latios",
+          "pokemon_name": "Mega Latios",
           "card_id": "xy6-59",
           "set_name": "Roaring Skies",
           "image_url": "https://assets.tcgdex.net/en/xy/xy6/59/high.png",
           "local_image_path": "data/section_artwork/pokemon_381_xy6-59.png",
           "rarity": "Ultra Rare",
-          "hp": 220
+          "hp": 220,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 381,
+            "official_artwork_id": 10063,
+            "subject_key": "pokeapi:official-artwork:10063",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10063.png"
+          }
         }
       ]
     },
@@ -4815,23 +4935,37 @@
       "featured_elements": [
         {
           "pokemon_id": 382,
-          "pokemon_name": "Kyogre",
+          "pokemon_name": "Primal Kyogre",
           "card_id": "xy7-96",
           "set_name": "Ancient Origins",
           "image_url": "https://assets.tcgdex.net/en/xy/xy7/96/high.png",
           "local_image_path": "data/section_artwork/pokemon_382_xy7-96.png",
           "rarity": "Secret Rare",
-          "hp": 240
+          "hp": 240,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 382,
+            "official_artwork_id": 10077,
+            "subject_key": "pokeapi:official-artwork:10077",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10077.png"
+          }
         },
         {
           "pokemon_id": 383,
-          "pokemon_name": "Groudon",
+          "pokemon_name": "Primal Groudon",
           "card_id": "xy7-97",
           "set_name": "Ancient Origins",
           "image_url": "https://assets.tcgdex.net/en/xy/xy7/97/high.png",
           "local_image_path": "data/section_artwork/pokemon_383_xy7-97.png",
           "rarity": "Secret Rare",
-          "hp": 240
+          "hp": 240,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 383,
+            "official_artwork_id": 10078,
+            "subject_key": "pokeapi:official-artwork:10078",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10078.png"
+          }
         }
       ]
     }

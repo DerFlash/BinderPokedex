@@ -1,0 +1,63 @@
+{
+  "scope": "SV01",
+  "source_scope": "SV01",
+  "poster_id": "SV01",
+  "section_id": null,
+  "source": "pokeapi_official_artwork",
+  "generated_at": "2026-08-06T17:43:55.938986+00:00",
+  "layout": {
+    "name": "standard_3x3",
+    "columns": 3,
+    "rows": 3
+  },
+  "items": [
+    {
+      "pokemon_id": 906,
+      "name_en": "Sprigatito",
+      "name_de": "Felori",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/906.png",
+      "file": "pokemon_906_sprigatito.png",
+      "mode": "RGBA",
+      "width": 475,
+      "height": 475,
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "transparent_pixels": 148457,
+      "opaque_pixels": 79450,
+      "validated_alpha": true,
+      "errors": []
+    },
+    {
+      "pokemon_id": 909,
+      "name_en": "Fuecoco",
+      "name_de": "Krokel",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/909.png",
+      "file": "pokemon_909_fuecoco.png",
+      "mode": "RGBA",
+      "width": 475,
+      "height": 475,
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "transparent_pixels": 143718,
+      "opaque_pixels": 83663,
+      "validated_alpha": true,
+      "errors": []
+    },
+    {
+      "pokemon_id": 912,
+      "name_en": "Quaxly",
+      "name_de": "Kwaks",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/912.png",
+      "file": "pokemon_912_quaxly.png",
+      "mode": "RGBA",
+      "width": 475,
+      "height": 475,
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "transparent_pixels": 158930,
+      "opaque_pixels": 68598,
+      "validated_alpha": true,
+      "errors": []
+    }
+  ]
+}

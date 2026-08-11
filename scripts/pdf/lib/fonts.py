@@ -10,6 +10,7 @@ Includes Unicode character support and graceful fallback handling.
 import logging
 from pathlib import Path
 from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from reportlab.pdfbase.ttfonts import TTFont
 import unicodedata
 
@@ -36,7 +37,7 @@ class FontManager:
         'es': {'font': 'Helvetica', 'font_bold': 'Helvetica-Bold'},
         'fr': {'font': 'Helvetica', 'font_bold': 'Helvetica-Bold'},
         'it': {'font': 'Helvetica', 'font_bold': 'Helvetica-Bold'},
-        'ja': {'font': 'SongtiBold', 'font_bold': 'SongtiBold'},          # Japanese
+        'ja': {'font': 'HeiseiKakuGo-W5', 'font_bold': 'HeiseiKakuGo-W5'},  # Japanese
         'ko': {'font': 'AppleGothic', 'font_bold': 'AppleGothic'},        # Korean (AppleGothic for Hangul)
         'zh_hans': {'font': 'SongtiBold', 'font_bold': 'SongtiBold'},     # Simplified Chinese
         'zh_hant': {'font': 'STHeitiMedium', 'font_bold': 'STHeitiMedium'},     # Traditional Chinese
@@ -44,6 +45,8 @@ class FontManager:
     
     # CJK Languages that need TrueType fonts
     CJK_LANGUAGES = ['ja', 'ko', 'zh_hans', 'zh_hant']
+
+    JAPANESE_CID_FONT = 'HeiseiKakuGo-W5'
     
     # Path to Songti TrueType Collection (Japanese, Simplified Chinese)
     SONGTI_PATH = Path('/System/Library/Fonts/Supplemental/Songti.ttc')
@@ -87,8 +90,19 @@ class FontManager:
             return
         
         logger.info("Registering fonts for multi-language support...")
+
+        # Songti's macOS TTC face omits valid Japanese glyphs such as 現 and
+        # 時. ReportLab's Japanese CID font has complete Japanese coverage and
+        # is available consistently on macOS and Linux PDF builds.
+        try:
+            pdfmetrics.registerFont(UnicodeCIDFont(cls.JAPANESE_CID_FONT))
+            cls._font_cache[cls.JAPANESE_CID_FONT] = True
+            logger.info("✓ Registered Japanese CID font")
+        except Exception as e:
+            cls._font_cache[cls.JAPANESE_CID_FONT] = False
+            logger.warning(f"✗ Could not register Japanese CID font: {e}")
         
-        # Register Songti font for Japanese and Simplified Chinese
+        # Register Songti font for Simplified Chinese
         if cls.SONGTI_PATH.exists():
             try:
                 font = TTFont('SongtiBold', str(cls.SONGTI_PATH))

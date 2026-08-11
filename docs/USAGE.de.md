@@ -4,10 +4,11 @@ Schnellreferenz für die Generierung von BinderPokedex-PDFs mit dem Scope-basier
 
 ## 📦 Verfügbare Scopes
 
-**25 Scopes insgesamt:**
+**30 Scopes insgesamt:**
 - **Pokedex**: Kompletter National Pokédex (1025 Pokémon)
-- **ExGen1-3**: TCG EX Varianten-Kollektionen (94/324/366 Karten)
-- **ME01-MEP**: Pokémon TCG Karmesin & Purpur - Mew-Serie (4 Sets)
+- **Base1-Base3**: Base Set, Dschungel und Fossil (3 Sets)
+- **ExGen1-3**: TCG EX Varianten-Kollektionen aus den aktuellen Quelldaten
+- **ME01-MEP**: Pokémon TCG Mega-Evolution-Ära (6 Sets)
 - **SV01-SVP**: Pokémon TCG Karmesin & Purpur Hauptserie (17 Sets)
 
 Alle verfügbaren Scopes auflisten:
@@ -44,13 +45,71 @@ python scripts/pdf/generate_pdf.py --scope SV01
 `--scope all` verwenden, um alles zu generieren:
 
 ```bash
-# Alle 25 Scopes in allen 9 Sprachen generieren
+# Alle 30 Scopes in jeder verfügbaren Sprache generieren
 python scripts/pdf/generate_pdf.py --scope all
 ```
 
-**Ausgabe:** ~225 PDFs (25 Scopes × 9 Sprachen, wo verfügbar)
-**Dauer:** 10-20 Minuten (mit gecachten Daten)
-**Größe:** ~377 MB gesamt
+Der aktuelle Release-Bestand erzeugt 167 PDFs in neun Spracharchiven. Die
+exakte Anzahl, Dauer und Größe hängen von den je Scope verfügbaren Sprachen und
+den abgerufenen Quelldaten ab. Für einen abgeschlossenen Release-Kandidaten ist
+`release-manifest.json` maßgeblich.
+
+### Optionale Posterseiten
+
+Der normale PDF-Befehl fügt freigegebene lokale Poster-Artworks automatisch ein.
+Einzelne Scopes aktivieren sie mit `pdf.enabled: true` in
+`data/poster_assets/<scope>/poster.yaml`. Sammel-Scopes ordnen in
+`data/poster_assets/<scope>/posters.yaml` isolierte Leaf-Manifeste stabil ihren
+Sections zu; jede aktivierte Seite folgt direkt auf das passende Section-Cover.
+Scopes und Bindings ohne Freigabe werden unverändert erzeugt. Die
+Artwork-Generierung bleibt ein separater Review-Workflow; der PDF-Befehl
+verwendet nur das promotete lokale Artwork und startet ComfyUI nicht selbst.
+
+Standardmäßig wird das Poster weiterhin als neun zuschneidbare Karten in
+physischer Größe ausgegeben. Dasselbe lokalisierte 3×3-Poster kann alternativ
+als ein zusammenhängendes, 200,5 × 276,7 mm großes Bild mittig auf A4 und ohne
+Schnittlinien ausgegeben werden:
+
+```bash
+python scripts/pdf/generate_pdf.py \
+  --scope Base1 \
+  --language de \
+  --poster-page-mode full-page
+```
+
+Dabei entsteht eine separate Datei wie
+`output/de/Base1_DE_POSTER_FULL_PAGE.pdf`. Scopes ohne aktiviertes promotetes
+Poster verwenden weiterhin den bestehenden Cover- und Kartenseiten-Pfad.
+
+Die Seitenreihenfolge bleibt derzeit Cover, Poster und danach Kartenseiten.
+Das Poster wiederholt bereits die semantischen Cover-Informationen wie
+Titel/Untertitel, Anzahl, Beschreibung beziehungsweise Veröffentlichungsdatum
+und Projektname. Das Entfernen des Covers ist eine separate spätere Migration,
+nachdem die betroffenen Poster und mehrsprachigen PDF-Layouts geprüft sind.
+
+Für einen einzelnen Build kann das Poster ohne Manifeständerung übersprungen
+werden:
+
+```bash
+python scripts/pdf/generate_pdf.py \
+  --scope Base1 \
+  --language de \
+  --skip-poster
+```
+
+Der Build erhält einen eigenen Dateinamen wie
+`output/de/Base1_DE_NO_POSTER.pdf` und überschreibt daher nicht
+`output/de/Base1_DE.pdf`. `--skip-poster` verhindert bereits das Laden aller
+Poster-Indizes, Manifeste und Artworks – bei Sammel-Scopes also sämtlicher
+Section-Poster – und lässt sich mit `--test` sowie `--skip-images` kombinieren.
+Die Option wird nicht mit `--poster-page-mode full-page` kombiniert, weil in
+einem übersprungenen Build kein Poster geladen wird.
+
+Die Artwork-Erzeugung ist ein expliziter optionaler Schritt nach dem
+Daten-Fetch. Die Anleitung
+[Poster Artwork Workflow](POSTER_WORKFLOW.md) beschreibt Initialisierung,
+set-spezifische Szenen, lokale ComfyUI-Erzeugung, Review, Promotion und
+PDF-Aktivierung.
 
 ## Unterstützte Sprachen
 
@@ -258,4 +317,3 @@ python --version
 ---
 
 **[← Zurück zu README](../README.md)** | **[Script-Dokumentation](../scripts/README.md)**
-

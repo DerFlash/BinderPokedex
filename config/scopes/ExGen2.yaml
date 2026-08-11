@@ -29,6 +29,11 @@ pipeline:
     max_cards: 3
     force: false
     cache_dir: data/section_artwork
+    section_featured_card_ids:
+      mega:
+        - xy8-63
+        - xy7-98
+        - xy6-59
 - step: save_output
   params:
     output_file: data/output/ExGen2.json

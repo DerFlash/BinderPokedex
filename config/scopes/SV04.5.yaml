@@ -30,6 +30,11 @@ pipeline:
     max_cards: 3
     force: false
     cache_dir: data/section_artwork
+    section_featured_card_ids:
+      all:
+      - sv04.5-007
+      - sv04.5-018
+      - sv04.5-016
 - step: save_output
   params:
     output_file: data/output/SV04.5.json

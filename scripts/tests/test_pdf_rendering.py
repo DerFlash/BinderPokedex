@@ -9,6 +9,8 @@ import sys
 import logging
 from pathlib import Path
 
+import pytest
+
 # Add lib to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / 'lib'))
 
@@ -19,6 +21,12 @@ from constants import LANGUAGES
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+
+@pytest.fixture(autouse=True)
+def isolate_pdf_output(tmp_path, monkeypatch):
+    """Keep legacy rendering tests out of the production output directory."""
+    monkeypatch.setattr("pdf_generator.OUTPUT_DIR", tmp_path / "output")
 
 
 def test_pdf_generation_basic():

@@ -63,6 +63,11 @@ from lib.variant_pdf_generator import VariantPDFGenerator
 from lib.cli_formatter import CLIFormatter
 from lib.cli_validator import GenerationValidator, LanguageValidator, VariantValidator, DirectoryValidator
 from lib.constants import LANGUAGES
+from lib.generation_options import (
+    POSTER_PAGE_MODES,
+    pdf_output_filename,
+    prepare_variant_data,
+)
 
 # Configure logging - suppress INFO during generation for clean output
 logging.basicConfig(
@@ -89,61 +94,6 @@ def get_all_scopes(data_dir: Path) -> list:
     scopes = [f.stem for f in json_files]
     
     return scopes
-
-
-def get_pokemon_name_for_language(pokemon: dict, language: str) -> str:
-    """
-    Get the Pokémon name for the specified language.
-    
-    Args:
-        pokemon: Pokémon data dictionary (must have 'name' as multilingual object)
-        language: Language code (de, en, ja, etc.)
-    
-    Returns:
-        Pokémon name in the specified language
-    """
-    return pokemon['name'].get(language, pokemon['name'].get('en', 'Unknown'))
-
-
-def prepare_pokemon_data(pokemon_list: list, language: str, skip_images: bool = False) -> list:
-    """
-    Prepare Pokémon data for PDF generation.
-    
-    Args:
-        pokemon_list: Raw Pokémon data from JSON (must have unified name object structure)
-        language: Target language code
-        skip_images: If True, don't include image_url in prepared data
-    
-    Returns:
-        List of prepared Pokémon dictionaries for rendering
-    """
-    prepared = []
-    
-    for pokemon in pokemon_list:
-        # Get types from unified types[] array or fall back to type1/type2
-        pokemon_types = pokemon.get('types', [])
-        if not pokemon_types:
-            # Fallback for old format
-            pokemon_types = [pokemon.get('type1', 'Normal')]
-            if pokemon.get('type2'):
-                pokemon_types.append(pokemon['type2'])
-        
-        prepared_pokemon = {
-            'id': pokemon.get('pokemon_id', pokemon.get('id')),  # Numeric ID for image cache lookup
-            'num': pokemon.get('num', '#???'),
-            'name': get_pokemon_name_for_language(pokemon, language),
-            'name_en': pokemon['name']['en'],  # English name for subtitle
-            'types': pokemon_types,
-            'generation': pokemon.get('generation', 1),
-        }
-        
-        # Only include image_url if images are enabled
-        if not skip_images:
-            prepared_pokemon['image_url'] = pokemon.get('image_url')
-        
-        prepared.append(prepared_pokemon)
-    
-    return prepared
 
 
 def list_available_templates(project_dir: Path):
@@ -264,14 +214,31 @@ Examples:
         "--skip-images",
         action="store_true",
         default=False,
-        help="Skip image processing (faster for testing)"
+        help="Skip remote card images while retaining local logos and poster artwork"
+    )
+
+    parser.add_argument(
+        "--skip-poster",
+        action="store_true",
+        default=False,
+        help="Skip optional poster pages enabled by a scope's poster.yaml"
+    )
+
+    parser.add_argument(
+        "--poster-page-mode",
+        choices=POSTER_PAGE_MODES,
+        default="cards",
+        help=(
+            "Render enabled posters as cuttable cards (default) or as one "
+            "continuous full page"
+        ),
     )
     
     parser.add_argument(
         "--test",
         action="store_true",
         default=False,
-        help="Test mode: only use 9 Pokémon for faster generation"
+        help="Test mode: render only the first 9 cards across all sections"
     )
     
     parser.add_argument(
@@ -311,6 +278,10 @@ Examples:
     )
     
     args = parser.parse_args()
+    if args.skip_poster and args.poster_page_mode != "cards":
+        parser.error(
+            "--poster-page-mode cannot be combined with --skip-poster"
+        )
     
     # Configure logging level based on verbose flag
     if args.verbose:
@@ -391,6 +362,8 @@ Examples:
                     output_dir=project_dir / 'output',
                     script_dir=script_dir,
                     skip_images=args.skip_images,
+                    skip_poster=args.skip_poster,
+                    poster_page_mode=args.poster_page_mode,
                     test_mode=args.test,
                     card_template=args.card_template,
                     page_template=args.page_template,
@@ -452,6 +425,8 @@ Examples:
         output_dir=project_dir / 'output',
         script_dir=script_dir,
         skip_images=args.skip_images,
+        skip_poster=args.skip_poster,
+        poster_page_mode=args.poster_page_mode,
         test_mode=args.test,
         card_template=args.card_template,
         page_template=args.page_template,
@@ -514,7 +489,9 @@ def generate_scope_pdf(scope_name: str, scope_file: Path, languages: list,
                        output_dir: Path, script_dir: Path,
                        skip_images: bool = False, test_mode: bool = False,
                        card_template: str = None, page_template: str = None, 
-                       cover_template: str = None) -> int:
+                       cover_template: str = None,
+                       skip_poster: bool = False,
+                       poster_page_mode: str = "cards") -> int:
     """
     Generate PDF for a specific scope.
     
@@ -525,6 +502,8 @@ def generate_scope_pdf(scope_name: str, scope_file: Path, languages: list,
         output_dir: Base output directory
         script_dir: Script directory for relative paths
         skip_images: Skip image processing
+        skip_poster: Skip an otherwise enabled poster page
+        poster_page_mode: Render an enabled poster as cards or one full page
         test_mode: Use only first 9 Pokemon for testing
         card_template: Optional SVG template for cards
         page_template: Optional SVG template for pages
@@ -560,24 +539,30 @@ def generate_scope_pdf(scope_name: str, scope_file: Path, languages: list,
                 logger.info(f"\n📊 Generating {scope_name} → {LANGUAGES.get(language, {}).get('name', language.upper())}")
                 
                 # Generate PDF using unified VariantPDFGenerator (works for all types)
-                _generate_variant_pdf(
+                generated = _generate_variant_pdf(
                     variant_data=scope_data,
                     language=language,
                     output_dir=output_dir / language,
                     script_dir=script_dir,
                     skip_images=skip_images,
+                    skip_poster=skip_poster,
+                    poster_page_mode=poster_page_mode,
                     test_mode=test_mode,
                     scope_name=scope_name,
                     card_template=card_template,
                     page_template=page_template,
                     cover_template=cover_template
                 )
+                if not generated:
+                    raise RuntimeError(
+                        f"PDF renderer reported failure for {scope_name}/{language}"
+                    )
                 
                 total_generated += 1
                 
             except Exception as e:
                 logger.error(f"❌ Failed to generate {scope_name} for {language}: {e}")
-                if args.verbose:
+                if logger.isEnabledFor(logging.INFO):
                     import traceback
                     traceback.print_exc()
                 total_failed += 1
@@ -677,12 +662,16 @@ def handle_variant_mode(args, script_dir, project_dir, data_dir, variants_dir):
                     variant_data = json.load(f)
                 
                 # Generate PDF
-                _generate_variant_pdf(
+                generated = _generate_variant_pdf(
                     variant_data=variant_data,
                     language=language,
                     output_dir=project_dir / 'output' / language,
                     script_dir=script_dir
                 )
+                if not generated:
+                    raise RuntimeError(
+                        f"PDF renderer reported failure for {variant_id}/{language}"
+                    )
                 
                 total_generated += 1
                 logger.info(f"   ✅ Generated: {variant_id}_{language}.pdf")
@@ -696,7 +685,20 @@ def handle_variant_mode(args, script_dir, project_dir, data_dir, variants_dir):
     return 0 if total_failed == 0 else 1
 
 
-def _generate_variant_pdf(variant_data, language, output_dir, script_dir, skip_images=False, test_mode=False, scope_name=None, card_template=None, page_template=None, cover_template=None):
+def _generate_variant_pdf(
+    variant_data,
+    language,
+    output_dir,
+    script_dir,
+    skip_images=False,
+    test_mode=False,
+    scope_name=None,
+    card_template=None,
+    page_template=None,
+    cover_template=None,
+    skip_poster=False,
+    poster_page_mode="cards",
+):
     """Generate a PDF for a scope (variant or pokedex)."""
     from lib.pdf_generator import ImageCache
     
@@ -712,24 +714,41 @@ def _generate_variant_pdf(variant_data, language, output_dir, script_dir, skip_i
         filename_base = variant_name.replace(' ', '_').replace('-', '_')
     
     # Generate output filename
-    output_file = output_dir / f"{filename_base}_{language.upper()}.pdf"
+    output_file = output_dir / pdf_output_filename(
+        filename_base,
+        language,
+        skip_images=skip_images,
+        skip_poster=skip_poster,
+        poster_page_mode=poster_page_mode,
+        test_mode=test_mode,
+    )
     
+    prepared_variant_data = prepare_variant_data(
+        variant_data,
+        skip_images=skip_images,
+        test_mode=test_mode,
+    )
+
     # Initialize image cache for loading Pokémon images
     image_cache = ImageCache()
     
     # Extract type_translations if present in data
-    type_translations = variant_data.get('type_translations')
+    type_translations = prepared_variant_data.get('type_translations')
     
     # Create and generate PDF
     pdf_gen = VariantPDFGenerator(
-        variant_data=variant_data,
+        variant_data=prepared_variant_data,
         language=language,
         output_file=output_file,
         image_cache=image_cache,
         type_translations=type_translations,
         card_template=card_template,
         page_template=page_template,
-        cover_template=cover_template
+        cover_template=cover_template,
+        include_poster=not skip_poster,
+        poster_page_mode=poster_page_mode,
+        scope_name=scope_name,
+        poster_source_data=variant_data,
     )
     
     return pdf_gen.generate()

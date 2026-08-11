@@ -17,15 +17,15 @@
         "zh_hant": "寶可夢 [EX_NEW]"
       },
       "subtitle": {
-        "de": "[EX_NEW] Serie (ab Karmesin & Purpur)",
-        "en": "[EX_NEW] Series (from Scarlet & Violet)",
-        "fr": "Série [EX_NEW] (à partir d'Écarlate & Violet)",
-        "es": "Serie [EX_NEW] (de Escarlata & Púrpura)",
-        "it": "Serie [EX_NEW] (da Rosso & Viola)",
-        "ja": "[EX_NEW]シリーズ（スカーレット&バイオレットより）",
-        "ko": "[EX_NEW] 시리즈 (스칼렛&바이올렛부터)",
-        "zh_hans": "[EX_NEW]系列（来自朱&紫）",
-        "zh_hant": "[EX_NEW]系列（來自朱&紫）"
+        "de": "Moderne Pokémon-[EX_NEW]-Ära (seit 2023)",
+        "en": "Modern Pokémon [EX_NEW] era (since 2023)",
+        "fr": "Ère moderne des Pokémon [EX_NEW] (depuis 2023)",
+        "es": "Era moderna de Pokémon [EX_NEW] (desde 2023)",
+        "it": "Era moderna dei Pokémon [EX_NEW] (dal 2023)",
+        "ja": "現代のポケモン [EX_NEW] 時代（2023年～）",
+        "ko": "현대 포켓몬 [EX_NEW] 시대 (2023년~)",
+        "zh_hans": "现代宝可梦 [EX_NEW] 时代（2023年至今）",
+        "zh_hant": "現代寶可夢 [EX_NEW] 時代（2023年至今）"
       },
       "suffix": "",
       "cards": [
@@ -258,15 +258,15 @@
           ],
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/34.png",
           "name": {
-            "ko": "니드킹",
-            "zh_hant": "尼多王",
-            "fr": "Nidoking",
-            "de": "Nidoking",
-            "es": "Nidoking",
-            "it": "Nidoking",
+            "ko": "Team Rocket's Nidoking",
+            "zh_hant": "Team Rocket's Nidoking",
+            "fr": "Team Rocket's Nidoking",
+            "de": "Team Rocket's Nidoking",
+            "es": "Team Rocket's Nidoking",
+            "it": "Team Rocket's Nidoking",
             "en": "Team Rocket's Nidoking",
-            "ja": "ニドキング",
-            "zh_hans": "尼多王"
+            "ja": "Team Rocket's Nidoking",
+            "zh_hans": "Team Rocket's Nidoking"
           },
           "prefix": null,
           "suffix": "[EX_NEW]",
@@ -306,15 +306,15 @@
           ],
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/35.png",
           "name": {
-            "ko": "삐삐",
-            "zh_hant": "皮皮",
-            "fr": "Mélofée",
-            "de": "Piepi",
-            "es": "Clefairy",
-            "it": "Clefairy",
+            "ko": "Lillie's Clefairy",
+            "zh_hant": "Lillie's Clefairy",
+            "fr": "Lillie's Clefairy",
+            "de": "Lillie's Clefairy",
+            "es": "Lillie's Clefairy",
+            "it": "Lillie's Clefairy",
             "en": "Lillie's Clefairy",
-            "ja": "ピッピ",
-            "zh_hans": "皮皮"
+            "ja": "Lillie's Clefairy",
+            "zh_hans": "Lillie's Clefairy"
           },
           "prefix": null,
           "suffix": "[EX_NEW]",
@@ -465,15 +465,15 @@
           ],
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/45.png",
           "name": {
-            "ko": "라플레시아",
-            "zh_hant": "霸王花",
-            "fr": "Rafflesia",
-            "de": "Giflor",
-            "es": "Vileplume",
-            "it": "Vileplume",
+            "ko": "Erika's Vileplume",
+            "zh_hant": "Erika's Vileplume",
+            "fr": "Erika's Vileplume",
+            "de": "Erika's Vileplume",
+            "es": "Erika's Vileplume",
+            "it": "Erika's Vileplume",
             "en": "Erika's Vileplume",
-            "ja": "ラフレシア",
-            "zh_hans": "霸王花"
+            "ja": "Erika's Vileplume",
+            "zh_hans": "Erika's Vileplume"
           },
           "prefix": null,
           "suffix": "[EX_NEW]",
@@ -513,15 +513,15 @@
           ],
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/53.png",
           "name": {
-            "ko": "페르시온",
-            "zh_hant": "貓老大",
-            "fr": "Persian",
-            "de": "Snobilikat",
-            "es": "Persian",
-            "it": "Persian",
+            "ko": "Team Rocket's Persian",
+            "zh_hant": "Team Rocket's Persian",
+            "fr": "Team Rocket's Persian",
+            "de": "Team Rocket's Persian",
+            "es": "Team Rocket's Persian",
+            "it": "Team Rocket's Persian",
             "en": "Team Rocket's Persian",
-            "ja": "ペルシアン",
-            "zh_hans": "猫老大"
+            "ja": "Team Rocket's Persian",
+            "zh_hans": "Team Rocket's Persian"
           },
           "prefix": null,
           "suffix": "[EX_NEW]",
@@ -743,17 +743,17 @@
           "types": [
             "Dragon"
           ],
-          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/103.png",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10114.png",
           "name": {
-            "ko": "나시",
-            "zh_hant": "椰蛋樹",
-            "fr": "Noadkoko",
-            "de": "Kokowei",
-            "es": "Exeggutor",
-            "it": "Exeggutor",
+            "de": "Alola-Kokowei",
             "en": "Alolan Exeggutor",
-            "ja": "ナッシー",
-            "zh_hans": "椰蛋树"
+            "fr": "Noadkoko d’Alola",
+            "es": "Exeggutor de Alola",
+            "it": "Exeggutor di Alola",
+            "ja": "ナッシー（アローラのすがた）",
+            "ko": "나시(알로라의 모습)",
+            "zh_hans": "椰蛋树（阿罗拉的样子）",
+            "zh_hant": "椰蛋樹（阿羅拉的樣子）"
           },
           "prefix": null,
           "suffix": "[EX_NEW]",
@@ -1156,15 +1156,15 @@
           ],
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/146.png",
           "name": {
-            "ko": "파이어",
-            "zh_hant": "火焰鳥",
-            "fr": "Sulfura",
-            "de": "Lavados",
-            "es": "Moltres",
-            "it": "Moltres",
+            "ko": "Team Rocket's Moltres",
+            "zh_hant": "Team Rocket's Moltres",
+            "fr": "Team Rocket's Moltres",
+            "de": "Team Rocket's Moltres",
+            "es": "Team Rocket's Moltres",
+            "it": "Team Rocket's Moltres",
             "en": "Team Rocket's Moltres",
-            "ja": "ファイヤー",
-            "zh_hans": "火焰鸟"
+            "ja": "Team Rocket's Moltres",
+            "zh_hans": "Team Rocket's Moltres"
           },
           "prefix": null,
           "suffix": "[EX_NEW]",
@@ -1241,15 +1241,15 @@
           ],
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png",
           "name": {
-            "ko": "뮤츠",
-            "zh_hant": "超夢",
-            "fr": "Mewtwo",
-            "de": "Mewtu",
-            "es": "Mewtwo",
-            "it": "Mewtwo",
+            "ko": "Team Rocket's Mewtwo",
+            "zh_hant": "Team Rocket's Mewtwo",
+            "fr": "Team Rocket's Mewtwo",
+            "de": "Team Rocket's Mewtwo",
+            "es": "Team Rocket's Mewtwo",
+            "it": "Team Rocket's Mewtwo",
             "en": "Team Rocket's Mewtwo",
-            "ja": "ミュウツー",
-            "zh_hans": "超梦"
+            "ja": "Team Rocket's Mewtwo",
+            "zh_hans": "Team Rocket's Mewtwo"
           },
           "prefix": null,
           "suffix": "[EX_NEW]",
@@ -1326,15 +1326,15 @@
           ],
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/169.png",
           "name": {
-            "ko": "크로뱃",
-            "zh_hant": "叉字蝠",
-            "fr": "Nostenfer",
-            "de": "Iksbat",
-            "es": "Crobat",
-            "it": "Crobat",
+            "ko": "Team Rocket's Crobat",
+            "zh_hant": "Team Rocket's Crobat",
+            "fr": "Team Rocket's Crobat",
+            "de": "Team Rocket's Crobat",
+            "es": "Team Rocket's Crobat",
+            "it": "Team Rocket's Crobat",
             "en": "Team Rocket's Crobat",
-            "ja": "クロバット",
-            "zh_hans": "叉字蝠"
+            "ja": "Team Rocket's Crobat",
+            "zh_hans": "Team Rocket's Crobat"
           },
           "prefix": null,
           "suffix": "[EX_NEW]",
@@ -1814,15 +1814,15 @@
           ],
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/250.png",
           "name": {
-            "ko": "칠색조",
-            "zh_hant": "鳳王",
-            "fr": "Ho-Oh",
-            "de": "Ho-Oh",
-            "es": "Ho-Oh",
-            "it": "Ho-Oh",
+            "ko": "Ethan's Ho-Oh",
+            "zh_hant": "Ethan's Ho-Oh",
+            "fr": "Ethan's Ho-Oh",
+            "de": "Ethan's Ho-Oh",
+            "es": "Ethan's Ho-Oh",
+            "it": "Ethan's Ho-Oh",
             "en": "Ethan's Ho-Oh",
-            "ja": "ホウオウ",
-            "zh_hans": "凤王"
+            "ja": "Ethan's Ho-Oh",
+            "zh_hans": "Ethan's Ho-Oh"
           },
           "prefix": null,
           "suffix": "[EX_NEW]",
@@ -1913,17 +1913,17 @@
           "suffix": "[EX_NEW]",
           "form_code": "#282_EX3",
           "tcg_card": {
-            "id": "sv04.5-029",
-            "localId": "029",
+            "id": "sv01-086",
+            "localId": "086",
             "set": {
               "cardCount": {
-                "official": 91,
-                "total": 245
+                "official": 198,
+                "total": 258
               },
-              "id": "sv04.5",
-              "logo": "https://assets.tcgdex.net/en/sv/sv04.5/logo",
-              "name": "Paldean Fates",
-              "symbol": "https://assets.tcgdex.net/univ/sv/sv04.5/symbol"
+              "id": "sv01",
+              "logo": "https://assets.tcgdex.net/en/sv/sv01/logo",
+              "name": "Scarlet & Violet",
+              "symbol": "https://assets.tcgdex.net/univ/sv/sv01/symbol"
             },
             "hp": 310,
             "rarity": "Double rare"
@@ -2265,15 +2265,15 @@
           ],
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/376.png",
           "name": {
-            "ko": "메타그로스",
-            "zh_hant": "巨金怪",
-            "fr": "Métalosse",
-            "de": "Metagross",
-            "es": "Metagross",
-            "it": "Metagross",
+            "ko": "Steven's Metagross",
+            "zh_hant": "Steven's Metagross",
+            "fr": "Steven's Metagross",
+            "de": "Steven's Metagross",
+            "es": "Steven's Metagross",
+            "it": "Steven's Metagross",
             "en": "Steven's Metagross",
-            "ja": "メタグロス",
-            "zh_hans": "巨金怪"
+            "ja": "Steven's Metagross",
+            "zh_hans": "Steven's Metagross"
           },
           "prefix": null,
           "suffix": "[EX_NEW]",
@@ -2642,15 +2642,15 @@
           ],
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/445.png",
           "name": {
-            "ko": "한카리아스",
-            "zh_hant": "烈咬陸鯊",
-            "fr": "Carchacrok",
-            "de": "Knakrack",
-            "es": "Garchomp",
-            "it": "Garchomp",
+            "ko": "Cynthia's Garchomp",
+            "zh_hant": "Cynthia's Garchomp",
+            "fr": "Cynthia's Garchomp",
+            "de": "Cynthia's Garchomp",
+            "es": "Cynthia's Garchomp",
+            "it": "Cynthia's Garchomp",
             "en": "Cynthia's Garchomp",
-            "ja": "ガブリアス",
-            "zh_hans": "烈咬陆鲨"
+            "ja": "Cynthia's Garchomp",
+            "zh_hans": "Cynthia's Garchomp"
           },
           "prefix": null,
           "suffix": "[EX_NEW]",
@@ -3130,15 +3130,15 @@
           ],
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/571.png",
           "name": {
-            "ko": "조로아크",
-            "zh_hant": "索羅亞克",
-            "fr": "Zoroark",
-            "de": "Zoroark",
-            "es": "Zoroark",
-            "it": "Zoroark",
+            "ko": "N's Zoroark",
+            "zh_hant": "N's Zoroark",
+            "fr": "N's Zoroark",
+            "de": "N's Zoroark",
+            "es": "N's Zoroark",
+            "it": "N's Zoroark",
             "en": "N's Zoroark",
-            "ja": "ゾロアーク",
-            "zh_hans": "索罗亚克"
+            "ja": "N's Zoroark",
+            "zh_hans": "N's Zoroark"
           },
           "prefix": null,
           "suffix": "[EX_NEW]",
@@ -3432,17 +3432,17 @@
           "types": [
             "Water"
           ],
-          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/646.png",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10022.png",
           "name": {
-            "ko": "큐레무",
-            "zh_hant": "酋雷姆",
-            "fr": "Kyurem",
-            "de": "Kyurem",
-            "es": "Kyurem",
-            "it": "Kyurem",
+            "de": "Schwarzes Kyurem",
             "en": "Black Kyurem",
-            "ja": "キュレム",
-            "zh_hans": "酋雷姆"
+            "fr": "Kyurem Noir",
+            "es": "Kyurem Negro",
+            "it": "Kyurem Nero",
+            "ja": "ブラックキュレム",
+            "ko": "블랙큐레무",
+            "zh_hans": "暗黑酋雷姆",
+            "zh_hant": "闇黑酋雷姆"
           },
           "prefix": null,
           "suffix": "[EX_NEW]",
@@ -4253,15 +4253,15 @@
           ],
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/861.png",
           "name": {
-            "ko": "오롱털",
-            "zh_hant": "長毛巨魔",
-            "fr": "Angoliath",
-            "de": "Olangaar",
-            "es": "Grimmsnarl",
-            "it": "Grimmsnarl",
+            "ko": "Marnie's Grimmsnarl",
+            "zh_hant": "Marnie's Grimmsnarl",
+            "fr": "Marnie's Grimmsnarl",
+            "de": "Marnie's Grimmsnarl",
+            "es": "Marnie's Grimmsnarl",
+            "it": "Marnie's Grimmsnarl",
             "en": "Marnie's Grimmsnarl",
-            "ja": "オーロンゲ",
-            "zh_hans": "长毛巨魔"
+            "ja": "Marnie's Grimmsnarl",
+            "zh_hans": "Marnie's Grimmsnarl"
           },
           "prefix": null,
           "suffix": "[EX_NEW]",
@@ -4338,15 +4338,15 @@
           ],
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/871.png",
           "name": {
-            "ko": "찌르성게",
-            "zh_hant": "啪嚓海膽",
-            "fr": "Wattapik",
-            "de": "Britzigel",
-            "es": "Pincurchin",
-            "it": "Pincurchin",
+            "ko": "Hop's Pincurchin",
+            "zh_hant": "Hop's Pincurchin",
+            "fr": "Hop's Pincurchin",
+            "de": "Hop's Pincurchin",
+            "es": "Hop's Pincurchin",
+            "it": "Hop's Pincurchin",
             "en": "Hop's Pincurchin",
-            "ja": "バチンウニ",
-            "zh_hans": "啪嚓海胆"
+            "ja": "Hop's Pincurchin",
+            "zh_hans": "Hop's Pincurchin"
           },
           "prefix": null,
           "suffix": "[EX_NEW]",
@@ -4497,15 +4497,15 @@
           ],
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/888.png",
           "name": {
-            "ko": "자시안",
-            "zh_hant": "蒼響",
-            "fr": "Zacian",
-            "de": "Zacian",
-            "es": "Zacian",
-            "it": "Zacian",
+            "ko": "Hop's Zacian",
+            "zh_hant": "Hop's Zacian",
+            "fr": "Hop's Zacian",
+            "de": "Hop's Zacian",
+            "es": "Hop's Zacian",
+            "it": "Hop's Zacian",
             "en": "Hop's Zacian",
-            "ja": "ザシアン",
-            "zh_hans": "苍响"
+            "ja": "Hop's Zacian",
+            "zh_hans": "Hop's Zacian"
           },
           "prefix": null,
           "suffix": "[EX_NEW]",
@@ -4543,17 +4543,17 @@
           "types": [
             "Colorless"
           ],
-          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/901.png",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10272.png",
           "name": {
-            "ko": "다투곰",
-            "zh_hant": "月月熊",
-            "fr": "Ursaking",
-            "de": "Ursaluna",
-            "es": "Ursaluna",
-            "it": "Ursaluna",
+            "de": "Blutmond-Ursaluna",
             "en": "Bloodmoon Ursaluna",
-            "ja": "ガチグマ",
-            "zh_hans": "月月熊"
+            "fr": "Ursaking Lune Vermeille",
+            "es": "Ursaluna Luna Carmesí",
+            "it": "Ursaluna Luna Cremisi",
+            "ja": "ガチグマ（アカツキ）",
+            "ko": "다투곰(붉은 달)",
+            "zh_hans": "月月熊（赫月）",
+            "zh_hant": "月月熊（赫月）"
           },
           "prefix": null,
           "suffix": "[EX_NEW]",
@@ -4808,25 +4808,25 @@
           }
         },
         {
-          "pokemon_id": 921,
+          "pokemon_id": 923,
           "types": [
             "Lightning"
           ],
-          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/921.png",
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/923.png",
           "name": {
-            "ko": "빠모",
-            "zh_hant": "布撥",
-            "fr": "Pohm",
-            "de": "Pamo",
-            "es": "Pawmi",
-            "it": "Pawmi",
+            "ko": "빠르모트",
+            "zh_hant": "巴布土撥",
+            "fr": "Pohmarmotte",
+            "de": "Pamomamo",
+            "es": "Pawmot",
+            "it": "Pawmot",
             "en": "Pawmot",
-            "ja": "パモ",
-            "zh_hans": "布拨"
+            "ja": "パーモット",
+            "zh_hans": "巴布土拨"
           },
           "prefix": null,
           "suffix": "[EX_NEW]",
-          "form_code": "#921_EX3",
+          "form_code": "#923_EX3",
           "tcg_card": {
             "id": "sv03-073",
             "localId": "073",
@@ -4842,17 +4842,6 @@
             },
             "hp": 300,
             "rarity": "Double rare"
-          },
-          "base_name": {
-            "ko": "빠모",
-            "zh_hant": "布撥",
-            "fr": "Pohm",
-            "de": "Pamo",
-            "es": "Pawmi",
-            "it": "Pawmi",
-            "en": "Pawmi",
-            "ja": "パモ",
-            "zh_hans": "布拨"
           }
         },
         {
@@ -5118,15 +5107,15 @@
           ],
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/939.png",
           "name": {
-            "ko": "찌리배리",
-            "zh_hant": "電肚蛙",
-            "fr": "Ampibidou",
-            "de": "Wampitz",
-            "es": "Bellibolt",
-            "it": "Bellibolt",
+            "ko": "Iono's Bellibolt",
+            "zh_hant": "Iono's Bellibolt",
+            "fr": "Iono's Bellibolt",
+            "de": "Iono's Bellibolt",
+            "es": "Iono's Bellibolt",
+            "it": "Iono's Bellibolt",
             "en": "Iono's Bellibolt",
-            "ja": "ハラバリー",
-            "zh_hans": "电肚蛙"
+            "ja": "Iono's Bellibolt",
+            "zh_hans": "Iono's Bellibolt"
           },
           "prefix": null,
           "suffix": "[EX_NEW]",
@@ -5202,15 +5191,15 @@
           ],
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/943.png",
           "name": {
-            "ko": "마피티프",
-            "zh_hant": "獒教父",
-            "fr": "Dogrino",
-            "de": "Mastifioso",
-            "es": "Mabosstiff",
-            "it": "Mabosstiff",
+            "ko": "Arven's Mabosstiff",
+            "zh_hant": "Arven's Mabosstiff",
+            "fr": "Arven's Mabosstiff",
+            "de": "Arven's Mabosstiff",
+            "es": "Arven's Mabosstiff",
+            "it": "Arven's Mabosstiff",
             "en": "Arven's Mabosstiff",
-            "ja": "マフィティフ",
-            "zh_hans": "獒教父"
+            "ja": "Arven's Mabosstiff",
+            "zh_hans": "Arven's Mabosstiff"
           },
           "prefix": null,
           "suffix": "[EX_NEW]",
@@ -5983,15 +5972,15 @@
           ],
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/980.png",
           "name": {
-            "ko": "토오",
-            "zh_hant": "土王",
-            "fr": "Terraiste",
-            "de": "Suelord",
-            "es": "Clodsire",
-            "it": "Clodsire",
+            "ko": "Paldean Clodsire",
+            "zh_hant": "Paldean Clodsire",
+            "fr": "Paldean Clodsire",
+            "de": "Paldean Clodsire",
+            "es": "Paldean Clodsire",
+            "it": "Paldean Clodsire",
             "en": "Paldean Clodsire",
-            "ja": "ドオー",
-            "zh_hans": "土王"
+            "ja": "Paldean Clodsire",
+            "zh_hans": "Paldean Clodsire"
           },
           "prefix": null,
           "suffix": "[EX_NEW]",
@@ -6067,15 +6056,15 @@
           ],
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/982.png",
           "name": {
-            "ko": "노고고치",
-            "zh_hant": "土龍節節",
-            "fr": "Deusolourdo",
-            "de": "Dummimisel",
-            "es": "Dudunsparce",
-            "it": "Dudunsparce",
+            "ko": "Larry's Dudunsparce",
+            "zh_hant": "Larry's Dudunsparce",
+            "fr": "Larry's Dudunsparce",
+            "de": "Larry's Dudunsparce",
+            "es": "Larry's Dudunsparce",
+            "it": "Larry's Dudunsparce",
             "en": "Larry's Dudunsparce",
-            "ja": "ノココッチ",
-            "zh_hans": "土龙节节"
+            "ja": "Larry's Dudunsparce",
+            "zh_hans": "Larry's Dudunsparce"
           },
           "prefix": null,
           "suffix": "[EX_NEW]",
@@ -6129,17 +6118,17 @@
           "suffix": "[EX_NEW]",
           "form_code": "#984_EX3",
           "tcg_card": {
-            "id": "sv04.5-053",
-            "localId": "053",
+            "id": "sv01-123",
+            "localId": "123",
             "set": {
               "cardCount": {
-                "official": 91,
-                "total": 245
+                "official": 198,
+                "total": 258
               },
-              "id": "sv04.5",
-              "logo": "https://assets.tcgdex.net/en/sv/sv04.5/logo",
-              "name": "Paldean Fates",
-              "symbol": "https://assets.tcgdex.net/univ/sv/sv04.5/symbol"
+              "id": "sv01",
+              "logo": "https://assets.tcgdex.net/en/sv/sv01/logo",
+              "name": "Scarlet & Violet",
+              "symbol": "https://assets.tcgdex.net/univ/sv/sv01/symbol"
             },
             "hp": 250,
             "rarity": "Double rare"
@@ -6240,17 +6229,17 @@
           "suffix": "[EX_NEW]",
           "form_code": "#990_EX3",
           "tcg_card": {
-            "id": "sv04.5-066",
-            "localId": "066",
+            "id": "sv01-143",
+            "localId": "143",
             "set": {
               "cardCount": {
-                "official": 91,
-                "total": 245
+                "official": 198,
+                "total": 258
               },
-              "id": "sv04.5",
-              "logo": "https://assets.tcgdex.net/en/sv/sv04.5/logo",
-              "name": "Paldean Fates",
-              "symbol": "https://assets.tcgdex.net/univ/sv/sv04.5/symbol"
+              "id": "sv01",
+              "logo": "https://assets.tcgdex.net/en/sv/sv01/logo",
+              "name": "Scarlet & Violet",
+              "symbol": "https://assets.tcgdex.net/univ/sv/sv01/symbol"
             },
             "hp": 220,
             "rarity": "Double rare"
@@ -6609,17 +6598,17 @@
           "suffix": "[EX_NEW]",
           "form_code": "#1007_EX3",
           "tcg_card": {
-            "id": "me02.5-121",
-            "localId": "121",
+            "id": "sv01-125",
+            "localId": "125",
             "set": {
               "cardCount": {
-                "official": 217,
-                "total": 295
+                "official": 198,
+                "total": 258
               },
-              "id": "me02.5",
-              "logo": "https://assets.tcgdex.net/en/me/me02.5/logo",
-              "name": "Ascended Heroes",
-              "symbol": "https://assets.tcgdex.net/univ/me/me02.5/symbol"
+              "id": "sv01",
+              "logo": "https://assets.tcgdex.net/en/sv/sv01/logo",
+              "name": "Scarlet & Violet",
+              "symbol": "https://assets.tcgdex.net/univ/sv/sv01/symbol"
             },
             "hp": 230,
             "rarity": "Double rare"
@@ -6646,17 +6635,17 @@
           "suffix": "[EX_NEW]",
           "form_code": "#1008_EX3",
           "tcg_card": {
-            "id": "me02.5-073",
-            "localId": "073",
+            "id": "sv01-081",
+            "localId": "081",
             "set": {
               "cardCount": {
-                "official": 217,
-                "total": 295
+                "official": 198,
+                "total": 258
               },
-              "id": "me02.5",
-              "logo": "https://assets.tcgdex.net/en/me/me02.5/logo",
-              "name": "Ascended Heroes",
-              "symbol": "https://assets.tcgdex.net/univ/me/me02.5/symbol"
+              "id": "sv01",
+              "logo": "https://assets.tcgdex.net/en/sv/sv01/logo",
+              "name": "Scarlet & Violet",
+              "symbol": "https://assets.tcgdex.net/univ/sv/sv01/symbol"
             },
             "hp": 220,
             "rarity": "Double rare"
@@ -6889,15 +6878,15 @@
           ],
           "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1017.png",
           "name": {
-            "ko": "오거폰",
-            "zh_hant": "厄鬼椪",
-            "fr": "Ogerpon",
-            "de": "Ogerpon",
-            "es": "Ogerpon",
-            "it": "Ogerpon",
+            "de": "Türkisgrüne-Maske-Ogerpon",
             "en": "Teal Mask Ogerpon",
-            "ja": "オーガポン",
-            "zh_hans": "厄诡椪"
+            "fr": "Ogerpon Masque Turquoise",
+            "es": "Ogerpon Máscara Turquesa",
+            "it": "Ogerpon Maschera Turchese",
+            "ja": "オーガポン（みどりのめん）",
+            "ko": "오거폰(벽록의 가면)",
+            "zh_hans": "厄诡椪（碧草面具）",
+            "zh_hant": "厄鬼椪（碧草面具）"
           },
           "prefix": null,
           "suffix": "[EX_NEW]",
@@ -6905,6 +6894,147 @@
           "tcg_card": {
             "id": "sv08.5-012",
             "localId": "012",
+            "set": {
+              "cardCount": {
+                "official": 131,
+                "total": 180
+              },
+              "id": "sv08.5",
+              "logo": "https://assets.tcgdex.net/en/sv/sv08.5/logo",
+              "name": "Prismatic Evolutions"
+            },
+            "hp": 210,
+            "rarity": "Double rare"
+          },
+          "base_name": {
+            "ko": "오거폰",
+            "zh_hant": "厄鬼椪",
+            "fr": "Ogerpon",
+            "de": "Ogerpon",
+            "es": "Ogerpon",
+            "it": "Ogerpon",
+            "en": "Ogerpon",
+            "ja": "オーガポン",
+            "zh_hans": "厄诡椪"
+          }
+        },
+        {
+          "pokemon_id": 1017,
+          "types": [
+            "Water"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10273.png",
+          "name": {
+            "de": "Brunnenmaske-Ogerpon",
+            "en": "Wellspring Mask Ogerpon",
+            "fr": "Ogerpon Masque du Puits",
+            "es": "Ogerpon Máscara Fuente",
+            "it": "Ogerpon Maschera Pozzo",
+            "ja": "オーガポン（いどのめん）",
+            "ko": "오거폰(우물의 가면)",
+            "zh_hans": "厄诡椪（水井面具）",
+            "zh_hant": "厄鬼椪（水井面具）"
+          },
+          "prefix": null,
+          "suffix": "[EX_NEW]",
+          "form_code": "#1017_EX3",
+          "tcg_card": {
+            "id": "sv08.5-027",
+            "localId": "027",
+            "set": {
+              "cardCount": {
+                "official": 131,
+                "total": 180
+              },
+              "id": "sv08.5",
+              "logo": "https://assets.tcgdex.net/en/sv/sv08.5/logo",
+              "name": "Prismatic Evolutions"
+            },
+            "hp": 210,
+            "rarity": "Double rare"
+          },
+          "base_name": {
+            "ko": "오거폰",
+            "zh_hant": "厄鬼椪",
+            "fr": "Ogerpon",
+            "de": "Ogerpon",
+            "es": "Ogerpon",
+            "it": "Ogerpon",
+            "en": "Ogerpon",
+            "ja": "オーガポン",
+            "zh_hans": "厄诡椪"
+          }
+        },
+        {
+          "pokemon_id": 1017,
+          "types": [
+            "Fire"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10274.png",
+          "name": {
+            "de": "Ofenmaske-Ogerpon",
+            "en": "Hearthflame Mask Ogerpon",
+            "fr": "Ogerpon Masque du Fourneau",
+            "es": "Ogerpon Máscara Horno",
+            "it": "Ogerpon Maschera Focolare",
+            "ja": "オーガポン（かまどのめん）",
+            "ko": "오거폰(화덕의 가면)",
+            "zh_hans": "厄诡椪（火灶面具）",
+            "zh_hant": "厄鬼椪（火灶面具）"
+          },
+          "prefix": null,
+          "suffix": "[EX_NEW]",
+          "form_code": "#1017_EX3",
+          "tcg_card": {
+            "id": "sv08.5-017",
+            "localId": "017",
+            "set": {
+              "cardCount": {
+                "official": 131,
+                "total": 180
+              },
+              "id": "sv08.5",
+              "logo": "https://assets.tcgdex.net/en/sv/sv08.5/logo",
+              "name": "Prismatic Evolutions"
+            },
+            "hp": 210,
+            "rarity": "Double rare"
+          },
+          "base_name": {
+            "ko": "오거폰",
+            "zh_hant": "厄鬼椪",
+            "fr": "Ogerpon",
+            "de": "Ogerpon",
+            "es": "Ogerpon",
+            "it": "Ogerpon",
+            "en": "Ogerpon",
+            "ja": "オーガポン",
+            "zh_hans": "厄诡椪"
+          }
+        },
+        {
+          "pokemon_id": 1017,
+          "types": [
+            "Fighting"
+          ],
+          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10275.png",
+          "name": {
+            "de": "Fundamentmaske-Ogerpon",
+            "en": "Cornerstone Mask Ogerpon",
+            "fr": "Ogerpon Masque de la Pierre",
+            "es": "Ogerpon Máscara Cimiento",
+            "it": "Ogerpon Maschera Fondamenta",
+            "ja": "オーガポン（いしずえのめん）",
+            "ko": "오거폰(주춧돌의 가면)",
+            "zh_hans": "厄诡椪（础石面具）",
+            "zh_hant": "厄鬼椪（礎石面具）"
+          },
+          "prefix": null,
+          "suffix": "[EX_NEW]",
+          "form_code": "#1017_EX3",
+          "tcg_card": {
+            "id": "sv08.5-058",
+            "localId": "058",
             "set": {
               "cardCount": {
                 "official": 131,
@@ -7220,17 +7350,34 @@
         }
       ],
       "description": {
-        "de": "Scarlet & Violet Serie (2023–heute) • Pokémon-ex Grundformen",
-        "en": "Scarlet & Violet Series (2023–present) • Pokémon-ex base forms",
-        "fr": "Série Écarlate & Violet (2023–présent) • Formes de base Pokémon-ex",
-        "es": "Serie Escarlata & Púrpura (2023–presente) • Formas base Pokémon-ex",
-        "it": "Serie Rosso & Viola (2023–presente) • Forme base Pokémon-ex",
-        "ja": "スカーレット&バイオレット シリーズ (2023–現在) • ポケモンex基本形態",
-        "ko": "스칼렛 & 바이올렛 시리즈 (2023–현재) • 포켓몬 ex 기본 형태",
-        "zh_hans": "朱&紫系列 (2023–至今) • 宝可梦ex基本形态",
-        "zh_hant": "朱&紫系列 (2023–至今) • 寶可夢ex基本形態"
+        "de": "2023–heute • Pokémon ex ohne Mega-Entwicklung",
+        "en": "2023–present • non-Mega Pokémon ex",
+        "fr": "2023–aujourd’hui • Pokémon ex hors Méga-Évolution",
+        "es": "2023–presente • Pokémon ex sin Megaevolución",
+        "it": "2023–presente • Pokémon ex non megaevoluti",
+        "ja": "2023年～ • メガシンカ以外のポケモンex",
+        "ko": "2023년~ • 메가진화가 아닌 포켓몬 ex",
+        "zh_hans": "2023年至今 • 非超级进化宝可梦ex",
+        "zh_hant": "2023年至今 • 非超級進化寶可夢ex"
       },
       "featured_elements": [
+        {
+          "pokemon_id": 1007,
+          "pokemon_name": "Koraidon",
+          "card_id": "sv01-125",
+          "set_name": "Scarlet & Violet",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv01/125/high.png",
+          "local_image_path": "data/section_artwork/pokemon_1007_sv01-125.png",
+          "rarity": "Double rare",
+          "hp": 230,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 1007,
+            "official_artwork_id": 1007,
+            "subject_key": "pokeapi:official-artwork:1007",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1007.png"
+          }
+        },
         {
           "pokemon_id": 25,
           "pokemon_name": "Pikachu",
@@ -7239,27 +7386,31 @@
           "image_url": "https://assets.tcgdex.net/en/me/me02.5/057/high.png",
           "local_image_path": "data/section_artwork/pokemon_25_me02.5-057.png",
           "rarity": "Double rare",
-          "hp": 200
+          "hp": 200,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 25,
+            "official_artwork_id": 25,
+            "subject_key": "pokeapi:official-artwork:25",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png"
+          }
         },
         {
-          "pokemon_id": 150,
-          "pokemon_name": "Team Rocket's Mewtwo",
-          "card_id": "me02.5-079",
-          "set_name": "Ascended Heroes",
-          "image_url": "https://assets.tcgdex.net/en/me/me02.5/079/high.png",
-          "local_image_path": "data/section_artwork/pokemon_150_me02.5-079.png",
+          "pokemon_id": 1008,
+          "pokemon_name": "Miraidon",
+          "card_id": "sv01-081",
+          "set_name": "Scarlet & Violet",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv01/081/high.png",
+          "local_image_path": "data/section_artwork/pokemon_1008_sv01-081.png",
           "rarity": "Double rare",
-          "hp": 280
-        },
-        {
-          "pokemon_id": 151,
-          "pokemon_name": "Mew",
-          "card_id": "sv03.5-151",
-          "set_name": "151",
-          "image_url": "https://assets.tcgdex.net/en/sv/sv03.5/151/high.png",
-          "local_image_path": "data/section_artwork/pokemon_151_sv03.5-151.png",
-          "rarity": "Double rare",
-          "hp": 180
+          "hp": 220,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 1008,
+            "official_artwork_id": 1008,
+            "subject_key": "pokeapi:official-artwork:1008",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1008.png"
+          }
         }
       ]
     },
@@ -7828,54 +7979,6 @@
           }
         },
         {
-          "pokemon_id": 351,
-          "types": [
-            "Darkness"
-          ],
-          "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10057.png",
-          "name": {
-            "ko": "캐스퐁",
-            "zh_hant": "飄浮泡泡",
-            "fr": "Morphéo",
-            "de": "Formeo",
-            "es": "Castform",
-            "it": "Castform",
-            "en": "Absol",
-            "ja": "ポワルン",
-            "zh_hans": "飘浮泡泡"
-          },
-          "prefix": "Mega",
-          "suffix": "[EX_NEW]",
-          "form_code": "#351_EX3",
-          "tcg_card": {
-            "id": "me01-086",
-            "localId": "086",
-            "set": {
-              "cardCount": {
-                "official": 132,
-                "total": 188
-              },
-              "id": "me01",
-              "logo": "https://assets.tcgdex.net/en/me/me01/logo",
-              "name": "Mega Evolution",
-              "symbol": "https://assets.tcgdex.net/univ/me/me01/symbol"
-            },
-            "hp": 280,
-            "rarity": "Double rare"
-          },
-          "base_name": {
-            "ko": "캐스퐁",
-            "zh_hant": "飄浮泡泡",
-            "fr": "Morphéo",
-            "de": "Formeo",
-            "es": "Castform",
-            "it": "Castform",
-            "en": "Castform",
-            "ja": "ポワルン",
-            "zh_hans": "飘浮泡泡"
-          }
-        },
-        {
           "pokemon_id": 359,
           "types": [
             "Darkness"
@@ -7896,8 +7999,8 @@
           "suffix": "[EX_NEW]",
           "form_code": "#359_EX3",
           "tcg_card": {
-            "id": "me01-161",
-            "localId": "161",
+            "id": "me01-086",
+            "localId": "086",
             "set": {
               "cardCount": {
                 "official": 132,
@@ -7909,7 +8012,7 @@
               "symbol": "https://assets.tcgdex.net/univ/me/me01/symbol"
             },
             "hp": 280,
-            "rarity": "Ultra Rare"
+            "rarity": "Double rare"
           }
         },
         {
@@ -8320,46 +8423,67 @@
         }
       ],
       "description": {
-        "de": "Scarlet & Violet Serie (2024–heute) • Mega-Entwicklungen als Pokémon-ex",
-        "en": "Scarlet & Violet Series (2024–present) • Mega Evolutions as Pokémon-ex",
-        "fr": "Série Écarlate & Violet (2024–présent) • Méga-Évolutions en Pokémon-ex",
-        "es": "Serie Escarlata & Púrpura (2024–presente) • Megaevoluciones como Pokémon-ex",
-        "it": "Serie Rosso & Viola (2024–presente) • Megaevoluzioni come Pokémon-ex",
-        "ja": "スカーレット&バイオレット シリーズ (2024–現在) • メガシンカポケモンex",
-        "ko": "스칼렛 & 바이올렛 시리즈 (2024–현재) • 메가진화 포켓몬 ex",
-        "zh_hans": "朱&紫系列 (2024–至今) • 超级进化宝可梦ex",
-        "zh_hant": "朱&紫系列 (2024–至今) • 超級進化寶可夢ex"
+        "de": "2025–heute • Mega-Entwicklungen als Pokémon ex",
+        "en": "2025–present • Mega Evolutions as Pokémon ex",
+        "fr": "2025–présent • Méga-Évolutions en Pokémon ex",
+        "es": "2025–presente • Megaevoluciones como Pokémon ex",
+        "it": "2025–presente • Megaevoluzioni come Pokémon ex",
+        "ja": "2025年～ • メガシンカしたポケモンex",
+        "ko": "2025년~ • 메가진화 포켓몬 ex",
+        "zh_hans": "2025年至今 • 超级进化宝可梦ex",
+        "zh_hant": "2025年至今 • 超級進化寶可夢ex"
       },
       "featured_elements": [
         {
           "pokemon_id": 380,
-          "pokemon_name": "Latias",
+          "pokemon_name": "Mega Latias",
           "card_id": "me01-100",
           "set_name": "Mega Evolution",
           "image_url": "https://assets.tcgdex.net/en/me/me01/100/high.png",
           "local_image_path": "data/section_artwork/pokemon_380_me01-100.png",
           "rarity": "Double rare",
-          "hp": 280
+          "hp": 280,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 380,
+            "official_artwork_id": 10062,
+            "subject_key": "pokeapi:official-artwork:10062",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10062.png"
+          }
         },
         {
           "pokemon_id": 719,
-          "pokemon_name": "Diancie",
+          "pokemon_name": "Mega Diancie",
           "card_id": "me02.5-267",
           "set_name": "Ascended Heroes",
           "image_url": "https://assets.tcgdex.net/en/me/me02.5/267/high.png",
           "local_image_path": "data/section_artwork/pokemon_719_me02.5-267.png",
           "rarity": "Ultra Rare",
-          "hp": 270
+          "hp": 270,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 719,
+            "official_artwork_id": 10075,
+            "subject_key": "pokeapi:official-artwork:10075",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10075.png"
+          }
         },
         {
           "pokemon_id": 448,
-          "pokemon_name": "Lucario",
+          "pokemon_name": "Mega Lucario",
           "card_id": "me02.5-113",
           "set_name": "Ascended Heroes",
           "image_url": "https://assets.tcgdex.net/en/me/me02.5/113/high.png",
           "local_image_path": "data/section_artwork/pokemon_448_me02.5-113.png",
           "rarity": "Double rare",
-          "hp": 340
+          "hp": 340,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 448,
+            "official_artwork_id": 10059,
+            "subject_key": "pokeapi:official-artwork:10059",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10059.png"
+          }
         }
       ]
     }

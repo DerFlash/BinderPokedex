@@ -1,23 +1,26 @@
 {
   "version": "2.0",
-  "consolidated_date": "2026-03-31",
+  "type": "pokedex",
+  "name": "Pokédex",
+  "consolidated_date": "2026-07-27",
   "total_generations": 9,
   "sections": {
     "gen1": {
       "section_id": "gen1",
+      "section_order": 1,
       "id": 1,
       "name": "Generation I",
       "region": "Kanto",
       "title": {
         "de": "Generation I",
         "en": "Generation I",
-        "fr": "Generation I",
-        "es": "Generation I",
-        "it": "Generation I",
-        "ja": "Generation I",
-        "ko": "Generation I",
-        "zh_hans": "Generation I",
-        "zh_hant": "Generation I"
+        "fr": "Génération I",
+        "es": "Generación I",
+        "it": "Generazione I",
+        "ja": "1世代",
+        "ko": "1세대",
+        "zh_hans": "第1世代",
+        "zh_hant": "第1世代"
       },
       "subtitle": {
         "de": "Kanto",
@@ -25,10 +28,10 @@
         "fr": "Kanto",
         "es": "Kanto",
         "it": "Kanto",
-        "ja": "Kanto",
-        "ko": "Kanto",
-        "zh_hans": "Kanto",
-        "zh_hant": "Kanto"
+        "ja": "カントー",
+        "ko": "칸토",
+        "zh_hans": "关都",
+        "zh_hant": "關都"
       },
       "color_hex": "#78C850",
       "pokemon_count": 151,
@@ -3171,19 +3174,20 @@
     },
     "gen2": {
       "section_id": "gen2",
+      "section_order": 2,
       "id": 2,
       "name": "Generation II",
       "region": "Johto",
       "title": {
         "de": "Generation II",
         "en": "Generation II",
-        "fr": "Generation II",
-        "es": "Generation II",
-        "it": "Generation II",
-        "ja": "Generation II",
-        "ko": "Generation II",
-        "zh_hans": "Generation II",
-        "zh_hant": "Generation II"
+        "fr": "Génération II",
+        "es": "Generación II",
+        "it": "Generazione II",
+        "ja": "2世代",
+        "ko": "2세대",
+        "zh_hans": "第2世代",
+        "zh_hant": "第2世代"
       },
       "subtitle": {
         "de": "Johto",
@@ -3191,10 +3195,10 @@
         "fr": "Johto",
         "es": "Johto",
         "it": "Johto",
-        "ja": "Johto",
-        "ko": "Johto",
-        "zh_hans": "Johto",
-        "zh_hant": "Johto"
+        "ja": "ジョウト",
+        "ko": "조토",
+        "zh_hans": "城都",
+        "zh_hant": "城都"
       },
       "color_hex": "#F85888",
       "pokemon_count": 100,
@@ -5299,19 +5303,20 @@
     },
     "gen3": {
       "section_id": "gen3",
+      "section_order": 3,
       "id": 3,
       "name": "Generation III",
       "region": "Hoenn",
       "title": {
         "de": "Generation III",
         "en": "Generation III",
-        "fr": "Generation III",
-        "es": "Generation III",
-        "it": "Generation III",
-        "ja": "Generation III",
-        "ko": "Generation III",
-        "zh_hans": "Generation III",
-        "zh_hant": "Generation III"
+        "fr": "Génération III",
+        "es": "Generación III",
+        "it": "Generazione III",
+        "ja": "3世代",
+        "ko": "3세대",
+        "zh_hans": "第3世代",
+        "zh_hant": "第3世代"
       },
       "subtitle": {
         "de": "Hoenn",
@@ -5319,10 +5324,10 @@
         "fr": "Hoenn",
         "es": "Hoenn",
         "it": "Hoenn",
-        "ja": "Hoenn",
-        "ko": "Hoenn",
-        "zh_hans": "Hoenn",
-        "zh_hant": "Hoenn"
+        "ja": "ホウエン",
+        "ko": "호연",
+        "zh_hans": "丰缘",
+        "zh_hant": "豐緣"
       },
       "color_hex": "#6890F0",
       "pokemon_count": 135,
@@ -8144,19 +8149,20 @@
     },
     "gen4": {
       "section_id": "gen4",
+      "section_order": 4,
       "id": 4,
       "name": "Generation IV",
       "region": "Sinnoh",
       "title": {
         "de": "Generation IV",
         "en": "Generation IV",
-        "fr": "Generation IV",
-        "es": "Generation IV",
-        "it": "Generation IV",
-        "ja": "Generation IV",
-        "ko": "Generation IV",
-        "zh_hans": "Generation IV",
-        "zh_hant": "Generation IV"
+        "fr": "Génération IV",
+        "es": "Generación IV",
+        "it": "Generazione IV",
+        "ja": "4世代",
+        "ko": "4세대",
+        "zh_hans": "第4世代",
+        "zh_hant": "第4世代"
       },
       "subtitle": {
         "de": "Sinnoh",
@@ -8164,10 +8170,10 @@
         "fr": "Sinnoh",
         "es": "Sinnoh",
         "it": "Sinnoh",
-        "ja": "Sinnoh",
-        "ko": "Sinnoh",
-        "zh_hans": "Sinnoh",
-        "zh_hant": "Sinnoh"
+        "ja": "シンオウ",
+        "ko": "신오",
+        "zh_hans": "神奥",
+        "zh_hant": "神奧"
       },
       "color_hex": "#F8D030",
       "pokemon_count": 107,
@@ -10416,30 +10422,31 @@
     },
     "gen5": {
       "section_id": "gen5",
+      "section_order": 5,
       "id": 5,
       "name": "Generation V",
       "region": "Unova",
       "title": {
         "de": "Generation V",
         "en": "Generation V",
-        "fr": "Generation V",
-        "es": "Generation V",
-        "it": "Generation V",
-        "ja": "Generation V",
-        "ko": "Generation V",
-        "zh_hans": "Generation V",
-        "zh_hant": "Generation V"
+        "fr": "Génération V",
+        "es": "Generación V",
+        "it": "Generazione V",
+        "ja": "5世代",
+        "ko": "5세대",
+        "zh_hans": "第5世代",
+        "zh_hant": "第5世代"
       },
       "subtitle": {
-        "de": "Unova",
+        "de": "Einall",
         "en": "Unova",
-        "fr": "Unova",
-        "es": "Unova",
-        "it": "Unova",
-        "ja": "Unova",
-        "ko": "Unova",
-        "zh_hans": "Unova",
-        "zh_hant": "Unova"
+        "fr": "Unys",
+        "es": "Teselia",
+        "it": "Unima",
+        "ja": "イッシュ",
+        "ko": "이슈",
+        "zh_hans": "合众",
+        "zh_hant": "合眾"
       },
       "color_hex": "#98D8D8",
       "pokemon_count": 156,
@@ -13689,19 +13696,20 @@
     },
     "gen6": {
       "section_id": "gen6",
+      "section_order": 6,
       "id": 6,
       "name": "Generation VI",
       "region": "Kalos",
       "title": {
         "de": "Generation VI",
         "en": "Generation VI",
-        "fr": "Generation VI",
-        "es": "Generation VI",
-        "it": "Generation VI",
-        "ja": "Generation VI",
-        "ko": "Generation VI",
-        "zh_hans": "Generation VI",
-        "zh_hant": "Generation VI"
+        "fr": "Génération VI",
+        "es": "Generación VI",
+        "it": "Generazione VI",
+        "ja": "6世代",
+        "ko": "6세대",
+        "zh_hans": "第6世代",
+        "zh_hant": "第6世代"
       },
       "subtitle": {
         "de": "Kalos",
@@ -13709,10 +13717,10 @@
         "fr": "Kalos",
         "es": "Kalos",
         "it": "Kalos",
-        "ja": "Kalos",
-        "ko": "Kalos",
-        "zh_hans": "Kalos",
-        "zh_hant": "Kalos"
+        "ja": "カロス",
+        "ko": "칼로스",
+        "zh_hans": "卡洛斯",
+        "zh_hant": "卡洛斯"
       },
       "color_hex": "#F85888",
       "pokemon_count": 72,
@@ -15249,19 +15257,20 @@
     },
     "gen7": {
       "section_id": "gen7",
+      "section_order": 7,
       "id": 7,
       "name": "Generation VII",
       "region": "Alola",
       "title": {
         "de": "Generation VII",
         "en": "Generation VII",
-        "fr": "Generation VII",
-        "es": "Generation VII",
-        "it": "Generation VII",
-        "ja": "Generation VII",
-        "ko": "Generation VII",
-        "zh_hans": "Generation VII",
-        "zh_hant": "Generation VII"
+        "fr": "Génération VII",
+        "es": "Generación VII",
+        "it": "Generazione VII",
+        "ja": "7世代",
+        "ko": "7세대",
+        "zh_hans": "第7世代",
+        "zh_hant": "第7世代"
       },
       "subtitle": {
         "de": "Alola",
@@ -15269,10 +15278,10 @@
         "fr": "Alola",
         "es": "Alola",
         "it": "Alola",
-        "ja": "Alola",
-        "ko": "Alola",
-        "zh_hans": "Alola",
-        "zh_hant": "Alola"
+        "ja": "アローラ",
+        "ko": "알롤라",
+        "zh_hans": "阿罗拉",
+        "zh_hant": "阿羅拉"
       },
       "color_hex": "#F08030",
       "pokemon_count": 88,
@@ -17143,19 +17152,20 @@
     },
     "gen8": {
       "section_id": "gen8",
+      "section_order": 8,
       "id": 8,
       "name": "Generation VIII",
       "region": "Galar",
       "title": {
         "de": "Generation VIII",
         "en": "Generation VIII",
-        "fr": "Generation VIII",
-        "es": "Generation VIII",
-        "it": "Generation VIII",
-        "ja": "Generation VIII",
-        "ko": "Generation VIII",
-        "zh_hans": "Generation VIII",
-        "zh_hant": "Generation VIII"
+        "fr": "Génération VIII",
+        "es": "Generación VIII",
+        "it": "Generazione VIII",
+        "ja": "8世代",
+        "ko": "8세대",
+        "zh_hans": "第8世代",
+        "zh_hant": "第8世代"
       },
       "subtitle": {
         "de": "Galar",
@@ -17163,10 +17173,10 @@
         "fr": "Galar",
         "es": "Galar",
         "it": "Galar",
-        "ja": "Galar",
-        "ko": "Galar",
-        "zh_hans": "Galar",
-        "zh_hant": "Galar"
+        "ja": "ガラル",
+        "ko": "가라르",
+        "zh_hans": "伽勒尔",
+        "zh_hant": "伽勒爾"
       },
       "color_hex": "#7038F8",
       "pokemon_count": 96,
@@ -19186,19 +19196,20 @@
     },
     "gen9": {
       "section_id": "gen9",
+      "section_order": 9,
       "id": 9,
       "name": "Generation IX",
       "region": "Paldea",
       "title": {
         "de": "Generation IX",
         "en": "Generation IX",
-        "fr": "Generation IX",
-        "es": "Generation IX",
-        "it": "Generation IX",
-        "ja": "Generation IX",
-        "ko": "Generation IX",
-        "zh_hans": "Generation IX",
-        "zh_hant": "Generation IX"
+        "fr": "Génération IX",
+        "es": "Generación IX",
+        "it": "Generazione IX",
+        "ja": "9世代",
+        "ko": "9세대",
+        "zh_hans": "第9世代",
+        "zh_hant": "第9世代"
       },
       "subtitle": {
         "de": "Paldea",
@@ -19206,10 +19217,10 @@
         "fr": "Paldea",
         "es": "Paldea",
         "it": "Paldea",
-        "ja": "Paldea",
-        "ko": "Paldea",
-        "zh_hans": "Paldea",
-        "zh_hant": "Paldea"
+        "ja": "パルデア",
+        "ko": "팔데아",
+        "zh_hans": "帕底亚",
+        "zh_hant": "帕底亞"
       },
       "color_hex": "#705848",
       "pokemon_count": 120,
@@ -21939,6 +21950,50 @@
       "it": "Folletto",
       "en": "Fairy",
       "zh_hans": "妖精"
+    },
+    "Colorless": {
+      "ja": "無色",
+      "ko": "무색",
+      "zh_hant": "無色",
+      "fr": "Incolore",
+      "de": "Farblos",
+      "es": "Incoloro",
+      "it": "Incolore",
+      "en": "Colorless",
+      "zh_hans": "无色"
+    },
+    "Darkness": {
+      "ja": "あく",
+      "ko": "악",
+      "zh_hant": "惡",
+      "fr": "Ténèbres",
+      "de": "Unlicht",
+      "es": "Siniestro",
+      "it": "Buio",
+      "en": "Darkness",
+      "zh_hans": "恶"
+    },
+    "Lightning": {
+      "ja": "でんき",
+      "ko": "전기",
+      "zh_hant": "電",
+      "fr": "Électrique",
+      "de": "Elektro",
+      "es": "Eléctrico",
+      "it": "Elettro",
+      "en": "Lightning",
+      "zh_hans": "电"
+    },
+    "Metal": {
+      "ja": "はがね",
+      "ko": "강철",
+      "zh_hant": "鋼",
+      "fr": "Acier",
+      "de": "Stahl",
+      "es": "Acero",
+      "it": "Acciaio",
+      "en": "Metal",
+      "zh_hans": "钢"
     }
   }
 }

@@ -12,7 +12,36 @@ Print 1,025+ Pokémon across 9 generations in 9 languages. All variants, all for
 
 ## 🎨 Preview
 
-![BinderPokedex Preview](docs/images/binderdex-preview.png)
+![An open BinderPokedex with a continuous Base Set poster and matching collected cards](docs/images/binder-pokedex-v9-key-visual.png)
+
+*One artwork, nine cards: the left page reveals the complete Base Set panorama,
+while the right shows the first collection slots with matching cards already
+in place.*
+
+### Actual v9.0 PDF output
+
+<p align="center">
+  <img src="docs/images/binder-pokedex-primal-poster-page.png" width="430" alt="A Primal panorama ready for nine BinderPokedex card pockets">
+</p>
+
+This Primal start page comes straight from BinderPokedex and is ready to print
+as nine physical cards.
+
+<!-- release-news:start -->
+### Coming in v9.0: One Artwork. Nine Cards. Your Binder.
+
+Turn your binder into a showcase: every collection now opens with a unique
+Pokémon panorama spanning nine card pockets.
+
+- A continuous scene turns the first page into a true centerpiece.
+- Every set, Pokédex generation, and EX chapter opens in its own world.
+- Each card works on its own; together, all nine reveal the complete panorama.
+- Set logos and key collection facts appear in your selected language.
+- Cut and sleeve the nine cards, or keep the artwork as a full-page print.
+
+Technical details belong in the [changelog](CHANGELOG.md); this space is for
+the experience collectors will see in their binders.
+<!-- release-news:end -->
 
 ---
 
@@ -22,7 +51,8 @@ Print 1,025+ Pokémon across 9 generations in 9 languages. All variants, all for
 - **1,025+ Pokémon** across all 9 generations (Kanto → Paldea) in National Pokédex
 - **Official artwork** from PokéAPI and TCGdex - authentic images from games and TCG
 - **3×3 card layout** (9 per page) - perfect for standard binder sheets
-- **Generation & variant covers** with beautiful multilingual design and localized logos
+- **Nine-card poster panoramas** for every current set, Pokédex generation,
+  and EX chapter
 - **Complete TCG Support** 🎴
   - **3 EX Generations:** ExGen1 (2003-2007), ExGen2 (2012-2016), ExGen3 (2023+)
   - **17 Scarlet & Violet Sets:** Full Scarlet & Violet era (SV01-SV10 + specials)
@@ -54,56 +84,10 @@ Print 1,025+ Pokémon across 9 generations in 9 languages. All variants, all for
 🇹🇼 [繁體中文](https://github.com/DerFlash/BinderPokedex/releases/download/v8.4/binder-pokedex-zh_hant.zip)
 ---
 
-## 📝 What's New
+## 📝 Release History
 
-### v8.4 (July 2026)
-
-**Pokemon Jungle and Fossil** 🎴
-
-- Added Jungle (base2, 1999) scope with 64 cards: 63 Pokémon, 1 Trainer
-- Added Fossil (base3, 1999) scope with 62 cards: 57 Pokémon, 5 Trainers
-- Available in de, en, fr, es, it (ja/ko/zh not released for these sets)
-- Fixed missing artwork for classic Trainer cards without a TCGdex subtype
-
-### v8.2 (July 2026)
-
-**Mega Evolution Set Expansion** 🎴
-
-- Added ME03 Perfect Order and ME04 Chaos Rising source data, scope configs, enriched output data, and featured section artwork
-- Release builds now discover scopes from config/scopes/*.yaml
-
-### v8.1 (July 2026)
-
-**CJK Font Fallback & TCG Type Translations** 🐛
-
-🔧 **CJK Fix (Korean & Traditional Chinese):**
-- Korean and Traditional Chinese PDFs were empty/broken on Linux/CI due to macOS-exclusive fonts (`AppleGothic`, `STHeitiMedium`) being unavailable
-- `FontManager` now automatically falls back to WenQuanYi/Noto on Linux — all 9 languages generate complete PDFs
-
-🌍 **TCG Energy Type Translations:**
-- `Colorless`, `Darkness`, `Lightning`, and `Metal` are TCG-exclusive names not covered by PokéAPI — they were always displayed in English
-- Now fully translated in all 9 languages (e.g. `Darkness` → `あく` / `Unlicht` / `Ténèbres`)
-
-### v8.0 (July 2026)
-
-**SVG WYSIWYG Template System & MEP Expansion** ✨
-
-🎨 **SVG Template System:**
-- Full SVG-based card, page, and cover templates — editable live in any SVG editor (Inkscape, Illustrator, etc.)
-- Templates support inline logo embedding and automatic image placement
-- New CLI parameters: `--card-template`, `--page-template`, `--cover-template`, `--list-templates`
-- Backwards-compatible: existing renders are unchanged when no template flag is passed
-
-📦 **MEP Bulbapedia Supplement:**
-- MEP set expanded from 10 → 55 cards via Bulbapedia data supplement
-- Covers all missing cards not available in TCGdex
-
-🔧 **Technical:**
-- CI: upgraded to Python 3.12 + pip caching for faster builds
-- Preserved PNG transparency in image cache and all rendered PDFs
-- Fixed TCG multilingual card name handling
-
-📄 **[Full Release Notes & Changelog](CHANGELOG.md)**
+- [Release news and downloads](https://github.com/DerFlash/BinderPokedex/releases)
+- [Full technical changelog](CHANGELOG.md)
 
 ---
 
@@ -124,6 +108,10 @@ Print 1,025+ Pokémon across 9 generations in 9 languages. All variants, all for
 | **Pokémon Variants** | [docs/VARIANTS_FEATURE_SUMMARY.md](docs/VARIANTS_FEATURE_SUMMARY.md) |
 | **Variants Architecture** | [docs/VARIANTS_ARCHITECTURE.md](docs/VARIANTS_ARCHITECTURE.md) |
 | **Variants Quickstart** | [docs/VARIANTS_QUICKSTART.md](docs/VARIANTS_QUICKSTART.md) |
+| **Poster Workflow** | [docs/POSTER_WORKFLOW.md](docs/POSTER_WORKFLOW.md) |
+| **Poster Requirements** | [docs/POSTER_ARTWORK_REQUIREMENTS.md](docs/POSTER_ARTWORK_REQUIREMENTS.md) |
+| **Poster Integration Training** | [docs/POSTER_ARTWORK_TRAINING.md](docs/POSTER_ARTWORK_TRAINING.md) |
+| **Release Workflow** | [docs/RELEASE_WORKFLOW.md](docs/RELEASE_WORKFLOW.md) |
 
 ---
 

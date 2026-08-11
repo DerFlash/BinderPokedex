@@ -85,17 +85,22 @@ def list_assets(project_dir: Path) -> list[dict[str, Any]]:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--tag", required=True)
+    parser.add_argument("--release-notes-tag", default=None)
     parser.add_argument("--project-dir", default=".")
     parser.add_argument("--output", default="release-manifest.json")
     args = parser.parse_args()
 
     project_dir = Path(args.project_dir).resolve()
     scopes = discover_scopes(project_dir)
-    release_notes = load_yaml(project_dir / "config" / "release_notes" / f"{args.tag}.yaml")
+    release_notes_tag = args.release_notes_tag or args.tag
+    release_notes = load_yaml(
+        project_dir / "config" / "release_notes" / f"{release_notes_tag}.yaml"
+    )
 
     manifest = {
         "schema_version": 1,
         "tag": args.tag,
+        "release_notes_tag": release_notes_tag,
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "languages": LANGUAGES,
         "scopes": scopes,

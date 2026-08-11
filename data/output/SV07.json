@@ -3462,24 +3462,38 @@
       ],
       "featured_elements": [
         {
-          "pokemon_id": 251,
-          "pokemon_name": "Celebi",
-          "card_id": "sv07-004",
+          "pokemon_id": 1,
+          "pokemon_name": "Bulbasaur",
+          "card_id": "sv07-143",
           "set_name": "Stellar Crown",
-          "image_url": "https://assets.tcgdex.net/en/sv/sv07/004/high.png",
-          "local_image_path": "data/section_artwork/pokemon_251_sv07-004.png",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv07/143/high.png",
+          "local_image_path": "data/section_artwork/pokemon_1_sv07-143.png",
           "rarity": null,
-          "hp": null
+          "hp": null,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 1,
+            "official_artwork_id": 1,
+            "subject_key": "pokeapi:official-artwork:1",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
+          }
         },
         {
-          "pokemon_id": 643,
-          "pokemon_name": "Reshiram",
-          "card_id": "sv07-022",
+          "pokemon_id": 7,
+          "pokemon_name": "Squirtle",
+          "card_id": "sv07-148",
           "set_name": "Stellar Crown",
-          "image_url": "https://assets.tcgdex.net/en/sv/sv07/022/high.png",
-          "local_image_path": "data/section_artwork/pokemon_643_sv07-022.png",
+          "image_url": "https://assets.tcgdex.net/en/sv/sv07/148/high.png",
+          "local_image_path": "data/section_artwork/pokemon_7_sv07-148.png",
           "rarity": null,
-          "hp": null
+          "hp": null,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 7,
+            "official_artwork_id": 7,
+            "subject_key": "pokeapi:official-artwork:7",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png"
+          }
         },
         {
           "pokemon_id": 813,
@@ -3489,7 +3503,14 @@
           "image_url": "https://assets.tcgdex.net/en/sv/sv07/026/high.png",
           "local_image_path": "data/section_artwork/pokemon_813_sv07-026.png",
           "rarity": null,
-          "hp": null
+          "hp": null,
+          "poster_subject": {
+            "source": "pokeapi_official_artwork",
+            "species_id": 813,
+            "official_artwork_id": 813,
+            "subject_key": "pokeapi:official-artwork:813",
+            "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/813.png"
+          }
         }
       ]
     }

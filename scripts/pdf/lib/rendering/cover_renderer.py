@@ -72,7 +72,7 @@ class CoverStyle:
     GENERATION_Y_OFFSET = 55 * mm
     REGION_Y_OFFSET = 65 * mm
     POKEDEX_RANGE_Y = 160 * mm     # Pokédex ID range (optional, above count)
-    POKEMOM_COUNT_Y = 150 * mm     # Pokémon count (always above decorative line)
+    COLLECTION_COUNT_Y = 150 * mm  # Collection count (always above decorative line)
     DECORATIVE_LINE_Y = 145 * mm   # Decorative line position
     ICONIC_POKEMON_Y = 10 * mm
     FOOTER_Y = 2.5 * mm
@@ -162,7 +162,7 @@ class CoverRenderer:
         
         # ===== MIDDLE CONTENT SECTION =====
         self._draw_title_section(canvas_obj, cover_data)
-        self._draw_pokemon_count(canvas_obj, len(pokemon_list), cover_data, color)
+        self._draw_collection_count(canvas_obj, len(pokemon_list), cover_data, color)
         
         # ===== FEATURED CARDS =====
         self._draw_featured_elements(canvas_obj, cover_data)
@@ -199,9 +199,7 @@ class CoverRenderer:
         else:
             section_subtitle_text = str(section_subtitle) if section_subtitle else ''
         
-        pokemon_text = self._get_translation('pokemon_count_text', count=len(pokemon_list))
-        if not pokemon_text or pokemon_text == 'pokemon_count_text':
-            pokemon_text = f"{len(pokemon_list)} Pokémon in this collection"
+        collection_count_text = self._collection_count_text(len(pokemon_list), cover_data)
         
         description = cover_data.get('description', {})
         if isinstance(description, dict):
@@ -215,7 +213,7 @@ class CoverRenderer:
         replacements = {
             'section_title': section_title_text,
             'section_subtitle': section_subtitle_text,
-            'pokemon_count': pokemon_text,
+            'pokemon_count': collection_count_text,
             'description': description_text,
             'footer': footer_text,
         }
@@ -286,12 +284,9 @@ class CoverRenderer:
             section_title=None
         )
     
-    def _draw_pokemon_count(self, canvas_obj, count: int, cover_data: Dict, color: str) -> None:
-        """Draw Pokémon count, description, and decorative line."""
-        # Pokémon count text
-        pokemon_text = self._get_translation('pokemon_count_text', count=count)
-        if not pokemon_text or pokemon_text == 'pokemon_count_text':
-            pokemon_text = f"{count} Pokémon in this collection"
+    def _draw_collection_count(self, canvas_obj, count: int, cover_data: Dict, color: str) -> None:
+        """Draw the typed collection count, description, and decorative line."""
+        collection_count_text = self._collection_count_text(count, cover_data)
         
         try:
             count_font_name = FontManager.get_font_name(self.language, bold=False)
@@ -300,7 +295,11 @@ class CoverRenderer:
             canvas_obj.setFont("Helvetica", self.style.POKEMON_COUNT_FONT_SIZE)
         
         canvas_obj.setFillColor(HexColor(self.style.TEXT_MEDIUM))
-        canvas_obj.drawCentredString(PAGE_WIDTH / 2, self.style.POKEMOM_COUNT_Y, pokemon_text)
+        canvas_obj.drawCentredString(
+            PAGE_WIDTH / 2,
+            self.style.COLLECTION_COUNT_Y,
+            collection_count_text,
+        )
         
         # Decorative line
         canvas_obj.setStrokeColor(HexColor(color))
@@ -458,3 +457,14 @@ class CoverRenderer:
             text = text.replace(f"{{{{{k}}}}}", str(v))
         
         return text
+
+    def _collection_count_text(self, count: int, cover_data: Dict) -> str:
+        """Describe the actual collection unit shown on the cover."""
+        is_card_collection = cover_data.get('type') == 'tcg_set'
+        translation_key = 'card_count_text' if is_card_collection else 'pokemon_count_text'
+        fallback = (
+            f"{count} cards in this collection"
+            if is_card_collection
+            else f"{count} Pokémon in this collection"
+        )
+        return self._get_translation(translation_key, fallback=fallback, count=count)
