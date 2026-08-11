@@ -71,7 +71,7 @@ Technical details: [full changelog](CHANGELOG.md).
 ### For End Users - Just Download & Print!
 
 
-**Latest (v9.0):** [All 167 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v9.0) ✨ *New: Turn your binder into a showcase: every collection now opens with a unique Pokémon panorama spanning nine card pockets.!*
+**Latest (v9.0):** [All 167 PDFs](https://github.com/DerFlash/BinderPokedex/releases/tag/v9.0) ✨ *New: Turn your binder into a showcase: every collection now opens with a unique Pokémon panorama spanning nine card pockets!*
 
 **By Language (v9.0):**
 🇩🇪 [Deutsch](https://github.com/DerFlash/BinderPokedex/releases/download/v9.0/binder-pokedex-de.zip) |

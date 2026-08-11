@@ -17,7 +17,7 @@ def test_announcement_updates_current_readmes_once(tmp_path, monkeypatch):
     manifest["scope_groups"]["mega"] = ["ME01", "ME02", "ME02.5", "ME03", "ME04", "MEP"]
     manifest["release_notes"] = {
         "display_date": {"en": "August 2026", "de": "August 2026"},
-        "summary": {"en": "Poster artwork", "de": "Poster-Artwork"},
+        "summary": {"en": "Poster artwork.", "de": "Poster-Artwork."},
         "whats_new": {
             "en": {"title": "Poster Artwork for Every Binder", "body": ["Added poster pages"]},
             "de": {"title": "Poster-Artwork für jeden Binder", "body": ["Poster-Seiten ergänzt"]},
@@ -48,5 +48,9 @@ def test_announcement_updates_current_readmes_once(tmp_path, monkeypatch):
     assert "Technische Details: [vollständiges Changelog](CHANGELOG.md)." in readme_de
     assert "**Latest (v9.0):** [All 167 PDFs]" in readme_en
     assert "**Aktuelle Version (v9.0):** [Alle 167 PDFs]" in readme_de
+    assert "*New: Poster artwork!*" in readme_en
+    assert "*Neu: Poster-Artwork!*" in readme_de
+    assert ".!*" not in readme_en
+    assert ".!*" not in readme_de
     assert "**30 Scarlet & Violet Sets:**" not in readme_en
     assert "**Scope-Based System** with 30 total scopes" in readme_en
