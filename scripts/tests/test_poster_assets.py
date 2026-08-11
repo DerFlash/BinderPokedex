@@ -2,6 +2,7 @@ import copy
 import json
 import shutil
 import sys
+import tempfile
 from dataclasses import replace
 from pathlib import Path
 from types import SimpleNamespace
@@ -25,6 +26,9 @@ from scripts.poster_assets.create_comfyui_poster_workflow import (
 )
 from scripts.poster_assets.create_comfyui_upscale_workflow import (
     build_workflow as build_upscale_workflow,
+)
+from scripts.poster_assets.create_custom_poster_layout import (
+    create_custom_layout_workspace,
 )
 from scripts.poster_assets.finalize_comfyui_poster import (
     draw_inline_logo_title,
@@ -56,6 +60,8 @@ from scripts.poster_assets.poster_io import (
     load_cutout_items,
     load_poster_scope_data,
     poster_bundle,
+    poster_bundles_for_scope,
+    resolve_poster_assets_root,
 )
 from scripts.poster_assets.poster_subject import (
     PosterSubject,
@@ -222,7 +228,7 @@ def test_dpi_aware_image_layout_reconstructs_print_endpoints(name, dpi):
     assert actual.row_spans == expected.row_spans
 
 
-def test_wide_layouts_are_modeled_for_future_matching_pdf_renderers():
+def test_wide_layouts_keep_full_page_a3_hints():
     layout_4x3 = build_print_layout("wide_4x3", 300)
     layout_4x4 = build_print_layout("wide_4x4", 300)
 
@@ -230,6 +236,58 @@ def test_wide_layouts_are_modeled_for_future_matching_pdf_renderers():
     assert (layout_4x4.columns, layout_4x4.rows) == (4, 4)
     assert pdf_page_hint("wide_4x3") == ("A3", "landscape")
     assert pdf_page_hint("wide_4x4") == ("A3", "portrait")
+
+
+def test_pokedex_custom_layout_workspace_is_isolated_and_pdf_enabled():
+    root = Path(__file__).resolve().parents[2]
+    parent = Path(tempfile.mkdtemp(prefix="custom-layout-test-", dir=root / "tmp"))
+    target = parent / "poster-assets"
+    try:
+        workspace = create_custom_layout_workspace(
+            "Pokedex",
+            "wide_4x3",
+            sections=("gen1",),
+            output_root=target,
+        )
+
+        bundles = poster_bundles_for_scope(
+            "Pokedex",
+            poster_assets=workspace,
+        )
+        assert len(bundles) == 1
+        assert bundles[0].poster_id == "gen1"
+        assert bundles[0].pdf_enabled is True
+        assert bundles[0].manifest["layout"] == {"name": "wide_4x3"}
+        assert bundles[0].manifest["pokemon"]["count"] == 3
+        assert not (bundles[0].asset_dir / bundles[0].artwork_file).exists()
+
+        cutouts = json.loads(
+            (bundles[0].asset_dir / "cutouts" / "manifest.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        assert cutouts["layout"] == {
+            "name": "wide_4x3",
+            "columns": 4,
+            "rows": 3,
+        }
+        assert (workspace / "workspace.yaml").is_file()
+    finally:
+        shutil.rmtree(parent)
+
+
+def test_poster_assets_root_accepts_repo_relative_local_workspace(monkeypatch):
+    monkeypatch.setenv(
+        "BINDER_POKEDEX_POSTER_ASSETS",
+        "tmp/custom-poster-layouts/example",
+    )
+
+    assert resolve_poster_assets_root() == (
+        Path(__file__).resolve().parents[2]
+        / "tmp"
+        / "custom-poster-layouts"
+        / "example"
+    ).resolve()
 
 
 @pytest.mark.parametrize(

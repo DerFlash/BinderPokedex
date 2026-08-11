@@ -15,7 +15,7 @@ Last reviewed: 2026-08-11
 | Decision | Current direction |
 | --- | --- |
 | Default binder format | `standard_3x3` on A4 portrait at physical card size |
-| Wide layouts | Keep `wide_4x3` and `wide_4x4` as artwork extension points; never squeeze them onto A4 |
+| Wide layouts | Keep `wide_4x3` and `wide_4x4` at physical card size; paginate their cutouts across A4 and reserve A3 for a continuous one-sheet print |
 | Generation timing | Explicit optional post-fetch step, before PDF generation |
 | Generation host | The operator explicitly chooses local Apple MPS or an isolated remote Apple Silicon worker before GPU work; remote endpoints and credentials stay outside tracked files |
 | PDF behavior | Consume only promoted local artwork; never launch ComfyUI implicitly |
@@ -87,8 +87,8 @@ is the accepted cost of exact identity preservation.
 | ID | Requirement | Status | Acceptance |
 | --- | --- | --- | --- |
 | `PA-001` | A4 production defaults to a 3×3 physical card grid | Done | Initializer and active A4 manifests use `standard_3x3` |
-| `PA-002` | 4×3 and 4×4 remain first-class artwork layouts | Prepared | Geometry, placement, prompting, promotion, validation, and slicing are layout-driven |
-| `PA-003` | Wide layouts preserve physical card dimensions | Prepared | Future 4×3 targets A3 landscape and 4×4 targets A3 portrait; no A4 scaling fallback |
+| `PA-002` | 4×3 and 4×4 remain first-class artwork layouts | Done | Geometry, placement, prompting, promotion, validation, slicing, and A4 PDF pagination are layout-driven |
+| `PA-003` | Wide layouts preserve physical card dimensions | Done | Cuttable PDFs keep every card at 63.5 × 88.9 mm and paginate without scaling; continuous 4×3 and 4×4 sheets still require A3 |
 | `PA-004` | Every individual TCG set has explicit scene direction | Done | `config/posters/scenes.yaml` has exact one-to-one catalog coverage enforced by tests |
 | `PA-005` | Full prompts cannot drift per set | Done | Creative scene is scope-specific; technical requirements are generated centrally |
 | `PA-006` | Poster preparation is an optional post-fetch phase | Done | One-scope and batch initialization exist and preserve reviewed manifests |
@@ -99,7 +99,7 @@ is the accepted cost of exact identity preservation.
 | `PA-011` | Poster use is optional per build | Done | `--skip-poster` bypasses poster discovery and writes a separate build |
 | `PA-012` | Every promotion is reproducible and auditable | Done | Provenance records model, prompt, source, references, workflow, review/audit, and output hashes |
 | `PA-013` | Aggregate sections can own separate posters | Done | `posters.yaml` routes isolated leaf manifests and replaces each matching cover with its enabled poster |
-| `PA-014` | 4×3/4×4 PDFs use matching page renderers | Open | Add physical page styles, templates, cutting guides, memory checks, and rendered-PDF QA |
+| `PA-014` | 4×3/4×4 cutouts print on the standard A4 renderer | Done | The renderer consumes cards in row-major order, emits nine per A4 page, resets the next chunk at the upper-left cell, and retains cutting guides around empty cells |
 | `PA-015` | Aggregate variants receive section-specific scenes and curated subject/reference sets | Done | All 15 current aggregate sections have exact catalog coverage and reviewed enabled promotions |
 | `PA-015A` | Variant subjects retain their exact form | Done | Selection, cutouts, planner, fingerprints, promotion, and validation bind exact Official Artwork identity |
 | `PA-016` | Post-fetch orchestration detects stale inputs | Done | Read-only planner separates expensive generation drift from cheap overlay/routing changes |
@@ -118,6 +118,7 @@ is the accepted cost of exact identity preservation.
 | `PA-029` | A learned integration path cannot weaken current identity, layout, depth, or fallback guarantees | In progress | Versioned pair contract, audit tooling, and an immutable aligned teacher-target builder exist; exact canonical source pixels are restored after the teacher pass, every target still needs human integration review, production stays unchanged, and promotion requires an unseen five-fixture comparison against both retained paths |
 | `PA-RW-001` | Artwork generation explicitly supports local or remote execution without storing worker endpoints | Done | Root agent guidance requires the operator choice before GPU work; the linked remote-worker guide uses immutable hash-pinned jobs, private SSH configuration, loopback-only ComfyUI, returned logs/metadata, and the unchanged human promotion gate |
 | `PA-RW-002` | Remote runtime dependencies and reusable model weights have independent lifecycles | Done | A checksum-pinned standalone bootstrap builds portable Python, locked packages, and ComfyUI entirely below an ephemeral runtime root; `ComfyUI/models` links to an external operator-selected cache, bundles never dereference it, and validated destruction preserves it |
+| `PA-030` | Custom layouts can be generated without changing release assets | Done | The custom-layout workspace command clones only manifests and deterministic source inputs below ignored `tmp/`; `BINDER_POKEDEX_POSTER_ASSETS` routes generation, promotion, validation, slicing, and PDF discovery to that isolated root |
 
 ## Current production boundary
 

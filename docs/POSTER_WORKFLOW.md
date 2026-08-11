@@ -680,19 +680,68 @@ The output receives a `_NO_POSTER.pdf` suffix.
 exclusive: once poster discovery is bypassed, the section cover is the only
 introductory page and no poster presentation mode applies.
 
+## Local custom layouts without release-asset changes
+
+Custom layouts use an isolated poster-assets root below ignored `tmp/`. This
+keeps the checked-in 3×3 manifests, promoted artwork, release validation, and
+release PDFs unchanged. For a German Pokédex pilot that replaces only the
+Generation-I cover with a 4×3 artwork:
+
+```bash
+python scripts/poster_assets/create_custom_poster_layout.py \
+  --scope Pokedex \
+  --section gen1 \
+  --layout wide_4x3
+
+export BINDER_POKEDEX_POSTER_ASSETS="$PWD/tmp/custom-poster-layouts/pokedex-gen1-wide_4x3"
+
+scripts/poster_assets/start_comfyui_poster.sh \
+  --scope Pokedex/sections/gen1
+python scripts/poster_assets/run_comfyui_poster.py \
+  --scope Pokedex/sections/gen1 \
+  --language de
+```
+
+Review the printed text-free artwork path and run-metadata path reported by the
+runner. Promote that reviewed candidate into the isolated workspace, never the
+tracked asset root:
+
+```bash
+python scripts/poster_assets/promote_comfyui_poster.py \
+  --scope Pokedex/sections/gen1 \
+  --artwork <reported-text-free-artwork.png> \
+  --run-metadata <reported-run-metadata.json> \
+  --language de \
+  --name flux2 \
+  --approve-joint-scene
+
+python scripts/pdf/generate_pdf.py \
+  --scope Pokedex \
+  --language de
+```
+
+The custom workspace enables only the selected aggregate bindings. All other
+Pokédex generations therefore retain their ordinary section covers. Omit
+`--section gen1` to prepare all nine generation workspaces; each leaf still
+needs its own generated, reviewed, and locally promoted artwork before the PDF
+can be built. Unset `BINDER_POKEDEX_POSTER_ASSETS` to return every command to
+the tracked production assets.
+
 ## Layout policy
 
-| Layout | Subjects | Physical grid | Intended PDF family | Current PDF status |
+| Layout | Subjects | Physical grid | Cuttable PDF | Continuous full page |
 | --- | ---: | --- | --- | --- |
-| `standard_3x3` | 3 by default; 1–2 only when the source section has fewer canonical subjects | 200.5 × 276.7 mm | A4 portrait | supported and default |
-| `wide_4x3` | 4 | 269 × 276.7 mm | A3 landscape | artwork-ready; matching PDF renderer open |
-| `wide_4x4` | 4 | 269 × 370.6 mm | A3 portrait | artwork-ready; matching PDF renderer open |
+| `standard_3x3` | 3 by default; 1–2 only when the source section has fewer canonical subjects | 200.5 × 276.7 mm | one A4 portrait page | A4 portrait |
+| `wide_4x3` | up to 4 | 269 × 276.7 mm | two A4 portrait pages: 9 + 3 cards | A3 landscape |
+| `wide_4x4` | up to 4 | 269 × 370.6 mm | two A4 portrait pages: 9 + 7 cards | A3 portrait |
 
 The artwork, placement, prompt, upscale, promotion, validation, and slicing
-layers understand all three layouts. The current production PDF renderer remains
-3×3/A4. It reports the required matching page family instead of treating wide
-layouts as invalid. Wide PDF output must preserve physical card size; it must
-not squeeze four binder cards onto A4.
+layers understand all three layouts. The cuttable PDF renderer always keeps the
+standard 3×3 A4 grid and consumes layout crops in row-major order. A 4×3 poster
+therefore puts crops 1–9 on its first A4 page and crops 10–12 into the upper
+row of its second page; the remaining six fields stay empty. No card is scaled
+down. `full-page` remains a literal continuous-sheet mode, so wide layouts still
+require their indicated A3 orientation there.
 
 Every raster cell is derived from cumulative physical start and end positions,
 not from repeatedly adding independently rounded card and gap widths. Generation

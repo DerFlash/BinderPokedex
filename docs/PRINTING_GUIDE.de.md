@@ -103,6 +103,20 @@ Gewicht:   80-90 g/m² (Standard)
 
 ## ✂️ Nach dem Drucken: Ausschneiden
 
+### Lokale 4×3-Poster auf zwei A4-Seiten
+
+Ein mit dem Custom-Layout `wide_4x3` erzeugtes Motiv wird nicht verkleinert.
+Die PDF verteilt seine zwölf Ausschnitte automatisch in Leserichtung:
+
+- Seite 1 enthält die Ausschnitte 1–9 als vollständiges 3×3-Raster.
+- Seite 2 enthält die Ausschnitte 10–12 in der oberen Reihe.
+- Die übrigen sechs Felder der zweiten Seite bleiben leer; die Schnittlinien
+  bleiben als Orientierung sichtbar.
+
+Beide Seiten ebenfalls mit **100 % / Tatsächliche Größe** auf A4 drucken. Der
+Modus `full-page` ist für ein zusammenhängendes 4×3-Blatt nicht A4-tauglich und
+benötigt A3 im Querformat.
+
 ### Was du brauchst:
 - ✂️ Scharfe Schere oder Cutter-Messer
 - 📏 Lineal (optional, für präzise Schnitte)

@@ -2,6 +2,10 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+POSTER_ASSETS_DIR="${BINDER_POKEDEX_POSTER_ASSETS:-$ROOT_DIR/data/poster_assets}"
+if [[ "$POSTER_ASSETS_DIR" != /* ]]; then
+  POSTER_ASSETS_DIR="$ROOT_DIR/$POSTER_ASSETS_DIR"
+fi
 COMFY_ROOT="${COMFY_ROOT:-$ROOT_DIR/.local_ai/ComfyUI}"
 COMFY_PY="${COMFY_PY:-$ROOT_DIR/.local_ai/venv-comfyui/bin/python}"
 COMFY_PY_PREFIX="$(dirname "$(dirname "$COMFY_PY")")"

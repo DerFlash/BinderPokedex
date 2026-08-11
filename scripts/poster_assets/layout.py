@@ -174,7 +174,7 @@ def resolve_layout_name(name: str | None) -> dict[str, int | str]:
 
 
 def pdf_page_hint(name: str | None) -> tuple[str, str]:
-    """Return the physical page family intended for a future matching renderer."""
+    """Return the paper family for one continuous physical-grid print."""
     spec = resolve_layout_name(name)
     return str(spec["pdf_paper"]), str(spec["pdf_orientation"])
 

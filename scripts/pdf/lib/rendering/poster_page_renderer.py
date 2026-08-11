@@ -153,42 +153,39 @@ class PosterPageRenderer:
         return self._card_paths
 
     def render_page(self, canvas_obj, page_renderer: PageRenderer) -> None:
+        """Render one poster, adding page breaks when its cards exceed A4."""
         if self.page_mode == "full-page":
             self._render_full_page(canvas_obj, page_renderer)
             return
         card_paths = self._prepare_cards()
         layout = resolve_layout_name(self.layout_name)
         poster_grid = (int(layout["columns"]), int(layout["rows"]))
-        page_grid = (
-            int(page_renderer.style.CARDS_PER_ROW),
-            int(page_renderer.style.CARDS_PER_COLUMN),
-        )
-        if poster_grid != page_grid:
-            paper, orientation = pdf_page_hint(self.layout_name)
-            raise ValueError(
-                f"Poster layout {self.layout_name} needs a "
-                f"{poster_grid[0]}x{poster_grid[1]} PDF page renderer; current "
-                f"renderer is {page_grid[0]}x{page_grid[1]}. A matching "
-                f"{paper} {orientation} renderer is the intended extension."
-            )
         expected = poster_grid[0] * poster_grid[1]
         if len(card_paths) != expected:
             raise ValueError(
-                f"Poster layout produced {len(card_paths)} cards, PDF page expects {expected}"
+                f"Poster layout produced {len(card_paths)} cards, expected {expected}"
             )
-        page_renderer.create_page(canvas_obj)
-        for index, card_path in enumerate(card_paths):
-            x, y = page_renderer.calculate_card_position(index)
-            canvas_obj.drawImage(
-                ImageReader(str(card_path)),
-                x,
-                y,
-                width=page_renderer.style.CARD_WIDTH,
-                height=page_renderer.style.CARD_HEIGHT,
-                preserveAspectRatio=False,
-                mask="auto",
-            )
-        page_renderer.draw_cutting_guides(canvas_obj)
+        cards_per_page = int(page_renderer.style.CARDS_PER_PAGE)
+        if cards_per_page <= 0:
+            raise ValueError("PDF page renderer must accept at least one card")
+
+        for page_start in range(0, expected, cards_per_page):
+            page_renderer.create_page(canvas_obj)
+            page_cards = card_paths[page_start : page_start + cards_per_page]
+            for page_index, card_path in enumerate(page_cards):
+                x, y = page_renderer.calculate_card_position(page_index)
+                canvas_obj.drawImage(
+                    ImageReader(str(card_path)),
+                    x,
+                    y,
+                    width=page_renderer.style.CARD_WIDTH,
+                    height=page_renderer.style.CARD_HEIGHT,
+                    preserveAspectRatio=False,
+                    mask="auto",
+                )
+            page_renderer.draw_cutting_guides(canvas_obj)
+            if page_start + cards_per_page < expected:
+                canvas_obj.showPage()
 
     def _render_full_page(
         self,

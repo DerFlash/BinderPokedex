@@ -13,19 +13,27 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 POSTER_WORKSPACE_ENV = "BINDER_POKEDEX_POSTER_ASSETS"
+POSTER_ASSETS_ENV = POSTER_WORKSPACE_ENV
 
 
-def _configured_workspace_root() -> Path | None:
-    configured = os.environ.get(POSTER_WORKSPACE_ENV)
+def resolve_poster_assets_root(value: str | None = None) -> Path:
+    """Resolve a combined custom workspace or the durable asset root."""
+    configured = value if value is not None else os.environ.get(
+        POSTER_WORKSPACE_ENV
+    )
     if not configured:
-        return None
+        return ROOT / "assets" / "posters"
     path = Path(configured).expanduser()
     if not path.is_absolute():
         path = ROOT / path
     return path.resolve()
 
 
-POSTER_WORKSPACE = _configured_workspace_root()
+POSTER_WORKSPACE = (
+    resolve_poster_assets_root()
+    if os.environ.get(POSTER_WORKSPACE_ENV)
+    else None
+)
 POSTER_CONFIGS = POSTER_WORKSPACE or ROOT / "config" / "posters"
 POSTER_ASSETS = POSTER_WORKSPACE or ROOT / "assets" / "posters"
 POSTER_WORKSPACES = POSTER_WORKSPACE or ROOT / "tmp" / "poster-workspaces"
