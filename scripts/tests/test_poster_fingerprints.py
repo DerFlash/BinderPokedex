@@ -243,6 +243,52 @@ def test_slotted_fallback_order_is_shared_by_fingerprint_and_validation(
     validator._validate_source_subjects(bundle, _scope_data())
 
 
+def test_promoted_provenance_records_custom_workspace_output_paths(
+    tmp_path,
+    monkeypatch,
+):
+    repository = tmp_path / "repository"
+    asset_dir = (
+        repository
+        / "tmp"
+        / "custom-poster-layouts"
+        / "example"
+        / "Example"
+    )
+    asset_dir.mkdir(parents=True)
+    artwork = asset_dir / ".stage-artwork.png"
+    preview = asset_dir / ".stage-preview.png"
+    cards_dir = asset_dir / ".stage-cards"
+    cards_dir.mkdir()
+    Image.new("RGB", (8, 8), (40, 120, 80)).save(artwork)
+    Image.new("RGB", (8, 8), (80, 140, 100)).save(preview)
+    card = cards_dir / "card_r1_c1.png"
+    Image.new("RGB", (4, 4), (120, 160, 90)).save(card)
+    monkeypatch.setattr(provenance, "ROOT", repository)
+
+    payload = provenance.promoted_provenance(
+        scope="Example",
+        name="flux2",
+        language="de",
+        run_metadata={},
+        artwork_path=artwork,
+        preview_path=preview,
+        card_paths=[card],
+        asset_dir=asset_dir,
+    )
+
+    prefix = "tmp/custom-poster-layouts/example/Example"
+    assert payload["outputs"]["artwork"]["file"] == (
+        f"{prefix}/poster-flux2-artwork.png"
+    )
+    assert payload["outputs"]["preview"]["file"] == (
+        f"{prefix}/poster-flux2.png"
+    )
+    assert payload["outputs"]["cards"][0]["file"] == (
+        f"{prefix}/poster-flux2-cards/card_r1_c1.png"
+    )
+
+
 def test_generation_fingerprint_excludes_routing_and_overlay_only_inputs(
     tmp_path,
 ):
