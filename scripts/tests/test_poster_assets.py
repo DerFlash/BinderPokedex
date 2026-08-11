@@ -240,7 +240,9 @@ def test_wide_layouts_keep_full_page_a3_hints():
 
 def test_pokedex_custom_layout_workspace_is_isolated_and_pdf_enabled():
     root = Path(__file__).resolve().parents[2]
-    parent = Path(tempfile.mkdtemp(prefix="custom-layout-test-", dir=root / "tmp"))
+    temp_root = root / "tmp"
+    temp_root.mkdir(parents=True, exist_ok=True)
+    parent = Path(tempfile.mkdtemp(prefix="custom-layout-test-", dir=temp_root))
     target = parent / "poster-assets"
     try:
         workspace = create_custom_layout_workspace(
