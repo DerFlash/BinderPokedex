@@ -222,6 +222,8 @@ def select_pokemon(
 
     selected = unique_by_poster_subject(scope_featured_elements(scope_data))
     fallback_candidates = pokemon_cfg.get("fallback_candidates", [])
+    slotted_candidates: list[tuple[int, dict[str, Any]]] = []
+    appended_candidates: list[dict[str, Any]] = []
     for candidate in fallback_candidates:
         pokemon_id = candidate.get("pokemon_id") if isinstance(candidate, dict) else None
         if not isinstance(pokemon_id, int):
@@ -232,7 +234,26 @@ def select_pokemon(
             "pokemon_name",
             localized.get("en") or f"pokemon-{pokemon_id}",
         )
-        selected.append(resolved_candidate)
+        slot = candidate.get("slot")
+        if slot is None:
+            appended_candidates.append(resolved_candidate)
+        elif (
+            isinstance(slot, int)
+            and not isinstance(slot, bool)
+            and 1 <= slot <= count
+        ):
+            slotted_candidates.append((slot, resolved_candidate))
+        else:
+            raise ValueError(
+                "pokemon.fallback_candidates slot must be between "
+                f"1 and {count}"
+            )
+    for slot, candidate in sorted(
+        slotted_candidates,
+        key=lambda item: item[0],
+    ):
+        selected.insert(slot - 1, candidate)
+    selected.extend(appended_candidates)
     selected = unique_by_poster_subject(selected)
 
     if len(selected) < count:

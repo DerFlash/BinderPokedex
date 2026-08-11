@@ -76,8 +76,9 @@ python scripts/poster_assets/fetch_poster_sources.py \
 
 Standardmäßig wird das Poster als zuschneidbare Karten in physischer Größe
 ausgegeben. Ein 3×3-Poster belegt eine A4-Seite. Lokale 4×3-Poster werden ohne
-Verkleinerung auf zwei A4-Seiten verteilt: neun Ausschnitte auf Seite 1 und die
-letzten drei in der oberen Reihe von Seite 2. Dasselbe lokalisierte 3×3-Poster
+Verkleinerung auf zwei A4-Seiten verteilt: Die linken drei Artwork-Spalten
+bilden Seite 1, die vierte Artwork-Spalte steht senkrecht in der ersten Spalte
+von Seite 2. Dasselbe lokalisierte 3×3-Poster
 kann alternativ als ein zusammenhängendes, 200,5 × 276,7 mm großes Bild mittig
 auf A4 und ohne Schnittlinien ausgegeben werden:
 
@@ -106,9 +107,13 @@ nicht verändert:
 python scripts/poster_assets/create_custom_poster_layout.py \
   --scope Pokedex \
   --section gen1 \
-  --layout wide_4x3
+  --layout wide_4x3 \
+  --fallback-pokemon 25
 
 export BINDER_POKEDEX_POSTER_ASSETS="$PWD/tmp/custom-poster-layouts/pokedex-gen1-wide_4x3"
+
+python scripts/poster_assets/fetch_cutouts.py \
+  --scope Pokedex/sections/gen1
 ```
 
 Danach ComfyUI-Runner, Review/Promotion und PDF-Generator mit derselben gesetzten

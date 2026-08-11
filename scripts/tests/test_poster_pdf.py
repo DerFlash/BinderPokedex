@@ -11,6 +11,7 @@ from scripts.pdf.lib.rendering.page_renderer import PageRenderer
 from scripts.pdf.lib.rendering.poster_page_renderer import (
     PosterPageCollection,
     PosterPageRenderer,
+    card_page_assignments,
 )
 from scripts.pdf.lib.variant_pdf_generator import VariantPDFGenerator
 from scripts.poster_assets.layout import physical_layout_size_mm
@@ -250,17 +251,17 @@ def test_sv035_poster_source_is_text_free_artwork():
 
 
 @pytest.mark.parametrize(
-    ("layout_name", "card_count", "last_page_count"),
+    ("layout_name", "card_count", "expected_positions"),
     (
-        ("wide_4x3", 12, 3),
-        ("wide_4x4", 16, 7),
+        ("wide_4x3", 12, [*range(9), 0, 3, 6]),
+        ("wide_4x4", 16, [*range(9), *range(7)]),
     ),
 )
 def test_wide_poster_paginates_at_physical_size_across_a4_pages(
     tmp_path,
     layout_name,
     card_count,
-    last_page_count,
+    expected_positions,
 ):
     card_paths = []
     for index in range(card_count):
@@ -282,7 +283,7 @@ def test_wide_poster_paginates_at_physical_size_across_a4_pages(
     )
     page_renderer.calculate_card_position.side_effect = [
         (index * 10, 0)
-        for index in (*range(9), *range(last_page_count))
+        for index in expected_positions
     ]
     canvas = MagicMock()
 
@@ -295,7 +296,24 @@ def test_wide_poster_paginates_at_physical_size_across_a4_pages(
     assert [
         call.args[0]
         for call in page_renderer.calculate_card_position.call_args_list
-    ] == [*range(9), *range(last_page_count)]
+    ] == expected_positions
+
+
+def test_wide_4x3_keeps_the_first_three_columns_together_on_page_one():
+    assert card_page_assignments((4, 3), (3, 3)) == [
+        [
+            (0, 0),
+            (1, 1),
+            (2, 2),
+            (4, 3),
+            (5, 4),
+            (6, 5),
+            (8, 6),
+            (9, 7),
+            (10, 8),
+        ],
+        [(3, 0), (7, 3), (11, 6)],
+    ]
 
 
 def test_wide_poster_renderer_accepts_a_matching_page_grid(tmp_path):

@@ -99,7 +99,7 @@ is the accepted cost of exact identity preservation.
 | `PA-011` | Poster use is optional per build | Done | `--skip-poster` bypasses poster discovery and writes a separate build |
 | `PA-012` | Every promotion is reproducible and auditable | Done | Provenance records model, prompt, source, references, workflow, review/audit, and output hashes |
 | `PA-013` | Aggregate sections can own separate posters | Done | `posters.yaml` routes isolated leaf manifests and replaces each matching cover with its enabled poster |
-| `PA-014` | 4×3/4×4 cutouts print on the standard A4 renderer | Done | The renderer consumes cards in row-major order, emits nine per A4 page, resets the next chunk at the upper-left cell, and retains cutting guides around empty cells |
+| `PA-014` | 4×3/4×4 cutouts print on the standard A4 renderer | Done | A 4×3 renderer keeps source columns 1–3 together on page one and places source column 4 vertically in page two's first column; cutting guides remain around empty cells |
 | `PA-015` | Aggregate variants receive section-specific scenes and curated subject/reference sets | Done | All 15 current aggregate sections have exact catalog coverage and reviewed enabled promotions |
 | `PA-015A` | Variant subjects retain their exact form | Done | Selection, cutouts, planner, fingerprints, promotion, and validation bind exact Official Artwork identity |
 | `PA-016` | Post-fetch orchestration detects stale inputs | Done | Read-only planner separates expensive generation drift from cheap overlay/routing changes |

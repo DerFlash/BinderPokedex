@@ -152,6 +152,7 @@ def _custom_manifest(
     cutout_count: int,
     *,
     enable_pdf: bool,
+    fallback_pokemon: tuple[int, ...] = (),
 ) -> dict[str, Any]:
     manifest = copy.deepcopy(source_manifest)
     layout = resolve_layout_name(layout_name)
@@ -164,13 +165,56 @@ def _custom_manifest(
     manifest["layout"] = {"name": layout_name}
 
     pokemon = manifest.setdefault("pokemon", {})
-    if pokemon.get("count", "auto_from_layout_columns") == "auto_from_layout_columns":
-        if cutout_count != columns:
-            pokemon["count"] = cutout_count
-    elif int(pokemon["count"]) > columns:
+    configured_count = pokemon.get("count", "auto_from_layout_columns")
+    if (
+        configured_count != "auto_from_layout_columns"
+        and int(configured_count) > columns
+    ):
         raise ValueError(
             f"Configured subject count {pokemon['count']} exceeds {layout_name}"
         )
+
+    source_layout = resolve_layout_name(
+        source_manifest.get("layout", {}).get("name")
+    )
+    expands_bottom_row = columns > int(source_layout["columns"])
+    missing_count = columns - cutout_count if expands_bottom_row else 0
+    if missing_count:
+        if len(fallback_pokemon) != missing_count:
+            raise ValueError(
+                f"Layout {layout_name} expands the bottom row to {columns} "
+                f"cards and needs {missing_count} additional Pokemon. Pass "
+                "--fallback-pokemon once for every missing card."
+            )
+        if cutout_count == 1:
+            occupied_slots = {columns // 2 + 1}
+        else:
+            last = columns - 1
+            divisor = cutout_count - 1
+            occupied_slots = {
+                (index * last + divisor // 2) // divisor + 1
+                for index in range(cutout_count)
+            }
+        missing_slots = [
+            slot
+            for slot in range(1, columns + 1)
+            if slot not in occupied_slots
+        ]
+        candidates = pokemon.setdefault("fallback_candidates", [])
+        candidates.extend(
+            {"pokemon_id": pokemon_id, "slot": slot}
+            for pokemon_id, slot in zip(
+                fallback_pokemon,
+                missing_slots,
+                strict=True,
+            )
+        )
+        pokemon["count"] = "auto_from_layout_columns"
+
+    if layout_name == "wide_4x3":
+        text_cells = manifest.setdefault("text_cells", {})
+        text_cells.setdefault("title", {}).update({"row": 2, "column": 2})
+        text_cells.setdefault("set_info", {}).update({"row": 2, "column": 3})
 
     if enable_pdf:
         pdf = manifest.setdefault("pdf", {})
@@ -200,6 +244,7 @@ def create_custom_layout_workspace(
     sections: tuple[str, ...] = (),
     output_root: Path | None = None,
     source_assets: Path = TRACKED_POSTER_ASSETS,
+    fallback_pokemon: tuple[int, ...] = (),
 ) -> Path:
     """Clone configuration and source inputs without copying promoted artwork."""
     resolve_layout_name(layout_name)
@@ -239,6 +284,7 @@ def create_custom_layout_workspace(
                 layout_name,
                 cutout_count,
                 enable_pdf=not aggregate,
+                fallback_pokemon=fallback_pokemon,
             )
             _write_yaml(target_dir / POSTER_MANIFEST_NAME, manifest)
 
@@ -313,6 +359,16 @@ def main() -> int:
         type=Path,
         help="Poster-assets root (default: tmp/custom-poster-layouts/...)",
     )
+    parser.add_argument(
+        "--fallback-pokemon",
+        action="append",
+        type=int,
+        default=[],
+        help=(
+            "Pokemon ID for one newly added bottom-row card; repeat once "
+            "for every column added by the custom layout"
+        ),
+    )
     args = parser.parse_args()
     try:
         target = create_custom_layout_workspace(
@@ -320,6 +376,7 @@ def main() -> int:
             args.layout,
             sections=tuple(args.section),
             output_root=args.output,
+            fallback_pokemon=tuple(args.fallback_pokemon),
         )
     except Exception as exc:
         print(f"ERROR: {exc}", file=sys.stderr)

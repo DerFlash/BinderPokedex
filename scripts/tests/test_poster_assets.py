@@ -250,6 +250,7 @@ def test_pokedex_custom_layout_workspace_is_isolated_and_pdf_enabled():
             "wide_4x3",
             sections=("gen1",),
             output_root=target,
+            fallback_pokemon=(25,),
         )
 
         bundles = poster_bundles_for_scope(
@@ -260,7 +261,23 @@ def test_pokedex_custom_layout_workspace_is_isolated_and_pdf_enabled():
         assert bundles[0].poster_id == "gen1"
         assert bundles[0].pdf_enabled is True
         assert bundles[0].manifest["layout"] == {"name": "wide_4x3"}
-        assert bundles[0].manifest["pokemon"]["count"] == 3
+        assert (
+            bundles[0].manifest["pokemon"]["count"]
+            == "auto_from_layout_columns"
+        )
+        assert bundles[0].manifest["pokemon"]["fallback_candidates"] == [
+            {"pokemon_id": 25, "slot": 2}
+        ]
+        assert bundles[0].manifest["text_cells"]["title"] == {
+            "row": 2,
+            "column": 2,
+        }
+        assert bundles[0].manifest["text_cells"]["set_info"] == {
+            "row": 2,
+            "column": 3,
+            "max_width_ratio": 0.92,
+            "max_height_ratio": 0.68,
+        }
         assert not (bundles[0].asset_dir / bundles[0].artwork_file).exists()
 
         cutouts = json.loads(
@@ -276,6 +293,30 @@ def test_pokedex_custom_layout_workspace_is_isolated_and_pdf_enabled():
         assert (workspace / "workspace.yaml").is_file()
     finally:
         shutil.rmtree(parent)
+
+
+def test_slotted_fallback_fills_the_missing_wide_poster_card():
+    root = Path(__file__).resolve().parents[2]
+    scope_data = json.loads(
+        (root / "data" / "output" / "Pokedex.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    selected = fetch_cutouts.select_pokemon(
+        {
+            "pokemon": {
+                "strategy": "featured_from_scope",
+                "fallback_candidates": [
+                    {"pokemon_id": 25, "slot": 2}
+                ],
+            }
+        },
+        {"sections": {"gen1": scope_data["sections"]["gen1"]}},
+        4,
+        {25: {"en": "Pikachu", "de": "Pikachu"}},
+    )
+
+    assert [item["pokemon_id"] for item in selected] == [1, 25, 4, 7]
 
 
 def test_poster_assets_root_accepts_repo_relative_local_workspace(monkeypatch):

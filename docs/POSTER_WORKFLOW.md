@@ -691,9 +691,13 @@ Generation-I cover with a 4×3 artwork:
 python scripts/poster_assets/create_custom_poster_layout.py \
   --scope Pokedex \
   --section gen1 \
-  --layout wide_4x3
+  --layout wide_4x3 \
+  --fallback-pokemon 25
 
 export BINDER_POKEDEX_POSTER_ASSETS="$PWD/tmp/custom-poster-layouts/pokedex-gen1-wide_4x3"
+
+python scripts/poster_assets/fetch_cutouts.py \
+  --scope Pokedex/sections/gen1
 
 scripts/poster_assets/start_comfyui_poster.sh \
   --scope Pokedex/sections/gen1
@@ -732,16 +736,22 @@ the tracked production assets.
 | Layout | Subjects | Physical grid | Cuttable PDF | Continuous full page |
 | --- | ---: | --- | --- | --- |
 | `standard_3x3` | 3 by default; 1–2 only when the source section has fewer canonical subjects | 200.5 × 276.7 mm | one A4 portrait page | A4 portrait |
-| `wide_4x3` | up to 4 | 269 × 276.7 mm | two A4 portrait pages: 9 + 3 cards | A3 landscape |
+| `wide_4x3` | exactly 4 | 269 × 276.7 mm | two A4 portrait pages: left 3 columns + right column | A3 landscape |
 | `wide_4x4` | up to 4 | 269 × 370.6 mm | two A4 portrait pages: 9 + 7 cards | A3 portrait |
 
 The artwork, placement, prompt, upscale, promotion, validation, and slicing
-layers understand all three layouts. The cuttable PDF renderer always keeps the
-standard 3×3 A4 grid and consumes layout crops in row-major order. A 4×3 poster
-therefore puts crops 1–9 on its first A4 page and crops 10–12 into the upper
-row of its second page; the remaining six fields stay empty. No card is scaled
-down. `full-page` remains a literal continuous-sheet mode, so wide layouts still
-require their indicated A3 orientation there.
+layers understand all three layouts. A 4×3 artwork reserves all four bottom
+cards for subjects; expanding a 3×3 source therefore requires one explicit
+`--fallback-pokemon`. The custom workspace positions the title at row 2,
+column 2 and the information panel beside it at row 2, column 3.
+
+The cuttable PDF renderer keeps the standard 3×3 A4 grid. For a 4×3 poster,
+page one contains source columns 1–3 in their original 3×3 arrangement. Page
+two contains source column 4 vertically in its first column, with its remaining
+six fields empty. The two sheets can therefore be placed side by side without
+reordering any crop, and no card is scaled down. `full-page` remains a literal
+continuous-sheet mode, so wide layouts still require their indicated A3
+orientation there.
 
 Every raster cell is derived from cumulative physical start and end positions,
 not from repeatedly adding independently rounded card and gap widths. Generation

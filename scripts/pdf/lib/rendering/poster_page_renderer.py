@@ -39,6 +39,48 @@ from scripts.poster_assets.poster_io import (  # noqa: E402
 from scripts.poster_assets.slice_poster import slice_poster  # noqa: E402
 
 
+def card_page_assignments(
+    poster_grid: tuple[int, int],
+    page_grid: tuple[int, int],
+) -> list[list[tuple[int, int]]]:
+    """Map row-major poster crops to their physical positions on PDF pages.
+
+    A poster that is only wider than the printable page is split into vertical
+    column bands. This keeps the first three columns of a 4x3 poster assembled
+    on page one and places its fourth column vertically in page two's first
+    column. Other oversized layouts retain the legacy sequential pagination.
+    """
+    poster_columns, poster_rows = poster_grid
+    page_columns, page_rows = page_grid
+    if min(poster_columns, poster_rows, page_columns, page_rows) <= 0:
+        raise ValueError("Poster and PDF page grids must be positive")
+
+    if poster_columns > page_columns and poster_rows <= page_rows:
+        pages: list[list[tuple[int, int]]] = []
+        for first_column in range(0, poster_columns, page_columns):
+            last_column = min(first_column + page_columns, poster_columns)
+            page: list[tuple[int, int]] = []
+            for row in range(poster_rows):
+                for column in range(first_column, last_column):
+                    source_index = row * poster_columns + column
+                    page_index = row * page_columns + column - first_column
+                    page.append((source_index, page_index))
+            pages.append(page)
+        return pages
+
+    expected = poster_columns * poster_rows
+    cards_per_page = page_columns * page_rows
+    return [
+        [
+            (source_index, page_index)
+            for page_index, source_index in enumerate(
+                range(page_start, min(page_start + cards_per_page, expected))
+            )
+        ]
+        for page_start in range(0, expected, cards_per_page)
+    ]
+
+
 class PosterPageRenderer:
     """Prepare and draw an optional scope poster page."""
 
@@ -165,14 +207,21 @@ class PosterPageRenderer:
             raise ValueError(
                 f"Poster layout produced {len(card_paths)} cards, expected {expected}"
             )
+        page_grid = (
+            int(page_renderer.style.CARDS_PER_ROW),
+            int(page_renderer.style.CARDS_PER_COLUMN),
+        )
         cards_per_page = int(page_renderer.style.CARDS_PER_PAGE)
         if cards_per_page <= 0:
             raise ValueError("PDF page renderer must accept at least one card")
+        if page_grid[0] * page_grid[1] != cards_per_page:
+            raise ValueError("PDF page card grid does not match CARDS_PER_PAGE")
 
-        for page_start in range(0, expected, cards_per_page):
+        pages = card_page_assignments(poster_grid, page_grid)
+        for page_number, page_assignments in enumerate(pages):
             page_renderer.create_page(canvas_obj)
-            page_cards = card_paths[page_start : page_start + cards_per_page]
-            for page_index, card_path in enumerate(page_cards):
+            for source_index, page_index in page_assignments:
+                card_path = card_paths[source_index]
                 x, y = page_renderer.calculate_card_position(page_index)
                 canvas_obj.drawImage(
                     ImageReader(str(card_path)),
@@ -184,7 +233,7 @@ class PosterPageRenderer:
                     mask="auto",
                 )
             page_renderer.draw_cutting_guides(canvas_obj)
-            if page_start + cards_per_page < expected:
+            if page_number + 1 < len(pages):
                 canvas_obj.showPage()
 
     def _render_full_page(
