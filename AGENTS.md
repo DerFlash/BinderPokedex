@@ -11,9 +11,11 @@ or a running ComfyUI process.
   `docs/POSTER_WORKFLOW.md` and keep the ComfyUI input/output directories scoped
   to the selected poster asset key.
 - For a remote render, follow `docs/POSTER_RENDER_WORKER.md`. Ask for an SSH
-  alias and remote paths only when the operator selects this route. Help probe,
-  transfer, execute, and retrieve the immutable render job, but leave
-  authentication to the operator's existing SSH setup.
+  alias and the private runtime, model-cache, job, and repository paths only
+  when the operator selects this route. Help probe, bootstrap or transfer the
+  disposable runtime, execute and retrieve the immutable render job, and clean
+  up the runtime, but leave authentication to the operator's existing SSH
+  setup.
 - Never commit real hostnames, IP addresses, usernames, SSH aliases,
   machine-specific paths, tokens, or keys. Never print secret material such as
   private keys or access tokens. Do not expose ComfyUI on a public interface;

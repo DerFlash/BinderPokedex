@@ -114,8 +114,10 @@ When remote rendering is selected, an assisting agent may ask for these
 non-secret connection parameters at runtime:
 
 1. an existing SSH config alias;
-2. the remote render root;
-3. the remote repository checkout path.
+2. the disposable remote runtime root;
+3. the persistent remote model-cache root;
+4. the disposable remote job root;
+5. the remote repository checkout path.
 
 The operator remains responsible for establishing SSH authentication and for
 confirming that the approved models are present. Real hostnames, IP addresses,

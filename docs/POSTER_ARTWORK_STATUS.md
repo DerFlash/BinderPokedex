@@ -34,7 +34,11 @@ review and promotion. The worker hostname, address, credentials, and concrete
 paths are intentionally not tracked. Future generation is not tied to that
 machine: the operator explicitly chooses local Apple MPS or the generic remote
 worker path documented in
-[Remote Poster Render Worker](POSTER_RENDER_WORKER.md).
+[Remote Poster Render Worker](POSTER_RENDER_WORKER.md). That path now builds a
+disposable native runtime from checksum-pinned archives and hash-locked Python
+dependencies. The runtime owns Python, ComfyUI, and tools; an independently
+managed external cache owns model weights. Packaging preserves the cache as a
+symbolic link, and validated destruction removes only the runtime.
 
 The reviewed rollout now uses the unquantized BF16 FLUX.2 Klein 4B checkpoint
 for all current v9 promotions. Native Klein 4B/9B, Base 4B, corrected Kontext
