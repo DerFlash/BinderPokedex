@@ -24,8 +24,13 @@ flowchart TD
         READY -->|yes| BRIEF
     end
 
-    subgraph LOCAL["2 · Optional local generation · Apple Metal/MPS"]
-        BRIEF --> COMFY["Start scope-isolated ComfyUI"]
+    subgraph GENERATE["2 · Optional generation · operator-selected target"]
+        BRIEF --> TARGET{"Render locally or remotely?"}
+        TARGET -->|local Apple MPS| COMFY["Start scope-isolated ComfyUI"]
+        TARGET -->|remote Apple MPS| JOB["Prepare immutable render job"]
+        JOB --> TRANSFER["SSH/rsync to isolated worker"]
+        TRANSFER --> REMOTE["Validate hashes and render on loopback"]
+        REMOTE --> RETURN["Return run.json, log, and images"]
         COMFY --> RUN["Run FLUX.2 poster pipeline"]
         RUN --> JOINT["Default · joint_scene"]
         JOINT --> TOPOLOGY{"Reference topology"}
@@ -40,6 +45,7 @@ flowchart TD
         RUN -. explicit fallback .-> IL["identity_lock"]
         IL --> ILPASS["Two-pass scene + immutable source figures"]
         ILPASS --> AUDIT["Exact opaque-pixel audit + model upscale"]
+        RETURN --> SCRATCH
     end
 
     subgraph GATE["3 · Review and stable assets"]
@@ -87,6 +93,35 @@ rehearsal that validates promoted posters and builds every PDF, ZIP, and the
 release manifest without publishing a GitHub Release. Tagged releases reuse
 that candidate build and publish only after it succeeds. See
 [Release Workflow](RELEASE_WORKFLOW.md).
+
+## Choose the render target before GPU work
+
+Starting poster generation requires an explicit operator choice. An agent must
+ask whether the candidate should be rendered on the local Apple Metal/MPS
+machine or on an isolated remote render worker before it starts ComfyUI or
+queues a GPU workflow. A previously used host, an available SSH alias, or a
+reachable ComfyUI process is not permission to select either route.
+
+- **Local:** use the scope-isolated launcher and runner documented below. Keep
+  ComfyUI on loopback and keep generated candidates below ignored workspace
+  paths.
+- **Remote:** prepare an immutable, hash-pinned render job and follow
+  [Remote Poster Render Worker](POSTER_RENDER_WORKER.md). The remote worker
+  validates the ComfyUI commit, model hashes, workflow, inputs, MPS device, and
+  job-specific input directory before queueing.
+
+When remote rendering is selected, an assisting agent may ask for these
+non-secret connection parameters at runtime:
+
+1. an existing SSH config alias;
+2. the remote render root;
+3. the remote repository checkout path.
+
+The operator remains responsible for establishing SSH authentication and for
+confirming that the approved models are present. Real hostnames, IP addresses,
+usernames, credentials, private keys, and machine-specific paths must never be
+written to tracked files. Remote ComfyUI stays bound to remote loopback; jobs
+are queued on the worker rather than through a publicly exposed API.
 
 ## Required and optional phases
 
