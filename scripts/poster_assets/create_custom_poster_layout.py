@@ -245,8 +245,9 @@ def create_custom_layout_workspace(
     output_root: Path | None = None,
     source_assets: Path = TRACKED_POSTER_ASSETS,
     fallback_pokemon: tuple[int, ...] = (),
+    include_unselected_promotions: bool = False,
 ) -> Path:
-    """Clone configuration and source inputs without copying promoted artwork."""
+    """Clone custom inputs and optionally retain other aggregate promotions."""
     resolve_layout_name(layout_name)
     source_assets = source_assets.resolve()
     target = _target_root(scope, layout_name, sections, output_root)
@@ -264,6 +265,7 @@ def create_custom_layout_workspace(
             source_assets / scope / POSTER_INDEX_NAME
         ).is_file()
         index_items: list[dict[str, Any]] = []
+        custom_index_items: dict[str, dict[str, Any]] = {}
 
         source_index_by_id: dict[str, dict[str, Any]] = {}
         if aggregate:
@@ -312,9 +314,40 @@ def create_custom_layout_workspace(
                     "poster-flux2-artwork.png",
                 )
                 pdf["insertion"] = "after_section_cover"
-                index_items.append(item)
+                custom_index_items[bundle.poster_id] = item
 
         if aggregate:
+            if include_unselected_promotions:
+                selected_ids = set(custom_index_items)
+                for source_bundle in poster_bundles_for_scope(
+                    scope,
+                    poster_assets=source_assets,
+                ):
+                    if source_bundle.poster_id in selected_ids:
+                        continue
+                    relative_asset = Path(*source_bundle.asset_key.split("/"))
+                    shutil.copytree(
+                        source_bundle.asset_dir,
+                        stage / relative_asset,
+                        ignore=shutil.ignore_patterns(
+                            ".DS_Store",
+                            "__pycache__",
+                            "comfyui_poster",
+                        ),
+                    )
+                index_items = [
+                    custom_index_items.get(
+                        str(item.get("id")),
+                        copy.deepcopy(item),
+                    )
+                    for item in source_index.get("posters", [])
+                    if isinstance(item, dict)
+                ]
+            else:
+                index_items = [
+                    custom_index_items[bundle.poster_id]
+                    for bundle in bundles
+                ]
             _write_yaml(
                 stage / scope / POSTER_INDEX_NAME,
                 {
@@ -334,6 +367,9 @@ def create_custom_layout_workspace(
                     bundle.section_id or bundle.poster_id
                     for bundle in bundles
                 ],
+                "included_unselected_promotions": (
+                    include_unselected_promotions
+                ),
                 "note": "Ignored local workspace; do not use as release input.",
             },
         )
@@ -369,6 +405,14 @@ def main() -> int:
             "for every column added by the custom layout"
         ),
     )
+    parser.add_argument(
+        "--include-unselected-promotions",
+        action="store_true",
+        help=(
+            "For a partial aggregate workspace, copy the other existing "
+            "promoted bundles so their artwork pages remain in local PDFs"
+        ),
+    )
     args = parser.parse_args()
     try:
         target = create_custom_layout_workspace(
@@ -377,6 +421,7 @@ def main() -> int:
             sections=tuple(args.section),
             output_root=args.output,
             fallback_pokemon=tuple(args.fallback_pokemon),
+            include_unselected_promotions=args.include_unselected_promotions,
         )
     except Exception as exc:
         print(f"ERROR: {exc}", file=sys.stderr)

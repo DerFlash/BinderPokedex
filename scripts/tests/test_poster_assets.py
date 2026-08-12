@@ -295,6 +295,110 @@ def test_pokedex_custom_layout_workspace_is_isolated_and_pdf_enabled():
         shutil.rmtree(parent)
 
 
+def test_partial_custom_workspace_can_retain_other_promoted_artworks():
+    root = Path(__file__).resolve().parents[2]
+    temp_root = root / "tmp"
+    temp_root.mkdir(parents=True, exist_ok=True)
+    parent = Path(tempfile.mkdtemp(prefix="custom-layout-hybrid-", dir=temp_root))
+    source_assets = parent / "source-assets"
+    target = parent / "poster-assets"
+    try:
+        index_items = []
+        for poster_id in ("section-a", "section-b"):
+            asset_dir = source_assets / "Aggregate" / "sections" / poster_id
+            (asset_dir / "cutouts").mkdir(parents=True)
+            manifest = {
+                "schema_version": 2,
+                "asset_key": f"Aggregate/sections/{poster_id}",
+                "scope": "Aggregate",
+                "poster_id": poster_id,
+                "source": {
+                    "scope": "Aggregate",
+                    "section_id": poster_id,
+                },
+                "layout": {"name": "standard_3x3"},
+                "artwork": {"promoted_file": "poster-artwork.png"},
+                "pokemon": {
+                    "strategy": "featured_from_scope",
+                    "count": "auto_from_layout_columns",
+                    "fallback_candidates": [],
+                },
+            }
+            (asset_dir / "poster.yaml").write_text(
+                yaml.safe_dump(manifest, sort_keys=False),
+                encoding="utf-8",
+            )
+            (asset_dir / "poster-artwork.png").write_bytes(b"promoted")
+            (asset_dir / "cutouts" / "manifest.json").write_text(
+                json.dumps(
+                    {
+                        "items": [
+                            {"pokemon_id": 1},
+                            {"pokemon_id": 4},
+                            {"pokemon_id": 7},
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            index_items.append(
+                {
+                    "id": poster_id,
+                    "section_id": poster_id,
+                    "manifest": f"sections/{poster_id}/poster.yaml",
+                    "pdf": {
+                        "enabled": True,
+                        "artwork_file": "poster-artwork.png",
+                        "insertion": "after_section_cover",
+                    },
+                }
+            )
+        index_path = source_assets / "Aggregate" / "posters.yaml"
+        index_path.parent.mkdir(parents=True, exist_ok=True)
+        index_path.write_text(
+            yaml.safe_dump(
+                {
+                    "schema_version": 1,
+                    "scope": "Aggregate",
+                    "posters": index_items,
+                },
+                sort_keys=False,
+            ),
+            encoding="utf-8",
+        )
+
+        workspace = create_custom_layout_workspace(
+            "Aggregate",
+            "wide_4x3",
+            sections=("section-a",),
+            output_root=target,
+            source_assets=source_assets,
+            fallback_pokemon=(25,),
+            include_unselected_promotions=True,
+        )
+
+        bundles = poster_bundles_for_scope(
+            "Aggregate",
+            poster_assets=workspace,
+        )
+        assert [bundle.poster_id for bundle in bundles] == [
+            "section-a",
+            "section-b",
+        ]
+        assert bundles[0].manifest["layout"] == {"name": "wide_4x3"}
+        assert not (bundles[0].asset_dir / bundles[0].artwork_file).exists()
+        assert bundles[1].manifest["layout"] == {"name": "standard_3x3"}
+        assert (bundles[1].asset_dir / bundles[1].artwork_file).read_bytes() == (
+            b"promoted"
+        )
+        workspace_meta = yaml.safe_load(
+            (workspace / "workspace.yaml").read_text(encoding="utf-8")
+        )
+        assert workspace_meta["included_unselected_promotions"] is True
+    finally:
+        shutil.rmtree(parent)
+
+
 def test_slotted_fallback_fills_the_missing_wide_poster_card():
     root = Path(__file__).resolve().parents[2]
     scope_data = json.loads(

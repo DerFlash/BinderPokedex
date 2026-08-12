@@ -692,7 +692,8 @@ python scripts/poster_assets/create_custom_poster_layout.py \
   --scope Pokedex \
   --section gen1 \
   --layout wide_4x3 \
-  --fallback-pokemon 25
+  --fallback-pokemon 25 \
+  --include-unselected-promotions
 
 export BINDER_POKEDEX_POSTER_ASSETS="$PWD/tmp/custom-poster-layouts/pokedex-gen1-wide_4x3"
 
@@ -724,12 +725,15 @@ python scripts/pdf/generate_pdf.py \
   --language de
 ```
 
-The custom workspace enables only the selected aggregate bindings. All other
-Pokédex generations therefore retain their ordinary section covers. Omit
-`--section gen1` to prepare all nine generation workspaces; each leaf still
-needs its own generated, reviewed, and locally promoted artwork before the PDF
-can be built. Unset `BINDER_POKEDEX_POSTER_ASSETS` to return every command to
-the tracked production assets.
+By default, the custom workspace enables only the selected aggregate bindings,
+so all other Pokédex generations retain their ordinary section covers. The
+explicit `--include-unselected-promotions` option instead copies the other
+already promoted bundles into the ignored workspace. This keeps every existing
+artwork page in a hybrid PDF without symlinking or modifying tracked release
+assets. Omit `--section gen1` to prepare all nine generation workspaces; each
+leaf still needs its own generated, reviewed, and locally promoted artwork
+before the PDF can be built. Unset `BINDER_POKEDEX_POSTER_ASSETS` to return
+every command to the tracked production assets.
 
 ## Layout policy
 
