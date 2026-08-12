@@ -1,0 +1,26 @@
+{
+  "format_version": 1,
+  "platform": {
+    "machine": "arm64",
+    "system": "Darwin"
+  },
+  "uv": {
+    "archive_sha256": "2b25be1af546be330b340b0a76b99f989daa6d92678fdffb87438e661e9d88fb",
+    "archive_url": "https://github.com/astral-sh/uv/releases/download/0.11.16/uv-aarch64-apple-darwin.tar.gz",
+    "version": "0.11.16"
+  },
+  "python": {
+    "version": "3.11.13"
+  },
+  "comfyui": {
+    "archive_sha256": "0dfde1cf40340cad7d1f96ff450af00f6498aa6234d9a7abcccba24e1d4b1a25",
+    "archive_url": "https://github.com/Comfy-Org/ComfyUI/archive/87d23b81765161624889febfb3b81f19f3c8435b.tar.gz",
+    "commit": "87d23b81765161624889febfb3b81f19f3c8435b"
+  },
+  "requirements": {
+    "input_path": "scripts/poster_assets/renderer-requirements.in",
+    "input_sha256": "aec0399fff63679f817e2065eed8da3712087cdedade7fd08047085a4187bd25",
+    "lock_path": "scripts/poster_assets/renderer-requirements.lock",
+    "lock_sha256": "ad5fe924803e31279abaa331fa5c5d6a65c1d2fa83447c0d2a268cbc4ba02337"
+  }
+}

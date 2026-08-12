@@ -6,7 +6,7 @@ live in [Poster Workflow](POSTER_WORKFLOW.md), durable product requirements in
 [Poster Architecture](POSTER_ARTWORK_CONCEPT.md), and rejected or superseded
 evidence in [Poster Experiment Log](POSTER_ARTWORK_EXPERIMENT_LOG.md).
 
-Last audited: 2026-08-10
+Last audited: 2026-08-11
 
 ## Current decision
 
@@ -25,6 +25,20 @@ New manifests default to `individual_spatial_joint`. A manifest and provenance
 describe exactly one active contract. Switching to a legacy topology or the
 fallback requires a deliberate manifest change, a new candidate, human review,
 and a new promotion; there is no automatic dual-active registry.
+
+## Generation environment
+
+The reviewed v9 candidates were rendered on an isolated remote Apple Silicon
+worker through portable, hash-pinned render jobs and returned for local visual
+review and promotion. The worker hostname, address, credentials, and concrete
+paths are intentionally not tracked. Future generation is not tied to that
+machine: the operator explicitly chooses local Apple MPS or the generic remote
+worker path documented in
+[Remote Poster Render Worker](POSTER_RENDER_WORKER.md). That path now builds a
+disposable native runtime from checksum-pinned archives and hash-locked Python
+dependencies. The runtime owns Python, ComfyUI, and tools; an independently
+managed external cache owns model weights. Packaging preserves the cache as a
+symbolic link, and validated destruction removes only the runtime.
 
 The reviewed rollout now uses the unquantized BF16 FLUX.2 Klein 4B checkpoint
 for all current v9 promotions. Native Klein 4B/9B, Base 4B, corrected Kontext

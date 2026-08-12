@@ -22,11 +22,13 @@ try:
         queue_workflow,
         validate_server_input_directory,
     )
+    from .renderer_runtime import comfyui_commit
 except ImportError:
     from queue_comfyui_workflow import (
         queue_workflow,
         validate_server_input_directory,
     )
+    from renderer_runtime import comfyui_commit
 
 
 FORMAT_VERSION = 1
@@ -236,15 +238,6 @@ def wait_for_server(server: str, log_path: Path, process: subprocess.Popen) -> N
     raise TimeoutError(f"Timed out waiting for ComfyUI; inspect {log_path}")
 
 
-def git_commit(repo: Path) -> str:
-    return subprocess.run(
-        ["git", "-C", str(repo), "rev-parse", "HEAD"],
-        check=True,
-        capture_output=True,
-        text=True,
-    ).stdout.strip()
-
-
 def run_job(
     job_dir: Path,
     comfyui_root: Path,
@@ -266,7 +259,7 @@ def run_job(
             f"models directory: {expected_models_root}"
         )
     manifest = validate_job(job_dir, models_root)
-    actual_commit = git_commit(comfyui_root)
+    actual_commit = comfyui_commit(comfyui_root)
     if actual_commit != manifest["comfyui_commit"]:
         raise ValueError(
             f"ComfyUI commit mismatch: expected {manifest['comfyui_commit']}, "

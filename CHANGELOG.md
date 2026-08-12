@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### 🔧 Renderer Infrastructure
+
+- Added a disposable native Apple-Silicon renderer runtime built from
+  checksum-pinned `uv`, portable Python, ComfyUI source, and hash-locked Python
+  dependencies without Homebrew Python, Git, or global package installation.
+- Separated reusable model weights into an operator-selected external cache;
+  runtime bundles retain only a symbolic link, while every render job continues
+  to bind the exact model paths and SHA-256 values it requires.
+- Added validated runtime packaging, model-cache rebinding, and destruction so
+  transferred or directly bootstrapped runtimes can be removed without touching
+  the external models.
+
 ## [9.0.0] - 2026-08-11
 
 ### ✨ Major Feature: Poster Artwork for Every Binder
@@ -23,8 +35,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   nine-card page.
 - Completed localized poster copy for all 266 current target/language
   combinations.
-- Kept local ComfyUI/Metal authoring separate from release consumption: CI and
+- Kept ComfyUI/Metal authoring separate from release consumption: CI and
   end users require only the reviewed, versioned repository assets.
+- Generated the reviewed v9 poster candidates on an isolated remote Apple
+  Silicon render worker through portable, hash-pinned jobs. The worker's
+  hostname, network address, credentials, and machine-specific paths are
+  intentionally not part of the repository or release artifacts.
 
 ### 🔧 Release and Quality
 

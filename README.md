@@ -110,6 +110,7 @@ Technical details: [full changelog](CHANGELOG.md).
 | **Variants Architecture** | [docs/VARIANTS_ARCHITECTURE.md](docs/VARIANTS_ARCHITECTURE.md) |
 | **Variants Quickstart** | [docs/VARIANTS_QUICKSTART.md](docs/VARIANTS_QUICKSTART.md) |
 | **Poster Workflow** | [docs/POSTER_WORKFLOW.md](docs/POSTER_WORKFLOW.md) |
+| **Remote Poster Render Worker** | [docs/POSTER_RENDER_WORKER.md](docs/POSTER_RENDER_WORKER.md) |
 | **Poster Requirements** | [docs/POSTER_ARTWORK_REQUIREMENTS.md](docs/POSTER_ARTWORK_REQUIREMENTS.md) |
 | **Poster Integration Training** | [docs/POSTER_ARTWORK_TRAINING.md](docs/POSTER_ARTWORK_TRAINING.md) |
 | **Release Workflow** | [docs/RELEASE_WORKFLOW.md](docs/RELEASE_WORKFLOW.md) |

@@ -1,4 +1,4 @@
-# Native macOS poster render worker
+# Remote Apple Silicon poster render worker
 
 The poster generator can submit self-contained ComfyUI jobs to another Apple
 Silicon Mac without turning that host into a manually maintained workstation.
@@ -9,9 +9,12 @@ and does not expose the macOS Metal/MPS backend required by this workflow.
 
 1. The repository creates a job directory containing one ComfyUI API workflow,
    its input images, and SHA-256 records for every workflow, input, and model.
-2. The directory is copied to an isolated render root over SSH or `rsync`.
-3. The remote worker validates every hash, the pinned ComfyUI commit, and the
-   available model files before starting ComfyUI.
+2. A disposable native runtime provides pinned Python, ComfyUI, and Python
+   packages without installing them globally. A separate model cache is linked
+   read-only by convention and is never packaged with the runtime.
+3. The job is copied to an isolated job root over SSH or `rsync`. The remote
+   worker validates every hash, the pinned runtime, and the available model
+   files before starting ComfyUI.
 4. ComfyUI listens on remote loopback only. The worker requires the startup log
    to report `Device: mps`, queues the workflow, and stops ComfyUI afterwards.
    Before queueing, it also verifies that the server reports this job's exact
@@ -25,35 +28,135 @@ all scene data or reference images consumed by `LoadImage` travel under the
 job's `input/` directory. Models stay cached on the render host and are named
 and hash-pinned by each job rather than copied for every run.
 
+The repository stores only bootstrap code, the runtime lock, dependency hashes,
+and expected model hashes. It does not store Python distributions, ComfyUI
+archives, installed packages, model weights, credentials, or built bundles.
+Runtime and model lifecycles are deliberately independent:
+
+- deleting the runtime removes Python, ComfyUI, uv, and installed packages;
+- deleting a job removes only that workflow, its inputs, logs, and outputs;
+- the operator-selected model cache remains reusable until explicitly removed.
+
 `Device: mps` proves that ComfyUI selected Metal as its primary accelerator;
 it does not prove that every auxiliary model used MPS. For example, a text
 encoder may run once on CPU while the diffusion model samples on MPS. Keep and
 review `comfyui.log` whenever per-stage device placement matters.
 
-## Bootstrap one Apple Silicon host
+## Agent/operator handshake
 
-Clone this repository on the render host, check out the desired feature branch,
-then run:
+Before any GPU process starts, the operator chooses **local** or **remote**
+generation. An artwork-generating agent must ask for that choice and must not
+reuse a host from conversation history or machine state without confirmation.
+If local is selected, return to the local launcher in
+[Poster Workflow](POSTER_WORKFLOW.md).
+
+If remote is selected, the agent may help with the steps in this guide after
+the operator supplies an existing SSH config alias and the private runtime,
+model-cache, job, and repository paths.
+The agent must not request, inspect, transmit, or persist passwords, access
+tokens, private keys, real hostnames, IP addresses, or usernames. SSH
+authentication remains outside the repository and render job.
+
+## Bind a worker without persisting host details
+
+Keep connection values only in the current shell or the operator's private SSH
+configuration. The placeholders below are deliberately not real endpoints:
+
+```bash
+export BINDER_RENDER_SSH="SSH_CONFIG_ALIAS"
+export BINDER_RUNTIME_ROOT="/absolute/path/to/ephemeral/BinderPokedex-runtime"
+export BINDER_MODEL_ROOT="/absolute/path/to/persistent/BinderPokedex-models"
+export BINDER_JOB_ROOT="/absolute/path/to/ephemeral/BinderPokedex-jobs"
+export BINDER_RENDER_REPO="/absolute/path/to/BinderPokedex-checkout"
+```
+
+Probe the selected host before transferring a job:
+
+```bash
+ssh "$BINDER_RENDER_SSH" 'uname -s; uname -m'
+ssh "$BINDER_RENDER_SSH" \
+  "git -C '$BINDER_RENDER_REPO' status --short --branch"
+```
+
+The expected platform is `Darwin` on `arm64`; the remote checkout should be on
+the intended commit or feature branch. This probe does not grant permission to
+install software, download models, or start a render. Confirm those separately
+when needed.
+
+Do not add these values to `.env`, Git configuration, manifests, run metadata,
+or documentation. Do not expose port 8188 publicly and do not point the normal
+local runner's `--server` option at a public remote URL. `render_job.py run`
+starts loopback-only ComfyUI and queues the workflow on the worker, which also
+keeps job-local input-path validation intact.
+
+## Build an ephemeral native runtime
+
+Transfer or clone the selected repository revision on the render host, then run:
 
 ```bash
 scripts/poster_assets/bootstrap_macos_renderer.sh \
-  /absolute/path/to/BinderPokedex-render
+  "$BINDER_RUNTIME_ROOT" \
+  "$BINDER_MODEL_ROOT"
 ```
 
-The command pins ComfyUI, creates an isolated Python 3.11 virtual environment,
-installs its requirements, applies the repository's version-checked Apple-MPS
-quantization and text-encoder compatibility patch, and verifies native MPS
-availability. It does not install models or change global Python packages.
+The command downloads a checksum-pinned standalone `uv`, installs a pinned
+portable Python inside the runtime, syncs the hash-locked ComfyUI dependencies,
+extracts a checksum-pinned ComfyUI source archive, applies the repository's
+version-checked Apple-MPS compatibility patch, and verifies native MPS. It does
+not require Homebrew Python or Git, install global packages, download models,
+or write to shell profiles.
+
+`ComfyUI/models` is a symbolic link to `BINDER_MODEL_ROOT`. The cache must be
+outside `BINDER_RUNTIME_ROOT`; the bootstrap and destroy commands reject nested
+paths. A typical private cache contains:
+
+```text
+BINDER_MODEL_ROOT/
+├── diffusion_models/
+├── text_encoders/
+├── vae/
+└── upscale_models/
+```
+
+The concrete cache path is operator state. Never add it to tracked config,
+documentation examples with real values, provenance, or a render job.
 
 Gated Hugging Face models require a one-time login performed by the host owner:
 
 ```bash
-/absolute/path/to/BinderPokedex-render/venv/bin/hf auth login
+"$BINDER_RUNTIME_ROOT/venv/bin/hf" auth login
 ```
 
 Never put a Hugging Face token in the repository, workflow, job manifest, or
 chat. Download approved model files into the corresponding directory below
-`ComfyUI/models/`, then record their SHA-256 values in the job.
+`BINDER_MODEL_ROOT`, then record their relative paths and SHA-256 values in the
+job. Model binaries never enter a Git commit or runtime bundle.
+
+## Optional runtime bundle transfer
+
+Building directly on the worker avoids transferring installed packages. For an
+offline worker, build the same native runtime on a compatible Apple Silicon Mac
+and package it without dereferencing the external model-cache link:
+
+```bash
+scripts/poster_assets/package_macos_renderer.sh \
+  "$BINDER_RUNTIME_ROOT" \
+  tmp/renderer-runtime.tar.gz
+```
+
+After transfer and extraction, bind that worker's private model cache and
+rewrite only the ignored runtime marker:
+
+```bash
+"$BINDER_RUNTIME_ROOT/venv/bin/python" \
+  "$BINDER_RENDER_REPO/scripts/poster_assets/renderer_runtime.py" \
+  bind-models \
+  --runtime-root "$BINDER_RUNTIME_ROOT" \
+  --model-root "$BINDER_MODEL_ROOT"
+```
+
+The archive is a disposable ignored artifact, not a release or repository
+asset. Its model entry is a symlink, so model weights are not copied into it.
 
 ## Prepare a job locally
 
@@ -75,18 +178,58 @@ the right side of an `--input SOURCE=DESTINATION` argument.
 
 ## Transfer and run
 
-Copy the immutable job directory to the remote `jobs/` folder with SSH or
-`rsync`. On the render host:
+Choose a local job name and transfer the immutable directory to the worker:
 
 ```bash
-/absolute/path/to/BinderPokedex-render/venv/bin/python \
-  /absolute/path/to/repo/scripts/poster_assets/render_job.py run \
-  --job-dir /absolute/path/to/BinderPokedex-render/jobs/JOB_NAME \
-  --comfyui-root /absolute/path/to/BinderPokedex-render/ComfyUI \
-  --python /absolute/path/to/BinderPokedex-render/venv/bin/python \
-  --models-root /absolute/path/to/BinderPokedex-render/ComfyUI/models
+export JOB_NAME="reviewed-job-name"
+export LOCAL_JOB_DIR="tmp/render-jobs/$JOB_NAME"
+
+rsync -a "$LOCAL_JOB_DIR/" \
+  "$BINDER_RENDER_SSH:$BINDER_JOB_ROOT/$JOB_NAME/"
+```
+
+Open an SSH session and run the job with the already bootstrapped worker. The
+paths remain runtime values and are not copied into tracked project files:
+
+```bash
+ssh "$BINDER_RENDER_SSH"
+```
+
+On the render host:
+
+```bash
+"$BINDER_RUNTIME_ROOT/venv/bin/python" \
+  "$BINDER_RENDER_REPO/scripts/poster_assets/render_job.py" run \
+  --job-dir "$BINDER_JOB_ROOT/JOB_NAME" \
+  --comfyui-root "$BINDER_RUNTIME_ROOT/ComfyUI" \
+  --python "$BINDER_RUNTIME_ROOT/venv/bin/python" \
+  --models-root "$BINDER_RUNTIME_ROOT/ComfyUI/models"
 ```
 
 Copy the completed job back and review `run.json`, `comfyui.log`, the whole
 poster, and every physical card crop. A successful remote process is evidence
 of reproducibility, not visual approval.
+
+After leaving the SSH session, retrieve the entire completed job:
+
+```bash
+rsync -a \
+  "$BINDER_RENDER_SSH:$BINDER_JOB_ROOT/$JOB_NAME/" \
+  "$LOCAL_JOB_DIR/"
+```
+
+Keep the returned job ignored until review. Promotion still happens through the
+normal local review and promotion gate; a remote worker never promotes assets.
+
+When no further render is pending, remove the runtime through its validated
+marker. This leaves the external model cache untouched:
+
+```bash
+scripts/poster_assets/destroy_macos_renderer.sh "$BINDER_RUNTIME_ROOT"
+```
+
+Dependency updates are deliberate maintenance changes. Run
+`scripts/poster_assets/refresh_renderer_lock.sh`, update the two printed hashes
+in `renderer-runtime.lock.json`, run the renderer tests, and perform one native
+MPS smoke render. Never silently replace a pinned model or runtime underneath a
+reviewed job.

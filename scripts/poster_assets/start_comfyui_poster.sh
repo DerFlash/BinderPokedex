@@ -2,8 +2,8 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-COMFY_ROOT="${COMFY_ROOT:-/Volumes/Daten/Entwicklung/BinderPokedex/.local_ai/ComfyUI}"
-COMFY_PY="${COMFY_PY:-/Volumes/Daten/Entwicklung/BinderPokedex/.local_ai/venv-comfyui/bin/python}"
+COMFY_ROOT="${COMFY_ROOT:-$ROOT_DIR/.local_ai/ComfyUI}"
+COMFY_PY="${COMFY_PY:-$ROOT_DIR/.local_ai/venv-comfyui/bin/python}"
 COMFY_PY_PREFIX="$(dirname "$(dirname "$COMFY_PY")")"
 POSTER_SCOPE="${POSTER_SCOPE:-Base1}"
 

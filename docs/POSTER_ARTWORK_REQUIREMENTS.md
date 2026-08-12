@@ -8,7 +8,7 @@ accepted assets are listed in
 edit-training experiment is specified in
 [Poster Artwork Integration LoRA](POSTER_ARTWORK_TRAINING.md).
 
-Last reviewed: 2026-08-07
+Last reviewed: 2026-08-11
 
 ## Decisions
 
@@ -17,6 +17,7 @@ Last reviewed: 2026-08-07
 | Default binder format | `standard_3x3` on A4 portrait at physical card size |
 | Wide layouts | Keep `wide_4x3` and `wide_4x4` as artwork extension points; never squeeze them onto A4 |
 | Generation timing | Explicit optional post-fetch step, before PDF generation |
+| Generation host | The operator explicitly chooses local Apple MPS or an isolated remote Apple Silicon worker before GPU work; remote endpoints and credentials stay outside tracked files |
 | PDF behavior | Consume only promoted local artwork; never launch ComfyUI implicitly |
 | Cover fallback | Use the promoted poster as the section start page; keep the existing section cover only when no promoted poster is enabled or the build explicitly skips posters |
 | Poster presentation | Render enabled posters as cuttable physical cards by default; optionally render the same localized poster as one continuous physical-grid-sized image centered on its PDF page |
@@ -115,6 +116,8 @@ is the accepted cost of exact identity preservation.
 | `PA-027` | The existing cover path remains available when no poster can be consumed | Done | Missing or disabled poster routes leave the section cover and normal card pages intact; `--skip-poster` bypasses poster discovery before asset loading |
 | `PA-028` | One promoted poster can be emitted either as physical cards or as a continuous page | Done for A4 3×3 | `cards` remains the default with nine 63.5 × 88.9 mm images and cutting guides; `--poster-page-mode full-page` draws one 200.5 × 276.7 mm image centered on A4 without cutting guides and writes a distinct filename |
 | `PA-029` | A learned integration path cannot weaken current identity, layout, depth, or fallback guarantees | In progress | Versioned pair contract, audit tooling, and an immutable aligned teacher-target builder exist; exact canonical source pixels are restored after the teacher pass, every target still needs human integration review, production stays unchanged, and promotion requires an unseen five-fixture comparison against both retained paths |
+| `PA-RW-001` | Artwork generation explicitly supports local or remote execution without storing worker endpoints | Done | Root agent guidance requires the operator choice before GPU work; the linked remote-worker guide uses immutable hash-pinned jobs, private SSH configuration, loopback-only ComfyUI, returned logs/metadata, and the unchanged human promotion gate |
+| `PA-RW-002` | Remote runtime dependencies and reusable model weights have independent lifecycles | Done | A checksum-pinned standalone bootstrap builds portable Python, locked packages, and ComfyUI entirely below an ephemeral runtime root; `ComfyUI/models` links to an external operator-selected cache, bundles never dereference it, and validated destruction preserves it |
 
 ## Current production boundary
 
@@ -131,9 +134,14 @@ is the accepted cost of exact identity preservation.
   (39 with v9 and Primal with `landscape_first_v1`) and `SV04.5` selects
   `spatial_identity_joint` v7. Earlier v5/v6 and Dev promotions remain
   reproducible through Git history but are not active.
+- The reviewed v9 candidates were generated through the isolated remote-worker
+  job path. Worker endpoints and credentials are operational state and are not
+  part of tracked provenance.
 - Fetching, planning, PDF building, and CI do not start ComfyUI.
-- Generated candidates are local scratch; only promotion creates tracked input
-  for deterministic PDF and release jobs.
+- A generation operator or agent chooses local or remote execution explicitly.
+- Generated candidates remain ignored scratch locally or in a returned remote
+  job; only promotion creates tracked input for deterministic PDF and release
+  jobs.
 - The rollout is complete for 41 user-reviewed promotions.
 - Each section has exactly one start page. Enabled promotions replace their
   section covers; missing/disabled assets and explicit `--skip-poster` builds
