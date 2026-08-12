@@ -20,7 +20,12 @@ try:
     from .fetch_title_logos import fetch_title_logos
     from .finalize_comfyui_poster import SUPPORTED_LANGUAGES
     from .generation_contract import CANONICAL_REFERENCE_MODES
-    from .layout import DEFAULT_LAYOUT_NAME, LAYOUTS, resolve_layout_name
+    from .layout import (
+        DEFAULT_LAYOUT_NAME,
+        LAYOUTS,
+        default_text_cells,
+        resolve_layout_name,
+    )
     from .poster_io import (
         POSTER_ASSETS,
         POSTER_CONFIGS,
@@ -39,7 +44,12 @@ except ImportError:
     from fetch_title_logos import fetch_title_logos
     from finalize_comfyui_poster import SUPPORTED_LANGUAGES
     from generation_contract import CANONICAL_REFERENCE_MODES
-    from layout import DEFAULT_LAYOUT_NAME, LAYOUTS, resolve_layout_name
+    from layout import (
+        DEFAULT_LAYOUT_NAME,
+        LAYOUTS,
+        default_text_cells,
+        resolve_layout_name,
+    )
     from poster_io import (
         POSTER_ASSETS,
         POSTER_CONFIGS,
@@ -149,7 +159,7 @@ def build_default_manifest(
     scene: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Build a manifest from the shared generation contract and creative scene."""
-    layout = resolve_layout_name(layout_name)
+    resolve_layout_name(layout_name)
     if scope_data.get("type") != "tcg_set":
         raise ValueError(
             f"{scope} is not an individual TCG set and cannot supply one "
@@ -164,19 +174,10 @@ def build_default_manifest(
         generation_template,
         seed=stable_scope_seed(scope),
     )
-    center_column = max(1, (int(layout["columns"]) + 1) // 2)
     manifest: dict[str, Any] = {
         "scope": scope,
         "layout": {"name": layout_name},
-        "text_cells": {
-            "title": {"row": 1, "column": center_column},
-            "set_info": {
-                "row": min(2, int(layout["rows"])),
-                "column": center_column,
-                "max_width_ratio": 0.92,
-                "max_height_ratio": 0.68,
-            },
-        },
+        "text_cells": default_text_cells(layout_name),
         "pdf": {
             "enabled": False,
             "artwork_file": "poster-flux2-artwork.png",
@@ -248,10 +249,11 @@ def build_section_manifest(
             )
     featured = section_data.get("featured_elements")
     maximum_subjects = int(layout["columns"])
-    if (
-        not isinstance(featured, list)
-        or not 1 <= len(featured) <= maximum_subjects
-    ):
+    if not isinstance(featured, list) or not featured:
+        raise ValueError(
+            f"{scope}/{section_id} needs at least one featured element"
+        )
+    if len(featured) > maximum_subjects and layout_name != "standard_2x2":
         raise ValueError(
             f"{scope}/{section_id} needs 1 to {maximum_subjects} "
             "featured_elements for this layout"
@@ -274,12 +276,12 @@ def build_section_manifest(
             f"{scope}/{section_id} featured_elements need unique poster "
             "subjects"
         )
+    selected_subject_count = min(len(unique_featured), maximum_subjects)
 
     generation = joint_scene_generation(
         generation_template,
         seed=stable_scope_seed(asset_key),
     )
-    center_column = max(1, (int(layout["columns"]) + 1) // 2)
     return {
         "schema_version": 2,
         "asset_key": asset_key,
@@ -290,15 +292,7 @@ def build_section_manifest(
             "section_id": section_id,
         },
         "layout": {"name": layout_name},
-        "text_cells": {
-            "title": {"row": 1, "column": center_column},
-            "set_info": {
-                "row": min(2, int(layout["rows"])),
-                "column": center_column,
-                "max_width_ratio": 0.92,
-                "max_height_ratio": 0.68,
-            },
-        },
+        "text_cells": default_text_cells(layout_name),
         "text_content": {"mode": "section_summary"},
         "artwork": {
             "promoted_file": "poster-flux2-artwork.png",
@@ -316,8 +310,8 @@ def build_section_manifest(
             "strategy": "featured_from_scope",
             "count": (
                 "auto_from_layout_columns"
-                if len(unique_featured) == maximum_subjects
-                else len(unique_featured)
+                if selected_subject_count == maximum_subjects
+                else selected_subject_count
             ),
             "row": "bottom",
             "cutout_source": "pokeapi_official_artwork",

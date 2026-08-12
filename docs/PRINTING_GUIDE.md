@@ -103,6 +103,13 @@ Weight:     80-90 g/m² (Standard)
 
 ## ✂️ After Printing: Cutting
 
+### Local 2×2 posters on one A4 sheet
+
+A `standard_2x2` artwork uses the upper-left four slots: title at upper left,
+information panel at upper right, and two Pokémon below. The normal 3×3 A4
+print grid's right column and bottom row stay empty. Print the four poster cards
+at **100% / Actual size**, then place them together on one 2×2 binder page.
+
 ### Card Header Layout:
 Each card features:
 - Pokémon ID (#001-#898 etc.)

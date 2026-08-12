@@ -54,9 +54,9 @@ Technische Details: [vollständiges Changelog](CHANGELOG.md).
 - **3×3 Kartenlayout** (9 pro Seite) - perfekt für Standard-Binderblätter
 - **Poster-Panoramen aus neun Karten** für jedes aktuelle Set, jede
   Pokédex-Generation und jedes EX-Kapitel
-- **Neu: Eigene Posterlayouts** ✨ – temporäre 4×3- und weitere breite Artworks
-  erzeugen und druckgerecht über mehrere A4-Seiten verteilen, ohne die
-  mitgelieferten Release-PDFs oder Poster-Assets zu verändern
+- **Neu: Eigene Posterlayouts** ✨ – temporäre kompakte 2×2- oder breite
+  4×3-Artworks im bestehenden A4-Druckraster erzeugen, ohne die mitgelieferten
+  Release-PDFs oder Poster-Assets zu verändern
 - **Komplette TCG-Unterstützung** 🎴
   - **3 EX-Generationen:** ExGen1 (2003-2007), ExGen2 (2012-2016), ExGen3 (2023+)
   - **17 Karmesin-&-Purpur-Sets:** Komplette Karmesin & Purpur-Ära (SV01-SV10 + Spezial-Sets)

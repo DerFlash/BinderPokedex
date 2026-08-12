@@ -768,23 +768,27 @@ second page. Pokémon card pages remain unchanged.
 
 | Layout | Subjects | Physical grid | Cuttable PDF | Continuous full page |
 | --- | ---: | --- | --- | --- |
+| `standard_2x2` | 2; the first two curated subjects when shrinking an existing layout | 132 × 182.8 mm | upper-left four slots of one A4 portrait page; right column and bottom row stay empty | A4 portrait |
 | `standard_3x3` | 3 by default; 1–2 only when the source section has fewer canonical subjects | 200.5 × 276.7 mm | one A4 portrait page | A4 portrait |
 | `wide_4x3` | exactly 4 | 269 × 276.7 mm | two A4 portrait pages: left 3 columns + right column | A3 landscape |
 | `wide_4x4` | up to 4 | 269 × 370.6 mm | two A4 portrait pages: 9 + 7 cards | A3 portrait |
 
 The artwork, placement, prompt, upscale, promotion, validation, and slicing
-layers understand all three layouts. A 4×3 artwork reserves all four bottom
-cards for subjects; expanding a 3×3 source therefore requires one explicit
-`--fallback-pokemon`. The custom workspace positions the title at row 2,
-column 2 and the information panel beside it at row 2, column 3.
+layers understand all four layouts. A 2×2 artwork places its title in row 1,
+column 1, its information panel in row 1, column 2, and its two subjects in the
+bottom row. A 4×3 artwork reserves all four bottom cards for subjects;
+expanding a 3×3 source therefore requires one explicit `--fallback-pokemon`.
+The 4×3 custom workspace positions the title at row 2, column 2 and the
+information panel beside it at row 2, column 3.
 
-The cuttable PDF renderer keeps the standard 3×3 A4 grid. For a 4×3 poster,
-page one contains source columns 1–3 in their original 3×3 arrangement. Page
-two contains source column 4 vertically in its first column, with its remaining
-six fields empty. The two sheets can therefore be placed side by side without
-reordering any crop, and no card is scaled down. `full-page` remains a literal
-continuous-sheet mode, so wide layouts still require their indicated A3
-orientation there.
+The cuttable PDF renderer keeps the standard 3×3 A4 grid. A 2×2 poster retains
+its shape in slots 1, 2, 4, and 5, leaving the other five slots empty. For a
+4×3 poster, page one contains source columns 1–3 in their original 3×3
+arrangement. Page two contains source column 4 vertically in its first column,
+with its remaining six fields empty. The two sheets can therefore be placed
+side by side without reordering any crop, and no card is scaled down.
+`full-page` remains a literal continuous-sheet mode, so wide layouts still
+require their indicated A3 orientation there.
 
 Every raster cell is derived from cumulative physical start and end positions,
 not from repeatedly adding independently rounded card and gap widths. Generation

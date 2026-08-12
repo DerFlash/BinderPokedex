@@ -45,15 +45,30 @@ def card_page_assignments(
 ) -> list[list[tuple[int, int]]]:
     """Map row-major poster crops to their physical positions on PDF pages.
 
-    A poster that is only wider than the printable page is split into vertical
-    column bands. This keeps the first three columns of a 4x3 poster assembled
-    on page one and places its fourth column vertically in page two's first
-    column. Other oversized layouts retain the legacy sequential pagination.
+    Smaller posters preserve their row and column coordinates in the upper-left
+    page slots, so a 2x2 artwork leaves the A4 grid's right column and bottom
+    row empty. A poster that is only wider than the printable page is split
+    into vertical column bands. This keeps the first three columns of a 4x3
+    poster assembled on page one and places its fourth column vertically in
+    page two's first column. Other oversized layouts retain sequential
+    pagination.
     """
     poster_columns, poster_rows = poster_grid
     page_columns, page_rows = page_grid
     if min(poster_columns, poster_rows, page_columns, page_rows) <= 0:
         raise ValueError("Poster and PDF page grids must be positive")
+
+    if poster_columns <= page_columns and poster_rows <= page_rows:
+        return [
+            [
+                (
+                    row * poster_columns + column,
+                    row * page_columns + column,
+                )
+                for row in range(poster_rows)
+                for column in range(poster_columns)
+            ]
+        ]
 
     if poster_columns > page_columns and poster_rows <= page_rows:
         pages: list[list[tuple[int, int]]] = []

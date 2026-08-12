@@ -75,10 +75,11 @@ python scripts/poster_assets/fetch_poster_sources.py \
 ```
 
 Standardmäßig wird das Poster als zuschneidbare Karten in physischer Größe
-ausgegeben. Ein 3×3-Poster belegt eine A4-Seite. Lokale 4×3-Poster werden ohne
-Verkleinerung auf zwei A4-Seiten verteilt: Die linken drei Artwork-Spalten
-bilden Seite 1, die vierte Artwork-Spalte steht senkrecht in der ersten Spalte
-von Seite 2. Dasselbe lokalisierte 3×3-Poster
+ausgegeben. Ein 3×3-Poster belegt eine A4-Seite. Ein lokales 2×2-Poster nutzt
+die vier Felder links oben; die rechte Spalte und die untere Reihe bleiben leer.
+Lokale 4×3-Poster werden ohne Verkleinerung auf zwei A4-Seiten verteilt: Die
+linken drei Artwork-Spalten bilden Seite 1, die vierte Artwork-Spalte steht
+senkrecht in der ersten Spalte von Seite 2. Dasselbe lokalisierte 3×3-Poster
 kann alternativ als ein zusammenhängendes, 200,5 × 276,7 mm großes Bild mittig
 auf A4 und ohne Schnittlinien ausgegeben werden:
 
@@ -120,6 +121,11 @@ Danach ComfyUI-Runner, Review/Promotion und PDF-Generator mit derselben gesetzte
 Umgebungsvariable ausführen. Der vollständige Ablauf mit allen Befehlen steht im
 [Poster Artwork Workflow](POSTER_WORKFLOW.md). Ohne `--section gen1` wird ein
 lokaler Workspace für alle neun Generationen vorbereitet.
+
+Für einen 2×2-Piloten stattdessen `--layout standard_2x2` verwenden. Das
+Custom-Layout übernimmt deterministisch die ersten zwei kuratierten Pokémon und
+ordnet Titel links oben, Infobox rechts oben und beide Pokémon darunter an. Ein
+zusätzlicher `--fallback-pokemon` ist dafür nicht nötig.
 
 Für einen einzelnen Build kann das Poster ohne Manifeständerung übersprungen
 werden:
