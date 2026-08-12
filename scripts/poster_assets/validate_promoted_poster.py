@@ -49,7 +49,10 @@ try:
         poster_bundle,
         poster_bundles_for_scope,
     )
-    from .poster_subject import subject_fingerprint_identity
+    from .poster_subject import (
+        resolve_poster_subject,
+        subject_fingerprint_identity,
+    )
 except ImportError:
     from fetch_cutouts import (
         resolve_requested_count,
@@ -89,7 +92,10 @@ except ImportError:
         poster_bundle,
         poster_bundles_for_scope,
     )
-    from poster_subject import subject_fingerprint_identity
+    from poster_subject import (
+        resolve_poster_subject,
+        subject_fingerprint_identity,
+    )
 
 
 POSTER_LANGUAGES = (
@@ -199,21 +205,37 @@ def _validate_source_subjects(
         expected_subjects = [
             subject_fingerprint_identity(item) for item in selected
         ]
+        expected_subject_keys = {
+            resolve_poster_subject(item).selection_key()
+            for item in selected
+        }
     except (AttributeError, TypeError, ValueError) as error:
         raise ValueError(
             f"{bundle.asset_key} source featured_elements are invalid"
         ) from error
     if section is not None:
         featured = section.get("featured_elements")
-        if not isinstance(featured, list) or len(featured) != count:
+        if not isinstance(featured, list):
             raise ValueError(
-                f"{bundle.asset_key} source section needs exactly {count} "
-                "featured_elements"
+                f"{bundle.asset_key} source section needs featured_elements"
             )
-        expected_items = scope_featured_elements(scope_data)
-        if len(unique_by_poster_subject(expected_items)) != count:
+        featured_items = scope_featured_elements(scope_data)
+        unique_featured = unique_by_poster_subject(featured_items)
+        if len(unique_featured) != len(featured):
             raise ValueError(
                 f"{bundle.asset_key} source featured_elements are not unique"
+            )
+        featured_subjects = {
+            resolve_poster_subject(item).selection_key()
+            for item in unique_featured
+        }
+        if (
+            len(featured_subjects) > count
+            or not featured_subjects.issubset(expected_subject_keys)
+        ):
+            raise ValueError(
+                f"{bundle.asset_key} source featured_elements do not match "
+                "the selected Pokemon and fallback candidates"
             )
     actual_subjects = (
         (provenance or {}).get("run", {})

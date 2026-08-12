@@ -74,9 +74,11 @@ python scripts/poster_assets/fetch_poster_sources.py \
   --kind logos
 ```
 
-The default poster presentation remains nine cuttable physical cards. To keep
-the same localized 3×3 poster as one continuous 200.5 × 276.7 mm image centered
-on A4, without cutting guides:
+The default poster presentation uses cuttable physical cards. A 3×3 poster
+occupies one A4 page; a local 4×3 poster is not scaled down and instead uses two
+A4 pages with nine cards followed by three cards in the next page's top row.
+To keep the same localized 3×3 poster as one continuous 200.5 × 276.7 mm image
+centered on A4, without cutting guides:
 
 ```bash
 python scripts/pdf/generate_pdf.py \
@@ -93,6 +95,11 @@ The normal page order is poster, then card pages. The poster carries the
 section's semantic title/subtitle, count, description or release date, and
 project identity. If no enabled promoted poster exists, the page order remains
 cover, then card pages.
+
+Use `scripts/poster_assets/create_custom_poster_layout.py` to prepare an
+ignored local poster-assets root for `wide_4x3` or another registered layout.
+The complete isolated-workspace example is in
+[Poster Artwork Workflow](POSTER_WORKFLOW.md).
 
 Skip the poster for one build without changing the scope manifest:
 

@@ -8,16 +8,16 @@ def read_project_file(relative_path: str) -> str:
     return (ROOT / relative_path).read_text(encoding="utf-8")
 
 
-def test_artwork_agents_reuse_configured_render_target_or_ask_once():
+def test_artwork_agents_reuse_only_workspace_local_render_configuration():
     guidance = read_project_file("AGENTS.md")
 
-    assert "reuse the renderer" in guidance
-    assert "only if\nno target is configured yet" in guidance
-    assert "Ask\nwhether" in guidance
-    assert "locally" in guidance and "remote worker" in guidance
-    assert "machine-local" in guidance
+    assert "renderer.local.yaml" in guidance
+    assert "reuse it for" in guidance
+    assert "the current workspace without asking again" in guidance
+    assert "when the workspace is fresh" in guidance
     assert "docs/POSTER_RENDER_WORKER.md" in guidance
-    assert "Do not expose ComfyUI on a public interface" in guidance
+    assert "Do not expose" in guidance
+    assert "ComfyUI on a public interface" in guidance
 
 
 def test_remote_worker_guide_is_discoverable_from_normal_documentation():
@@ -25,7 +25,7 @@ def test_remote_worker_guide_is_discoverable_from_normal_documentation():
     workflow = read_project_file("docs/POSTER_WORKFLOW.md")
 
     assert "docs/POSTER_RENDER_WORKER.md" in readme
-    assert "Resolve the render target before GPU work" in workflow
+    assert "Resolve the workspace render target before GPU work" in workflow
     assert "[Remote Poster Render Worker](POSTER_RENDER_WORKER.md)" in workflow
 
 

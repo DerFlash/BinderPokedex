@@ -193,6 +193,90 @@ def _with_manifest(bundle, manifest):
     return replace(bundle, manifest=manifest)
 
 
+def _with_slotted_wide_fallback(scope_dir, bundle):
+    manifest = copy.deepcopy(bundle.manifest)
+    manifest["layout"] = {"name": "wide_4x3"}
+    manifest["pokemon"]["fallback_candidates"] = [
+        {"pokemon_id": 25, "slot": 2}
+    ]
+
+    cutout_dir = scope_dir / "cutouts"
+    filename = "pokemon_025.png"
+    Image.new("RGBA", (18, 18), (240, 205, 55, 255)).save(
+        cutout_dir / filename
+    )
+    cutouts = load_json(cutout_dir / "manifest.json")
+    cutouts["items"].insert(
+        1,
+        {
+            "pokemon_id": 25,
+            "url": PosterSubject(25, 25).image_url,
+            "file": filename,
+        },
+    )
+    (cutout_dir / "manifest.json").write_text(
+        json.dumps(cutouts),
+        encoding="utf-8",
+    )
+    return replace(
+        bundle,
+        asset_key="Example/sections/main",
+        poster_id="main",
+        section_id="main",
+        manifest=manifest,
+    )
+
+
+def test_slotted_fallback_order_is_shared_by_fingerprint_and_validation(
+    tmp_path,
+):
+    _repository, assets, output, scope_dir, bundle = _write_fixture(tmp_path)
+    bundle = _with_slotted_wide_fallback(scope_dir, bundle)
+
+    fingerprint = build_generation_fingerprint(
+        bundle,
+        poster_assets=assets,
+        scope_data_dir=output,
+    )
+
+    assert fingerprint["components"]["source_subject_ids"] == [1, 25, 4, 7]
+    validator._validate_source_subjects(bundle, _scope_data())
+
+
+def test_promoted_provenance_records_custom_workspace_master_path(
+    tmp_path,
+    monkeypatch,
+):
+    repository = tmp_path / "repository"
+    asset_dir = (
+        repository
+        / "tmp"
+        / "custom-poster-layouts"
+        / "example"
+        / "Example"
+    )
+    asset_dir.mkdir(parents=True)
+    artwork = asset_dir / ".stage-artwork.png"
+    Image.new("RGB", (8, 8), (40, 120, 80)).save(artwork)
+    monkeypatch.setattr(provenance, "ROOT", repository)
+    stable_artwork = asset_dir / "poster-flux2-artwork.png"
+
+    payload = provenance.promoted_provenance(
+        scope="Example",
+        name="flux2",
+        language="de",
+        run_metadata={},
+        artwork_path=artwork,
+        stable_artwork_path=stable_artwork,
+    )
+
+    prefix = "tmp/custom-poster-layouts/example/Example"
+    assert payload["outputs"]["artwork"]["file"] == (
+        f"{prefix}/poster-flux2-artwork.png"
+    )
+    assert set(payload["outputs"]) == {"artwork"}
+
+
 def test_generation_fingerprint_excludes_routing_and_overlay_only_inputs(
     tmp_path,
 ):

@@ -2,6 +2,7 @@ import copy
 import json
 import shutil
 import sys
+import tempfile
 from dataclasses import replace
 from pathlib import Path
 from types import SimpleNamespace
@@ -25,6 +26,10 @@ from scripts.poster_assets.create_comfyui_poster_workflow import (
 )
 from scripts.poster_assets.create_comfyui_upscale_workflow import (
     build_workflow as build_upscale_workflow,
+)
+from scripts.poster_assets.create_custom_poster_layout import (
+    _parse_section_fallbacks,
+    create_custom_layout_workspace,
 )
 from scripts.poster_assets.finalize_comfyui_poster import (
     draw_inline_logo_title,
@@ -56,6 +61,8 @@ from scripts.poster_assets.poster_io import (
     load_cutout_items,
     load_poster_scope_data,
     poster_bundle,
+    poster_bundles_for_scope,
+    resolve_poster_assets_root,
 )
 from scripts.poster_assets.poster_subject import (
     PosterSubject,
@@ -222,7 +229,7 @@ def test_dpi_aware_image_layout_reconstructs_print_endpoints(name, dpi):
     assert actual.row_spans == expected.row_spans
 
 
-def test_wide_layouts_are_modeled_for_future_matching_pdf_renderers():
+def test_wide_layouts_keep_full_page_a3_hints():
     layout_4x3 = build_print_layout("wide_4x3", 300)
     layout_4x4 = build_print_layout("wide_4x4", 300)
 
@@ -230,6 +237,271 @@ def test_wide_layouts_are_modeled_for_future_matching_pdf_renderers():
     assert (layout_4x4.columns, layout_4x4.rows) == (4, 4)
     assert pdf_page_hint("wide_4x3") == ("A3", "landscape")
     assert pdf_page_hint("wide_4x4") == ("A3", "portrait")
+
+
+def test_pokedex_custom_layout_workspace_is_isolated_and_pdf_enabled():
+    root = Path(__file__).resolve().parents[2]
+    temp_root = root / "tmp"
+    temp_root.mkdir(parents=True, exist_ok=True)
+    parent = Path(tempfile.mkdtemp(prefix="custom-layout-test-", dir=temp_root))
+    target = parent / "poster-assets"
+    try:
+        workspace = create_custom_layout_workspace(
+            "Pokedex",
+            "wide_4x3",
+            sections=("gen1",),
+            output_root=target,
+            fallback_pokemon=(25,),
+        )
+
+        bundles = poster_bundles_for_scope(
+            "Pokedex",
+            poster_assets=workspace,
+        )
+        assert len(bundles) == 1
+        assert bundles[0].poster_id == "gen1"
+        assert bundles[0].pdf_enabled is True
+        assert bundles[0].manifest["layout"] == {"name": "wide_4x3"}
+        assert (
+            bundles[0].manifest["pokemon"]["count"]
+            == "auto_from_layout_columns"
+        )
+        assert bundles[0].manifest["pokemon"]["fallback_candidates"] == [
+            {"pokemon_id": 25, "slot": 2}
+        ]
+        assert bundles[0].manifest["text_cells"]["title"] == {
+            "row": 2,
+            "column": 2,
+        }
+        assert bundles[0].manifest["text_cells"]["set_info"] == {
+            "row": 2,
+            "column": 3,
+            "max_width_ratio": 0.92,
+            "max_height_ratio": 0.68,
+        }
+        assert not (bundles[0].asset_dir / bundles[0].artwork_file).exists()
+
+        cutouts = json.loads(
+            (bundles[0].asset_dir / "cutouts" / "manifest.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        assert cutouts["layout"] == {
+            "name": "wide_4x3",
+            "columns": 4,
+            "rows": 3,
+        }
+        assert (workspace / "workspace.yaml").is_file()
+    finally:
+        shutil.rmtree(parent)
+
+
+def test_partial_custom_workspace_can_retain_other_promoted_artworks():
+    root = Path(__file__).resolve().parents[2]
+    temp_root = root / "tmp"
+    temp_root.mkdir(parents=True, exist_ok=True)
+    parent = Path(tempfile.mkdtemp(prefix="custom-layout-hybrid-", dir=temp_root))
+    source_assets = parent / "source-assets"
+    target = parent / "poster-assets"
+    try:
+        index_items = []
+        for poster_id in ("section-a", "section-b"):
+            asset_dir = source_assets / "Aggregate" / "sections" / poster_id
+            (asset_dir / "cutouts").mkdir(parents=True)
+            manifest = {
+                "schema_version": 2,
+                "asset_key": f"Aggregate/sections/{poster_id}",
+                "scope": "Aggregate",
+                "poster_id": poster_id,
+                "source": {
+                    "scope": "Aggregate",
+                    "section_id": poster_id,
+                },
+                "layout": {"name": "standard_3x3"},
+                "artwork": {"promoted_file": "poster-artwork.png"},
+                "pokemon": {
+                    "strategy": "featured_from_scope",
+                    "count": "auto_from_layout_columns",
+                    "fallback_candidates": [],
+                },
+            }
+            (asset_dir / "poster.yaml").write_text(
+                yaml.safe_dump(manifest, sort_keys=False),
+                encoding="utf-8",
+            )
+            (asset_dir / "poster-artwork.png").write_bytes(b"promoted")
+            (asset_dir / "cutouts" / "manifest.json").write_text(
+                json.dumps(
+                    {
+                        "items": [
+                            {"pokemon_id": 1},
+                            {"pokemon_id": 4},
+                            {"pokemon_id": 7},
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            index_items.append(
+                {
+                    "id": poster_id,
+                    "section_id": poster_id,
+                    "manifest": f"sections/{poster_id}/poster.yaml",
+                    "pdf": {
+                        "enabled": True,
+                        "artwork_file": "poster-artwork.png",
+                        "insertion": "after_section_cover",
+                    },
+                }
+            )
+        index_path = source_assets / "Aggregate" / "posters.yaml"
+        index_path.parent.mkdir(parents=True, exist_ok=True)
+        index_path.write_text(
+            yaml.safe_dump(
+                {
+                    "schema_version": 1,
+                    "scope": "Aggregate",
+                    "posters": index_items,
+                },
+                sort_keys=False,
+            ),
+            encoding="utf-8",
+        )
+
+        workspace = create_custom_layout_workspace(
+            "Aggregate",
+            "wide_4x3",
+            sections=("section-a",),
+            output_root=target,
+            source_assets=source_assets,
+            fallback_pokemon=(25,),
+            include_unselected_promotions=True,
+        )
+
+        bundles = poster_bundles_for_scope(
+            "Aggregate",
+            poster_assets=workspace,
+        )
+        assert [bundle.poster_id for bundle in bundles] == [
+            "section-a",
+            "section-b",
+        ]
+        assert bundles[0].manifest["layout"] == {"name": "wide_4x3"}
+        assert not (bundles[0].asset_dir / bundles[0].artwork_file).exists()
+        assert bundles[1].manifest["layout"] == {"name": "standard_3x3"}
+        assert (bundles[1].asset_dir / bundles[1].artwork_file).read_bytes() == (
+            b"promoted"
+        )
+        workspace_meta = yaml.safe_load(
+            (workspace / "workspace.yaml").read_text(encoding="utf-8")
+        )
+        assert workspace_meta["included_unselected_promotions"] is True
+    finally:
+        shutil.rmtree(parent)
+
+
+def test_complete_pokedex_custom_workspace_uses_section_fallbacks():
+    root = Path(__file__).resolve().parents[2]
+    temp_root = root / "tmp"
+    temp_root.mkdir(parents=True, exist_ok=True)
+    parent = Path(tempfile.mkdtemp(prefix="custom-layout-complete-", dir=temp_root))
+    target = parent / "poster-assets"
+    section_fallbacks = {
+        "gen1": (25,),
+        "gen2": (175,),
+        "gen3": (280,),
+        "gen4": (447,),
+        "gen5": (570,),
+        "gen6": (700,),
+        "gen7": (778,),
+        "gen8": (831,),
+        "gen9": (921,),
+    }
+    try:
+        workspace = create_custom_layout_workspace(
+            "Pokedex",
+            "wide_4x3",
+            output_root=target,
+            section_fallback_pokemon=section_fallbacks,
+        )
+
+        bundles = poster_bundles_for_scope(
+            "Pokedex",
+            poster_assets=workspace,
+        )
+        assert [bundle.poster_id for bundle in bundles] == [
+            f"gen{generation}" for generation in range(1, 10)
+        ]
+        for bundle in bundles:
+            expected_id = section_fallbacks[bundle.poster_id][0]
+            assert bundle.manifest["layout"] == {"name": "wide_4x3"}
+            assert bundle.manifest["pokemon"]["fallback_candidates"] == [
+                {"pokemon_id": expected_id, "slot": 2}
+            ]
+            assert not (bundle.asset_dir / bundle.artwork_file).exists()
+
+        workspace_meta = yaml.safe_load(
+            (workspace / "workspace.yaml").read_text(encoding="utf-8")
+        )
+        assert workspace_meta["section_fallback_pokemon"] == {
+            section: list(pokemon_ids)
+            for section, pokemon_ids in section_fallbacks.items()
+        }
+    finally:
+        shutil.rmtree(parent)
+
+
+def test_section_fallback_parser_groups_repeated_sections():
+    assert _parse_section_fallbacks(
+        ["gen1=25", "gen2=175", "gen2=172"]
+    ) == {
+        "gen1": (25,),
+        "gen2": (175, 172),
+    }
+
+
+@pytest.mark.parametrize("value", ("gen1", "=25", "gen1=", "gen1=nope", "gen1=0"))
+def test_section_fallback_parser_rejects_invalid_assignments(value):
+    with pytest.raises(ValueError):
+        _parse_section_fallbacks([value])
+
+
+def test_slotted_fallback_fills_the_missing_wide_poster_card():
+    root = Path(__file__).resolve().parents[2]
+    scope_data = json.loads(
+        (root / "data" / "output" / "Pokedex.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    selected = fetch_cutouts.select_pokemon(
+        {
+            "pokemon": {
+                "strategy": "featured_from_scope",
+                "fallback_candidates": [
+                    {"pokemon_id": 25, "slot": 2}
+                ],
+            }
+        },
+        {"sections": {"gen1": scope_data["sections"]["gen1"]}},
+        4,
+        {25: {"en": "Pikachu", "de": "Pikachu"}},
+    )
+
+    assert [item["pokemon_id"] for item in selected] == [1, 25, 4, 7]
+
+
+def test_poster_assets_root_accepts_repo_relative_local_workspace(monkeypatch):
+    monkeypatch.setenv(
+        "BINDER_POKEDEX_POSTER_ASSETS",
+        "tmp/custom-poster-layouts/example",
+    )
+
+    assert resolve_poster_assets_root() == (
+        Path(__file__).resolve().parents[2]
+        / "tmp"
+        / "custom-poster-layouts"
+        / "example"
+    ).resolve()
 
 
 @pytest.mark.parametrize(

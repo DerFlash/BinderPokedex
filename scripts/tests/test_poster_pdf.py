@@ -11,6 +11,7 @@ from scripts.pdf.lib.rendering.page_renderer import PageRenderer
 from scripts.pdf.lib.rendering.poster_page_renderer import (
     PosterPageCollection,
     PosterPageRenderer,
+    card_page_assignments,
 )
 from scripts.pdf.lib.variant_pdf_generator import VariantPDFGenerator
 from scripts.poster_assets.layout import physical_layout_size_mm
@@ -249,16 +250,70 @@ def test_sv035_poster_source_is_text_free_artwork():
         renderer.cleanup()
 
 
-def test_wide_poster_reports_the_matching_future_pdf_page_requirement():
-    renderer = PosterPageRenderer.__new__(PosterPageRenderer)
-    renderer.layout_name = "wide_4x3"
-    renderer.page_mode = "cards"
-    renderer._prepare_cards = MagicMock(
-        return_value=[Path(f"card-{index}.png") for index in range(12)]
-    )
+@pytest.mark.parametrize(
+    ("layout_name", "card_count", "expected_positions"),
+    (
+        ("wide_4x3", 12, [*range(9), 0, 3, 6]),
+        ("wide_4x4", 16, [*range(9), *range(7)]),
+    ),
+)
+def test_wide_poster_paginates_at_physical_size_across_a4_pages(
+    tmp_path,
+    layout_name,
+    card_count,
+    expected_positions,
+):
+    card_paths = []
+    for index in range(card_count):
+        card_path = tmp_path / f"card-{index}.png"
+        Image.new("RGB", (2, 2), (index, index, index)).save(card_path)
+        card_paths.append(card_path)
 
-    with pytest.raises(ValueError, match="A3 landscape renderer"):
-        renderer.render_page(MagicMock(), PageRenderer())
+    renderer = PosterPageRenderer.__new__(PosterPageRenderer)
+    renderer.layout_name = layout_name
+    renderer.page_mode = "cards"
+    renderer._prepare_cards = MagicMock(return_value=card_paths)
+    page_renderer = MagicMock()
+    page_renderer.style = SimpleNamespace(
+        CARDS_PER_ROW=3,
+        CARDS_PER_COLUMN=3,
+        CARDS_PER_PAGE=9,
+        CARD_WIDTH=10,
+        CARD_HEIGHT=20,
+    )
+    page_renderer.calculate_card_position.side_effect = [
+        (index * 10, 0)
+        for index in expected_positions
+    ]
+    canvas = MagicMock()
+
+    renderer.render_page(canvas, page_renderer)
+
+    assert canvas.drawImage.call_count == card_count
+    canvas.showPage.assert_called_once_with()
+    assert page_renderer.create_page.call_count == 2
+    assert page_renderer.draw_cutting_guides.call_count == 2
+    assert [
+        call.args[0]
+        for call in page_renderer.calculate_card_position.call_args_list
+    ] == expected_positions
+
+
+def test_wide_4x3_keeps_the_first_three_columns_together_on_page_one():
+    assert card_page_assignments((4, 3), (3, 3)) == [
+        [
+            (0, 0),
+            (1, 1),
+            (2, 2),
+            (4, 3),
+            (5, 4),
+            (6, 5),
+            (8, 6),
+            (9, 7),
+            (10, 8),
+        ],
+        [(3, 0), (7, 3), (11, 6)],
+    ]
 
 
 def test_wide_poster_renderer_accepts_a_matching_page_grid(tmp_path):
@@ -288,6 +343,7 @@ def test_wide_poster_renderer_accepts_a_matching_page_grid(tmp_path):
     renderer.render_page(canvas, page_renderer)
 
     assert canvas.drawImage.call_count == 12
+    canvas.showPage.assert_not_called()
     page_renderer.draw_cutting_guides.assert_called_once_with(canvas)
 
 
@@ -474,6 +530,54 @@ def test_aggregate_posters_render_into_a_real_two_page_pdf(tmp_path):
         renderer._prepare_cards.call_count == 1
         for renderer in renderers
     )
+
+
+def test_wide_poster_renders_into_a_real_two_page_a4_pdf(tmp_path):
+    card_paths = []
+    for index in range(12):
+        card_path = tmp_path / f"wide-card-{index}.png"
+        Image.new(
+            "RGB",
+            (24, 34),
+            (40 + index * 10, 90, 130),
+        ).save(card_path)
+        card_paths.append(card_path)
+
+    bundle = PosterBundle(
+        asset_key="Aggregate/wide",
+        scope="Aggregate",
+        poster_id="wide",
+        section_id="wide",
+        asset_dir=tmp_path,
+        manifest_path=tmp_path / "poster.yaml",
+        manifest={"layout": {"name": "wide_4x3"}},
+        pdf_enabled=True,
+        insertion="after_section_cover",
+        artwork_file="unused.png",
+    )
+    renderer = PosterPageRenderer(
+        bundle,
+        "de",
+        tmp_path / "unused.png",
+        layout_name="wide_4x3",
+    )
+    renderer._prepare_cards = MagicMock(return_value=card_paths)
+
+    output_path = tmp_path / "wide.pdf"
+    generator = VariantPDFGenerator.__new__(VariantPDFGenerator)
+    generator.output_file = output_path
+    generator.pokemon_list = []
+    generator.language = "de"
+    generator.variant_data = {
+        "sections": {"wide": {"section_order": 1, "cards": []}}
+    }
+    generator.page_renderer = PageRenderer()
+    generator.poster_pages = PosterPageCollection([renderer])
+    generator._draw_section_cover = MagicMock()
+    generator._draw_cards_page = MagicMock()
+
+    assert generator.generate() is True
+    assert output_path.read_bytes().count(b"/Type /Page\n") == 2
 
 
 def test_failed_pdf_build_preserves_previous_output_and_cleans_temp(

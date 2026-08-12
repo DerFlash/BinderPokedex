@@ -15,8 +15,7 @@ try:
         normalized_visible_placement_contract,
     )
     from .fetch_cutouts import (
-        scope_featured_elements,
-        unique_by_poster_subject,
+        select_pokemon,
     )
     from .layout import (
         RASTER_GEOMETRY_CONTRACT_VERSION,
@@ -58,8 +57,7 @@ except ImportError:
         normalized_visible_placement_contract,
     )
     from fetch_cutouts import (
-        scope_featured_elements,
-        unique_by_poster_subject,
+        select_pokemon,
     )
     from layout import (
         RASTER_GEOMETRY_CONTRACT_VERSION,
@@ -920,27 +918,15 @@ def _expected_subject_ids(
             "pokemon.count must be a positive integer or "
             "'auto_from_layout_columns'"
         )
-    selected = unique_by_poster_subject(
-        scope_featured_elements(scope_data)
+    selected = select_pokemon(
+        manifest,
+        scope_data,
+        requested,
+        {},
     )
-    fallback = pokemon.get("fallback_candidates", [])
-    if not isinstance(fallback, list):
-        raise ValueError("pokemon.fallback_candidates must be a list")
-    for item in fallback:
-        if (
-            isinstance(item, dict)
-            and isinstance(item.get("pokemon_id"), int)
-        ):
-            selected.append(dict(item))
-    selected = unique_by_poster_subject(selected)
-    if len(selected) < requested:
-        raise ValueError(
-            f"Layout needs {requested} Pokemon, but only "
-            f"{len(selected)} were resolved"
-        )
     return [
         subject_fingerprint_identity(item)
-        for item in selected[:requested]
+        for item in selected
     ]
 
 

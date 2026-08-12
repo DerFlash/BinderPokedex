@@ -74,10 +74,13 @@ python scripts/poster_assets/fetch_poster_sources.py \
   --kind logos
 ```
 
-Standardmäßig wird das Poster weiterhin als neun zuschneidbare Karten in
-physischer Größe ausgegeben. Dasselbe lokalisierte 3×3-Poster kann alternativ
-als ein zusammenhängendes, 200,5 × 276,7 mm großes Bild mittig auf A4 und ohne
-Schnittlinien ausgegeben werden:
+Standardmäßig wird das Poster als zuschneidbare Karten in physischer Größe
+ausgegeben. Ein 3×3-Poster belegt eine A4-Seite. Lokale 4×3-Poster werden ohne
+Verkleinerung auf zwei A4-Seiten verteilt: Die linken drei Artwork-Spalten
+bilden Seite 1, die vierte Artwork-Spalte steht senkrecht in der ersten Spalte
+von Seite 2. Dasselbe lokalisierte 3×3-Poster
+kann alternativ als ein zusammenhängendes, 200,5 × 276,7 mm großes Bild mittig
+auf A4 und ohne Schnittlinien ausgegeben werden:
 
 ```bash
 python scripts/pdf/generate_pdf.py \
@@ -90,11 +93,33 @@ Dabei entsteht eine separate Datei wie
 `output/de/Base1_DE_POSTER_FULL_PAGE.pdf`. Scopes ohne aktiviertes promotetes
 Poster verwenden weiterhin den bestehenden Cover- und Kartenseiten-Pfad.
 
-Die Seitenreihenfolge bleibt derzeit Cover, Poster und danach Kartenseiten.
-Das Poster wiederholt bereits die semantischen Cover-Informationen wie
-Titel/Untertitel, Anzahl, Beschreibung beziehungsweise Veröffentlichungsdatum
-und Projektname. Das Entfernen des Covers ist eine separate spätere Migration,
-nachdem die betroffenen Poster und mehrsprachigen PDF-Layouts geprüft sind.
+Ein aktiviertes Poster ersetzt das passende Section-Cover und steht direkt vor
+den Kartenseiten. Ohne aktiviertes Poster oder mit `--skip-poster` bleibt das
+gewöhnliche Cover erhalten.
+
+#### Lokaler 4×3-Pilot für den deutschen Pokédex
+
+Der Custom-Layout-Befehl kopiert nur Konfiguration und deterministische
+Quell-Cutouts nach `tmp/`. Eingecheckte 3×3-Artworks und Release-Manifeste werden
+nicht verändert:
+
+```bash
+python scripts/poster_assets/create_custom_poster_layout.py \
+  --scope Pokedex \
+  --section gen1 \
+  --layout wide_4x3 \
+  --fallback-pokemon 25
+
+export BINDER_POKEDEX_POSTER_ASSETS="$PWD/tmp/custom-poster-layouts/pokedex-gen1-wide_4x3"
+
+python scripts/poster_assets/fetch_cutouts.py \
+  --scope Pokedex/sections/gen1
+```
+
+Danach ComfyUI-Runner, Review/Promotion und PDF-Generator mit derselben gesetzten
+Umgebungsvariable ausführen. Der vollständige Ablauf mit allen Befehlen steht im
+[Poster Artwork Workflow](POSTER_WORKFLOW.md). Ohne `--section gen1` wird ein
+lokaler Workspace für alle neun Generationen vorbereitet.
 
 Für einen einzelnen Build kann das Poster ohne Manifeständerung übersprungen
 werden:
