@@ -42,6 +42,8 @@ try:
         sha256_file,
     )
     from .poster_io import (
+        POSTER_ASSETS,
+        POSTER_CONFIGS,
         PosterBundle,
         load_poster_scope_data,
         poster_bundle,
@@ -80,6 +82,8 @@ except ImportError:
         sha256_file,
     )
     from poster_io import (
+        POSTER_ASSETS,
+        POSTER_CONFIGS,
         PosterBundle,
         load_poster_scope_data,
         poster_bundle,
@@ -88,7 +92,6 @@ except ImportError:
     from poster_subject import resolve_poster_subject
 
 
-POSTER_ASSETS = ROOT / "data" / "poster_assets"
 POSTER_LANGUAGES = (
     "de",
     "en",
@@ -104,16 +107,21 @@ POSTER_LANGUAGES = (
 
 def enabled_poster_bundles(
     poster_assets: Path = POSTER_ASSETS,
+    poster_configs: Path | None = None,
 ) -> list[PosterBundle]:
     """Return every PDF-enabled bundle with its resolved routing intact."""
     enabled: list[PosterBundle] = []
+    config_root = poster_configs or (
+        POSTER_CONFIGS if poster_assets == POSTER_ASSETS else poster_assets
+    )
     for scope_dir in sorted(
-        (path for path in poster_assets.iterdir() if path.is_dir()),
+        (path for path in config_root.iterdir() if path.is_dir()),
         key=lambda path: path.name,
     ):
         for bundle in poster_bundles_for_scope(
             scope_dir.name,
             poster_assets=poster_assets,
+            poster_configs=config_root,
         ):
             if bundle.pdf_enabled:
                 enabled.append(bundle)
@@ -130,8 +138,12 @@ def enabled_poster_scopes(
     ]
 
 
-def _validate_record(record: dict[str, Any]) -> Path:
-    path = ROOT / str(record["file"])
+def _validate_record(
+    record: dict[str, Any],
+    *,
+    expected_path: Path | None = None,
+) -> Path:
+    path = expected_path or ROOT / str(record["file"])
     if not path.is_file():
         raise FileNotFoundError(path)
     actual_hash = sha256_file(path)
@@ -263,6 +275,11 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
     )
     provenance_path = scope_dir / provenance_file
     payload = json.loads(provenance_path.read_text(encoding="utf-8"))
+    schema_version = payload.get("schema_version")
+    if schema_version not in {1, 2}:
+        raise ValueError(
+            f"Unsupported promoted provenance version: {provenance_path}"
+        )
     if payload.get("kind") != "promoted_poster" or payload.get("scope") != scope:
         raise ValueError(f"Invalid promoted provenance: {provenance_path}")
     if bundle.section_id is not None and (
@@ -413,7 +430,15 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
     )
     output_dpi = recorded_generation.get("output_dpi")
     outputs = payload.get("outputs", {})
-    artwork_path = _validate_record(outputs["artwork"])
+    promoted_file = artwork_config.get(
+        "promoted_file",
+        "poster-flux2-artwork.png",
+    )
+    promoted_artwork_path = bundle.asset_dir / str(promoted_file)
+    artwork_path = _validate_record(
+        outputs["artwork"],
+        expected_path=promoted_artwork_path,
+    )
     if is_joint_scene:
         promoted_pixel_hash = image_pixel_record(
             artwork_path,
@@ -435,46 +460,32 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
             f"{routed_artwork_path}, but promoted provenance validates "
             f"{artwork_path}"
         )
-    preview_path = _validate_record(outputs["preview"])
     asset_name = payload.get("asset_name")
     if not isinstance(asset_name, str) or not asset_name:
         raise ValueError(f"Invalid promoted asset name: {asset_name!r}")
-    configured_preview = artwork_config.get(
-        "preview_file",
-        f"poster-{asset_name}.png",
-    )
-    expected_preview_path = (bundle.asset_dir / configured_preview).resolve()
-    if preview_path.resolve() != expected_preview_path:
-        raise ValueError(
-            f"Promoted preview routes to {preview_path}, expected "
-            f"{expected_preview_path}"
+    preview_path: Path | None = None
+    card_paths: list[Path] = []
+    if schema_version == 1:
+        preview_path = _validate_record(outputs["preview"])
+        configured_preview = artwork_config.get(
+            "preview_file",
+            f"poster-{asset_name}.png",
         )
-    card_records = outputs.get("cards", [])
-    if len(card_records) != layout.rows * layout.columns:
-        raise ValueError(
-            f"Expected {layout.rows * layout.columns} card records, "
-            f"got {len(card_records)}"
-        )
-    card_paths = [_validate_record(record) for record in card_records]
-    expected_card_paths = [
-        expected_preview_path.with_name(
-            f"{expected_preview_path.stem}-cards"
-        )
-        / f"card_r{row}_c{column}.png"
-        for row in range(1, layout.rows + 1)
-        for column in range(1, layout.columns + 1)
-    ]
-    for path, expected_path in zip(
-        card_paths,
-        expected_card_paths,
-        strict=True,
-    ):
-        if path.resolve() != expected_path:
+        expected_preview_path = (bundle.asset_dir / configured_preview).resolve()
+        if preview_path.resolve() != expected_preview_path:
             raise ValueError(
-                f"Promoted card routes to {path}, expected {expected_path}"
+                f"Promoted preview routes to {preview_path}, expected "
+                f"{expected_preview_path}"
             )
+        card_records = outputs.get("cards", [])
+        if len(card_records) != layout.rows * layout.columns:
+            raise ValueError(
+                f"Expected {layout.rows * layout.columns} card records, "
+                f"got {len(card_records)}"
+            )
+        card_paths = [_validate_record(record) for record in card_records]
 
-    for path in (artwork_path, preview_path):
+    for path in (artwork_path,) + ((preview_path,) if preview_path else ()):
         with Image.open(path) as image:
             if image.size != (layout.width_px, layout.height_px):
                 raise ValueError(
@@ -499,17 +510,18 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
         for row in range(1, layout.rows + 1)
         for column in range(1, layout.columns + 1)
     ]
-    for path, expected_size in zip(
-        card_paths,
-        expected_card_sizes,
-        strict=True,
-    ):
-        with Image.open(path) as image:
-            if image.size != expected_size:
-                raise ValueError(
-                    f"Promoted card has wrong dimensions: {path} is "
-                    f"{image.size}, expected {expected_size}"
-                )
+    if card_paths:
+        for path, expected_size in zip(
+            card_paths,
+            expected_card_sizes,
+            strict=True,
+        ):
+            with Image.open(path) as image:
+                if image.size != expected_size:
+                    raise ValueError(
+                        f"Promoted card has wrong dimensions: {path} is "
+                        f"{image.size}, expected {expected_size}"
+                    )
         if isinstance(output_dpi, int):
             dpi_x, dpi_y = _image_dpi(path)
             if (
@@ -526,7 +538,7 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
         "scope": scope,
         "artwork": artwork_path,
         "preview": preview_path,
-        "cards": len(card_paths),
+        "cards": layout.rows * layout.columns,
         "dimensions": (layout.width_px, layout.height_px),
         "card_dimensions": (
             distinct_card_sizes[0]

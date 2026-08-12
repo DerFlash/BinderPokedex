@@ -1,0 +1,575 @@
+{
+  "asset_name": "flux2",
+  "kind": "promoted_poster",
+  "outputs": {
+    "artwork": {
+      "bytes": 5163375,
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "file": "assets/posters/MEP/poster-flux2-artwork.png",
+      "height": 3268,
+      "mode": "RGBA",
+      "pixel_sha256": "871c6de8dcc8b9c30d5faebe27f9e52b00b0216bcf093ac62607f117baa4f28a",
+      "sha256": "25bf253bd104c6f62db18dee2239bbd316a8158ec07083a5983cdfbf282d191d",
+      "width": 2368
+    }
+  },
+  "poster_id": "MEP",
+  "promoted_at": "2026-08-06T23:51:06.421446+00:00",
+  "review_language": "en",
+  "run": {
+    "created_at": "2026-08-06T19:20:06.602320+00:00",
+    "generation": {
+      "encoder": "qwen_3_4b.safetensors",
+      "encoder_sha256": "6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a",
+      "engine": "flux",
+      "generation_megapixels": 1.0,
+      "mode": "joint_scene",
+      "model": "flux-2-klein-4b.safetensors",
+      "model_sha256": "ec3d4e733a771f61c052fb4856c48b336c55eaf2c65487c2a1faeb9bbda7a343",
+      "output_dpi": 300,
+      "output_method": "lanczos",
+      "reference_mode": "individual_spatial_joint",
+      "seed": 260754076,
+      "steps": 4,
+      "vae": "flux2-vae.safetensors",
+      "vae_sha256": "d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5"
+    },
+    "inputs": {
+      "cutout_manifest": {
+        "bytes": 1721,
+        "file": "assets/posters/MEP/cutouts/manifest.json",
+        "sha256": "c011aae7ddd19747a94a19e08d8489bfc890f4e6b3bfb86c897b2e826199eeef"
+      },
+      "cutouts": [
+        {
+          "bytes": 130815,
+          "file": "assets/posters/MEP/cutouts/pokemon_888_zacian.png",
+          "height": 475,
+          "mode": "RGBA",
+          "pixel_sha256": "60ed070f524f35d74e85ccdd0103896aa9f49fe9f2a1f774a502b482a68823cd",
+          "sha256": "f36c2b196763a2c3389ee00b481b534b94d87907d81c0b0fd2dcf5487db2a533",
+          "width": 475
+        },
+        {
+          "bytes": 206887,
+          "file": "assets/posters/MEP/cutouts/pokemon_001_bulbasaur.png",
+          "height": 475,
+          "mode": "RGBA",
+          "pixel_sha256": "f96cfeddc294c4efbbdf1b35cd816341d950e3051dec2128c03f652448b04d10",
+          "sha256": "8e8f5588a41f5dc9006b029347e26f3eb20761160a16e2b0e4df8fb7ea9eb24a",
+          "width": 475
+        },
+        {
+          "bytes": 139307,
+          "file": "assets/posters/MEP/cutouts/pokemon_004_charmander.png",
+          "height": 475,
+          "mode": "RGBA",
+          "pixel_sha256": "84b721fa96a4480ee20afd28765c279e15d45b0f73c13f74c7988cf06a3b68df",
+          "sha256": "a1ece1866497c8b11df3853190781c45f724a33a839cb5525597466d03deafd8",
+          "width": 475
+        }
+      ],
+      "generation_fingerprint": {
+        "components": {
+          "cutouts": [
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "60ed070f524f35d74e85ccdd0103896aa9f49fe9f2a1f774a502b482a68823cd",
+              "pokemon_id": 888,
+              "width": 475
+            },
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "f96cfeddc294c4efbbdf1b35cd816341d950e3051dec2128c03f652448b04d10",
+              "pokemon_id": 1,
+              "width": 475
+            },
+            {
+              "height": 475,
+              "mode": "RGBA",
+              "pixel_sha256": "84b721fa96a4480ee20afd28765c279e15d45b0f73c13f74c7988cf06a3b68df",
+              "pokemon_id": 4,
+              "width": 475
+            }
+          ],
+          "effective_prompt": {
+            "encoding": "utf-8",
+            "sha256": "5f241de877efe9ce722657e68d56f4f0d558e94a0fb50756d801b559216110e5"
+          },
+          "generation": {
+            "encoder": "qwen_3_4b.safetensors",
+            "encoder_sha256": "6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a",
+            "engine": "flux",
+            "generation_megapixels": 1.0,
+            "mode": "joint_scene",
+            "model": "flux-2-klein-4b.safetensors",
+            "model_sha256": "ec3d4e733a771f61c052fb4856c48b336c55eaf2c65487c2a1faeb9bbda7a343",
+            "output_dpi": 300,
+            "output_method": "lanczos",
+            "reference_mode": "individual_spatial_joint",
+            "seed": 260754076,
+            "steps": 4,
+            "vae": "flux2-vae.safetensors",
+            "vae_sha256": "d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5"
+          },
+          "joint_scene_conditioning": {
+            "identity_source_resampling": "canonical_card_fit",
+            "reference_megapixels": 0.5,
+            "reference_neutral_rgb": [
+              226,
+              224,
+              211
+            ],
+            "reference_strategy": "individual_spatial_identity_per_subject"
+          },
+          "layout": {
+            "columns": 3,
+            "name": "standard_3x3",
+            "raster_geometry": {
+              "generation_canvas_px": [
+                848,
+                1168
+              ],
+              "generation_column_spans_px": [
+                [
+                  0,
+                  269
+                ],
+                [
+                  290,
+                  558
+                ],
+                [
+                  579,
+                  848
+                ]
+              ],
+              "generation_row_spans_px": [
+                [
+                  0,
+                  375
+                ],
+                [
+                  396,
+                  772
+                ],
+                [
+                  793,
+                  1168
+                ]
+              ],
+              "name": "cumulative_physical_endpoints",
+              "output_canvas_px": [
+                2368,
+                3268
+              ],
+              "output_column_spans_px": [
+                [
+                  0,
+                  750
+                ],
+                [
+                  809,
+                  1559
+                ],
+                [
+                  1618,
+                  2368
+                ]
+              ],
+              "output_row_spans_px": [
+                [
+                  0,
+                  1050
+                ],
+                [
+                  1109,
+                  2159
+                ],
+                [
+                  2218,
+                  3268
+                ]
+              ],
+              "version": 2
+            },
+            "rows": 3,
+            "safe_cells": {
+              "set_info": {
+                "column": 2,
+                "row": 2
+              },
+              "title": {
+                "column": 2,
+                "row": 1
+              }
+            }
+          },
+          "pipeline_contract": {
+            "name": "poster_generation",
+            "version": 9
+          },
+          "pokemon": {
+            "count": "auto_from_layout_columns",
+            "cutout_source": "pokeapi_official_artwork",
+            "fallback_candidates": [
+              {
+                "pokemon_id": 25
+              },
+              {
+                "pokemon_id": 1
+              },
+              {
+                "pokemon_id": 4
+              },
+              {
+                "pokemon_id": 7
+              },
+              {
+                "pokemon_id": 133
+              },
+              {
+                "pokemon_id": 6
+              }
+            ],
+            "row": "bottom",
+            "strategy": "featured_from_scope"
+          },
+          "scene": {
+            "concept": "the Mega Evolution Black Star Promo collection",
+            "ground_noun": "meadow",
+            "lighting": "Festive clear daylight creates soft gold highlights.",
+            "rendering": "Use premium promotional-card illustration, clean linework, restrained saturated accents, and spacious atmospheric depth.",
+            "setting": "The artwork contains an expansive celebratory highland meadow, distant crystal monuments without writing, sweeping cloud ribbons, and several subtly different biomes meeting at the horizon."
+          },
+          "source_subject_ids": [
+            888,
+            1,
+            4
+          ]
+        },
+        "schema_version": 1,
+        "sha256": "3c5d500d77ccffe519f78022f413d8659dafb4ad19f7b8c9e80d306319a145e0"
+      },
+      "overlay_fingerprint": {
+        "components": {
+          "languages": {
+            "de": {
+              "information": [
+                "MEP Black Star Promos",
+                "55 Karten",
+                "Veröffentlicht",
+                "26. September 2025"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff"
+              }
+            },
+            "en": {
+              "information": [
+                "MEP Black Star Promos",
+                "55 cards",
+                "Released",
+                "September 26, 2025"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff"
+              }
+            },
+            "es": {
+              "information": [
+                "MEP Black Star Promos",
+                "55 cartas",
+                "Publicado",
+                "26 septiembre 2025"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff"
+              }
+            },
+            "fr": {
+              "information": [
+                "MEP Black Star Promos",
+                "55 cartes",
+                "Sortie",
+                "26 septembre 2025"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff"
+              }
+            },
+            "it": {
+              "information": [
+                "MEP Black Star Promos",
+                "55 carte",
+                "Pubblicato",
+                "26 settembre 2025"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff"
+              }
+            },
+            "ja": {
+              "information": [
+                "MEP Black Star Promos",
+                "55 枚",
+                "発売日",
+                "2025年9月26日"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff"
+              }
+            },
+            "ko": {
+              "information": [
+                "MEP Black Star Promos",
+                "55 장",
+                "출시일",
+                "2025년 9월 26일"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff"
+              }
+            },
+            "zh_hans": {
+              "information": [
+                "MEP Black Star Promos",
+                "55 张",
+                "发行日期",
+                "2025年9月26日"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff"
+              }
+            },
+            "zh_hant": {
+              "information": [
+                "MEP Black Star Promos",
+                "55 張",
+                "發行日期",
+                "2025年9月26日"
+              ],
+              "title": {
+                "kind": "logo",
+                "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff"
+              }
+            }
+          },
+          "layout_name": "standard_3x3",
+          "logo_pixels": {
+            "de": {
+              "height": 466,
+              "mode": "RGBA",
+              "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff",
+              "width": 514
+            },
+            "en": {
+              "height": 466,
+              "mode": "RGBA",
+              "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff",
+              "width": 514
+            },
+            "es": {
+              "height": 466,
+              "mode": "RGBA",
+              "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff",
+              "width": 514
+            },
+            "fr": {
+              "height": 466,
+              "mode": "RGBA",
+              "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff",
+              "width": 514
+            },
+            "it": {
+              "height": 466,
+              "mode": "RGBA",
+              "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff",
+              "width": 514
+            },
+            "ja": {
+              "height": 466,
+              "mode": "RGBA",
+              "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff",
+              "width": 514
+            },
+            "ko": {
+              "height": 466,
+              "mode": "RGBA",
+              "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff",
+              "width": 514
+            },
+            "zh_hans": {
+              "height": 466,
+              "mode": "RGBA",
+              "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff",
+              "width": 514
+            },
+            "zh_hant": {
+              "height": 466,
+              "mode": "RGBA",
+              "pixel_sha256": "6dccaf2994b99f8096f3116e2e1c2693adef6ad80161181d76fb64b2a26822ff",
+              "width": 514
+            }
+          },
+          "pipeline_contract": {
+            "name": "poster_overlay",
+            "version": 3
+          },
+          "text_cells": {
+            "set_info": {
+              "column": 2,
+              "max_height_ratio": 0.68,
+              "max_width_ratio": 0.92,
+              "row": 2
+            },
+            "title": {
+              "column": 2,
+              "row": 1
+            }
+          },
+          "text_content": {}
+        },
+        "schema_version": 1,
+        "sha256": "99aed296f0bbb945f558494a07fd185c57e22f6080d9559e6b4c6fdbc1f6d4a2"
+      },
+      "prompt": {
+        "bytes": 5722,
+        "file": "tmp/poster-workspaces/MEP/comfyui_poster/individual_spatial_joint_prompt.generated.txt",
+        "sha256": "7cf6da178dd1718a0ebfee2cba3152cb5e1034dd77ef612908c11c0c41d8fcf8"
+      },
+      "references": [
+        {
+          "bytes": 25739,
+          "file": "tmp/poster-workspaces/MEP/comfyui_poster/individual_spatial_reference_1.png",
+          "height": 832,
+          "mode": "RGBA",
+          "pixel_sha256": "d6bc618d8be7905dd9cb9cac0050bf18f64a5086106b3626b8633f6eb41e6b80",
+          "sha256": "37e568df63a1b9593402b61928b33335f36adab6597ec4be1eca1802d834791b",
+          "width": 608
+        },
+        {
+          "bytes": 36385,
+          "file": "tmp/poster-workspaces/MEP/comfyui_poster/individual_spatial_reference_2.png",
+          "height": 832,
+          "mode": "RGBA",
+          "pixel_sha256": "55c96cec5e6bf1de53ab87db467eb4fde669af6ad04fe71049751741ae2e406f",
+          "sha256": "12016f7d3a74c62c7b61fb05d1ad0c248cf36fa23be6bdbe0f9b5e4bdad0dc48",
+          "width": 608
+        },
+        {
+          "bytes": 26964,
+          "file": "tmp/poster-workspaces/MEP/comfyui_poster/individual_spatial_reference_3.png",
+          "height": 832,
+          "mode": "RGBA",
+          "pixel_sha256": "38acf0a2c43e5ed51793bd1ffaaf05ee02b532aa336600f80365d3c5a2ee8295",
+          "sha256": "19a7a12476f833b59eea8bb64e62043aefe16df263f443ed74485fd50809e6b4",
+          "width": 608
+        }
+      ],
+      "scope_manifest": {
+        "bytes": 2222,
+        "file": "config/posters/MEP/poster.yaml",
+        "sha256": "5b836c93ccf15a90dc7635b8b5737ca331a256a6da6886af9b8cd22e4b51b83d"
+      },
+      "workflow": {
+        "bytes": 9744,
+        "file": "tmp/poster-workspaces/MEP/comfyui_poster/workflow_api_joint_scene_individual_spatial_joint_1mp_260754076.json",
+        "sha256": "8a06fd2b8b1b693ef0689f3f234d97c7bc8b8aa47c6c129263bc77c7f19fbee9"
+      }
+    },
+    "kind": "poster_generation_run",
+    "poster_id": "MEP",
+    "raw_artwork": {
+      "bytes": 1316133,
+      "file": "tmp/poster-workspaces/MEP/comfyui_poster/output/mep_flux2_joint_scene_individual_spatial_1mp_seed_260754076_00001_.png",
+      "height": 1168,
+      "mode": "RGBA",
+      "pixel_sha256": "466a04fa5313bbd96904e0a591e99529e8829030e25beea6fdf074010b63432c",
+      "sha256": "66347a575068e80e75cd2dd04e1917347ea94335087192a3a026fff1a47a5383",
+      "width": 848
+    },
+    "schema_version": 1,
+    "scope": "MEP",
+    "section_id": null,
+    "source_artwork": {
+      "bytes": 5163375,
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "file": "tmp/poster-workspaces/MEP/comfyui_poster/temp/mep_flux2_joint_scene_individual_spatial_1mp_seed_260754076_00001__to_300dpi.png",
+      "height": 3268,
+      "mode": "RGBA",
+      "pixel_sha256": "871c6de8dcc8b9c30d5faebe27f9e52b00b0216bcf093ac62607f117baa4f28a",
+      "sha256": "25bf253bd104c6f62db18dee2239bbd316a8158ec07083a5983cdfbf282d191d",
+      "width": 2368
+    },
+    "source_scope": "MEP",
+    "validation": {
+      "joint_scene_visual_review": {
+        "approval_source": "explicit_promotion_flag",
+        "criteria": [
+          "exact_cast_count",
+          "raw_generation_identity",
+          "text_free_output_identity",
+          "identity_and_form",
+          "silhouette_and_stature",
+          "anatomy_and_face",
+          "colors_and_markings",
+          "placement_and_card_safety",
+          "natural_scene_integration",
+          "coherent_landscape_occlusion"
+        ],
+        "generation_fingerprint_sha256": "3c5d500d77ccffe519f78022f413d8659dafb4ad19f7b8c9e80d306319a145e0",
+        "method": "human_identity_and_scene_review",
+        "passed": true,
+        "raw_artwork_pixel_sha256": "466a04fa5313bbd96904e0a591e99529e8829030e25beea6fdf074010b63432c",
+        "raw_artwork_sha256": "66347a575068e80e75cd2dd04e1917347ea94335087192a3a026fff1a47a5383",
+        "reviewed_artwork_pixel_sha256": "871c6de8dcc8b9c30d5faebe27f9e52b00b0216bcf093ac62607f117baa4f28a",
+        "reviewed_artwork_sha256": "25bf253bd104c6f62db18dee2239bbd316a8158ec07083a5983cdfbf282d191d",
+        "reviewed_at": "2026-08-06T23:50:56.966877+00:00",
+        "source_cutout_pixel_sha256": [
+          "60ed070f524f35d74e85ccdd0103896aa9f49fe9f2a1f774a502b482a68823cd",
+          "f96cfeddc294c4efbbdf1b35cd816341d950e3051dec2128c03f652448b04d10",
+          "84b721fa96a4480ee20afd28765c279e15d45b0f73c13f74c7988cf06a3b68df"
+        ],
+        "source_cutout_sha256": [
+          "f36c2b196763a2c3389ee00b481b534b94d87907d81c0b0fd2dcf5487db2a533",
+          "8e8f5588a41f5dc9006b029347e26f3eb20761160a16e2b0e4df8fb7ea9eb24a",
+          "a1ece1866497c8b11df3853190781c45f724a33a839cb5525597466d03deafd8"
+        ],
+        "source_subject_ids": [
+          888,
+          1,
+          4
+        ],
+        "stage": "raw_and_text_free_print_artwork"
+      }
+    }
+  },
+  "schema_version": 2,
+  "scope": "MEP",
+  "section_id": null,
+  "source_scope": "MEP",
+  "storage": {
+    "derivatives": "regenerated_in_ignored_workspace",
+    "durable_outputs": [
+      "artwork"
+    ],
+    "schema_version": 1
+  }
+}

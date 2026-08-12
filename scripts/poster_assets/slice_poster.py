@@ -9,14 +9,13 @@ from PIL import Image
 
 try:
     from .layout import build_image_layout
-    from .poster_io import poster_bundle
+    from .poster_io import POSTER_ASSETS, poster_bundle
 except ImportError:
     from layout import build_image_layout
-    from poster_io import poster_bundle
+    from poster_io import POSTER_ASSETS, poster_bundle
 
 
 ROOT = Path(__file__).resolve().parents[2]
-POSTER_ASSETS = ROOT / "data" / "poster_assets"
 
 
 def slice_poster(scope: str, source: Path, output_dir: Path | None = None) -> list[Path]:

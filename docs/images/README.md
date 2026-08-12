@@ -6,8 +6,8 @@ The room, desk, binder, hand, empty sleeves, lighting, and reflections started
 as an AI-assisted, brand-neutral concept photograph. All product content was
 then composited locally without a subsequent generative pass:
 
-- the left page uses the nine exact promoted Base Set cuts from
-  `data/poster_assets/Base1/poster-flux2-cards/`;
+- the left page uses nine exact cuts reproduced from the promoted Base Set
+  master in `assets/posters/Base1/poster-flux2-artwork.png`;
 - the right page uses the first nine exact card cuts from page 2 of a freshly
   generated English Base Set PDF;
 - positions #002, #004, #006, and #008 replace their printable cut with the

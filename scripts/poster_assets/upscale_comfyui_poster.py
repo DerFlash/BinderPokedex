@@ -22,7 +22,7 @@ try:
         queue_workflow,
         validate_server_input_directory,
     )
-    from .poster_io import poster_asset_slug, poster_bundle
+    from .poster_io import POSTER_ASSETS, poster_asset_slug, poster_bundle
 except ImportError:
     from create_comfyui_upscale_workflow import (
         DEFAULT_UPSCALE_MODEL,
@@ -33,11 +33,10 @@ except ImportError:
         queue_workflow,
         validate_server_input_directory,
     )
-    from poster_io import poster_asset_slug, poster_bundle
+    from poster_io import POSTER_ASSETS, poster_asset_slug, poster_bundle
 
 
 ROOT = Path(__file__).resolve().parents[2]
-POSTER_ASSETS = ROOT / "data" / "poster_assets"
 
 
 def safe_marker(value: str) -> str:
@@ -121,11 +120,11 @@ def upscale(
 ) -> tuple[Path, Path]:
     if not source.is_file():
         raise FileNotFoundError(source)
-    scope_dir = poster_bundle(
+    bundle = poster_bundle(
         scope,
         poster_assets=POSTER_ASSETS,
-    ).asset_dir
-    work_dir = scope_dir / "comfyui_poster"
+    )
+    work_dir = bundle.work_dir
     work_dir.mkdir(parents=True, exist_ok=True)
     validate_server_input_directory(server, work_dir)
 

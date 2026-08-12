@@ -720,7 +720,7 @@ def test_validate_png_rejects_flattened_image(tmp_path: Path):
 
 
 def test_cutout_placements_share_one_foot_baseline():
-    scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
+    scope_dir = Path(__file__).resolve().parents[2] / "assets" / "posters" / "Base1"
     placements = cutout_placements(build_page_layout("standard_3x3"), scope_dir)
 
     foot_positions = []
@@ -733,7 +733,7 @@ def test_cutout_placements_share_one_foot_baseline():
 
 
 def test_cutout_placements_stay_inside_bottom_card_cells():
-    scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
+    scope_dir = Path(__file__).resolve().parents[2] / "assets" / "posters" / "Base1"
     placements = cutout_placements(build_page_layout("standard_3x3"), scope_dir)
 
     for placement in placements:
@@ -775,8 +775,8 @@ def test_two_cutouts_use_the_outer_bottom_cards(tmp_path: Path):
 def test_joint_scene_placements_reuse_canonical_card_fit():
     scope_dir = (
         Path(__file__).resolve().parents[2]
-        / "data"
-        / "poster_assets"
+        / "assets"
+        / "posters"
         / "Base1"
     )
     layout = build_page_layout("standard_3x3")
@@ -797,7 +797,7 @@ def test_joint_scene_placements_reuse_canonical_card_fit():
 
 
 def test_inpaint_reference_uses_exact_final_placements(tmp_path: Path):
-    scope_dir = Path(__file__).resolve().parents[2] / "data" / "poster_assets" / "Base1"
+    scope_dir = Path(__file__).resolve().parents[2] / "assets" / "posters" / "Base1"
     build_identity_lock_references("Base1", 0.25, tmp_path)
 
     actual = Image.open(tmp_path / "inpaint_reference.png").convert("RGBA")
@@ -852,8 +852,8 @@ def test_joint_scene_preparation_writes_spatial_and_unscaled_identity_refs(
     for placement in joint_scene_cutout_placements(
         layout,
         Path(__file__).resolve().parents[2]
-        / "data"
-        / "poster_assets"
+        / "assets"
+        / "posters"
         / "Base1",
     ):
         expected.alpha_composite(
@@ -864,15 +864,15 @@ def test_joint_scene_preparation_writes_spatial_and_unscaled_identity_refs(
 
     items = load_cutout_items(
         Path(__file__).resolve().parents[2]
-        / "data"
-        / "poster_assets"
+        / "assets"
+        / "posters"
         / "Base1"
     )
     for item, identity_path in zip(items, identity_paths, strict=True):
         source = Image.open(
             Path(__file__).resolve().parents[2]
-            / "data"
-            / "poster_assets"
+            / "assets"
+            / "posters"
             / "Base1"
             / "cutouts"
             / item["file"]
@@ -1121,7 +1121,7 @@ def test_new_tcg_set_manifest_keeps_every_advertised_pdf_language_logo():
 def test_every_current_tcg_set_bootstraps_without_set_specific_python():
     root = Path(__file__).resolve().parents[2]
     generation_template = fetch_cutouts.load_yaml(
-        root / "data" / "poster_assets" / "Base1" / "poster.yaml"
+        root / "config" / "posters" / "Base1" / "poster.yaml"
     )["artwork"]["generation"]
     checked = []
     for scope_path in sorted((root / "data" / "output").glob("*.json")):
@@ -1177,7 +1177,7 @@ def test_scene_catalog_covers_every_current_aggregate_section_exactly():
 def test_every_current_aggregate_section_bootstraps_from_shared_code():
     root = Path(__file__).resolve().parents[2]
     generation = fetch_cutouts.load_yaml(
-        root / "data" / "poster_assets" / "Base1" / "poster.yaml"
+        root / "config" / "posters" / "Base1" / "poster.yaml"
     )["artwork"]["generation"]
     checked = []
     for path in sorted((root / "data" / "output").glob("*.json")):
@@ -1217,9 +1217,9 @@ def test_primal_section_uses_its_two_canonical_subjects_without_duplication():
     scope_data = fetch_cutouts.load_json(root / "data" / "output" / "ExGen2.json")
     section = scope_data["sections"]["primal"]
     generation = fetch_cutouts.load_yaml(
-        root / "data" / "poster_assets" / "Base1" / "poster.yaml"
+        root / "config" / "posters" / "Base1" / "poster.yaml"
     )["artwork"]["generation"]
-    scene = fetch_cutouts.load_yaml(root / "config" / "poster_scenes.yaml")[
+    scene = fetch_cutouts.load_yaml(root / "config" / "posters" / "scenes.yaml")[
         "section_scopes"
     ]["ExGen2"]["primal"]
 
@@ -1242,7 +1242,7 @@ def test_primal_section_uses_its_two_canonical_subjects_without_duplication():
 def test_runner_uses_the_scope_generation_contract_as_its_defaults():
     root = Path(__file__).resolve().parents[2]
     manifest = fetch_cutouts.load_yaml(
-        root / "data" / "poster_assets" / "Base1" / "poster.yaml"
+        root / "config" / "posters" / "Base1" / "poster.yaml"
     )
 
     assert configured_generation("Base1") == manifest["artwork"]["generation"]
@@ -2774,10 +2774,14 @@ def test_promotion_installs_complete_bundle_with_stable_provenance(
     assert len(cards) == 9 and all(path.is_file() for path in cards)
     payload = json.loads(provenance.read_text(encoding="utf-8"))
     assert payload["scope"] == "Example"
-    assert payload["preview_language"] == "de"
-    assert payload["outputs"]["artwork"]["file"] == (
-        "data/poster_assets/Example/poster-flux2-artwork.png"
-    )
+    assert payload["review_language"] == "de"
+    assert payload["schema_version"] == 2
+    assert payload["storage"] == {
+        "schema_version": 1,
+        "durable_outputs": ["artwork"],
+        "derivatives": "regenerated_in_ignored_workspace",
+    }
+    assert set(payload["outputs"]) == {"artwork"}
     assert not list(scope_dir.glob(".poster-promotion-*"))
 
 

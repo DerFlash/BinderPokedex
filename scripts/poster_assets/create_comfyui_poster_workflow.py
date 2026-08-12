@@ -35,6 +35,7 @@ try:
         SUPPORTED_REFERENCE_MODES,
     )
     from .poster_io import (
+        POSTER_ASSETS,
         load_cutout_items,
         load_poster_scope_data,
         poster_asset_slug,
@@ -69,6 +70,7 @@ except ImportError:
         SUPPORTED_REFERENCE_MODES,
     )
     from poster_io import (
+        POSTER_ASSETS,
         load_cutout_items,
         load_poster_scope_data,
         poster_asset_slug,
@@ -77,7 +79,6 @@ except ImportError:
 
 
 ROOT = Path(__file__).resolve().parents[2]
-POSTER_ASSETS = ROOT / "data" / "poster_assets"
 REGIONAL_GLOBAL_SCENE_STRENGTH = 0.2
 
 
@@ -306,7 +307,7 @@ def build_joint_scene_workflow(
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
     manifest = bundle.manifest
     scope_data = load_poster_scope_data(bundle)
-    items = load_cutout_items(POSTER_ASSETS / scope)
+    items = load_cutout_items(bundle.asset_dir)
     width, height = output_dimensions(scope, megapixels)
     placement_contract = normalized_visible_placement_contract(
         joint_scene_canvas_placements(
@@ -433,7 +434,7 @@ def build_regional_joint_scene_workflow(
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
     manifest = bundle.manifest
     scope_data = load_poster_scope_data(bundle)
-    items = load_cutout_items(POSTER_ASSETS / scope)
+    items = load_cutout_items(bundle.asset_dir)
     width, height = output_dimensions(scope, megapixels)
     layout_name = str(
         manifest.get("layout", {}).get(
@@ -818,7 +819,7 @@ def write_workflow(
     vae_name: str = "flux2-vae.safetensors",
     output_dir: Path | None = None,
 ) -> Path:
-    work_dir = POSTER_ASSETS / scope / "comfyui_poster"
+    work_dir = poster_bundle(scope, poster_assets=POSTER_ASSETS).work_dir
     target_dir = output_dir or work_dir
     target_dir.mkdir(parents=True, exist_ok=True)
     if generation_mode not in {"identity_lock", "joint_scene"}:
@@ -878,7 +879,9 @@ def write_workflow(
             encoding="utf-8",
         )
     elif generation_mode == "joint_scene":
-        items = load_cutout_items(POSTER_ASSETS / scope)
+        items = load_cutout_items(
+            poster_bundle(scope, poster_assets=POSTER_ASSETS).asset_dir
+        )
         snapshot = format_regional_joint_prompt_snapshot(
             str(workflow["4"]["inputs"]["text"]),
             items,

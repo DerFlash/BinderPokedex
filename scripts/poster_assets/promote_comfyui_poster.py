@@ -20,7 +20,7 @@ try:
         validate_promotable_generation_contract,
     )
     from .layout import build_generation_output_layout
-    from .poster_io import poster_bundle
+    from .poster_io import POSTER_ASSETS, poster_bundle
     from .provenance import (
         approve_joint_scene_visual_review,
         build_generation_fingerprint,
@@ -44,7 +44,7 @@ except ImportError:
         validate_promotable_generation_contract,
     )
     from layout import build_generation_output_layout
-    from poster_io import poster_bundle
+    from poster_io import POSTER_ASSETS, poster_bundle
     from provenance import (
         approve_joint_scene_visual_review,
         build_generation_fingerprint,
@@ -63,7 +63,6 @@ except ImportError:
 
 
 ROOT = Path(__file__).resolve().parents[2]
-POSTER_ASSETS = ROOT / "data" / "poster_assets"
 
 
 def _configured_refresh_paths(
@@ -172,7 +171,7 @@ def promote(
     approve_joint_scene: bool = False,
     run_metadata_path: Path,
 ) -> tuple[Path, Path, list[Path], Path]:
-    """Persist reviewed artwork, deterministic overlay, and physical card crops."""
+    """Persist a reviewed master; keep reproducible QA derivatives ignored."""
     if not artwork.is_file():
         raise FileNotFoundError(artwork)
 
@@ -328,8 +327,9 @@ def promote(
         )
 
     artwork_path = scope_dir / f"poster-{name}-artwork.png"
-    final_path = scope_dir / f"poster-{name}.png"
-    cards_dir = scope_dir / f"poster-{name}-cards"
+    qa_dir = bundle.work_dir / "promotion"
+    final_path = qa_dir / f"poster-{name}.png"
+    cards_dir = qa_dir / f"poster-{name}-cards"
     provenance_path = scope_dir / f"poster-{name}-provenance.json"
 
     with tempfile.TemporaryDirectory(
@@ -378,8 +378,7 @@ def promote(
             language=language,
             run_metadata=run_metadata,
             artwork_path=staged_artwork,
-            preview_path=staged_final,
-            card_paths=staged_card_paths,
+            stable_artwork_path=artwork_path,
         )
         staged_provenance.write_text(
             json.dumps(
@@ -392,11 +391,14 @@ def promote(
             encoding="utf-8",
         )
 
+        qa_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(staged_final, final_path)
+        if cards_dir.exists():
+            shutil.rmtree(cards_dir)
+        shutil.copytree(staged_cards, cards_dir)
         _replace_bundle(
             [
                 (staged_artwork, artwork_path),
-                (staged_final, final_path),
-                (staged_cards, cards_dir),
                 (staged_provenance, provenance_path),
             ],
             force=force,
@@ -439,8 +441,8 @@ def main() -> int:
         run_metadata_path=args.run_metadata,
     )
     print(f"Artwork: {artwork_path}")
-    print(f"Final poster: {final_path}")
-    print(f"Card slices: {cards[0].parent} ({len(cards)})")
+    print(f"QA preview (ignored): {final_path}")
+    print(f"QA card slices (ignored): {cards[0].parent} ({len(cards)})")
     print(f"Provenance: {provenance_path}")
     return 0
 

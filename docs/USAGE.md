@@ -58,8 +58,8 @@ completed release-candidate build.
 
 The normal PDF command automatically includes accepted local poster artwork.
 Individual scopes opt in with `pdf.enabled: true` in
-`data/poster_assets/<scope>/poster.yaml`. Aggregate scopes use
-`data/poster_assets/<scope>/posters.yaml` to bind isolated leaf manifests to
+`config/posters/<scope>/poster.yaml`. Aggregate scopes use
+`config/posters/<scope>/posters.yaml` to bind isolated leaf manifests to
 section IDs; each enabled page replaces its matching section cover. Scopes and
 bindings without that opt-in continue through the ordinary cover path. Poster
 generation itself is a separate reviewed workflow; the PDF command only

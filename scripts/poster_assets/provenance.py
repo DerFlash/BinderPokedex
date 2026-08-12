@@ -41,6 +41,7 @@ try:
         joint_scene_conditioning_contract,
     )
     from .poster_io import (
+        POSTER_ASSETS,
         SCOPE_DATA,
         PosterBundle,
         load_json,
@@ -83,6 +84,7 @@ except ImportError:
         joint_scene_conditioning_contract,
     )
     from poster_io import (
+        POSTER_ASSETS,
         SCOPE_DATA,
         PosterBundle,
         load_json,
@@ -96,7 +98,6 @@ except ImportError:
 
 
 ROOT = Path(__file__).resolve().parents[2]
-POSTER_ASSETS = ROOT / "data" / "poster_assets"
 FINGERPRINT_SCHEMA_VERSION = 1
 GENERATION_PIPELINE_CONTRACT_VERSION = 3
 # Cumulative endpoint rasterization changes generation-reference pixels, but
@@ -1336,8 +1337,9 @@ def generation_input_records(
 ) -> dict[str, Any]:
     """Collect the exact lightweight files that conditioned one generation."""
     validate_generation_contract(generation)
-    scope_dir = POSTER_ASSETS / scope
-    work_dir = scope_dir / "comfyui_poster"
+    bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
+    scope_dir = bundle.asset_dir
+    work_dir = bundle.work_dir
     cutout_manifest_path = scope_dir / "cutouts" / "manifest.json"
     cutout_manifest = json.loads(cutout_manifest_path.read_text(encoding="utf-8"))
     cutouts = [
@@ -1396,7 +1398,7 @@ def generation_input_records(
         )
 
     records = {
-        "scope_manifest": file_record(scope_dir / "poster.yaml"),
+        "scope_manifest": file_record(bundle.manifest_path),
         "prompt": file_record(
             prompt_path_for_generation(
                 work_dir,
@@ -1530,26 +1532,14 @@ def promoted_provenance(
     language: str,
     run_metadata: dict[str, Any],
     artwork_path: Path,
-    preview_path: Path,
-    card_paths: list[Path],
+    stable_artwork_path: Path | None = None,
 ) -> dict[str, Any]:
-    """Build the stable audit record for a complete promotion bundle."""
-    stable_root = Path("data") / "poster_assets" / scope
+    """Build the stable audit record for one durable text-free master."""
     artwork_record = file_record(artwork_path, image=True)
-    artwork_record["file"] = (
-        stable_root / f"poster-{name}-artwork.png"
-    ).as_posix()
-    preview_record = file_record(preview_path, image=True)
-    preview_record["file"] = (stable_root / f"poster-{name}.png").as_posix()
-    card_records = []
-    for card_path in card_paths:
-        record = file_record(card_path, image=True)
-        record["file"] = (
-            stable_root / f"poster-{name}-cards" / card_path.name
-        ).as_posix()
-        card_records.append(record)
+    if stable_artwork_path is not None:
+        artwork_record["file"] = display_path(stable_artwork_path)
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "kind": "promoted_poster",
         "promoted_at": datetime.now(timezone.utc).isoformat(),
         "scope": scope,
@@ -1557,11 +1547,12 @@ def promoted_provenance(
         "poster_id": run_metadata.get("poster_id", scope),
         "section_id": run_metadata.get("section_id"),
         "asset_name": name,
-        "preview_language": language,
+        "review_language": language,
         "run": run_metadata,
-        "outputs": {
-            "artwork": artwork_record,
-            "preview": preview_record,
-            "cards": card_records,
+        "storage": {
+            "schema_version": 1,
+            "durable_outputs": ["artwork"],
+            "derivatives": "regenerated_in_ignored_workspace",
         },
+        "outputs": {"artwork": artwork_record},
     }

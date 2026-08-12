@@ -117,9 +117,7 @@ def validate_identity_lock_pixels(
 ) -> dict[str, int | str | bool]:
     """Require every fully opaque source pixel to survive diffusion unchanged."""
     reference_path = reference_path or (
-        POSTER_ASSETS
-        / scope
-        / "comfyui_poster"
+        poster_bundle(scope, poster_assets=POSTER_ASSETS).work_dir
         / "inpaint_reference.png"
     )
     return audit_exact_source_pixels(

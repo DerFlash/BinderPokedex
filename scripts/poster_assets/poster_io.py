@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -11,7 +12,24 @@ import yaml
 
 
 ROOT = Path(__file__).resolve().parents[2]
-POSTER_ASSETS = ROOT / "data" / "poster_assets"
+POSTER_WORKSPACE_ENV = "BINDER_POKEDEX_POSTER_ASSETS"
+
+
+def _configured_workspace_root() -> Path | None:
+    configured = os.environ.get(POSTER_WORKSPACE_ENV)
+    if not configured:
+        return None
+    path = Path(configured).expanduser()
+    if not path.is_absolute():
+        path = ROOT / path
+    return path.resolve()
+
+
+POSTER_WORKSPACE = _configured_workspace_root()
+POSTER_CONFIGS = POSTER_WORKSPACE or ROOT / "config" / "posters"
+POSTER_ASSETS = POSTER_WORKSPACE or ROOT / "assets" / "posters"
+POSTER_WORKSPACES = POSTER_WORKSPACE or ROOT / "tmp" / "poster-workspaces"
+POSTER_DEFAULTS = ROOT / "config" / "posters" / "defaults.yaml"
 SCOPE_DATA = ROOT / "data" / "output"
 POSTER_INDEX_NAME = "posters.yaml"
 POSTER_MANIFEST_NAME = "poster.yaml"
@@ -32,6 +50,19 @@ class PosterBundle:
     pdf_enabled: bool
     insertion: str
     artwork_file: str
+    config_dir: Path | None = None
+    work_dir: Path | None = None
+
+    def __post_init__(self) -> None:
+        """Supply combined-root defaults for older callers and test fixtures."""
+        if self.config_dir is None:
+            object.__setattr__(self, "config_dir", self.manifest_path.parent)
+        if self.work_dir is None:
+            object.__setattr__(
+                self,
+                "work_dir",
+                self.asset_dir / "comfyui_poster",
+            )
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -85,6 +116,48 @@ def poster_asset_dir(
     return poster_assets.joinpath(*relative.parts)
 
 
+def poster_config_dir(
+    asset_key: str,
+    *,
+    poster_configs: Path = POSTER_CONFIGS,
+) -> Path:
+    """Resolve a poster key below the versioned configuration root."""
+    relative = _safe_relative_asset(asset_key, "poster asset key")
+    return poster_configs.joinpath(*relative.parts)
+
+
+def poster_work_dir(
+    asset_key: str,
+    *,
+    poster_workspaces: Path = POSTER_WORKSPACES,
+) -> Path:
+    """Resolve a poster key below the ignored working root."""
+    relative = _safe_relative_asset(asset_key, "poster asset key")
+    return poster_workspaces.joinpath(*relative.parts, "comfyui_poster")
+
+
+def _poster_roots(
+    poster_assets: Path,
+    poster_configs: Path | None,
+    poster_workspaces: Path | None,
+) -> tuple[Path, Path, Path]:
+    """Resolve split production roots or one explicit combined workspace.
+
+    The historical ``poster_assets=...`` test and custom-workspace API remains
+    a combined root. The default production asset root selects the split
+    configuration, durable-asset, and ignored-workspace directories.
+    """
+    if poster_configs is None and poster_workspaces is None:
+        if poster_assets == POSTER_ASSETS:
+            return POSTER_CONFIGS, POSTER_ASSETS, POSTER_WORKSPACES
+        return poster_assets, poster_assets, poster_assets
+    return (
+        poster_configs or POSTER_CONFIGS,
+        poster_assets,
+        poster_workspaces or POSTER_WORKSPACES,
+    )
+
+
 def poster_asset_slug(asset_key: str) -> str:
     """Return a filename-safe, readable form of a possibly nested asset key."""
     relative = _safe_relative_asset(asset_key, "poster asset key")
@@ -99,10 +172,19 @@ def poster_bundle(
     section_id: str | None = None,
     pdf_config: dict[str, Any] | None = None,
     poster_assets: Path = POSTER_ASSETS,
+    poster_configs: Path | None = None,
+    poster_workspaces: Path | None = None,
 ) -> PosterBundle:
     """Load one normal poster manifest from a stable asset key."""
-    asset_dir = poster_asset_dir(asset_key, poster_assets=poster_assets)
-    manifest_path = asset_dir / POSTER_MANIFEST_NAME
+    config_root, asset_root, workspace_root = _poster_roots(
+        poster_assets,
+        poster_configs,
+        poster_workspaces,
+    )
+    config_dir = poster_config_dir(asset_key, poster_configs=config_root)
+    asset_dir = poster_asset_dir(asset_key, poster_assets=asset_root)
+    work_dir = poster_work_dir(asset_key, poster_workspaces=workspace_root)
+    manifest_path = config_dir / POSTER_MANIFEST_NAME
     if not manifest_path.is_file():
         raise FileNotFoundError(manifest_path)
     manifest = load_yaml(manifest_path)
@@ -178,7 +260,9 @@ def poster_bundle(
         scope=resolved_scope,
         poster_id=resolved_poster_id,
         section_id=resolved_section,
+        config_dir=config_dir,
         asset_dir=asset_dir,
+        work_dir=work_dir,
         manifest_path=manifest_path,
         manifest=manifest,
         pdf_enabled=enabled,
@@ -191,10 +275,17 @@ def poster_bundles_for_scope(
     scope: str,
     *,
     poster_assets: Path = POSTER_ASSETS,
+    poster_configs: Path | None = None,
+    poster_workspaces: Path | None = None,
 ) -> list[PosterBundle]:
     """Discover a legacy single bundle or an aggregate scope's ordered bundles."""
     scope = _safe_key(scope, "poster scope")
-    scope_dir = poster_assets / scope
+    config_root, _asset_root, _workspace_root = _poster_roots(
+        poster_assets,
+        poster_configs,
+        poster_workspaces,
+    )
+    scope_dir = config_root / scope
     single_manifest = scope_dir / POSTER_MANIFEST_NAME
     index_path = scope_dir / POSTER_INDEX_NAME
     if single_manifest.is_file() and index_path.is_file():
@@ -208,6 +299,8 @@ def poster_bundles_for_scope(
                 scope,
                 scope=scope,
                 poster_assets=poster_assets,
+                poster_configs=config_root,
+                poster_workspaces=_workspace_root,
             )
         ]
     if not index_path.is_file():
@@ -265,6 +358,8 @@ def poster_bundles_for_scope(
             section_id=section_id,
             pdf_config=pdf_config,
             poster_assets=poster_assets,
+            poster_configs=config_root,
+            poster_workspaces=_workspace_root,
         )
         if bundle.manifest.get("scope") != scope:
             raise ValueError(

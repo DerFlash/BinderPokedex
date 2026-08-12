@@ -44,9 +44,9 @@ review `comfyui.log` whenever per-stage device placement matters.
 
 ## Agent/operator handshake
 
-Before any GPU process starts, the operator chooses **local** or **remote**
-generation. An artwork-generating agent must ask for that choice and must not
-reuse a host from conversation history or machine state without confirmation.
+Before any GPU process starts, use the **local** or **remote** target already
+configured in ignored state for this workspace or session. An artwork-generating
+agent asks for that choice only when no target has been configured yet.
 If local is selected, return to the local launcher in
 [Poster Workflow](POSTER_WORKFLOW.md).
 
@@ -70,6 +70,11 @@ export BINDER_JOB_ROOT="/absolute/path/to/ephemeral/BinderPokedex-jobs"
 export BINDER_RENDER_REPO="/absolute/path/to/BinderPokedex-checkout"
 ```
 
+To remember the selection for one workspace, store the target and these values
+in `.poster-renderer.env` with owner-only permissions. The file is ignored.
+Source it for a render session; do not copy it into render jobs or a different
+checkout.
+
 Probe the selected host before transferring a job:
 
 ```bash
@@ -83,8 +88,9 @@ the intended commit or feature branch. This probe does not grant permission to
 install software, download models, or start a render. Confirm those separately
 when needed.
 
-Do not add these values to `.env`, Git configuration, manifests, run metadata,
-or documentation. Do not expose port 8188 publicly and do not point the normal
+Do not add these values to tracked `.env` files, Git configuration, manifests,
+run metadata, or documentation. Ignored workspace/session state may remember
+the selection. Do not expose port 8188 publicly and do not point the normal
 local runner's `--server` option at a public remote URL. `render_job.py run`
 starts loopback-only ComfyUI and queues the workflow on the worker, which also
 keeps job-local input-path validation intact.

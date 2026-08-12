@@ -89,7 +89,7 @@ is the accepted cost of exact identity preservation.
 | `PA-001` | A4 production defaults to a 3×3 physical card grid | Done | Initializer and active A4 manifests use `standard_3x3` |
 | `PA-002` | 4×3 and 4×4 remain first-class artwork layouts | Prepared | Geometry, placement, prompting, promotion, validation, and slicing are layout-driven |
 | `PA-003` | Wide layouts preserve physical card dimensions | Prepared | Future 4×3 targets A3 landscape and 4×4 targets A3 portrait; no A4 scaling fallback |
-| `PA-004` | Every individual TCG set has explicit scene direction | Done | `config/poster_scenes.yaml` has exact one-to-one catalog coverage enforced by tests |
+| `PA-004` | Every individual TCG set has explicit scene direction | Done | `config/posters/scenes.yaml` has exact one-to-one catalog coverage enforced by tests |
 | `PA-005` | Full prompts cannot drift per set | Done | Creative scene is scope-specific; technical requirements are generated centrally |
 | `PA-006` | Poster preparation is an optional post-fetch phase | Done | One-scope and batch initialization exist and preserve reviewed manifests |
 | `PA-007` | Generation follows the scope contract | Done | Runner reads FLUX.2 model, mode, reference topology, seed, steps, generation size, output method, and dpi from `poster.yaml`; explicit overrides are recorded |

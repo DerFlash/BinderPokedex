@@ -58,8 +58,8 @@ den abgerufenen Quelldaten ab. Für einen abgeschlossenen Release-Kandidaten ist
 
 Der normale PDF-Befehl fügt freigegebene lokale Poster-Artworks automatisch ein.
 Einzelne Scopes aktivieren sie mit `pdf.enabled: true` in
-`data/poster_assets/<scope>/poster.yaml`. Sammel-Scopes ordnen in
-`data/poster_assets/<scope>/posters.yaml` isolierte Leaf-Manifeste stabil ihren
+`config/posters/<scope>/poster.yaml`. Sammel-Scopes ordnen in
+`config/posters/<scope>/posters.yaml` isolierte Leaf-Manifeste stabil ihren
 Sections zu; jede aktivierte Seite folgt direkt auf das passende Section-Cover.
 Scopes und Bindings ohne Freigabe werden unverändert erzeugt. Die
 Artwork-Generierung bleibt ein separater Review-Workflow; der PDF-Befehl

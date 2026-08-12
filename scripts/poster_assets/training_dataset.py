@@ -13,17 +13,18 @@ from typing import Any
 from PIL import Image, ImageChops, ImageStat
 
 try:
+    from .poster_io import POSTER_ASSETS, poster_bundle
     from .prepare_comfyui_poster import build_identity_lock_references
     from .provenance import image_pixel_record, sha256_file
     from .source_pixel_audit import audit_exact_source_pixels
 except ImportError:
+    from poster_io import POSTER_ASSETS, poster_bundle
     from prepare_comfyui_poster import build_identity_lock_references
     from provenance import image_pixel_record, sha256_file
     from source_pixel_audit import audit_exact_source_pixels
 
 
 ROOT = Path(__file__).resolve().parents[2]
-POSTER_ASSETS = ROOT / "data" / "poster_assets"
 AUDIT_FORMAT_VERSION = 1
 PAIR_STATUSES = frozenset(
     {
@@ -332,6 +333,10 @@ def audit_promoted_pairs(
                 provenance_path,
                 poster_assets=poster_assets,
             )
+            bundle = poster_bundle(
+                asset_key,
+                poster_assets=poster_assets,
+            )
             target_path = target_path_from_provenance(provenance, root=root)
             target_exists = target_path.is_file()
             target_record = (
@@ -347,8 +352,8 @@ def audit_promoted_pairs(
             target_ok = target_exists and not target_errors
             visual_review = target_review_passed(provenance)
             input_paths = sorted(
-                provenance_path.parent.glob(
-                    "comfyui_poster/output/*identity_lock*scene*.png"
+                bundle.work_dir.glob(
+                    "output/*identity_lock*scene*.png"
                 )
             )
             source_reference: Path | None = None

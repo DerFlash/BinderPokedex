@@ -29,25 +29,29 @@ pages while:
    depth in a generated one-shot.
 4. **Candidates are disposable.** ComfyUI references, workflows, raw outputs,
    print candidates, and run metadata remain ignored until promotion.
-5. **Promotions are deterministic inputs.** PDFs and CI consume only tracked
-   masters, previews, slices, and provenance.
+5. **Promotions are deterministic inputs.** PDFs and CI consume the tracked
+   text-free masters and provenance, then recreate localized previews and
+   physical slices deterministically in ignored workspaces.
 6. **No hidden generation.** Fetching, PDF rendering, and CI never start
    ComfyUI.
 
 ## Files
 
-An individual scope or aggregate leaf owns:
+An individual scope or aggregate leaf uses three separate storage classes:
 
 ```text
-data/poster_assets/<asset-key>/
+config/posters/<asset-key>/
   poster.yaml
+assets/posters/<asset-key>/
   cutouts/
     manifest.json
     pokemon_*.png
   logos/
     manifest.json
     ...
-  comfyui_poster/                 # ignored local workspace
+  poster-flux2-artwork.png        # promoted text-free master
+  poster-flux2-provenance.json    # durable promotion audit
+tmp/poster-workspaces/<asset-key>/comfyui_poster/ # ignored local workspace
     individual_spatial_reference_*.png # default v9 topology
     individual_spatial_joint_prompt.generated.txt # default v9 topology
     joint_scene_cast_reference.png # legacy spatial_identity_joint only
@@ -57,11 +61,16 @@ data/poster_assets/<asset-key>/
     workflow_api_*.json
     output/
     temp/
-  poster-flux2-artwork.png        # promoted text-free master
-  poster-flux2.png                # deterministic preview with overlay
-  poster-flux2-cards/             # promoted physical crops
-  poster-flux2-provenance.json
 ```
+
+Localized previews and physical crops are deterministic derivatives. Promotion
+writes QA copies below the ignored workspace; PDF rendering recreates them in
+`tmp/pdfs/`. They are intentionally not versioned.
+
+The regular `data/` lifecycle is independent of all three poster storage
+classes. Fetching or resetting generated scope data cannot remove poster
+configuration, promoted masters, or provenance; clearing `tmp/` only discards
+reproducible render workspaces.
 
 An aggregate root additionally owns `posters.yaml`. It binds stable section IDs
 to independent leaf manifests and PDF insertion points. Generation and
@@ -145,7 +154,7 @@ IL, but the fallback remains reproducible and explicitly selectable.
 
 Full prompts are generated, not maintained per scope. They combine:
 
-1. the exact creative scene from `config/poster_scenes.yaml`;
+1. the exact creative scene from `config/posters/scenes.yaml`;
 2. scope metadata;
 3. layout-safe title/information cells;
 4. normalized subject rectangles, baselines, and padding;

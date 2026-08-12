@@ -2,10 +2,18 @@
 
 ## Poster artwork generation
 
-Before starting any GPU-intensive poster artwork generation, ask the operator
-whether the candidate should be rendered locally or on a remote worker. Do not
-infer the target from a previously used host, an available SSH configuration,
-or a running ComfyUI process.
+Before starting GPU-intensive poster artwork generation, reuse the renderer
+target already configured for the current local workspace or session. Ask
+whether the candidate should be rendered locally or on a remote worker only if
+no target is configured yet, and record that choice only in ignored, machine-local
+workspace state. Never infer a target from arbitrary network discovery or a
+ComfyUI process that is unrelated to the configured workspace.
+
+Use `.poster-renderer.env` as the conventional ignored workspace marker.
+`BINDER_POSTER_RENDER_TARGET` is `local` or `remote`; a remote marker
+may also contain the private `BINDER_RENDER_*` values from the worker guide.
+Reuse a valid marker without asking again. A fresh checkout has no marker and
+therefore requires one operator choice before its first GPU render.
 
 - For a local Apple Metal/MPS render, follow
   `docs/POSTER_WORKFLOW.md` and keep the ComfyUI input/output directories scoped

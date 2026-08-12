@@ -9,15 +9,14 @@ from pathlib import Path
 try:
     from .create_comfyui_poster_workflow import node
     from .layout import build_print_layout
-    from .poster_io import poster_asset_slug, poster_bundle
+    from .poster_io import POSTER_ASSETS, poster_asset_slug, poster_bundle
 except ImportError:
     from create_comfyui_poster_workflow import node
     from layout import build_print_layout
-    from poster_io import poster_asset_slug, poster_bundle
+    from poster_io import POSTER_ASSETS, poster_asset_slug, poster_bundle
 
 
 ROOT = Path(__file__).resolve().parents[2]
-POSTER_ASSETS = ROOT / "data" / "poster_assets"
 DEFAULT_UPSCALE_MODEL = "RealESRGAN_x4plus_anime_6B.pth"
 
 
@@ -65,7 +64,7 @@ def write_workflow(
     filename_prefix: str | None = None,
     output_dir: Path | None = None,
 ) -> Path:
-    work_dir = POSTER_ASSETS / scope / "comfyui_poster"
+    work_dir = poster_bundle(scope, poster_assets=POSTER_ASSETS).work_dir
     target_dir = output_dir or work_dir
     target_dir.mkdir(parents=True, exist_ok=True)
     output = target_dir / f"workflow_api_upscale_{dpi}dpi.json"
