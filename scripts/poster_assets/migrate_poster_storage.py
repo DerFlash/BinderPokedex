@@ -22,13 +22,22 @@ except ImportError:
 def _rewrite_recorded_path(value: str, bundle: PosterBundle) -> str:
     """Route old repository paths without changing immutable record hashes."""
     old_root = f"data/poster_assets/{bundle.asset_key}/"
-    if not value.startswith(old_root):
+    asset_root = f"assets/posters/{bundle.asset_key}/"
+    if value.startswith(old_root):
+        relative = value.removeprefix(old_root)
+    elif value.startswith(asset_root):
+        relative = value.removeprefix(asset_root)
+    else:
         return value
-    relative = value.removeprefix(old_root)
     if relative == "poster.yaml":
         return f"config/posters/{bundle.asset_key}/poster.yaml"
-    if relative.startswith("cutouts/") or relative.startswith("logo"):
-        return f"assets/posters/{bundle.asset_key}/{relative}"
+    if (
+        relative.startswith("cutouts/")
+        or relative.startswith("logo")
+    ):
+        return (
+            f"tmp/poster-workspaces/{bundle.asset_key}/sources/{relative}"
+        )
     if relative.startswith("comfyui_poster/"):
         return f"tmp/poster-workspaces/{bundle.asset_key}/{relative}"
     return f"assets/posters/{bundle.asset_key}/{relative}"
@@ -71,6 +80,7 @@ def migrate_payload(payload: dict[str, Any], bundle: PosterBundle) -> dict[str, 
     payload["storage"] = {
         "schema_version": 1,
         "durable_outputs": ["artwork"],
+        "reproducible_sources": "downloaded_to_ignored_workspace",
         "derivatives": "regenerated_in_ignored_workspace",
     }
     return payload

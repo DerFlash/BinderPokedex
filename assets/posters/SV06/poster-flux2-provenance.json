@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1724,
-        "file": "assets/posters/SV06/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/SV06/sources/cutouts/manifest.json",
         "sha256": "0417eda470f0a8b23a4ffda76e8de39d6ad28302fce6069b680a6f81d07512d7"
       },
       "cutouts": [
         {
           "bytes": 111536,
-          "file": "assets/posters/SV06/cutouts/pokemon_810_grookey.png",
+          "file": "tmp/poster-workspaces/SV06/sources/cutouts/pokemon_810_grookey.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "1007dc8ec519ceb248b9a19942d488e3974128e63416c80d54b6eba894c60d35",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 122799,
-          "file": "assets/posters/SV06/cutouts/pokemon_390_chimchar.png",
+          "file": "tmp/poster-workspaces/SV06/sources/cutouts/pokemon_390_chimchar.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "016b06764dd680b0d6fc80bbb89635dc05de59b972ae40a6ce0515baac8cfc11",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 191956,
-          "file": "assets/posters/SV06/cutouts/pokemon_656_froakie.png",
+          "file": "tmp/poster-workspaces/SV06/sources/cutouts/pokemon_656_froakie.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "e9003e7398727fc9af1c4e6802623b4395c0663b1edbd299a53d96a24b474ce2",
@@ -570,6 +570,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

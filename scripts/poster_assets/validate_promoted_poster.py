@@ -30,7 +30,7 @@ try:
     from .poster_config import build_identity_lock_prompt
     from .provenance import (
         ROOT,
-        build_generation_fingerprint,
+        rebuild_generation_fingerprint_from_recorded_sources,
         build_overlay_fingerprint,
         current_generation_pipeline_contract_version,
         fingerprint_record_is_valid,
@@ -49,7 +49,7 @@ try:
         poster_bundle,
         poster_bundles_for_scope,
     )
-    from .poster_subject import resolve_poster_subject
+    from .poster_subject import subject_fingerprint_identity
 except ImportError:
     from fetch_cutouts import (
         resolve_requested_count,
@@ -70,7 +70,7 @@ except ImportError:
     from poster_config import build_identity_lock_prompt
     from provenance import (
         ROOT,
-        build_generation_fingerprint,
+        rebuild_generation_fingerprint_from_recorded_sources,
         build_overlay_fingerprint,
         current_generation_pipeline_contract_version,
         fingerprint_record_is_valid,
@@ -89,7 +89,7 @@ except ImportError:
         poster_bundle,
         poster_bundles_for_scope,
     )
-    from poster_subject import resolve_poster_subject
+    from poster_subject import subject_fingerprint_identity
 
 
 POSTER_LANGUAGES = (
@@ -174,6 +174,7 @@ def _image_dpi(path: Path) -> tuple[float, float]:
 def _validate_source_subjects(
     bundle,
     scope_data: dict[str, Any],
+    provenance: dict[str, Any] | None = None,
 ) -> None:
     """Keep every promoted cutout cast bound to the current source data."""
     sections = scope_data.get("sections", {})
@@ -196,8 +197,7 @@ def _validate_source_subjects(
             {},
         )
         expected_subjects = [
-            resolve_poster_subject(item).selection_key()
-            for item in selected
+            subject_fingerprint_identity(item) for item in selected
         ]
     except (AttributeError, TypeError, ValueError) as error:
         raise ValueError(
@@ -215,31 +215,32 @@ def _validate_source_subjects(
             raise ValueError(
                 f"{bundle.asset_key} source featured_elements are not unique"
             )
-    cutout_manifest_path = bundle.asset_dir / "cutouts" / "manifest.json"
-    cutout_manifest = json.loads(
-        cutout_manifest_path.read_text(encoding="utf-8")
+    actual_subjects = (
+        (provenance or {}).get("run", {})
+        .get("inputs", {})
+        .get("generation_fingerprint", {})
+        .get("components", {})
+        .get("source_subject_ids")
     )
-    actual_items = cutout_manifest.get("items", [])
-    if not isinstance(actual_items, list):
-        raise ValueError(
-            f"{bundle.asset_key} cutout manifest items are invalid"
-        )
-    try:
-        actual_subjects = []
-        for item in actual_items:
-            if not isinstance(item, dict):
-                raise ValueError("cutout item must be a mapping")
-            subject = resolve_poster_subject(item)
-            if item.get("url") != subject.image_url:
-                raise ValueError("cutout URL does not match poster subject")
-            actual_subjects.append(subject.selection_key())
-    except (TypeError, ValueError) as error:
-        raise ValueError(
-            f"{bundle.asset_key} cutout poster subjects are invalid"
-        ) from error
+    if not isinstance(actual_subjects, list):
+        legacy_manifest = bundle.source_dir / "cutouts" / "manifest.json"
+        if legacy_manifest.is_file():
+            legacy_items = json.loads(
+                legacy_manifest.read_text(encoding="utf-8")
+            ).get("items")
+            if isinstance(legacy_items, list):
+                actual_subjects = [
+                    subject_fingerprint_identity(item)
+                    for item in legacy_items
+                    if isinstance(item, dict)
+                ]
+        if not isinstance(actual_subjects, list):
+            raise ValueError(
+                f"{bundle.asset_key} provenance lacks audited cutout subjects"
+            )
     if actual_subjects != expected_subjects:
         raise ValueError(
-            f"{bundle.asset_key} cutouts {actual_subjects} do not match "
+            f"{bundle.asset_key} audited cutouts {actual_subjects} do not match "
             f"current featured_elements {expected_subjects}"
         )
     if bundle.scope == "Pokedex" and section is not None:
@@ -292,7 +293,7 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
             f"{provenance_path}"
         )
     scope_data = load_poster_scope_data(bundle)
-    _validate_source_subjects(bundle, scope_data)
+    _validate_source_subjects(bundle, scope_data, payload)
 
     configured_generation = artwork_config.get("generation", {})
     recorded_generation = payload.get("run", {}).get("generation", {})
@@ -334,11 +335,9 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
                 recorded_generation,
             )
         )
-        current_fingerprint = build_generation_fingerprint(
+        current_fingerprint = rebuild_generation_fingerprint_from_recorded_sources(
             bundle,
-            pipeline_contract_version=(
-                generation_pipeline_contract_version
-            ),
+            recorded_fingerprint,
         )
         if (
             recorded_fingerprint.get("sha256")
@@ -418,7 +417,10 @@ def validate(target: str | PosterBundle) -> dict[str, Any]:
             raise ValueError(
                 f"Malformed overlay fingerprint in {provenance_path}"
             )
-        current_overlay_fingerprint = build_overlay_fingerprint(bundle)
+        current_overlay_fingerprint = build_overlay_fingerprint(
+            bundle,
+            recorded=recorded_overlay_fingerprint,
+        )
         overlay_fingerprint_current = (
             recorded_overlay_fingerprint.get("sha256")
             == current_overlay_fingerprint["sha256"]

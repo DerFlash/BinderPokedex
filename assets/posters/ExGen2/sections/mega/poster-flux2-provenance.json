@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 2817,
-        "file": "assets/posters/ExGen2/sections/mega/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/ExGen2/sections/mega/sources/cutouts/manifest.json",
         "sha256": "66e1a00757275db0192c0916eeb828fafa3652aef12dfd67be249168dcd8f6d1"
       },
       "cutouts": [
         {
           "bytes": 110204,
-          "file": "assets/posters/ExGen2/sections/mega/cutouts/pokemon_150_artwork_10043_mega_mewtwo_x.png",
+          "file": "tmp/poster-workspaces/ExGen2/sections/mega/sources/cutouts/pokemon_150_artwork_10043_mega_mewtwo_x.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "5cb6f08bfa45ba919a4c4490ea815a511d7811f8157ccd014736454271371397",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 192229,
-          "file": "assets/posters/ExGen2/sections/mega/cutouts/pokemon_384_artwork_10079_mega_rayquaza.png",
+          "file": "tmp/poster-workspaces/ExGen2/sections/mega/sources/cutouts/pokemon_384_artwork_10079_mega_rayquaza.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "c62bb4f8a03ed1dba5591c040d3b226d4fe4d6f1706e5d8e0031c06b8b1a6de9",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 86722,
-          "file": "assets/posters/ExGen2/sections/mega/cutouts/pokemon_381_artwork_10063_mega_latios.png",
+          "file": "tmp/poster-workspaces/ExGen2/sections/mega/sources/cutouts/pokemon_381_artwork_10063_mega_latios.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "ac10273e8377e4cede5aa1afe33ac90e2886f956f2c06115b5535997040d45c4",
@@ -565,6 +565,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1722,
-        "file": "assets/posters/SV10/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/SV10/sources/cutouts/manifest.json",
         "sha256": "f6d6d4a452b578a820fc9763a533852f8a67c1d7979fa3943e62349c50d9fce7"
       },
       "cutouts": [
         {
           "bytes": 117988,
-          "file": "assets/posters/SV10/cutouts/pokemon_155_cyndaquil.png",
+          "file": "tmp/poster-workspaces/SV10/sources/cutouts/pokemon_155_cyndaquil.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "b54e467594c5b93a7d563140f2cbf9b0af9bc33bbef72d9fc0c976bc39c095e7",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 158849,
-          "file": "assets/posters/SV10/cutouts/pokemon_250_ho_oh.png",
+          "file": "tmp/poster-workspaces/SV10/sources/cutouts/pokemon_250_ho_oh.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "27c1eb01dc8b91b25c89dd2c948aafa26722d2b563e8c00728926b10ff077f4c",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 87212,
-          "file": "assets/posters/SV10/cutouts/pokemon_255_torchic.png",
+          "file": "tmp/poster-workspaces/SV10/sources/cutouts/pokemon_255_torchic.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "671e8746fd27fa08b1fc031d94ed88e5d0538116c15c0872ed51e0789254699d",
@@ -570,6 +570,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

@@ -53,6 +53,7 @@ try:
         fingerprint_record_is_valid,
         generation_fingerprint_pipeline_contract_version,
         prompt_path_for_generation,
+        rebuild_generation_fingerprint_from_recorded_sources,
         required_model_artifact_hashes,
         sha256_file,
     )
@@ -100,6 +101,7 @@ except ImportError:  # Direct script execution
         fingerprint_record_is_valid,
         generation_fingerprint_pipeline_contract_version,
         prompt_path_for_generation,
+        rebuild_generation_fingerprint_from_recorded_sources,
         required_model_artifact_hashes,
         sha256_file,
     )
@@ -570,7 +572,7 @@ def _cutout_asset_issues(
         bundle.manifest,
         scope_data,
     )
-    path = bundle.asset_dir / "cutouts" / "manifest.json"
+    path = bundle.source_dir / "cutouts" / "manifest.json"
     if not path.is_file():
         return ["cutout_manifest_missing"], [], None
     try:
@@ -665,7 +667,7 @@ def _cutout_asset_issues(
             continue
         try:
             file_path = _safe_local_asset(
-                bundle.asset_dir / "cutouts",
+                bundle.source_dir / "cutouts",
                 item.get("file"),
                 "cutout file",
             )
@@ -719,7 +721,7 @@ def _logo_asset_issues(
     for _language, relative_file, _url in downloads:
         try:
             path = _safe_local_asset(
-                bundle.asset_dir,
+                bundle.source_dir,
                 relative_file,
                 "title-logo file",
             )
@@ -884,10 +886,12 @@ def _promotion_drift_codes(
                     recorded_generation,
                 )
             )
-            current_generation_fingerprint = build_generation_fingerprint(
-                bundle,
-                scope_data_dir=scope_data_dir,
-                pipeline_contract_version=stored_contract,
+            current_generation_fingerprint = (
+                rebuild_generation_fingerprint_from_recorded_sources(
+                    bundle,
+                    stored_generation_fingerprint,
+                    scope_data_dir=scope_data_dir,
+                )
             )
             if (
                 stored_generation_fingerprint.get("sha256")
@@ -914,6 +918,7 @@ def _promotion_drift_codes(
             current_overlay_fingerprint = build_overlay_fingerprint(
                 bundle,
                 scope_data_dir=scope_data_dir,
+                recorded=stored_overlay_fingerprint,
             )
             if (
                 stored_overlay_fingerprint.get("sha256")

@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1727,
-        "file": "assets/posters/ExGen2/sections/normal/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/ExGen2/sections/normal/sources/cutouts/manifest.json",
         "sha256": "651c57c65525b72169752ab102cbc2566fc14b029bf2ccc58f475dbb2dab213f"
       },
       "cutouts": [
         {
           "bytes": 120336,
-          "file": "assets/posters/ExGen2/sections/normal/cutouts/pokemon_150_mewtwo.png",
+          "file": "tmp/poster-workspaces/ExGen2/sections/normal/sources/cutouts/pokemon_150_mewtwo.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "ba8ef7c35c88cb509fa1617beab0041a3f8e8317041b1c97cc598fe1f936eefa",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 134189,
-          "file": "assets/posters/ExGen2/sections/normal/cutouts/pokemon_151_mew.png",
+          "file": "tmp/poster-workspaces/ExGen2/sections/normal/sources/cutouts/pokemon_151_mew.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "f1408e4b91b0b915d33b8b5f8b5a819bee2007d2e201739c0d48dd4460f26614",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 117611,
-          "file": "assets/posters/ExGen2/sections/normal/cutouts/pokemon_249_lugia.png",
+          "file": "tmp/poster-workspaces/ExGen2/sections/normal/sources/cutouts/pokemon_249_lugia.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "6662c2d9cc9998ff0bb60c7d551bf5ed27beca009d828377692035d7ec370a90",
@@ -517,6 +517,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

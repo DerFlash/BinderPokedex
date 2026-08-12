@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1743,
-        "file": "assets/posters/Pokedex/sections/gen6/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/Pokedex/sections/gen6/sources/cutouts/manifest.json",
         "sha256": "72d9dcf7bfbafc8d5de7588d15749f21c8a7d43f576c6701498adfdbc471b9f8"
       },
       "cutouts": [
         {
           "bytes": 127628,
-          "file": "assets/posters/Pokedex/sections/gen6/cutouts/pokemon_650_chespin.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen6/sources/cutouts/pokemon_650_chespin.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "2d476961e61fcbfcad17257f451779d702695af3461f35c85cf33b2c13e95974",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 129977,
-          "file": "assets/posters/Pokedex/sections/gen6/cutouts/pokemon_653_fennekin.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen6/sources/cutouts/pokemon_653_fennekin.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "48ba52540c9e8d073b492d22e323efbb1436e9fa0128da6f9a301c32b6ec56a3",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 191956,
-          "file": "assets/posters/Pokedex/sections/gen6/cutouts/pokemon_656_froakie.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen6/sources/cutouts/pokemon_656_froakie.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "e9003e7398727fc9af1c4e6802623b4395c0663b1edbd299a53d96a24b474ce2",
@@ -507,6 +507,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

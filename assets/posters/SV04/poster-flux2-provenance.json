@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1715,
-        "file": "assets/posters/SV04/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/SV04/sources/cutouts/manifest.json",
         "sha256": "54715385b1c6c94b2c3401d3cec67be58df4e971b403c58666f17c1d65fd557f"
       },
       "cutouts": [
         {
           "bytes": 115180,
-          "file": "assets/posters/SV04/cutouts/pokemon_909_fuecoco.png",
+          "file": "tmp/poster-workspaces/SV04/sources/cutouts/pokemon_909_fuecoco.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "6f87f462a8639a983688199cd116cbbe580a356acf62ca1f46a4eb805a268d1e",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 195483,
-          "file": "assets/posters/SV04/cutouts/pokemon_484_palkia.png",
+          "file": "tmp/poster-workspaces/SV04/sources/cutouts/pokemon_484_palkia.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "28ac97447a7043e3bff0a1c2822aa0601c3b5e94e6720fdbe969caf477937f9c",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 120336,
-          "file": "assets/posters/SV04/cutouts/pokemon_150_mewtwo.png",
+          "file": "tmp/poster-workspaces/SV04/sources/cutouts/pokemon_150_mewtwo.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "ba8ef7c35c88cb509fa1617beab0041a3f8e8317041b1c97cc598fe1f936eefa",
@@ -570,6 +570,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

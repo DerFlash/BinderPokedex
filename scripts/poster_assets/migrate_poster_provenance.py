@@ -121,7 +121,7 @@ def _recorded_pipeline_contract_version(
 
 
 def _current_cutouts(bundle: PosterBundle) -> list[tuple[str, Path]]:
-    cutout_dir = (bundle.asset_dir / "cutouts").resolve()
+    cutout_dir = (bundle.source_dir / "cutouts").resolve()
     payload = load_json(cutout_dir / "manifest.json")
     items = payload.get("items")
     if not isinstance(items, list) or not items:

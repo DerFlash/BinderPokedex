@@ -51,12 +51,15 @@ class PosterBundle:
     insertion: str
     artwork_file: str
     config_dir: Path | None = None
+    source_dir: Path | None = None
     work_dir: Path | None = None
 
     def __post_init__(self) -> None:
         """Supply combined-root defaults for older callers and test fixtures."""
         if self.config_dir is None:
             object.__setattr__(self, "config_dir", self.manifest_path.parent)
+        if self.source_dir is None:
+            object.__setattr__(self, "source_dir", self.asset_dir)
         if self.work_dir is None:
             object.__setattr__(
                 self,
@@ -136,6 +139,16 @@ def poster_work_dir(
     return poster_workspaces.joinpath(*relative.parts, "comfyui_poster")
 
 
+def poster_source_dir(
+    asset_key: str,
+    *,
+    poster_workspaces: Path = POSTER_WORKSPACES,
+) -> Path:
+    """Resolve reproducible downloaded inputs below the ignored workspace."""
+    relative = _safe_relative_asset(asset_key, "poster asset key")
+    return poster_workspaces.joinpath(*relative.parts, "sources")
+
+
 def _poster_roots(
     poster_assets: Path,
     poster_configs: Path | None,
@@ -151,6 +164,12 @@ def _poster_roots(
         if poster_assets == POSTER_ASSETS:
             return POSTER_CONFIGS, POSTER_ASSETS, POSTER_WORKSPACES
         return poster_assets, poster_assets, poster_assets
+    if (
+        poster_workspaces is None
+        and poster_configs == poster_assets
+        and poster_assets != POSTER_ASSETS
+    ):
+        return poster_configs, poster_assets, poster_assets
     return (
         poster_configs or POSTER_CONFIGS,
         poster_assets,
@@ -184,6 +203,14 @@ def poster_bundle(
     config_dir = poster_config_dir(asset_key, poster_configs=config_root)
     asset_dir = poster_asset_dir(asset_key, poster_assets=asset_root)
     work_dir = poster_work_dir(asset_key, poster_workspaces=workspace_root)
+    source_dir = (
+        asset_dir
+        if config_root == asset_root == workspace_root
+        else poster_source_dir(
+            asset_key,
+            poster_workspaces=workspace_root,
+        )
+    )
     manifest_path = config_dir / POSTER_MANIFEST_NAME
     if not manifest_path.is_file():
         raise FileNotFoundError(manifest_path)
@@ -262,6 +289,7 @@ def poster_bundle(
         section_id=resolved_section,
         config_dir=config_dir,
         asset_dir=asset_dir,
+        source_dir=source_dir,
         work_dir=work_dir,
         manifest_path=manifest_path,
         manifest=manifest,

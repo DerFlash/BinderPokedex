@@ -600,7 +600,7 @@ def finalize(scope: str, input_path: Path, output_path: Path | None = None, lang
     if language not in SUPPORTED_LANGUAGES:
         raise ValueError(f"Unsupported language: {language}")
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
-    scope_dir = bundle.asset_dir
+    scope_dir = bundle.source_dir
     manifest = bundle.manifest
     scope_data = load_poster_scope_data(bundle)
 

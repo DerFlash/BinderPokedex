@@ -64,6 +64,15 @@ Sections zu; jede aktivierte Seite folgt direkt auf das passende Section-Cover.
 Scopes und Bindings ohne Freigabe werden unverändert erzeugt. Die
 Artwork-Generierung bleibt ein separater Review-Workflow; der PDF-Befehl
 verwendet nur das promotete lokale Artwork und startet ComfyUI nicht selbst.
+Herunterladbare Set-Logos werden nicht eingecheckt. Nach dem Daten-Fetch lädt
+der folgende Schritt die für TCG-Poster benötigten PDF-Overlays in den
+ignorierten Workspace; für reine Pokédex-PDFs ist er nicht erforderlich:
+
+```bash
+python scripts/poster_assets/fetch_poster_sources.py \
+  --scope SV01 \
+  --kind logos
+```
 
 Standardmäßig wird das Poster weiterhin als neun zuschneidbare Karten in
 physischer Größe ausgegeben. Dasselbe lokalisierte 3×3-Poster kann alternativ

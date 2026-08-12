@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 2814,
-        "file": "assets/posters/ExGen3/sections/mega/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/ExGen3/sections/mega/sources/cutouts/manifest.json",
         "sha256": "a24e65d361d2042c0c6469180ea941f33e0939911ba7704e306ef4aac037cfc5"
       },
       "cutouts": [
         {
           "bytes": 120353,
-          "file": "assets/posters/ExGen3/sections/mega/cutouts/pokemon_380_artwork_10062_mega_latias.png",
+          "file": "tmp/poster-workspaces/ExGen3/sections/mega/sources/cutouts/pokemon_380_artwork_10062_mega_latias.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "5c9afa2435eb806d76964ed10de2cd51f5ac905fece59d62b04ca52b3b1a7449",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 167713,
-          "file": "assets/posters/ExGen3/sections/mega/cutouts/pokemon_719_artwork_10075_mega_diancie.png",
+          "file": "tmp/poster-workspaces/ExGen3/sections/mega/sources/cutouts/pokemon_719_artwork_10075_mega_diancie.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "6403c9b3f8171df5d25e4c6d67a76741474b5d2258860e6078386e10d9a95308",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 139825,
-          "file": "assets/posters/ExGen3/sections/mega/cutouts/pokemon_448_artwork_10059_mega_lucario.png",
+          "file": "tmp/poster-workspaces/ExGen3/sections/mega/sources/cutouts/pokemon_448_artwork_10059_mega_lucario.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "d46aa86b77c45468013a7b60fbe5487bb78b95b7c20468cc900809208175a813",
@@ -565,6 +565,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1718,
-        "file": "assets/posters/Base2/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/Base2/sources/cutouts/manifest.json",
         "sha256": "6383d3e5aca635ffa0db0c32fb17ff12cfdf87d4d0eb0c0579a61e48ac023267"
       },
       "cutouts": [
         {
           "bytes": 120225,
-          "file": "assets/posters/Base2/cutouts/pokemon_025_pikachu.png",
+          "file": "tmp/poster-workspaces/Base2/sources/cutouts/pokemon_025_pikachu.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "e1100eee7248e696797b553f2151ad8e62c0eb83df473d0d9151cceb2e61c76c",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 143361,
-          "file": "assets/posters/Base2/cutouts/pokemon_143_snorlax.png",
+          "file": "tmp/poster-workspaces/Base2/sources/cutouts/pokemon_143_snorlax.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "670c1bc4364c50d67cbf0c912168c524968e3a1aa4f7d8d719c1e6618d4651e7",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 144445,
-          "file": "assets/posters/Base2/cutouts/pokemon_133_eevee.png",
+          "file": "tmp/poster-workspaces/Base2/sources/cutouts/pokemon_133_eevee.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "856a30685c5ed1dbbfd7881bdb6fa40e0adb49875e9b495e5962e6fa4a9b943f",
@@ -573,6 +573,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

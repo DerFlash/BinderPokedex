@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1732,
-        "file": "assets/posters/ME02/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/ME02/sources/cutouts/manifest.json",
         "sha256": "238a1988dcfd1b22f8f49bdf08e89309b417b9b70c19aac96acb92209ccd24f9"
       },
       "cutouts": [
         {
           "bytes": 156320,
-          "file": "assets/posters/ME02/cutouts/pokemon_649_genesect.png",
+          "file": "tmp/poster-workspaces/ME02/sources/cutouts/pokemon_649_genesect.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "ba0da4edff8f653873e90108012847154227d0d6ebd3583159a2db1f2c107bfa",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 139307,
-          "file": "assets/posters/ME02/cutouts/pokemon_004_charmander.png",
+          "file": "tmp/poster-workspaces/ME02/sources/cutouts/pokemon_004_charmander.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "84b721fa96a4480ee20afd28765c279e15d45b0f73c13f74c7988cf06a3b68df",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 164867,
-          "file": "assets/posters/ME02/cutouts/pokemon_643_reshiram.png",
+          "file": "tmp/poster-workspaces/ME02/sources/cutouts/pokemon_643_reshiram.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "670636862ff3fad6116dc4ae9a9955e34b0b5d6167dd2c7d6cf74ced1b021cf1",
@@ -570,6 +570,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

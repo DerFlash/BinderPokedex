@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1721,
-        "file": "assets/posters/Base3/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/Base3/sources/cutouts/manifest.json",
         "sha256": "ff46c04a08f536397826bb28a00277681c115764fec423840b8117760685a0e8"
       },
       "cutouts": [
         {
           "bytes": 137214,
-          "file": "assets/posters/Base3/cutouts/pokemon_141_kabutops.png",
+          "file": "tmp/poster-workspaces/Base3/sources/cutouts/pokemon_141_kabutops.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "68d90594b3543be8391b2bdbf0f0db579e0399110954a64852b115374e6cc9e0",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 136777,
-          "file": "assets/posters/Base3/cutouts/pokemon_131_lapras.png",
+          "file": "tmp/poster-workspaces/Base3/sources/cutouts/pokemon_131_lapras.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "61389cbeddeb925e2e8a0901a4d27a27ef812a8dd9b908352dce0303bb2e69ca",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 149201,
-          "file": "assets/posters/Base3/cutouts/pokemon_094_gengar.png",
+          "file": "tmp/poster-workspaces/Base3/sources/cutouts/pokemon_094_gengar.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "fe058305aedf7ea11872532366fbc708cd0e3f75f931e2d3a8e646061f162b48",
@@ -573,6 +573,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1725,
-        "file": "assets/posters/ME01/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/ME01/sources/cutouts/manifest.json",
         "sha256": "998be7d76737c84d92efffbaa98b234c0e74eeb9a67ed5ebc63012ec8643b7cb"
       },
       "cutouts": [
         {
           "bytes": 206887,
-          "file": "assets/posters/ME01/cutouts/pokemon_001_bulbasaur.png",
+          "file": "tmp/poster-workspaces/ME01/sources/cutouts/pokemon_001_bulbasaur.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "f96cfeddc294c4efbbdf1b35cd816341d950e3051dec2128c03f652448b04d10",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 106526,
-          "file": "assets/posters/ME01/cutouts/pokemon_152_chikorita.png",
+          "file": "tmp/poster-workspaces/ME01/sources/cutouts/pokemon_152_chikorita.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "30acf73b389c25cf7460b45a71f064af19b82302ba1affb0ac10002a6513d8c0",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 130422,
-          "file": "assets/posters/ME01/cutouts/pokemon_251_celebi.png",
+          "file": "tmp/poster-workspaces/ME01/sources/cutouts/pokemon_251_celebi.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "ab1936141a2f148374bdcbd895cc88d806941e7a6f8873af86fe0141b42ff197",
@@ -570,6 +570,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

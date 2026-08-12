@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1738,
-        "file": "assets/posters/Pokedex/sections/gen7/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/Pokedex/sections/gen7/sources/cutouts/manifest.json",
         "sha256": "b2a77bdd1b127053d467d0f507d36c5bff227a54a40ea43c8d9f9fae450537eb"
       },
       "cutouts": [
         {
           "bytes": 140222,
-          "file": "assets/posters/Pokedex/sections/gen7/cutouts/pokemon_722_rowlet.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen7/sources/cutouts/pokemon_722_rowlet.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "2e6530175cdf2ef2877c923dd19fe4ff967c72eba9d7ef2c495684acc59e425b",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 87756,
-          "file": "assets/posters/Pokedex/sections/gen7/cutouts/pokemon_725_litten.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen7/sources/cutouts/pokemon_725_litten.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "f4a2fdf0a76857dede5af6ae625093ada7273ae71e383fd04ec97c94184acaae",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 95754,
-          "file": "assets/posters/Pokedex/sections/gen7/cutouts/pokemon_728_popplio.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen7/sources/cutouts/pokemon_728_popplio.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "287968b7e4bae522bafd0cdb43e354b191ed55734c533298a0104ae7aff138d3",
@@ -507,6 +507,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

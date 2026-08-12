@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1727,
-        "file": "assets/posters/SV04.5/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/SV04.5/sources/cutouts/manifest.json",
         "sha256": "c21712f2c0059ae1c629daaa6b59059be59e3b7633931f4af1fc255107970270"
       },
       "cutouts": [
         {
           "bytes": 139307,
-          "file": "assets/posters/SV04.5/cutouts/pokemon_004_charmander.png",
+          "file": "tmp/poster-workspaces/SV04.5/sources/cutouts/pokemon_004_charmander.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "84b721fa96a4480ee20afd28765c279e15d45b0f73c13f74c7988cf06a3b68df",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 120225,
-          "file": "assets/posters/SV04.5/cutouts/pokemon_025_pikachu.png",
+          "file": "tmp/poster-workspaces/SV04.5/sources/cutouts/pokemon_025_pikachu.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "e1100eee7248e696797b553f2151ad8e62c0eb83df473d0d9151cceb2e61c76c",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 136777,
-          "file": "assets/posters/SV04.5/cutouts/pokemon_131_lapras.png",
+          "file": "tmp/poster-workspaces/SV04.5/sources/cutouts/pokemon_131_lapras.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "61389cbeddeb925e2e8a0901a4d27a27ef812a8dd9b908352dce0303bb2e69ca",
@@ -580,6 +580,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

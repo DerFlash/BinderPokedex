@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1720,
-        "file": "assets/posters/SV03/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/SV03/sources/cutouts/manifest.json",
         "sha256": "8c80d899e5f4e04311613fa303b905b331facb997345234f2081c25dda22acb5"
       },
       "cutouts": [
         {
           "bytes": 140222,
-          "file": "assets/posters/SV03/cutouts/pokemon_722_rowlet.png",
+          "file": "tmp/poster-workspaces/SV03/sources/cutouts/pokemon_722_rowlet.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "2e6530175cdf2ef2877c923dd19fe4ff967c72eba9d7ef2c495684acc59e425b",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 139307,
-          "file": "assets/posters/SV03/cutouts/pokemon_004_charmander.png",
+          "file": "tmp/poster-workspaces/SV03/sources/cutouts/pokemon_004_charmander.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "84b721fa96a4480ee20afd28765c279e15d45b0f73c13f74c7988cf06a3b68df",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 191956,
-          "file": "assets/posters/SV03/cutouts/pokemon_656_froakie.png",
+          "file": "tmp/poster-workspaces/SV03/sources/cutouts/pokemon_656_froakie.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "e9003e7398727fc9af1c4e6802623b4395c0663b1edbd299a53d96a24b474ce2",
@@ -570,6 +570,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

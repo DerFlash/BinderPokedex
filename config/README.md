@@ -26,11 +26,12 @@ data/                # Generated/temporary data
 └── ExGen1_Single.json
 ```
 
-Poster configuration deliberately lives under `config/posters/`, while
-reviewed, durable poster inputs live under `assets/posters/`. Generated
-previews, card crops, model workflows, and raw renderer output belong under
-the ignored `tmp/poster-workspaces/` tree. A reset of `data/` therefore cannot
-delete poster configuration or promoted artwork.
+Poster configuration deliberately lives under `config/posters/`, while only
+reviewed masters and their provenance live under `assets/posters/`. Downloaded
+cutouts and title logos, generated previews, card crops, model workflows, and
+raw renderer output belong under the ignored `tmp/poster-workspaces/` tree.
+A reset of `data/` therefore cannot delete poster configuration or promoted
+artwork; a reset of `tmp/` only removes reproducible inputs and derivatives.
 
 ## Scopes
 

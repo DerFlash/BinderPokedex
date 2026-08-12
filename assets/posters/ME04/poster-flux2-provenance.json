@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1716,
-        "file": "assets/posters/ME04/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/ME04/sources/cutouts/manifest.json",
         "sha256": "e3c5900c37064188493c7c4c196a1bce125f309eb3edd8159c8b275313790dfb"
       },
       "cutouts": [
         {
           "bytes": 127628,
-          "file": "assets/posters/ME04/cutouts/pokemon_650_chespin.png",
+          "file": "tmp/poster-workspaces/ME04/sources/cutouts/pokemon_650_chespin.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "2d476961e61fcbfcad17257f451779d702695af3461f35c85cf33b2c13e95974",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 158849,
-          "file": "assets/posters/ME04/cutouts/pokemon_250_ho_oh.png",
+          "file": "tmp/poster-workspaces/ME04/sources/cutouts/pokemon_250_ho_oh.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "27c1eb01dc8b91b25c89dd2c948aafa26722d2b563e8c00728926b10ff077f4c",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 129977,
-          "file": "assets/posters/ME04/cutouts/pokemon_653_fennekin.png",
+          "file": "tmp/poster-workspaces/ME04/sources/cutouts/pokemon_653_fennekin.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "48ba52540c9e8d073b492d22e323efbb1436e9fa0128da6f9a301c32b6ec56a3",
@@ -570,6 +570,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

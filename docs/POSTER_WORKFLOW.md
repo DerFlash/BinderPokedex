@@ -54,11 +54,12 @@ flowchart TD
         SCRATCH --> REVIEW{"Review raw, print master, identity, depth, and all card crops"}
         REVIEW -->|reject| RUN
         REVIEW -->|accept| PROMOTE["Transactional promotion"]
-        PROMOTE --> TRACKED["Tracked master + preview + card slices + provenance"]
+        PROMOTE --> TRACKED["Tracked master + provenance"]
     end
 
     subgraph CONSUME["4 · Deterministic consumers"]
         TRACKED --> ROUTE{"PDF route enabled?"}
+        SOURCES["Fetch reproducible title logos"] --> PDF
         ROUTE -->|no| COVER["Existing section-cover path"]
         ROUTE -->|yes| PDF["PDF builder"]
         OUTPUT --> PDF
@@ -90,8 +91,10 @@ same fallback is selected explicitly by `--skip-poster`.
 
 CI uses the same boundary. Pull requests run a complete, read-only release
 rehearsal that validates promoted posters and builds every PDF, ZIP, and the
-release manifest without publishing a GitHub Release. Tagged releases reuse
-that candidate build and publish only after it succeeds. See
+release manifest without publishing a GitHub Release. Before PDF rendering,
+CI downloads configured title logos into the ignored poster source cache; it
+does not regenerate artwork or download cutouts. Tagged releases reuse that
+candidate build and publish only after it succeeds. See
 [Release Workflow](RELEASE_WORKFLOW.md).
 
 ## Resolve the render target before GPU work
@@ -259,6 +262,22 @@ python scripts/poster_assets/init_poster_scope.py \
 ```
 
 The batch command never overwrites an existing reviewed manifest.
+
+For an existing checkout, reproducible sources can be refreshed independently:
+
+```bash
+# Everything required to prepare a new artwork candidate
+python scripts/poster_assets/fetch_poster_sources.py \
+  --scope SV04
+
+# Only the downloaded overlays needed by PDF generation
+python scripts/poster_assets/fetch_poster_sources.py \
+  --scope SV04 \
+  --kind logos
+```
+
+Both commands write only below `tmp/poster-workspaces/<asset-key>/sources/`.
+They never change the promoted master or provenance.
 
 Aggregate scopes use an ordered routing index plus one isolated leaf manifest
 per section. Initialize all configured Pokédex generation bundles after its
@@ -554,8 +573,8 @@ For an aggregate target, use the same asset key for promotion and validation,
 for example `Pokedex/sections/gen1`.
 
 Promotion is transactional and versions only the text-free master plus its
-provenance. Localized previews and physical crops are reproduced below `tmp/`
-for QA and PDF generation. The audit records hashes for models, prompts, source
+provenance. Localized previews, physical crops, downloaded cutouts, and title
+logos live below `tmp/`. The audit records hashes for models, prompts, source
 figures, references, workflows, and the durable master. Exact-source modes require a
 passed `exact_opaque_source_pixels` record; changing the manifest engine or
 supplying otherwise matching hashes cannot bypass that gate.
@@ -599,9 +618,13 @@ The persisted `insertion` values identify the first or matching section for
 backward-compatible routing. Once selected, the enabled poster replaces that
 section's cover; it is no longer emitted as an additional page after it.
 
-The ordinary PDF command then consumes the promoted local artwork:
+After fetching scope data, download any configured title-logo overlays and
+then consume the promoted local artwork:
 
 ```bash
+python scripts/poster_assets/fetch_poster_sources.py \
+  --scope SV04 \
+  --kind logos
 python scripts/pdf/generate_pdf.py --scope SV04 --language de
 ```
 

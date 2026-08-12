@@ -152,7 +152,7 @@ def build_identity_lock_references(
 ) -> Path:
     """Write only the assets consumed by the identity-lock workflow."""
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
-    scope_dir = bundle.asset_dir
+    scope_dir = bundle.source_dir
     manifest = bundle.manifest
     reference_dir = output_dir or bundle.work_dir
     reference_dir.mkdir(parents=True, exist_ok=True)
@@ -226,7 +226,7 @@ def build_joint_scene_references(
 ) -> None:
     """Write unscaled identities and, when requested, the spatial cast."""
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
-    scope_dir = bundle.asset_dir
+    scope_dir = bundle.source_dir
     manifest = bundle.manifest
     reference_dir = output_dir or bundle.work_dir
     reference_dir.mkdir(parents=True, exist_ok=True)
@@ -277,7 +277,7 @@ def build_individual_spatial_joint_references(
 ) -> list[Path]:
     """Write one poster-shaped identity-and-position image per subject."""
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
-    scope_dir = bundle.asset_dir
+    scope_dir = bundle.source_dir
     manifest = bundle.manifest
     reference_dir = output_dir or bundle.work_dir
     reference_dir.mkdir(parents=True, exist_ok=True)
@@ -386,7 +386,7 @@ def prepare(
             f"{effective_reference_mode!r}; expected one of {expected}"
         )
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
-    scope_dir = bundle.asset_dir
+    scope_dir = bundle.source_dir
     work_dir = bundle.work_dir
     required = (
         bundle.manifest_path,

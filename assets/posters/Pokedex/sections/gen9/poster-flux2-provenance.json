@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1745,
-        "file": "assets/posters/Pokedex/sections/gen9/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/Pokedex/sections/gen9/sources/cutouts/manifest.json",
         "sha256": "316bcbdf0c817511e84c979085054c4cebfd8342ee89dc9d3b6f4abafc7636d2"
       },
       "cutouts": [
         {
           "bytes": 114350,
-          "file": "assets/posters/Pokedex/sections/gen9/cutouts/pokemon_906_sprigatito.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen9/sources/cutouts/pokemon_906_sprigatito.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "bbb27600106084f27dc56d019f37f6c1c17bba9a3ea8138fd79e7d03b5200b81",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 115180,
-          "file": "assets/posters/Pokedex/sections/gen9/cutouts/pokemon_909_fuecoco.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen9/sources/cutouts/pokemon_909_fuecoco.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "6f87f462a8639a983688199cd116cbbe580a356acf62ca1f46a4eb805a268d1e",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 91302,
-          "file": "assets/posters/Pokedex/sections/gen9/cutouts/pokemon_912_quaxly.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen9/sources/cutouts/pokemon_912_quaxly.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "0c34c412b2dffca8c3d88946d77a3547e03ae7ba7488c9368fadb53b07b3a6f9",
@@ -507,6 +507,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

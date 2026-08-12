@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1723,
-        "file": "assets/posters/SV10.5B/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/SV10.5B/sources/cutouts/manifest.json",
         "sha256": "aef8092063d0548c3171e1f9e932fcb6b88988fbe016e862b56c58d487b6ee2b"
       },
       "cutouts": [
         {
           "bytes": 140282,
-          "file": "assets/posters/SV10.5B/cutouts/pokemon_495_snivy.png",
+          "file": "tmp/poster-workspaces/SV10.5B/sources/cutouts/pokemon_495_snivy.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "a75f5938c2496b9b044bcb6222aa4bd94fde50b5735370347625fe3a9ee295db",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 159156,
-          "file": "assets/posters/SV10.5B/cutouts/pokemon_646_kyurem.png",
+          "file": "tmp/poster-workspaces/SV10.5B/sources/cutouts/pokemon_646_kyurem.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "da284b9bac2441f23931c268112c18342059a4c9a36e583290a6245ea3979280",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 131573,
-          "file": "assets/posters/SV10.5B/cutouts/pokemon_644_zekrom.png",
+          "file": "tmp/poster-workspaces/SV10.5B/sources/cutouts/pokemon_644_zekrom.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "59576e8df21328450c48c812176c49d26e828097c5c67318b3739adc8c347026",
@@ -570,6 +570,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

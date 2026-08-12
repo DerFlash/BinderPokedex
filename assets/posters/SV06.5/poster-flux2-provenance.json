@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1727,
-        "file": "assets/posters/SV06.5/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/SV06.5/sources/cutouts/manifest.json",
         "sha256": "1ad0e941f3e8b105e879e681490bf88ae0796c8472949930a004037a16fa3b4d"
       },
       "cutouts": [
         {
           "bytes": 140222,
-          "file": "assets/posters/SV06.5/cutouts/pokemon_722_rowlet.png",
+          "file": "tmp/poster-workspaces/SV06.5/sources/cutouts/pokemon_722_rowlet.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "2e6530175cdf2ef2877c923dd19fe4ff967c72eba9d7ef2c495684acc59e425b",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 153975,
-          "file": "assets/posters/SV06.5/cutouts/pokemon_717_yveltal.png",
+          "file": "tmp/poster-workspaces/SV06.5/sources/cutouts/pokemon_717_yveltal.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "2041c9b60db4b347efea6a2a232cbafef264456d7005ac241ee27edc6513e408",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 156320,
-          "file": "assets/posters/SV06.5/cutouts/pokemon_649_genesect.png",
+          "file": "tmp/poster-workspaces/SV06.5/sources/cutouts/pokemon_649_genesect.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "ba0da4edff8f653873e90108012847154227d0d6ebd3583159a2db1f2c107bfa",
@@ -570,6 +570,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

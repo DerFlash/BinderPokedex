@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1990,
-        "file": "assets/posters/ExGen2/sections/primal/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/ExGen2/sections/primal/sources/cutouts/manifest.json",
         "sha256": "aeb09bae16cb3e12e8f1881277187e7b7f1782ee322a5b4d78333e9c925f3ceb"
       },
       "cutouts": [
         {
           "bytes": 146324,
-          "file": "assets/posters/ExGen2/sections/primal/cutouts/pokemon_382_artwork_10077_primal_kyogre.png",
+          "file": "tmp/poster-workspaces/ExGen2/sections/primal/sources/cutouts/pokemon_382_artwork_10077_primal_kyogre.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "bdc782a89b7fa4936ced73d2fc7fbaac0867103c044194a3bc9578410fe87053",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 151528,
-          "file": "assets/posters/ExGen2/sections/primal/cutouts/pokemon_383_artwork_10078_primal_groudon.png",
+          "file": "tmp/poster-workspaces/ExGen2/sections/primal/sources/cutouts/pokemon_383_artwork_10078_primal_groudon.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "3097d54d4f86d699df12cfa858dd627517776f0971773c03953fd34e3784a69b",
@@ -520,6 +520,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

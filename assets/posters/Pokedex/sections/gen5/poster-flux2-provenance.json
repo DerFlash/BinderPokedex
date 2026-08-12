@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1738,
-        "file": "assets/posters/Pokedex/sections/gen5/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/Pokedex/sections/gen5/sources/cutouts/manifest.json",
         "sha256": "1e742de69884079aea6ff9724d1839af123383fc753cbfd13c19d83914bf6c75"
       },
       "cutouts": [
         {
           "bytes": 140282,
-          "file": "assets/posters/Pokedex/sections/gen5/cutouts/pokemon_495_snivy.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen5/sources/cutouts/pokemon_495_snivy.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "a75f5938c2496b9b044bcb6222aa4bd94fde50b5735370347625fe3a9ee295db",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 123236,
-          "file": "assets/posters/Pokedex/sections/gen5/cutouts/pokemon_498_tepig.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen5/sources/cutouts/pokemon_498_tepig.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "71b68cb64b98197b2d22a474dfbcddd8952bc766c65e4f0405e2ed7dfd8b4e11",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 138423,
-          "file": "assets/posters/Pokedex/sections/gen5/cutouts/pokemon_501_oshawott.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen5/sources/cutouts/pokemon_501_oshawott.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "7d95563acab903da681aa4f6896726f6e691fe6441e6f2f3878e4492369d6237",
@@ -507,6 +507,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

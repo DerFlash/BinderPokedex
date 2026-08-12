@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1742,
-        "file": "assets/posters/ExGen1/sections/normal/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/ExGen1/sections/normal/sources/cutouts/manifest.json",
         "sha256": "4c309781708ecb727afc6eb88228bc4b3dcb44d3f9d87b2ba86452cd48410f3e"
       },
       "cutouts": [
         {
           "bytes": 186955,
-          "file": "assets/posters/ExGen1/sections/normal/cutouts/pokemon_003_venusaur.png",
+          "file": "tmp/poster-workspaces/ExGen1/sections/normal/sources/cutouts/pokemon_003_venusaur.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "c712365648ec3c21469e36aa0b2ee2fe6de83527da79e28174b0cb00fdf5eba3",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 200578,
-          "file": "assets/posters/ExGen1/sections/normal/cutouts/pokemon_009_blastoise.png",
+          "file": "tmp/poster-workspaces/ExGen1/sections/normal/sources/cutouts/pokemon_009_blastoise.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "1ac8b2c741d3f07e6ebe6b96443d789bae0c1bc85ca5dbd6075cb6db09a85d09",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 117611,
-          "file": "assets/posters/ExGen1/sections/normal/cutouts/pokemon_249_lugia.png",
+          "file": "tmp/poster-workspaces/ExGen1/sections/normal/sources/cutouts/pokemon_249_lugia.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "6662c2d9cc9998ff0bb60c7d551bf5ed27beca009d828377692035d7ec370a90",
@@ -501,6 +501,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1759,
-        "file": "assets/posters/ExGen3/sections/normal/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/ExGen3/sections/normal/sources/cutouts/manifest.json",
         "sha256": "e8312651c4442962c418961bcaf680a0d8e33c2f142b2ed3c82580e30d928307"
       },
       "cutouts": [
         {
           "bytes": 157198,
-          "file": "assets/posters/ExGen3/sections/normal/cutouts/pokemon_1007_koraidon.png",
+          "file": "tmp/poster-workspaces/ExGen3/sections/normal/sources/cutouts/pokemon_1007_koraidon.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "c9e907f440cd1d5ad0c40cbe8231b0b336f45beb72b129ec06d0f472b07694b7",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 120225,
-          "file": "assets/posters/ExGen3/sections/normal/cutouts/pokemon_025_pikachu.png",
+          "file": "tmp/poster-workspaces/ExGen3/sections/normal/sources/cutouts/pokemon_025_pikachu.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "e1100eee7248e696797b553f2151ad8e62c0eb83df473d0d9151cceb2e61c76c",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 113012,
-          "file": "assets/posters/ExGen3/sections/normal/cutouts/pokemon_1008_miraidon.png",
+          "file": "tmp/poster-workspaces/ExGen3/sections/normal/sources/cutouts/pokemon_1008_miraidon.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "fe22dead91aca376715aa4c7c179a86de19a713d6512bf6ee660f0d0837a77de",
@@ -517,6 +517,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

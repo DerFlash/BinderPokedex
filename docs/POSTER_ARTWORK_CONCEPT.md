@@ -27,8 +27,9 @@ pages while:
 3. **Human review is a gate.** Automation can prove geometry, hashes, graph
    shape, and exact fallback pixels; it cannot approve anatomy or coherent
    depth in a generated one-shot.
-4. **Candidates are disposable.** ComfyUI references, workflows, raw outputs,
-   print candidates, and run metadata remain ignored until promotion.
+4. **Reproducible sources and candidates are disposable.** Downloaded cutouts
+   and set logos, ComfyUI references, workflows, raw outputs, print candidates,
+   and run metadata remain in ignored workspaces.
 5. **Promotions are deterministic inputs.** PDFs and CI consume the tracked
    text-free masters and provenance, then recreate localized previews and
    physical slices deterministically in ignored workspaces.
@@ -43,15 +44,17 @@ An individual scope or aggregate leaf uses three separate storage classes:
 config/posters/<asset-key>/
   poster.yaml
 assets/posters/<asset-key>/
-  cutouts/
-    manifest.json
-    pokemon_*.png
-  logos/
-    manifest.json
-    ...
   poster-flux2-artwork.png        # promoted text-free master
   poster-flux2-provenance.json    # durable promotion audit
-tmp/poster-workspaces/<asset-key>/comfyui_poster/ # ignored local workspace
+tmp/poster-workspaces/<asset-key>/
+  sources/                        # ignored, reproducibly downloaded
+    cutouts/
+      manifest.json
+      pokemon_*.png
+    logos/
+      ...
+    logo.png
+  comfyui_poster/                 # ignored renderer workspace
     individual_spatial_reference_*.png # default v9 topology
     individual_spatial_joint_prompt.generated.txt # default v9 topology
     joint_scene_cast_reference.png # legacy spatial_identity_joint only
@@ -67,10 +70,18 @@ Localized previews and physical crops are deterministic derivatives. Promotion
 writes QA copies below the ignored workspace; PDF rendering recreates them in
 `tmp/pdfs/`. They are intentionally not versioned.
 
+Cutouts and set logos are also intentionally not versioned. Their URLs and
+selection rules are durable configuration; `fetch_poster_sources.py` recreates
+the byte inputs below `tmp/poster-workspaces/`. Promoted provenance retains
+the exact reviewed hashes, so a promotion remains auditable without keeping a
+second repository copy of every downloaded source. Release CI fetches only the
+logos needed for deterministic localized PDF overlays. Cutouts are fetched
+only when preparing or revalidating a new artwork candidate.
+
 The regular `data/` lifecycle is independent of all three poster storage
 classes. Fetching or resetting generated scope data cannot remove poster
 configuration, promoted masters, or provenance; clearing `tmp/` only discards
-reproducible render workspaces.
+reproducible downloads, render workspaces, and PDF derivatives.
 
 An aggregate root additionally owns `posters.yaml`. It binds stable section IDs
 to independent leaf manifests and PDF insertion points. Generation and

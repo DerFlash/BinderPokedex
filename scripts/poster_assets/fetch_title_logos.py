@@ -63,7 +63,7 @@ def resolve_logo_downloads(
 def fetch_title_logos(scope: str, force: bool = False) -> list[Path]:
     """Download and normalize every configured title logo to RGBA PNG."""
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
-    scope_dir = bundle.asset_dir
+    scope_dir = bundle.source_dir
     manifest_path = bundle.manifest_path
     manifest = bundle.manifest
     scope_data = load_poster_scope_data(

@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1744,
-        "file": "assets/posters/Pokedex/sections/gen4/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/Pokedex/sections/gen4/sources/cutouts/manifest.json",
         "sha256": "65c0460897cdc4831b442ff54328775408f2f5545549e03b47a8032bcf970974"
       },
       "cutouts": [
         {
           "bytes": 118604,
-          "file": "assets/posters/Pokedex/sections/gen4/cutouts/pokemon_387_turtwig.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen4/sources/cutouts/pokemon_387_turtwig.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "a863b05ce702ed5f50a451563484b2f596230810e582d52e0eb12fd9b2218cf7",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 122799,
-          "file": "assets/posters/Pokedex/sections/gen4/cutouts/pokemon_390_chimchar.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen4/sources/cutouts/pokemon_390_chimchar.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "016b06764dd680b0d6fc80bbb89635dc05de59b972ae40a6ce0515baac8cfc11",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 137695,
-          "file": "assets/posters/Pokedex/sections/gen4/cutouts/pokemon_393_piplup.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen4/sources/cutouts/pokemon_393_piplup.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "101b477012d5a1ec1b882746723807bb1c1214ec7fb4b8114f5b25348f6bce24",
@@ -507,6 +507,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

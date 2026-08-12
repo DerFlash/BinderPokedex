@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1725,
-        "file": "assets/posters/SV05/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/SV05/sources/cutouts/manifest.json",
         "sha256": "ef49edf069ad1475f4c0aa8f60f2f145e9ddd664d0c91b72f1bf9597eb5fad7d"
       },
       "cutouts": [
         {
           "bytes": 118604,
-          "file": "assets/posters/SV05/cutouts/pokemon_387_turtwig.png",
+          "file": "tmp/poster-workspaces/SV05/sources/cutouts/pokemon_387_turtwig.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "a863b05ce702ed5f50a451563484b2f596230810e582d52e0eb12fd9b2218cf7",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 87756,
-          "file": "assets/posters/SV05/cutouts/pokemon_725_litten.png",
+          "file": "tmp/poster-workspaces/SV05/sources/cutouts/pokemon_725_litten.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "f4a2fdf0a76857dede5af6ae625093ada7273ae71e383fd04ec97c94184acaae",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 116432,
-          "file": "assets/posters/SV05/cutouts/pokemon_158_totodile.png",
+          "file": "tmp/poster-workspaces/SV05/sources/cutouts/pokemon_158_totodile.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "b873fb5dfe88086f59ab95bc6612f1c86239f00c896cb442be4ce79da5c5ca5d",
@@ -570,6 +570,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

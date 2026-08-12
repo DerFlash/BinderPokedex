@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1758,
-        "file": "assets/posters/Pokedex/sections/gen2/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/Pokedex/sections/gen2/sources/cutouts/manifest.json",
         "sha256": "3692e1803270c53c82e26674eb931d72fb6aedd2c9bca12143bbdf3b88cc9f97"
       },
       "cutouts": [
         {
           "bytes": 106526,
-          "file": "assets/posters/Pokedex/sections/gen2/cutouts/pokemon_152_chikorita.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen2/sources/cutouts/pokemon_152_chikorita.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "30acf73b389c25cf7460b45a71f064af19b82302ba1affb0ac10002a6513d8c0",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 117988,
-          "file": "assets/posters/Pokedex/sections/gen2/cutouts/pokemon_155_cyndaquil.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen2/sources/cutouts/pokemon_155_cyndaquil.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "b54e467594c5b93a7d563140f2cbf9b0af9bc33bbef72d9fc0c976bc39c095e7",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 116432,
-          "file": "assets/posters/Pokedex/sections/gen2/cutouts/pokemon_158_totodile.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen2/sources/cutouts/pokemon_158_totodile.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "b873fb5dfe88086f59ab95bc6612f1c86239f00c896cb442be4ce79da5c5ca5d",
@@ -507,6 +507,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

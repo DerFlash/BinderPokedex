@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1721,
-        "file": "assets/posters/SV08.5/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/SV08.5/sources/cutouts/manifest.json",
         "sha256": "7a9a371eaa5c1ea3521227a7154d03afc4fde97b76a1d29e93861f0c072895ff"
       },
       "cutouts": [
         {
           "bytes": 120225,
-          "file": "assets/posters/SV08.5/cutouts/pokemon_025_pikachu.png",
+          "file": "tmp/poster-workspaces/SV08.5/sources/cutouts/pokemon_025_pikachu.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "e1100eee7248e696797b553f2151ad8e62c0eb83df473d0d9151cceb2e61c76c",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 172093,
-          "file": "assets/posters/SV08.5/cutouts/pokemon_383_groudon.png",
+          "file": "tmp/poster-workspaces/SV08.5/sources/cutouts/pokemon_383_groudon.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "b54d5e6c6fe573bb087226173cedd66703d936aa26ba0707e3fbf0542df261c0",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 117611,
-          "file": "assets/posters/SV08.5/cutouts/pokemon_249_lugia.png",
+          "file": "tmp/poster-workspaces/SV08.5/sources/cutouts/pokemon_249_lugia.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "6662c2d9cc9998ff0bb60c7d551bf5ed27beca009d828377692035d7ec370a90",
@@ -570,6 +570,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

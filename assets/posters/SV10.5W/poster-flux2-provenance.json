@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1731,
-        "file": "assets/posters/SV10.5W/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/SV10.5W/sources/cutouts/manifest.json",
         "sha256": "24027a53d8fe3044eef6a6ac065bd220cd3e6bd4069b8bee46657695261632f4"
       },
       "cutouts": [
         {
           "bytes": 123236,
-          "file": "assets/posters/SV10.5W/cutouts/pokemon_498_tepig.png",
+          "file": "tmp/poster-workspaces/SV10.5W/sources/cutouts/pokemon_498_tepig.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "71b68cb64b98197b2d22a474dfbcddd8952bc766c65e4f0405e2ed7dfd8b4e11",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 164867,
-          "file": "assets/posters/SV10.5W/cutouts/pokemon_643_reshiram.png",
+          "file": "tmp/poster-workspaces/SV10.5W/sources/cutouts/pokemon_643_reshiram.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "670636862ff3fad6116dc4ae9a9955e34b0b5d6167dd2c7d6cf74ced1b021cf1",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 138423,
-          "file": "assets/posters/SV10.5W/cutouts/pokemon_501_oshawott.png",
+          "file": "tmp/poster-workspaces/SV10.5W/sources/cutouts/pokemon_501_oshawott.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "7d95563acab903da681aa4f6896726f6e691fe6441e6f2f3878e4492369d6237",
@@ -570,6 +570,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

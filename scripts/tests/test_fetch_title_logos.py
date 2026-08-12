@@ -11,8 +11,10 @@ def test_title_logo_fetch_copies_repository_local_source(tmp_path, monkeypatch):
     Image.new("RGBA", (64, 32), (255, 204, 0, 255)).save(source)
 
     asset_dir = tmp_path / "poster"
+    source_dir = tmp_path / "poster-workspace" / "sources"
     bundle = SimpleNamespace(
         asset_dir=asset_dir,
+        source_dir=source_dir,
         manifest_path=asset_dir / "poster.yaml",
         manifest={
             "title_logo": {"files": {"de": "logos/logo-de.png"}}
@@ -35,7 +37,7 @@ def test_title_logo_fetch_copies_repository_local_source(tmp_path, monkeypatch):
 
     written = title_logos.fetch_title_logos("SVP")
 
-    assert written == [asset_dir / "logos" / "logo-de.png"]
+    assert written == [source_dir / "logos" / "logo-de.png"]
     with Image.open(written[0]) as copied, Image.open(source) as original:
         assert copied.mode == "RGBA"
         assert copied.size == original.size

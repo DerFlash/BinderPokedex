@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 2074,
-        "file": "assets/posters/ME03/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/ME03/sources/cutouts/manifest.json",
         "sha256": "34ce799c56390a24dc4777b558309bd815d90935d9cc584c19f561b50d45c965"
       },
       "cutouts": [
         {
           "bytes": 140282,
-          "file": "assets/posters/ME03/cutouts/pokemon_495_snivy.png",
+          "file": "tmp/poster-workspaces/ME03/sources/cutouts/pokemon_495_snivy.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "a75f5938c2496b9b044bcb6222aa4bd94fde50b5735370347625fe3a9ee295db",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 140222,
-          "file": "assets/posters/ME03/cutouts/pokemon_722_rowlet.png",
+          "file": "tmp/poster-workspaces/ME03/sources/cutouts/pokemon_722_rowlet.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "2e6530175cdf2ef2877c923dd19fe4ff967c72eba9d7ef2c495684acc59e425b",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 140837,
-          "file": "assets/posters/ME03/cutouts/pokemon_718_artwork_10301_mega_zygarde.png",
+          "file": "tmp/poster-workspaces/ME03/sources/cutouts/pokemon_718_artwork_10301_mega_zygarde.png",
           "height": 534,
           "mode": "RGBA",
           "pixel_sha256": "b46d221140831a0b2a04803a5b4388d35f26ba3c1f14706c479007b06533bd0b",
@@ -586,6 +586,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

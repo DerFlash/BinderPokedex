@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1731,
-        "file": "assets/posters/SV09/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/SV09/sources/cutouts/manifest.json",
         "sha256": "d8b177966d8e728a43fb86cfbb38dd6199c5ee088b3a06fd98e81604270e37d6"
       },
       "cutouts": [
         {
           "bytes": 114350,
-          "file": "assets/posters/SV09/cutouts/pokemon_906_sprigatito.png",
+          "file": "tmp/poster-workspaces/SV09/sources/cutouts/pokemon_906_sprigatito.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "bbb27600106084f27dc56d019f37f6c1c17bba9a3ea8138fd79e7d03b5200b81",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 87212,
-          "file": "assets/posters/SV09/cutouts/pokemon_255_torchic.png",
+          "file": "tmp/poster-workspaces/SV09/sources/cutouts/pokemon_255_torchic.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "671e8746fd27fa08b1fc031d94ed88e5d0538116c15c0872ed51e0789254699d",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 164867,
-          "file": "assets/posters/SV09/cutouts/pokemon_643_reshiram.png",
+          "file": "tmp/poster-workspaces/SV09/sources/cutouts/pokemon_643_reshiram.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "670636862ff3fad6116dc4ae9a9955e34b0b5d6167dd2c7d6cf74ced1b021cf1",
@@ -570,6 +570,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

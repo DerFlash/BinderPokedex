@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1730,
-        "file": "assets/posters/ME02.5/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/ME02.5/sources/cutouts/manifest.json",
         "sha256": "2c92dcad4ef366a3cc9706411a6536ff888918f296f24260990516f60898763e"
       },
       "cutouts": [
         {
           "bytes": 106526,
-          "file": "assets/posters/ME02.5/cutouts/pokemon_152_chikorita.png",
+          "file": "tmp/poster-workspaces/ME02.5/sources/cutouts/pokemon_152_chikorita.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "30acf73b389c25cf7460b45a71f064af19b82302ba1affb0ac10002a6513d8c0",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 139307,
-          "file": "assets/posters/ME02.5/cutouts/pokemon_004_charmander.png",
+          "file": "tmp/poster-workspaces/ME02.5/sources/cutouts/pokemon_004_charmander.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "84b721fa96a4480ee20afd28765c279e15d45b0f73c13f74c7988cf06a3b68df",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 158849,
-          "file": "assets/posters/ME02.5/cutouts/pokemon_250_ho_oh.png",
+          "file": "tmp/poster-workspaces/ME02.5/sources/cutouts/pokemon_250_ho_oh.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "27c1eb01dc8b91b25c89dd2c948aafa26722d2b563e8c00728926b10ff077f4c",
@@ -570,6 +570,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

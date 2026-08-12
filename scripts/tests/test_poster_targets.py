@@ -15,6 +15,7 @@ from scripts.poster_assets.finalize_comfyui_poster import (
     resolved_title_text,
     title_logo_file,
 )
+from scripts.poster_assets.fetch_title_logos import resolve_logo_downloads
 from scripts.poster_assets.typography import load_font, wrap_text
 from scripts.poster_assets.init_poster_scope import (
     build_section_manifest,
@@ -66,6 +67,12 @@ def test_poster_storage_classes_are_separate_and_complete():
         bundle.work_dir.is_relative_to(ROOT / "tmp" / "poster-workspaces")
         for bundle in bundles
     )
+    assert all(
+        bundle.source_dir.is_relative_to(
+            ROOT / "tmp" / "poster-workspaces"
+        )
+        for bundle in bundles
+    )
     assert not (ROOT / "data" / "poster_assets").exists()
     assert not list((ROOT / "assets" / "posters").rglob("poster-flux2.png"))
     assert not list(
@@ -73,6 +80,9 @@ def test_poster_storage_classes_are_separate_and_complete():
             "poster-flux2-cards/card_r*_c*.png"
         )
     )
+    assert not list((ROOT / "assets" / "posters").rglob("cutouts/*"))
+    assert not list((ROOT / "assets" / "posters").rglob("logos/*"))
+    assert not list((ROOT / "assets" / "posters").rglob("logo.png"))
 
 
 @pytest.mark.parametrize(
@@ -86,14 +96,23 @@ def test_curated_posters_use_three_card_safe_subjects(scope, expected_ids):
     bundle = poster_bundle(scope)
     source = load_poster_scope_data(bundle)
     featured = source["sections"]["all"]["featured_elements"]
-    cutouts = json.loads(
-        (bundle.asset_dir / "cutouts" / "manifest.json").read_text(
+    provenance = json.loads(
+        (
+            bundle.asset_dir / "poster-flux2-provenance.json"
+        ).read_text(
             encoding="utf-8"
         )
-    )["items"]
+    )
+    approved_subjects = (
+        provenance["run"]["inputs"]["generation_fingerprint"]
+        ["components"]["source_subject_ids"]
+    )
 
     assert [item["pokemon_id"] for item in featured] == expected_ids
-    assert [item["pokemon_id"] for item in cutouts] == expected_ids
+    assert [
+        item if isinstance(item, int) else item["pokemon_id"]
+        for item in approved_subjects
+    ] == expected_ids
 
 
 def test_every_generated_pdf_language_has_complete_poster_copy():
@@ -117,8 +136,16 @@ def test_every_generated_pdf_language_has_complete_poster_copy():
             for language in languages:
                 logo_file = title_logo_file(bundle.manifest, language)
                 if logo_file:
-                    if bundle.pdf_enabled:
-                        assert (bundle.asset_dir / logo_file).is_file()
+                    downloads = {
+                        relative_file: url
+                        for _logo_language, relative_file, url in (
+                            resolve_logo_downloads(
+                                bundle.manifest,
+                                scope_data,
+                            )
+                        )
+                    }
+                    assert downloads.get(logo_file)
                     header_text = None
                 else:
                     header_text = resolved_title_text(scope_data, language)

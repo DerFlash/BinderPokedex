@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1745,
-        "file": "assets/posters/Pokedex/sections/gen3/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/Pokedex/sections/gen3/sources/cutouts/manifest.json",
         "sha256": "171b64c53bde8daebbc4611c4661e46f7151493108a669ac7fcacc1cae5791f3"
       },
       "cutouts": [
         {
           "bytes": 126007,
-          "file": "assets/posters/Pokedex/sections/gen3/cutouts/pokemon_252_treecko.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen3/sources/cutouts/pokemon_252_treecko.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "37c41a06e09d6658d643f5311b585c7adc85dbce09602f6118ef9157ccb3f8a3",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 87212,
-          "file": "assets/posters/Pokedex/sections/gen3/cutouts/pokemon_255_torchic.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen3/sources/cutouts/pokemon_255_torchic.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "671e8746fd27fa08b1fc031d94ed88e5d0538116c15c0872ed51e0789254699d",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 126596,
-          "file": "assets/posters/Pokedex/sections/gen3/cutouts/pokemon_258_mudkip.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen3/sources/cutouts/pokemon_258_mudkip.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "5f3608561fbb30f36203b6bbf47071ccf5793393a1d176d3c024b7947aefa19b",
@@ -507,6 +507,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

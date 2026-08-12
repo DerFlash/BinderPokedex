@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1713,
-        "file": "assets/posters/SV08/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/SV08/sources/cutouts/manifest.json",
         "sha256": "84eb58086b4774847d988e635f139f447d55e237f8ba0df048c9813e4fe440d1"
       },
       "cutouts": [
         {
           "bytes": 158849,
-          "file": "assets/posters/SV08/cutouts/pokemon_250_ho_oh.png",
+          "file": "tmp/poster-workspaces/SV08/sources/cutouts/pokemon_250_ho_oh.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "27c1eb01dc8b91b25c89dd2c948aafa26722d2b563e8c00728926b10ff077f4c",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 115180,
-          "file": "assets/posters/SV08/cutouts/pokemon_909_fuecoco.png",
+          "file": "tmp/poster-workspaces/SV08/sources/cutouts/pokemon_909_fuecoco.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "6f87f462a8639a983688199cd116cbbe580a356acf62ca1f46a4eb805a268d1e",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 159156,
-          "file": "assets/posters/SV08/cutouts/pokemon_646_kyurem.png",
+          "file": "tmp/poster-workspaces/SV08/sources/cutouts/pokemon_646_kyurem.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "da284b9bac2441f23931c268112c18342059a4c9a36e583290a6245ea3979280",
@@ -570,6 +570,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

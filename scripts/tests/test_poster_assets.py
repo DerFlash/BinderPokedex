@@ -11,6 +11,7 @@ import yaml
 from PIL import Image, ImageChops, ImageDraw
 
 from scripts.poster_assets import fetch_cutouts
+from scripts.poster_assets import fetch_poster_sources
 from scripts.poster_assets import (
     create_comfyui_poster_workflow as poster_workflow,
 )
@@ -118,6 +119,35 @@ from scripts.poster_assets.validate_promoted_poster import (
     validate as validate_promoted_poster,
 )
 from scripts.poster_assets import validate_promoted_poster as poster_validator
+
+
+def test_fetch_poster_sources_can_limit_ci_to_pdf_logos(monkeypatch):
+    calls = []
+    bundle = SimpleNamespace(
+        asset_key="Example",
+        manifest={"title_logo": {"file": "logo.png"}},
+    )
+    monkeypatch.setattr(
+        fetch_poster_sources,
+        "poster_bundle",
+        lambda *_args, **_kwargs: bundle,
+    )
+    monkeypatch.setattr(
+        fetch_poster_sources,
+        "fetch_cutouts",
+        lambda *args, **kwargs: calls.append(("cutouts", args, kwargs)),
+    )
+    monkeypatch.setattr(
+        fetch_poster_sources,
+        "fetch_title_logos",
+        lambda *args, **kwargs: calls.append(("logos", args, kwargs)),
+    )
+
+    assert fetch_poster_sources.fetch_sources(
+        ["Example"],
+        kind="logos",
+    ) == 0
+    assert calls == [("logos", ("Example",), {"force": False})]
 
 
 def test_auto_count_uses_layout_columns():
@@ -531,6 +561,7 @@ def test_fetch_cutouts_downloads_exact_form_artwork_without_base_fallback(
     asset_dir = tmp_path / "ExGen3" / "sections" / "mega"
     bundle = SimpleNamespace(
         asset_dir=asset_dir,
+        source_dir=asset_dir,
         asset_key="ExGen3/sections/mega",
         scope="ExGen3",
         poster_id="mega",
@@ -639,6 +670,7 @@ def test_individual_promotion_rejects_source_form_cutout_mismatch(
         scope="ME03",
         section_id=None,
         asset_dir=asset_dir,
+        source_dir=asset_dir,
         manifest={
             "layout": {"name": "standard_3x3"},
             "pokemon": {
@@ -720,7 +752,7 @@ def test_validate_png_rejects_flattened_image(tmp_path: Path):
 
 
 def test_cutout_placements_share_one_foot_baseline():
-    scope_dir = Path(__file__).resolve().parents[2] / "assets" / "posters" / "Base1"
+    scope_dir = poster_bundle("Base1").source_dir
     placements = cutout_placements(build_page_layout("standard_3x3"), scope_dir)
 
     foot_positions = []
@@ -733,7 +765,7 @@ def test_cutout_placements_share_one_foot_baseline():
 
 
 def test_cutout_placements_stay_inside_bottom_card_cells():
-    scope_dir = Path(__file__).resolve().parents[2] / "assets" / "posters" / "Base1"
+    scope_dir = poster_bundle("Base1").source_dir
     placements = cutout_placements(build_page_layout("standard_3x3"), scope_dir)
 
     for placement in placements:
@@ -773,12 +805,7 @@ def test_two_cutouts_use_the_outer_bottom_cards(tmp_path: Path):
 
 
 def test_joint_scene_placements_reuse_canonical_card_fit():
-    scope_dir = (
-        Path(__file__).resolve().parents[2]
-        / "assets"
-        / "posters"
-        / "Base1"
-    )
+    scope_dir = poster_bundle("Base1").source_dir
     layout = build_page_layout("standard_3x3")
     exact = cutout_placements(layout, scope_dir)
     joint = joint_scene_cutout_placements(layout, scope_dir)
@@ -797,7 +824,7 @@ def test_joint_scene_placements_reuse_canonical_card_fit():
 
 
 def test_inpaint_reference_uses_exact_final_placements(tmp_path: Path):
-    scope_dir = Path(__file__).resolve().parents[2] / "assets" / "posters" / "Base1"
+    scope_dir = poster_bundle("Base1").source_dir
     build_identity_lock_references("Base1", 0.25, tmp_path)
 
     actual = Image.open(tmp_path / "inpaint_reference.png").convert("RGBA")
@@ -851,10 +878,7 @@ def test_joint_scene_preparation_writes_spatial_and_unscaled_identity_refs(
     expected = Image.new("RGBA", actual.size, (226, 224, 211, 255))
     for placement in joint_scene_cutout_placements(
         layout,
-        Path(__file__).resolve().parents[2]
-        / "assets"
-        / "posters"
-        / "Base1",
+        poster_bundle("Base1").source_dir,
     ):
         expected.alpha_composite(
             placement["image"],
@@ -862,20 +886,11 @@ def test_joint_scene_preparation_writes_spatial_and_unscaled_identity_refs(
         )
     assert ImageChops.difference(actual, expected).getbbox() is None
 
-    items = load_cutout_items(
-        Path(__file__).resolve().parents[2]
-        / "assets"
-        / "posters"
-        / "Base1"
-    )
+    source_dir = poster_bundle("Base1").source_dir
+    items = load_cutout_items(source_dir)
     for item, identity_path in zip(items, identity_paths, strict=True):
         source = Image.open(
-            Path(__file__).resolve().parents[2]
-            / "assets"
-            / "posters"
-            / "Base1"
-            / "cutouts"
-            / item["file"]
+            source_dir / "cutouts" / item["file"]
         ).convert("RGBA")
         detail = Image.open(identity_path).convert("RGB")
         assert detail.size == (512, 512)
@@ -1660,7 +1675,7 @@ def test_regional_joint_scene_binds_each_identity_to_its_physical_card():
         height_px=height,
     )
     placements = joint_scene_canvas_placements(
-        poster_workflow.POSTER_ASSETS / "Base1",
+        poster_bundle("Base1").source_dir,
         layout_name="standard_3x3",
         canvas_size=(width, height),
     )
@@ -1778,7 +1793,7 @@ def test_regional_joint_scene_places_two_subjects_in_outer_cards():
     width = workflow["6"]["inputs"]["width"]
     height = workflow["6"]["inputs"]["height"]
     placements = joint_scene_canvas_placements(
-        poster_workflow.POSTER_ASSETS / "ExGen2/sections/primal",
+        poster_bundle("ExGen2/sections/primal").source_dir,
         layout_name="standard_3x3",
         canvas_size=(width, height),
     )
@@ -1905,7 +1920,7 @@ def test_regional_joint_scene_supports_four_physical_card_regions(
 def test_joint_scene_prompt_separates_spatial_and_identity_roles():
     bundle = poster_bundle("Pokedex/sections/gen7")
     scope_data = load_poster_scope_data(bundle)
-    items = load_cutout_items(bundle.asset_dir)
+    items = load_cutout_items(bundle.source_dir)
     width, height = latent_canvas_dimensions("standard_3x3", 1.0)
     placement_contract = normalized_visible_placement_contract(
         joint_scene_cutout_placements(
@@ -1914,7 +1929,7 @@ def test_joint_scene_prompt_separates_spatial_and_identity_roles():
                 width_px=width,
                 height_px=height,
             ),
-            bundle.asset_dir,
+            bundle.source_dir,
         ),
         canvas_size=(width, height),
     )
@@ -1963,7 +1978,7 @@ def test_joint_scene_scope_constraints_reach_the_one_shot_prompt():
     constraint = "Keep the distant observatory below the cloud line."
     manifest["artwork"]["scene"]["constraints"] = [constraint]
     scope_data = load_poster_scope_data(bundle)
-    items = load_cutout_items(bundle.asset_dir)
+    items = load_cutout_items(bundle.source_dir)
     width, height = latent_canvas_dimensions("standard_3x3", 1.0)
     placement_contract = normalized_visible_placement_contract(
         joint_scene_cutout_placements(
@@ -1972,7 +1987,7 @@ def test_joint_scene_scope_constraints_reach_the_one_shot_prompt():
                 width_px=width,
                 height_px=height,
             ),
-            bundle.asset_dir,
+            bundle.source_dir,
         ),
         canvas_size=(width, height),
     )
@@ -2779,6 +2794,7 @@ def test_promotion_installs_complete_bundle_with_stable_provenance(
     assert payload["storage"] == {
         "schema_version": 1,
         "durable_outputs": ["artwork"],
+        "reproducible_sources": "downloaded_to_ignored_workspace",
         "derivatives": "regenerated_in_ignored_workspace",
     }
     assert set(payload["outputs"]) == {"artwork"}

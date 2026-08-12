@@ -31,7 +31,14 @@ therefore requires one operator choice before its first GPU render.
 - Always bring back `run.json`, `comfyui.log`, and every output image. A
   successful render is not approval: inspect the full poster and all physical
   card crops before any promotion.
+- Treat downloaded cutouts and set logos as reproducible source-cache files.
+  Fetch them with `fetch_poster_sources.py` below the ignored
+  `tmp/poster-workspaces/<asset-key>/sources/` tree and never commit them.
+  Promotion commits only the reviewed text-free master and its provenance;
+  provenance retains the exact source hashes used for the review.
 
 This choice applies only to artwork generation. Fetching data, deterministic
 localization, slicing, PDF rendering, and release validation do not require a
-render worker.
+render worker. TCG PDF builds must fetch their configured title logos with
+`fetch_poster_sources.py --kind logos`; Pokédex posters use deterministic text
+titles and do not require that download.

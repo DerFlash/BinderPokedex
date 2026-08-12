@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1746,
-        "file": "assets/posters/Pokedex/sections/gen8/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/Pokedex/sections/gen8/sources/cutouts/manifest.json",
         "sha256": "1522211bb3e1df1f8fd6e3635382a53170d81f6f19c0bdf9ccf4ffbb28a6392f"
       },
       "cutouts": [
         {
           "bytes": 111536,
-          "file": "assets/posters/Pokedex/sections/gen8/cutouts/pokemon_810_grookey.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen8/sources/cutouts/pokemon_810_grookey.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "1007dc8ec519ceb248b9a19942d488e3974128e63416c80d54b6eba894c60d35",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 65679,
-          "file": "assets/posters/Pokedex/sections/gen8/cutouts/pokemon_813_scorbunny.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen8/sources/cutouts/pokemon_813_scorbunny.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "f88fc484d3b27caaf14d4bb02b3e9df6dc534154404af128db1597fe5f8e609e",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 102743,
-          "file": "assets/posters/Pokedex/sections/gen8/cutouts/pokemon_816_sobble.png",
+          "file": "tmp/poster-workspaces/Pokedex/sections/gen8/sources/cutouts/pokemon_816_sobble.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "52f49d77a019e0c1ffbb8fcef6a807ce9f8405a7a48154aee4d6312b48f5b26a",
@@ -507,6 +507,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

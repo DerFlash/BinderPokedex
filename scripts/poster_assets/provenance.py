@@ -947,7 +947,7 @@ def _expected_subject_ids(
 def _cutout_components(
     bundle: PosterBundle,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    cutout_dir = bundle.asset_dir / "cutouts"
+    cutout_dir = bundle.source_dir / "cutouts"
     manifest_path = cutout_dir / "manifest.json"
     payload = load_json(manifest_path)
     items = payload.get("items", [])
@@ -1036,7 +1036,7 @@ def _effective_generation_prompt(
         )
         placement_contract = normalized_visible_placement_contract(
             joint_scene_canvas_placements(
-                bundle.asset_dir,
+                bundle.source_dir,
                 layout_name=layout_name,
                 canvas_size=(width, height),
             ),
@@ -1193,12 +1193,115 @@ def build_generation_fingerprint(
     return fingerprint_record(components)
 
 
+def rebuild_generation_fingerprint_from_recorded_sources(
+    target: str | PosterBundle,
+    recorded: dict[str, Any],
+    *,
+    poster_assets: Path | None = None,
+    scope_data_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Rebuild current semantics while retaining audited downloaded pixels.
+
+    Promoted provenance owns the immutable cutout pixel hashes. Revalidating a
+    promoted master therefore does not need to redownload those source PNGs;
+    current configuration, source selection, layout and pipeline contracts are
+    still recomputed and compared with the recorded fingerprint.
+    """
+    if not fingerprint_record_is_valid(recorded):
+        raise ValueError("Malformed recorded generation fingerprint")
+    bundle, scope_data = _bundle_and_scope_data(
+        target,
+        poster_assets=poster_assets,
+        scope_data_dir=scope_data_dir,
+    )
+    components = recorded["components"]
+    generation = bundle.manifest.get("artwork", {}).get("generation", {})
+    if not isinstance(generation, dict):
+        raise ValueError("artwork.generation must be a mapping")
+    validate_generation_contract(generation)
+    contract_version = generation_fingerprint_pipeline_contract_version(
+        recorded,
+        generation,
+    )
+    expected_subjects = _expected_subject_ids(bundle.manifest, scope_data)
+    if components.get("source_subject_ids") != expected_subjects:
+        raise ValueError(
+            "Recorded cutout subjects do not match the current source "
+            f"selection for {bundle.asset_key}"
+        )
+    cutouts = components.get("cutouts")
+    if not isinstance(cutouts, list) or len(cutouts) != len(expected_subjects):
+        raise ValueError("Recorded generation fingerprint has invalid cutouts")
+    for cutout in cutouts:
+        if (
+            not isinstance(cutout, dict)
+            or not isinstance(cutout.get("pokemon_id"), int)
+            or not isinstance(cutout.get("pixel_sha256"), str)
+        ):
+            raise ValueError(
+                "Recorded generation fingerprint has invalid cutout pixels"
+            )
+
+    engine = str(generation.get("engine", ""))
+    mode = str(generation.get("mode", ""))
+    if engine == "flux" and mode == "identity_lock":
+        prompt = build_identity_lock_prompt(bundle.manifest, scope_data)
+        effective_prompt = {
+            "encoding": "utf-8",
+            "sha256": hashlib.sha256(prompt.encode("utf-8")).hexdigest(),
+        }
+    else:
+        effective_prompt = components.get("effective_prompt")
+        if not isinstance(effective_prompt, dict):
+            raise ValueError(
+                "Recorded generation fingerprint lacks its prompt audit"
+            )
+
+    current_components: dict[str, Any] = {
+        "pipeline_contract": {
+            "name": "poster_generation",
+            "version": contract_version,
+        },
+        "layout": _layout_generation_contract(
+            bundle.manifest,
+            generation,
+            contract_version,
+        ),
+        "scene": bundle.manifest.get("artwork", {}).get("scene", {}),
+        "generation": generation,
+        "pokemon": bundle.manifest.get("pokemon", {}),
+        "effective_prompt": effective_prompt,
+        "source_subject_ids": expected_subjects,
+        "cutouts": cutouts,
+    }
+    if engine == "flux" and mode == "joint_scene":
+        current_components["joint_scene_conditioning"] = (
+            joint_scene_conditioning_contract(
+                bundle.manifest,
+                [{} for _subject in expected_subjects],
+                reference_mode=str(generation.get("reference_mode", "")),
+            )
+        )
+    else:
+        current_components["conditioning"] = bundle.manifest.get(
+            "conditioning",
+            {},
+        )
+        current_components["identity_lock"] = identity_lock_config(
+            bundle.manifest
+        )
+    return fingerprint_record(
+        current_components,
+        schema_version=int(recorded["schema_version"]),
+    )
+
+
 def _safe_overlay_asset(bundle: PosterBundle, filename: str) -> Path:
     relative = Path(filename)
     if relative.is_absolute() or ".." in relative.parts:
         raise ValueError(f"Unsafe poster overlay asset: {filename!r}")
-    path = (bundle.asset_dir / relative).resolve()
-    if not path.is_relative_to(bundle.asset_dir.resolve()):
+    path = (bundle.source_dir / relative).resolve()
+    if not path.is_relative_to(bundle.source_dir.resolve()):
         raise ValueError(f"Poster overlay asset escapes its scope: {filename!r}")
     return path
 
@@ -1208,6 +1311,7 @@ def build_overlay_fingerprint(
     *,
     poster_assets: Path | None = None,
     scope_data_dir: Path | None = None,
+    recorded: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Fingerprint cheap deterministic overlay inputs independently."""
     try:
@@ -1249,12 +1353,25 @@ def build_overlay_fingerprint(
         raise ValueError("text_cells.title must be a mapping")
     language_components: dict[str, Any] = {}
     logo_records: dict[str, Any] = {}
+    recorded_logo_records = (
+        recorded.get("components", {}).get("logo_pixels", {})
+        if fingerprint_record_is_valid(recorded)
+        else {}
+    )
     for language in SUPPORTED_LANGUAGES:
         logo_file = title_logo_file(manifest, language)
         header_text: str | None = None
         if logo_file:
             logo_path = _safe_overlay_asset(bundle, str(logo_file))
-            logo_record = image_pixel_record(logo_path)
+            logo_record = (
+                image_pixel_record(logo_path)
+                if logo_path.is_file()
+                else recorded_logo_records.get(language)
+            )
+            if not isinstance(logo_record, dict):
+                raise FileNotFoundError(
+                    f"Poster title logo not found: {logo_path}"
+                )
             logo_records[language] = logo_record
             title: dict[str, Any] = {
                 "kind": "logo",
@@ -1338,7 +1455,7 @@ def generation_input_records(
     """Collect the exact lightweight files that conditioned one generation."""
     validate_generation_contract(generation)
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
-    scope_dir = bundle.asset_dir
+    scope_dir = bundle.source_dir
     work_dir = bundle.work_dir
     cutout_manifest_path = scope_dir / "cutouts" / "manifest.json"
     cutout_manifest = json.loads(cutout_manifest_path.read_text(encoding="utf-8"))
@@ -1552,6 +1669,7 @@ def promoted_provenance(
         "storage": {
             "schema_version": 1,
             "durable_outputs": ["artwork"],
+            "reproducible_sources": "downloaded_to_ignored_workspace",
             "derivatives": "regenerated_in_ignored_workspace",
         },
         "outputs": {"artwork": artwork_record},

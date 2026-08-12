@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1653,
-        "file": "assets/posters/Base1/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/Base1/sources/cutouts/manifest.json",
         "sha256": "394d08aa34ecf8ce57e98c92401ae0a02daf7344e5a4e85f3500d21b847b9c2e"
       },
       "cutouts": [
         {
           "bytes": 120336,
-          "file": "assets/posters/Base1/cutouts/pokemon_150_mewtwo.png",
+          "file": "tmp/poster-workspaces/Base1/sources/cutouts/pokemon_150_mewtwo.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "ba8ef7c35c88cb509fa1617beab0041a3f8e8317041b1c97cc598fe1f936eefa",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 206887,
-          "file": "assets/posters/Base1/cutouts/pokemon_001_bulbasaur.png",
+          "file": "tmp/poster-workspaces/Base1/sources/cutouts/pokemon_001_bulbasaur.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "f96cfeddc294c4efbbdf1b35cd816341d950e3051dec2128c03f652448b04d10",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 139307,
-          "file": "assets/posters/Base1/cutouts/pokemon_004_charmander.png",
+          "file": "tmp/poster-workspaces/Base1/sources/cutouts/pokemon_004_charmander.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "84b721fa96a4480ee20afd28765c279e15d45b0f73c13f74c7988cf06a3b68df",
@@ -562,6 +562,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }

@@ -40,13 +40,13 @@
     "inputs": {
       "cutout_manifest": {
         "bytes": 1721,
-        "file": "assets/posters/MEP/cutouts/manifest.json",
+        "file": "tmp/poster-workspaces/MEP/sources/cutouts/manifest.json",
         "sha256": "c011aae7ddd19747a94a19e08d8489bfc890f4e6b3bfb86c897b2e826199eeef"
       },
       "cutouts": [
         {
           "bytes": 130815,
-          "file": "assets/posters/MEP/cutouts/pokemon_888_zacian.png",
+          "file": "tmp/poster-workspaces/MEP/sources/cutouts/pokemon_888_zacian.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "60ed070f524f35d74e85ccdd0103896aa9f49fe9f2a1f774a502b482a68823cd",
@@ -55,7 +55,7 @@
         },
         {
           "bytes": 206887,
-          "file": "assets/posters/MEP/cutouts/pokemon_001_bulbasaur.png",
+          "file": "tmp/poster-workspaces/MEP/sources/cutouts/pokemon_001_bulbasaur.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "f96cfeddc294c4efbbdf1b35cd816341d950e3051dec2128c03f652448b04d10",
@@ -64,7 +64,7 @@
         },
         {
           "bytes": 139307,
-          "file": "assets/posters/MEP/cutouts/pokemon_004_charmander.png",
+          "file": "tmp/poster-workspaces/MEP/sources/cutouts/pokemon_004_charmander.png",
           "height": 475,
           "mode": "RGBA",
           "pixel_sha256": "84b721fa96a4480ee20afd28765c279e15d45b0f73c13f74c7988cf06a3b68df",
@@ -570,6 +570,7 @@
     "durable_outputs": [
       "artwork"
     ],
+    "reproducible_sources": "downloaded_to_ignored_workspace",
     "schema_version": 1
   }
 }
