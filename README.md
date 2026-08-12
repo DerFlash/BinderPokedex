@@ -54,6 +54,9 @@ Technical details: [full changelog](CHANGELOG.md).
 - **3×3 card layout** (9 per page) - perfect for standard binder sheets
 - **Nine-card poster panoramas** for every current set, Pokédex generation,
   and EX chapter
+- **New: Custom poster layouts** ✨ — generate temporary 4×3 and other wide
+  artwork layouts and paginate them across multiple A4 sheets without changing
+  bundled release PDFs or poster assets
 - **Complete TCG Support** 🎴
   - **3 EX Generations:** ExGen1 (2003-2007), ExGen2 (2012-2016), ExGen3 (2023+)
   - **17 Scarlet & Violet Sets:** Full Scarlet & Violet era (SV01-SV10 + specials)
