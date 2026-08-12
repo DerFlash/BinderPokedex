@@ -229,7 +229,12 @@ def _validate_source_subjects(
             resolve_poster_subject(item).selection_key()
             for item in unique_featured
         }
-        if (
+        compact_featured_match = (
+            layout.name == "standard_2x2"
+            and len(featured_subjects) > count
+            and expected_subject_keys.issubset(featured_subjects)
+        )
+        if not compact_featured_match and (
             len(featured_subjects) > count
             or not featured_subjects.issubset(expected_subject_keys)
         ):

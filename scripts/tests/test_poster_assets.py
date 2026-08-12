@@ -28,6 +28,8 @@ from scripts.poster_assets.create_comfyui_upscale_workflow import (
     build_workflow as build_upscale_workflow,
 )
 from scripts.poster_assets.create_custom_poster_layout import (
+    _copy_inputs,
+    _custom_manifest,
     _parse_section_fallbacks,
     create_custom_layout_workspace,
 )
@@ -45,6 +47,7 @@ from scripts.poster_assets.layout import (
     build_page_layout,
     build_print_layout,
     build_source_layout,
+    default_text_cells,
     effective_dpi,
     latent_canvas_dimensions,
     pdf_page_hint,
@@ -162,6 +165,79 @@ def test_auto_count_uses_layout_columns():
     assert fetch_cutouts.resolve_requested_count(manifest, build_page_layout("wide_4x3")) == 4
 
 
+def test_2x2_layout_uses_requested_overlay_cells_and_two_subjects():
+    layout = build_print_layout("standard_2x2", 300)
+
+    assert (layout.columns, layout.rows) == (2, 2)
+    assert (layout.width_px, layout.height_px) == (1559, 2159)
+    assert pdf_page_hint("standard_2x2") == ("A4", "portrait")
+    assert default_text_cells("standard_2x2") == {
+        "title": {"row": 1, "column": 1},
+        "set_info": {
+            "row": 1,
+            "column": 2,
+            "max_width_ratio": 0.92,
+            "max_height_ratio": 0.68,
+        },
+    }
+
+    manifest = _custom_manifest(
+        {
+            "layout": {"name": "standard_3x3"},
+            "text_cells": {
+                "title": {"row": 1, "column": 2},
+                "set_info": {"row": 2, "column": 2},
+            },
+            "pokemon": {"count": "auto_from_layout_columns"},
+        },
+        "standard_2x2",
+        2,
+        enable_pdf=True,
+    )
+    assert manifest["text_cells"] == default_text_cells("standard_2x2")
+    assert manifest["pdf"]["enabled"] is True
+
+    fixed_count_manifest = _custom_manifest(
+        {
+            "layout": {"name": "standard_3x3"},
+            "pokemon": {"count": 3},
+        },
+        "standard_2x2",
+        2,
+        enable_pdf=False,
+    )
+    assert (
+        fixed_count_manifest["pokemon"]["count"]
+        == "auto_from_layout_columns"
+    )
+
+
+def test_custom_2x2_inputs_retain_the_first_two_curated_cutouts(tmp_path):
+    source = tmp_path / "source"
+    target = tmp_path / "target"
+    (source / "cutouts").mkdir(parents=True)
+    items = []
+    for index in range(1, 4):
+        file_name = f"pokemon-{index}.png"
+        (source / "cutouts" / file_name).write_bytes(bytes([index]))
+        items.append({"pokemon_id": index, "file": file_name})
+    (source / "cutouts" / "manifest.json").write_text(
+        json.dumps({"items": items}),
+        encoding="utf-8",
+    )
+
+    count = _copy_inputs(source, target, {}, max_cutouts=2)
+
+    retained = json.loads(
+        (target / "cutouts" / "manifest.json").read_text(encoding="utf-8")
+    )
+    assert count == 2
+    assert [item["pokemon_id"] for item in retained["items"]] == [1, 2]
+    assert (target / "cutouts" / "pokemon-1.png").is_file()
+    assert (target / "cutouts" / "pokemon-2.png").is_file()
+    assert not (target / "cutouts" / "pokemon-3.png").exists()
+
+
 @pytest.mark.parametrize("scope", [".", ".."])
 def test_poster_initializer_rejects_path_traversal_scope(scope):
     with pytest.raises(ValueError, match="Unsafe scope name"):
@@ -214,7 +290,7 @@ def test_uniform_extent_compatibility_properties_fail_on_uneven_rasters():
 @pytest.mark.parametrize("dpi", (72, 150, 299, 300, 301, 600))
 @pytest.mark.parametrize(
     "name",
-    ("standard_3x3", "wide_4x3", "wide_4x4"),
+    ("standard_2x2", "standard_3x3", "wide_4x3", "wide_4x4"),
 )
 def test_dpi_aware_image_layout_reconstructs_print_endpoints(name, dpi):
     expected = build_print_layout(name, dpi)
@@ -556,7 +632,7 @@ def test_standard_latent_layout_has_cumulative_endpoint_geometry():
 @pytest.mark.parametrize("dpi", (72, 150, 299, 300, 301, 600))
 @pytest.mark.parametrize(
     "name",
-    ("standard_3x3", "wide_4x3", "wide_4x4"),
+    ("standard_2x2", "standard_3x3", "wide_4x3", "wide_4x4"),
 )
 def test_print_layout_rasterization_never_accumulates_past_page(
     name,
@@ -595,7 +671,7 @@ def test_source_layout_rejects_a_wrong_physical_aspect_ratio():
 )
 @pytest.mark.parametrize(
     "name",
-    ("standard_3x3", "wide_4x3", "wide_4x4"),
+    ("standard_2x2", "standard_3x3", "wide_4x3", "wide_4x4"),
 )
 def test_every_latent_aligned_canvas_is_accepted_by_source_layout(
     name,
@@ -996,6 +1072,60 @@ def test_individual_promotion_rejects_source_form_cutout_mismatch(
 
     with pytest.raises(ValueError, match="do not match"):
         poster_validator._validate_source_subjects(bundle, scope_data)
+
+
+def test_2x2_promotion_accepts_first_two_of_three_curated_subjects(
+    tmp_path: Path,
+):
+    asset_dir = tmp_path / "Pokedex" / "sections" / "gen1"
+    cutout_dir = asset_dir / "cutouts"
+    cutout_dir.mkdir(parents=True)
+    bundle = SimpleNamespace(
+        asset_key="Pokedex/sections/gen1",
+        scope="Pokedex",
+        section_id="gen1",
+        asset_dir=asset_dir,
+        source_dir=asset_dir,
+        manifest={
+            "layout": {"name": "standard_2x2"},
+            "pokemon": {
+                "strategy": "featured_from_scope",
+                "count": "auto_from_layout_columns",
+                "fallback_candidates": [],
+            },
+        },
+    )
+    featured = [
+        {"pokemon_id": 1},
+        {"pokemon_id": 4},
+        {"pokemon_id": 7},
+    ]
+    scope_data = {
+        "sections": {
+            "gen1": {
+                "featured_elements": featured,
+                "title": {
+                    language: "Generation I"
+                    for language in poster_validator.POSTER_LANGUAGES
+                },
+                "subtitle": {
+                    language: "Kanto"
+                    for language in poster_validator.POSTER_LANGUAGES
+                },
+                "description": {
+                    language: "#001 - #151"
+                    for language in poster_validator.POSTER_LANGUAGES
+                },
+            }
+        }
+    }
+    selected = featured[:2]
+    (cutout_dir / "manifest.json").write_text(
+        json.dumps({"items": selected}),
+        encoding="utf-8",
+    )
+
+    poster_validator._validate_source_subjects(bundle, scope_data)
 
 
 def test_validate_png_requires_transparency(tmp_path: Path):
@@ -1403,6 +1533,31 @@ def test_new_tcg_set_manifest_keeps_every_advertised_pdf_language_logo():
         language: f"logos/logo-{language}.png"
         for language in languages
     }
+
+
+def test_2x2_section_manifest_selects_two_of_three_curated_subjects():
+    root = Path(__file__).resolve().parents[2]
+    scope_data = fetch_cutouts.load_json(
+        root / "data" / "output" / "Pokedex.json"
+    )
+    section = scope_data["sections"]["gen1"]
+    generation = fetch_cutouts.load_yaml(
+        root / "config" / "posters" / "Base1" / "poster.yaml"
+    )["artwork"]["generation"]
+    scene = section_scenes_for_scope("Pokedex")["gen1"]
+
+    manifest = build_section_manifest(
+        "Pokedex/sections/gen1",
+        "Pokedex",
+        "gen1",
+        section,
+        "standard_2x2",
+        generation,
+        scene,
+    )
+
+    assert manifest["pokemon"]["count"] == "auto_from_layout_columns"
+    assert manifest["text_cells"] == default_text_cells("standard_2x2")
 
 
 def test_every_current_tcg_set_bootstraps_without_set_specific_python():
@@ -2638,7 +2793,7 @@ def test_resize_artwork_uses_requested_poster_dimensions(tmp_path: Path):
 
 @pytest.mark.parametrize(
     "layout_name",
-    ("standard_3x3", "wide_4x3", "wide_4x4"),
+    ("standard_2x2", "standard_3x3", "wide_4x3", "wide_4x4"),
 )
 def test_resize_artwork_to_dpi_uses_exact_print_dimensions(
     tmp_path: Path,

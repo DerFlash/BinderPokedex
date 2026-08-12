@@ -75,8 +75,10 @@ python scripts/poster_assets/fetch_poster_sources.py \
 ```
 
 The default poster presentation uses cuttable physical cards. A 3×3 poster
-occupies one A4 page; a local 4×3 poster is not scaled down and instead uses two
-A4 pages with nine cards followed by three cards in the next page's top row.
+occupies one A4 page. A local 2×2 poster uses the upper-left four slots of that
+same page, leaving the right column and bottom row empty. A local 4×3 poster is
+not scaled down and instead uses two A4 pages with nine cards followed by three
+cards vertically in the next page's first column.
 To keep the same localized 3×3 poster as one continuous 200.5 × 276.7 mm image
 centered on A4, without cutting guides:
 
@@ -97,7 +99,9 @@ project identity. If no enabled promoted poster exists, the page order remains
 cover, then card pages.
 
 Use `scripts/poster_assets/create_custom_poster_layout.py` to prepare an
-ignored local poster-assets root for `wide_4x3` or another registered layout.
+ignored local poster-assets root for `standard_2x2`, `wide_4x3`, or another
+registered layout. `standard_2x2` places the title at upper left, the
+information panel at upper right, and two Pokémon below them.
 The complete isolated-workspace example is in
 [Poster Artwork Workflow](POSTER_WORKFLOW.md).
 

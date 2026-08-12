@@ -17,6 +17,12 @@ RASTER_GEOMETRY_CONTRACT_VERSION = 2
 
 DEFAULT_LAYOUT_NAME = "standard_3x3"
 LAYOUTS = {
+    "standard_2x2": {
+        "columns": 2,
+        "rows": 2,
+        "pdf_paper": "A4",
+        "pdf_orientation": "portrait",
+    },
     "standard_3x3": {
         "columns": 3,
         "rows": 3,
@@ -171,6 +177,30 @@ def resolve_layout_name(name: str | None) -> dict[str, int | str]:
     if layout_name not in LAYOUTS:
         raise ValueError(f"Unknown layout '{layout_name}'. Known layouts: {', '.join(sorted(LAYOUTS))}")
     return LAYOUTS[layout_name]
+
+
+def default_text_cells(name: str | None) -> dict[str, dict[str, float | int]]:
+    """Return deterministic title and information cells for a poster grid."""
+    layout_name = name or DEFAULT_LAYOUT_NAME
+    spec = resolve_layout_name(layout_name)
+    if layout_name == "standard_2x2":
+        title = {"row": 1, "column": 1}
+        set_info = {"row": 1, "column": 2}
+    else:
+        center_column = max(1, (int(spec["columns"]) + 1) // 2)
+        title = {"row": 1, "column": center_column}
+        set_info = {
+            "row": min(2, int(spec["rows"])),
+            "column": center_column,
+        }
+    return {
+        "title": title,
+        "set_info": {
+            **set_info,
+            "max_width_ratio": 0.92,
+            "max_height_ratio": 0.68,
+        },
+    }
 
 
 def pdf_page_hint(name: str | None) -> tuple[str, str]:

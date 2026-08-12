@@ -316,6 +316,18 @@ def test_wide_4x3_keeps_the_first_three_columns_together_on_page_one():
     ]
 
 
+def test_2x2_poster_keeps_its_shape_on_the_upper_left_a4_slots():
+    assert card_page_assignments((2, 2), (3, 3)) == [
+        [(0, 0), (1, 1), (2, 3), (3, 4)]
+    ]
+
+
+def test_standard_3x3_poster_still_uses_all_nine_a4_slots():
+    assert card_page_assignments((3, 3), (3, 3)) == [
+        [(index, index) for index in range(9)]
+    ]
+
+
 def test_wide_poster_renderer_accepts_a_matching_page_grid(tmp_path):
     card_paths = []
     for index in range(12):

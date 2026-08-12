@@ -14,7 +14,7 @@ from typing import Any
 import yaml
 
 try:
-    from .layout import LAYOUTS, resolve_layout_name
+    from .layout import LAYOUTS, default_text_cells, resolve_layout_name
     from .poster_io import (
         POSTER_ASSETS,
         POSTER_CONFIGS,
@@ -28,7 +28,7 @@ try:
         poster_bundles_for_scope,
     )
 except ImportError:
-    from layout import LAYOUTS, resolve_layout_name
+    from layout import LAYOUTS, default_text_cells, resolve_layout_name
     from poster_io import (
         POSTER_ASSETS,
         POSTER_CONFIGS,
@@ -175,6 +175,8 @@ def _copy_inputs(
     source_dir: Path,
     target_dir: Path,
     manifest: dict[str, Any],
+    *,
+    max_cutouts: int | None = None,
 ) -> int:
     cutouts_source = source_dir / "cutouts"
     if not cutouts_source.is_dir():
@@ -190,6 +192,30 @@ def _copy_inputs(
     items = cutout_manifest.get("items")
     if not isinstance(items, list) or not items:
         raise ValueError(f"Custom layout source has no cutouts: {cutout_manifest_path}")
+    if max_cutouts is not None and len(items) > max_cutouts:
+        retained_items = items[:max_cutouts]
+        retained_files = {
+            str(item.get("file"))
+            for item in retained_items
+            if isinstance(item, dict) and item.get("file")
+        }
+        for item in items[max_cutouts:]:
+            relative_value = item.get("file") if isinstance(item, dict) else None
+            if not isinstance(relative_value, str) or not relative_value:
+                continue
+            relative_file = Path(relative_value)
+            if relative_file.is_absolute() or ".." in relative_file.parts:
+                raise ValueError(
+                    f"Unsafe cutout manifest path: {relative_value!r}"
+                )
+            if relative_value not in retained_files:
+                (target_dir / "cutouts" / relative_file).unlink(missing_ok=True)
+        cutout_manifest["items"] = retained_items
+        cutout_manifest_path.write_text(
+            json.dumps(cutout_manifest, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
+        items = retained_items
     return len(items)
 
 
@@ -234,17 +260,22 @@ def _custom_manifest(
 
     pokemon = manifest.setdefault("pokemon", {})
     configured_count = pokemon.get("count", "auto_from_layout_columns")
+    source_layout = resolve_layout_name(
+        source_manifest.get("layout", {}).get("name")
+    )
+    shrinks_bottom_row = columns < int(source_layout["columns"])
     if (
         configured_count != "auto_from_layout_columns"
         and int(configured_count) > columns
     ):
-        raise ValueError(
-            f"Configured subject count {pokemon['count']} exceeds {layout_name}"
-        )
+        if shrinks_bottom_row:
+            pokemon["count"] = "auto_from_layout_columns"
+        else:
+            raise ValueError(
+                f"Configured subject count {pokemon['count']} exceeds "
+                f"{layout_name}"
+            )
 
-    source_layout = resolve_layout_name(
-        source_manifest.get("layout", {}).get("name")
-    )
     expands_bottom_row = columns > int(source_layout["columns"])
     missing_count = columns - cutout_count if expands_bottom_row else 0
     if missing_count:
@@ -279,7 +310,11 @@ def _custom_manifest(
         )
         pokemon["count"] = "auto_from_layout_columns"
 
-    if layout_name == "wide_4x3":
+    if layout_name == "standard_2x2":
+        text_cells = manifest.setdefault("text_cells", {})
+        for key, cell in default_text_cells(layout_name).items():
+            text_cells.setdefault(key, {}).update(cell)
+    elif layout_name == "wide_4x3":
         text_cells = manifest.setdefault("text_cells", {})
         text_cells.setdefault("title", {}).update({"row": 2, "column": 2})
         text_cells.setdefault("set_info", {}).update({"row": 2, "column": 3})
@@ -421,10 +456,12 @@ def create_custom_layout_workspace(
             relative_asset = Path(*bundle.asset_key.split("/"))
             target_dir = stage / relative_asset
             target_dir.mkdir(parents=True, exist_ok=True)
+            layout = resolve_layout_name(layout_name)
             cutout_count = _copy_inputs(
                 bundle.source_dir,
                 target_dir,
                 bundle.manifest,
+                max_cutouts=int(layout["columns"]),
             )
             manifest = _custom_manifest(
                 bundle.manifest,
@@ -442,7 +479,6 @@ def create_custom_layout_workspace(
             cutout_manifest = json.loads(
                 cutout_manifest_path.read_text(encoding="utf-8")
             )
-            layout = resolve_layout_name(layout_name)
             cutout_manifest["layout"] = {
                 "name": layout_name,
                 "columns": int(layout["columns"]),

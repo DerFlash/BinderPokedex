@@ -103,6 +103,14 @@ Gewicht:   80-90 g/m² (Standard)
 
 ## ✂️ Nach dem Drucken: Ausschneiden
 
+### Lokale 2×2-Poster auf einer A4-Seite
+
+Ein mit `standard_2x2` erzeugtes Motiv liegt in den vier Feldern links oben:
+Titel links oben, Infobox rechts oben und zwei Pokémon darunter. Die rechte
+Spalte und die untere Reihe des üblichen 3×3-A4-Druckrasters bleiben leer. Die
+vier Poster-Karten werden weiterhin bei **100 % / Tatsächliche Größe** gedruckt
+und anschließend gemeinsam in eine 2×2-Binderseite einsortiert.
+
 ### Lokale 4×3-Poster auf zwei A4-Seiten
 
 Ein mit dem Custom-Layout `wide_4x3` erzeugtes Motiv wird nicht verkleinert.
