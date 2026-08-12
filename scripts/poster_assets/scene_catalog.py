@@ -11,7 +11,7 @@ except ImportError:
     from poster_io import ROOT, SCOPE_DATA, load_json, load_yaml
 
 
-SCENE_CATALOG = ROOT / "config" / "poster_scenes.yaml"
+SCENE_CATALOG = ROOT / "config" / "posters" / "scenes.yaml"
 REQUIRED_SCENE_FIELDS = (
     "concept",
     "setting",

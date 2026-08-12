@@ -47,6 +47,12 @@ jobs:
       - name: Fetch all scope data
         run: python scripts/fetcher/fetch.py --scope all
 
+      - name: Fetch reproducible poster sources
+        run: >-
+          python scripts/poster_assets/fetch_poster_sources.py
+          --all-enabled
+          --kind logos
+
       - name: Validate promoted posters
         run: python scripts/poster_assets/validate_promoted_poster.py --all-enabled
 

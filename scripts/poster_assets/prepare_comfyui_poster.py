@@ -32,7 +32,7 @@ try:
         build_identity_lock_prompt,
         identity_lock_config,
     )
-    from .poster_io import load_poster_scope_data, poster_bundle
+    from .poster_io import POSTER_ASSETS, load_poster_scope_data, poster_bundle
 except ImportError:
     from composition import (
         cutout_placements,
@@ -56,11 +56,10 @@ except ImportError:
         build_identity_lock_prompt,
         identity_lock_config,
     )
-    from poster_io import load_poster_scope_data, poster_bundle
+    from poster_io import POSTER_ASSETS, load_poster_scope_data, poster_bundle
 
 
 ROOT = Path(__file__).resolve().parents[2]
-POSTER_ASSETS = ROOT / "data" / "poster_assets"
 
 
 def build_upper_context_mask(
@@ -153,9 +152,9 @@ def build_identity_lock_references(
 ) -> Path:
     """Write only the assets consumed by the identity-lock workflow."""
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
-    scope_dir = bundle.asset_dir
+    scope_dir = bundle.source_dir
     manifest = bundle.manifest
-    reference_dir = output_dir or scope_dir / "comfyui_poster"
+    reference_dir = output_dir or bundle.work_dir
     reference_dir.mkdir(parents=True, exist_ok=True)
     width, height = output_dimensions(scope, megapixels)
     layout = build_source_layout(
@@ -227,9 +226,9 @@ def build_joint_scene_references(
 ) -> None:
     """Write unscaled identities and, when requested, the spatial cast."""
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
-    scope_dir = bundle.asset_dir
+    scope_dir = bundle.source_dir
     manifest = bundle.manifest
-    reference_dir = output_dir or scope_dir / "comfyui_poster"
+    reference_dir = output_dir or bundle.work_dir
     reference_dir.mkdir(parents=True, exist_ok=True)
     cast_megapixels = min(
         megapixels,
@@ -278,9 +277,9 @@ def build_individual_spatial_joint_references(
 ) -> list[Path]:
     """Write one poster-shaped identity-and-position image per subject."""
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
-    scope_dir = bundle.asset_dir
+    scope_dir = bundle.source_dir
     manifest = bundle.manifest
-    reference_dir = output_dir or scope_dir / "comfyui_poster"
+    reference_dir = output_dir or bundle.work_dir
     reference_dir.mkdir(parents=True, exist_ok=True)
     width, height = output_dimensions(
         bundle.asset_key,
@@ -387,10 +386,10 @@ def prepare(
             f"{effective_reference_mode!r}; expected one of {expected}"
         )
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
-    scope_dir = bundle.asset_dir
-    work_dir = scope_dir / "comfyui_poster"
+    scope_dir = bundle.source_dir
+    work_dir = bundle.work_dir
     required = (
-        scope_dir / "poster.yaml",
+        bundle.manifest_path,
         scope_dir / "cutouts" / "manifest.json",
     )
     for path in required:

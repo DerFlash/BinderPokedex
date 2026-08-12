@@ -44,7 +44,7 @@ def test_base1_full_page_draws_one_continuous_physical_poster():
     )
     assert renderer is not None
     localized_path = (
-        ROOT / "data" / "poster_assets" / "Base1" / "poster-flux2-artwork.png"
+        ROOT / "assets" / "posters" / "Base1" / "poster-flux2-artwork.png"
     )
     renderer._prepare_localized_poster = MagicMock(
         return_value=localized_path,
@@ -225,7 +225,7 @@ def test_base1_poster_source_is_text_free_artwork():
     assert renderer is not None
     try:
         assert renderer.artwork_path == (
-            ROOT / "data" / "poster_assets" / "Base1" / "poster-flux2-artwork.png"
+            ROOT / "assets" / "posters" / "Base1" / "poster-flux2-artwork.png"
         )
         assert renderer.insertion == "after_first_section_cover"
         assert renderer.layout_name == "standard_3x3"
@@ -239,8 +239,8 @@ def test_sv035_poster_source_is_text_free_artwork():
     try:
         assert renderer.artwork_path == (
             ROOT
-            / "data"
-            / "poster_assets"
+            / "assets"
+            / "posters"
             / "SV03.5"
             / "poster-flux2-artwork.png"
         )

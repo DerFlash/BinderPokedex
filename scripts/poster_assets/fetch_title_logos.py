@@ -13,14 +13,13 @@ from PIL import Image
 
 try:
     from .fetch_cutouts import download_bytes
-    from .poster_io import load_poster_scope_data, poster_bundle
+    from .poster_io import POSTER_ASSETS, load_poster_scope_data, poster_bundle
 except ImportError:
     from fetch_cutouts import download_bytes
-    from poster_io import load_poster_scope_data, poster_bundle
+    from poster_io import POSTER_ASSETS, load_poster_scope_data, poster_bundle
 
 
 ROOT = Path(__file__).resolve().parents[2]
-POSTER_ASSETS = ROOT / "data" / "poster_assets"
 OUTPUT_DIR = ROOT / "data" / "output"
 
 
@@ -64,7 +63,7 @@ def resolve_logo_downloads(
 def fetch_title_logos(scope: str, force: bool = False) -> list[Path]:
     """Download and normalize every configured title logo to RGBA PNG."""
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
-    scope_dir = bundle.asset_dir
+    scope_dir = bundle.source_dir
     manifest_path = bundle.manifest_path
     manifest = bundle.manifest
     scope_data = load_poster_scope_data(

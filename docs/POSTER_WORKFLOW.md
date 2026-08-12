@@ -54,11 +54,12 @@ flowchart TD
         SCRATCH --> REVIEW{"Review raw, print master, identity, depth, and all card crops"}
         REVIEW -->|reject| RUN
         REVIEW -->|accept| PROMOTE["Transactional promotion"]
-        PROMOTE --> TRACKED["Tracked master + preview + card slices + provenance"]
+        PROMOTE --> TRACKED["Tracked master + provenance"]
     end
 
     subgraph CONSUME["4 · Deterministic consumers"]
         TRACKED --> ROUTE{"PDF route enabled?"}
+        SOURCES["Fetch reproducible title logos"] --> PDF
         ROUTE -->|no| COVER["Existing section-cover path"]
         ROUTE -->|yes| PDF["PDF builder"]
         OUTPUT --> PDF
@@ -90,17 +91,21 @@ same fallback is selected explicitly by `--skip-poster`.
 
 CI uses the same boundary. Pull requests run a complete, read-only release
 rehearsal that validates promoted posters and builds every PDF, ZIP, and the
-release manifest without publishing a GitHub Release. Tagged releases reuse
-that candidate build and publish only after it succeeds. See
+release manifest without publishing a GitHub Release. Before PDF rendering,
+CI downloads configured title logos into the ignored poster source cache; it
+does not regenerate artwork or download cutouts. Tagged releases reuse that
+candidate build and publish only after it succeeds. See
 [Release Workflow](RELEASE_WORKFLOW.md).
 
-## Choose the render target before GPU work
+## Resolve the render target before GPU work
 
-Starting poster generation requires an explicit operator choice. An agent must
-ask whether the candidate should be rendered on the local Apple Metal/MPS
-machine or on an isolated remote render worker before it starts ComfyUI or
-queues a GPU workflow. A previously used host, an available SSH alias, or a
-reachable ComfyUI process is not permission to select either route.
+Reuse the renderer target configured in ignored state for the current workspace
+or session. Ask whether to use local Apple Metal/MPS or an isolated remote
+worker only when no target is configured yet. The target and all private
+connection values remain machine-local and are never committed.
+The conventional workspace marker is `.poster-renderer.env` with
+`BINDER_POSTER_RENDER_TARGET=local` or `remote`. An agent may maintain that
+ignored file for the operator; a fresh checkout intentionally starts without it.
 
 - **Local:** use the scope-isolated launcher and runner documented below. Keep
   ComfyUI on loopback and keep generated candidates below ignored workspace
@@ -198,8 +203,8 @@ embedded generation run:
 ```bash
 python scripts/poster_assets/promote_comfyui_poster.py \
   --scope Pokedex/sections/gen3 \
-  --artwork data/poster_assets/Pokedex/sections/gen3/poster-flux2-artwork.png \
-  --run-metadata data/poster_assets/Pokedex/sections/gen3/poster-flux2-provenance.json \
+  --artwork assets/posters/Pokedex/sections/gen3/poster-flux2-artwork.png \
+  --run-metadata assets/posters/Pokedex/sections/gen3/poster-flux2-provenance.json \
   --name flux2 \
   --force
 ```
@@ -238,7 +243,7 @@ python scripts/poster_assets/init_poster_scope.py \
 `standard_3x3` is the default and should normally be omitted. The initializer:
 
 - creates the reviewed FLUX.2 `joint_scene` contract;
-- embeds the set-specific creative brief from `config/poster_scenes.yaml`;
+- embeds the set-specific creative brief from `config/posters/scenes.yaml`;
 - derives a stable per-scope seed;
 - selects the canonical featured Pokémon for the bottom row (three for the
   normal 3×3 case, or fewer only when the source section defines fewer);
@@ -258,6 +263,22 @@ python scripts/poster_assets/init_poster_scope.py \
 
 The batch command never overwrites an existing reviewed manifest.
 
+For an existing checkout, reproducible sources can be refreshed independently:
+
+```bash
+# Everything required to prepare a new artwork candidate
+python scripts/poster_assets/fetch_poster_sources.py \
+  --scope SV04
+
+# Only the downloaded overlays needed by PDF generation
+python scripts/poster_assets/fetch_poster_sources.py \
+  --scope SV04 \
+  --kind logos
+```
+
+Both commands write only below `tmp/poster-workspaces/<asset-key>/sources/`.
+They never change the promoted master or provenance.
+
 Aggregate scopes use an ordered routing index plus one isolated leaf manifest
 per section. Initialize all configured Pokédex generation bundles after its
 data fetch with:
@@ -269,7 +290,7 @@ python scripts/poster_assets/init_poster_scope.py \
   --fetch
 ```
 
-This keeps `data/poster_assets/Pokedex/posters.yaml` separate from the nine
+This keeps `config/posters/Pokedex/posters.yaml` separate from the nine
 generation manifests below `Pokedex/sections/`. New bindings begin disabled;
 reviewed bindings can then be enabled independently. Each has its own seed and
 provenance boundary and selects only that generation's three starter
@@ -310,9 +331,9 @@ turn a form back into its base species.
 
 ## 4. Review the creative brief
 
-Review `data/poster_assets/<scope>/poster.yaml` for an individual set, or the
+Review `config/posters/<scope>/poster.yaml` for an individual set, or the
 selected aggregate leaf such as
-`data/poster_assets/Pokedex/sections/gen1/poster.yaml`, especially:
+`config/posters/Pokedex/sections/gen1/poster.yaml`, especially:
 
 - `artwork.scene`;
 - the selected cutouts;
@@ -320,7 +341,7 @@ selected aggregate leaf such as
 - the generation model, seed, and output settings.
 
 Every current individual TCG set has an explicit seed brief in
-`config/poster_scenes.yaml`. The initializer copies that brief into the
+`config/posters/scenes.yaml`. The initializer copies that brief into the
 manifest. The final production prompt is then generated from four inputs:
 
 1. the set-specific creative scene;
@@ -551,8 +572,10 @@ python scripts/poster_assets/validate_promoted_poster.py --scope SV04
 For an aggregate target, use the same asset key for promotion and validation,
 for example `Pokedex/sections/gen1`.
 
-Promotion is transactional and records hashes for models, prompts, source
-figures, references, workflows, and outputs. Exact-source modes require a
+Promotion is transactional and versions only the text-free master plus its
+provenance. Localized previews, physical crops, downloaded cutouts, and title
+logos live below `tmp/`. The audit records hashes for models, prompts, source
+figures, references, workflows, and the durable master. Exact-source modes require a
 passed `exact_opaque_source_pixels` record; changing the manifest engine or
 supplying otherwise matching hashes cannot bypass that gate.
 
@@ -595,9 +618,13 @@ The persisted `insertion` values identify the first or matching section for
 backward-compatible routing. Once selected, the enabled poster replaces that
 section's cover; it is no longer emitted as an additional page after it.
 
-The ordinary PDF command then consumes the promoted local artwork:
+After fetching scope data, download any configured title-logo overlays and
+then consume the promoted local artwork:
 
 ```bash
+python scripts/poster_assets/fetch_poster_sources.py \
+  --scope SV04 \
+  --kind logos
 python scripts/pdf/generate_pdf.py --scope SV04 --language de
 ```
 
@@ -682,7 +709,7 @@ Before initializing the new scope:
 
 1. add its regular fetch configuration;
 2. fetch its generated `data/output/<scope>.json`;
-3. add one explicit creative brief to `config/poster_scenes.yaml`;
+3. add one explicit creative brief to `config/posters/scenes.yaml`;
 4. run the tests, which require exact catalog coverage with no missing or stale
    TCG-set entries;
 5. follow the lifecycle above.

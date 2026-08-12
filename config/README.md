@@ -10,7 +10,10 @@ config/
 │   ├── Pokedex.yaml
 │   ├── ExGen1.yaml
 │   └── SV01.yaml
-└── poster_scenes.yaml      # Creative poster brief for every TCG set
+└── posters/
+    ├── defaults.yaml       # Defaults only for newly initialized manifests
+    ├── scenes.yaml         # Creative poster brief for every TCG set
+    └── <asset-key>/        # Reviewed poster manifests and routing indexes
 
 enrichments/         # Static enrichment data
 ├── translations_es.json
@@ -22,6 +25,13 @@ data/                # Generated/temporary data
 ├── ExGen1_All.json
 └── ExGen1_Single.json
 ```
+
+Poster configuration deliberately lives under `config/posters/`, while only
+reviewed masters and their provenance live under `assets/posters/`. Downloaded
+cutouts and title logos, generated previews, card crops, model workflows, and
+raw renderer output belong under the ignored `tmp/poster-workspaces/` tree.
+A reset of `data/` therefore cannot delete poster configuration or promoted
+artwork; a reset of `tmp/` only removes reproducible inputs and derivatives.
 
 ## Scopes
 
@@ -76,7 +86,7 @@ See [../enrichments/README.md](../enrichments/README.md) for enrichment data doc
 1. Create a new YAML file in `config/scopes/`
 2. Define the scope name, description, and pipeline
 3. For an individual TCG set, add its creative poster brief to
-   `config/poster_scenes.yaml`
+   `config/posters/scenes.yaml`
 4. Test with fetch script: `python scripts/fetcher/fetch.py --scope YourScope`
 5. Follow [the poster workflow](../docs/POSTER_WORKFLOW.md) when the scope should
    receive an optional poster

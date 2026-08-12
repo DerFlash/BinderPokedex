@@ -1622,7 +1622,7 @@ def test_validator_rejects_an_unknown_pipeline_contract(
         validator.validate("Example")
 
 
-def test_validator_rejects_reordered_card_provenance(
+def test_validator_rejects_durable_artwork_hash_drift(
     tmp_path,
     monkeypatch,
 ):
@@ -1642,11 +1642,10 @@ def test_validator_rejects_reordered_card_provenance(
         run_metadata_path=run_metadata,
     )
     promoted = load_json(provenance_path)
-    cards = promoted["outputs"]["cards"]
-    cards[0], cards[1] = cards[1], cards[0]
+    promoted["outputs"]["artwork"]["sha256"] = "0" * 64
     provenance_path.write_text(json.dumps(promoted), encoding="utf-8")
 
-    with pytest.raises(ValueError, match="Promoted card routes"):
+    with pytest.raises(ValueError, match="Hash mismatch"):
         validator.validate("Example")
 
 

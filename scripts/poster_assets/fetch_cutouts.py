@@ -23,7 +23,7 @@ from PIL import Image
 
 try:
     from .layout import build_page_layout
-    from .poster_io import load_poster_scope_data, poster_bundle
+    from .poster_io import POSTER_ASSETS, load_poster_scope_data, poster_bundle
     from .poster_subject import (
         manifest_subject_fields,
         poster_display_name_from_card,
@@ -32,7 +32,7 @@ try:
     )
 except ImportError:  # Direct script execution
     from layout import build_page_layout
-    from poster_io import load_poster_scope_data, poster_bundle
+    from poster_io import POSTER_ASSETS, load_poster_scope_data, poster_bundle
     from poster_subject import (
         manifest_subject_fields,
         poster_display_name_from_card,
@@ -43,7 +43,7 @@ except ImportError:  # Direct script execution
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parent.parent
-POSTER_ASSETS_DIR = REPO_ROOT / "data" / "poster_assets"
+POSTER_ASSETS_DIR = POSTER_ASSETS
 OUTPUT_DIR = REPO_ROOT / "data" / "output"
 USER_AGENT = "BinderPokedex poster-assets/1.0"
 MIN_SIZE = 350
@@ -346,7 +346,7 @@ def build_manifest_item(
 
 def fetch_cutouts(scope: str, force: bool = False) -> int:
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS_DIR)
-    scope_dir = bundle.asset_dir
+    scope_dir = bundle.source_dir
     manifest = bundle.manifest
     scope_data = load_poster_scope_data(
         bundle,

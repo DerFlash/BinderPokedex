@@ -76,7 +76,7 @@ back over that teacher scene at their original pixels:
 ```bash
 python -m scripts.poster_assets.training_dataset compose-target \
   --edited-scene tmp/poster-training/v0/scene-edit.png \
-  --source-reference data/poster_assets/SCOPE/comfyui_poster/inpaint_reference.png \
+  --source-reference tmp/poster-workspaces/SCOPE/comfyui_poster/inpaint_reference.png \
   --output tmp/poster-training/v0/aligned-target.png
 ```
 
@@ -106,7 +106,7 @@ explicit RGBA foreground layer last:
 ```bash
 python -m scripts.poster_assets.training_dataset compose-occlusion-target \
   --edited-scene tmp/poster-training/v0/SCENE/integrated-scene.png \
-  --source-reference data/poster_assets/SCOPE/comfyui_poster/inpaint_reference.png \
+  --source-reference tmp/poster-workspaces/SCOPE/comfyui_poster/inpaint_reference.png \
   --foreground-layer tmp/poster-training/v0/SCENE/foreground-layer.png \
   --output tmp/poster-training/v0/SCENE/front-target.png
 ```

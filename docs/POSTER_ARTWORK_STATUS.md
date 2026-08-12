@@ -212,11 +212,12 @@ texture, character pixels, or a post-decode composite.
 
 ## Cleanup boundary
 
-Generated references, workflows, candidates, run metadata, PDF smoke tests, and
-rendered QA pages are ignored local scratch. Promoted masters, previews, card
-slices, and provenance are versioned. Rejected implementations remain only in
-Git history and the experiment log. Production tests call the canonical
-workflow builders directly; retired experiment entry points are not retained.
+Downloaded cutouts and set logos, generated references, workflows, candidates,
+run metadata, PDF smoke tests, localized previews, card slices, and rendered QA
+pages are ignored local scratch. Only promoted masters and their provenance are
+versioned as poster raster assets. Rejected implementations remain only in Git
+history and the experiment log. Production tests call the canonical workflow
+builders directly; retired experiment entry points are not retained.
 
 ## Verification
 
@@ -228,10 +229,13 @@ python -m scripts.poster_assets.validate_promoted_poster --all-enabled
 python -m scripts.poster_assets.poster_work_plan --all-configured
 ```
 
-Core branch verification rerun on 2026-08-10:
+Core branch verification rerun on 2026-08-12:
 
-- the project suite passes with `550 passed, 1 skipped`;
+- the project suite passes with `568 passed, 1 skipped`;
 - all 41 enabled poster bundles validate;
+- all 41 promotions also validate from an empty poster-source cache, using
+  their audited provenance rather than repository copies of downloaded
+  cutouts;
 - the planner reports all 41 configured targets as current and PDF-enabled;
 - a fresh German ExGen2 build with remote card images disabled succeeds with
   127 entries and 19 pages;

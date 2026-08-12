@@ -35,6 +35,7 @@ try:
     from .poster_config import build_identity_lock_prompt, identity_lock_config
     from .poster_io import (
         POSTER_ASSETS,
+        POSTER_CONFIGS,
         POSTER_INDEX_NAME,
         POSTER_MANIFEST_NAME,
         SCOPE_DATA,
@@ -52,6 +53,7 @@ try:
         fingerprint_record_is_valid,
         generation_fingerprint_pipeline_contract_version,
         prompt_path_for_generation,
+        rebuild_generation_fingerprint_from_recorded_sources,
         required_model_artifact_hashes,
         sha256_file,
     )
@@ -81,6 +83,7 @@ except ImportError:  # Direct script execution
     from poster_config import build_identity_lock_prompt, identity_lock_config
     from poster_io import (
         POSTER_ASSETS,
+        POSTER_CONFIGS,
         POSTER_INDEX_NAME,
         POSTER_MANIFEST_NAME,
         SCOPE_DATA,
@@ -98,6 +101,7 @@ except ImportError:  # Direct script execution
         fingerprint_record_is_valid,
         generation_fingerprint_pipeline_contract_version,
         prompt_path_for_generation,
+        rebuild_generation_fingerprint_from_recorded_sources,
         required_model_artifact_hashes,
         sha256_file,
     )
@@ -190,12 +194,12 @@ def _safe_local_asset(scope_dir: Path, value: object, label: str) -> Path:
     return result
 
 
-def _configured_roots(poster_assets: Path) -> list[str]:
-    if not poster_assets.is_dir():
+def _configured_roots(poster_configs: Path) -> list[str]:
+    if not poster_configs.is_dir():
         return []
     return [
         path.name
-        for path in sorted(poster_assets.iterdir(), key=lambda item: item.name)
+        for path in sorted(poster_configs.iterdir(), key=lambda item: item.name)
         if path.is_dir()
         and (
             (path / POSTER_MANIFEST_NAME).is_file()
@@ -288,6 +292,7 @@ def _resolve_targets(
     requested_scope: str,
     *,
     poster_assets: Path,
+    poster_configs: Path,
     scope_data_dir: Path,
 ) -> list[PosterBundle] | WorkItem:
     scope_parts = requested_scope.split("/")
@@ -305,7 +310,7 @@ def _resolve_targets(
             error=ValueError(f"Unsafe poster scope: {requested_scope!r}"),
         )
     root_scope = requested_scope.split("/", 1)[0]
-    root_dir = poster_assets / root_scope
+    root_dir = poster_configs / root_scope
     if not (
         (root_dir / POSTER_MANIFEST_NAME).is_file()
         or (root_dir / POSTER_INDEX_NAME).is_file()
@@ -318,6 +323,7 @@ def _resolve_targets(
         bundles = poster_bundles_for_scope(
             root_scope,
             poster_assets=poster_assets,
+            poster_configs=poster_configs,
         )
     except Exception as error:
         return _blocked_item(
@@ -566,7 +572,7 @@ def _cutout_asset_issues(
         bundle.manifest,
         scope_data,
     )
-    path = bundle.asset_dir / "cutouts" / "manifest.json"
+    path = bundle.source_dir / "cutouts" / "manifest.json"
     if not path.is_file():
         return ["cutout_manifest_missing"], [], None
     try:
@@ -661,7 +667,7 @@ def _cutout_asset_issues(
             continue
         try:
             file_path = _safe_local_asset(
-                bundle.asset_dir / "cutouts",
+                bundle.source_dir / "cutouts",
                 item.get("file"),
                 "cutout file",
             )
@@ -715,7 +721,7 @@ def _logo_asset_issues(
     for _language, relative_file, _url in downloads:
         try:
             path = _safe_local_asset(
-                bundle.asset_dir,
+                bundle.source_dir,
                 relative_file,
                 "title-logo file",
             )
@@ -740,7 +746,7 @@ def _logo_asset_issues(
     return list(_unique(issues)), None
 
 
-def _promotion_paths(bundle: PosterBundle) -> tuple[Path, Path, Path, Path]:
+def _promotion_paths(bundle: PosterBundle) -> tuple[Path, Path]:
     artwork = bundle.manifest.get("artwork", {})
     if not isinstance(artwork, dict):
         raise ValueError("artwork must be a mapping")
@@ -754,18 +760,7 @@ def _promotion_paths(bundle: PosterBundle) -> tuple[Path, Path, Path, Path]:
         artwork.get("promoted_file", "poster-flux2-artwork.png"),
         "promoted artwork file",
     )
-    preview = _safe_local_asset(
-        bundle.asset_dir,
-        artwork.get("preview_file", "poster-flux2.png"),
-        "promoted preview file",
-    )
-    cards = preview.with_name(f"{preview.stem}-cards")
-    return (
-        provenance,
-        promoted,
-        preview,
-        cards,
-    )
+    return provenance, promoted
 
 
 def _promotion_drift_codes(
@@ -782,7 +777,7 @@ def _promotion_drift_codes(
     overlay_drift: list[str] = []
     pipeline_notes: list[str] = []
     if (
-        provenance.get("schema_version") != 1
+        provenance.get("schema_version") not in {1, 2}
         or provenance.get("kind") != "promoted_poster"
         or provenance.get("scope") != bundle.asset_key
     ):
@@ -852,7 +847,7 @@ def _promotion_drift_codes(
         else:
             current_prompt_hash = sha256_file(
                 prompt_path_for_generation(
-                    bundle.asset_dir / "comfyui_poster",
+                    bundle.work_dir,
                     generation,
                 )
             )
@@ -891,10 +886,12 @@ def _promotion_drift_codes(
                     recorded_generation,
                 )
             )
-            current_generation_fingerprint = build_generation_fingerprint(
-                bundle,
-                scope_data_dir=scope_data_dir,
-                pipeline_contract_version=stored_contract,
+            current_generation_fingerprint = (
+                rebuild_generation_fingerprint_from_recorded_sources(
+                    bundle,
+                    stored_generation_fingerprint,
+                    scope_data_dir=scope_data_dir,
+                )
             )
             if (
                 stored_generation_fingerprint.get("sha256")
@@ -921,6 +918,7 @@ def _promotion_drift_codes(
             current_overlay_fingerprint = build_overlay_fingerprint(
                 bundle,
                 scope_data_dir=scope_data_dir,
+                recorded=stored_overlay_fingerprint,
             )
             if (
                 stored_overlay_fingerprint.get("sha256")
@@ -985,12 +983,7 @@ def _plan_bundle(
         )
 
     try:
-        (
-            provenance_path,
-            artwork_path,
-            preview_path,
-            cards_path,
-        ) = _promotion_paths(bundle)
+        provenance_path, artwork_path = _promotion_paths(bundle)
     except Exception as error:
         return WorkItem(
             **base,
@@ -1001,13 +994,7 @@ def _plan_bundle(
         )
     promotion_present = provenance_path.is_file()
     any_promotion_asset = any(
-        path.exists()
-        for path in (
-            provenance_path,
-            artwork_path,
-            preview_path,
-            cards_path,
-        )
+        path.exists() for path in (provenance_path, artwork_path)
     )
     if not _contains_catalog_contract(configured_scene, expected_scene):
         state = "promotion_stale" if promotion_present else "blocked"
@@ -1217,6 +1204,7 @@ def build_work_plan(
     scope: str | None = None,
     all_configured: bool = False,
     poster_assets: Path = POSTER_ASSETS,
+    poster_configs: Path | None = None,
     scope_data_dir: Path = SCOPE_DATA,
     scene_catalog_path: Path = SCENE_CATALOG,
     promotion_validator: PromotionValidator | None = None,
@@ -1224,9 +1212,12 @@ def build_work_plan(
     """Build a deterministic poster work plan without changing local state."""
     if (scope is None) == (not all_configured):
         raise ValueError("Choose exactly one of scope or all_configured")
+    config_root = poster_configs or (
+        POSTER_CONFIGS if poster_assets == POSTER_ASSETS else poster_assets
+    )
     validator = promotion_validator or validate
     requested = (
-        _configured_roots(poster_assets)
+        _configured_roots(config_root)
         if all_configured
         else [str(scope)]
     )
@@ -1235,6 +1226,7 @@ def build_work_plan(
         resolved = _resolve_targets(
             requested_scope,
             poster_assets=poster_assets,
+            poster_configs=config_root,
             scope_data_dir=scope_data_dir,
         )
         if isinstance(resolved, WorkItem):

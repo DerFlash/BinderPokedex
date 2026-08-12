@@ -21,7 +21,14 @@ try:
     from .finalize_comfyui_poster import SUPPORTED_LANGUAGES
     from .generation_contract import CANONICAL_REFERENCE_MODES
     from .layout import DEFAULT_LAYOUT_NAME, LAYOUTS, resolve_layout_name
-    from .poster_io import POSTER_ASSETS, SCOPE_DATA, load_json, load_yaml
+    from .poster_io import (
+        POSTER_ASSETS,
+        POSTER_CONFIGS,
+        POSTER_DEFAULTS,
+        SCOPE_DATA,
+        load_json,
+        load_yaml,
+    )
     from .scene_catalog import scene_for_scope, section_scenes_for_scope
 except ImportError:
     from fetch_cutouts import (
@@ -33,12 +40,38 @@ except ImportError:
     from finalize_comfyui_poster import SUPPORTED_LANGUAGES
     from generation_contract import CANONICAL_REFERENCE_MODES
     from layout import DEFAULT_LAYOUT_NAME, LAYOUTS, resolve_layout_name
-    from poster_io import POSTER_ASSETS, SCOPE_DATA, load_json, load_yaml
+    from poster_io import (
+        POSTER_ASSETS,
+        POSTER_CONFIGS,
+        POSTER_DEFAULTS,
+        SCOPE_DATA,
+        load_json,
+        load_yaml,
+    )
     from scene_catalog import scene_for_scope, section_scenes_for_scope
 
 
 FALLBACK_POKEMON = (25, 1, 4, 7, 133, 6)
 SAFE_IDENTIFIER = re.compile(r"[A-Za-z0-9._-]+")
+_DEFAULT_POSTER_ASSETS = POSTER_ASSETS
+
+
+def _poster_config_root() -> Path:
+    """Keep explicit legacy/test roots combined while production is split."""
+    return (
+        POSTER_CONFIGS
+        if POSTER_ASSETS == _DEFAULT_POSTER_ASSETS
+        else POSTER_ASSETS
+    )
+
+
+def _generation_defaults() -> dict[str, Any]:
+    defaults = load_yaml(POSTER_DEFAULTS).get("generation")
+    if not isinstance(defaults, dict) or not defaults:
+        raise ValueError(
+            f"Poster defaults need a non-empty generation mapping: {POSTER_DEFAULTS}"
+        )
+    return defaults
 
 
 def _validate_identifier(value: object, label: str) -> str:
@@ -151,7 +184,6 @@ def build_default_manifest(
         },
         "artwork": {
             "promoted_file": "poster-flux2-artwork.png",
-            "preview_file": "poster-flux2.png",
             "provenance_file": "poster-flux2-provenance.json",
             "identity_lock": {
                 "overscan_ratio": 0.04,
@@ -270,7 +302,6 @@ def build_section_manifest(
         "text_content": {"mode": "section_summary"},
         "artwork": {
             "promoted_file": "poster-flux2-artwork.png",
-            "preview_file": "poster-flux2.png",
             "provenance_file": "poster-flux2-provenance.json",
             "identity_lock": {
                 "overscan_ratio": 0.04,
@@ -329,17 +360,9 @@ def init_section_scope(
             f"Section scene coverage mismatch for {scope}: "
             f"missing={missing}, stale={stale}"
         )
-    template_path = POSTER_ASSETS / "Base1" / "poster.yaml"
-    if not template_path.is_file():
-        raise FileNotFoundError(
-            f"Reviewed generation template not found: {template_path}"
-        )
-    generation_template = load_yaml(template_path).get(
-        "artwork",
-        {},
-    ).get("generation", {})
+    generation_template = _generation_defaults()
 
-    scope_dir = POSTER_ASSETS / scope
+    scope_dir = _poster_config_root() / scope
     scope_dir.mkdir(parents=True, exist_ok=True)
     bindings = []
     created: list[Path] = []
@@ -450,17 +473,8 @@ def init_scope(
     scope_data_path = SCOPE_DATA / f"{scope}.json"
     if not scope_data_path.is_file():
         raise FileNotFoundError(scope_data_path)
-    template_path = POSTER_ASSETS / "Base1" / "poster.yaml"
-    if not template_path.is_file():
-        raise FileNotFoundError(
-            f"Reviewed generation template not found: {template_path}"
-        )
-
     scope_data = load_json(scope_data_path)
-    generation_template = load_yaml(template_path).get(
-        "artwork",
-        {},
-    ).get("generation", {})
+    generation_template = _generation_defaults()
     scene = (
         scene_for_scope(scope)
         if scope_data.get("type") == "tcg_set"
@@ -473,7 +487,7 @@ def init_scope(
         generation_template,
         scene,
     )
-    scope_dir = POSTER_ASSETS / scope
+    scope_dir = _poster_config_root() / scope
     manifest_path = scope_dir / "poster.yaml"
     if manifest_path.exists() and not force:
         raise FileExistsError(
@@ -515,7 +529,7 @@ def init_missing_tcg_scopes(
     created = []
     skipped = []
     for scope in available_tcg_scopes():
-        manifest_path = POSTER_ASSETS / scope / "poster.yaml"
+        manifest_path = _poster_config_root() / scope / "poster.yaml"
         if manifest_path.exists():
             skipped.append(manifest_path)
             continue

@@ -11,6 +11,7 @@ from PIL import Image, ImageDraw, ImageFilter
 try:
     from .layout import build_image_layout
     from .poster_io import (
+        POSTER_ASSETS,
         load_poster_scope_data,
         poster_bundle,
     )
@@ -21,7 +22,7 @@ try:
     )
 except ImportError:
     from layout import build_image_layout
-    from poster_io import load_poster_scope_data, poster_bundle
+    from poster_io import POSTER_ASSETS, load_poster_scope_data, poster_bundle
     from typography import (
         draw_text_centered,
         load_font,
@@ -30,7 +31,6 @@ except ImportError:
 
 
 ROOT = Path(__file__).resolve().parents[2]
-POSTER_ASSETS = ROOT / "data" / "poster_assets"
 SUPPORTED_LANGUAGES = (
     "de",
     "en",
@@ -600,7 +600,7 @@ def finalize(scope: str, input_path: Path, output_path: Path | None = None, lang
     if language not in SUPPORTED_LANGUAGES:
         raise ValueError(f"Unsupported language: {language}")
     bundle = poster_bundle(scope, poster_assets=POSTER_ASSETS)
-    scope_dir = bundle.asset_dir
+    scope_dir = bundle.source_dir
     manifest = bundle.manifest
     scope_data = load_poster_scope_data(bundle)
 

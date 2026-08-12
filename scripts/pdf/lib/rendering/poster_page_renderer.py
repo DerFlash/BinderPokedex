@@ -18,7 +18,6 @@ from .page_renderer import PageRenderer
 
 logger = logging.getLogger(__name__)
 PROJECT_ROOT = Path(__file__).resolve().parents[4]
-POSTER_ASSETS = PROJECT_ROOT / "data" / "poster_assets"
 
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -31,6 +30,7 @@ from scripts.poster_assets.layout import (  # noqa: E402
     resolve_layout_name,
 )
 from scripts.poster_assets.poster_io import (  # noqa: E402
+    POSTER_ASSETS,
     PosterBundle,
     poster_asset_slug,
     poster_bundles_for_scope,

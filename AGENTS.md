@@ -2,10 +2,18 @@
 
 ## Poster artwork generation
 
-Before starting any GPU-intensive poster artwork generation, ask the operator
-whether the candidate should be rendered locally or on a remote worker. Do not
-infer the target from a previously used host, an available SSH configuration,
-or a running ComfyUI process.
+Before starting GPU-intensive poster artwork generation, reuse the renderer
+target already configured for the current local workspace or session. Ask
+whether the candidate should be rendered locally or on a remote worker only if
+no target is configured yet, and record that choice only in ignored, machine-local
+workspace state. Never infer a target from arbitrary network discovery or a
+ComfyUI process that is unrelated to the configured workspace.
+
+Use `.poster-renderer.env` as the conventional ignored workspace marker.
+`BINDER_POSTER_RENDER_TARGET` is `local` or `remote`; a remote marker
+may also contain the private `BINDER_RENDER_*` values from the worker guide.
+Reuse a valid marker without asking again. A fresh checkout has no marker and
+therefore requires one operator choice before its first GPU render.
 
 - For a local Apple Metal/MPS render, follow
   `docs/POSTER_WORKFLOW.md` and keep the ComfyUI input/output directories scoped
@@ -23,7 +31,14 @@ or a running ComfyUI process.
 - Always bring back `run.json`, `comfyui.log`, and every output image. A
   successful render is not approval: inspect the full poster and all physical
   card crops before any promotion.
+- Treat downloaded cutouts and set logos as reproducible source-cache files.
+  Fetch them with `fetch_poster_sources.py` below the ignored
+  `tmp/poster-workspaces/<asset-key>/sources/` tree and never commit them.
+  Promotion commits only the reviewed text-free master and its provenance;
+  provenance retains the exact source hashes used for the review.
 
 This choice applies only to artwork generation. Fetching data, deterministic
 localization, slicing, PDF rendering, and release validation do not require a
-render worker.
+render worker. TCG PDF builds must fetch their configured title logos with
+`fetch_poster_sources.py --kind logos`; Pokédex posters use deterministic text
+titles and do not require that download.

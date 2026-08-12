@@ -29,7 +29,18 @@ while (($#)); do
   esac
 done
 
-EXPERIMENT_DIR="$ROOT_DIR/data/poster_assets/$POSTER_SCOPE/comfyui_poster"
+if [[ -n "${BINDER_POKEDEX_POSTER_ASSETS:-}" ]]; then
+  POSTER_CONFIG_ROOT="$BINDER_POKEDEX_POSTER_ASSETS"
+  POSTER_WORK_ROOT="$BINDER_POKEDEX_POSTER_ASSETS"
+else
+  POSTER_CONFIG_ROOT="$ROOT_DIR/config/posters"
+  POSTER_WORK_ROOT="$ROOT_DIR/tmp/poster-workspaces"
+fi
+if [[ "$POSTER_CONFIG_ROOT" != /* ]]; then
+  POSTER_CONFIG_ROOT="$ROOT_DIR/$POSTER_CONFIG_ROOT"
+  POSTER_WORK_ROOT="$ROOT_DIR/$POSTER_WORK_ROOT"
+fi
+EXPERIMENT_DIR="$POSTER_WORK_ROOT/$POSTER_SCOPE/comfyui_poster"
 if ((${#COMFY_ARGS[@]})); then
   set -- "${COMFY_ARGS[@]}"
 else
@@ -40,7 +51,7 @@ if [[ ! -x "$COMFY_PY" || ! -f "$COMFY_ROOT/main.py" ]]; then
   echo "ComfyUI installation not found. Set COMFY_ROOT and COMFY_PY." >&2
   exit 1
 fi
-if [[ ! -f "$ROOT_DIR/data/poster_assets/$POSTER_SCOPE/poster.yaml" ]]; then
+if [[ ! -f "$POSTER_CONFIG_ROOT/$POSTER_SCOPE/poster.yaml" ]]; then
   echo "Poster scope not found: $POSTER_SCOPE" >&2
   exit 1
 fi

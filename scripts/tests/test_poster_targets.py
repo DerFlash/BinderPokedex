@@ -15,11 +15,13 @@ from scripts.poster_assets.finalize_comfyui_poster import (
     resolved_title_text,
     title_logo_file,
 )
+from scripts.poster_assets.fetch_title_logos import resolve_logo_downloads
 from scripts.poster_assets.typography import load_font, wrap_text
 from scripts.poster_assets.init_poster_scope import (
     build_section_manifest,
 )
 from scripts.poster_assets.poster_io import (
+    POSTER_CONFIGS,
     load_poster_scope_data,
     poster_bundle,
     poster_bundles_for_scope,
@@ -31,14 +33,56 @@ from scripts.poster_assets.validate_promoted_poster import enabled_poster_scopes
 
 
 ROOT = Path(__file__).resolve().parents[2]
-POSTER_ASSETS = ROOT / "data" / "poster_assets"
+POSTER_CONFIG_ROOT = POSTER_CONFIGS
 
 
 def test_every_current_poster_target_has_a_checked_in_manifest():
-    manifests = list(POSTER_ASSETS.glob("*/poster.yaml"))
-    manifests.extend(POSTER_ASSETS.glob("*/sections/*/poster.yaml"))
+    manifests = list(POSTER_CONFIG_ROOT.glob("*/poster.yaml"))
+    manifests.extend(POSTER_CONFIG_ROOT.glob("*/sections/*/poster.yaml"))
 
     assert len(manifests) == 41
+
+
+def test_poster_storage_classes_are_separate_and_complete():
+    bundles = [
+        bundle
+        for scope in sorted(
+            path.name
+            for path in POSTER_CONFIG_ROOT.iterdir()
+            if path.is_dir()
+        )
+        for bundle in poster_bundles_for_scope(scope)
+    ]
+
+    assert len(bundles) == 41
+    assert all(
+        bundle.config_dir.is_relative_to(POSTER_CONFIG_ROOT)
+        for bundle in bundles
+    )
+    assert all(
+        bundle.asset_dir.is_relative_to(ROOT / "assets" / "posters")
+        for bundle in bundles
+    )
+    assert all(
+        bundle.work_dir.is_relative_to(ROOT / "tmp" / "poster-workspaces")
+        for bundle in bundles
+    )
+    assert all(
+        bundle.source_dir.is_relative_to(
+            ROOT / "tmp" / "poster-workspaces"
+        )
+        for bundle in bundles
+    )
+    assert not (ROOT / "data" / "poster_assets").exists()
+    assert not list((ROOT / "assets" / "posters").rglob("poster-flux2.png"))
+    assert not list(
+        (ROOT / "assets" / "posters").rglob(
+            "poster-flux2-cards/card_r*_c*.png"
+        )
+    )
+    assert not list((ROOT / "assets" / "posters").rglob("cutouts/*"))
+    assert not list((ROOT / "assets" / "posters").rglob("logos/*"))
+    assert not list((ROOT / "assets" / "posters").rglob("logo.png"))
 
 
 @pytest.mark.parametrize(
@@ -52,14 +96,23 @@ def test_curated_posters_use_three_card_safe_subjects(scope, expected_ids):
     bundle = poster_bundle(scope)
     source = load_poster_scope_data(bundle)
     featured = source["sections"]["all"]["featured_elements"]
-    cutouts = json.loads(
-        (bundle.asset_dir / "cutouts" / "manifest.json").read_text(
+    provenance = json.loads(
+        (
+            bundle.asset_dir / "poster-flux2-provenance.json"
+        ).read_text(
             encoding="utf-8"
         )
-    )["items"]
+    )
+    approved_subjects = (
+        provenance["run"]["inputs"]["generation_fingerprint"]
+        ["components"]["source_subject_ids"]
+    )
 
     assert [item["pokemon_id"] for item in featured] == expected_ids
-    assert [item["pokemon_id"] for item in cutouts] == expected_ids
+    assert [
+        item if isinstance(item, int) else item["pokemon_id"]
+        for item in approved_subjects
+    ] == expected_ids
 
 
 def test_every_generated_pdf_language_has_complete_poster_copy():
@@ -67,7 +120,7 @@ def test_every_generated_pdf_language_has_complete_poster_copy():
     configured_scopes = {
         path.parent.name
         for pattern in ("*/poster.yaml", "*/posters.yaml")
-        for path in POSTER_ASSETS.glob(pattern)
+        for path in POSTER_CONFIG_ROOT.glob(pattern)
     }
     for scope in sorted(configured_scopes):
         for bundle in poster_bundles_for_scope(scope):
@@ -83,8 +136,16 @@ def test_every_generated_pdf_language_has_complete_poster_copy():
             for language in languages:
                 logo_file = title_logo_file(bundle.manifest, language)
                 if logo_file:
-                    if bundle.pdf_enabled:
-                        assert (bundle.asset_dir / logo_file).is_file()
+                    downloads = {
+                        relative_file: url
+                        for _logo_language, relative_file, url in (
+                            resolve_logo_downloads(
+                                bundle.manifest,
+                                scope_data,
+                            )
+                        )
+                    }
+                    assert downloads.get(logo_file)
                     header_text = None
                 else:
                     header_text = resolved_title_text(scope_data, language)
@@ -119,8 +180,8 @@ def test_every_generated_pdf_language_has_complete_poster_copy():
 
 def test_standalone_poster_manifests_remain_isolated_single_bundles():
     expected_hashes = {
-        "Base1": "31f000f6dc70660616a7f32b2479e9c6e35dc473a126f2653a6b066f284f2856",
-        "SV03.5": "eb43270bbea4be0cba17e42d02796d36777bb0536e1fd61966fa53794b2f4dd6",
+        "Base1": "30fe44df5f2e99596d9b80a879371ed7549299a9e7e192e26f6cb066f94cf36b",
+        "SV03.5": "30fcaeaa7b80f2cc5709461afc7f9178451940e0c8b911bedacbae8c030d2173",
     }
 
     for scope, expected_hash in expected_hashes.items():
