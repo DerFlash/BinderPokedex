@@ -2,32 +2,38 @@
 
 ## Poster artwork generation
 
-Before starting GPU-intensive poster artwork generation, reuse the renderer
-target already configured for the current local workspace or session. Ask
-whether the candidate should be rendered locally or on a remote worker only if
-no target is configured yet, and record that choice only in ignored, machine-local
-workspace state. Never infer a target from arbitrary network discovery or a
-ComfyUI process that is unrelated to the configured workspace.
+Before starting GPU-intensive poster artwork generation, resolve the active
+poster workspace and look for its ignored `renderer.local.yaml` marker. The
+default marker lives in `tmp/poster-workspaces/`; a custom combined workspace
+uses its `$BINDER_POKEDEX_POSTER_ASSETS` root.
+If that marker contains a complete local or remote configuration, reuse it for
+the current workspace without asking again. Ask the operator to choose local or
+remote only when the workspace is fresh, the marker is missing or incomplete,
+the configured worker is unreachable, or the operator explicitly requests a
+different target. Do not infer a target from conversation history, unrelated
+SSH state, or a running ComfyUI process.
 
-Use `.poster-renderer.env` as the conventional ignored workspace marker.
-`BINDER_POSTER_RENDER_TARGET` is `local` or `remote`; a remote marker
-may also contain the private `BINDER_RENDER_*` values from the worker guide.
-Reuse a valid marker without asking again. A fresh checkout has no marker and
-therefore requires one operator choice before its first GPU render.
+After the operator chooses a target, write or update that workspace marker and
+restrict it to the current user. The marker may contain the target plus private SSH alias and runtime,
+model-cache, job, and repository paths. It is workspace-local operator state:
+never stage, commit, quote in reports, or copy it into render jobs or
+provenance. A newly created custom workspace has no marker and therefore asks
+once.
 
 - For a local Apple Metal/MPS render, follow
   `docs/POSTER_WORKFLOW.md` and keep the ComfyUI input/output directories scoped
   to the selected poster asset key.
-- For a remote render, follow `docs/POSTER_RENDER_WORKER.md`. Ask for an SSH
-  alias and the private runtime, model-cache, job, and repository paths only
-  when the operator selects this route. Help probe, bootstrap or transfer the
-  disposable runtime, execute and retrieve the immutable render job, and clean
-  up the runtime, but leave authentication to the operator's existing SSH
-  setup.
-- Never commit real hostnames, IP addresses, usernames, SSH aliases,
-  machine-specific paths, tokens, or keys. Never print secret material such as
-  private keys or access tokens. Do not expose ComfyUI on a public interface;
-  the remote worker must bind to loopback and queue the workflow on that host.
+- For a remote render, follow `docs/POSTER_RENDER_WORKER.md`. Ask only for
+  configuration values absent from the active workspace marker. Help probe,
+  bootstrap or transfer the disposable runtime, execute and retrieve the
+  immutable render job, and clean up the runtime, but leave authentication to
+  the operator's existing SSH setup.
+- Never commit or report real hostnames, IP addresses, usernames, SSH aliases,
+  machine-specific paths, tokens, or keys. Private connection values may exist
+  only in the ignored local marker or the operator's SSH configuration. Never
+  print secret material such as private keys or access tokens. Do not expose
+  ComfyUI on a public interface; the remote worker must bind to loopback and
+  queue the workflow on that host.
 - Always bring back `run.json`, `comfyui.log`, and every output image. A
   successful render is not approval: inspect the full poster and all physical
   card crops before any promotion.

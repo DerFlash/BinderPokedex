@@ -44,23 +44,42 @@ review `comfyui.log` whenever per-stage device placement matters.
 
 ## Agent/operator handshake
 
-Before any GPU process starts, use the **local** or **remote** target already
-configured in ignored state for this workspace or session. An artwork-generating
-agent asks for that choice only when no target has been configured yet.
-If local is selected, return to the local launcher in
+Each poster-assets workspace chooses **local** or **remote** generation once.
+An artwork-generating agent first checks the workspace's ignored
+`renderer.local.yaml`. A complete marker is reused without another question.
+The agent asks only for a fresh workspace, missing values, an unreachable
+configured worker, or an explicit target change. Conversation history,
+unrelated SSH state, and running ComfyUI processes are not configuration. If
+local is selected, return to the local launcher in
 [Poster Workflow](POSTER_WORKFLOW.md).
 
-If remote is selected, the agent may help with the steps in this guide after
-the operator supplies an existing SSH config alias and the private runtime,
-model-cache, job, and repository paths.
-The agent must not request, inspect, transmit, or persist passwords, access
-tokens, private keys, real hostnames, IP addresses, or usernames. SSH
-authentication remains outside the repository and render job.
+After the choice, store the target and any private connection paths in
+`renderer.local.yaml` at the active workspace root with user-only file
+permissions. This is `tmp/poster-workspaces/` by default and
+`$BINDER_POKEDEX_POSTER_ASSETS` for a custom combined workspace. The marker is
+ignored local operator state and must never be
+staged, committed, included in a render job, copied into provenance, or quoted
+in a report. Passwords, access tokens, and private keys remain outside both the
+marker and repository; SSH authentication stays in the operator's existing SSH
+setup.
 
-## Bind a worker without persisting host details
+## Bind a worker without committing host details
 
-Keep connection values only in the current shell or the operator's private SSH
-configuration. The placeholders below are deliberately not real endpoints:
+Keep connection values in the ignored workspace marker, the current shell, or
+the operator's private SSH configuration. A marker uses this private shape;
+the placeholders are deliberately not real endpoints:
+
+```yaml
+schema_version: 1
+target: remote
+ssh_alias: SSH_CONFIG_ALIAS
+runtime_root: /absolute/path/to/ephemeral/BinderPokedex-runtime
+model_root: /absolute/path/to/persistent/BinderPokedex-models
+job_root: /absolute/path/to/ephemeral/BinderPokedex-jobs
+repository_root: /absolute/path/to/BinderPokedex-checkout
+```
+
+Export those values for the commands below without printing them:
 
 ```bash
 export BINDER_RENDER_SSH="SSH_CONFIG_ALIAS"
@@ -88,12 +107,12 @@ the intended commit or feature branch. This probe does not grant permission to
 install software, download models, or start a render. Confirm those separately
 when needed.
 
-Do not add these values to tracked `.env` files, Git configuration, manifests,
-run metadata, or documentation. Ignored workspace/session state may remember
-the selection. Do not expose port 8188 publicly and do not point the normal
-local runner's `--server` option at a public remote URL. `render_job.py run`
-starts loopback-only ComfyUI and queues the workflow on the worker, which also
-keeps job-local input-path validation intact.
+Do not add these values to `.env`, Git configuration, tracked manifests, run
+metadata, or documentation. The ignored `renderer.local.yaml` is the sole
+repository-workspace exception. Do not expose port 8188 publicly and do not
+point the normal local runner's `--server` option at a public remote URL.
+`render_job.py run` starts loopback-only ComfyUI and queues the workflow on the
+worker, which also keeps job-local input-path validation intact.
 
 ## Build an ephemeral native runtime
 

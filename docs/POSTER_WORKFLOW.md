@@ -97,15 +97,17 @@ does not regenerate artwork or download cutouts. Tagged releases reuse that
 candidate build and publish only after it succeeds. See
 [Release Workflow](RELEASE_WORKFLOW.md).
 
-## Resolve the render target before GPU work
+## Resolve the workspace render target before GPU work
 
-Reuse the renderer target configured in ignored state for the current workspace
-or session. Ask whether to use local Apple Metal/MPS or an isolated remote
-worker only when no target is configured yet. The target and all private
-connection values remain machine-local and are never committed.
-The conventional workspace marker is `.poster-renderer.env` with
-`BINDER_POSTER_RENDER_TARGET=local` or `remote`. An agent may maintain that
-ignored file for the operator; a fresh checkout intentionally starts without it.
+Starting poster generation requires a configured workspace target. An agent
+first reads the active poster workspace's ignored `renderer.local.yaml`. The
+default marker is `tmp/poster-workspaces/renderer.local.yaml`; custom combined
+workspaces keep it below `$BINDER_POKEDEX_POSTER_ASSETS`. A
+complete local or remote marker remains valid for that workspace and does not
+require another question. The agent asks only when a new workspace has no
+marker, required values are missing, the configured worker cannot be reached,
+or the operator requests a change. Conversation history, unrelated SSH state,
+or a reachable ComfyUI process alone is not a workspace configuration.
 
 - **Local:** use the scope-isolated launcher and runner documented below. Keep
   ComfyUI on loopback and keep generated candidates below ignored workspace
@@ -115,8 +117,8 @@ ignored file for the operator; a fresh checkout intentionally starts without it.
   validates the ComfyUI commit, model hashes, workflow, inputs, MPS device, and
   job-specific input directory before queueing.
 
-When remote rendering is selected, an assisting agent may ask for these
-non-secret connection parameters at runtime:
+When remote rendering is selected but the marker is incomplete, an assisting
+agent may ask for these non-secret connection parameters:
 
 1. an existing SSH config alias;
 2. the disposable remote runtime root;
@@ -126,8 +128,10 @@ non-secret connection parameters at runtime:
 
 The operator remains responsible for establishing SSH authentication and for
 confirming that the approved models are present. Real hostnames, IP addresses,
-usernames, credentials, private keys, and machine-specific paths must never be
-written to tracked files. Remote ComfyUI stays bound to remote loopback; jobs
+usernames, and machine-specific paths may be recorded only in the ignored
+workspace marker or private SSH configuration, never in tracked files, render
+jobs, provenance, or reports. Credentials and private keys do not belong in
+the marker. Remote ComfyUI stays bound to remote loopback; jobs
 are queued on the worker rather than through a publicly exposed API.
 
 ## Required and optional phases

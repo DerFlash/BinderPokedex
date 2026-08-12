@@ -47,6 +47,7 @@ _archive/
 temp/
 tmp/
 data/poster_training/
+**/renderer.local.yaml
 
 # Generated files (keep data, ignore PDFs)
 output/**/*.pdf
