@@ -16,8 +16,11 @@ import yaml
 try:
     from .layout import LAYOUTS, resolve_layout_name
     from .poster_io import (
+        POSTER_ASSETS,
+        POSTER_CONFIGS,
         POSTER_INDEX_NAME,
         POSTER_MANIFEST_NAME,
+        POSTER_WORKSPACES,
         ROOT,
         load_yaml,
         poster_asset_slug,
@@ -27,8 +30,11 @@ try:
 except ImportError:
     from layout import LAYOUTS, resolve_layout_name
     from poster_io import (
+        POSTER_ASSETS,
+        POSTER_CONFIGS,
         POSTER_INDEX_NAME,
         POSTER_MANIFEST_NAME,
+        POSTER_WORKSPACES,
         ROOT,
         load_yaml,
         poster_asset_slug,
@@ -37,7 +43,9 @@ except ImportError:
     )
 
 
-TRACKED_POSTER_ASSETS = ROOT / "data" / "poster_assets"
+TRACKED_POSTER_ASSETS = POSTER_ASSETS
+TRACKED_POSTER_CONFIGS = POSTER_CONFIGS
+TRACKED_POSTER_WORKSPACES = POSTER_WORKSPACES
 DEFAULT_WORKSPACE_PARENT = ROOT / "tmp" / "custom-poster-layouts"
 
 
@@ -63,8 +71,15 @@ def _target_root(
             "Custom poster workspaces must stay inside the repository so "
             "generation provenance can use safe repository-relative paths"
         )
-    if target == TRACKED_POSTER_ASSETS.resolve():
-        raise ValueError("Custom layout output cannot replace tracked poster assets")
+    protected_roots = {
+        TRACKED_POSTER_ASSETS.resolve(),
+        TRACKED_POSTER_CONFIGS.resolve(),
+        TRACKED_POSTER_WORKSPACES.resolve(),
+    }
+    if target in protected_roots:
+        raise ValueError(
+            "Custom layout output cannot replace a production poster root"
+        )
     return target
 
 
@@ -72,13 +87,27 @@ def _selected_bundles(
     scope: str,
     sections: tuple[str, ...],
     source_assets: Path,
+    source_configs: Path,
+    source_workspaces: Path,
 ):
     if "/" in scope:
         if sections:
             raise ValueError("--section cannot be combined with a leaf asset key")
-        return [poster_bundle(scope, poster_assets=source_assets)]
+        return [
+            poster_bundle(
+                scope,
+                poster_assets=source_assets,
+                poster_configs=source_configs,
+                poster_workspaces=source_workspaces,
+            )
+        ]
 
-    bundles = poster_bundles_for_scope(scope, poster_assets=source_assets)
+    bundles = poster_bundles_for_scope(
+        scope,
+        poster_assets=source_assets,
+        poster_configs=source_configs,
+        poster_workspaces=source_workspaces,
+    )
     if not bundles:
         raise ValueError(f"No poster configuration exists for scope {scope!r}")
     if not sections:
@@ -120,15 +149,18 @@ def _copy_relative_file(
     shutil.copy2(source, destination)
 
 
-def _copy_inputs(source_dir: Path, target_dir: Path, manifest: dict[str, Any]) -> int:
-    cutouts_source = source_dir / "cutouts"
-    if not cutouts_source.is_dir():
-        raise FileNotFoundError(cutouts_source)
-    shutil.copytree(cutouts_source, target_dir / "cutouts")
-
+def _copy_overlay_inputs(
+    source_dir: Path,
+    target_dir: Path,
+    manifest: dict[str, Any],
+) -> None:
     logos_source = source_dir / "logos"
     if logos_source.is_dir():
-        shutil.copytree(logos_source, target_dir / "logos")
+        shutil.copytree(
+            logos_source,
+            target_dir / "logos",
+            dirs_exist_ok=True,
+        )
 
     title_logo = manifest.get("title_logo", {})
     if isinstance(title_logo, dict):
@@ -138,12 +170,48 @@ def _copy_inputs(source_dir: Path, target_dir: Path, manifest: dict[str, Any]) -
             for relative_file in files.values():
                 _copy_relative_file(source_dir, target_dir, relative_file)
 
+
+def _copy_inputs(
+    source_dir: Path,
+    target_dir: Path,
+    manifest: dict[str, Any],
+) -> int:
+    cutouts_source = source_dir / "cutouts"
+    if not cutouts_source.is_dir():
+        raise FileNotFoundError(
+            f"Poster cutouts are not cached: {cutouts_source}. Run "
+            "fetch_poster_sources.py --kind cutouts first."
+        )
+    shutil.copytree(cutouts_source, target_dir / "cutouts")
+    _copy_overlay_inputs(source_dir, target_dir, manifest)
+
     cutout_manifest_path = target_dir / "cutouts" / "manifest.json"
     cutout_manifest = json.loads(cutout_manifest_path.read_text(encoding="utf-8"))
     items = cutout_manifest.get("items")
     if not isinstance(items, list) or not items:
         raise ValueError(f"Custom layout source has no cutouts: {cutout_manifest_path}")
     return len(items)
+
+
+def _copy_durable_outputs(source_dir: Path, target_dir: Path) -> None:
+    """Copy accepted masters/provenance without treating them as sources."""
+    if not source_dir.is_dir():
+        return
+    shutil.copytree(
+        source_dir,
+        target_dir,
+        dirs_exist_ok=True,
+        ignore=shutil.ignore_patterns(
+            ".DS_Store",
+            "__pycache__",
+            "comfyui_poster",
+            "cutouts",
+            "logos",
+            "logo.png",
+            POSTER_MANIFEST_NAME,
+            POSTER_INDEX_NAME,
+        ),
+    )
 
 
 def _custom_manifest(
@@ -269,14 +337,36 @@ def create_custom_layout_workspace(
     *,
     sections: tuple[str, ...] = (),
     output_root: Path | None = None,
-    source_assets: Path = TRACKED_POSTER_ASSETS,
+    source_assets: Path | None = None,
+    source_configs: Path | None = None,
+    source_workspaces: Path | None = None,
     fallback_pokemon: tuple[int, ...] = (),
     section_fallback_pokemon: dict[str, tuple[int, ...]] | None = None,
     include_unselected_promotions: bool = False,
 ) -> Path:
     """Clone custom inputs and optionally retain other aggregate promotions."""
     resolve_layout_name(layout_name)
-    source_assets = source_assets.resolve()
+    if source_assets is None:
+        asset_root = TRACKED_POSTER_ASSETS.resolve()
+        config_root = (
+            source_configs or TRACKED_POSTER_CONFIGS
+        ).resolve()
+        workspace_root = (
+            source_workspaces or TRACKED_POSTER_WORKSPACES
+        ).resolve()
+    else:
+        asset_root = source_assets.resolve()
+        combined_root = source_configs is None and source_workspaces is None
+        config_root = (
+            asset_root
+            if combined_root
+            else (source_configs or TRACKED_POSTER_CONFIGS).resolve()
+        )
+        workspace_root = (
+            asset_root
+            if combined_root
+            else (source_workspaces or TRACKED_POSTER_WORKSPACES).resolve()
+        )
     target = _target_root(scope, layout_name, sections, output_root)
     if target.exists():
         raise FileExistsError(
@@ -284,7 +374,13 @@ def create_custom_layout_workspace(
             "Choose another --output or remove that ignored workspace first."
         )
 
-    bundles = _selected_bundles(scope, sections, source_assets)
+    bundles = _selected_bundles(
+        scope,
+        sections,
+        asset_root,
+        config_root,
+        workspace_root,
+    )
     section_fallback_pokemon = section_fallback_pokemon or {}
     if fallback_pokemon and section_fallback_pokemon:
         raise ValueError(
@@ -306,14 +402,14 @@ def create_custom_layout_workspace(
     stage = Path(tempfile.mkdtemp(prefix=f".{target.name}-", dir=target.parent))
     try:
         aggregate = "/" not in scope and (
-            source_assets / scope / POSTER_INDEX_NAME
+            config_root / scope / POSTER_INDEX_NAME
         ).is_file()
         index_items: list[dict[str, Any]] = []
         custom_index_items: dict[str, dict[str, Any]] = {}
 
         source_index_by_id: dict[str, dict[str, Any]] = {}
         if aggregate:
-            source_index = load_yaml(source_assets / scope / POSTER_INDEX_NAME)
+            source_index = load_yaml(config_root / scope / POSTER_INDEX_NAME)
             source_index_by_id = {
                 str(item.get("id")): item
                 for item in source_index.get("posters", [])
@@ -325,7 +421,11 @@ def create_custom_layout_workspace(
             relative_asset = Path(*bundle.asset_key.split("/"))
             target_dir = stage / relative_asset
             target_dir.mkdir(parents=True, exist_ok=True)
-            cutout_count = _copy_inputs(bundle.asset_dir, target_dir, bundle.manifest)
+            cutout_count = _copy_inputs(
+                bundle.source_dir,
+                target_dir,
+                bundle.manifest,
+            )
             manifest = _custom_manifest(
                 bundle.manifest,
                 layout_name,
@@ -369,19 +469,27 @@ def create_custom_layout_workspace(
                 selected_ids = set(custom_index_items)
                 for source_bundle in poster_bundles_for_scope(
                     scope,
-                    poster_assets=source_assets,
+                    poster_assets=asset_root,
+                    poster_configs=config_root,
+                    poster_workspaces=workspace_root,
                 ):
                     if source_bundle.poster_id in selected_ids:
                         continue
                     relative_asset = Path(*source_bundle.asset_key.split("/"))
-                    shutil.copytree(
+                    retained_dir = stage / relative_asset
+                    retained_dir.mkdir(parents=True, exist_ok=True)
+                    _copy_durable_outputs(
                         source_bundle.asset_dir,
-                        stage / relative_asset,
-                        ignore=shutil.ignore_patterns(
-                            ".DS_Store",
-                            "__pycache__",
-                            "comfyui_poster",
-                        ),
+                        retained_dir,
+                    )
+                    _copy_overlay_inputs(
+                        source_bundle.source_dir,
+                        retained_dir,
+                        source_bundle.manifest,
+                    )
+                    _write_yaml(
+                        retained_dir / POSTER_MANIFEST_NAME,
+                        source_bundle.manifest,
                     )
                 index_items = [
                     custom_index_items.get(
