@@ -735,6 +735,31 @@ leaf still needs its own generated, reviewed, and locally promoted artwork
 before the PDF can be built. Unset `BINDER_POKEDEX_POSTER_ASSETS` to return
 every command to the tracked production assets.
 
+To prepare a complete 4×3 Pokédex workspace, assign the additional fourth
+Pokémon explicitly per generation instead of reusing one fallback across every
+section:
+
+```bash
+python scripts/poster_assets/create_custom_poster_layout.py \
+  --scope Pokedex \
+  --layout wide_4x3 \
+  --section-fallback-pokemon gen1=25 \
+  --section-fallback-pokemon gen2=175 \
+  --section-fallback-pokemon gen3=280 \
+  --section-fallback-pokemon gen4=447 \
+  --section-fallback-pokemon gen5=570 \
+  --section-fallback-pokemon gen6=700 \
+  --section-fallback-pokemon gen7=778 \
+  --section-fallback-pokemon gen8=831 \
+  --section-fallback-pokemon gen9=921
+```
+
+This creates nine independent 4×3 manifests. Every leaf requires its own
+generated, reviewed, and locally promoted 4×3 artwork. Once all nine promotions
+exist, the cuttable German PDF emits two A4 pages per generation: source
+columns 1–3 on the first page and source column 4 in the first column of the
+second page. Pokémon card pages remain unchanged.
+
 ## Layout policy
 
 | Layout | Subjects | Physical grid | Cuttable PDF | Continuous full page |

@@ -28,6 +28,7 @@ from scripts.poster_assets.create_comfyui_upscale_workflow import (
     build_workflow as build_upscale_workflow,
 )
 from scripts.poster_assets.create_custom_poster_layout import (
+    _parse_section_fallbacks,
     create_custom_layout_workspace,
 )
 from scripts.poster_assets.finalize_comfyui_poster import (
@@ -397,6 +398,72 @@ def test_partial_custom_workspace_can_retain_other_promoted_artworks():
         assert workspace_meta["included_unselected_promotions"] is True
     finally:
         shutil.rmtree(parent)
+
+
+def test_complete_pokedex_custom_workspace_uses_section_fallbacks():
+    root = Path(__file__).resolve().parents[2]
+    temp_root = root / "tmp"
+    temp_root.mkdir(parents=True, exist_ok=True)
+    parent = Path(tempfile.mkdtemp(prefix="custom-layout-complete-", dir=temp_root))
+    target = parent / "poster-assets"
+    section_fallbacks = {
+        "gen1": (25,),
+        "gen2": (175,),
+        "gen3": (280,),
+        "gen4": (447,),
+        "gen5": (570,),
+        "gen6": (700,),
+        "gen7": (778,),
+        "gen8": (831,),
+        "gen9": (921,),
+    }
+    try:
+        workspace = create_custom_layout_workspace(
+            "Pokedex",
+            "wide_4x3",
+            output_root=target,
+            section_fallback_pokemon=section_fallbacks,
+        )
+
+        bundles = poster_bundles_for_scope(
+            "Pokedex",
+            poster_assets=workspace,
+        )
+        assert [bundle.poster_id for bundle in bundles] == [
+            f"gen{generation}" for generation in range(1, 10)
+        ]
+        for bundle in bundles:
+            expected_id = section_fallbacks[bundle.poster_id][0]
+            assert bundle.manifest["layout"] == {"name": "wide_4x3"}
+            assert bundle.manifest["pokemon"]["fallback_candidates"] == [
+                {"pokemon_id": expected_id, "slot": 2}
+            ]
+            assert not (bundle.asset_dir / bundle.artwork_file).exists()
+
+        workspace_meta = yaml.safe_load(
+            (workspace / "workspace.yaml").read_text(encoding="utf-8")
+        )
+        assert workspace_meta["section_fallback_pokemon"] == {
+            section: list(pokemon_ids)
+            for section, pokemon_ids in section_fallbacks.items()
+        }
+    finally:
+        shutil.rmtree(parent)
+
+
+def test_section_fallback_parser_groups_repeated_sections():
+    assert _parse_section_fallbacks(
+        ["gen1=25", "gen2=175", "gen2=172"]
+    ) == {
+        "gen1": (25,),
+        "gen2": (175, 172),
+    }
+
+
+@pytest.mark.parametrize("value", ("gen1", "=25", "gen1=", "gen1=nope", "gen1=0"))
+def test_section_fallback_parser_rejects_invalid_assignments(value):
+    with pytest.raises(ValueError):
+        _parse_section_fallbacks([value])
 
 
 def test_slotted_fallback_fills_the_missing_wide_poster_card():

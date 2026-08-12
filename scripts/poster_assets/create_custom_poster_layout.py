@@ -237,6 +237,32 @@ def _write_yaml(path: Path, value: dict[str, Any]) -> None:
     )
 
 
+def _parse_section_fallbacks(values: list[str]) -> dict[str, tuple[int, ...]]:
+    """Parse repeatable SECTION=POKEMON_ID fallback assignments."""
+    parsed: dict[str, list[int]] = {}
+    for value in values:
+        section, separator, pokemon_id_text = value.partition("=")
+        if not separator or not section or not pokemon_id_text:
+            raise ValueError(
+                "Section fallbacks must use SECTION=POKEMON_ID"
+            )
+        try:
+            pokemon_id = int(pokemon_id_text)
+        except ValueError as exc:
+            raise ValueError(
+                f"Invalid Pokemon ID in section fallback: {value!r}"
+            ) from exc
+        if pokemon_id <= 0:
+            raise ValueError(
+                f"Pokemon IDs must be positive in section fallback: {value!r}"
+            )
+        parsed.setdefault(section, []).append(pokemon_id)
+    return {
+        section: tuple(pokemon_ids)
+        for section, pokemon_ids in parsed.items()
+    }
+
+
 def create_custom_layout_workspace(
     scope: str,
     layout_name: str,
@@ -245,6 +271,7 @@ def create_custom_layout_workspace(
     output_root: Path | None = None,
     source_assets: Path = TRACKED_POSTER_ASSETS,
     fallback_pokemon: tuple[int, ...] = (),
+    section_fallback_pokemon: dict[str, tuple[int, ...]] | None = None,
     include_unselected_promotions: bool = False,
 ) -> Path:
     """Clone custom inputs and optionally retain other aggregate promotions."""
@@ -258,6 +285,23 @@ def create_custom_layout_workspace(
         )
 
     bundles = _selected_bundles(scope, sections, source_assets)
+    section_fallback_pokemon = section_fallback_pokemon or {}
+    if fallback_pokemon and section_fallback_pokemon:
+        raise ValueError(
+            "Use either fallback_pokemon or section_fallback_pokemon, not both"
+        )
+    selected_section_ids = {
+        bundle.section_id or bundle.poster_id
+        for bundle in bundles
+    }
+    unknown_fallback_sections = (
+        set(section_fallback_pokemon) - selected_section_ids
+    )
+    if unknown_fallback_sections:
+        raise ValueError(
+            "Fallback Pokemon configured for unselected sections: "
+            + ", ".join(sorted(unknown_fallback_sections))
+        )
     target.parent.mkdir(parents=True, exist_ok=True)
     stage = Path(tempfile.mkdtemp(prefix=f".{target.name}-", dir=target.parent))
     try:
@@ -277,6 +321,7 @@ def create_custom_layout_workspace(
             }
 
         for bundle in bundles:
+            section_id = bundle.section_id or bundle.poster_id
             relative_asset = Path(*bundle.asset_key.split("/"))
             target_dir = stage / relative_asset
             target_dir.mkdir(parents=True, exist_ok=True)
@@ -286,7 +331,10 @@ def create_custom_layout_workspace(
                 layout_name,
                 cutout_count,
                 enable_pdf=not aggregate,
-                fallback_pokemon=fallback_pokemon,
+                fallback_pokemon=section_fallback_pokemon.get(
+                    section_id,
+                    fallback_pokemon,
+                ),
             )
             _write_yaml(target_dir / POSTER_MANIFEST_NAME, manifest)
 
@@ -370,6 +418,12 @@ def create_custom_layout_workspace(
                 "included_unselected_promotions": (
                     include_unselected_promotions
                 ),
+                "section_fallback_pokemon": {
+                    section: list(pokemon_ids)
+                    for section, pokemon_ids in sorted(
+                        section_fallback_pokemon.items()
+                    )
+                },
                 "note": "Ignored local workspace; do not use as release input.",
             },
         )
@@ -406,6 +460,16 @@ def main() -> int:
         ),
     )
     parser.add_argument(
+        "--section-fallback-pokemon",
+        action="append",
+        default=[],
+        metavar="SECTION=POKEMON_ID",
+        help=(
+            "Additional bottom-row Pokemon for one aggregate section; "
+            "repeat for each section or missing card"
+        ),
+    )
+    parser.add_argument(
         "--include-unselected-promotions",
         action="store_true",
         help=(
@@ -415,12 +479,16 @@ def main() -> int:
     )
     args = parser.parse_args()
     try:
+        section_fallback_pokemon = _parse_section_fallbacks(
+            args.section_fallback_pokemon
+        )
         target = create_custom_layout_workspace(
             args.scope,
             args.layout,
             sections=tuple(args.section),
             output_root=args.output,
             fallback_pokemon=tuple(args.fallback_pokemon),
+            section_fallback_pokemon=section_fallback_pokemon,
             include_unselected_promotions=args.include_unselected_promotions,
         )
     except Exception as exc:
