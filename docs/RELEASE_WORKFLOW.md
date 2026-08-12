@@ -1,8 +1,10 @@
 # Release Workflow
 
-BinderPokedex uses one shared release-candidate build for pull requests and
-tagged releases. A pull request proves that the complete release payload can be
-built, but it never publishes a GitHub Release.
+BinderPokedex uses one shared release-candidate build for tagged releases and
+selected pull requests. Release and hotfix branches always rehearse the full
+payload before merging into `main`; an ordinary feature pull request does so
+only when it carries the `full-release-check` label. A pull-request rehearsal
+never publishes a GitHub Release.
 
 ## Workflow boundary
 
@@ -16,7 +18,7 @@ Build Release Candidate (reusable, read-only)
   -> render and verify versioned GitHub release notes
   -> upload one temporary Actions artifact
 
-Verify Release Build (pull request or manual)
+Verify Release Build (release/hotfix PR, labeled PR, or manual)
   -> call Build Release Candidate
   -> stop after the temporary artifact
 
@@ -72,9 +74,25 @@ positions. It never starts ComfyUI.
 
 ## Pull-request release rehearsal
 
-`.github/workflows/verify-release.yml` runs for every pull request and may also
-be started manually. It calls the same reusable workflow as a tag release and
-therefore builds:
+`.github/workflows/verify-release.yml` listens to pull requests targeting
+`main`, but calls the expensive reusable build only when at least one of these
+conditions applies:
+
+- the source branch starts with `release/`;
+- the source branch starts with `hotfix/`;
+- the pull request has the `full-release-check` label; or
+- a maintainer starts the workflow manually.
+
+The label is the explicit opt-in for feature branches that change PDF
+rendering, release inputs, promoted assets, or other behavior that should be
+proved against the complete payload before merge. Adding the label starts the
+build immediately; subsequent commits retrigger it while the label remains.
+Removing the label cancels an in-progress rehearsal through the workflow's
+concurrency rule. Ordinary feature and documentation pull requests leave the
+release-candidate job skipped and consume no release-build runner time.
+
+When selected, the workflow calls the same reusable workflow as a tag release
+and therefore builds:
 
 - all configured scopes;
 - all nine release languages;

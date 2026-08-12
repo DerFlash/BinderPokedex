@@ -19,10 +19,25 @@ def test_pull_request_release_check_is_read_only_and_never_publishes():
     source = (WORKFLOWS / "verify-release.yml").read_text(encoding="utf-8")
 
     assert "pull_request" in workflow["on"]
+    pull_request = workflow["on"]["pull_request"]
+    assert pull_request["branches"] == ["main"]
+    assert set(pull_request["types"]) == {
+        "opened",
+        "reopened",
+        "synchronize",
+        "labeled",
+        "unlabeled",
+    }
     assert workflow["permissions"] == {"contents": "read"}
-    assert workflow["jobs"]["build-release-candidate"]["uses"] == (
+    candidate = workflow["jobs"]["build-release-candidate"]
+    assert candidate["uses"] == (
         "./.github/workflows/build-release.yml"
     )
+    condition = candidate["if"]
+    assert "github.event_name == 'workflow_dispatch'" in condition
+    assert "startsWith(github.head_ref, 'release/')" in condition
+    assert "startsWith(github.head_ref, 'hotfix/')" in condition
+    assert "full-release-check" in condition
     assert "contents: write" not in source
     assert "softprops/action-gh-release" not in source
 
