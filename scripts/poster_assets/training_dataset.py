@@ -15,13 +15,11 @@ from PIL import Image, ImageChops, ImageStat
 try:
     from .poster_io import POSTER_ASSETS, poster_bundle
     from .prepare_comfyui_poster import build_identity_lock_references
-    from .poster_io import POSTER_ASSETS
     from .provenance import image_pixel_record, sha256_file
     from .source_pixel_audit import audit_exact_source_pixels
 except ImportError:
     from poster_io import POSTER_ASSETS, poster_bundle
     from prepare_comfyui_poster import build_identity_lock_references
-    from poster_io import POSTER_ASSETS
     from provenance import image_pixel_record, sha256_file
     from source_pixel_audit import audit_exact_source_pixels
 
